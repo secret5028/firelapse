@@ -1,0 +1,754 @@
+{
+  "unit_tests_passed": 51,
+  "samples": [
+    {
+      "host_filter": {
+        "rejected": 0,
+        "exterior_recovered": 0,
+        "retained_review": 0
+      },
+      "rejected_ids": [],
+      "solver_rooms": 25,
+      "isolated_rooms": [
+        "R4",
+        "R8",
+        "R12"
+      ],
+      "recovered_openings": [],
+      "sample": "hotel-4F",
+      "rooms_before": 25,
+      "rooms_after": 25,
+      "elevator_doors_before": 3,
+      "elevator_doors_after": 3,
+      "valid_geometry": true,
+      "existing_door_connections_preserved": true,
+      "ordinary_room_core_overlap_m2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "graph_connections": 54,
+      "excluded_graph_openings": 0,
+      "auto_checks": [
+        {
+          "rule": "AUTO틈보강",
+          "selected_radius_px": 2,
+          "trials": [
+            {
+              "radius_px": 2,
+              "gap_mm": 80.0,
+              "rooms": 22,
+              "valid_doors": 41,
+              "added_pixels": 6255,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9985,
+                "maximum_area_change": 0.0015,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            },
+            {
+              "radius_px": 4,
+              "gap_mm": 160.0,
+              "rooms": 22,
+              "valid_doors": 41,
+              "added_pixels": 53560,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9956,
+                "maximum_area_change": 0.0044,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            }
+          ],
+          "note": "실 수·영역 대응·면적 변화·문 이웃 공간을 함께 비교. 기존 연결을 보존하는 안정 구간의 작은 보강폭 사용"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE0",
+          "source_core": 0,
+          "door": "CE0_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE1",
+          "source_core": 1,
+          "door": "CE1_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE2",
+          "source_core": 2,
+          "door": "CE2_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R4",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R8",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R12",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        }
+      ],
+      "three_d_rooms": 25,
+      "checks_remaining": []
+    },
+    {
+      "host_filter": {
+        "rejected": 0,
+        "exterior_recovered": 0,
+        "retained_review": 5
+      },
+      "rejected_ids": [],
+      "solver_rooms": 20,
+      "isolated_rooms": [
+        "R8",
+        "R10",
+        "R12",
+        "R15"
+      ],
+      "recovered_openings": [
+        "W6",
+        "W7"
+      ],
+      "sample": "hotel-1F",
+      "rooms_before": 20,
+      "rooms_after": 20,
+      "elevator_doors_before": 7,
+      "elevator_doors_after": 7,
+      "valid_geometry": true,
+      "existing_door_connections_preserved": true,
+      "ordinary_room_core_overlap_m2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "graph_connections": 43,
+      "excluded_graph_openings": 5,
+      "auto_checks": [
+        {
+          "rule": "AUTO틈보강",
+          "selected_radius_px": 2,
+          "trials": [
+            {
+              "radius_px": 2,
+              "gap_mm": 80.0,
+              "rooms": 18,
+              "valid_doors": 42,
+              "added_pixels": 9455,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9945,
+                "maximum_area_change": 0.0055,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            },
+            {
+              "radius_px": 4,
+              "gap_mm": 160.0,
+              "rooms": 18,
+              "valid_doors": 42,
+              "added_pixels": 16557,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9834,
+                "maximum_area_change": 0.0166,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            }
+          ],
+          "note": "실 수·영역 대응·면적 변화·문 이웃 공간을 함께 비교. 기존 연결을 보존하는 안정 구간의 작은 보강폭 사용"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE0",
+          "source_core": 0,
+          "door": "CE0_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE1",
+          "source_core": 1,
+          "door": "CE1_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE2",
+          "source_core": 2,
+          "door": "CE2_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO개구부연결복구",
+          "id": "W6",
+          "sides": [
+            "out",
+            "R1"
+          ],
+          "note": "기존 CAD 개구부의 3개 횡단선에서 동일한 양쪽 공간 확인"
+        },
+        {
+          "rule": "AUTO개구부연결복구",
+          "id": "W7",
+          "sides": [
+            "out",
+            "R1"
+          ],
+          "note": "기존 CAD 개구부의 3개 횡단선에서 동일한 양쪽 공간 확인"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R8",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R10",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R12",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R15",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        }
+      ],
+      "three_d_rooms": 20,
+      "checks_remaining": [
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "D9",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W2",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W13",
+          "status": "unresolved"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W14",
+          "status": "unresolved"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W17",
+          "status": "same_space"
+        }
+      ]
+    },
+    {
+      "host_filter": {
+        "rejected": 6,
+        "exterior_recovered": 0,
+        "retained_review": 8
+      },
+      "rejected_ids": [
+        "W68",
+        "W69",
+        "W72",
+        "W75",
+        "W78",
+        "W79"
+      ],
+      "solver_rooms": 35,
+      "isolated_rooms": [
+        "R18",
+        "R20"
+      ],
+      "recovered_openings": [],
+      "sample": "office-1F",
+      "rooms_before": 35,
+      "rooms_after": 35,
+      "elevator_doors_before": 8,
+      "elevator_doors_after": 8,
+      "valid_geometry": true,
+      "existing_door_connections_preserved": true,
+      "ordinary_room_core_overlap_m2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "graph_connections": 109,
+      "excluded_graph_openings": 8,
+      "auto_checks": [
+        {
+          "rule": "AUTO반복단차선",
+          "n": 7,
+          "block": "1",
+          "repeated_blocks": 90,
+          "spacing_m": 1.05,
+          "note": "동심 원호의 일정 간격 반복 + 같은 영역의 반복 블록 근거로 객석 단차 후보를 구획 경계에서 제외"
+        },
+        {
+          "rule": "AUTO틈보강",
+          "selected_radius_px": 2,
+          "trials": [
+            {
+              "radius_px": 2,
+              "gap_mm": 80.0,
+              "rooms": 37,
+              "valid_doors": 72,
+              "added_pixels": 57688,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9968,
+                "maximum_area_change": 0.0032,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            },
+            {
+              "radius_px": 4,
+              "gap_mm": 160.0,
+              "rooms": 37,
+              "valid_doors": 72,
+              "added_pixels": 105155,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9904,
+                "maximum_area_change": 0.0096,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            }
+          ],
+          "note": "실 수·영역 대응·면적 변화·문 이웃 공간을 함께 비교. 기존 연결을 보존하는 안정 구간의 작은 보강폭 사용"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE1",
+          "source_core": 1,
+          "door": "CE1_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE2",
+          "source_core": 2,
+          "door": "CE2_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W68",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W69",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W72",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W75",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W78",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W79",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R18",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R20",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        }
+      ],
+      "three_d_rooms": 35,
+      "checks_remaining": [
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "D6",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "D13",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "D16",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "D18",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W62",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W65",
+          "status": "unresolved"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W76",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W89",
+          "status": "unresolved"
+        }
+      ]
+    },
+    {
+      "host_filter": {
+        "rejected": 0,
+        "exterior_recovered": 0,
+        "retained_review": 0
+      },
+      "rejected_ids": [],
+      "solver_rooms": 24,
+      "isolated_rooms": [
+        "R9",
+        "R21"
+      ],
+      "recovered_openings": [],
+      "sample": "office-4F",
+      "rooms_before": 24,
+      "rooms_after": 24,
+      "elevator_doors_before": 8,
+      "elevator_doors_after": 8,
+      "valid_geometry": true,
+      "existing_door_connections_preserved": true,
+      "ordinary_room_core_overlap_m2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "graph_connections": 67,
+      "excluded_graph_openings": 0,
+      "auto_checks": [
+        {
+          "rule": "AUTO틈보강",
+          "selected_radius_px": 2,
+          "trials": [
+            {
+              "radius_px": 2,
+              "gap_mm": 80.0,
+              "rooms": 22,
+              "valid_doors": 20,
+              "added_pixels": 71268,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9952,
+                "maximum_area_change": 0.0048,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            },
+            {
+              "radius_px": 4,
+              "gap_mm": 160.0,
+              "rooms": 22,
+              "valid_doors": 20,
+              "added_pixels": 76062,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9856,
+                "maximum_area_change": 0.0144,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            }
+          ],
+          "note": "실 수·영역 대응·면적 변화·문 이웃 공간을 함께 비교. 기존 연결을 보존하는 안정 구간의 작은 보강폭 사용"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE0",
+          "source_core": 0,
+          "door": "CE0_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO승강로분리",
+          "id": "CE1",
+          "source_core": 1,
+          "door": "CE1_D",
+          "note": "검출된 승강기 블록 영역을 홀·복도에서 분리. 도면의 인접 틈 근거가 있을 때 승강기문 연결"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R9",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R21",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        }
+      ],
+      "three_d_rooms": 24,
+      "checks_remaining": []
+    },
+    {
+      "host_filter": {
+        "rejected": 2,
+        "exterior_recovered": 0,
+        "retained_review": 3
+      },
+      "rejected_ids": [
+        "W2",
+        "W7"
+      ],
+      "solver_rooms": 24,
+      "isolated_rooms": [
+        "R19",
+        "R20",
+        "R21"
+      ],
+      "recovered_openings": [],
+      "sample": "exhibition-1F",
+      "rooms_before": 24,
+      "rooms_after": 24,
+      "elevator_doors_before": 0,
+      "elevator_doors_after": 0,
+      "valid_geometry": true,
+      "existing_door_connections_preserved": true,
+      "ordinary_room_core_overlap_m2": [],
+      "graph_connections": 23,
+      "excluded_graph_openings": 3,
+      "auto_checks": [
+        {
+          "rule": "AUTO틈보강",
+          "selected_radius_px": 2,
+          "trials": [
+            {
+              "radius_px": 2,
+              "gap_mm": 80.0,
+              "rooms": 40,
+              "valid_doors": 61,
+              "added_pixels": 12326,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9981,
+                "maximum_area_change": 0.0019,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            },
+            {
+              "radius_px": 4,
+              "gap_mm": 160.0,
+              "rooms": 40,
+              "valid_doors": 61,
+              "added_pixels": 15367,
+              "safe": true,
+              "topology": {
+                "safe": true,
+                "minimum_region_retention": 0.9941,
+                "maximum_area_change": 0.0059,
+                "region_split": false,
+                "region_merge": false,
+                "door_neighbors_preserved": true
+              }
+            }
+          ],
+          "note": "실 수·영역 대응·면적 변화·문 이웃 공간을 함께 비교. 기존 연결을 보존하는 안정 구간의 작은 보강폭 사용"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W2",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO벽없는개구부제외",
+          "id": "W7",
+          "note": "벽 위 개구부 공리의 근거 부족: 모호한 기호를 개구부 목록에서 제외"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R19",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R20",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        },
+        {
+          "rule": "AUTO연결미확정실유지",
+          "id": "R21",
+          "note": "공간을 유지하며 연결 근거 부족을 표시. 문 또는 외기 연결을 임의 생성하지 않음"
+        }
+      ],
+      "three_d_rooms": 24,
+      "checks_remaining": [
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "D7",
+          "status": "same_space"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W3",
+          "status": "unresolved"
+        },
+        {
+          "rule": "Q개구부연결",
+          "severity": "review",
+          "id": "W8",
+          "status": "unresolved"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "sample": "hotel-4F",
+      "state_percent": 50,
+      "seconds": 60,
+      "solver_success": true,
+      "rooms": 25,
+      "confirmed_connections_unchanged": true
+    },
+    {
+      "sample": "hotel-1F",
+      "state_percent": 50,
+      "seconds": 60,
+      "solver_success": true,
+      "rooms": 20,
+      "confirmed_connections_unchanged": true
+    },
+    {
+      "sample": "office-1F",
+      "state_percent": 50,
+      "seconds": 60,
+      "solver_success": true,
+      "rooms": 35,
+      "confirmed_connections_unchanged": true
+    },
+    {
+      "sample": "office-4F",
+      "state_percent": 50,
+      "seconds": 60,
+      "solver_success": true,
+      "rooms": 24,
+      "confirmed_connections_unchanged": true
+    },
+    {
+      "sample": "exhibition-1F",
+      "state_percent": 50,
+      "seconds": 60,
+      "solver_success": true,
+      "rooms": 24,
+      "confirmed_connections_unchanged": true
+    }
+  ],
+  "code_sha256": {
+    "test_cad_connectivity.py": "4908e8d2ae196ffb9e395f56d2072c06a1f9cdd07271ec15a00a9a7295f36fe8",
+    "cad_review_ui.py": "7e392dcf966a2090c7b2bb026594f0fc716336fe05c5340d9626bef2b2eba547",
+    "cad_evidence.py": "404d268a840284fe6b2d71bed666970bfe1bc90dfb16060b80e3a64fd87a5b8a",
+    "cad_build3d.py": "9cb8400400491a0b5bda7d62de08762dc8fef747262119d0632da5421aa03e18",
+    "cad_auto.py": "369bade0984f07f169063d766a4eff1b7cf3b35e2ef99788d6144714599ba724",
+    "test_cad_evidence.py": "ce53af377906d8db9b2ac7a6b21f07f651bfad210011d8b3c9fa025f135514bd",
+    "fire_align.py": "04f2e4c7c18d8bbb3f102e51696c7961ea7e68775a6d0f2491d5b26f28f86c3e",
+    "fire_zone.py": "e55d7de953c0ae8322e92b93952059ea6b7cb4930b84032282ae0251e0b34f40",
+    "compare_template.html": "5f9436ceaf14c77725c065de19a614e0e77d43e486b8e8e748c7f9481b5f26ac",
+    "CAD-자동보강-v3.txt": "200d3f10316c5b72a0d8feb5b34bab914b1538a400a00cb824a23f418bcc852a",
+    "cad_host.py": "c11be24d0f713afa1edb2ced0385c1c0ab1b3fdc0bb89433187ea920f23e6c6e",
+    "cad_topology.py": "e1d50e672c72d3befec718af387a2c4f211412f48a051916fc8e627896bbaa8e",
+    "CAD-추출-사용법.txt": "d1e9290dfee57cd656e84715a8c71fd4006a55d665f352f0f3cea6f08aee4dbb",
+    "standard_heights.json": "cfd0b10c2976a94c528c71a0b38354f4f83252a2d8b2615a2725292560af7b7f",
+    "cad_connectivity.py": "b3aecf95e62a48d227ca63d3897686df558939faf120ff31178c8f196288a333",
+    "cad_heal.py": "33f0dc3fe529241d19786dd5db92c246341e6ab7c5ecb171fce0d0b7c29e1bba",
+    "test_cad_auto.py": "ce248c147ad9353add02f9cda222a555717d4080bed73ab8b753b3df6eca86cf",
+    "viewer_template.html": "245432492f81c47a680b405e6cc3876eeb0a9ab7d049f2d8ad19d3235ae2f6bb",
+    "cad_plan.py": "1edfa770b0f9ae6cc993161a62679be33e9b88168e9d71b45359ec0118ec96eb",
+    "fire_load_table.json": "75b3ce94bae4868c3a9df4325e644702a5e532f3cf3e9ca272719705892edf05",
+    "fire_symbols.py": "008022d50ace0bbaac5983ef7b6214056777c5388b427b8685814c8f703456dd",
+    "fire_building.py": "1ea5267b65aab5556794dbda0ae204b270d112ab6c701c55d70fd1abeca023ae",
+    "test_cad_topology.py": "6750a225c7d1d67c50d5edc752b3c2d62860d624ce2265d74e33bdcf90bd5774",
+    "CAD-연결보강-v4.txt": "78b7022328e7b912d14ebdeaae154f09b6f920484682455e4641a8559fe3d52e",
+    "requirements-extraction.txt": "f9b431c698815d789ae439e22357d2a3126b3a91e7bbb90c68695c6cbac5db86",
+    "cadio.py": "337fb35bb474ae6bc526ab9170820fe6bb3a3feb24ba1ed1f16f840e62e56407",
+    "test_cad_host.py": "9c7b36f807d3478ad9229e370be1527423acf94ffa5124e095f8cb27dc3a9ada",
+    "run_building.py": "74145a7180b2e92042a4256fa30fc90f99298d231380bf99fa12613565a93343",
+    "cad_pipeline.py": "a4e7683e789a6366a163de15e7ac27c89a994ae9a6c302f8dc231b3e045032e1",
+    "fire_overlay.py": "74f1e1c9b25cae44c80dfc1dccf7c57003bbf6071c02ecc6464acce5ad197c02",
+    "cad_compare.py": "738fcc358e745c79bd181f191cf1c2706cb43a58efa71a4f277679c797b51da5",
+    "layer_map.json": "fb57c9ab5314f41803aa1bb49a01285e5012cd1e54a5ecce44c26039b9a4c5f6"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "duration": 1800,
+  "engine_seconds": 103.844,
+  "events": [
+    {
+      "id": "FuelA",
+      "criterion": "FLUX",
+      "setpoint": 12.5,
+      "unit": "kW/m²",
+      "first_ignition_sample": 230.0,
+      "max_target_value": 20.8845,
+      "peak_hrr_kW": 500.0
+    },
+    {
+      "id": "FuelB",
+      "criterion": "TEMPERATURE",
+      "setpoint": 300,
+      "unit": "°C",
+      "first_ignition_sample": 645.0,
+      "max_target_value": 446.101,
+      "peak_hrr_kW": 500.0
+    },
+    {
+      "id": "FuelC",
+      "criterion": "TEMPERATURE",
+      "setpoint": 300,
+      "unit": "°C",
+      "first_ignition_sample": null,
+      "max_target_value": 40.4803,
+      "peak_hrr_kW": 0.0
+    }
+  ],
+  "peak_total_hrr_kW": 2000.0,
+  "peak_fire_room_upper_C": 267.691,
+  "no_ignition_reference_peak_upper_C": 180.2,
+  "geometry_unchanged": true,
+  "legacy_prefix_unchanged": true,
+  "automatic_wall_cut_removed": true,
+  "scope": "Conditional ignition/energy feedback/data range/geometry checks; not physical validation"
+}

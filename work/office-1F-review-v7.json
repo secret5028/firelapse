@@ -1,0 +1,28 @@
+{
+  "source_sha256": "6fd852af924b52d7654af0a663d588a860965fcf87a15a7c7ace8e4f8dacc4c6",
+  "source_categories": [],
+  "exclude_candidates": [
+    {
+      "alias": "W65",
+      "reason": "surface_line_on_continuous_wall",
+      "note": "연속 벽면의 선을 창으로 오인: 벽은 유지",
+      "bounds_m": [
+        14004.550000000001,
+        -1777.5790000000002,
+        14005.07,
+        -1773.379
+      ]
+    },
+    {
+      "alias": "W89",
+      "reason": "repeated_grating_detail",
+      "note": "기둥 하부 반복 빗살 상세를 창으로 오인",
+      "bounds_m": [
+        13992.79,
+        -1781.719,
+        13993.83,
+        -1781.139
+      ]
+    }
+  ]
+}

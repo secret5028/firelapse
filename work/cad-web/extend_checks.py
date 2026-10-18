@@ -1,0 +1,5 @@
+from pathlib import Path
+s=Path('work/check_runtime.mjs').read_text(encoding='utf-8')
+s=s.replace('this.id=id;','this.id=id;this.events={};').replace('addEventListener(){}getBoundingClientRect()', 'addEventListener(t,f){this.events[t]=f}getBoundingClientRect()')
+s=s.replace("console.log('PASS", """const c=get('canvas');const before=vm.runInContext('cam.phi',ctx);c.events.pointerdown({pointerId:1,clientX:400,clientY:300,button:0});c.events.pointermove({pointerId:1,clientX:400,clientY:320,buttons:1,shiftKey:false});assert(vm.runInContext('cam.phi',ctx)<before);c.events.pointerup({pointerId:1,clientX:400,clientY:320});get('invertY').onchange({target:{checked:false}});assert.equal(ctx.window.fireViewer.state.invertY,false);vm.runInContext('camera.updateMatrixWorld(true);model.updateMatrixWorld(true)',ctx);const oldPivot=vm.runInContext('target.clone()',ctx);vm.runInContext('click(450,400)',ctx);assert(vm.runInContext('target.clone()',ctx).distanceTo(oldPivot)>.01);console.log('PASS inverted orbit and clicked pivot;""")
+Path('work/check_runtime_v2.mjs').write_text(s,encoding='utf-8')

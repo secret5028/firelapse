@@ -1,0 +1,10 @@
+{
+  "version": "cad-core-v14",
+  "installed": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱",
+  "backup": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\개발\\backups\\cad-core-v14-20261014-173106",
+  "status": "installed",
+  "template_sha256": "53f89c5ab37341e30ef29ceeddb14e2fcb6bd207d48f3d729388b053d12223d3",
+  "current_job": "d018b4bb75da4475b1fd75447603c1a0",
+  "restart_required": false,
+  "source_geometry_changed": false
+}

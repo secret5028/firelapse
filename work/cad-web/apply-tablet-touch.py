@@ -1,0 +1,8 @@
+from pathlib import Path
+p=Path('work/prepare_local.py');s=p.read_text('utf8').replace("Path('work/elevator-display.js').read_text('utf-8')", "Path('work/touch-view.js').read_text('utf-8')+'\\n'+Path('work/elevator-display.js').read_text('utf-8')");p.write_text(s,'utf8')
+p=Path('work/folder_review.html');s=p.read_text('utf8');needle='function mesh(a,b,y,h,color,opacity=1)'
+code="installTabletGestures(cv,{pan(dx,dy){const k=2*radius*Math.tan(camera.fov*Math.PI/360)/Math.max(1,cv.clientHeight);target.addScaledVector(new T.Vector3().setFromMatrixColumn(camera.matrixWorld,0),-dx*k).addScaledVector(new T.Vector3().setFromMatrixColumn(camera.matrixWorld,1),dy*k);cameraUpdate();},rotate(dx,dy){theta-=dx*.008;phi=Math.max(.02,Math.min(1.5,phi-dy*.008));cameraUpdate();},zoom(r){radius=Math.max(2,Math.min(2000,radius*r));cameraUpdate();}});"
+assert needle in s;s=s.replace(needle,code+needle,1);p.write_text(s,'utf8')
+p=Path('work/museum/viewer.js');s=p.read_text('utf8');s+= '\n'+Path('work/touch-view.js').read_text('utf8')+"\ninstallTabletGestures(canvas,{pan(dx,dy){target.addScaledVector(V().setFromMatrixColumn(camera.matrix,0),-dx*radius*.0015);target.addScaledVector(V().setFromMatrixColumn(camera.matrix,1),dy*radius*.0015);cam();},rotate(dx,dy){theta-=dx*.006;phi=Math.max(.015,Math.min(1.55,phi-dy*.006));cam();},zoom(r){radius=Math.max(8,Math.min(340,radius*r));cam();}});\n";p.write_text(s,'utf8')
+p=Path('work/review-layout.js');s=p.read_text('utf8');s=s.replace('보기 조작 안내</summary>','보기 조작 안내</summary><p>터치: 한 손가락 회전 · 두 손가락 드래그 이동 · 두 손가락 벌리기/오므리기 확대·축소</p>');p.write_text(s,'utf8')
+p=Path('work/museum/package.py');s=p.read_text('utf8').replace('드래그 회전 · Shift 이동 · 휠 확대','드래그 회전 · Shift 이동 · 휠 확대 / 터치: 한 손가락 회전 · 두 손가락 이동·확대');p.write_text(s,'utf8')

@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAD 3D 층 모델</title>
+<style>
+:root{--bg:#f4f4f2;--fg:#1d1d1f;--pn:#ffffffee;--ln:#d6d6d2;--ac:#2b6cb0}
+@media (prefers-color-scheme:dark){:root{--bg:#17181a;--fg:#e8e8e6;--pn:#222428ee;--ln:#3a3c40;--ac:#7fb0e6}}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px/1.4 system-ui,"Malgun Gothic",sans-serif}
+#v{position:fixed;inset:0}
+#p{position:fixed;top:10px;left:10px;width:270px;max-height:calc(100% - 20px);overflow:auto;background:var(--pn);border:1px solid var(--ln);border-radius:8px;padding:10px 12px;box-sizing:border-box}
+#p h1{font-size:14px;margin:0 0 6px}
+#p h2{font-size:12px;margin:10px 0 4px;color:var(--ac)}
+#p label{display:flex;gap:6px;align-items:center;margin:2px 0}
+#p input[type=range]{flex:1}
+#p button{margin:4px 4px 0 0;padding:4px 8px;border:1px solid var(--ln);background:transparent;color:var(--fg);border-radius:4px;cursor:pointer}
+.ck{font-size:11px;border-top:1px solid var(--ln);padding:3px 0}
+.lb{font-size:11px;padding:1px 4px;background:#0008;color:#fff;border-radius:3px;white-space:nowrap;pointer-events:none}
+.lg span{display:inline-block;width:10px;height:10px;margin-right:4px;vertical-align:middle;border-radius:2px}
+@media (max-width:600px){#p{width:calc(100% - 20px);max-height:40%}}
+</style></head><body>
+<div id="v"></div>
+<div id="p"><h1>2단계 · 3D 모델</h1><p><a href="plans.html">1단계 평면</a> · <a href="plans.html">층별 추출 결과</a></p><div id="info"></div>
+<div id="fz" style="display:none"><h2>경량 화재·연기 해석</h2>
+<div style="display:flex;gap:4px;flex-wrap:wrap"><button id="fzpick">🔥 화점 지정</button><button id="fzclr">해제</button>
+<span style="font-size:12px">MC <input id="fzn" type=number value=40 min=10 max=300 step=10 style="width:52px">회</span><button id="fzmc">확률 계산</button></div>
+<div id="fzst" style="font-size:12px;margin:4px 0;color:#d9822b"></div>
+<select id="fzm" style="width:100%"><option value="sim">지정 화점 해석(시간 진행)</option><option value="rep">MC 대표 표본(시간 진행)</option><option value="worst">MC 최악 표본(시간 진행)</option>
+<option value="p_untenable">확률: 도착 시 피난 한계 초과</option><option value="p_fgi">확률: 도착 시 FGI(연기 폭발) 잠재</option>
+<option value="p_backdraft_any">확률: 도착 전 백드래프트 조건 도달</option><option value="p_flashover">확률: 도착 전 플래시오버</option><option value="p_fire">발화 실 표본 빈도</option></select>
+<div id="fzt" style="margin-top:6px"><input id="fzs" type=range min=0 max=1 step=1 value=0 style="width:100%"><button id="fzp">▶ 재생</button> <span id="fzv"></span></div>
+<div id="fzi" style="font-size:12px;line-height:1.5;opacity:.9"></div>
+<div id="fzl" style="font-size:11px;margin-top:4px"></div></div>
+
+<h2>층 보기</h2><div id="fbtn" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+<label><input id="xr" type="checkbox"> 투시(벽 반투명·깊이 무시, 내부 보기)</label>
+<label><input id="above" type="checkbox"> 선택 층 위 층도 표시</label>
+<div style="font-size:11px;opacity:.75">더블클릭: 그 지점으로 시점 중심 이동</div>
+<h2>층</h2><div id="fl"></div>
+<h2>보기</h2>
+<label>층 띄우기 <input id="ex" type="range" min="0" max="12" step="0.5" value="0"></label>
+<label>벽 투명도 <input id="op" type="range" min="0.15" max="1" step="0.05" value="1"></label>
+<label><input id="rl" type="checkbox" checked> 실 이름</label>
+<label><input id="gl" type="checkbox" checked> 유리</label>
+<label><input id="cl" type="checkbox"> 반자(천장)</label>
+<div class="lg"><span style="background:#8a8a8a"></span>벽 <span style="background:#3fa34d"></span>문 위 <span style="background:#e08a1e"></span>창 아래·위 <span style="background:#7fc8ff"></span>유리 <span style="background:#8b5a2b"></span>상부 보</div>
+<button id="obj">OBJ 저장</button><button id="save">천장 설정 저장</button><button id="top">위에서</button><button id="iso">비스듬히</button>
+<h2>문 개방률 (연기 모델 입력)</h2>
+<label><input id="dl" type="checkbox" checked> 문짝 표시</label>
+<label>전체 <input id="dall" type="range" min="0" max="100" step="5" value="0"><span id="dallv">0%</span></label>
+<div id="dsel" style="font-size:12px;opacity:.85">문짝을 클릭하면 개별 조절</div>
+<label id="donel" style="display:none">선택 문 <input id="done" type="range" min="0" max="100" step="5" value="0"><span id="donev">0%</span></label>
+<label id="ddirl" style="display:none"><input id="ddir" type="checkbox"> 반대쪽으로 열기(양방향문)</label>
+<button id="dsave">문 설정 저장</button><button id="dload">문 설정 불러오기</button><input id="dfile" type="file" accept=".json" style="display:none">
+<div class="lg"><span style="background:#2e7d32"></span>문짝(경첩 기준 회전, 도면 호 방향) <span style="background:#c62828"></span>선택</div>
+<h2>창 개방·파손률 (시나리오 변수)</h2>
+<label>전체 <input id="wall" type="range" min="0" max="100" step="5" value="0"><span id="wallv">0%</span></label>
+<div id="wsel" style="font-size:12px;opacity:.85">창을 클릭하면 개별 조절</div>
+<label id="wonel" style="display:none">선택 창 <input id="wone" type="range" min="0" max="100" step="5" value="0"><span id="wonev">0%</span></label>
+<button id="wsave">창 설정 저장</button>
+<h2>수직 공간</h2>
+<label><input id="sh" type="checkbox" checked> 계단·승강기·램프 표시</label>
+<label><input id="show_stair" type="checkbox" checked> 계단·계단참</label><label><input id="show_elev" type="checkbox" checked> 승강기·승강장 문</label><label><input id="show_ramp" type="checkbox" checked> 차량 램프</label><label><input id="show_anchor" type="checkbox"> 원본 대조 경계(빨강: 기호 / 청록: 실)</label><label>램프 경사 <input id="ramp_slope" type="range" min="0" max="25" step="1" value="10"><span id="ramp_value">10%</span></label><label><input id="ramp_reverse" type="checkbox"> 램프 상승 방향 반전</label><p style="font-size:11px">램프는 확인된 곡선 구간입니다. 경사·상승 방향은 표시용 가정이며 상단 연결층은 미확정입니다.</p><h2>검사(공리)</h2><div id="ck"></div></div>
+<script type="importmap">{"imports":{"three":"/cad-assets/three.module.js","three/addons/":"/cad-assets/addons/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {CSS2DRenderer,CSS2DObject} from 'three/addons/renderers/CSS2DRenderer.js';
+import {OBJExporter} from 'three/addons/exporters/OBJExporter.js';
+const B=await (await fetch('building.json')).json();
+function ceilStateDefault(f){const r=f.ceil_rule||{};return Math.min(f.h-0.3,Math.max(r.min_h||2.4,f.h-(r.plenum||1.0)))}
+const el=document.getElementById('v');
+const R=new THREE.WebGLRenderer({antialias:true});R.setPixelRatio(devicePixelRatio);el.appendChild(R.domElement);
+const L2=new CSS2DRenderer();L2.domElement.style.cssText='position:absolute;top:0;pointer-events:none';el.appendChild(L2.domElement);
+const S=new THREE.Scene();
+const dark=matchMedia('(prefers-color-scheme:dark)').matches;S.background=new THREE.Color(dark?0x17181a:0xf4f4f2);
+const C=new THREE.PerspectiveCamera(45,1,0.1,2000);C.up.set(0,0,1);
+const O=new OrbitControls(C,R.domElement);
+S.add(new THREE.HemisphereLight(0xffffff,0x666666,1.6));const dl=new THREE.DirectionalLight(0xffffff,1.4);dl.position.set(40,-60,90);S.add(dl);
+const mat={wall:new THREE.MeshLambertMaterial({color:0x8a8a8a,transparent:true}),door_head:new THREE.MeshLambertMaterial({color:0x3fa34d,transparent:true}),
+win_low:new THREE.MeshLambertMaterial({color:0xe08a1e,transparent:true}),win_head:new THREE.MeshLambertMaterial({color:0xe08a1e,transparent:true}),
+glass:new THREE.MeshLambertMaterial({color:0x7fc8ff,transparent:true,opacity:0.35,depthWrite:false}),slab:new THREE.MeshLambertMaterial({color:0xcfcac0}),beam:new THREE.MeshLambertMaterial({color:0x8b5a2b,transparent:true}),ceil:new THREE.MeshLambertMaterial({color:0xf2e6b8,transparent:true,opacity:0.35,depthWrite:false,side:THREE.DoubleSide})};
+const tagCol={stair:0xe06666,elev:0x5b8def};
+function shp(p){const s=new THREE.Shape(p.o.map(([x,y])=>new THREE.Vector2(x,y)));for(const h of p.h){s.holes.push(new THREE.Path(h.map(([x,y])=>new THREE.Vector2(x,y))))}return s}
+function ext(polys,z0,z1,m){if(!polys.length||z1<=z0)return null;const g=new THREE.ExtrudeGeometry(polys.map(shp),{depth:z1-z0,bevelEnabled:false,curveSegments:1});g.translate(0,0,z0);return new THREE.Mesh(g,m)}
+const groups=[],labels=[],glassM=[],ceilM=[],ceilState=[];let maxX=0,maxY=0,maxZ=0;
+B.floors.forEach((f,i)=>{const G=new THREE.Group();G.userData.z=f.z;G.position.z=f.z;G.name=f.name;
+  const sl=ext(f.render_slab||f.slab,-0.2,0,mat.slab);if(sl){sl.name=f.name+'_slab';G.add(sl)}
+  const beamMs=[];for(const b of f.bands){const m=ext(b.polys,b.z0,b.z1,mat[b.kind]);if(m){m.name=f.name+'_'+b.kind;G.add(m);if(b.kind==='beam')beamMs.push(m)}}
+  // 천장 마감(반자): 기본은 규칙값, 층별로 켜기/끄기·높이 변경. 보는 반자 없거나 반자보다 아래로 내려올 때만 보임
+  const st={on:f.ceil_h!=null,h:f.ceil_h!=null?f.ceil_h:Math.max((f.ceil_rule&&f.ceil_rule.min_h)||2.4,f.h-((f.ceil_rule&&f.ceil_rule.plenum)||1.0)),mesh:null,beams:[]};
+  if(f.ceiling&&f.ceiling.length){const c=ext(f.render_ceiling||f.ceiling,0,0.03,mat.ceil);if(c){c.name=f.name+'_ceiling';G.add(c);ceilM.push(c);st.mesh=c}}
+  st.beams=beamMs;ceilState.push(st);
+  // 창: 종류 구분 없이 단일 처리(층별 창대·창머리 높이). 창마다 개방·파손률 변수(0%=온전, 100%=완전 개방·파손)
+  for(const o of f.openings){if(o.kind!=='window'&&o.kind!=='window_inner')continue;
+    const ps=o.polys.filter(p=>p.length>=3).map(p=>({o:p,h:[]}));const g=ext(ps,f.glass.z0,f.glass.z1,mat.glass.clone());
+    if(g){g.name=f.name+'_'+o.id;G.add(g);glassM.push(g);g.userData.win={floor:f.name,id:o.id,pct:0,mesh:g}}}
+  for(const r of f.rooms){const tg=r.tags.find(t=>tagCol[t]);const c=tg?tagCol[tg]:new THREE.Color().setHSL((parseInt(r.id.slice(1))*0.137)%1,0.45,dark?0.35:0.8).getHex();
+    const geo=new THREE.ShapeGeometry((r.render_polys||r.polys).map(shp));geo.translate(0,0,0.02);const m=new THREE.Mesh(geo,new THREE.MeshLambertMaterial({color:c,side:THREE.DoubleSide}));m.name=f.name+'_'+r.id;G.add(m);
+    if(!(r.names&&r.names.length)&&r.area<8)continue;
+    const d=document.createElement('div');d.className='lb';d.textContent=(r.names&&r.names.length?r.names[r.names.length>1?1:0]:r.id)+' '+r.area+'㎡';
+    const o=new CSS2DObject(d);o.position.set(r.c[0],r.c[1],0.3);G.add(o);labels.push(o)}
+  for(const p of f.slab)for(const[x,y]of p.o){maxX=Math.max(maxX,x);maxY=Math.max(maxY,y)}maxZ=Math.max(maxZ,f.z+f.h);
+  S.add(G);groups.push(G);
+  const lb=document.createElement('label');lb.innerHTML=`<input type=checkbox checked> ${f.name} (${f.use}, 바닥 ${f.z.toFixed(2)}m, 층고 ${f.h.toFixed(2)}m, 반자 ${f.ceil_h?f.ceil_h.toFixed(2)+'m':'없음'}, 보 ${({exposed:'노출',above_ceiling:'반자 위(숨김)',none:'-'})[f.beams]||'-'}, 실 ${f.rooms.length}, 개구부 ${f.openings.length})`;
+  lb.querySelector('input').onchange=e=>{G.visible=e.target.checked};document.getElementById('fl').appendChild(lb);
+  const cc=document.createElement('label');cc.style.paddingLeft='18px';cc.innerHTML=`<input type=checkbox ${f.ceil_h!=null?'checked':''}> 천장 마감 <input type=number step=0.1 min=2.1 max=${f.h.toFixed(1)} value=${(f.ceil_h!=null?f.ceil_h:0).toFixed(2)} style="width:60px">m`;
+  const [cb,ci]=cc.querySelectorAll('input');const k=i;
+  if(f.ceil_h==null)ci.value=(Math.round(ceilStateDefault(f)*100)/100).toFixed(2);
+  cb.onchange=()=>{ceilState[k].on=cb.checked;applyCeil()};ci.oninput=()=>{ceilState[k].h=Math.min(f.h-0.05,Math.max(2.1,parseFloat(ci.value)||2.1));applyCeil()};
+  document.getElementById('fl').appendChild(cc);
+  const ck=document.getElementById('ck');for(const c of f.checks){const d=document.createElement('div');d.className='ck';d.textContent=`${f.name} ${c.rule} ${c.id||''} ${c.note||''}`;ck.appendChild(d)}});
+// ---- 문짝: 경첩 기준, 도면 호 방향으로 회전. 0%=닫힘, 100%=도면에 그려진 열린 위치 ----
+const leafMat=new THREE.MeshLambertMaterial({color:0x2e7d32}),leafSel=new THREE.MeshLambertMaterial({color:0xc62828});
+const leaves=[];
+const ang=(a,b)=>Math.atan2(b[1]-a[1],b[0]-a[0]);
+function dAng(a,b){let d=b-a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d}
+function swingGuidePoints(L){const c=ang(L.hinge,L.closed),o=ang(L.hinge,L.open),start=L.open2?o:c;
+  const span=L.open2?dAng(o,c)+dAng(c,ang(L.hinge,L.open2)):dAng(c,o);
+  return Array.from({length:49},(_,i)=>new THREE.Vector3(L.hinge[0]+L.r*Math.cos(start+span*i/48),L.hinge[1]+L.r*Math.sin(start+span*i/48),0.035))}
+B.floors.forEach((f,i)=>{const G=groups[i];for(const o of f.openings){(o.leaves||[]).forEach((L,j)=>{
+  const w=L.r,h=Math.max(0.5,(o.door_h||f.door_h||2.1)-0.02),t=0.045;
+  const piv=new THREE.Group();piv.position.set(L.hinge[0],L.hinge[1],0.01);
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,t,h),leafMat);m.position.set(w/2,0,h/2);piv.add(m);G.add(piv);
+  const a0=ang(L.hinge,L.closed),a1=ang(L.hinge,L.open),a2=L.open2?ang(L.hinge,L.open2):null;
+  const guide=new THREE.Line(new THREE.BufferGeometry().setFromPoints(swingGuidePoints(L)),new THREE.LineBasicMaterial({color:0x198346}));G.add(guide);
+  const st={floor:f.name,id:o.id,j,kind:L.kind,piv,guide,mesh:m,a0,d1:dAng(a0,a1),d2:a2==null?null:dAng(a0,a2),pct:0,cur:0,rev:false,swing_into:o.swing_into};
+  m.userData.leaf=st;leaves.push(st)})}});
+function leafTarget(s){const d=(s.rev&&s.d2!=null)?s.d2:s.d1;return s.a0+d*s.pct/100}
+leaves.forEach(s=>{s.cur=leafTarget(s);s.piv.rotation.z=s.cur});
+let selLeaf=null;
+function pick(e){const r=R.domElement.getBoundingClientRect();const m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+  const rc=new THREE.Raycaster();rc.setFromCamera(m,C);const hit=rc.intersectObjects(leaves.map(s=>s.mesh).filter(x=>x.visible&&x.parent.parent.visible),false)[0];
+  if(selLeaf)selLeaf.mesh.material=leafMat;selLeaf=hit?hit.object.userData.leaf:null;
+  const one=document.getElementById('done'),l1=document.getElementById('donel'),l2=document.getElementById('ddirl');
+  if(selLeaf){selLeaf.mesh.material=leafSel;l1.style.display='';l2.style.display=selLeaf.d2!=null?'':'none';one.value=selLeaf.pct;document.getElementById('donev').textContent=selLeaf.pct+'%';document.getElementById('ddir').checked=selLeaf.rev;
+    document.getElementById('dsel').textContent=`${selLeaf.floor} ${selLeaf.id} 문짝${selLeaf.j+1} · ${selLeaf.kind==='double_acting'?'양방향문':'여닫이'} · 열리는 쪽 ${selLeaf.swing_into||'?'}`}
+  else{l1.style.display='none';l2.style.display='none';document.getElementById('dsel').textContent='문짝을 클릭하면 개별 조절'}}
+let down=null;R.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
+R.domElement.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<4)pick(e)});
+document.getElementById('dall').oninput=e=>{const p=+e.target.value;document.getElementById('dallv').textContent=p+'%';leaves.forEach(s=>s.pct=p);if(selLeaf){document.getElementById('done').value=p;document.getElementById('donev').textContent=p+'%'}};
+document.getElementById('done').oninput=e=>{if(!selLeaf)return;const p=+e.target.value;document.getElementById('donev').textContent=p+'%';
+  // 양개문: 짝 문짝도 같은 값
+  leaves.filter(s=>s.floor===selLeaf.floor&&s.id===selLeaf.id).forEach(s=>s.pct=p)};
+document.getElementById('ddir').onchange=e=>{if(selLeaf)leaves.filter(s=>s.floor===selLeaf.floor&&s.id===selLeaf.id).forEach(s=>s.rev=e.target.checked)};
+document.getElementById('dl').onchange=e=>leaves.forEach(s=>{s.piv.visible=e.target.checked;s.guide.visible=e.target.checked});
+document.getElementById('dsave').onclick=()=>{const o={};leaves.forEach(s=>{o[s.floor]=o[s.floor]||{};o[s.floor][s.id]={open_pct:s.pct,reverse:s.rev,kind:s.kind,swing_into:s.swing_into}});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:'application/json'}));a.download='door_settings.json';a.click()};
+document.getElementById('dload').onclick=()=>document.getElementById('dfile').click();
+document.getElementById('dfile').onchange=e=>{const fr=new FileReader();fr.onload=()=>{try{const o=JSON.parse(fr.result);leaves.forEach(s=>{const v=o[s.floor]&&o[s.floor][s.id];if(v){s.pct=+v.open_pct||0;s.rev=!!v.reverse}})}catch(_){}};fr.readAsText(e.target.files[0])};
+// ---- 창 개방·파손률: 유리 불투명도·색으로 표시, 저장(연기 모델 입력) ----
+const wins=glassM.map(m=>m.userData.win).filter(Boolean);
+function paintWin(w){const p=w.pct/100;w.mesh.material.opacity=0.35*(1-p)+0.05;w.mesh.material.color.setHex(p>0?0xff7a59:0x7fc8ff)}
+let selWin=null;
+document.getElementById('wall').oninput=e=>{const p=+e.target.value;document.getElementById('wallv').textContent=p+'%';wins.forEach(w=>{w.pct=p;paintWin(w)})};
+document.getElementById('wone').oninput=e=>{if(!selWin)return;selWin.pct=+e.target.value;document.getElementById('wonev').textContent=selWin.pct+'%';paintWin(selWin)};
+document.getElementById('wsave').onclick=()=>{const o={};wins.forEach(w=>{o[w.floor]=o[w.floor]||{};o[w.floor][w.id]={open_break_pct:w.pct}});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:'application/json'}));a.download='window_settings.json';a.click()};
+R.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>=4||selLeaf)return;
+  const r=R.domElement.getBoundingClientRect();const m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+  const rc=new THREE.Raycaster();rc.setFromCamera(m,C);const hit=rc.intersectObjects(wins.map(w=>w.mesh).filter(x=>x.visible&&x.parent.visible),false)[0];
+  selWin=hit?hit.object.userData.win:null;document.getElementById('wonel').style.display=selWin?'':'none';
+  document.getElementById('wsel').textContent=selWin?`${selWin.floor} ${selWin.id}`:'창을 클릭하면 개별 조절';if(selWin){document.getElementById('wone').value=selWin.pct;document.getElementById('wonev').textContent=selWin.pct+'%'}});
+// Existing croquis UI conventions, adapted from Y-up to this CAD viewer's Z-up.
+// Input vertices already share the building coordinate frame; never recenter.
+function addTransportGeometry(T,B,groups,extrude){
+ const roots=[],ramps=[];
+ const mats={stair:new T.MeshLambertMaterial({color:0xe5c35a,side:T.DoubleSide}),elev:new T.MeshLambertMaterial({color:0xffdf89,side:T.DoubleSide}),ramp:new T.MeshLambertMaterial({color:0xc59661,side:T.DoubleSide})};
+ function root(i,kind){const g=new T.Group();g.name=B.floors[i].name+'_'+kind;g.userData.transportKind=kind;g.userData.floorIndex=i;groups[i].add(g);roots.push(g);return g;}
+ function line(g,points,color,closed=false){const geo=new T.BufferGeometry().setFromPoints(points.map(p=>new T.Vector3(...p)));const obj=new (closed?T.LineLoop:T.Line)(geo,new T.LineBasicMaterial({color}));g.add(obj);return obj;}
+ function box(g,w,d,h,x,y,z,color){const m=new T.Mesh(new T.BoxGeometry(w,d,h),new T.MeshLambertMaterial({color}));m.position.set(x,y,z);g.add(m);return m;}
+ B.floors.forEach((f,i)=>{
+  const stairs=root(i,'stair'),elev=root(i,'elev'),debug=root(i,'anchor'),road=root(i,'ramp');debug.visible=false;
+  for(const c of f.transport||[]){
+   for(const p of c.anchor)line(debug,p.o.map(([x,y])=>[x,y,.07]),0xe34d59,true);
+   if(c.room_region)for(const p of c.room_region)line(debug,p.o.map(([x,y])=>[x,y,.08]),0x008984,true);
+   if(c.kind==='stair'){
+    for(const step of c.meshes){const m=extrude(step.polys,step.z0,step.z1,mats.stair);if(m){m.name=f.name+'_'+c.id+'_step';stairs.add(m);}}
+    if(!c.meshes.length)for(const p of c.region)line(stairs,p.o.map(([x,y])=>[x,y,.08]),c.connected?0xe5c35a:0x999999,true);
+   }else{
+    const pts=c.anchor[0].o,xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),cx=(Math.min(...xs)+Math.max(...xs))/2,cy=(Math.min(...ys)+Math.max(...ys))/2;
+    // Floor marker indicates position, rather than inventing a cabin at every floor.
+    line(elev,[[cx-.45,cy,.12],[cx,cy-.45,.12],[cx+.45,cy,.12],[cx,cy+.45,.12]],0xb78a16,true);
+    for(const p of c.region){line(elev,p.o.map(([x,y])=>[x,y,.04]),0x8b70ba,true);for(const [x,y] of p.o)line(elev,[[x,y,0],[x,y,f.h]],0xc5b9d8);}
+    for(const id of c.door_ids||[]){const o=f.openings.find(o=>o.id===id);if(!o)continue;
+     const p=o.geometry_polys?.[0]?.o||o.polys[0];let a=p[0],b=p[1],len=0;
+     p.forEach((q,k)=>{const r=p[(k+1)%p.length],d=Math.hypot(r[0]-q[0],r[1]-q[1]);if(d>len){len=d;a=q;b=r;}});
+     const g=new T.Group();g.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,0);g.rotation.z=Math.atan2(b[1]-a[1],b[0]-a[0]);elev.add(g);const h=o.door_h||2.1;
+     box(g,.08,.16,h,-len/2,0,h/2,0xb68a13);box(g,.08,.16,h,len/2,0,h/2,0xb68a13);box(g,len+.08,.16,.08,0,0,h,0xb68a13);
+     for(const side of [-1,1])box(g,Math.max(.05,len/2-.02),.045,h-.08,side*len/4,0,(h-.08)/2,0xffe7a1);
+     box(g,.014,.055,h-.08,0,-.025,(h-.08)/2,0x927019);
+    }
+   }
+  }
+  for(const r of f.model_ramps||[]){
+   const vertices=[],N=Math.min(r.inner.length,r.outer.length);
+   for(let k=0;k<N-1;k++)for(const [side,j] of [[0,k],[1,k],[1,k+1],[0,k],[1,k+1],[0,k+1]]){const q=side?r.outer[j]:r.inner[j];vertices.push(q[0],q[1],0);}
+   const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));const mesh=new T.Mesh(geo,mats.ramp);road.add(mesh);
+   const edges=[];for(const path of [r.inner,r.outer])edges.push(line(road,path.map(q=>[...q,0]),0x845528));
+   ramps.push({data:r,geo,edges,N});
+  }
+ });
+ function slope(percent,reverse=false){for(const r of ramps){const a=r.geo.attributes.position;let index=0;const rise=r.data.length_m*percent/100;
+  for(let k=0;k<r.N-1;k++)for(const j of [k,k,k+1,k,k+1,k+1])a.setZ(index++,.035+rise*(reverse?1-j/(r.N-1):j/(r.N-1)));
+  a.needsUpdate=true;r.geo.computeVertexNormals();r.geo.computeBoundingBox();r.geo.computeBoundingSphere();
+  r.edges.forEach(e=>{const a=e.geometry.attributes.position;for(let j=0;j<r.N;j++)a.setZ(j,.06+rise*(reverse?1-j/(r.N-1):j/(r.N-1)));a.needsUpdate=true;e.geometry.computeBoundingSphere();});
+ }}
+ slope(10);return {roots,ramps,slope};
+}
+
+
+const transport=addTransportGeometry(THREE,B,groups,ext);
+function syncTransport(){const master=document.getElementById('sh').checked,si=B.floors.findIndex(f=>f.name===selFloor),above=document.getElementById('above').checked;
+ for(const g of transport.roots){const fi=g.userData.floorIndex,kind=g.userData.transportKind,show=selFloor==='all'||fi===si||(above&&fi>si);g.visible=show&&master&&document.getElementById('show_'+kind).checked;}}
+document.getElementById('sh').onchange=syncTransport;
+for(const id of ['stair','elev','ramp','anchor'])document.getElementById('show_'+id).onchange=syncTransport;
+function rampSlope(){const p=+document.getElementById('ramp_slope').value;document.getElementById('ramp_value').textContent=p+'%';transport.slope(p,document.getElementById('ramp_reverse').checked);}
+document.getElementById('ramp_slope').oninput=rampSlope;document.getElementById('ramp_reverse').onchange=rampSlope;
+
+function stepLeaves(){for(const s of leaves){const t=leafTarget(s);const d=t-s.cur;if(Math.abs(d)>1e-4){s.cur+=d*0.18;s.piv.rotation.z=s.cur}}}
+function applyCeil(){B.floors.forEach((f,i)=>{const s=ceilState[i];if(!s)return;if(s.mesh){s.mesh.position.z=s.h;s.mesh.visible=s.on&&document.getElementById('cl').checked}
+  const show=!s.on||(f.h-(f.beam_d||0.6))<s.h;s.beams.forEach(m=>m.visible=show)})}
+document.getElementById('save').onclick=()=>{const o={};B.floors.forEach((f,i)=>o[f.name]={ceiling:ceilState[i].on,ceil_h:ceilState[i].on?+ceilState[i].h.toFixed(2):null,floor_h:f.h});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o,null,1)],{type:'application/json'}));a.download='ceiling_settings.json';a.click()};
+applyCeil();
+if(B.floors.length>3){document.getElementById('rl').checked=false;labels.forEach(o=>o.visible=false)}
+document.getElementById('info').textContent=`층 높이 출처: ${B.levels_src}`;
+const ctr=new THREE.Vector3(maxX/2,maxY/2,maxZ/3);O.target.copy(ctr);
+function iso(){const D=Math.max(maxX,maxY,maxZ);C.position.set(ctr.x+D*0.75,ctr.y-D*1.5,ctr.z+D*1.15);O.update()}
+function top(){C.position.set(maxX/2,maxY/2-0.01,Math.max(maxX,maxY)*1.5);O.update()}iso();
+document.getElementById('iso').onclick=iso;document.getElementById('top').onclick=top;
+document.getElementById('ex').oninput=e=>groups.forEach((G,i)=>G.position.z=G.userData.z+i*parseFloat(e.target.value));
+// ---- 투시 보기(두산위브 CAD검토 방식): 벽 투명 + 깊이 기록 끔 + 앞면만 → 바깥 벽 너머 실내가 보임 ----
+const XR=['wall','door_head','win_low','win_head','beam'];
+function setXray(on){for(const k of XR){const m=mat[k];m.transparent=true;m.opacity=on?0.28:parseFloat(document.getElementById('op').value);m.depthWrite=!on;m.side=on?THREE.FrontSide:THREE.DoubleSide;m.needsUpdate=true}}
+document.getElementById('xr').onchange=e=>setXray(e.target.checked);
+// 층 단독 보기: 선택 층만(옵션: 위층 포함), 아래층은 바닥판만 흐리게 유지 → 층 위치 감각 유지
+let selFloor='all';
+function syncLabels(){const on=document.getElementById('rl').checked;const si=B.floors.findIndex(f=>f.name===selFloor);const above=document.getElementById('above').checked;
+  labels.forEach(o=>{const i=groups.indexOf(o.parent);o.visible=on&&(selFloor==='all'||i===si||(above&&i>si))})}
+function applyFloor(){const above=document.getElementById('above').checked;const si=B.floors.findIndex(f=>f.name===selFloor);
+  groups.forEach((G,i)=>{const show=selFloor==='all'||i===si||(above&&i>si);const slabOnly=selFloor!=='all'&&i<si;
+    G.visible=show||slabOnly;G.children.forEach(o=>{o.visible=show?true:o.name.endsWith('_slab')})});
+  syncLabels();applyCeil();syncTransport();
+  if(selFloor!=='all'){const f=B.floors[si];const dz=f.z+f.h/2-O.target.z;O.target.z+=dz;C.position.z+=dz;O.update()}}
+{const box=document.getElementById('fbtn');for(const n of ['all',...B.floors.map(f=>f.name)]){const b=document.createElement('button');b.textContent=n==='all'?'전체':n;b.style.cssText='padding:3px 7px;font-size:12px';
+  b.onclick=()=>{selFloor=n;[...box.children].forEach(x=>x.style.fontWeight=x===b?'700':'400');applyFloor()};box.appendChild(b)}}
+document.getElementById('above').onchange=applyFloor;
+R.domElement.addEventListener('dblclick',e=>{const r=R.domElement.getBoundingClientRect();const m=new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
+  const rc=new THREE.Raycaster();rc.setFromCamera(m,C);const hit=rc.intersectObjects(groups.filter(g=>g.visible),true).find(h=>h.object.visible);
+  if(hit){const d=hit.point.clone().sub(O.target);O.target.add(d);C.position.add(d);O.update()}});
+document.getElementById('op').oninput=e=>{for(const k of['wall','door_head','win_low','win_head','beam'])mat[k].opacity=parseFloat(e.target.value)};
+document.getElementById('rl').onchange=()=>syncLabels();
+document.getElementById('cl').onchange=()=>applyCeil();
+document.getElementById('gl').onchange=e=>glassM.forEach(o=>o.visible=e.target.checked);
+document.getElementById('obj').onclick=()=>{const t=new OBJExporter().parse(S);const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='building.obj';a.click()};
+// ---- 경량 화재 해석: 화점 지정(크로키 업 방식: 층 선택 → 바닥 클릭) → 로컬 서버(fire_server.py)가 해석 → 연기층 체적·불꽃 재생 ----
+const FIRE=/*__FIRE__*/null;const FIRE_LIVE=/*__LIVE__*/false;
+if(FIRE||FIRE_LIVE){document.getElementById('fz').style.display='';
+  const $=id=>document.getElementById(id);
+  const tcol=T=>{const s=[[20,0x9aa5b1],[60,0xf2d14b],[150,0xf29b38],[300,0xe8562a],[600,0xb3122e]];
+    if(T<=s[0][0])return new THREE.Color(s[0][1]);for(let k=1;k<s.length;k++)if(T<=s[k][0]){const u=(T-s[k-1][0])/(s[k][0]-s[k-1][0]);return new THREE.Color(s[k-1][1]).lerp(new THREE.Color(s[k][1]),u)}return new THREE.Color(s[s.length-1][1])};
+  const pcol=p=>new THREE.Color(0x2e7d32).lerp(new THREE.Color(0xf2d14b),Math.min(p*2,1)).lerp(new THREE.Color(0xc62828),Math.max(p*2-1,0));
+  const fmt=t=>`${Math.floor(t/60)}분 ${String(Math.round(t%60)).padStart(2,'0')}초`;
+  let SIM=null,MC=FIRE,curFloor=null,smoke={},fpt=null,picking=false,play=null;
+  // 층별 연기 체적 메시(필요할 때 생성)
+  function buildSmoke(fn){if(curFloor===fn)return;for(const k in smoke){const s=smoke[k];s.m.parent&&s.m.parent.remove(s.m);s.fl&&s.fl.parent.remove(s.fl);s.o&&s.o.parent.remove(s.o)}smoke={};curFloor=fn;
+    const fi=B.floors.findIndex(f=>f.name===fn);const f=B.floors[fi];const G=groups[fi];const ceil=f.ceil_h||f.h;
+    for(const r of f.rooms){const m=new THREE.Mesh(new THREE.ExtrudeGeometry(r.polys.map(shp),{depth:1,bevelEnabled:false,curveSegments:1}),new THREE.MeshLambertMaterial({transparent:true,opacity:.5,depthWrite:false}));
+      m.visible=false;G.add(m);const fl=new THREE.Mesh(new THREE.ShapeGeometry((r.render_polys||r.polys).map(shp)),new THREE.MeshBasicMaterial({transparent:true,opacity:.75,side:THREE.DoubleSide}));fl.position.z=0.04;fl.visible=false;G.add(fl);
+      const d=document.createElement('div');d.className='lb';d.style.fontWeight='700';const o=new CSS2DObject(d);o.position.set(r.c[0],r.c[1],1.2);o.visible=false;G.add(o);smoke[r.id]={m,fl,o,d,H:ceil}}
+    (B.shafts||[]).filter(s=>s.floors.includes(fn)).forEach((s,k)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(s.w,s.h,1),new THREE.MeshLambertMaterial({transparent:true,opacity:.45,depthWrite:false}));
+      m.position.set(s.x,s.y,0);m.visible=false;S.add(m);smoke['S'+k]={m,shaft:s,z0:s.z0,H:s.z1-s.z0}})}
+  // 불꽃: 원뿔 겹(가산 혼합) + 점광원, 높이 = Heskestad 화염 높이(해석값), 반자에 닿으면 천장 확산 원판
+  const flame=new THREE.Group();flame.visible=false;
+  const fm=c=>new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false,depthTest:false});
+  const cones=[[0xff3d00,1],[0xff8f00,.72],[0xffe082,.42]].map(([c,w])=>{const m=new THREE.Mesh(new THREE.ConeGeometry(.5*w,1,20,1,true),fm(c));m.rotation.x=Math.PI/2;m.userData.w=w;flame.add(m);return m});
+  const disc=new THREE.Mesh(new THREE.CircleGeometry(1,36),fm(0xff6d00));disc.visible=false;flame.add(disc);
+  const pl=new THREE.PointLight(0xff7a2a,0,12,1.5);flame.add(pl);flame.traverse(o=>o.renderOrder=999);
+  const pin=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,3,8),new THREE.MeshBasicMaterial({color:0xff3d00,depthTest:false}));pin.rotation.x=Math.PI/2;pin.position.z=1.5;pin.renderOrder=999;flame.add(pin);
+  let fL=0.4,fCeil=2.4;
+  function setFlame(L,ceil,hrr){fL=Math.max(L,hrr>0?0.25:0);fCeil=ceil;pin.visible=hrr<=0;pl.intensity=Math.min(hrr/150,40)}
+  (function tick(){requestAnimationFrame(tick);if(!flame.visible)return;const t=performance.now()/1000;const h=Math.min(fL,fCeil-0.02);
+    cones.forEach((m,i)=>{const fk=1+0.12*Math.sin(t*9+i*2.1)+0.06*Math.sin(t*23+i);const hh=Math.max(h*fk*(1-i*0.12),0.01);m.scale.set(1+0.25*h,hh,1+0.25*h);m.position.z=hh/2;m.visible=h>0.02});
+    const ext=fL-fCeil;disc.visible=ext>0;if(ext>0){const r=Math.min(0.5+ext,4)*(1+0.05*Math.sin(t*7));disc.scale.set(r,r,1);disc.position.z=fCeil-0.03}})();
+  function placeFlame(fn,x,y){const fi=B.floors.findIndex(f=>f.name===fn);flame.parent&&flame.parent.remove(flame);groups[fi].add(flame);flame.position.set(x,y,0.05);flame.visible=true;
+    const f=B.floors[fi];setFlame(0.4,f.ceil_h||f.h,0)}
+  // 실 판정(점-다각형)
+  const inPoly=(x,y,ring)=>{let c=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const[xi,yi]=ring[i],[xj,yj]=ring[j];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))c=!c}return c};
+  const roomAt=(f,x,y)=>f.rooms.find(r=>r.polys.some(p=>inPoly(x,y,p.o)&&!p.h.some(h=>inPoly(x,y,h))));
+  const st=t=>$('fzst').textContent=t||'';
+  // 시계열 공통 그리기: R={t,hrr,flame_L,series:{id:{z,T}},fire,broken,ta?,sc?}
+  function hide(){for(const k in smoke){const s=smoke[k];s.m.visible=false;if(s.fl)s.fl.visible=false;if(s.o)s.o.visible=false}}
+  function drawSeries(R,fn){buildSmoke(fn);$('fzt').style.display='';sl.max=R.t.length-1;if(+sl.value>+sl.max)sl.value=sl.max;const k=+sl.value;const t=R.t[k];
+    for(const id in R.series){const s=smoke[id];if(!s)continue;const z=Math.min(R.series[id].z[k],s.H),T=R.series[id].T[k];const d=s.H-z;
+      if(d<0.03)continue;s.m.material.color=tcol(T);s.m.material.opacity=Math.min(.25+T/400,.8);s.m.scale.z=d;s.m.position.z=s.shaft?s.z0+z+d/2:z;s.m.visible=true;
+      if(s.o&&(T>25||z<1.8)){s.d.textContent=`${Math.round(T)}℃ · ${z.toFixed(1)}m`;s.o.visible=true}}
+    const fi=R.fire;if(fi&&fi.point){if(!flame.visible||flame.parent!==groups[B.floors.findIndex(f=>f.name===fn)])placeFlame(fn,fi.point[0],fi.point[1]);const f=B.floors.find(f=>f.name===fn);setFlame(R.flame_L?R.flame_L[k]:0.5,f.ceil_h||f.h,R.hrr[k])}
+    $('fzv').textContent=`발화 후 ${fmt(t)}${R.ta&&t>=R.ta?' (도착 후)':''}`;
+    let h='';if(fi)h+=`발화 실 <b>${fi.name||fi.room}</b> · ${fi.label} (${fi.by==='name'?'실 이름':'층 용도'}, ${fi.basis||'<span style="color:#d9822b">근거 없음·임시값</span>'})<br>`+
+      `화재하중 <b>${Math.round(fi.qf_MJ)} MJ/㎡</b> × ${fi.area.toFixed(1)}㎡ · α ${fi.alpha.toFixed(4)} kW/s² · 최대 ${Math.round(fi.Qpk_kW)} kW · 화원 ${['','중앙','벽','','모서리'][fi.plume]||'-'}<br>`;
+    h+=`HRR <b>${Math.round(R.hrr[k])} kW</b> · 화염 높이 ${(R.flame_L?R.flame_L[k]:0).toFixed(1)} m`;
+    if(R.sc)h+=` · 신고 ${fmt(R.sc.t_report)} · 도착 <b>${fmt(R.ta)}</b><br>열린 문: ${Object.entries(R.sc.doors_open).map(([a,b])=>a+' '+Math.round(b)+'%').join(', ')||'없음'} · 열린·파손 창: ${Object.entries(R.sc.windows_open).map(([a,b])=>a+' '+Math.round(b)+'%').join(', ')||'없음'}`;
+    if(R.open)h+=`<br>열린 문: ${R.open.doors||'없음'} · 열린·파손 창: ${R.open.windows||'없음'}`;
+    h+=`<br>열파손 창: ${Object.keys(R.broken||{}).join(', ')||'없음'}`;
+    $('fzi').innerHTML=h;
+    $('fzl').innerHTML='연기층 색: <span style="color:#9aa5b1">■</span>20℃ <span style="color:#f2d14b">■</span>60 <span style="color:#f29b38">■</span>150 <span style="color:#e8562a">■</span>300 <span style="color:#b3122e">■</span>600℃+ · 라벨 = 상부 온도 · 연기층 경계 높이'}
+  const sl=$('fzs'),mode=$('fzm');
+  function draw(){hide();const md=mode.value;
+    if(md==='sim'){if(!SIM){$('fzt').style.display='none';$('fzi').innerHTML=FIRE_LIVE?'층을 고르고 <b>🔥 화점 지정</b> → 바닥 클릭':'화점 해석은 <code>python fire_server.py</code>로 열어야 합니다';$('fzl').innerHTML='';return}drawSeries(SIM,SIM.floor);return}
+    if(!MC){$('fzt').style.display='none';$('fzi').innerHTML='몬테카를로 결과 없음 — <b>확률 계산</b>';$('fzl').innerHTML='';return}
+    if(md==='rep'||md==='worst'){drawSeries(md==='rep'?MC.representative:MC.worst,MC.floor);return}
+    buildSmoke(MC.floor);$('fzt').style.display='none';
+    for(const id in MC.rooms){const s=smoke[id];if(!s||!s.fl)continue;const p=MC.rooms[id][md];s.fl.material.color=pcol(p);s.fl.visible=true;if(p>0){s.d.textContent=Math.round(p*100)+'%';s.o.visible=true}}
+    $('fzi').innerHTML=`몬테카를로 ${MC.n}회 · ${MC.floor} · 화점 ${MC.fire_point?MC.fire_point.map(v=>v.toFixed(1)).join(', ')+' ('+MC.fire_room_fixed+')':'무작위(면적 가중)'}<br>도착 시각 10/50/90% = ${MC.ta_q.map(fmt).join(' / ')}<br>최대 HRR 10/50/90% = ${MC.hrr_peak_q.map(x=>Math.round(x)+' kW').join(' / ')}`+
+      (MC.fire_room_risk?`<br>발화 실: 도착 전 플래시오버 <b>${Math.round(MC.fire_room_risk.p_flashover*100)}%</b> · 도착 시 백드래프트 조건 <b>${Math.round(MC.fire_room_risk.p_backdraft*100)}%</b>`:'');
+    $('fzl').innerHTML='<span style="color:#2e7d32">■</span>0% <span style="color:#f2d14b">■</span>50% <span style="color:#c62828">■</span>100%'}
+  mode.onchange=draw;sl.oninput=draw;
+  $('fzp').onclick=e=>{if(play){clearInterval(play);play=null;e.target.textContent='▶ 재생';return}e.target.textContent='■ 정지';play=setInterval(()=>{sl.value=(+sl.value+1)%(+sl.max+1);draw()},120)};
+  // 뷰어의 문 개방률·창 개방·파손률 그대로 입력
+  function openings(fn){const d={},w={};leaves.filter(s=>s.floor===fn).forEach(s=>d[s.id]=Math.max(d[s.id]||0,s.pct||0));wins.filter(x=>x.floor===fn).forEach(x=>w[x.id]=x.pct||0);return{doors:d,windows:w}}
+  async function runSim(){if(!FIRE_LIVE){st('로컬 서버가 아닙니다 — fire_server.py로 여세요');return}
+    const op=openings(fpt.floor);st(`해석 중… (${fpt.floor} ${fpt.room})`);const t0=performance.now();
+    try{const r=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({floor:fpt.floor,point:[fpt.x,fpt.y],doors:op.doors,windows:op.windows})});const R=await r.json();
+      if(R.error){st('오류: '+R.error);return}
+      R.series={};R.rooms.forEach(x=>R.series[x.id]={z:x.z_int,T:x.T_u});R.hrr=R.HRR_kW;R.broken=R.window_broken;
+      R.open={doors:Object.entries(op.doors).filter(([a,b])=>b>0).map(([a,b])=>a+' '+b+'%').join(', '),windows:Object.entries(op.windows).filter(([a,b])=>b>0).map(([a,b])=>a+' '+b+'%').join(', ')};
+      const ev=R.rooms.filter(x=>x.t_flashover!=null||x.t_untenable!=null).map(x=>`${x.name}: ${x.t_flashover!=null?'FO '+fmt(x.t_flashover)+' · ':''}피난한계 ${x.t_untenable!=null?fmt(x.t_untenable):'-'}`).slice(0,6);
+      SIM=R;mode.value='sim';sl.value=0;draw();st(`완료 ${((performance.now()-t0)/1000).toFixed(1)}s · `+ev.join(' / '))}catch(e){st('서버 응답 없음: '+e)}}
+  $('fzpick').onclick=()=>{if(selFloor==='all'){st('층 보기에서 층을 먼저 고르세요');return}picking=!picking;$('fzpick').style.fontWeight=picking?'700':'400';st(picking?`${selFloor} 바닥을 클릭하세요`:'')};
+  $('fzclr').onclick=()=>{fpt=null;SIM=null;flame.visible=false;picking=false;$('fzpick').style.fontWeight='400';hide();draw();st('')};
+  let pd=null;R.domElement.addEventListener('pointerdown',e=>{if(picking)pd=[e.clientX,e.clientY]},true);
+  R.domElement.addEventListener('pointerup',e=>{if(!picking||!pd||Math.hypot(e.clientX-pd[0],e.clientY-pd[1])>=4)return;e.stopImmediatePropagation();
+    const fi=B.floors.findIndex(f=>f.name===selFloor),f=B.floors[fi],G=groups[fi];const r=R.domElement.getBoundingClientRect();
+    const rc=new THREE.Raycaster();rc.setFromCamera(new THREE.Vector2((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1),C);
+    const p=new THREE.Vector3();if(!rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,0,1),-G.position.z),p)){st('바닥을 클릭하세요');return}
+    pickAt(f.name,p.x,p.y)},true);
+  function pickAt(fn,x,y){const f=B.floors.find(f=>f.name===fn);const rm=roomAt(f,x,y);if(!rm){st('실 안을 클릭하세요(벽·외부 제외)');return}
+    if(rm.tags.includes('stair')){st('계단은 화점으로 지정할 수 없습니다');return}
+    picking=false;$('fzpick').style.fontWeight='400';fpt={floor:fn,x:+x.toFixed(2),y:+y.toFixed(2),room:(rm.names[0]||rm.id)};placeFlame(fn,x,y);runSim()}
+  window.__firePick=pickAt;   // 시험·외부 연동용
+  $('fzmc').onclick=async()=>{if(!FIRE_LIVE){st('로컬 서버가 아닙니다');return}if(!fpt){st('화점을 먼저 지정하세요(무작위는 fire_mc.py)');return}
+    const n=+$('fzn').value;st(`몬테카를로 ${n}회 시작…`);
+    await fetch('/api/mc',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({floor:fpt.floor,point:[fpt.x,fpt.y],n})});
+    const poll=setInterval(async()=>{const s=await (await fetch('/api/mc')).json();if(s.error){clearInterval(poll);st('오류: '+s.error);return}
+      if(s.done){clearInterval(poll);MC=s.result;mode.value='p_untenable';draw();st(`몬테카를로 ${MC.n}회 완료`)}else st(`몬테카를로 ${s.k}/${s.n}…`)},2000)};
+  if(FIRE){selFloor=FIRE.floor;applyFloor();mode.value='rep'}
+  document.getElementById('xr').checked=true;setXray(true);
+  function focusFloor(fn){const fi=B.floors.findIndex(f=>f.name===fn),f=B.floors[fi];let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const p of f.slab)for(const[x,y]of p.o){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y)}
+   const c=new THREE.Vector3((x0+x1)/2,(y0+y1)/2,groups[fi].position.z+1.2),D=Math.max(x1-x0,y1-y0);O.target.copy(c);C.position.set(c.x+D*0.45,c.y-D*1.1,c.z+D*1.0);O.update()}
+  [...document.getElementById('fbtn').children].forEach(bt=>bt.addEventListener('click',()=>{if(selFloor!=='all')focusFloor(selFloor)}));
+  if(selFloor!=='all')focusFloor(selFloor);
+  draw()}
+function rs(){const w=innerWidth,h=innerHeight;R.setSize(w,h);L2.setSize(w,h);C.aspect=w/h;C.updateProjectionMatrix()}addEventListener('resize',rs);rs();
+(function loop(){requestAnimationFrame(loop);stepLeaves();O.update();R.render(S,C);L2.render(S,C)})();
+
+selFloor=B.floors[0].name;document.getElementById('xr').checked=true;setXray(true);applyFloor();syncTransport();
+</script></body></html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>원본·결과 대조 __TITLE__</title>
+<style>
+:root{--bg:#f3f3f1;--fg:#1c1c1e;--pn:#fff;--ln:#d4d4cf;--ac:#2b6cb0;--mk:#e0245e}
+@media (prefers-color-scheme:dark){:root{--bg:#18191b;--fg:#e8e8e6;--pn:#222428;--ln:#3a3c40;--ac:#7fb0e6}}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:13px/1.45 system-ui,"Malgun Gothic",sans-serif}
+#top{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--ln);background:var(--pn)}
+#top b{margin-right:8px}
+button{padding:4px 9px;border:1px solid var(--ln);background:transparent;color:var(--fg);border-radius:4px;cursor:pointer;font:inherit}
+button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.sep{width:1px;height:20px;background:var(--ln);margin:0 4px}
+#main{display:flex;height:calc(100% - 46px)}
+#stage{flex:1;position:relative;overflow:hidden;display:flex}
+.pane{flex:1;position:relative;overflow:hidden;background:#fff;border-right:1px solid var(--ln);cursor:grab}
+.pane .cap{position:absolute;left:6px;top:6px;z-index:5;background:#000a;color:#fff;padding:2px 6px;border-radius:3px;font-size:12px;pointer-events:none}
+.layer{position:absolute;left:0;top:0;transform-origin:0 0}
+.layer img{position:absolute;left:0;top:0;image-rendering:auto;user-select:none;-webkit-user-drag:none}
+.mk{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border:2px solid var(--mk);border-radius:50%;pointer-events:none}
+.mk.sel{border-width:4px;width:44px;height:44px;margin:-22px 0 0 -22px;box-shadow:0 0 0 3px #fff8}
+#side{width:330px;overflow:auto;border-left:1px solid var(--ln);background:var(--pn);padding:8px 10px}
+#side h3{font-size:12px;margin:10px 0 4px;color:var(--ac)}
+.lg div{display:flex;align-items:center;gap:6px;margin:1px 0}.lg i{display:inline-block;width:22px;height:8px;border-radius:2px}
+.it{padding:4px 2px;border-top:1px solid var(--ln);cursor:pointer;font-size:12px}.it:hover{background:#8881}.it.sel{background:#e0245e22}
+.it small{opacity:.7}
+#swipe{position:absolute;top:0;bottom:0;width:3px;background:var(--mk);z-index:6;cursor:ew-resize}
+@media (max-width:800px){#side{display:none}}
+</style></head><body>
+<div id="top"><b>원본·결과 대조 — __TITLE__</b><span id="tabs"></span><span class="sep"></span>
+<button data-m="side" class="on">나란히</button><button data-m="over">겹치기</button><button data-m="swipe">스와이프</button>
+<select id="rsel" style="display:none"><option value="p">결과: 레이어+공리</option><option value="g">결과: 세 번째 화면</option></select>
+<label>결과 투명도 <input id="op" type="range" min="0" max="1" step="0.05" value="0.55"></label>
+<label><input id="mkon" type="checkbox" checked> 표시점</label><button id="fit">전체</button></div>
+<div id="main"><div id="stage"></div>
+<div id="side">
+<div id="inf"></div>
+<h3>원본(CAD 선, 레이어 대응표 기준 색)</h3><div class="lg">
+<div><i style="background:#000"></i>벽</div><div><i style="background:#aa0000"></i>기둥</div><div><i style="background:#0078e6"></i>창</div>
+<div><i style="background:#00a000"></i>문</div><div><i style="background:#c800c8"></i>계단</div><div><i style="background:#00a0be"></i>승강기</div>
+<div><i style="background:#afafaf"></i>기타(분류 안 됨)</div><div><i style="background:#d7d7d7"></i>무시(가구·문자·치수 등)</div>
+<div><i style="background:repeating-linear-gradient(90deg,#ff8c00 0 5px,transparent 5px 10px)"></i>숨은선 벽·창(제외됨)</div></div>
+<h3>결과(처리 후)</h3><div class="lg">
+<div><i style="background:#3c3c3c"></i>벽(=외곽−실)</div><div><i style="background:linear-gradient(90deg,#d8c,#acd,#cda)"></i>실(무작위 색, Rn)</div>
+<div><i style="background:#00aa00"></i>문 개구부</div><div><i style="background:#00c8b4"></i>미닫이(창 레이어·양쪽 실)</div><div><i style="background:#008cff"></i>창 개구부</div>
+<div><i style="background:#ff8c00"></i>자동 보정 점(연장·자르기·스냅)</div><div><i style="border:2px solid red;height:10px;width:10px;border-radius:50%"></i>애매한 틈(표시만)</div>
+<div><i style="background:#96e696"></i>실 내부 문(칸막이 문)</div><div><i style="background:#00aa78"></i>승강기 문</div><div><i style="background:#78b4e6"></i>실내창·유리칸막이</div><div><i style="background:#c87878"></i>환기구 후보(지하 외곽)</div>
+<div><i style="background:#005a00;height:3px"></i>문짝(닫힌 상태) + 호(열리는 방향)</div><div><i style="background:#f0f"></i>× 문 양쪽 같은 영역</div><div><i style="border:2px solid #8b5a2b;height:6px"></i>상부 보(숨은선 띠, 반자 없을 때만 3D)</div></div>
+<h3>소방 심볼(세 번째 화면)</h3><div class="lg"><div><i style="border:2px solid #e60000;border-radius:50%;height:10px;width:10px"></i>감지기</div><div><i style="background:#009600;width:10px;height:10px"></i>피난구유도등(문 옆)</div><div><i style="border:2px solid #009600;width:10px;height:10px"></i>피난구 기호·통로 역할(문과 무관 위치)</div><div><i style="background:#005ae6;width:10px;height:10px;clip-path:polygon(50% 0,100% 100%,0 100%)"></i>통로유도등</div><div><i style="border:2px solid #ff8c00;width:10px;height:10px"></i>옥내소화전</div><div><i style="background:#e6c8aa;border:2px solid #a0643c"></i>덮인 반실내 공간(위층 바닥 아래 + 감지기)</div></div>
+<h3>표시점·검사 <small id="cnt"></small></h3><div id="list"></div></div></div>
+<script>
+const F=/*__DATA__*/null;
+let cur=0,mode='side',tf={s:1,x:0,y:0},selI=-1,swipeX=.5;
+const stage=document.getElementById('stage');
+const tabs=document.getElementById('tabs');
+F.forEach((f,i)=>{const b=document.createElement('button');b.textContent=f.name;b.onclick=()=>show(i);tabs.appendChild(b)});
+document.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{mode=b.dataset.m;document.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on',x===b));build()});
+document.getElementById('op').oninput=()=>apply();document.getElementById('mkon').onchange=()=>build();
+document.getElementById('fit').onclick=()=>{fit();apply()};
+function pane(cap,imgs){const p=document.createElement('div');p.className='pane';const c=document.createElement('div');c.className='cap';c.textContent=cap;p.appendChild(c);
+ const L=document.createElement('div');L.className='layer';imgs.forEach(([src,cls])=>{const im=new Image();im.src=src;im.className=cls||'';L.appendChild(im)});
+ if(document.getElementById('mkon').checked)F[cur].marks.forEach((m,i)=>{if(!m.p)return;const d=document.createElement('div');d.className='mk'+(i===selI?' sel':'');d.style.left=m.p[0]+'px';d.style.top=m.p[1]+'px';L.appendChild(d)});
+ p.appendChild(L);stage.appendChild(p);return p}
+function build(){stage.innerHTML='';const f=F[cur];
+ const R=(f.g&&document.getElementById('rsel').value==='g')?f.g:f.p;
+ if(mode==='side'){pane('원본 CAD',[[f.o]]);pane(f.g?'레이어+공리':'처리 결과',[[f.p]]);if(f.g)pane(f.gname||'형상(레이어 무관)',[[f.g]])}
+ else if(mode==='over'){pane('겹치기: 원본 위에 결과',[[f.o],[R,'top']])}
+ else{const p=pane('스와이프: 왼쪽 원본 | 오른쪽 결과',[[f.o],[R,'top']]);const s=document.createElement('div');s.id='swipe';p.appendChild(s);
+  s.onpointerdown=e=>{e.stopPropagation();s.setPointerCapture(e.pointerId);s.onpointermove=ev=>{const r=p.getBoundingClientRect();swipeX=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width));apply()};s.onpointerup=()=>s.onpointermove=null}}
+ stage.querySelectorAll('.pane').forEach(p=>{p.onwheel=e=>{e.preventDefault();const r=p.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,k=Math.exp(-e.deltaY*0.0015);
+   tf.x=mx-(mx-tf.x)*k;tf.y=my-(my-tf.y)*k;tf.s*=k;apply()};
+  p.onpointerdown=e=>{p.setPointerCapture(e.pointerId);const sx=e.clientX,sy=e.clientY,ox=tf.x,oy=tf.y;p.style.cursor='grabbing';
+   p.onpointermove=ev=>{tf.x=ox+ev.clientX-sx;tf.y=oy+ev.clientY-sy;apply()};p.onpointerup=()=>{p.onpointermove=null;p.style.cursor='grab'}}});
+ apply()}
+function apply(){const op=parseFloat(document.getElementById('op').value);
+ stage.querySelectorAll('.pane').forEach(p=>{const L=p.querySelector('.layer');L.style.transform=`translate(${tf.x}px,${tf.y}px) scale(${tf.s})`;
+  const t=L.querySelector('img.top');if(t){if(mode==='over'){t.style.opacity=op;t.style.clipPath='none'}else{t.style.opacity=1;const w=p.clientWidth;const cx=(swipeX*w-tf.x)/tf.s;t.style.clipPath=`inset(0 0 0 ${cx}px)`}}
+  const s=p.querySelector('#swipe');if(s)s.style.left=(swipeX*p.clientWidth-1)+'px'})}
+function fit(){const f=F[cur];const w=(mode==='side'?stage.clientWidth/(f.g?3:2):stage.clientWidth),h=stage.clientHeight;tf.s=Math.min(w/f.w,h/f.h)*0.98;tf.x=(w-f.w*tf.s)/2;tf.y=(h-f.h*tf.s)/2}
+function show(i){cur=i;selI=-1;[...tabs.children].forEach((b,j)=>b.classList.toggle('on',j===i));const f=F[i];
+ const I=f.info;document.getElementById('inf').innerHTML=`<b>${f.name}</b> <small>${f.src}</small><br>실 ${I.rooms} · 문 ${I.stats.doors_open} · 미닫이 ${I.stats.sliding||0} · 창 ${I.stats.windows} · 실내창 ${I.stats.windows_inner||0}<br>`+(f.fire?`소방: 감지기 ${f.fire.detector||0} · 피난구유도등 ${f.fire.exit_sign||0} · 통로유도등 ${f.fire.corridor_light||0} · 소화전 ${f.fire.hydrant||0}<br>`:'')+
+  (I.heal&&I.heal['형상_실']!==undefined?`<br>`:'')+(I.use?`용도 ${I.use} · 층고 ${I.h}m · 반자 ${I.ceil??'없음'}<br>정렬: ${I.align}<br>`:'')+`보정: ${Object.entries(I.heal).map(([k,v])=>k+' '+v).join(', ')}`;
+ const L=document.getElementById('list');L.innerHTML='';document.getElementById('cnt').textContent=f.marks.length+'건';
+ f.marks.forEach((m,j)=>{const d=document.createElement('div');d.className='it';d.innerHTML=`<b>${m.t}</b> <small>${m.d}</small>${m.p?'':' <small>(위치 없음)</small>'}`;
+  d.onclick=()=>{selI=j;[...L.children].forEach((x,k)=>x.classList.toggle('sel',k===j));if(m.p){const w=(mode==='side'?stage.clientWidth/(F[cur].g?3:2):stage.clientWidth),h=stage.clientHeight;tf.s=Math.max(tf.s,0.9);tf.x=w/2-m.p[0]*tf.s;tf.y=h/2-m.p[1]*tf.s}build()};L.appendChild(d)});
+ build();fit();apply()}
+if(F.some(f=>f.g)){const r=document.getElementById('rsel');r.style.display='';r.onchange=()=>build()}
+addEventListener('resize',()=>apply());show(0);
+</script></body></html>

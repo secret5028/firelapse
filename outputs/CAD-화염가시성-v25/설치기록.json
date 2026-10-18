@@ -1,0 +1,19 @@
+{
+  "status": "installed_and_browser_checked",
+  "cause": "CFAST flame height floor 0.01m at late positive HRR; subpixel flame not just occlusion",
+  "minimum_display_pixels": {
+    "height": 32,
+    "width": 22
+  },
+  "checks": [
+    "27:26 flame visible at 276kW",
+    "30:00 top view flame visible at 212kW",
+    "zero time no flame",
+    "no console errors",
+    "legacy UI and simulation data hashes unchanged"
+  ],
+  "model_sha256": "e41aaab6a13a5a7c7361cc435f2f701df69e7c7ee577e25ddf4f1194193f4eb1",
+  "results_sha256": "80854d73cd4654bef3f4ec7e6cdbd3dbe1b0fa5965bf8b92167072931ef3f285",
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+  "screenshot": "화염표시-27분26초.png"
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "file": "SP1021.pdf",
+    "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication1021.pdf",
+    "sha256": "40ff5fa6862185b5d33e934174cbdbc6d89e232cae7177e015b071c50e48ed96",
+    "bytes": 8556546
+  },
+  {
+    "file": "NCSTAR1-5e.pdf",
+    "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/NCSTAR/ncstar1-5e.pdf",
+    "sha256": "5af84da7f74bccbfdf814b1c4f450c56c17f07ca477f6b51277a0682c1cfc7c8",
+    "bytes": 11619133
+  },
+  {
+    "file": "exp-tree.json",
+    "url": "https://api.github.com/repos/firemodels/exp/git/trees/master?recursive=1",
+    "sha256": "ef08f6c47659fc10cc800738c2fa2858e024d01f97d71383ada3a30af5baaf7d",
+    "bytes": 993946
+  }
+]

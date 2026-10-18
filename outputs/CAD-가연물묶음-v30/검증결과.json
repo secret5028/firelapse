@@ -1,0 +1,110 @@
+{
+  "input_validation": "passed",
+  "baseline_budget": {
+    "energy_MJ": 7887.644669092502,
+    "equivalent_fuel_kg": 435.781473430525,
+    "peak_sum_kW": 16534.09091
+  },
+  "new_budget": {
+    "energy_MJ": 7887.644669092502,
+    "equivalent_fuel_kg": 435.781473430525,
+    "peak_sum_kW": 16534.09091
+  },
+  "energy_meaning": "All prescribed curves at their own ignition age, not necessarily released energy within the global 30-minute run",
+  "threshold_and_material_unchanged": true,
+  "native_engine_unchanged": true,
+  "placement-only": {
+    "duration": 1800,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignition_time": 0,
+        "peak_kW": 3256.68,
+        "max_surface_C": null
+      },
+      {
+        "id": "WorkstationN",
+        "ignition_time": 345.0,
+        "peak_kW": 2600.44,
+        "max_surface_C": 529.872
+      },
+      {
+        "id": "WorkstationS",
+        "ignition_time": 350.0,
+        "peak_kW": 2600.44,
+        "max_surface_C": 533.813
+      },
+      {
+        "id": "WorkstationHallDoor",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 69.1762
+      },
+      {
+        "id": "WorkstationHallInner",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 71.2894
+      },
+      {
+        "id": "WorkstationASDoor",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 36.4788
+      },
+      {
+        "id": "WorkstationASInner",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 36.5392
+      }
+    ]
+  },
+  "ceiling": {
+    "duration": 1800,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignition_time": 0,
+        "peak_kW": 3256.68,
+        "max_surface_C": null
+      },
+      {
+        "id": "WorkstationN",
+        "ignition_time": 345.0,
+        "peak_kW": 2504.46,
+        "max_surface_C": 519.975
+      },
+      {
+        "id": "WorkstationS",
+        "ignition_time": 350.0,
+        "peak_kW": 2504.45,
+        "max_surface_C": 517.626
+      },
+      {
+        "id": "WorkstationHallDoor",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 106.43
+      },
+      {
+        "id": "WorkstationHallInner",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 109.485
+      },
+      {
+        "id": "WorkstationASDoor",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 49.9984
+      },
+      {
+        "id": "WorkstationASInner",
+        "ignition_time": null,
+        "peak_kW": 0.0,
+        "max_surface_C": 50.1709
+      }
+    ]
+  }
+}

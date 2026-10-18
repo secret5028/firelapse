@@ -1,0 +1,6 @@
+Pillow
+pypdfium2
+ezdxf
+shapely
+numpy
+opencv-python

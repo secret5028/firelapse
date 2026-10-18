@@ -1,0 +1,3728 @@
+[
+  {
+    "index": 15,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "B0",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14003039.53431354,
+        -1775028.575879273
+      ],
+      [
+        14010439.53431354,
+        -1775028.575879273
+      ]
+    ]
+  },
+  {
+    "index": 62,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "128",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005439.53431354,
+        -1757728.575879273
+      ],
+      [
+        14005439.53431354,
+        -1798528.575879278
+      ]
+    ]
+  },
+  {
+    "index": 63,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "129",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006439.53431354,
+        -1778728.575879273
+      ],
+      [
+        14006439.53431354,
+        -1780628.575879273
+      ]
+    ]
+  },
+  {
+    "index": 150,
+    "layer": "SY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 3
+    },
+    "ins": {
+      "id": 3,
+      "name": "CCS120",
+      "layer": "SY",
+      "raw": "SY",
+      "x": 14006504.41360307,
+      "y": -1777014.238089624,
+      "rot": 90.0,
+      "sx": -60.0,
+      "sy": 60.0,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14007050.207401415,
+        -1776608.37394857
+      ],
+      [
+        14007050.207401415,
+        -1777418.3739485706
+      ]
+    ]
+  },
+  {
+    "index": 151,
+    "layer": "SY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 3
+    },
+    "ins": {
+      "id": 3,
+      "name": "CCS120",
+      "layer": "SY",
+      "raw": "SY",
+      "x": 14006504.41360307,
+      "y": -1777014.238089624,
+      "rot": 90.0,
+      "sx": -60.0,
+      "sy": 60.0,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14006645.207401782,
+        -1777013.37394857
+      ],
+      [
+        14007050.207401415,
+        -1777418.3739485706
+      ]
+    ]
+  },
+  {
+    "index": 152,
+    "layer": "SY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 3
+    },
+    "ins": {
+      "id": 3,
+      "name": "CCS120",
+      "layer": "SY",
+      "raw": "SY",
+      "x": 14006504.41360307,
+      "y": -1777014.238089624,
+      "rot": 90.0,
+      "sx": -60.0,
+      "sy": 60.0,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14007050.207401415,
+        -1776608.37394857
+      ],
+      [
+        14006645.207401782,
+        -1777013.37394857
+      ]
+    ]
+  },
+  {
+    "index": 208,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "DASHED:HID",
+    "arc": null,
+    "source": {
+      "handle": "225",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005731.98932832,
+        -1775620.842662064
+      ],
+      [
+        14005731.98932832,
+        -1779136.309096548
+      ]
+    ]
+  },
+  {
+    "index": 209,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "DASHED:HID",
+    "arc": null,
+    "source": {
+      "handle": "227",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005746.98932832,
+        -1779136.309096549
+      ],
+      [
+        14005746.98932832,
+        -1775620.842662063
+      ]
+    ]
+  },
+  {
+    "index": 210,
+    "layer": "WALL-1",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "228",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004839.53431354,
+        -1775648.575879273
+      ],
+      [
+        14004839.53431354,
+        -1770508.575879273
+      ]
+    ]
+  },
+  {
+    "index": 214,
+    "layer": "SY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 8
+    },
+    "ins": {
+      "id": 8,
+      "name": "CCS120",
+      "layer": "SY",
+      "raw": "SY",
+      "x": 14006504.41360307,
+      "y": -1777014.238089624,
+      "rot": 90.0,
+      "sx": -60.0,
+      "sy": 60.0,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14007050.207401415,
+        -1776608.37394857
+      ],
+      [
+        14007050.207401415,
+        -1777418.3739485706
+      ]
+    ]
+  },
+  {
+    "index": 215,
+    "layer": "SY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 8
+    },
+    "ins": {
+      "id": 8,
+      "name": "CCS120",
+      "layer": "SY",
+      "raw": "SY",
+      "x": 14006504.41360307,
+      "y": -1777014.238089624,
+      "rot": 90.0,
+      "sx": -60.0,
+      "sy": 60.0,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14006645.207401782,
+        -1777013.37394857
+      ],
+      [
+        14007050.207401415,
+        -1777418.3739485706
+      ]
+    ]
+  },
+  {
+    "index": 216,
+    "layer": "SY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 8
+    },
+    "ins": {
+      "id": 8,
+      "name": "CCS120",
+      "layer": "SY",
+      "raw": "SY",
+      "x": 14006504.41360307,
+      "y": -1777014.238089624,
+      "rot": 90.0,
+      "sx": -60.0,
+      "sy": 60.0,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14007050.207401415,
+        -1776608.37394857
+      ],
+      [
+        14006645.207401782,
+        -1777013.37394857
+      ]
+    ]
+  },
+  {
+    "index": 263,
+    "layer": "WALL-1",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "25D",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004839.53431354,
+        -1775648.575879273
+      ],
+      [
+        14004939.53431354,
+        -1775648.575879275
+      ]
+    ]
+  },
+  {
+    "index": 355,
+    "layer": "지시선",
+    "kind": "CIRCLE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "477",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006424.436722897,
+        -1777034.199850406
+      ],
+      [
+        14006368.195328867,
+        -1776861.1066378946
+      ],
+      [
+        14006220.953447724,
+        -1776754.1291493406
+      ],
+      [
+        14006038.952473497,
+        -1776754.1291493406
+      ],
+      [
+        14005891.710592354,
+        -1776861.1066378946
+      ],
+      [
+        14005835.469198324,
+        -1777034.199850406
+      ],
+      [
+        14005891.710592354,
+        -1777207.2930629174
+      ],
+      [
+        14006038.952473497,
+        -1777314.2705514715
+      ],
+      [
+        14006220.953447724,
+        -1777314.2705514715
+      ],
+      [
+        14006368.195328867,
+        -1777207.2930629174
+      ],
+      [
+        14006424.436722897,
+        -1777034.199850406
+      ]
+    ]
+  },
+  {
+    "index": 548,
+    "layer": "FIN",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "56E",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006424.53431352,
+        -1775128.575883249
+      ],
+      [
+        14006589.53431367,
+        -1775128.575883249
+      ]
+    ]
+  },
+  {
+    "index": 717,
+    "layer": "WALL-1",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "681",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004939.53431354,
+        -1775648.575879274
+      ],
+      [
+        14004939.53431354,
+        -1770508.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2491,
+    "layer": "COL2",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B2",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005653.53431354,
+        -1775332.075879273
+      ],
+      [
+        14005618.53431354,
+        -1775332.075879273
+      ],
+      [
+        14005618.53431354,
+        -1775138.575879273
+      ],
+      [
+        14005260.53431354,
+        -1775138.575879273
+      ],
+      [
+        14005260.53431354,
+        -1775332.075879273
+      ],
+      [
+        14005225.53431354,
+        -1775332.075879273
+      ],
+      [
+        14005225.53431354,
+        -1774925.075879273
+      ],
+      [
+        14005260.53431354,
+        -1774925.075879273
+      ],
+      [
+        14005260.53431354,
+        -1775118.575879273
+      ],
+      [
+        14005618.53431354,
+        -1775118.575879273
+      ],
+      [
+        14005618.53431354,
+        -1774925.075879273
+      ],
+      [
+        14005653.53431354,
+        -1774925.075879273
+      ],
+      [
+        14005653.53431354,
+        -1775332.075879273
+      ]
+    ]
+  },
+  {
+    "index": 2492,
+    "layer": "WALLBR",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B3",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004939.53431354,
+        -1775528.575879273
+      ],
+      [
+        14004939.53431354,
+        -1775628.575879273
+      ],
+      [
+        14005689.48932832,
+        -1775628.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2493,
+    "layer": "WALLBR",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B4",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005789.48932832,
+        -1775628.575879273
+      ],
+      [
+        14005939.53431354,
+        -1775628.575879273
+      ],
+      [
+        14005939.53431353,
+        -1775128.575883239
+      ]
+    ]
+  },
+  {
+    "index": 2494,
+    "layer": "FIN",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B5",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004939.53431354,
+        -1775628.575879274
+      ],
+      [
+        14004939.53431354,
+        -1775648.575879273
+      ],
+      [
+        14005689.48932832,
+        -1775648.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2495,
+    "layer": "FIN",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B6",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005789.48932832,
+        -1775648.575879273
+      ],
+      [
+        14005959.53431354,
+        -1775648.575879273
+      ],
+      [
+        14005959.53431353,
+        -1775148.57588324
+      ],
+      [
+        14010059.53431352,
+        -1775148.575883249
+      ],
+      [
+        14010059.53431352,
+        -1774597.494651258
+      ]
+    ]
+  },
+  {
+    "index": 2496,
+    "layer": "COL",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B7",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005839.53431354,
+        -1774928.324304711
+      ],
+      [
+        14005839.53431354,
+        -1774728.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2498,
+    "layer": "WALL",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10B9",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005039.53431354,
+        -1774728.575879273
+      ],
+      [
+        14005039.53431354,
+        -1775528.575879273
+      ],
+      [
+        14005839.53431354,
+        -1775528.575879273
+      ],
+      [
+        14005839.53431354,
+        -1775128.575883239
+      ],
+      [
+        14010039.53431352,
+        -1775128.575883249
+      ],
+      [
+        14010039.53431352,
+        -1774562.494651258
+      ]
+    ]
+  },
+  {
+    "index": 2503,
+    "layer": "WALL",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10BE",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005039.53431354,
+        -1774728.575879273
+      ],
+      [
+        14005039.53431353,
+        -1770628.575879273
+      ],
+      [
+        14010039.53431352,
+        -1770628.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2504,
+    "layer": "WALL",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10BF",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006424.53431352,
+        -1770828.575879273
+      ],
+      [
+        14006424.53431352,
+        -1770828.575879273
+      ],
+      [
+        14005239.53431352,
+        -1770828.57587927
+      ],
+      [
+        14005239.53431352,
+        -1774728.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2505,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:CENTER2",
+    "arc": null,
+    "source": {
+      "handle": "10C0",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007789.534306,
+        -1770828.575879273
+      ],
+      [
+        14007789.534306,
+        -1775028.575879065
+      ]
+    ]
+  },
+  {
+    "index": 2506,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C1",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005984.53431152,
+        -1774928.324304711
+      ],
+      [
+        14005984.53431152,
+        -1774491.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2507,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C2",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005984.53431152,
+        -1774391.83119391
+      ],
+      [
+        14005984.53431152,
+        -1770828.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2508,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C3",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006041.53431351,
+        -1771786.575879244
+      ],
+      [
+        14006041.53431351,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2509,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C4",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006041.53431353,
+        -1774391.579619555
+      ],
+      [
+        14006041.53431353,
+        -1774590.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2510,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C5",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006091.53431351,
+        -1771786.575879244
+      ],
+      [
+        14006091.53431351,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2511,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C6",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006091.53431352,
+        -1774391.579619555
+      ],
+      [
+        14006091.53431353,
+        -1774590.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2512,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C7",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006099.53431351,
+        -1771786.575879244
+      ],
+      [
+        14006099.53431351,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2513,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C8",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006099.53431353,
+        -1774391.579619555
+      ],
+      [
+        14006099.53431353,
+        -1774590.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2514,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10C9",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006149.53431351,
+        -1771786.575879244
+      ],
+      [
+        14006149.53431351,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2515,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10CA",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006149.53431352,
+        -1774391.579619555
+      ],
+      [
+        14006149.53431352,
+        -1774590.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2516,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10CB",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006014.53431152,
+        -1771778.575879214
+      ],
+      [
+        14006014.53431152,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2517,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10CC",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006014.53431153,
+        -1774391.579619555
+      ],
+      [
+        14006014.53431153,
+        -1774598.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2518,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10CD",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006164.53431351,
+        -1771778.575879214
+      ],
+      [
+        14006164.53431351,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2519,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "10CE",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006164.53431352,
+        -1774391.579619555
+      ],
+      [
+        14006164.53431352,
+        -1774598.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2605,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1125",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14009564.53431153,
+        -1774598.32430471
+      ],
+      [
+        14006014.53431153,
+        -1774598.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2606,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1126",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14009414.53430954,
+        -1774563.32430471
+      ],
+      [
+        14006164.53431352,
+        -1774563.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2607,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1127",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006091.53431353,
+        -1774590.324304711
+      ],
+      [
+        14006041.53431353,
+        -1774590.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2608,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1128",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14006149.53431352,
+        -1774590.324304711
+      ],
+      [
+        14006099.53431353,
+        -1774590.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2636,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:CENTER2",
+    "arc": null,
+    "source": {
+      "handle": "1145",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14009839.53431351,
+        -1773238.575879154
+      ],
+      [
+        14005739.53430953,
+        -1773238.575879154
+      ]
+    ]
+  },
+  {
+    "index": 2637,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1146",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007699.534306,
+        -1772137.575879214
+      ],
+      [
+        14007699.534306,
+        -1772777.575879184
+      ]
+    ]
+  },
+  {
+    "index": 2638,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1147",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007879.53430599,
+        -1772137.575879214
+      ],
+      [
+        14007879.53430599,
+        -1772777.575879184
+      ]
+    ]
+  },
+  {
+    "index": 2639,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1148",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007879.53430599,
+        -1772777.575879184
+      ],
+      [
+        14007699.534306,
+        -1772777.575879184
+      ]
+    ]
+  },
+  {
+    "index": 2640,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1149",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007999.53430599,
+        -1772457.575879214
+      ],
+      [
+        14007579.53430601,
+        -1772457.575879214
+      ]
+    ]
+  },
+  {
+    "index": 2641,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "114A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007999.53430599,
+        -1772457.575879214
+      ],
+      [
+        14007579.53430601,
+        -1772457.575879214
+      ]
+    ]
+  },
+  {
+    "index": 2642,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "114B",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007879.53430599,
+        -1772137.575879214
+      ],
+      [
+        14007699.534306,
+        -1772137.575879214
+      ]
+    ]
+  },
+  {
+    "index": 2644,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "114D",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007699.534306,
+        -1774339.575879095
+      ],
+      [
+        14007699.534306,
+        -1773699.575879095
+      ]
+    ]
+  },
+  {
+    "index": 2645,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "114E",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007879.53430599,
+        -1774339.575879095
+      ],
+      [
+        14007879.53430599,
+        -1773699.575879095
+      ]
+    ]
+  },
+  {
+    "index": 2646,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "114F",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007999.53430599,
+        -1774019.575879095
+      ],
+      [
+        14007579.53430601,
+        -1774019.575879095
+      ]
+    ]
+  },
+  {
+    "index": 2647,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1150",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007999.53430599,
+        -1774019.575879095
+      ],
+      [
+        14007579.53430601,
+        -1774019.575879095
+      ]
+    ]
+  },
+  {
+    "index": 2648,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1151",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007879.53430599,
+        -1774339.575879095
+      ],
+      [
+        14007699.534306,
+        -1774339.575879095
+      ]
+    ]
+  },
+  {
+    "index": 2649,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1152",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007879.53430599,
+        -1773699.575879095
+      ],
+      [
+        14007699.534306,
+        -1773699.575879095
+      ]
+    ]
+  },
+  {
+    "index": 2671,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:HIDDEN",
+    "arc": null,
+    "source": {
+      "handle": "1168",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007481.10318123,
+        -1774921.755429487
+      ],
+      [
+        14007097.96543084,
+        -1774921.755429487
+      ]
+    ]
+  },
+  {
+    "index": 2672,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1169",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007167.96543084,
+        -1774838.324304711
+      ],
+      [
+        14007097.96543084,
+        -1774838.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2673,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "116A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007097.96543084,
+        -1774928.324304711
+      ],
+      [
+        14007097.96543084,
+        -1774838.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2674,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "116B",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007257.96495583,
+        -1774918.324304681
+      ],
+      [
+        14007257.96495583,
+        -1774819.324304681
+      ]
+    ]
+  },
+  {
+    "index": 2675,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "116C",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007321.10270623,
+        -1774918.324304681
+      ],
+      [
+        14007321.10270623,
+        -1774819.324304681
+      ]
+    ]
+  },
+  {
+    "index": 2676,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:HIDDEN",
+    "arc": null,
+    "source": {
+      "handle": "116D",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007174.53383104,
+        -1774918.324304681
+      ],
+      [
+        14007174.53383104,
+        -1774729.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2677,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "116E",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007167.96495584,
+        -1774918.324304681
+      ],
+      [
+        14007167.96495584,
+        -1774729.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2678,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "116F",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007481.10318123,
+        -1774928.324304711
+      ],
+      [
+        14007481.10318123,
+        -1774838.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2679,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1170",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007411.10270623,
+        -1774918.324304681
+      ],
+      [
+        14007411.10270623,
+        -1774735.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2680,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:HIDDEN",
+    "arc": null,
+    "source": {
+      "handle": "1171",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007404.53383103,
+        -1774918.324304681
+      ],
+      [
+        14007404.53383103,
+        -1774729.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2681,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1172",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007167.96495584,
+        -1774729.32356302
+      ],
+      [
+        14007388.81561818,
+        -1774729.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2682,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1173",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007404.53383103,
+        -1774729.32356302
+      ],
+      [
+        14007174.53383104,
+        -1774729.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2683,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1174",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007411.10270623,
+        -1774735.32356302
+      ],
+      [
+        14007174.53383104,
+        -1774735.32356302
+      ]
+    ]
+  },
+  {
+    "index": 2684,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1175",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007343.28385811,
+        -1774718.323654722
+      ],
+      [
+        14007297.53423937,
+        -1774718.323654722
+      ]
+    ]
+  },
+  {
+    "index": 2685,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1176",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007294.28426645,
+        -1774715.073681812
+      ],
+      [
+        14007294.28426645,
+        -1774681.573960971
+      ]
+    ]
+  },
+  {
+    "index": 2686,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1177",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007284.78434562,
+        -1774715.073681812
+      ],
+      [
+        14007284.78434562,
+        -1774681.573960971
+      ]
+    ]
+  },
+  {
+    "index": 2687,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1178",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007297.53423937,
+        -1774678.323988061
+      ],
+      [
+        14007297.53423937,
+        -1774638.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2688,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1179",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007281.5343727,
+        -1774678.323988061
+      ],
+      [
+        14007281.5343727,
+        -1774638.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2689,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "117A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007297.53423937,
+        -1774638.324304711
+      ],
+      [
+        14007281.5343727,
+        -1774638.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2690,
+    "layer": "HOISTWAY",
+    "kind": "ARC",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007297.53423937,
+      -1774681.573960971,
+      3.24997291639152,
+      90.0,
+      180.0
+    ],
+    "source": {
+      "handle": "117B",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007297.53423937,
+        -1774678.3239880546
+      ],
+      [
+        14007295.909252912,
+        -1774678.759401864
+      ],
+      [
+        14007294.719680263,
+        -1774679.948974513
+      ],
+      [
+        14007294.284266453,
+        -1774681.573960971
+      ]
+    ]
+  },
+  {
+    "index": 2691,
+    "layer": "HOISTWAY",
+    "kind": "ARC",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007281.5343727,
+      -1774681.573960971,
+      3.24997291639152,
+      0.0,
+      90.0
+    ],
+    "source": {
+      "handle": "117C",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007284.784345618,
+        -1774681.573960971
+      ],
+      [
+        14007284.348931808,
+        -1774679.948974513
+      ],
+      [
+        14007283.159359159,
+        -1774678.759401864
+      ],
+      [
+        14007281.5343727,
+        -1774678.3239880546
+      ]
+    ]
+  },
+  {
+    "index": 2692,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:CENTER",
+    "arc": null,
+    "source": {
+      "handle": "117D",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007221.53487271,
+        -1774722.517840724
+      ],
+      [
+        14007221.53487271,
+        -1774742.51767404
+      ]
+    ]
+  },
+  {
+    "index": 2693,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "117E",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007281.5343727,
+        -1774718.323654722
+      ],
+      [
+        14007235.78472535,
+        -1774718.323654722
+      ]
+    ]
+  },
+  {
+    "index": 2694,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "117F",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007232.53478104,
+        -1774729.32356302
+      ],
+      [
+        14007232.53478104,
+        -1774721.573599051
+      ]
+    ]
+  },
+  {
+    "index": 2695,
+    "layer": "HOISTWAY",
+    "kind": "ARC",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007235.78475396,
+      -1774721.573627632,
+      3.24997291639152,
+      90.0,
+      180.0
+    ],
+    "source": {
+      "handle": "1180",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007235.78475396,
+        -1774718.3236547157
+      ],
+      [
+        14007234.159767501,
+        -1774718.759068525
+      ],
+      [
+        14007232.970194852,
+        -1774719.948641174
+      ],
+      [
+        14007232.534781042,
+        -1774721.573627632
+      ]
+    ]
+  },
+  {
+    "index": 2696,
+    "layer": "HOISTWAY",
+    "kind": "ARC",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007297.53423937,
+      -1774715.073681812,
+      3.24997291639152,
+      180.0,
+      270.0
+    ],
+    "source": {
+      "handle": "1181",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007294.284266453,
+        -1774715.073681812
+      ],
+      [
+        14007294.719680263,
+        -1774716.6986682701
+      ],
+      [
+        14007295.909252912,
+        -1774717.8882409192
+      ],
+      [
+        14007297.53423937,
+        -1774718.3236547285
+      ]
+    ]
+  },
+  {
+    "index": 2697,
+    "layer": "HOISTWAY",
+    "kind": "ARC",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007281.5343727,
+      -1774715.073681812,
+      3.24997291639152,
+      270.0,
+      0.0
+    ],
+    "source": {
+      "handle": "1182",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007281.5343727,
+        -1774718.3236547285
+      ],
+      [
+        14007283.159359159,
+        -1774717.8882409192
+      ],
+      [
+        14007284.348931808,
+        -1774716.6986682701
+      ],
+      [
+        14007284.784345618,
+        -1774715.073681812
+      ]
+    ]
+  },
+  {
+    "index": 2698,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1183",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007346.53383103,
+        -1774729.32356302
+      ],
+      [
+        14007346.53383103,
+        -1774721.573627632
+      ]
+    ]
+  },
+  {
+    "index": 2699,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "DASHED:CENTER",
+    "arc": null,
+    "source": {
+      "handle": "1184",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007357.53373936,
+        -1774722.517840724
+      ],
+      [
+        14007357.53373936,
+        -1774742.51767404
+      ]
+    ]
+  },
+  {
+    "index": 2700,
+    "layer": "HOISTWAY",
+    "kind": "ARC",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007343.28385811,
+      -1774721.573627632,
+      3.24997291639152,
+      0.0,
+      90.0
+    ],
+    "source": {
+      "handle": "1185",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007346.533831026,
+        -1774721.573627632
+      ],
+      [
+        14007346.098417217,
+        -1774719.948641174
+      ],
+      [
+        14007344.908844568,
+        -1774718.759068525
+      ],
+      [
+        14007343.28385811,
+        -1774718.3236547157
+      ]
+    ]
+  },
+  {
+    "index": 2701,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1186",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007404.53383103,
+        -1774819.324304681
+      ],
+      [
+        14007174.53383104,
+        -1774819.324304681
+      ]
+    ]
+  },
+  {
+    "index": 2702,
+    "layer": "0",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1187",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007321.10270623,
+        -1774838.324304711
+      ],
+      [
+        14007257.96495583,
+        -1774838.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2703,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1188",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007481.10318123,
+        -1774838.324304711
+      ],
+      [
+        14007411.10318123,
+        -1774838.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2704,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1189",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007411.10318123,
+        -1774918.324304681
+      ],
+      [
+        14007321.10270623,
+        -1774918.324304681
+      ]
+    ]
+  },
+  {
+    "index": 2705,
+    "layer": "HOISTWAY",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "118A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007257.96543084,
+        -1774918.324304681
+      ],
+      [
+        14007167.96543084,
+        -1774918.324304681
+      ]
+    ]
+  },
+  {
+    "index": 2706,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "118B",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007289.53430602,
+        -1771498.965644119
+      ],
+      [
+        14007289.53430602,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2707,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "118C",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14007289.53430603,
+        -1774391.579619555
+      ],
+      [
+        14007289.53430603,
+        -1774928.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2752,
+    "layer": "DEFPOINTS",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11B9",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005984.53431153,
+        -1774391.579619555
+      ],
+      [
+        14005984.53431153,
+        -1774928.324304711
+      ],
+      [
+        14009594.53431153,
+        -1774928.32430471
+      ],
+      [
+        14009594.53431153,
+        -1774391.579619555
+      ]
+    ]
+  },
+  {
+    "index": 2753,
+    "layer": "DEFPOINTS",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11BA",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14009594.53431152,
+        -1774391.83119391
+      ],
+      [
+        14009594.53431152,
+        -1770828.575879273
+      ],
+      [
+        14005984.53431152,
+        -1770828.575879273
+      ],
+      [
+        14005984.53431152,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2754,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11BB",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005739.53430953,
+        -1770828.575879273
+      ],
+      [
+        14005739.53430953,
+        -1774391.83119391
+      ]
+    ]
+  },
+  {
+    "index": 2755,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11BC",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005739.53430954,
+        -1774391.579619555
+      ],
+      [
+        14005739.53430954,
+        -1774728.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2756,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11BD",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005839.53431354,
+        -1774928.324304711
+      ],
+      [
+        14005984.53431153,
+        -1774928.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2757,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11BE",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005984.53431152,
+        -1774928.575883251
+      ],
+      [
+        14005984.53431152,
+        -1774391.831198097
+      ]
+    ]
+  },
+  {
+    "index": 2758,
+    "layer": "DEFPOINTS",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11BF",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005984.53431152,
+        -1774391.83119391
+      ],
+      [
+        14005984.53431152,
+        -1770828.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2772,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "11CD",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005439.53431354,
+        -1757728.575879273
+      ],
+      [
+        14005439.53431354,
+        -1797628.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2773,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "11CE",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005739.53431354,
+        -1766453.944903736
+      ],
+      [
+        14005739.53431354,
+        -1779431.455464844
+      ]
+    ]
+  },
+  {
+    "index": 2796,
+    "layer": "COL",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11EA",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005239.53431352,
+        -1774728.575879273
+      ],
+      [
+        14005839.53431354,
+        -1774728.575879273
+      ]
+    ]
+  },
+  {
+    "index": 2797,
+    "layer": "COL",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "11EB",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005839.53431354,
+        -1774928.324304711
+      ],
+      [
+        14009839.53431352,
+        -1774928.324304711
+      ]
+    ]
+  },
+  {
+    "index": 2960,
+    "layer": "WID",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": [
+      14007584.534313519,
+      -1779108.5758794076,
+      540.0000000009596,
+      135.0000000053104,
+      -179.99999999478746
+    ],
+    "source": {
+      "handle": null,
+      "insertion": 103
+    },
+    "ins": {
+      "id": 103,
+      "name": "D600",
+      "layer": "WID",
+      "raw": "WID",
+      "x": 14007314.53431352,
+      "y": -1779228.575879318,
+      "rot": 90.0,
+      "sx": 1,
+      "sy": 1,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14007584.534313517,
+        -1779108.5758794085
+      ],
+      [
+        14007202.696651641,
+        -1778726.738217601
+      ],
+      [
+        14007135.260655096,
+        -1778808.9836062882
+      ],
+      [
+        14007085.639365941,
+        -1778901.9268259758
+      ],
+      [
+        14007055.006135106,
+        -1779002.73515694
+      ],
+      [
+        14007044.534313517,
+        -1779108.5758794567
+      ]
+    ]
+  },
+  {
+    "index": 2961,
+    "layer": "WID",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": null,
+      "insertion": 103
+    },
+    "ins": {
+      "id": 103,
+      "name": "D600",
+      "layer": "WID",
+      "raw": "WID",
+      "x": 14007314.53431352,
+      "y": -1779228.575879318,
+      "rot": 90.0,
+      "sx": 1,
+      "sy": 1,
+      "parent": null,
+      "depth": 0
+    },
+    "points": [
+      [
+        14007584.534313517,
+        -1779108.5758794085
+      ],
+      [
+        14007561.687953684,
+        -1779131.4852018754
+      ],
+      [
+        14007180.012146574,
+        -1778750.858370119
+      ],
+      [
+        14007202.696651641,
+        -1778726.738217601
+      ]
+    ]
+  },
+  {
+    "index": 3261,
+    "layer": "WID",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "175F",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004789.53431346,
+        -1773653.575879268
+      ],
+      [
+        14004689.53431346,
+        -1773653.575879268
+      ],
+      [
+        14004689.53431346,
+        -1777403.575879271
+      ],
+      [
+        14004789.53431346,
+        -1777403.575879271
+      ],
+      [
+        14004789.53431346,
+        -1773653.575879268
+      ]
+    ]
+  },
+  {
+    "index": 3262,
+    "layer": "EL8",
+    "kind": "LWPOLYLINE",
+    "lt": "DASHED:HID",
+    "arc": null,
+    "source": {
+      "handle": "1761",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004789.53431346,
+        -1771928.575879269
+      ],
+      [
+        14004689.53431346,
+        -1771928.575879269
+      ],
+      [
+        14004689.53431346,
+        -1773653.575879268
+      ]
+    ]
+  },
+  {
+    "index": 3263,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "DASHED:HID",
+    "arc": null,
+    "source": {
+      "handle": "1762",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004789.53431346,
+        -1773653.575879268
+      ],
+      [
+        14004789.53431346,
+        -1771928.575879269
+      ]
+    ]
+  },
+  {
+    "index": 3633,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1869",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005731.98932832,
+        -1775620.842662064
+      ],
+      [
+        14005746.98932832,
+        -1775620.842662063
+      ]
+    ]
+  },
+  {
+    "index": 3634,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "186A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005701.48932832,
+        -1775560.139212294
+      ],
+      [
+        14005690.76932832,
+        -1775560.139212294
+      ]
+    ]
+  },
+  {
+    "index": 3635,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "186B",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005700.20932832,
+        -1775558.859212294
+      ],
+      [
+        14005689.48932832,
+        -1775558.859212294
+      ]
+    ]
+  },
+  {
+    "index": 3636,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "186C",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005701.48932832,
+        -1775550.939212294
+      ],
+      [
+        14005701.48932832,
+        -1775560.139212294
+      ]
+    ]
+  },
+  {
+    "index": 3637,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "186D",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005700.20932832,
+        -1775549.659212294
+      ],
+      [
+        14005700.20932832,
+        -1775558.859212294
+      ]
+    ]
+  },
+  {
+    "index": 3638,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "186E",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005723.00932832,
+        -1775657.295879272
+      ],
+      [
+        14005690.76932832,
+        -1775657.295879272
+      ]
+    ]
+  },
+  {
+    "index": 3639,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "186F",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005724.28932832,
+        -1775658.575879273
+      ],
+      [
+        14005689.48932832,
+        -1775658.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3640,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1870",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005689.48932832,
+        -1775558.859212294
+      ],
+      [
+        14005689.48932832,
+        -1775658.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3641,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1871",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005690.76932832,
+        -1775560.139212294
+      ],
+      [
+        14005690.76932832,
+        -1775657.295879272
+      ]
+    ]
+  },
+  {
+    "index": 3642,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1872",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005724.28932832,
+        -1775658.575879273
+      ],
+      [
+        14005724.28932832,
+        -1775608.45921227
+      ]
+    ]
+  },
+  {
+    "index": 3643,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1873",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005723.00932832,
+        -1775657.295879272
+      ],
+      [
+        14005723.00932832,
+        -1775607.17921227
+      ]
+    ]
+  },
+  {
+    "index": 3644,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1874",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005777.57929876,
+        -1775560.139212294
+      ],
+      [
+        14005788.20932832,
+        -1775560.139212294
+      ]
+    ]
+  },
+  {
+    "index": 3645,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1875",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005778.85929875,
+        -1775558.859212294
+      ],
+      [
+        14005789.48932832,
+        -1775558.859212294
+      ]
+    ]
+  },
+  {
+    "index": 3646,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1876",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005777.57929876,
+        -1775550.939212294
+      ],
+      [
+        14005777.57929876,
+        -1775560.139212294
+      ]
+    ]
+  },
+  {
+    "index": 3647,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1877",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005778.85929875,
+        -1775549.659212294
+      ],
+      [
+        14005778.85929875,
+        -1775558.859212294
+      ]
+    ]
+  },
+  {
+    "index": 3648,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1878",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005770.68932832,
+        -1775630.176393813
+      ],
+      [
+        14005755.96932832,
+        -1775630.176393813
+      ]
+    ]
+  },
+  {
+    "index": 3649,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1879",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005769.40932832,
+        -1775631.456393812
+      ],
+      [
+        14005754.68932832,
+        -1775631.456393812
+      ]
+    ]
+  },
+  {
+    "index": 3650,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "187A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005754.68932832,
+        -1775658.575879273
+      ],
+      [
+        14005754.68932832,
+        -1775643.775879273
+      ]
+    ]
+  },
+  {
+    "index": 3651,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "187B",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005755.96932832,
+        -1775657.295879272
+      ],
+      [
+        14005755.96932832,
+        -1775643.775879273
+      ]
+    ]
+  },
+  {
+    "index": 3652,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "187C",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005788.20932832,
+        -1775656.015879272
+      ],
+      [
+        14005770.68932832,
+        -1775656.015879272
+      ]
+    ]
+  },
+  {
+    "index": 3653,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "187D",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005789.48932832,
+        -1775658.575879273
+      ],
+      [
+        14005754.68932832,
+        -1775658.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3654,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "187E",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005788.20932832,
+        -1775657.295879272
+      ],
+      [
+        14005755.96932832,
+        -1775657.295879272
+      ]
+    ]
+  },
+  {
+    "index": 3655,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "187F",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005755.96932832,
+        -1775643.775879273
+      ],
+      [
+        14005754.68932832,
+        -1775643.775879273
+      ]
+    ]
+  },
+  {
+    "index": 3656,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1880",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005769.40932832,
+        -1775657.295879272
+      ],
+      [
+        14005769.40932832,
+        -1775631.456393812
+      ]
+    ]
+  },
+  {
+    "index": 3657,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1881",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005770.68932832,
+        -1775656.015879272
+      ],
+      [
+        14005770.68932832,
+        -1775630.176393813
+      ]
+    ]
+  },
+  {
+    "index": 3658,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1882",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005789.48932832,
+        -1775558.859212294
+      ],
+      [
+        14005789.48932832,
+        -1775658.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3659,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1883",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005788.20932832,
+        -1775560.139212294
+      ],
+      [
+        14005788.20932832,
+        -1775657.295879272
+      ]
+    ]
+  },
+  {
+    "index": 3660,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1884",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005755.96932832,
+        -1775630.176393813
+      ],
+      [
+        14005755.96932832,
+        -1775607.17921227
+      ]
+    ]
+  },
+  {
+    "index": 3661,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1885",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005754.68932832,
+        -1775631.456393812
+      ],
+      [
+        14005754.68932832,
+        -1775608.45921227
+      ]
+    ]
+  },
+  {
+    "index": 3662,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1886",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005755.96932832,
+        -1775607.17921227
+      ],
+      [
+        14005723.00932832,
+        -1775607.17921227
+      ]
+    ]
+  },
+  {
+    "index": 3663,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1887",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005754.68932832,
+        -1775608.45921227
+      ],
+      [
+        14005724.28932832,
+        -1775608.45921227
+      ]
+    ]
+  },
+  {
+    "index": 3664,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1888",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005700.20932832,
+        -1775549.659212294
+      ],
+      [
+        14005778.85929875,
+        -1775549.659212294
+      ]
+    ]
+  },
+  {
+    "index": 3665,
+    "layer": "EL8",
+    "kind": "LINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "1889",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005701.48932832,
+        -1775550.939212294
+      ],
+      [
+        14005777.57929876,
+        -1775550.939212294
+      ]
+    ]
+  },
+  {
+    "index": 3666,
+    "layer": "EL8",
+    "kind": "LWPOLYLINE",
+    "lt": "DASHED:HID",
+    "arc": null,
+    "source": {
+      "handle": "188A",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004689.53431346,
+        -1777403.575879271
+      ],
+      [
+        14004689.53431346,
+        -1779228.575879273
+      ],
+      [
+        14004789.53431346,
+        -1779228.575879273
+      ],
+      [
+        14004789.53431346,
+        -1777403.575879271
+      ]
+    ]
+  },
+  {
+    "index": 3672,
+    "layer": "WALLBR",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "18AB",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004939.53431354,
+        -1775528.575879273
+      ],
+      [
+        14005839.53431354,
+        -1775528.575879273
+      ],
+      [
+        14005839.53431354,
+        -1775128.575883239
+      ],
+      [
+        14005939.53431353,
+        -1775128.575879273
+      ],
+      [
+        14005939.53431354,
+        -1775628.575879273
+      ],
+      [
+        14005789.48932832,
+        -1775628.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3673,
+    "layer": "WALLBR",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "18AC",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14005689.48932832,
+        -1775628.575879273
+      ],
+      [
+        14004939.53431354,
+        -1775628.575879274
+      ],
+      [
+        14004939.53431354,
+        -1775528.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3674,
+    "layer": "4WID",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "18AD",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004939.53431354,
+        -1775528.575879273
+      ],
+      [
+        14004839.53431354,
+        -1775528.575879273
+      ],
+      [
+        14004839.53431354,
+        -1775648.575879273
+      ],
+      [
+        14004939.53431354,
+        -1775648.575879273
+      ],
+      [
+        14004939.53431354,
+        -1775528.575879273
+      ]
+    ]
+  },
+  {
+    "index": 3675,
+    "layer": "4WID",
+    "kind": "LWPOLYLINE",
+    "lt": "CONTINUOUS",
+    "arc": null,
+    "source": {
+      "handle": "18AE",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14004929.53431354,
+        -1775538.575879273
+      ],
+      [
+        14004849.53431354,
+        -1775538.575879273
+      ],
+      [
+        14004849.53431354,
+        -1775638.575879273
+      ],
+      [
+        14004929.53431354,
+        -1775638.575879273
+      ],
+      [
+        14004929.53431354,
+        -1775538.575879273
+      ]
+    ]
+  },
+  {
+    "index": 4374,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "1B20",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        13993039.53431354,
+        -1775128.575879273
+      ],
+      [
+        14067039.53431354,
+        -1775128.575879273
+      ]
+    ]
+  },
+  {
+    "index": 4379,
+    "layer": "CEN",
+    "kind": "LINE",
+    "lt": "DASHED:CEN",
+    "arc": null,
+    "source": {
+      "handle": "1B25",
+      "insertion": null
+    },
+    "ins": null,
+    "points": [
+      [
+        14003039.53431354,
+        -1775128.575879273
+      ],
+      [
+        14021439.53431354,
+        -1775128.575879273
+      ]
+    ]
+  }
+]

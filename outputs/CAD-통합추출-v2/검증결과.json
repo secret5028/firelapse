@@ -1,0 +1,481 @@
+{
+  "unit_tests": 22,
+  "unit_test_result": "passed",
+  "real_drawings": [
+    {
+      "sample": "hotel-4F",
+      "building": "28-200-2018-00000088",
+      "seconds": 10.74,
+      "exit_code": 0,
+      "checks": {
+        "room_count_preserved": true,
+        "existing_door_connections_preserved": true,
+        "swing_directions_preserved": true,
+        "valid_geometry": true
+      },
+      "stats": {
+        "rooms": 22,
+        "doors_zone": 19,
+        "doors_open": 18,
+        "doors_elev": 0,
+        "gaps_closed": 10,
+        "doors_internal": 0,
+        "sliding": 0,
+        "windows": 33,
+        "windows_inner": 0,
+        "vents": 0,
+        "leaves": 18,
+        "leaves_std": 18,
+        "jamb_dropped": 59,
+        "wall_thick_mm_p50_p90": [
+          153.0,
+          420.0
+        ]
+      },
+      "quality": {
+        "status": "review_required",
+        "errors": 0,
+        "issues": [],
+        "check_counts": {
+          "A숨은선-제외": 1,
+          "A승강기문-추정": 10,
+          "A문-문틀지지미확인": 14,
+          "A실-출입": 3,
+          "A실-소형": 1,
+          "A1-외부단일": 1,
+          "Q형상정리": 3,
+          "F감지기-실미확인": 1,
+          "F유도등-문미확인": 2,
+          "F실-감지기없음": 4
+        },
+        "raster_resolution_m": 0.02,
+        "ground_truth_validated": false,
+        "auto_repaired_line_count": 922
+      },
+      "source_vectors": 1179,
+      "fire_symbols": 44,
+      "fire_alignment_verified": true,
+      "changed_openings": []
+    },
+    {
+      "sample": "hotel-1F",
+      "building": "28-200-2018-00000088",
+      "seconds": 4.98,
+      "exit_code": 0,
+      "checks": {
+        "room_count_preserved": true,
+        "existing_door_connections_preserved": true,
+        "swing_directions_preserved": true,
+        "valid_geometry": true
+      },
+      "stats": {
+        "rooms": 17,
+        "doors_zone": 21,
+        "doors_open": 18,
+        "doors_elev": 4,
+        "gaps_closed": 40,
+        "doors_internal": 0,
+        "sliding": 0,
+        "windows": 15,
+        "windows_inner": 8,
+        "vents": 0,
+        "leaves": 11,
+        "leaves_std": 11,
+        "jamb_dropped": 1,
+        "wall_thick_mm_p50_p90": [
+          153.0,
+          458.0
+        ]
+      },
+      "quality": {
+        "status": "review_required",
+        "errors": 0,
+        "issues": [
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D9",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W2",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W3",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W6",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W7",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W13",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W14",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W17",
+            "status": "same_space"
+          }
+        ],
+        "check_counts": {
+          "A숨은선-제외": 1,
+          "A승강기문-추정": 44,
+          "A문-양쪽분리": 1,
+          "A창-외기안닿음": 7,
+          "A개구부-연결확인": 8,
+          "A문-문틀지지미확인": 4,
+          "A실-출입": 2,
+          "A실-소형": 1,
+          "A1-외부단일": 1,
+          "Q형상정리": 3,
+          "F유도등-문미확인": 7,
+          "F유도등-개구부경합": 1,
+          "F유도등→문": 1,
+          "F실-감지기없음": 9
+        },
+        "raster_resolution_m": 0.02,
+        "ground_truth_validated": false,
+        "auto_repaired_line_count": 191
+      },
+      "source_vectors": 460,
+      "fire_symbols": 31,
+      "fire_alignment_verified": true,
+      "changed_openings": [
+        {
+          "id": "W9",
+          "before": "window",
+          "after": "door"
+        }
+      ]
+    },
+    {
+      "sample": "office-1F",
+      "building": "28-200-2026-00000010",
+      "seconds": 16.5,
+      "exit_code": 0,
+      "checks": {
+        "room_count_preserved": true,
+        "existing_door_connections_preserved": true,
+        "swing_directions_preserved": true,
+        "valid_geometry": true
+      },
+      "stats": {
+        "rooms": 41,
+        "doors_zone": 26,
+        "doors_open": 25,
+        "doors_elev": 6,
+        "gaps_closed": 0,
+        "doors_internal": 0,
+        "sliding": 0,
+        "windows": 53,
+        "windows_inner": 44,
+        "vents": 0,
+        "leaves": 42,
+        "leaves_std": 42,
+        "jamb_dropped": 129,
+        "wall_thick_mm_p50_p90": [
+          153.0,
+          344.0
+        ]
+      },
+      "quality": {
+        "status": "review_required",
+        "errors": 0,
+        "issues": [
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D6",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D13",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D16",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D18",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W62",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W65",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W68",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W69",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W71",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W72",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W75",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W76",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W78",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W80",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W96",
+            "status": "unresolved"
+          }
+        ],
+        "check_counts": {
+          "A외부-얇은경계": 1,
+          "A숨은선-제외": 1,
+          "A승강기문-추정": 6,
+          "A문-양쪽분리": 4,
+          "A실내창-문종류확인": 23,
+          "A창-외기안닿음": 8,
+          "A개구부-연결확인": 15,
+          "A문-문틀지지미확인": 25,
+          "A실-출입": 4,
+          "A실-소형": 1,
+          "A1-외부단일": 1,
+          "Q형상정리": 17,
+          "CAD입력-누락가능": 1
+        },
+        "raster_resolution_m": 0.02,
+        "ground_truth_validated": false,
+        "auto_repaired_line_count": 1376
+      },
+      "source_vectors": 1696,
+      "fire_symbols": 0,
+      "fire_alignment_verified": null,
+      "changed_openings": []
+    },
+    {
+      "sample": "office-4F",
+      "building": "28-200-2026-00000010",
+      "seconds": 7.94,
+      "exit_code": 0,
+      "checks": {
+        "room_count_preserved": true,
+        "existing_door_connections_preserved": true,
+        "swing_directions_preserved": true,
+        "valid_geometry": true
+      },
+      "stats": {
+        "rooms": 22,
+        "doors_zone": 9,
+        "doors_open": 9,
+        "doors_elev": 6,
+        "gaps_closed": 0,
+        "doors_internal": 0,
+        "sliding": 0,
+        "windows": 42,
+        "windows_inner": 8,
+        "vents": 0,
+        "leaves": 14,
+        "leaves_std": 14,
+        "jamb_dropped": 22,
+        "wall_thick_mm_p50_p90": [
+          153.0,
+          344.0
+        ]
+      },
+      "quality": {
+        "status": "review_required",
+        "errors": 0,
+        "issues": [],
+        "check_counts": {
+          "A승강기문-추정": 6,
+          "A실내창-문종류확인": 5,
+          "A문-문틀지지미확인": 6,
+          "A실-출입": 2,
+          "A실-소형": 2,
+          "Q형상정리": 2,
+          "CAD입력-누락가능": 1
+        },
+        "raster_resolution_m": 0.02,
+        "ground_truth_validated": false,
+        "auto_repaired_line_count": 649
+      },
+      "source_vectors": 986,
+      "fire_symbols": 0,
+      "fire_alignment_verified": null,
+      "changed_openings": []
+    },
+    {
+      "sample": "exhibition-1F",
+      "building": "28-710-2025-00000016",
+      "seconds": 4.53,
+      "exit_code": 0,
+      "checks": {
+        "room_count_preserved": true,
+        "existing_door_connections_preserved": true,
+        "swing_directions_preserved": true,
+        "valid_geometry": true
+      },
+      "stats": {
+        "rooms": 24,
+        "doors_zone": 22,
+        "doors_open": 19,
+        "doors_elev": 0,
+        "gaps_closed": 0,
+        "doors_internal": 0,
+        "sliding": 0,
+        "windows": 7,
+        "windows_inner": 2,
+        "vents": 0,
+        "leaves": 20,
+        "leaves_std": 20,
+        "jamb_dropped": 0,
+        "wall_thick_mm_p50_p90": [
+          229.0,
+          535.0
+        ]
+      },
+      "quality": {
+        "status": "review_required",
+        "errors": 0,
+        "issues": [
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D1",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "D7",
+            "status": "same_space"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W2",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W3",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W7",
+            "status": "unresolved"
+          },
+          {
+            "rule": "Q개구부연결",
+            "severity": "review",
+            "id": "W8",
+            "status": "unresolved"
+          }
+        ],
+        "check_counts": {
+          "A숨은선-제외": 1,
+          "A문-양쪽분리": 2,
+          "A창-외기안닿음": 2,
+          "A개구부-연결확인": 6,
+          "A문-문틀지지미확인": 11,
+          "A실-출입": 5,
+          "A실-소형": 2,
+          "Q형상정리": 4
+        },
+        "raster_resolution_m": 0.02,
+        "ground_truth_validated": false,
+        "auto_repaired_line_count": 388
+      },
+      "source_vectors": 1129,
+      "fire_symbols": 0,
+      "fire_alignment_verified": null,
+      "changed_openings": []
+    }
+  ],
+  "building_checks": {
+    "1F": {
+      "rooms": 17,
+      "holes": 0,
+      "fire_symbols": 31,
+      "evidence_preserved": true
+    },
+    "4F": {
+      "rooms": 22,
+      "holes": 1,
+      "fire_symbols": 44,
+      "evidence_preserved": true
+    }
+  },
+  "note": "Checks verify structural consistency, not 100% correspondence with manually annotated CAD ground truth."
+}

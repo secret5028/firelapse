@@ -1,0 +1,236 @@
+[
+  {
+    "floor": "3F",
+    "time": 225,
+    "playing": false,
+    "mode": "real",
+    "enabled": true,
+    "selected": "3F_R9",
+    "roomCount": 156,
+    "solverCompartments": 100,
+    "verticalPaths": 36,
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.44999999999999996,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignited": true,
+        "hrr": 562.5
+      },
+      {
+        "id": "FuelA",
+        "ignited": false,
+        "hrr": 0
+      },
+      {
+        "id": "FuelB",
+        "ignited": false,
+        "hrr": 0
+      },
+      {
+        "id": "FuelC",
+        "ignited": false,
+        "hrr": 0
+      }
+    ],
+    "duration": 1800,
+    "smokeRooms": 2,
+    "rendering": {
+      "volumeCount": 3,
+      "flames": [
+        "ExampleFire"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "steps": 32
+    }
+  },
+  {
+    "floor": "3F",
+    "time": 300,
+    "playing": false,
+    "mode": "real",
+    "enabled": true,
+    "selected": "3F_R9",
+    "roomCount": 156,
+    "solverCompartments": 100,
+    "verticalPaths": 36,
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.44999999999999996,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignited": true,
+        "hrr": 1000
+      },
+      {
+        "id": "FuelA",
+        "ignited": true,
+        "hrr": 307.962
+      },
+      {
+        "id": "FuelB",
+        "ignited": false,
+        "hrr": 0
+      },
+      {
+        "id": "FuelC",
+        "ignited": false,
+        "hrr": 0
+      }
+    ],
+    "duration": 1800,
+    "smokeRooms": 2,
+    "rendering": {
+      "volumeCount": 3,
+      "flames": [
+        "ExampleFire",
+        "FuelA"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "steps": 32
+    }
+  },
+  {
+    "floor": "3F",
+    "time": 640,
+    "playing": false,
+    "mode": "real",
+    "enabled": true,
+    "selected": "3F_R9",
+    "roomCount": 156,
+    "solverCompartments": 100,
+    "verticalPaths": 36,
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.44999999999999996,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignited": true,
+        "hrr": 1000
+      },
+      {
+        "id": "FuelA",
+        "ignited": true,
+        "hrr": 500
+      },
+      {
+        "id": "FuelB",
+        "ignited": false,
+        "hrr": 0
+      },
+      {
+        "id": "FuelC",
+        "ignited": false,
+        "hrr": 0
+      }
+    ],
+    "duration": 1800,
+    "smokeRooms": 7,
+    "rendering": {
+      "volumeCount": 44,
+      "flames": [
+        "ExampleFire",
+        "FuelA"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "steps": 32
+    }
+  },
+  {
+    "floor": "3F",
+    "time": 800,
+    "playing": false,
+    "mode": "real",
+    "enabled": true,
+    "selected": "3F_R9",
+    "roomCount": 156,
+    "solverCompartments": 100,
+    "verticalPaths": 36,
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.44999999999999996,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignited": true,
+        "hrr": 1000
+      },
+      {
+        "id": "FuelA",
+        "ignited": true,
+        "hrr": 500
+      },
+      {
+        "id": "FuelB",
+        "ignited": true,
+        "hrr": 500
+      },
+      {
+        "id": "FuelC",
+        "ignited": false,
+        "hrr": 0
+      }
+    ],
+    "duration": 1800,
+    "smokeRooms": 7,
+    "rendering": {
+      "volumeCount": 46,
+      "flames": [
+        "ExampleFire",
+        "FuelA",
+        "FuelB"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "steps": 32
+    }
+  },
+  {
+    "floor": "3F",
+    "time": 1800,
+    "playing": false,
+    "mode": "real",
+    "enabled": true,
+    "selected": "3F_R9",
+    "roomCount": 156,
+    "solverCompartments": 100,
+    "verticalPaths": 36,
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.44999999999999996,
+    "fires": [
+      {
+        "id": "ExampleFire",
+        "ignited": true,
+        "hrr": 1000
+      },
+      {
+        "id": "FuelA",
+        "ignited": true,
+        "hrr": 0
+      },
+      {
+        "id": "FuelB",
+        "ignited": true,
+        "hrr": 0
+      },
+      {
+        "id": "FuelC",
+        "ignited": false,
+        "hrr": 0
+      }
+    ],
+    "duration": 1800,
+    "smokeRooms": 10,
+    "rendering": {
+      "volumeCount": 69,
+      "flames": [
+        "ExampleFire"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "steps": 32
+    }
+  }
+]

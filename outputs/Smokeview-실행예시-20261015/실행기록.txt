@@ -1,0 +1,34 @@
+Smokeview 실제 실행 예시 — 2026-10-15
+
+사용자 요청: Smokeview가 어떤 도구인지, 실제로 어떻게 보이는지 예시 생성.
+범위: 공식 소형 예제 실행과 이미지 출력. 기존 웹앱/사용자 CAD 모델 수정 및 전체 시뮬레이션 통합은 하지 않음.
+
+도구
+CFAST 7.7.7 / Smokeview 6.11.1 공식 Windows 패키지를 work/smokeview-demo에 압축 해제. 시스템 설치 스크립트/파일 연결/PATH 변경은 실행하지 않음.
+https://github.com/firemodels/smv/releases/download/SMV-6.11.1/SMV-6.11.1_win.exe
+https://github.com/firemodels/cfast/releases/download/CFAST-7.7.7/CFAST-7.7.7_SMV-6.11.1.exe
+Smokeview SHA256: a84db0c7e44bcd03cd3785b03da1ed9b03f12e4de1fb05f9fc05cfc5466247c4 (공식 manifest와 일치).
+
+입력
+배포본 Examples/Users_Guide_Example.in을 demo.in으로 복사. 물리 입력 미수정.
+3개 구획: 아래층 Comp 1/Comp 2와 Comp 2 위의 Comp 3. 벽 개구부/층간 개구부/기계환기 등 포함.
+모사시간 3600초. CFAST 정상 종료, 로그상 3.88초/3785 time steps. 작은 예제이며 실제 사용자 건물의 성능 추정치 아님.
+
+출력
+demo.smv / demo_zone.csv 및 관련 결과 파일.
+demo.ini: 온도 표시 범위 20–100℃. 안전 한계 기준이 아니라 이 예제의 값 비교용 범례.
+demo.ssf: 60,180,300,600초의 온도/연기 화면을 PNG로 저장.
+smoke.ini: Smokeview 연기층 표시 설정.
+temperature_60/180/300/600.png, smoke_60/180/300/600.png.
+render-success.txt: 실제 Smokeview 렌더링 로그.
+index.html: 생성 이미지 8장을 시간별로 전환하는 갤러리. 자체 3D 시뮬레이터나 회전 가능한 Smokeview 웹 포트가 아님.
+
+실행
+cfast.exe demo
+smokeview.exe -runscript demo
+숨김 Start-Process 실행에서는 출력이 진행되지 않았음. 임시 드라이브의 영문 작업 경로에서 CLI 직접 실행해 정상 출력. 임시 R: 연결 및 정체된 이 작업의 프로세스 3개는 종료/해제 완료.
+
+해석
+이 파일은 AI 생성 이미지가 아니라 CFAST 계산 결과를 실제 Smokeview로 그린 예시다.
+방별 상하부 온도·연기층·단순 화염/개구부 흐름 표현을 확인하는 용도.
+우리 CAD 건물 결과, 백드래프트/FGI 발생 예측, 현장 안전성 검증이 아님.

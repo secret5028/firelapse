@@ -1,0 +1,31 @@
+{
+  "status": "installed_and_checked",
+  "date": "2026-10-15",
+  "url": "http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html",
+  "files": {
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\building.json": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\model.html": "15dac1370c89f122b8650a544c07facc7ca8a543a251ce3f9ab446b03477a6ff",
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\cfast-demo.json": "4338682c2702ccd4c936481f3e6c3e6e1e90d165eca3cff00a4fce555af17f3c",
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\_internal\\cad_engine\\integrated_viewer.html": "15dac1370c89f122b8650a544c07facc7ca8a543a251ce3f9ab446b03477a6ff"
+  },
+  "browser_checks": [
+    "basic mode",
+    "realistic volume smoke and flame shader without errors",
+    "5/10/20/30-minute controls",
+    "all floors",
+    "4F R0 room focus",
+    "disable/restore result and clipping",
+    "zero-second empty smoke",
+    "playback time advances",
+    "30-minute stopped state"
+  ],
+  "screenshots": [
+    "기본모드-전층30분.jpg",
+    "실감보기-3층30분.jpg"
+  ],
+  "backups": [
+    "before-overlay.js",
+    "before-model.html",
+    "before-cfast-demo.json"
+  ]
+}

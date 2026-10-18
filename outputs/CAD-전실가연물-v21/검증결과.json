@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "engine_seconds": 134.563,
+  "targets": 117,
+  "rooms_with_targets": 116,
+  "ignited_targets": [
+    {
+      "id": "FuelA",
+      "room_key": "3F_R9",
+      "ignition_time": 255.0
+    },
+    {
+      "id": "FuelB",
+      "room_key": "3F_R9",
+      "ignition_time": 655.0
+    }
+  ],
+  "other_room_max_target_surface_C": 40.5575,
+  "preset_unchanged": true,
+  "all_targets_inside_CAD_room": true,
+  "grouped_room_mapping_checked": true,
+  "scope": "Numerical and mapping checks, not physical validation"
+}

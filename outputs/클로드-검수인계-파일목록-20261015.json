@@ -1,0 +1,458 @@
+{
+  "date": "2026-10-15",
+  "workspace": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d",
+  "purpose": "Claude review evidence index; files are not bundled; directories are existence checks only",
+  "files": [
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\AGENTS.md",
+      "exists": true,
+      "kind": "file",
+      "bytes": 3821,
+      "sha256": "d6c3e393543420548a79baf1a7df4498572c1211c06ae8fc346c34a008f55cf4"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\작업기준-복구-20261014.txt",
+      "exists": true,
+      "kind": "file",
+      "bytes": 57163,
+      "sha256": "195cc5492efb45c0bb057f64ff796d7259b872a0a28832b4a946e551365c04ce"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\클로드-검수인계-CData-20261015.txt",
+      "exists": true,
+      "kind": "file",
+      "bytes": 24359,
+      "sha256": "4880e5aad1d4d7d1ab5a3b76479cb423eb496ba3fc4c4368f5cd7fd97556df9b"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\smokeview-demo\\firemodels\\cfast7\\cdata.exe",
+      "exists": true,
+      "kind": "file",
+      "bytes": 29542400,
+      "sha256": "5f8b432f22f86271a5fc139bde126f2a9285c03fa456155c819a5063c8f6da3d"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\smokeview-demo\\firemodels\\cfast7\\Documents\\CFAST_CData_Guide.pdf",
+      "exists": true,
+      "kind": "file",
+      "bytes": 7402431,
+      "sha256": "a3f7444cd0e78e2160ccad69d03f31df214d74c451799032e6ecc874402c536f"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cad_cfast_multifloor.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 27233,
+      "sha256": "a13f24f1c2c71fe37e03ce706a0d668016dee58c1ba8a038e1d24d9981fa7eb4"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\run_cfast_current.ps1",
+      "exists": true,
+      "kind": "file",
+      "bytes": 656,
+      "sha256": "f4233484474e05637a7f77ceb452bebaec9a998fcafb34679c97ae214364f386"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_runtime.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2883,
+      "sha256": "5f0256fe6f0de5e286d02dfd05b0cb54dca47be57796b441a5ee44d2e6d10790"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_design_fire.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 4195,
+      "sha256": "84126e624101b7b61af26a1e564de3361195324e3963ea9279ee2e8fda008720"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_nist_design_fire.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 12132,
+      "sha256": "0e4ba7abea26de64e729da408a15ef837dba70f9888a10b151ce5bcd18447892"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_spread_scenario_v26.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2229,
+      "sha256": "8a440c8cbc42260bc810a435139fc17e9bc60a0c8423e72e46fb84c52620f8cf"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_spread_fuel_v26.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 14531,
+      "sha256": "de40625420f8a642a793e08d96989d81592a0afa1e00781595e6774e5a2dd29d"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_nist_ignition.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 1000,
+      "sha256": "0e3b2af3e32647edd0495e9f7a44514592d2774c622e0c357d5ce0405b6bcb76"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast_nist_desk.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2268,
+      "sha256": "8fe73ff0f423f913b1bfdbb4c98ec8cb03f08fb921db1ed0c1b8a0381c48ff10"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cad_cfast_multifloor_overlay.js",
+      "exists": true,
+      "kind": "file",
+      "bytes": 31619,
+      "sha256": "6434907d6c40cf8024309e46d6a5ffff48338bbbd6846563a4451ae8cba2a27f"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cad_cfast_realistic.js",
+      "exists": true,
+      "kind": "file",
+      "bytes": 8925,
+      "sha256": "3c2d244798146167d4346b94e3aa608346e34b5cde6c352804e1801a5c397765"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\restore_cad_ui.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2308,
+      "sha256": "fd20fadfe682f446e2494d4a1ad7b9584dd346ee18c471fda3691cf4ff9bf240"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cad-web",
+      "exists": true,
+      "kind": "directory"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast-reference\\v777-input_namelist.f90",
+      "exists": true,
+      "kind": "file",
+      "bytes": 109346,
+      "sha256": "a1b6423ba1d4508781ad5907af12666e0b95ff15407708f69b3063f7064ef5a4"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast-reference\\v777-solve.f90",
+      "exists": true,
+      "kind": "file",
+      "bytes": 65254,
+      "sha256": "7190213ae59178679579d658570b0b61264ac8c8a9281664547065c1746aa0be"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast-reference\\v777-numerics.f90",
+      "exists": true,
+      "kind": "file",
+      "bytes": 212648,
+      "sha256": "036f770567ebd22a961803c6425d73eea485f41e54d29095dc7a3706df99e6f0"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\cfast-reference\\v777-Input_File_Chapter.tex",
+      "exists": true,
+      "kind": "file",
+      "bytes": 63727,
+      "sha256": "d183a2ba1df35a04a7109e53254b96c33281533899935a3758a2e7aadc5dcf24"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\속도개선-비교결과.txt",
+      "exists": true,
+      "kind": "file",
+      "bytes": 5630,
+      "sha256": "87b8e730ee3b8b852c54af2b964afa7bfcad7e9bc3affe5ea3a54e04517da594"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\full-verification.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 45617,
+      "sha256": "289ed8be319eb50a183d1474b3baa88b3aa6399917920ae4b523be560f95c1a1"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\screening-summary.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 5176,
+      "sha256": "019a993dca2a7adae5492da99662aee618dd37e6a095277faf956b975880ef5e"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\comparison.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 27091,
+      "sha256": "684c31365970bc33fbd67784cb08a9bfbe7dd53fe49ffe0650f116f309553a5c"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor.in",
+      "exists": true,
+      "kind": "file",
+      "bytes": 72632,
+      "sha256": "8eff2d975ef74deb381c8c021987d417ed689035e1663bc14da80ce02ec2db96"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor_compartments.csv",
+      "exists": true,
+      "kind": "file",
+      "bytes": 12369570,
+      "sha256": "ac3e65bfea531357964ce1ef96c008900356d0f897949442641af281856a7953"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor_devices.csv",
+      "exists": true,
+      "kind": "file",
+      "bytes": 299301,
+      "sha256": "47f3acf7e36557daf30896ff487be7ddec980e080bcc68e8088ba2406a68b3ac"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor_zone.csv",
+      "exists": true,
+      "kind": "file",
+      "bytes": 35543868,
+      "sha256": "22eccfab975dd4551a62fab7d9b7acd7ed625d4327efaa8227511ba2a1ea754d"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor-timing.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 362,
+      "sha256": "f8f9a89c48126d02ee07421bd568440e718501f6702929e4bc712ec1e5a1e585"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor-progress.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 8475,
+      "sha256": "922550041541f3f88c886a7168cc453f22990562e0ab7709573b601f33d88520"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor-cache.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 1170,
+      "sha256": "f3cae4656c5ab4135e157945f88537fe0e107f7eeafd8ceccd2927320d9adedf"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\cfast-demo.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 3449841,
+      "sha256": "fb183582d5b6054d297d3b715130cd6924574f5c2e35c2c179edbac1c95b475b"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\connection-manifest.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 206077,
+      "sha256": "7bc94c48dc4e51995a704bb5c51c0701000a6984a3d1ab0f696196b1b9c1f037"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\selected600",
+      "exists": true,
+      "kind": "directory"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\설치기록.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 359,
+      "sha256": "ac80d8e72c2fec5932d7ba483312929aca805dab41047519450b699f08dffcf3"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\backup\\cfast-demo.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 3450100,
+      "sha256": "8b965697af0b13cc0830bb6f4bf7dfff01144251f70357275cfb2ac006df8b6c"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26",
+      "exists": true,
+      "kind": "directory"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\diagnostic-symmetry",
+      "exists": true,
+      "kind": "directory"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-NIST가연물-v23",
+      "exists": true,
+      "kind": "directory"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\benchmark_cfast_v27.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2905,
+      "sha256": "004ce1a665dda3df03f151a8ed509b6ab62afaf590a91a8e965130719528c2de"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\compare_cfast_v27.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 3868,
+      "sha256": "54eb0f054ba926c0484f7c3f819cc31e29703002702f8bd39d1bfeff9583cb86"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\finalize_cfast_v27.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2625,
+      "sha256": "4b2fa54d3960f9e3f8e1edf2068e52056dffc3597ce60ef1069022f1e2cc3091"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\report_cfast_v27.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 6685,
+      "sha256": "ed9fe3d9242302013102c43025cdbc4f098b2ffbf7d0c70cd2697f75d7252e47"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\test_cfast_runtime.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 1827,
+      "sha256": "07000cd2a19b522bb4f2c30e73ecb8f8a541dd70840ccf68b8f0de9b7306cd7e"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\install_cfast_v27.ps1",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2136,
+      "sha256": "b1d16fce348513799de0aa10b08f755c0adb935661ca9d38fd401ff32a391d39"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\record_cfast_v27.py",
+      "exists": true,
+      "kind": "file",
+      "bytes": 4069,
+      "sha256": "97ffa35d8cc36927098e5fb4cc9d1513a656a03fd0d58e7d224449c85190a69c"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\work\\smokeview-demo\\firemodels\\cfast7\\cfast.exe",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2761728,
+      "sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\selected600\\benchmark.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 387,
+      "sha256": "70954623a93e3a96100ed3071676d98edd8679df1c2a0136e631388af06ad60c"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\step025600\\benchmark.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 387,
+      "sha256": "b76e0c4dcbcee4108f20e7f4a0cc3f01a5bcf8d366dbf7e62884140fe5c3c7a5"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\step010600\\benchmark.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 387,
+      "sha256": "e464d1abc84465d03e22276b420a54c9f71cc8a0f983963996ef063d2f66aeb3"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor.log",
+      "exists": true,
+      "kind": "file",
+      "bytes": 477,
+      "sha256": "cc7683f788a38bc2ff18c8d98aa914e9bb3c832bd1328bfb2091a4c3c84dfcdb"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\final\\multifloor-execution.log",
+      "exists": true,
+      "kind": "file",
+      "bytes": 98,
+      "sha256": "64477a60abc6422d3db06c870ee19bf2067eb4ab9e49a36f5b9941cd4ee6a8de"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-속도검증-v27\\served-verification.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 497,
+      "sha256": "f2f047659f1dc097860153b98b72b1c2ecb151475356bcef7f7aa80993db6d85"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\multifloor.in",
+      "exists": true,
+      "kind": "file",
+      "bytes": 72606,
+      "sha256": "3a6ab169fe8cdb0ca064399d8d616a003de2b795e9a6656ab0b4d4bb4952b632"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\multifloor_compartments.csv",
+      "exists": true,
+      "kind": "file",
+      "bytes": 12369570,
+      "sha256": "e2a8b6417ba8b875ad36d4b83b12e48513d339b31a850642d5cd5b98fb2788ac"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\multifloor_devices.csv",
+      "exists": true,
+      "kind": "file",
+      "bytes": 299301,
+      "sha256": "c12b0477a54a547199e6d03bdfd5a0df1b3eee566345abbbb0f8d4690ff91c0c"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\multifloor_zone.csv",
+      "exists": true,
+      "kind": "file",
+      "bytes": 35543868,
+      "sha256": "2089875aa723e1c6837635eb5097790f7e9e11aabfc9c9b54e6f773be347ff25"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\multifloor-timing.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 117,
+      "sha256": "4d75dd819f66a7e22874829bd8840e9c9df63aa0bebe2e31db6ebb4b1276ea4a"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-조건부전이-v26\\선정근거와-계산결과.txt",
+      "exists": true,
+      "kind": "file",
+      "bytes": 5482,
+      "sha256": "9f4d34f2d911fe525a6b8776746157764945fdc5b63470698be578d1f4990310"
+    },
+    {
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-NIST가연물-v23\\선정근거와-적용범위.txt",
+      "exists": true,
+      "kind": "file",
+      "bytes": 3916,
+      "sha256": "29534fe58baaedee806c2496522894cd319605f5d898e2489e97e3abfa1ac53d"
+    },
+    {
+      "path": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\building.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 2459876,
+      "sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360"
+    },
+    {
+      "path": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\model.html",
+      "exists": true,
+      "kind": "file",
+      "bytes": 199022,
+      "sha256": "3c703087f05e93841baa12123a073c49d3870ad92ddd5f75e44571846f84fbc3"
+    },
+    {
+      "path": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\cfast-demo.json",
+      "exists": true,
+      "kind": "file",
+      "bytes": 3449841,
+      "sha256": "fb183582d5b6054d297d3b715130cd6924574f5c2e35c2c179edbac1c95b475b"
+    }
+  ],
+  "checks": {
+    "all_paths_exist": true,
+    "engine_matches_v27": true,
+    "building_matches_v27": true,
+    "report_values_checked": true
+  }
+}

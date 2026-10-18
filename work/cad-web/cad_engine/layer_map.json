@@ -1,0 +1,110 @@
+{
+  "_설명": "외부참조 접두어(xxx$0$)를 뗀 대문자 레이어명에 정규식(search) 적용. 위에서부터 먼저 맞는 것 채택. 건물별 예외는 overrides에 '정확한 레이어명': '분류'로 추가.",
+  "order": [
+    "ignore",
+    "door",
+    "window",
+    "column",
+    "wall",
+    "stair",
+    "elev"
+  ],
+  "rules": {
+    "ignore": [
+      "HAT",
+      "PAT",
+      "FUR",
+      "BATH",
+      "TEXT",
+      "DIM",
+      "CEN",
+      "DEF",
+      "TIT",
+      "TREE",
+      "수전",
+      "KIT",
+      "면적",
+      "LEVEL",
+      "DETAIL",
+      "HID",
+      "ELEV-SYM",
+      "^0$",
+      "^2$",
+      "^TX",
+      "F-LINE",
+      "C-LINE",
+      "HARDWARE",
+      "확장면",
+      "^AC$",
+      "^F\\d",
+      "SILL",
+      "TOILET",
+      "EQP",
+      "CAR",
+      "SYM",
+      "^SY\\d",
+      "AXIS",
+      "지시선",
+      "TILE",
+      "드레인",
+      "사다리",
+      "LIGHT",
+      "^AP(SYM|PAT|DIM|GRID|FLVP|ETC)",
+      "^AESYM",
+      "ETC-인테리어",
+      "REV",
+      "^GUIDE$"
+    ],
+    "door": [
+      "DOOR",
+      "DOFRAME",
+      "DOOR-FR",
+      "셔터",
+      "SHUTTER",
+      "^DR$",
+      "-DR$",
+      "^APOPEN"
+    ],
+    "window": [
+      "WIN",
+      "WID",
+      "창호",
+      "GLASS",
+      "CURTAIN",
+      "^APGLZ",
+      "^APWIN"
+    ],
+    "column": [
+      "^C-\\d+X\\d+$",
+      "COL"
+    ],
+    "wall": [
+      "WALL",
+      "^(IN-)?WAL",
+      "BWALL",
+      "(^|-)CON$",
+      "^CON",
+      "^(IN-)?FIN",
+      "^COR$",
+      "^INS",
+      "WALLBR",
+      "^WA\\d$",
+      "내벽",
+      "^AP(CONC|INWA|FIN$|JAMB)"
+    ],
+    "stair": [
+      "STA",
+      "STAIR",
+      "계단",
+      "^ST$"
+    ],
+    "elev": [
+      "^(IN-)?ELE",
+      "^EV",
+      "LIFT",
+      "HOISTWAY",
+      "^APELE"
+    ]
+  },
+  "overrides": {}
+}

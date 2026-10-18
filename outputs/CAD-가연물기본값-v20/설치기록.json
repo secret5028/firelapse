@@ -1,0 +1,13 @@
+{
+  "status": "installed_and_checked",
+  "url": "http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html",
+  "preset": "generic_wood_v1",
+  "model_sha256": "dd7f9dd706bae620ef7fb502add254c5e28cb438642b831ba797bc9158660366",
+  "results_sha256": "e9bbb03ec848f98836d4a6bedb9b25b528d6f359024a7aa2c294409b513af639",
+  "browser_checks": [
+    "default material label",
+    "all targets surface 300 C",
+    "real view",
+    "no console errors"
+  ]
+}

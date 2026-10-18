@@ -1,0 +1,353 @@
+{
+  "unit_tests_passed": 58,
+  "samples": [
+    {
+      "sample": "exhibition-1F",
+      "rooms_before": 24,
+      "rooms_after": 24,
+      "room_mapping": {
+        "R0": "R0",
+        "R1": "R1",
+        "R2": "R2",
+        "R3": "R3",
+        "R4": "R4",
+        "R5": "R5",
+        "R6": "R6",
+        "R7": "R7",
+        "R8": "R8",
+        "R9": "R9",
+        "R10": "R10",
+        "R11": "R11",
+        "R12": "R12",
+        "R13": "R13",
+        "R14": "R14",
+        "R15": "R15",
+        "R16": "R16",
+        "R17": "R17",
+        "R18": "R18",
+        "R19": "R19",
+        "R20": "R20",
+        "R21": "R21",
+        "R22": "R22",
+        "R23": "R23"
+      },
+      "changed_existing_connections": [],
+      "new_connections": [],
+      "excluded": [
+        {
+          "id": "D7",
+          "reason": "same_space"
+        },
+        {
+          "id": "W3",
+          "reason": "unresolved"
+        },
+        {
+          "id": "W8",
+          "reason": "unresolved"
+        }
+      ],
+      "rejected": [
+        "W2",
+        "W7"
+      ],
+      "runs": [
+        {
+          "state": 50,
+          "seconds": 60,
+          "solver_success": true
+        }
+      ]
+    },
+    {
+      "sample": "hotel-1F",
+      "rooms_before": 20,
+      "rooms_after": 20,
+      "room_mapping": {
+        "R0": "R0",
+        "R1": "R1",
+        "R2": "R2",
+        "R3": "R3",
+        "R4": "R4",
+        "R5": "R5",
+        "R6": "R6",
+        "R7": "R7",
+        "R8": "R8",
+        "R9": "R9",
+        "R10": "R10",
+        "R11": "R11",
+        "R12": "R12",
+        "R13": "R13",
+        "R14": "R14",
+        "R15": "R15",
+        "R16": "R16",
+        "CE0": "CE0",
+        "CE1": "CE1",
+        "CE2": "CE2"
+      },
+      "changed_existing_connections": [],
+      "new_connections": [
+        {
+          "id": "D9",
+          "sides": [
+            "R1",
+            "R4"
+          ]
+        }
+      ],
+      "excluded": [
+        {
+          "id": "W2",
+          "reason": "same_space"
+        },
+        {
+          "id": "W13",
+          "reason": "unresolved"
+        },
+        {
+          "id": "W14",
+          "reason": "unresolved"
+        },
+        {
+          "id": "W17",
+          "reason": "same_space"
+        }
+      ],
+      "rejected": [],
+      "runs": [
+        {
+          "state": 50,
+          "seconds": 60,
+          "solver_success": true
+        }
+      ]
+    },
+    {
+      "sample": "hotel-4F",
+      "rooms_before": 25,
+      "rooms_after": 25,
+      "room_mapping": {
+        "R0": "R0",
+        "R1": "R1",
+        "R2": "R2",
+        "R3": "R3",
+        "R4": "R4",
+        "R5": "R5",
+        "R6": "R6",
+        "R7": "R7",
+        "R8": "R8",
+        "R9": "R9",
+        "R10": "R10",
+        "R11": "R11",
+        "R12": "R12",
+        "R13": "R13",
+        "R14": "R14",
+        "R15": "R15",
+        "R16": "R16",
+        "R17": "R17",
+        "R18": "R18",
+        "R19": "R19",
+        "R20": "R20",
+        "R21": "R21",
+        "CE0": "CE0",
+        "CE1": "CE1",
+        "CE2": "CE2"
+      },
+      "changed_existing_connections": [],
+      "new_connections": [],
+      "excluded": [],
+      "rejected": [],
+      "runs": [
+        {
+          "state": 50,
+          "seconds": 60,
+          "solver_success": true
+        }
+      ]
+    },
+    {
+      "sample": "office-1F",
+      "rooms_before": 35,
+      "rooms_after": 33,
+      "room_mapping": {
+        "R0": "R0",
+        "R1": "R1",
+        "R2": "R2",
+        "R3": "R3",
+        "R4": "R4",
+        "R5": "R5",
+        "R6": "R6",
+        "R7": "R7",
+        "R8": "R8",
+        "R9": "R9",
+        "R10": "R10",
+        "R11": "R11",
+        "R12": "R12",
+        "R13": "R13",
+        "R14": "R14",
+        "R15": "R15",
+        "R16": "R16",
+        "R17": "R17",
+        "R18": "R18",
+        "R19": "R19",
+        "R20": "R20",
+        "R21": "R21",
+        "R22": "R22",
+        "R23": "R23",
+        "R24": "R24",
+        "R25": "R25",
+        "R26": "R26",
+        "R27": "R27",
+        "R28": "R28",
+        "R29": "R15",
+        "R30": "R29",
+        "R31": "R30",
+        "R32": "R30",
+        "CE1": "CE1",
+        "CE2": "CE2"
+      },
+      "changed_existing_connections": [],
+      "new_connections": [
+        {
+          "id": "D6",
+          "sides": [
+            "R30",
+            "out"
+          ]
+        },
+        {
+          "id": "D13",
+          "sides": [
+            "R21",
+            "R25"
+          ]
+        },
+        {
+          "id": "D18",
+          "sides": [
+            "R9",
+            "R15"
+          ]
+        }
+      ],
+      "excluded": [
+        {
+          "id": "W76",
+          "reason": "same_space"
+        },
+        {
+          "id": "W79",
+          "reason": "same_space"
+        }
+      ],
+      "rejected": [
+        "W68",
+        "W69",
+        "W72",
+        "W75",
+        "W78",
+        "D16",
+        "W62",
+        "W65",
+        "W89"
+      ],
+      "runs": [
+        {
+          "state": 0,
+          "seconds": 60,
+          "solver_success": true
+        },
+        {
+          "state": 50,
+          "seconds": 60,
+          "solver_success": true
+        },
+        {
+          "state": 100,
+          "seconds": 60,
+          "solver_success": true
+        }
+      ]
+    },
+    {
+      "sample": "office-4F",
+      "rooms_before": 24,
+      "rooms_after": 23,
+      "room_mapping": {
+        "R0": "R0",
+        "R1": "R1",
+        "R2": "R2",
+        "R3": "R3",
+        "R4": "R4",
+        "R5": "R5",
+        "R6": "R3",
+        "R7": "R6",
+        "R8": "R7",
+        "R9": "R8",
+        "R10": "R9",
+        "R11": "R10",
+        "R12": "R11",
+        "R13": "R12",
+        "R14": "R13",
+        "R15": "R14",
+        "R16": "R15",
+        "R17": "R16",
+        "R18": "R17",
+        "R19": "R18",
+        "R20": "R19",
+        "R21": "R20",
+        "CE0": "CE0",
+        "CE1": "CE1"
+      },
+      "changed_existing_connections": [],
+      "new_connections": [],
+      "excluded": [],
+      "rejected": [],
+      "runs": [
+        {
+          "state": 50,
+          "seconds": 60,
+          "solver_success": true
+        }
+      ]
+    }
+  ],
+  "code_sha256": {
+    "standard_heights.json": "cfd0b10c2976a94c528c71a0b38354f4f83252a2d8b2615a2725292560af7b7f",
+    "cad_heal.py": "7ee385a8e422e3d1d7a5d9a1e8e42e274c884f311ea04c988afe514c10f86988",
+    "fire_overlay.py": "74f1e1c9b25cae44c80dfc1dccf7c57003bbf6071c02ecc6464acce5ad197c02",
+    "requirements-extraction.txt": "f9b431c698815d789ae439e22357d2a3126b3a91e7bbb90c68695c6cbac5db86",
+    "cad_evidence.py": "404d268a840284fe6b2d71bed666970bfe1bc90dfb16060b80e3a64fd87a5b8a",
+    "CAD-연결보강-v4.txt": "78b7022328e7b912d14ebdeaae154f09b6f920484682455e4641a8559fe3d52e",
+    "fire_zone.py": "e55d7de953c0ae8322e92b93952059ea6b7cb4930b84032282ae0251e0b34f40",
+    "test_cad_topology.py": "6750a225c7d1d67c50d5edc752b3c2d62860d624ce2265d74e33bdcf90bd5774",
+    "test_cad_host.py": "9c7b36f807d3478ad9229e370be1527423acf94ffa5124e095f8cb27dc3a9ada",
+    "test_cad_evidence.py": "ce53af377906d8db9b2ac7a6b21f07f651bfad210011d8b3c9fa025f135514bd",
+    "cad_build3d.py": "9cb8400400491a0b5bda7d62de08762dc8fef747262119d0632da5421aa03e18",
+    "cad_door_rules.py": "b04486b5a90e93a1e3b615b9556a5558dd3f11dda8634ca972249d86e0dbe18a",
+    "test_cad_door_rules.py": "01b2ccccb6040697148f72bb8844fc3a751ea91d396785b85ff50778c6bebdf2",
+    "test_cad_auto.py": "ce248c147ad9353add02f9cda222a555717d4080bed73ab8b753b3df6eca86cf",
+    "cad_connectivity.py": "b3aecf95e62a48d227ca63d3897686df558939faf120ff31178c8f196288a333",
+    "fire_load_table.json": "75b3ce94bae4868c3a9df4325e644702a5e532f3cf3e9ca272719705892edf05",
+    "CAD-추출-사용법.txt": "d1e9290dfee57cd656e84715a8c71fd4006a55d665f352f0f3cea6f08aee4dbb",
+    "compare_template.html": "5f9436ceaf14c77725c065de19a614e0e77d43e486b8e8e748c7f9481b5f26ac",
+    "fire_symbols.py": "008022d50ace0bbaac5983ef7b6214056777c5388b427b8685814c8f703456dd",
+    "run_building.py": "74145a7180b2e92042a4256fa30fc90f99298d231380bf99fa12613565a93343",
+    "cad_pipeline.py": "fd932d1a4eb320e6155eeb3214c0f6fc22e6fc96114fef087592869de42db8c1",
+    "CAD-자동보강-v3.txt": "200d3f10316c5b72a0d8feb5b34bab914b1538a400a00cb824a23f418bcc852a",
+    "cad_review_ui.py": "492f33405efc2492eb6462cbd4eb2f01a708274eab2bc3c6b66260e29b8a5fef",
+    "cadio.py": "337fb35bb474ae6bc526ab9170820fe6bb3a3feb24ba1ed1f16f840e62e56407",
+    "fire_align.py": "04f2e4c7c18d8bbb3f102e51696c7961ea7e68775a6d0f2491d5b26f28f86c3e",
+    "cad_host.py": "c11be24d0f713afa1edb2ced0385c1c0ab1b3fdc0bb89433187ea920f23e6c6e",
+    "test_cad_connectivity.py": "4908e8d2ae196ffb9e395f56d2072c06a1f9cdd07271ec15a00a9a7295f36fe8",
+    "viewer_template.html": "245432492f81c47a680b405e6cc3876eeb0a9ab7d049f2d8ad19d3235ae2f6bb",
+    "cad_review_rules.py": "c933ada6e6272e82a93703ac585791be2d955ddec935f0f67e06fa297354c174",
+    "cad_topology.py": "e1d50e672c72d3befec718af387a2c4f211412f48a051916fc8e627896bbaa8e",
+    "cad_compare.py": "738fcc358e745c79bd181f191cf1c2706cb43a58efa71a4f277679c797b51da5",
+    "cad_auto.py": "369bade0984f07f169063d766a4eff1b7cf3b35e2ef99788d6144714599ba724",
+    "fire_building.py": "1ea5267b65aab5556794dbda0ae204b270d112ab6c701c55d70fd1abeca023ae",
+    "layer_map.json": "fb57c9ab5314f41803aa1bb49a01285e5012cd1e54a5ecce44c26039b9a4c5f6",
+    "cad_plan.py": "cb2fd189f787977772aabad0fca19386bf6dfff0c8489c69cb92d522158876c8"
+  },
+  "browser_click_test": "not_run_local_file_access_restricted"
+}

@@ -1,0 +1,435 @@
+{
+  "zero": {
+    "calculationMode": "nist_evidence_scenario",
+    "duration": 1800,
+    "enabled": true,
+    "fires": [
+      {
+        "hrr": 0,
+        "id": "ExampleFire",
+        "ignited": true
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationN",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationS",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationHall",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationAS",
+        "ignited": false
+      }
+    ],
+    "floor": "3F",
+    "mode": "real",
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "playing": false,
+    "rendering": {
+      "depthTest": false,
+      "flameRenderOrder": 20,
+      "flameSizes": [],
+      "flames": [],
+      "method": "polygon-masked-volume-raymarch",
+      "minimumFlamePixels": {
+        "height": 32,
+        "width": 22
+      },
+      "smokeRenderOrder": 10,
+      "steps": 32,
+      "visibility": "geometry < smoke < flames",
+      "volumeCount": 0
+    },
+    "roomCount": 156,
+    "selected": "3F_R9",
+    "smokeRooms": 0,
+    "solverCompartments": 100,
+    "time": 0,
+    "verticalPaths": 36,
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.45
+  },
+  "before": {
+    "calculationMode": "nist_evidence_scenario",
+    "duration": 1800,
+    "enabled": true,
+    "fires": [
+      {
+        "hrr": 1682.06,
+        "id": "ExampleFire",
+        "ignited": true
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationN",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationS",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationHall",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationAS",
+        "ignited": false
+      }
+    ],
+    "floor": "3F",
+    "mode": "real",
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "playing": false,
+    "rendering": {
+      "depthTest": false,
+      "flameRenderOrder": 20,
+      "flameSizes": [
+        {
+          "displayHeight": 5.175788829249501,
+          "enlarged": true,
+          "id": "ExampleFire",
+          "physicalHeight": 1.77823
+        }
+      ],
+      "flames": [
+        "ExampleFire"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "minimumFlamePixels": {
+        "height": 32,
+        "width": 22
+      },
+      "smokeRenderOrder": 10,
+      "steps": 32,
+      "visibility": "geometry < smoke < flames",
+      "volumeCount": 3
+    },
+    "roomCount": 156,
+    "selected": "3F_R9",
+    "smokeRooms": 2,
+    "solverCompartments": 100,
+    "time": 340,
+    "verticalPaths": 36,
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.45
+  },
+  "spread": {
+    "calculationMode": "nist_evidence_scenario",
+    "duration": 1800,
+    "enabled": true,
+    "fires": [
+      {
+        "hrr": 1090.8,
+        "id": "ExampleFire",
+        "ignited": true
+      },
+      {
+        "hrr": 2549.26,
+        "id": "WorkstationN",
+        "ignited": true
+      },
+      {
+        "hrr": 2549.25,
+        "id": "WorkstationS",
+        "ignited": true
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationHall",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationAS",
+        "ignited": false
+      }
+    ],
+    "floor": "3F",
+    "mode": "real",
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "playing": false,
+    "rendering": {
+      "depthTest": false,
+      "flameRenderOrder": 20,
+      "flameSizes": [
+        {
+          "displayHeight": 5.175788829249491,
+          "enlarged": true,
+          "id": "ExampleFire",
+          "physicalHeight": 1.0488
+        },
+        {
+          "displayHeight": 5.235358647548752,
+          "enlarged": true,
+          "id": "WorkstationN",
+          "physicalHeight": 2.60797
+        },
+        {
+          "displayHeight": 5.116906325372233,
+          "enlarged": true,
+          "id": "WorkstationS",
+          "physicalHeight": 2.60797
+        }
+      ],
+      "flames": [
+        "ExampleFire",
+        "WorkstationN",
+        "WorkstationS"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "minimumFlamePixels": {
+        "height": 32,
+        "width": 22
+      },
+      "smokeRenderOrder": 10,
+      "steps": 32,
+      "visibility": "geometry < smoke < flames",
+      "volumeCount": 48
+    },
+    "roomCount": 156,
+    "selected": "3F_R9",
+    "smokeRooms": 7,
+    "solverCompartments": 100,
+    "time": 750,
+    "verticalPaths": 36,
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.45
+  },
+  "end": {
+    "calculationMode": "nist_evidence_scenario",
+    "duration": 1800,
+    "enabled": true,
+    "fires": [
+      {
+        "hrr": 211.777,
+        "id": "ExampleFire",
+        "ignited": true
+      },
+      {
+        "hrr": 322.919,
+        "id": "WorkstationN",
+        "ignited": true
+      },
+      {
+        "hrr": 328.781,
+        "id": "WorkstationS",
+        "ignited": true
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationHall",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationAS",
+        "ignited": false
+      }
+    ],
+    "floor": "3F",
+    "mode": "real",
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "playing": false,
+    "rendering": {
+      "depthTest": false,
+      "flameRenderOrder": 20,
+      "flameSizes": [
+        {
+          "displayHeight": 0.5504755301345214,
+          "enlarged": true,
+          "id": "ExampleFire",
+          "physicalHeight": 0.01
+        },
+        {
+          "displayHeight": 0.6147522992286054,
+          "enlarged": true,
+          "id": "WorkstationN",
+          "physicalHeight": 0.01
+        },
+        {
+          "displayHeight": 0.4921958251317772,
+          "enlarged": true,
+          "id": "WorkstationS",
+          "physicalHeight": 0.01
+        }
+      ],
+      "flames": [
+        "ExampleFire",
+        "WorkstationN",
+        "WorkstationS"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "minimumFlamePixels": {
+        "height": 32,
+        "width": 22
+      },
+      "smokeRenderOrder": 10,
+      "steps": 32,
+      "visibility": "geometry < smoke < flames",
+      "volumeCount": 75
+    },
+    "roomCount": 156,
+    "selected": "3F_R9",
+    "smokeRooms": 11,
+    "solverCompartments": 100,
+    "time": 1800,
+    "verticalPaths": 36,
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.45
+  },
+  "basic": {
+    "calculationMode": "nist_evidence_scenario",
+    "duration": 1800,
+    "enabled": true,
+    "fires": [
+      {
+        "hrr": 211.777,
+        "id": "ExampleFire",
+        "ignited": true
+      },
+      {
+        "hrr": 322.919,
+        "id": "WorkstationN",
+        "ignited": true
+      },
+      {
+        "hrr": 328.781,
+        "id": "WorkstationS",
+        "ignited": true
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationHall",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationAS",
+        "ignited": false
+      }
+    ],
+    "floor": "3F",
+    "mode": "zones",
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "playing": false,
+    "rendering": {
+      "depthTest": false,
+      "flameRenderOrder": 20,
+      "flameSizes": [],
+      "flames": [],
+      "method": "polygon-masked-volume-raymarch",
+      "minimumFlamePixels": {
+        "height": 32,
+        "width": 22
+      },
+      "smokeRenderOrder": 10,
+      "steps": 32,
+      "visibility": "geometry < smoke < flames",
+      "volumeCount": 0
+    },
+    "roomCount": 156,
+    "selected": "3F_R9",
+    "smokeRooms": 11,
+    "solverCompartments": 100,
+    "time": 1800,
+    "verticalPaths": 36,
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.45
+  },
+  "errors": [],
+  "final": {
+    "calculationMode": "nist_evidence_scenario",
+    "duration": 1800,
+    "enabled": true,
+    "fires": [
+      {
+        "hrr": 1090.8,
+        "id": "ExampleFire",
+        "ignited": true
+      },
+      {
+        "hrr": 2549.26,
+        "id": "WorkstationN",
+        "ignited": true
+      },
+      {
+        "hrr": 2549.25,
+        "id": "WorkstationS",
+        "ignited": true
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationHall",
+        "ignited": false
+      },
+      {
+        "hrr": 0,
+        "id": "WorkstationAS",
+        "ignited": false
+      }
+    ],
+    "floor": "3F",
+    "mode": "real",
+    "modelHash": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "playing": false,
+    "rendering": {
+      "depthTest": false,
+      "flameRenderOrder": 20,
+      "flameSizes": [
+        {
+          "displayHeight": 1.0488,
+          "enlarged": false,
+          "id": "ExampleFire",
+          "physicalHeight": 1.0488
+        },
+        {
+          "displayHeight": 2.60797,
+          "enlarged": false,
+          "id": "WorkstationN",
+          "physicalHeight": 2.60797
+        },
+        {
+          "displayHeight": 2.60797,
+          "enlarged": false,
+          "id": "WorkstationS",
+          "physicalHeight": 2.60797
+        }
+      ],
+      "flames": [
+        "ExampleFire",
+        "WorkstationN",
+        "WorkstationS"
+      ],
+      "method": "polygon-masked-volume-raymarch",
+      "minimumFlamePixels": {
+        "height": 32,
+        "width": 22
+      },
+      "smokeRenderOrder": 10,
+      "steps": 32,
+      "visibility": "geometry < smoke < flames",
+      "volumeCount": 48
+    },
+    "roomCount": 156,
+    "selected": "3F_R9",
+    "smokeRooms": 7,
+    "solverCompartments": 100,
+    "time": 750,
+    "verticalPaths": 36,
+    "wallClippingPlanes": 0,
+    "wallOpacity": 0.45
+  }
+}

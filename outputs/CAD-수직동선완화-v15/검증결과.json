@@ -1,0 +1,98 @@
+{
+  "normal": {
+    "version": "cad-ui-v15",
+    "floor": "all",
+    "camera": [
+      86.23776245892128,
+      -54.842024917841485,
+      107.84974867194933
+    ],
+    "target": [
+      41.08,
+      35.4735,
+      22.049999999999997
+    ],
+    "visibleFloors": [
+      "B1",
+      "1F",
+      "2F",
+      "3F",
+      "4F",
+      "5F",
+      "6F",
+      "7F",
+      "PH"
+    ],
+    "groundZ": 5.1,
+    "gridZ": 4.909999999999999,
+    "gridVisible": true,
+    "gridStep": 1,
+    "stairs": 512,
+    "visibleWalls": 39,
+    "viewport": [
+      868,
+      656
+    ],
+    "legacy": {
+      "vehicles": 0,
+      "routes": 0,
+      "fires": 0,
+      "people": 0,
+      "hydraulics": true
+    },
+    "coreEmphasis": true,
+    "coreOpacity": 0.8625,
+    "coreDepthTest": true,
+    "coreOverlay": false,
+    "wallTransparency": 55
+  },
+  "opaque": {
+    "version": "cad-ui-v15",
+    "floor": "all",
+    "camera": [
+      86.23776245892131,
+      -54.84202491782389,
+      107.84974867193114
+    ],
+    "target": [
+      41.08,
+      35.4735,
+      22.049999999999997
+    ],
+    "visibleFloors": [
+      "B1",
+      "1F",
+      "2F",
+      "3F",
+      "4F",
+      "5F",
+      "6F",
+      "7F",
+      "PH"
+    ],
+    "groundZ": 5.1,
+    "gridZ": 4.909999999999999,
+    "gridVisible": true,
+    "gridStep": 1,
+    "stairs": 512,
+    "visibleWalls": 39,
+    "viewport": [
+      868,
+      656
+    ],
+    "legacy": {
+      "vehicles": 0,
+      "routes": 0,
+      "fires": 0,
+      "people": 0,
+      "hydraulics": true
+    },
+    "coreEmphasis": true,
+    "coreOpacity": 1,
+    "coreDepthTest": true,
+    "coreOverlay": false,
+    "wallTransparency": 0
+  },
+  "errors": [],
+  "wall_occlusion_visually_verified": true
+}

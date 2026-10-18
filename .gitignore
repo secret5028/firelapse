@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+!.env.example
+work/cad-deps/
+work/cad-web/local-data/
+outputs/home-run/
+outputs/rebuilt-viewer/

@@ -1,0 +1,150 @@
+{
+  "rooms": [
+    {
+      "room": "3F_R9",
+      "intervals": [
+        {
+          "onset": 635.0,
+          "confirmed": 645.0,
+          "end": 680.0
+        },
+        {
+          "onset": 705.0,
+          "confirmed": 715.0,
+          "end": 820.0
+        },
+        {
+          "onset": 945.0,
+          "confirmed": 955.0,
+          "end": 1015.0
+        }
+      ]
+    },
+    {
+      "room": "3F_R2",
+      "intervals": []
+    },
+    {
+      "room": "3F_R8",
+      "intervals": []
+    }
+  ],
+  "jets": [
+    {
+      "solver_key": "3F_R2",
+      "room_keys": [
+        "3F_R2"
+      ],
+      "onset": 635.0,
+      "peak_kW": 816.952,
+      "peak_time": 1000.0,
+      "anchor": {
+        "vent_id": "3F_D14",
+        "room_key": "3F_R2",
+        "donor_room": "3F_R9",
+        "floor": "3F",
+        "position": [
+          69.899,
+          55.403
+        ],
+        "top": 2.1,
+        "width": 1.9,
+        "donor_fuel_score": 0.280787
+      },
+      "candidates": [
+        {
+          "vent_id": "3F_D14",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R9",
+          "floor": "3F",
+          "position": [
+            69.899,
+            55.403
+          ],
+          "top": 2.1,
+          "width": 1.9,
+          "donor_fuel_score": 0.280787
+        },
+        {
+          "vent_id": "3F_D12",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R11",
+          "floor": "3F",
+          "position": [
+            57.6,
+            53.928
+          ],
+          "top": 2.1,
+          "width": 1.8,
+          "donor_fuel_score": 1.58614e-06
+        },
+        {
+          "vent_id": "3F_D10",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R8",
+          "floor": "3F",
+          "position": [
+            65.199,
+            55.4
+          ],
+          "top": 2.1,
+          "width": 1.9,
+          "donor_fuel_score": 8.2587e-07
+        },
+        {
+          "vent_id": "3F_D7",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R23",
+          "floor": "3F",
+          "position": [
+            62.175,
+            43.07775
+          ],
+          "top": 2.1,
+          "width": 1.8,
+          "donor_fuel_score": 7.15739e-07
+        },
+        {
+          "vent_id": "3F_D3",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R12",
+          "floor": "3F",
+          "position": [
+            59.72,
+            45.8395
+          ],
+          "top": 2.1,
+          "width": 1.7,
+          "donor_fuel_score": 4.42071e-07
+        },
+        {
+          "vent_id": "3F_D8",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R1",
+          "floor": "3F",
+          "position": [
+            52.825,
+            43.08075
+          ],
+          "top": 2.1,
+          "width": 1.9,
+          "donor_fuel_score": 1.7466e-07
+        },
+        {
+          "vent_id": "3F_D13",
+          "room_key": "3F_R2",
+          "donor_room": "3F_R1",
+          "floor": "3F",
+          "position": [
+            56.525,
+            56.92775
+          ],
+          "top": 2.1,
+          "width": 1.9,
+          "donor_fuel_score": 1.7466e-07
+        }
+      ],
+      "location_basis": "illustrative_opening_from_connectivity_and_donor_fuel; not native per-vent output"
+    }
+  ]
+}

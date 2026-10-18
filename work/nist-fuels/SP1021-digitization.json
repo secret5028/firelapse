@@ -1,0 +1,21 @@
+{
+  "source": "NIST SP 1021, Figure 71, printed p54 / PDF p59",
+  "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication1021.pdf",
+  "pdf_sha256": "40ff5fa6862185b5d33e934174cbdbc6d89e232cae7177e015b071c50e48ed96",
+  "method": "red vector circle centres; duplicate x averaged; largest-error piecewise-linear reduction",
+  "axes_pdf_points": {
+    "x0": 162,
+    "x1800": 401.88,
+    "y0": 495.66,
+    "y3500": 698.94
+  },
+  "raw_points": 1433,
+  "input_points": 190,
+  "raw_energy_MJ": 1584.848674663997,
+  "input_energy_MJ": 1583.3768377785004,
+  "energy_relative_error": -0.0009286923786642198,
+  "peak_kW": 3306.818181818181,
+  "peak_time_s": 379.089545,
+  "last_point_extension_s": 0.9004500000000917,
+  "note": "Figure digitization; not original measurement CSV. No amplitude multiplication or duration stretching. Original 50kW/200s igniter included in measured package; no second igniter added."
+}

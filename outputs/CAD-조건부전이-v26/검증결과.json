@@ -1,0 +1,76 @@
+{
+  "status": "passed",
+  "physical_validation": false,
+  "normal_exit": true,
+  "elapsed_seconds": 2079.672,
+  "rooms": 156,
+  "solver_compartments": 100,
+  "vertical_paths": 36,
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+  "legacy_prefix_unchanged": true,
+  "actual_primary_peak_kW": 3256.68,
+  "actual_total_peak_kW": 7142.55,
+  "targets": [
+    {
+      "id": "WorkstationN",
+      "name": "북측 별도 작업대 묶음",
+      "room": "3F_R9",
+      "ignition_time": 345.0,
+      "max_surface_C": 529.903,
+      "max_hrr_kW": 2601.22
+    },
+    {
+      "id": "WorkstationS",
+      "name": "남측 별도 작업대 묶음",
+      "room": "3F_R9",
+      "ignition_time": 350.0,
+      "max_surface_C": 533.843,
+      "max_hrr_kW": 2601.22
+    },
+    {
+      "id": "WorkstationHall",
+      "name": "홀 가구 묶음",
+      "room": "3F_R2",
+      "ignition_time": null,
+      "max_surface_C": 71.4797,
+      "max_hrr_kW": 0.0
+    },
+    {
+      "id": "WorkstationAS",
+      "name": "A/S실 가구 묶음",
+      "room": "3F_R8",
+      "ignition_time": null,
+      "max_surface_C": 36.5439,
+      "max_hrr_kW": 0.0
+    }
+  ],
+  "registered_fire_peak_kW": 6546.28,
+  "vent_jet_peak_kW": 819.895,
+  "target_prescribed_energy_MJ": 1576.0669578285006,
+  "footprints_inside_rooms": true,
+  "fire_room_packages_nonoverlapping": true,
+  "native_ignition_log_matches_flags": true,
+  "native_ignition_log_seconds": {
+    "WorkstationN": 342.0,
+    "WorkstationS": 347.0
+  },
+  "primary_curve_unchanged": true,
+  "source_room_dimensions_m": [
+    5.018119822208971,
+    9.581038656593051
+  ],
+  "room_max_upper_C": {
+    "3F_R9": 462.644,
+    "3F_R2": 136.474,
+    "3F_R8": 51.8601
+  },
+  "limitations": [
+    "실제 재고가 아닌 밀집 가구 배치 시나리오; 점화원이 각 노출면에 존재한다고 가정",
+    "북/남 서류 노출면 높이0.75/0.90m. 대칭 동시착화시 CFAST7.7.7의 IGN/HRR 불일치가 재현되어 서로 다른 높이의 배치를 선택; 엔진 수정이나 착화기준 변경은 하지 않음",
+    "타깃은 서류 노출면, 화원은 묶음 중심. 서류 조건 충족 후 전체 묶음 지정 HRR 적용은 설계 가정이며 실제 내부 전이 검증 아님",
+    "원 콘 시험의 후면 단열·수평 노출을 CFAST 양면 노출 PLATE로 근사. 작업실 타깃은 화원을 향한 수직 서류면",
+    "가구 묶음 조성·CO/soot수율·연소열18.1MJ/kg·복사분율0.33은 기존 대리 가정",
+    "R9만 CAD 경계 종횡비를 유지하는 등면적 직사각형 사용. 벽/문 도면 및 CAD 건물 높이 변경 없음",
+    "다른 구획 화염의 직접 복사열과 문을 통한 국소 화염 접촉은 계산하지 않음; 다른 방은 구획 열환경으로만 착화 판단"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "explicit_user_approval": "3 files approved",
+  "solver_rerun": false,
+  "result_sha256": "825ddd4b8aaf0cd5437cb580358bb1d9ee9208f100edb4fa6ecec8289c2feadf",
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+  "status": "installed",
+  "model_sha256": "8011129b7252961cc4855f2d90066bf9d2d121a6fe0f45bd3f81dc864f72b394",
+  "physical_validation": false
+}

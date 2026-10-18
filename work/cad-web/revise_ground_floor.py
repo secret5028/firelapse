@@ -1,0 +1,5 @@
+from pathlib import Path
+p=Path('work/factory_data.py');s=p.read_text(encoding='utf-8').replace('f=floor(1,[[0,9,5.1,9],[0,7.4,5.1,1.6]])',"f=floor(1,[[0,0,45.9,18]])\nf['floorBasis']='사용자 지시: 1층 전체 바닥 적용'");p.write_text(s,encoding='utf-8')
+p=Path('work/factory.js');s=p.read_text(encoding='utf-8').replace('사무실·계단만 바닥 표현','전체 바닥').replace('if(f.n!==2){const x=f.n===3?15.3:5.1;', 'if(f.n===3){const x=15.3;').replace("f.n===3?'3F 바닥 없음 ↓ 2F 창고':'1F OPEN · 바닥 미확인'", "'3F 바닥 없음 ↓ 2F 창고'").replace('OPEN 바닥·하부 연결 미확인 · 전체 바닥','1층 전체 바닥 반영 · 층간 연결은 미확인');p.write_text(s,encoding='utf-8')
+p=Path('work/factory.html');s=p.read_text(encoding='utf-8').replace('1층: 사무실·계단만 표현','1층: 전체 바닥').replace('1층의 넓은 OPEN도 보수적으로 바닥을 만들지 않았습니다.', '1층은 사용자 지시에 따라 전체 바닥을 적용했습니다. OPEN 글자만으로 바닥 유무를 일괄 판단하지 않습니다.');p.write_text(s,encoding='utf-8')
+p=Path('outputs/당산리공장-모델안내.txt');s=p.read_text(encoding='utf-8').replace('- 1층 OPEN도 보수적으로 바닥을 만들지 않음. 정확한 단면 확인 필요.', '- 1층은 사용자 지시에 따라 전체 바닥 적용. OPEN만으로 바닥 없음 판단하지 않음.').replace('1층 일부·2층 창고 포함','1층 전체·2층 창고 포함');p.write_text(s,encoding='utf-8')

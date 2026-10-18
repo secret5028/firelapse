@@ -1,0 +1,69 @@
+{
+  "preset_id": "nist_ncstar_desk_A13",
+  "name": "NIST 시험 책상 상판 대리재료",
+  "description": "NCSTAR1-5C 표A-2·그림A-13의 점화원 존재 조건: 407°C. 1차원 열응답 보정 물성 사용. 실제 건물의 모든 목재 공통값이나 자연발화 온도가 아님.",
+  "material": {
+    "id": "NISTDESK",
+    "conductivity_W_mK": 0.100416,
+    "density_kg_m3": 700,
+    "specific_heat_kJ_kgK": 5.8576,
+    "thickness_m": 0.028,
+    "emissivity": 0.95
+  },
+  "ignition": {
+    "criterion": "TEMPERATURE",
+    "setpoint": 407,
+    "unit": "°C",
+    "pilot_assumed": true
+  },
+  "growth": {
+    "hrr_kW": [
+      [
+        0,
+        146.29092976108976
+      ],
+      [
+        1739.0,
+        146.29092976108976
+      ],
+      [
+        1739.001,
+        0
+      ],
+      [
+        3600,
+        0
+      ]
+    ],
+    "area_m2": 1.2,
+    "base_height_m": 0.75,
+    "heat_of_combustion_kJ_kg": 14000,
+    "co_yield": 0.006171682,
+    "soot_yield": 0.015
+  },
+  "evidence": {
+    "report": "NIST NCSTAR1-5C",
+    "table": "A-2 printed p73",
+    "ignition_figure": "A-13 printed p91",
+    "ignition_uncertainty_C": 10,
+    "ignition_basis": "piloted cone tests; effective 1D conduction fit; not full-scale CFAST validation",
+    "thermal_conversion": "k:2.4e-4 cal/(cm s K)*418.4; rho:0.70g/cm3*1000; cp:1.4cal/(g K)*4.184kJ/(kg K)",
+    "reference_flux_kW_m2": 45,
+    "total_energy_MJ_m2": 212,
+    "energy_uncertainty_MJ_m2": 4.3,
+    "mean_burn_duration_s": 1739,
+    "post_ignition_model": "square-wave whole-burn equivalent at the 45kW/m2 test exposure; prescribed after ignition, not dynamically responding to changing exposure",
+    "assumptions": [
+      "상판 면적1.2m²·높이0.75m·위치는 시나리오 가정",
+      "점화원 존재 가정",
+      "원 시험 후면은 단열. CFAST는 양면 노출 PLATE로 근사하므로 시험 열경계의 정확한 재현이 아님",
+      "CO/soot 수율은 실측되지 않은 대리값"
+    ]
+  },
+  "sources": [
+    {
+      "url": "https://nvlpubs.nist.gov/nistpubs/Legacy/NCSTAR/ncstar1-5c.pdf",
+      "use": "표A-2 및 그림A-13: 열응답, 점화조건, 연소열, 평균연소와 총열량"
+    }
+  ]
+}

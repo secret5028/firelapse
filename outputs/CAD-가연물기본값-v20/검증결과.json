@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "preset_id": "generic_wood_v1",
+  "duration": 1800,
+  "engine_seconds": 99.172,
+  "events": {
+    "ExampleFire": 0,
+    "FuelA": 255.0,
+    "FuelB": 655.0,
+    "FuelC": null
+  },
+  "geometry_unchanged": true,
+  "legacy_prefix_unchanged": true,
+  "scope": "Default inheritance and calculation output checks; not material validation"
+}

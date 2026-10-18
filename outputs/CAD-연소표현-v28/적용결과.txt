@@ -1,0 +1,50 @@
+v28 개구부 연소·산소제한 진단·실감 화염 표현 — 2026-10-15
+
+후속 수정 (아래 최초 적용보다 우선): 사용자 요청으로 문 주변 긴 리본 불꽃 제거.
+기존 화염만 폭·높이·일렁임의 3가지 패턴으로 변형. 계산 결과 JSON은 변경하지 않았다.
+개구부 연소는 수치/고리로 유지. 앱 model.html/설치 템플릿 재적용 및 브라우저 확인.
+16:40 리본 0개, 기존 화염 3개, 오류·경고 없음. 최신 스크린샷: 기존화염-패턴수정.png.
+아래 문 주변 불꽃에 관한 설명과 최초 스크린샷은 수정 전 기록이다.
+
+완료: 기존 앱의 model.html, cfast-demo.json, 설치 뷰어 템플릿에 적용.
+사용자 승인 후 기존 파일 백업을 유지하고 3개 파일을 직접 복사했다. Windows 실행 정책은 변경하지 않았다.
+기존 건물 데이터, 시점/레이어/계단·승강기/격자/작전 도구 유지. 기존 CFAST 수치 시계열은 동일하다. 엔진 재계산·물리 입력 수정 없음.
+
+표현
+- 기본 모드: native DJET의 수신 구획별 개구부 가스 연소량 표시.
+- 실감 보기: 연결된 문 주변에서 안쪽으로 휘어지는 불꽃, 시간에 따라 색·폭·끝부분이 변하는 화염. 연기보다 나중에 그려져 가려지지 않는다.
+- 구획별 DJET는 특정 문별 연소량이 아니다. 연결 관계와 미연소 연료를 이용해 표시용 문 하나를 골랐다. 문 위치·화염 형상·퍼짐 길이는 연출이며 물리 예측이나 새 가연물 착화를 뜻하지 않는다.
+- 등록 가연물 화염은 기존 실제 HRR/착화 출력에 따른다. 홀과 A/S실 가구는 여전히 미착화.
+- HRR_E(예상)와 HRR(실제)의 차이를 이용해 산소제한 징후와 10초 지속 확인을 표시한다. HRR_E−HRR > max(1 kW, HRR_E의 1%)는 앱 표시 기준이며 NIST의 공식 전환 임계값이 아니다.
+
+현재 결과
+- 첫 산소제한 징후 3F_R9 10:35, 지속 확인 10:45.
+- 구획 3F_R2 개구부 연소 최대 816.952 kW, 16:40.
+- 실감 보기의 표시용 문 3F_D14. 최대 보기 버튼으로 해당 장면 이동.
+- 출력 간격 5초. 처음/확인 시점은 이 간격의 출력에서 판단한 값.
+
+검증
+- work/verify_cfast_v28.py: 기존 수치와 레거시 UI 영역 불변, DJET 합계 대조, 지속 판정 경계 사례 통과.
+- JS 문법 검사 통과. 실제 앱 브라우저 오류·경고 없음.
+- 00:00: 개구부 연소 0, 화염 표시 0.
+- 10:45: R9 산소제한 지속 표시, 개구부 연소 196.941 kW.
+- 16:40: R2 선택 동기화, 실감 화염 5겹, 개구부 연소 816.952 kW. 기본 모드 전환 시 연출 불꽃 사라짐.
+- 결과 표시 해제: 모든 화염 제거. 다시 표시 정상.
+- 30:00: 개구부 연소 0, 연출 불꽃 0.
+- 브라우저 검증은 표시/연동 검증이며 실제 건물 화재 물리 검증이 아니다.
+
+코드
+work/cfast_combustion.py: native CSV 후처리
+work/cad_cfast_combustion.js: 개구부 연소 및 산소제한 표시
+work/cad_cfast_realistic.js: 화염 실감 표현
+work/cad_cfast_multifloor_overlay.js: 기존 UI 통합
+work/prepare_cfast_v28.py / work/verify_cfast_v28.py: 준비·검증
+work/restore_cad_ui.py CAD-연소표현-v28: 뷰어 생성
+work/cad_cfast_multifloor.py: 이후 재계산에도 후처리 적용
+
+공식 근거 (CFAST 7.7.7)
+https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/outputspreadsheet.f90
+https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/fire.f90
+https://github.com/firemodels/cfast/blob/CFAST-7.7.7/Manuals/CFAST_Users_Guide/Input_File_Chapter.tex
+
+기존 클로드 검수 인계문서·파일목록은 v27 당시 기록이다. 이후 소스 변경은 이 v28 기록과 설치기록.json, 검증결과.json을 함께 참조한다.

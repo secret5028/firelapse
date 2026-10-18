@@ -1,0 +1,96 @@
+{
+  "defaults_file": "cfast_spread_fuel_v26.json",
+  "evidence_based": true,
+  "preserve_aspect_rooms": [
+    "3F_R9"
+  ],
+  "description": "3F 작업실에 최초1개+별도2개 작업대 묶음, 홀/A/S실에 각1개. 작업실 묶음 중심간2.6m, 등가 폭2.44m로 약0.16m 간격. 노출 서류면의 가열로 조건부 착화; 점화원 존재 가정. 문상태와 소화설비 미작동 조건은 v23과 동일.",
+  "targets": [
+    {
+      "id": "WorkstationN",
+      "name": "북측 별도 작업대 묶음",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        0,
+        2.6
+      ],
+      "target_offset_xy_m": [
+        0,
+        1.38
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "width_m": 2.44,
+      "depth_m": 2.44
+    },
+    {
+      "id": "WorkstationS",
+      "name": "남측 별도 작업대 묶음",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        0,
+        -2.6
+      ],
+      "target_offset_xy_m": [
+        0,
+        -1.38
+      ],
+      "target_height_m": 0.9,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "width_m": 2.44,
+      "depth_m": 2.44
+    },
+    {
+      "id": "WorkstationHall",
+      "name": "홀 가구 묶음",
+      "room_key": "3F_R2",
+      "position_xy_m": [
+        62.63,
+        57.77
+      ],
+      "solver_xy_m": [
+        9.0148128100366,
+        9.0148128100366
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 2.44,
+      "depth_m": 2.44,
+      "placement": "CAD interior; equivalent compartment centre, upper-layer exposure"
+    },
+    {
+      "id": "WorkstationAS",
+      "name": "A/S실 가구 묶음",
+      "room_key": "3F_R8",
+      "position_xy_m": [
+        64.95,
+        50.52
+      ],
+      "solver_xy_m": [
+        3.520497123986895,
+        3.520497123986895
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 2.44,
+      "depth_m": 2.44,
+      "placement": "CAD interior; equivalent compartment centre, upper-layer exposure"
+    }
+  ]
+}

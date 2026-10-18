@@ -1,0 +1,1 @@
+const im=document.getElementById('drawing');document.querySelectorAll('[data-src]').forEach(b=>b.onclick=()=>{im.src=b.dataset.src;document.querySelectorAll('[data-src]').forEach(x=>x.classList.toggle('on',x===b))});document.getElementById('zoom').oninput=e=>{im.style.width=e.target.value+'%';document.getElementById('z').textContent=e.target.value+'%'};

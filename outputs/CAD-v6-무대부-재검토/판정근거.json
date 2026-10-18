@@ -1,0 +1,22 @@
+{
+  "north": {
+    "evidence": "WALLBR 이중 경계와 WID 중앙 창틀, 폭 약 1.8m",
+    "interpretation": "별도 실 및 영사창 가능성; 용도·높이 미확정",
+    "D16": "문짝 선 부재만으로 폐기 불가; 주변 경계 누락과 함께 재검토"
+  },
+  "south": {
+    "W79": {
+      "arc_layer": "FURNITURE",
+      "arc_radius_m": 0.7,
+      "leaf_layer": "WID",
+      "jamb_wall_layer": "TEX",
+      "interpretation": "문짝·호·벽 끝이 함께 존재하는 여닫이문 근거"
+    },
+    "left": {
+      "arc_layer": "FURNITURE",
+      "arc_radius_m": 0.75,
+      "interpretation": "대응 위치에 문이 있으나 폭과 위치는 완전 대칭이 아님"
+    }
+  },
+  "status": "원본 재검토 결과. v6 코드 및 추출 데이터는 이번 재검토에서 변경하지 않음"
+}

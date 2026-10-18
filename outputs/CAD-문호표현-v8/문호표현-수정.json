@@ -1,0 +1,57 @@
+{
+  "change": "render_full_recorded_double_action_swing",
+  "code_sha256": {
+    "cad_swing.py": "1057ded7e3bbdf86856337335bfa85b1c29006385eabdd2ede27f4eff4c2ac3a",
+    "cad_plan.py": "dff3d01140f52edcd47b19b1c3ca8cdd888e9c970e8897624420c33150cd36dd",
+    "cad_pipeline.py": "a7b4ba8b569ace7e9d159a3ac359e925ad2814ec8dbc6f65aec946f79ee482bd",
+    "viewer_template.html": "80cea6a6ea572dc78a84dacaeb3c1d34465582285ba7baf1a03bb352d682937d"
+  },
+  "unit_tests": 70,
+  "floors": [
+    {
+      "floor": "1F",
+      "double_action_leaves": 12,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "2F",
+      "double_action_leaves": 2,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "3F",
+      "double_action_leaves": 2,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "4F",
+      "double_action_leaves": 6,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "5F",
+      "double_action_leaves": 8,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "6F",
+      "double_action_leaves": 24,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "7F",
+      "double_action_leaves": 11,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "B1",
+      "double_action_leaves": 0,
+      "geometry_unchanged": true
+    },
+    {
+      "floor": "PH",
+      "double_action_leaves": 0,
+      "geometry_unchanged": true
+    }
+  ]
+}

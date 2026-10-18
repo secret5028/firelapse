@@ -1,0 +1,180 @@
+{
+  "defaults_file": "cfast_spread_fuel_v26.json",
+  "evidence_based": true,
+  "preserve_aspect_rooms": [
+    "3F_R9"
+  ],
+  "description": "v30: R9 최초 화원/추가 두 묶음 유지. 홀과 A/S 재고 각각을 문 근처/안쪽 두 대표 묶음에 50%씩 배분. 착화 기준/노출면 높이/물성 유지. 총 지정 HRR 곡선과 환산 연료량 보존. 표시 단위는 독립 화원이 아님.",
+  "targets": [
+    {
+      "id": "WorkstationN",
+      "name": "북측 별도 작업대 묶음",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        0,
+        2.6
+      ],
+      "target_offset_xy_m": [
+        0,
+        1.38
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "width_m": 2.44,
+      "depth_m": 2.44,
+      "fuel_fraction": 1.0,
+      "inventory_parent": "WorkstationN",
+      "placement_zone": "door_side"
+    },
+    {
+      "id": "WorkstationS",
+      "name": "남측 별도 작업대 묶음",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        0,
+        -2.6
+      ],
+      "target_offset_xy_m": [
+        0,
+        -1.38
+      ],
+      "target_height_m": 0.9,
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "width_m": 2.44,
+      "depth_m": 2.44,
+      "fuel_fraction": 1.0,
+      "inventory_parent": "WorkstationS",
+      "placement_zone": "interior"
+    },
+    {
+      "id": "WorkstationHallDoor",
+      "name": "홀 가구 묶음 · 문 근처",
+      "room_key": "3F_R2",
+      "position_xy_m": [
+        69.86240941553302,
+        56.749409415533016
+      ],
+      "solver_xy_m": [
+        15.48595705379708,
+        10.78255234269079
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 1.724818831066034,
+      "depth_m": 1.724818831066034,
+      "placement": "CAD interior grid candidate; bbox mapping to equivalent compartment, not a local door-jet model",
+      "fuel_fraction": 0.5,
+      "inventory_parent": "WorkstationHall",
+      "placement_zone": "door",
+      "door_id": "D14",
+      "door_distance_m": 1.34690652426499
+    },
+    {
+      "id": "WorkstationHallInner",
+      "name": "홀 가구 묶음 · 방 안쪽",
+      "room_key": "3F_R2",
+      "position_xy_m": [
+        62.612409415533016,
+        57.749409415533016
+      ],
+      "solver_xy_m": [
+        9.165126021614737,
+        11.314697958819982
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 1.724818831066034,
+      "depth_m": 1.724818831066034,
+      "placement": "CAD interior grid candidate; bbox mapping to equivalent compartment, not a local door-jet model",
+      "fuel_fraction": 0.5,
+      "inventory_parent": "WorkstationHall",
+      "placement_zone": "inner",
+      "door_id": "D14",
+      "door_distance_m": 7.655066263001577
+    },
+    {
+      "id": "WorkstationASDoor",
+      "name": "A/S실 가구 묶음 · 문 근처",
+      "room_key": "3F_R8",
+      "position_xy_m": [
+        65.10240941553302,
+        53.98940941553301
+      ],
+      "solver_xy_m": [
+        3.7548472597136335,
+        6.0216931134636615
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 1.724818831066034,
+      "depth_m": 1.724818831066034,
+      "placement": "CAD interior grid candidate; bbox mapping to equivalent compartment, not a local door-jet model",
+      "fuel_fraction": 0.5,
+      "inventory_parent": "WorkstationAS",
+      "placement_zone": "door",
+      "door_id": "D10",
+      "door_distance_m": 1.4138937506031317
+    },
+    {
+      "id": "WorkstationASInner",
+      "name": "A/S실 가구 묶음 · 방 안쪽",
+      "room_key": "3F_R8",
+      "position_xy_m": [
+        64.85240941553302,
+        50.48940941553301
+      ],
+      "solver_xy_m": [
+        3.415030935004473,
+        3.4708723011348894
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 1.724818831066034,
+      "depth_m": 1.724818831066034,
+      "placement": "CAD interior grid candidate; bbox mapping to equivalent compartment, not a local door-jet model",
+      "fuel_fraction": 0.5,
+      "inventory_parent": "WorkstationAS",
+      "placement_zone": "inner",
+      "door_id": "D10",
+      "door_distance_m": 4.922806610206925
+    }
+  ],
+  "unit_profiles": {
+    "desk": {
+      "height_m": 0.75,
+      "depth_limit_m": 0.8
+    },
+    "cabinet": {
+      "height_m": 1.2,
+      "depth_limit_m": 0.65
+    },
+    "tall_cabinet": {
+      "height_m": 1.8,
+      "depth_limit_m": 0.65
+    }
+  }
+}

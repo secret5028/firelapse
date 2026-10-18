@@ -1,0 +1,2864 @@
+{
+  "building": "28-200-2026-00000010",
+  "drawings": [
+    {
+      "name": "A31-006-01-______AT 1____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf",
+      "sha256": "6fd852af924b52d7654af0a663d588a860965fcf87a15a7c7ace8e4f8dacc4c6",
+      "unit_m": 0.001,
+      "titles": [
+        "지상1층바닥",
+        "지상1층바닥",
+        "지상1층바닥",
+        "상부 지붕선",
+        "다목적실"
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 385,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 49,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "10form",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "line",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 124,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 74,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 167,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 288,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 25,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 54,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 172,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 13,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 39,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 23,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 713,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 16,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 133,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 348,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL8",
+          "entities": 142,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL-3",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 41,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 64,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL-1",
+          "entities": 89,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AINFO",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "9",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 48,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 7,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 397,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "open-tr",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 188,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 50,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 65,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL-7",
+          "entities": 117,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAND",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY",
+          "entities": 18,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "241",
+          "entities": 56,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FUR",
+          "entities": 422,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "F-FUR",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 202,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 56,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-캐노피",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "plan",
+          "entities": 12,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 23,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-FURNITURE",
+          "entities": 5830,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FURNITURE",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "INSERT": 272,
+        "LINE": 1857,
+        "HATCH": 35,
+        "LWPOLYLINE": 453,
+        "TEXT": 198,
+        "CIRCLE": 52,
+        "DIMENSION": 297,
+        "ARC": 112,
+        "POLYLINE": 3
+      },
+      "primitives": 10675,
+      "blocks": 272,
+      "xrefs": [],
+      "floor": "1F",
+      "floors": [
+        "1F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-007-01-______AT 2____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf",
+      "sha256": "2ce3c33b577534b3b744af3742e60d04fe7060859fe973423cdab621e3b1f0d3",
+      "unit_m": 0.001,
+      "titles": [
+        "지상2층바닥"
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 356,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 25,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 43,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 7,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 81,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 51,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 126,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 289,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 25,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 135,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TE2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 40,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 613,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 124,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 464,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 27,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 40,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AINFO",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 46,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 11,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 397,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 50,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 48,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL4",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 89,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 41,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-지붕나누기",
+          "entities": 16,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-캐노피",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 1044,
+        "LWPOLYLINE": 382,
+        "ARC": 69,
+        "INSERT": 109,
+        "DIMENSION": 174,
+        "TEXT": 131,
+        "HATCH": 29,
+        "CIRCLE": 31,
+        "POLYLINE": 3
+      },
+      "primitives": 3328,
+      "blocks": 109,
+      "xrefs": [],
+      "floor": "2F",
+      "floors": [
+        "2F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-008-01-______AT 3____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf",
+      "sha256": "9a37bf28c299dc601b2327afa8ea5f4c166b71c767059ffa74d742b51f442712",
+      "unit_m": 0.001,
+      "titles": [
+        "지상3층바닥",
+        "5. 화장실은 확대평면 및 전개도 참조 할 것."
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 386,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 13,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 35,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "10form",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 75,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 51,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 126,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 288,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 41,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 54,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 137,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 47,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 592,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 110,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 464,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL8",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 24,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 40,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AINFO",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 41,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 397,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 50,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 48,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 90,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 35,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 1010,
+        "LWPOLYLINE": 335,
+        "ARC": 66,
+        "HATCH": 29,
+        "INSERT": 108,
+        "DIMENSION": 190,
+        "TEXT": 161,
+        "CIRCLE": 27,
+        "POLYLINE": 2
+      },
+      "primitives": 3266,
+      "blocks": 108,
+      "xrefs": [],
+      "floor": "3F",
+      "floors": [
+        "3F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-009-01-______AT 4____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf",
+      "sha256": "4f4fd698eb6239eebe004b273d898a2d7817c8ff97a16316d2f11e49e15eaa5d",
+      "unit_m": 0.001,
+      "titles": [
+        "지상4층바닥",
+        "5. 화장실은 확대평면 및 전개도 참조 할 것."
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 357,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 13,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 44,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 72,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 33,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 126,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 288,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 38,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 57,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 116,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 38,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 505,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 96,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 464,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 24,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 40,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 31,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 397,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 50,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 51,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 60,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 35,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 897,
+        "LWPOLYLINE": 291,
+        "ARC": 62,
+        "INSERT": 97,
+        "HATCH": 23,
+        "DIMENSION": 174,
+        "TEXT": 132,
+        "CIRCLE": 24
+      },
+      "primitives": 3040,
+      "blocks": 97,
+      "xrefs": [],
+      "floor": "4F",
+      "floors": [
+        "4F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-010-01-______AT 5____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf",
+      "sha256": "dba0c37ef4bc2fab5431b181edb8bf9e4af824e8212a8d3d625268e54ce5f44e",
+      "unit_m": 0.001,
+      "titles": [
+        "지상5층바닥",
+        "5. 화장실은 확대평면 및 전개도 참조 할 것."
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 358,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 44,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "10form",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 76,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 39,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 136,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 288,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 38,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 53,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 117,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 38,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 510,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 108,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 464,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 24,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 40,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 37,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 397,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 50,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 51,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 65,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 35,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 928,
+        "LWPOLYLINE": 284,
+        "INSERT": 100,
+        "HATCH": 23,
+        "DIMENSION": 180,
+        "TEXT": 140,
+        "CIRCLE": 24,
+        "ARC": 63
+      },
+      "primitives": 3079,
+      "blocks": 100,
+      "xrefs": [],
+      "floor": "5F",
+      "floors": [
+        "5F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-011-01-______AT 6____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf",
+      "sha256": "d3b2c65d948ad85189179cf2eb9ed0be475a1beacd224c63e0a6bf3411c482e3",
+      "unit_m": 0.001,
+      "titles": [
+        "지상6층바닥",
+        "5. 화장실은 확대평면 및 전개도 참조 할 것.",
+        "지상6층바닥",
+        "지상6층바닥"
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 359,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 38,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 100,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 105,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 138,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 1515,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 39,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 52,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 149,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 39,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 605,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 70,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 464,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 24,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 40,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AINFO",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 136,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 7,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 396,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 38,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 50,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 21,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAND",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 145,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 35,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM-내부",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "C PL -등추가$0$lighting-ceiling",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LWPOLYLINE": 456,
+        "LINE": 1642,
+        "INSERT": 100,
+        "HATCH": 25,
+        "DIMENSION": 179,
+        "TEXT": 273,
+        "CIRCLE": 29,
+        "ARC": 640
+      },
+      "primitives": 4686,
+      "blocks": 100,
+      "xrefs": [],
+      "floor": "6F",
+      "floors": [
+        "6F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-012-01-______AT 7____.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf",
+      "sha256": "f147602997ce8e49f62792bc52207d0b7b05bc64d2b980d7f8f416095b977f67",
+      "unit_m": 0.001,
+      "titles": [
+        "지상7층SL바닥",
+        "지상7층바닥",
+        "지상7층바닥",
+        "지상7층바닥",
+        "지상7층바닥",
+        "5. 화장실은 확대평면 및 전개도 참조 할 것."
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 217,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 16,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 10,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "line",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 94,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 106,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 143,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 657,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 196,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 39,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 153,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 15,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TE2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 35,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-점검사다리",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 483,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FIN",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 164,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "GB석고보드",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EQP",
+          "entities": 232,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 26,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TO",
+          "entities": 21,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AINFO",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 103,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 122,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ETC",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "K-TOILET",
+          "entities": 25,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-UNKNOWN",
+          "entities": 26,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL4",
+          "entities": 16,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FUR",
+          "entities": 26,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-내벽고정식",
+          "entities": 125,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 42,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "FURNITURE",
+          "entities": 208,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "C PL -등추가$0$lighting-ceiling",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Win1",
+          "entities": 11,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "BT-lite",
+          "entities": 6,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "bit_lite",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 1261,
+        "LWPOLYLINE": 523,
+        "DIMENSION": 183,
+        "HATCH": 32,
+        "TEXT": 258,
+        "CIRCLE": 36,
+        "INSERT": 84,
+        "ARC": 90,
+        "POLYLINE": 7
+      },
+      "primitives": 3502,
+      "blocks": 84,
+      "xrefs": [],
+      "floor": "7F",
+      "floors": [
+        "7F"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-013-01-______AT _______.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-013-01-______AT _______.dxf",
+      "sha256": "fc35cfe4007e65121cc9b3de63b91de46d10a222e7ac34ebc3ccabefc9aac4f0",
+      "unit_m": 0.001,
+      "titles": [
+        "지붕SL바닥",
+        "지붕점검구(900x600)"
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 7,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 19,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 46,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 7,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TE2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-점검사다리",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL4",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 5,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LWPOLYLINE": 37,
+        "LINE": 62,
+        "TEXT": 58,
+        "CIRCLE": 3,
+        "DIMENSION": 33,
+        "INSERT": 12,
+        "HATCH": 2
+      },
+      "primitives": 182,
+      "blocks": 12,
+      "xrefs": [],
+      "floor": "ROOF",
+      "floors": [
+        "ROOF"
+      ],
+      "role": "roof_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-014-01-______AT ______.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-014-01-______AT ______.dxf",
+      "sha256": "a5ed797d8381e495d94f435ec1b4cc1268e52c26cec98f046d3a17ef107feda3",
+      "unit_m": 0.001,
+      "titles": [
+        "옥탑층 평면도",
+        "옥탑층바닥",
+        "지붕SL바닥",
+        "지붕SL바닥",
+        "지붕SL바닥"
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 27,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "10form",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 31,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 13,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 71,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 24,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 72,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 12,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TE2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "0-점검사다리",
+          "entities": 12,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DOOR",
+          "entities": 10,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT2",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 98,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 52,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "col2",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AINFO",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "9",
+          "entities": 32,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WINE",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 9,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ETC",
+          "entities": 13,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL4",
+          "entities": 15,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "우수드레인",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 355,
+        "DIMENSION": 57,
+        "TEXT": 118,
+        "INSERT": 18,
+        "LWPOLYLINE": 170,
+        "CIRCLE": 19,
+        "HATCH": 7,
+        "ARC": 5
+      },
+      "primitives": 684,
+      "blocks": 18,
+      "xrefs": [],
+      "floor": "PH",
+      "floors": [
+        "PH"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified"
+    },
+    {
+      "name": "A31-015-01-______AT ______.dxf",
+      "path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-015-01-______AT ______.dxf",
+      "sha256": "8c388560bc23f92ad9fb03ed2b50c3f09dd2b7d3fb1cef31441e52a2d122a67d",
+      "unit_m": 0.001,
+      "titles": [
+        "지하1층바닥",
+        "지하1층바닥",
+        "지하1층바닥",
+        "지하1층바닥",
+        "지하1층바닥",
+        "5. 화장실은 확대평면 및 전개도 참조 할 것.",
+        "지하 주차장",
+        "계단실#3 지상1층 평면도"
+      ],
+      "layers": [
+        {
+          "name": "0",
+          "entities": 26,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SYM",
+          "entities": 111,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT",
+          "entities": 5,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "Defpoints",
+          "entities": 30,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DIM",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "line",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CEN",
+          "entities": 101,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEXT1",
+          "entities": 110,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "ST",
+          "entities": 315,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "elev",
+          "entities": 288,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY2",
+          "entities": 58,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "8",
+          "entities": 48,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TITLE",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "AXIS",
+          "entities": 48,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "7TXT",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "COL",
+          "entities": 30,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALLBR",
+          "entities": 163,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WA1",
+          "entities": 187,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "hidded",
+          "entities": 13,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HAT",
+          "entities": 5,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "LEVEL-1",
+          "entities": 30,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "IN",
+          "entities": 0,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL",
+          "entities": 12,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WID",
+          "entities": 345,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WALL-1",
+          "entities": 4,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "WA2",
+          "entities": 31,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL8",
+          "entities": 74,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL-3",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "DO",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "지시선",
+          "entities": 14,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CAR",
+          "entities": 109,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "HOISTWAY",
+          "entities": 167,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "open-tr",
+          "entities": 43,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "CAR-STOP",
+          "entities": 872,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "4WID",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "EL-7",
+          "entities": 8,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TILE",
+          "entities": 2,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "SY",
+          "entities": 3,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "_FIN",
+          "entities": 15,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "TEX",
+          "entities": 22,
+          "off": false,
+          "frozen": false
+        },
+        {
+          "name": "252",
+          "entities": 1,
+          "off": false,
+          "frozen": false
+        }
+      ],
+      "entity_types": {
+        "LINE": 1091,
+        "HATCH": 78,
+        "LWPOLYLINE": 565,
+        "ARC": 40,
+        "DIMENSION": 129,
+        "INSERT": 171,
+        "TEXT": 264,
+        "CIRCLE": 43
+      },
+      "primitives": 3296,
+      "blocks": 171,
+      "xrefs": [],
+      "floor": "B1",
+      "floors": [
+        "B1"
+      ],
+      "role": "architectural_plan",
+      "review": "all_loaded_layers_geometry_scanned",
+      "revision": "drawing_date_not_verified",
+      "secondary_views": [
+        {
+          "floor": "1F",
+          "title": "계단실#3 지상1층 평면도",
+          "status": "inset_context_not_registered",
+          "note": "주 평면과 다른 배치 좌표의 부분도; 1층 전체에 자동 합성하지 않음"
+        }
+      ]
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 1,
+      "title": "도면목록표, 범례",
+      "role": "raster_reference",
+      "floors": [],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 2,
+      "title": "장비일람표",
+      "role": "raster_reference",
+      "floors": [],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 3,
+      "title": "소화배관 계통도",
+      "role": "raster_reference",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F",
+        "PH"
+      ],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 4,
+      "title": "지하층 펌프실 소화배관 평면도",
+      "role": "raster_reference",
+      "floors": [
+        "B1"
+      ],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 5,
+      "title": "지하층 소화설비 평면도",
+      "role": "raster_reference",
+      "floors": [
+        "B1"
+      ],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 6,
+      "title": "도면목록표(소방)",
+      "role": "raster_reference",
+      "floors": [],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 7,
+      "title": "소방범례 및 주기사항",
+      "role": "raster_reference",
+      "floors": [],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "unspecified",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 8,
+      "title": "소방설비 간선계통도(변경후)",
+      "role": "raster_reference",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F",
+        "PH"
+      ],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "after_change",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 9,
+      "title": "지하1층 소방시설(전기) 평면도(변경전)",
+      "role": "raster_reference",
+      "floors": [
+        "B1"
+      ],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "before_change",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    },
+    {
+      "name": "소방시설 완공도면(소방시설 정비, 2026.6.17.).pdf",
+      "sha256": "81252b22c54f8a8f4ddda7309f1172f450e544adeb04f06750b775a99a5f8b85",
+      "page": 10,
+      "title": "지하1층 소방간선(전기) 평면도(변경후)",
+      "role": "raster_reference",
+      "floors": [
+        "B1"
+      ],
+      "review": "visually_reviewed",
+      "registered": false,
+      "geometry_use": false,
+      "revision": "after_change",
+      "note": "스캔 PDF. 좌표 정합 전에는 벽·문·감지기·유도등의 자동 확정 근거로 사용하지 않음"
+    }
+  ],
+  "coverage_note": "확보된 건축 CAD 10장 및 소방 PDF 10쪽 확인. B1·1F~7F·PH 9개 층 추출. 지붕도는 참고도이며 실내 층으로 생성하지 않음. 별도 창호일람·입면·단면·1F~7F 소방 평면 원본은 이 폴더에서 확보되지 않음. B1 도면의 1F 계단실 부분도와 PDF는 좌표 미정합 참고자료로 기록. 범례와 계통도를 평면으로 겹치지 않음."
+}

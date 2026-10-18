@@ -1,0 +1,14 @@
+{
+  "wall_seconds": 1549.8435718999972,
+  "cpu_seconds": 1526.0,
+  "steps": 11091,
+  "cache_hit": false,
+  "signature": {
+    "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+    "input_sha256": "41eafd8d39e099903a89d84a1a006620780b0e6fb4c2dd282402690a56921644",
+    "flags": [
+      "-k",
+      "-o:CD"
+    ]
+  }
+}

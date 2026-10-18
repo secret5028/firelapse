@@ -1,0 +1,26 @@
+
+const review={"width": 1448, "height": 1404, "items": []},im=document.getElementById('drawing'),stage=document.getElementById('stage'),canvas=document.getElementById('canvas'),overlay=document.getElementById('opening-overlay');
+const zoom=document.getElementById('zoom'),visible=document.getElementById('review-visible'),filter=document.getElementById('review-filter');
+const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox',`0 0 ${review.width} ${review.height}`);svg.setAttribute('preserveAspectRatio','none');overlay.append(svg);
+const nodes=new Map();let selected=null;
+function element(tag,attrs){const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));svg.append(e);return e;}
+review.items.forEach(item=>{const group=document.createElementNS(ns,'g');svg.append(group);item.polys.forEach(poly=>{const pts=poly.map(p=>p.join(',')).join(' ');['opening-halo','opening-shape'].forEach(cls=>{const p=document.createElementNS(ns,'polygon');p.setAttribute('points',pts);p.setAttribute('class',cls);group.append(p);});});
+const line=element('line',{class:'opening-line',x1:item.x,y1:item.y,x2:item.x,y2:item.y});
+const pin=document.createElement('button');pin.className='opening-pin';pin.type='button';pin.textContent=`⚠ ${String(item.number).padStart(2,'0')} ${item.id}`;pin.setAttribute('aria-label',`${item.id} 위치 확대`);pin.onclick=()=>selectOpening(item.number);overlay.append(pin);nodes.set(item.number,{group,line,pin,item});});
+function layout(){const w=stage.clientWidth,h=im.clientHeight;if(!w||!h)return;const placed=[];const show=visible.checked&&!im.getAttribute('src').startsWith('before')&&!im.getAttribute('src').startsWith('architecture');overlay.hidden=!show;
+nodes.forEach(node=>{const {item,pin,group,line}=node,ok=filter.value==='all'||filter.value===item.reason;pin.hidden=!ok;group.style.display=ok?'':'none';line.style.display=ok?'':'none';if(!ok)return;
+const x=item.x/review.width*w,y=item.y/review.height*h,bw=pin.offsetWidth||85,bh=pin.offsetHeight||30;let chosen;
+for(const dy of [-30,30,-65,65,-100,100,0]){for(const dx of [0,90,-90,180,-180]){const cx=Math.max(bw/2+3,Math.min(w-bw/2-3,x+dx)),cy=Math.max(bh/2+3,Math.min(h-bh/2-3,y+dy)),box={l:cx-bw/2-5,r:cx+bw/2+5,t:cy-bh/2-5,b:cy+bh/2+5};if(!placed.some(p=>box.l<p.r&&box.r>p.l&&box.t<p.b&&box.b>p.t)){chosen={cx,cy,box};break;}}if(chosen)break;}
+chosen=chosen||{cx:x,cy:y,box:{l:x-bw/2,r:x+bw/2,t:y-bh/2,b:y+bh/2}};placed.push(chosen.box);pin.style.left=chosen.cx+'px';pin.style.top=chosen.cy+'px';line.setAttribute('x2',chosen.cx/w*review.width);line.setAttribute('y2',chosen.cy/h*review.height);
+pin.classList.toggle('selected',item.number===selected);group.querySelectorAll('.opening-shape').forEach(p=>p.classList.toggle('selected',item.number===selected));});}
+function setZoom(value){zoom.value=value;stage.style.width=value+'%';document.getElementById('z').textContent=value+'%';requestAnimationFrame(layout);}
+function setLayer(src){im.src=src;document.querySelectorAll('[data-src]').forEach(b=>b.classList.toggle('on',b.dataset.src===src));requestAnimationFrame(layout);}
+function selectOpening(number){const node=nodes.get(number);if(!node)return;selected=number;visible.checked=true;filter.value='all';applyFilter();setLayer('connectivity.svg');setZoom(Math.max(250,Number(zoom.value)));
+document.querySelectorAll('[data-opening]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.opening)===number?'true':'false'));
+requestAnimationFrame(()=>requestAnimationFrame(()=>{layout();canvas.scrollTo({left:node.item.x/review.width*stage.clientWidth-canvas.clientWidth/2,top:node.item.y/review.height*im.clientHeight-canvas.clientHeight/2,behavior:'auto'});}));}
+function applyFilter(){document.querySelectorAll('#opening-list li').forEach(li=>li.hidden=filter.value!=='all'&&filter.value!==li.dataset.reason);layout();}
+document.querySelectorAll('[data-opening]').forEach(b=>b.onclick=()=>selectOpening(Number(b.dataset.opening)));
+document.querySelectorAll('[data-src]').forEach(b=>b.onclick=()=>setLayer(b.dataset.src));
+zoom.oninput=e=>setZoom(Number(e.target.value));visible.onchange=layout;filter.onchange=applyFilter;
+document.getElementById('review-all').onclick=()=>{selected=null;filter.value='all';visible.checked=true;applyFilter();setLayer('connectivity.svg');setZoom(100);canvas.scrollTo(0,0);document.querySelectorAll('[data-opening]').forEach(b=>b.setAttribute('aria-pressed','false'));};
+im.onload=layout;new ResizeObserver(layout).observe(stage);requestAnimationFrame(layout);

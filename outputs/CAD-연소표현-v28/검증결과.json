@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "physical_validation": false,
+  "solver_rerun": false,
+  "existing_result_data_unchanged": true,
+  "legacy_ui_prefix_unchanged": true,
+  "first_limitation_seconds": 635,
+  "confirmation_seconds": 645,
+  "jet_peak_kW": 816.952,
+  "jet_peak_seconds": 1000,
+  "native_jet_resolution": "compartment",
+  "jet_ribbons_removed": true,
+  "synthetic_interval_cases_passed": true,
+  "result_sha256": "825ddd4b8aaf0cd5437cb580358bb1d9ee9208f100edb4fa6ecec8289c2feadf",
+  "model_sha256": "8011129b7252961cc4855f2d90066bf9d2d121a6fe0f45bd3f81dc864f72b394",
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360"
+}

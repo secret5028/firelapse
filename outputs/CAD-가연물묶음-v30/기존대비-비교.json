@@ -1,0 +1,418 @@
+{
+  "cases": {
+    "기존 v27": {
+      "rooms": {
+        "3F_R9": {
+          "height_m": 5.5,
+          "upper_peak_C": 462.588,
+          "lower_peak_C": 133.225,
+          "min_layer_m": 0.1,
+          "observer_1_5m_peak_C": 462.588,
+          "observer_1_5m_peak_OD": 3.09916,
+          "smoke_first_s": 5.0,
+          "targets": [
+            {
+              "id": "WorkstationN",
+              "ignition_s": 345.0,
+              "surface_peak_C": 529.872,
+              "radiation_peak_kW_m2": 32.0605
+            },
+            {
+              "id": "WorkstationS",
+              "ignition_s": 350.0,
+              "surface_peak_C": 533.813,
+              "radiation_peak_kW_m2": 33.9385
+            }
+          ]
+        },
+        "3F_R2": {
+          "height_m": 5.5,
+          "upper_peak_C": 136.488,
+          "lower_peak_C": 36.3369,
+          "min_layer_m": 1.24405,
+          "observer_1_5m_peak_C": 136.488,
+          "observer_1_5m_peak_OD": 2.87087,
+          "smoke_first_s": 70.0,
+          "targets": [
+            {
+              "id": "WorkstationHall",
+              "ignition_s": null,
+              "surface_peak_C": 71.4468,
+              "radiation_peak_kW_m2": 1.4218
+            }
+          ]
+        },
+        "3F_R8": {
+          "height_m": 5.5,
+          "upper_peak_C": 51.8639,
+          "lower_peak_C": 28.925,
+          "min_layer_m": 0.395481,
+          "observer_1_5m_peak_C": 51.8639,
+          "observer_1_5m_peak_OD": 2.55896,
+          "smoke_first_s": 360.0,
+          "targets": [
+            {
+              "id": "WorkstationAS",
+              "ignition_s": null,
+              "surface_peak_C": 36.5393,
+              "radiation_peak_kW_m2": 0.576753
+            }
+          ]
+        }
+      },
+      "floors": {
+        "B1": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "1F": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "2F": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "3F": {
+          "smoke_rooms_at_30min": 11,
+          "first_smoke_s": 5.0
+        },
+        "4F": {
+          "smoke_rooms_at_30min": 6,
+          "first_smoke_s": 385.0
+        },
+        "5F": {
+          "smoke_rooms_at_30min": 4,
+          "first_smoke_s": 405.0
+        },
+        "6F": {
+          "smoke_rooms_at_30min": 17,
+          "first_smoke_s": 435.0
+        },
+        "7F": {
+          "smoke_rooms_at_30min": 19,
+          "first_smoke_s": 470.0
+        },
+        "PH": {
+          "smoke_rooms_at_30min": 3,
+          "first_smoke_s": 490.0
+        }
+      },
+      "peak_total_hrr_kW": 7141.893,
+      "actual_30min_energy_MJ": 4536.4786738725,
+      "elapsed_seconds": 809.017,
+      "ignitions": [
+        {
+          "id": "WorkstationN",
+          "time": 345.0
+        },
+        {
+          "id": "WorkstationS",
+          "time": 350.0
+        },
+        {
+          "id": "WorkstationHall",
+          "time": null
+        },
+        {
+          "id": "WorkstationAS",
+          "time": null
+        }
+      ]
+    },
+    "배치만 변경": {
+      "rooms": {
+        "3F_R9": {
+          "height_m": 5.5,
+          "upper_peak_C": 462.588,
+          "lower_peak_C": 133.225,
+          "min_layer_m": 0.1,
+          "observer_1_5m_peak_C": 462.588,
+          "observer_1_5m_peak_OD": 3.09916,
+          "smoke_first_s": 5.0,
+          "targets": [
+            {
+              "id": "WorkstationN",
+              "ignition_s": 345.0,
+              "surface_peak_C": 529.872,
+              "radiation_peak_kW_m2": 32.0605
+            },
+            {
+              "id": "WorkstationS",
+              "ignition_s": 350.0,
+              "surface_peak_C": 533.813,
+              "radiation_peak_kW_m2": 33.9385
+            }
+          ]
+        },
+        "3F_R2": {
+          "height_m": 5.5,
+          "upper_peak_C": 136.488,
+          "lower_peak_C": 36.3369,
+          "min_layer_m": 1.24405,
+          "observer_1_5m_peak_C": 136.488,
+          "observer_1_5m_peak_OD": 2.87087,
+          "smoke_first_s": 70.0,
+          "targets": [
+            {
+              "id": "WorkstationHallDoor",
+              "ignition_s": null,
+              "surface_peak_C": 69.1762,
+              "radiation_peak_kW_m2": 1.36542
+            },
+            {
+              "id": "WorkstationHallInner",
+              "ignition_s": null,
+              "surface_peak_C": 71.2894,
+              "radiation_peak_kW_m2": 1.41773
+            }
+          ]
+        },
+        "3F_R8": {
+          "height_m": 5.5,
+          "upper_peak_C": 51.8639,
+          "lower_peak_C": 28.925,
+          "min_layer_m": 0.395481,
+          "observer_1_5m_peak_C": 51.8639,
+          "observer_1_5m_peak_OD": 2.55896,
+          "smoke_first_s": 360.0,
+          "targets": [
+            {
+              "id": "WorkstationASDoor",
+              "ignition_s": null,
+              "surface_peak_C": 36.4788,
+              "radiation_peak_kW_m2": 0.575974
+            },
+            {
+              "id": "WorkstationASInner",
+              "ignition_s": null,
+              "surface_peak_C": 36.5392,
+              "radiation_peak_kW_m2": 0.576752
+            }
+          ]
+        }
+      },
+      "floors": {
+        "B1": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "1F": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "2F": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "3F": {
+          "smoke_rooms_at_30min": 11,
+          "first_smoke_s": 5.0
+        },
+        "4F": {
+          "smoke_rooms_at_30min": 6,
+          "first_smoke_s": 385.0
+        },
+        "5F": {
+          "smoke_rooms_at_30min": 4,
+          "first_smoke_s": 405.0
+        },
+        "6F": {
+          "smoke_rooms_at_30min": 17,
+          "first_smoke_s": 435.0
+        },
+        "7F": {
+          "smoke_rooms_at_30min": 19,
+          "first_smoke_s": 470.0
+        },
+        "PH": {
+          "smoke_rooms_at_30min": 3,
+          "first_smoke_s": 490.0
+        }
+      },
+      "peak_total_hrr_kW": 7141.893,
+      "actual_30min_energy_MJ": 4536.4786738725,
+      "elapsed_seconds": 906.869,
+      "ignitions": [
+        {
+          "id": "WorkstationN",
+          "time": 345.0
+        },
+        {
+          "id": "WorkstationS",
+          "time": 350.0
+        },
+        {
+          "id": "WorkstationHallDoor",
+          "time": null
+        },
+        {
+          "id": "WorkstationHallInner",
+          "time": null
+        },
+        {
+          "id": "WorkstationASDoor",
+          "time": null
+        },
+        {
+          "id": "WorkstationASInner",
+          "time": null
+        }
+      ]
+    },
+    "배치 + 반자고": {
+      "rooms": {
+        "3F_R9": {
+          "height_m": 3.0,
+          "upper_peak_C": 514.176,
+          "lower_peak_C": 164.058,
+          "min_layer_m": 0.1,
+          "observer_1_5m_peak_C": 514.176,
+          "observer_1_5m_peak_OD": 3.05063,
+          "smoke_first_s": 5.0,
+          "targets": [
+            {
+              "id": "WorkstationN",
+              "ignition_s": 345.0,
+              "surface_peak_C": 519.975,
+              "radiation_peak_kW_m2": 30.243
+            },
+            {
+              "id": "WorkstationS",
+              "ignition_s": 350.0,
+              "surface_peak_C": 517.626,
+              "radiation_peak_kW_m2": 31.7087
+            }
+          ]
+        },
+        "3F_R2": {
+          "height_m": 3.0,
+          "upper_peak_C": 198.895,
+          "lower_peak_C": 47.4756,
+          "min_layer_m": 1.2766,
+          "observer_1_5m_peak_C": 198.895,
+          "observer_1_5m_peak_OD": 3.39434,
+          "smoke_first_s": 35.0,
+          "targets": [
+            {
+              "id": "WorkstationHallDoor",
+              "ignition_s": null,
+              "surface_peak_C": 106.43,
+              "radiation_peak_kW_m2": 2.44548
+            },
+            {
+              "id": "WorkstationHallInner",
+              "ignition_s": null,
+              "surface_peak_C": 109.485,
+              "radiation_peak_kW_m2": 2.53692
+            }
+          ]
+        },
+        "3F_R8": {
+          "height_m": 3.0,
+          "upper_peak_C": 76.3935,
+          "lower_peak_C": 35.7779,
+          "min_layer_m": 0.563415,
+          "observer_1_5m_peak_C": 76.3935,
+          "observer_1_5m_peak_OD": 3.83731,
+          "smoke_first_s": 210.0,
+          "targets": [
+            {
+              "id": "WorkstationASDoor",
+              "ignition_s": null,
+              "surface_peak_C": 49.9984,
+              "radiation_peak_kW_m2": 0.786574
+            },
+            {
+              "id": "WorkstationASInner",
+              "ignition_s": null,
+              "surface_peak_C": 50.1709,
+              "radiation_peak_kW_m2": 0.788165
+            }
+          ]
+        }
+      },
+      "floors": {
+        "B1": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "1F": {
+          "smoke_rooms_at_30min": 0,
+          "first_smoke_s": null
+        },
+        "2F": {
+          "smoke_rooms_at_30min": 2,
+          "first_smoke_s": 1025.0
+        },
+        "3F": {
+          "smoke_rooms_at_30min": 15,
+          "first_smoke_s": 5.0
+        },
+        "4F": {
+          "smoke_rooms_at_30min": 10,
+          "first_smoke_s": 270.0
+        },
+        "5F": {
+          "smoke_rooms_at_30min": 11,
+          "first_smoke_s": 310.0
+        },
+        "6F": {
+          "smoke_rooms_at_30min": 32,
+          "first_smoke_s": 350.0
+        },
+        "7F": {
+          "smoke_rooms_at_30min": 23,
+          "first_smoke_s": 390.0
+        },
+        "PH": {
+          "smoke_rooms_at_30min": 3,
+          "first_smoke_s": 410.0
+        }
+      },
+      "peak_total_hrr_kW": 7165.77,
+      "actual_30min_energy_MJ": 4537.174199626559,
+      "elapsed_seconds": 1549.844,
+      "ignitions": [
+        {
+          "id": "WorkstationN",
+          "time": 345.0
+        },
+        {
+          "id": "WorkstationS",
+          "time": 350.0
+        },
+        {
+          "id": "WorkstationHallDoor",
+          "time": null
+        },
+        {
+          "id": "WorkstationHallInner",
+          "time": null
+        },
+        {
+          "id": "WorkstationASDoor",
+          "time": null
+        },
+        {
+          "id": "WorkstationASInner",
+          "time": null
+        }
+      ]
+    }
+  },
+  "placement_vs_baseline_max_absolute_difference": {
+    "upper_C": 0.0,
+    "lower_C": 0.0,
+    "interface_m": 0.0,
+    "upper_OD": 0.0,
+    "lower_OD": 0.0
+  },
+  "notes": [
+    "30분 저장 출력 비교. 런타임은 두 실행 일부 병행으로 성능 비교용이 아님.",
+    "반자고 사례는 전층 실별 높이를 변경. 최초 화재실, 홀, A/S는 도면 표기 3.0m.",
+    "총 지정 곡선·환산 연료량 보존. 실제 방출 열량은 산소/착화 시점에 따라 달라짐.",
+    "다른 실 직접 화원복사·문 근처 국소 화염 접촉은 여전히 미계산.",
+    "원격 병합실은 체적을 보존하는 평균 높이로 계산. 경계 열물성은 기존 대리 콘크리트 유지."
+  ]
+}

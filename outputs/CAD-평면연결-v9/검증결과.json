@@ -1,0 +1,339 @@
+{
+  "scope": "stage_1_only",
+  "floors": [
+    {
+      "floor": "B1",
+      "use": "parking",
+      "rooms": 33,
+      "openings": 44,
+      "ramps": 1,
+      "cores": 6,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "shift": [
+        142.98,
+        15.13
+      ],
+      "source_sha256": "8c388560bc23f92ad9fb03ed2b50c3f09dd2b7d3fb1cef31441e52a2d122a67d",
+      "excluded": [
+        {
+          "id": "D16",
+          "reason": "same_space"
+        }
+      ]
+    },
+    {
+      "floor": "1F",
+      "use": "office",
+      "rooms": 34,
+      "openings": 115,
+      "ramps": 0,
+      "cores": 6,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 1.4269658251652785e-15,
+      "alignment": "base",
+      "shift": [
+        0.0,
+        0.0
+      ],
+      "source_sha256": "6fd852af924b52d7654af0a663d588a860965fcf87a15a7c7ace8e4f8dacc4c6",
+      "excluded": [
+        {
+          "id": "D16",
+          "reason": "same_space"
+        },
+        {
+          "id": "W76",
+          "reason": "same_space"
+        }
+      ]
+    },
+    {
+      "floor": "2F",
+      "use": "factory",
+      "rooms": 29,
+      "openings": 73,
+      "ramps": 0,
+      "cores": 5,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 2.507160122087711e-15,
+      "alignment": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "shift": [
+        -84.1,
+        0.0
+      ],
+      "source_sha256": "2ce3c33b577534b3b744af3742e60d04fe7060859fe973423cdab621e3b1f0d3",
+      "excluded": []
+    },
+    {
+      "floor": "3F",
+      "use": "factory",
+      "rooms": 31,
+      "openings": 66,
+      "ramps": 0,
+      "cores": 5,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "shift": [
+        -162.133,
+        1.42
+      ],
+      "source_sha256": "9a37bf28c299dc601b2327afa8ea5f4c166b71c767059ffa74d742b51f442712",
+      "excluded": []
+    },
+    {
+      "floor": "4F",
+      "use": "factory",
+      "rooms": 23,
+      "openings": 67,
+      "ramps": 0,
+      "cores": 5,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "shift": [
+        -246.233,
+        1.42
+      ],
+      "source_sha256": "4f4fd698eb6239eebe004b273d898a2d7817c8ff97a16316d2f11e49e15eaa5d",
+      "excluded": []
+    },
+    {
+      "floor": "5F",
+      "use": "office",
+      "rooms": 23,
+      "openings": 68,
+      "ramps": 0,
+      "cores": 5,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "shift": [
+        -330.333,
+        1.42
+      ],
+      "source_sha256": "dba0c37ef4bc2fab5431b181edb8bf9e4af824e8212a8d3d625268e54ce5f44e",
+      "excluded": [
+        {
+          "id": "D5",
+          "reason": "same_space"
+        },
+        {
+          "id": "D6",
+          "reason": "same_space"
+        },
+        {
+          "id": "W49",
+          "reason": "same_space"
+        }
+      ]
+    },
+    {
+      "floor": "6F",
+      "use": "office",
+      "rooms": 46,
+      "openings": 84,
+      "ramps": 0,
+      "cores": 5,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "shift": [
+        -414.433,
+        1.42
+      ],
+      "source_sha256": "d3b2c65d948ad85189179cf2eb9ed0be475a1beacd224c63e0a6bf3411c482e3",
+      "excluded": []
+    },
+    {
+      "floor": "7F",
+      "use": "office",
+      "rooms": 35,
+      "openings": 82,
+      "ramps": 0,
+      "cores": 4,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 15 (full 3) + columns 20 (←6F)",
+      "shift": [
+        -497.816,
+        1.42
+      ],
+      "source_sha256": "f147602997ce8e49f62792bc52207d0b7b05bc64d2b980d7f8f416095b977f67",
+      "excluded": [
+        {
+          "id": "W23",
+          "reason": "unresolved"
+        },
+        {
+          "id": "W25",
+          "reason": "unresolved"
+        },
+        {
+          "id": "W39",
+          "reason": "unresolved"
+        }
+      ]
+    },
+    {
+      "floor": "PH",
+      "use": "penthouse",
+      "rooms": 7,
+      "openings": 12,
+      "ramps": 0,
+      "cores": 1,
+      "quality_errors": 0,
+      "wall_room_overlap_m2": 0.0,
+      "alignment": "cores edges 2 (full 0) + columns 2 (←7F)",
+      "shift": [
+        -582.636,
+        1.42
+      ],
+      "source_sha256": "a5ed797d8381e495d94f435ec1b4cc1268e52c26cec98f046d3a17ef107feda3",
+      "excluded": [
+        {
+          "id": "W5",
+          "reason": "unresolved"
+        }
+      ]
+    }
+  ],
+  "vertical_links": 35,
+  "groups": [
+    {
+      "kind": "elev",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F"
+      ],
+      "overlaps": [
+        0.9807,
+        1.0,
+        0.999,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "kind": "elev",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F"
+      ],
+      "overlaps": [
+        0.9789,
+        1.0,
+        0.9989,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "kind": "elev",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F"
+      ],
+      "overlaps": [
+        0.9789,
+        1.0,
+        0.9989,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "kind": "stair",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F",
+        "PH"
+      ],
+      "overlaps": [
+        0.6901,
+        1.0,
+        0.9993,
+        1.0,
+        0.8511,
+        1.0,
+        1.0,
+        0.7585
+      ]
+    },
+    {
+      "kind": "stair",
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F"
+      ],
+      "overlaps": [
+        0.7339,
+        1.0,
+        0.9993,
+        1.0,
+        0.8597,
+        1.0,
+        0.865
+      ]
+    }
+  ],
+  "unmatched": [
+    {
+      "floor": "B1",
+      "kind": "stair",
+      "room_id": null,
+      "core_id": "C3",
+      "reason": "no_unambiguous_adjacent_floor_match"
+    },
+    {
+      "floor": "1F",
+      "kind": "stair",
+      "room_id": null,
+      "core_id": "C4",
+      "reason": "no_unambiguous_adjacent_floor_match"
+    }
+  ],
+  "checks": "geometry consistency and CAD core correspondence; not fire physics validation",
+  "known_limits": [
+    "램프 곡선 구간만 추출. 상하단 표고·외기 연결 미확정",
+    "B1/1F 각각 추가 계단 후보 1개는 다른 층 대응 근거가 없어 연결하지 않음",
+    "3F R27 실내외 미확정 상태 유지",
+    "스캔 소방 PDF 자동 좌표 등록·OCR 융합은 미적용"
+  ]
+}

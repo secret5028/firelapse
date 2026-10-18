@@ -1,0 +1,18 @@
+조건부 2차 착화 v19
+
+기존 앱: http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html
+실감 보기 → 선택 실 옆에서 → 13분20초에서 최초 화점/A/B의 동시 연소를 볼 수 있습니다.
+가연물 착화 상태의 A/B 버튼을 누르면 해당 위치와 첫 착화 출력 후30초로 이동합니다.
+A 3:50, B 10:45 첫 착화 출력. C는 30분 내 미착화. 출력 5초 간격.
+A/B는 추가 화재 곡선 종료 후 사라집니다. 최초 화점 1MW는 계속 유지하는 예시입니다.
+벽 자동 절개를 제거했으며 기존 벽 투명도 조절을 사용합니다.
+
+예시 배치/재료/착화 기준은 ignition-scenario.json 참조. 실제 자재 검증값 아님.
+문은 일반 실내문100%, 외부문 유효50%, 승강기문 닫힘+누설1%, 창 닫힘, 소화설비 미작동 유지.
+
+재현: python work/cad_cfast_multifloor.py --duration 1800 --output CAD-2차착화-v19 --ignition-config work/cfast_ignition_scenario.json
+화면: python work/restore_cad_ui.py CAD-2차착화-v19
+검증: python work/verify_cfast_v19.py
+
+no-ignition-reference: A를 1.4m 떨어뜨렸던 첫 배치의 입력/출력. 세 대상 모두 기준 미달로 착화하지 않음. 최종배치는 A만 1.0m로 이동했고 기준값은 동일.
+공식 입력/출력 소스: https://github.com/firemodels/cfast/tree/CFAST-7.7.7/Source/CFAST

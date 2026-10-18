@@ -1,0 +1,37 @@
+"""One-time v22 -> v23 integration; evidence generation remains reproducible."""
+from pathlib import Path
+p=Path(__file__).resolve().parent
+b=p/'build_nist_fuels_v23.py'
+s=b.read_text('utf8').replace("'CFAST Target 후면 INSULATED'", "'원 시험 후면은 단열. CFAST는 양면 노출 PLATE로 근사하므로 시험 열경계의 정확한 재현이 아님'")
+s=s.replace(",back='INSULATED'", ",back='CFAST_TWO_SIDED'")
+b.write_text(s,'utf8')
+f=p/'cad_cfast_multifloor.py';s=f.read_text('utf8')
+s=s.replace("OUT=ROOT/'outputs/CAD-CFAST기준-v22'", "OUT=ROOT/'outputs/CAD-NIST가연물-v23'")
+s=s.replace("parser.add_argument('--ignition-config',help='Opt-in experimental secondary ignition scenario; omitted in baseline')", "parser.add_argument('--ignition-config',default=str(ROOT/'work/cfast_nist_ignition.json'),help='Explicit conditional targets; default NIST desk scenario');parser.add_argument('--no-secondary',action='store_true',help='Run only the prescribed primary fire')")
+s=s.replace("default=str(ROOT/'work/cfast_design_fire.json')", "default=str(ROOT/'work/cfast_nist_design_fire.json')")
+s=s.replace('if args.ignition_config:', 'if args.ignition_config and not args.no_secondary:')
+s=s.replace("MATERIAL='Example wood surrogate'", "MATERIAL='Declared target material'")
+s=s.replace("result['calculation_mode']='experimental_secondary_ignition' if ignition else 'prescribed_design_fire'", "result['calculation_mode']=('nist_evidence_scenario' if ignition.get('evidence_based') else 'experimental_secondary_ignition') if ignition else 'prescribed_design_fire'")
+old=next(l for l in s.splitlines() if l.startswith("result['assumptions'][0]="))
+s=s.replace(old, "if design.get('curve_type')=='tabulated':\n    result['assumptions'][0]=f\"3F R9: {design['name']}, NIST実測図の数値化（실측 도표 수치화）, 최대 {design['peak_kW']:.1f} kW. 건물 용도의 대표 시나리오이며 실제 재고·최악 화재의 확정값 아님. 초기 20°C.\"\nelse:\n    "+old)
+s=s.replace('NIST実測図の数値化（실측 도표 수치화）', 'NIST 실측 도표 수치화')
+s=s.replace("'실험용 추가 착화 설정이 명시적으로 활성화됨. 재료·착화 임계값은 NIST 공통 기본값이 아님.'", "'지정한 별도 대상만 조건부 착화 계산. 해당 NIST 시험 재료에 근거한 값이며 모든 목재의 공통 기본값이 아님.'")
+s=s.replace("' — 시나리오 가정이며 보편적 재료 상수 아님.'", "' — 해당 재료 시험에 근거한 조건. 점화원 존재는 별도 가정이며 보편적 재료 상수 아님.'")
+s=s.replace("if ignition.get('defaults'):result['assumptions'].append(ignition['defaults']['description'])", "if ignition.get('defaults'):\n        result['assumptions'].append(ignition['defaults']['description'])\n        result['assumptions'] += ignition['defaults'].get('evidence',{}).get('assumptions',[])\n        if ignition.get('evidence_based'):\n            result['assumptions'].append('추가 상판 연소는 45kW/m² 콘 시험의 총열량212MJ/m²·평균연소시간1739초를 사용한 등가 일정 HRR. 실제 구획의 변화하는 노출에 따라 HRR이 다시 산정되는 모델은 아님.')\n        result['sources'] += [v['url'] for v in ignition['defaults'].get('sources',[])]")
+s=s.replace("result['design_fire']=design", "result['design_fire']=design\nresult['sources'] += design.get('sources',[])")
+f.write_text(s,'utf8')
+f=p/'cad_cfast_multifloor_overlay.js';s=f.read_text('utf8')
+s=s.replace('금색: 입력 HRR · 파랑: 계산 HRR','금색: 최초 화점 입력 · 파랑: 전체 계산 HRR')
+s=s.replace('실험용 추가 착화','조건부 추가 착화')
+s=s.replace('배치·재료·착화 기준은 예시 가정','재료·착화 기준 출처: 아래 계산 조건<br>배치·점화원 존재는 시나리오 가정')
+old=next(l for l in s.splitlines() if "$('cfDesignText').textContent=" in l)
+s=s.replace(old, "  if(design.curve_type==='tabulated') $('cfDesignText').textContent=`${design.name}. 실측 도표 수치화: 최대 ${(design.peak_kW/1000).toFixed(2)} MW, 약 ${(design.evidence.peak_time_s/60).toFixed(1)}분. 성장·감쇠 곡선 적용. 30분 입력 열량 ${design.prescribed_energy_MJ.toFixed(0)} MJ. 실제 건물 재고를 확정한 값은 아닙니다.`;\n  else "+old.strip())
+s=s.replace("'조건부 추가 착화 설정 활성화'", "'별도 상판 2개: 표면 407°C + 점화원 존재 가정. 조건 미달이면 미착화.'")
+s=s.replace('기본 재질:', '근거 재질:').replace('°C 착화 가정','°C · 점화원 존재 조건').replace('재료 기본값:', '열응답 대리 물성:')
+s=s.replace("${Math.max(...g.hrr_kW.map(v=>v[1]))}", "${Math.max(...g.hrr_kW.map(v=>v[1])).toFixed(1)}")
+needle=" for(const text of data.assumptions)"
+idx=s.index(needle)
+s=s[:idx]+" for(const url of data.sources||[]){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener';a.textContent=url.includes('1021')?'NIST 작업대 화재 실험 · SP1021':url.includes('1-5c')?'NIST 책상 상판 시험 · NCSTAR1-5C':'CFAST 공식 지침';a.style.cssText='display:block;color:#9fd9ff;margin:5px 0';$('cfAssumptions').append(a)}\n"+s[idx:]
+f.write_text(s,'utf8')
+f=p/'cad_cfast_realistic.js';s=f.read_text('utf8').replace('new THREE.BoxGeometry(side,side,f.base_height||.5)', 'new THREE.BoxGeometry(f.width_m||side,f.depth_m||side,f.base_height||.5)');f.write_text(s,'utf8')
+print('v23 integration written')

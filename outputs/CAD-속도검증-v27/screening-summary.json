@@ -1,0 +1,137 @@
+{
+  "physical_input_lines_identical": true,
+  "physical_sha256": "c1dd9ea3bc63e409b76a9a3abc076f654859e3e99a490b1f351cfbf3c09f4472",
+  "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+  "selected_max_time_step_s": 0.25,
+  "screening": {
+    "baseline120": {
+      "name": "baseline120",
+      "wall_seconds": 39.06365240000014,
+      "engine_seconds": 38.3,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "a7be944ced85ece768aab6fe4c4b56d0f1807c6c287fdaa8056f15f3e4a74396",
+      "output_bytes": 5833307
+    },
+    "baseline120repeat": {
+      "name": "baseline120repeat",
+      "wall_seconds": 31.014463100000285,
+      "engine_seconds": 30.3,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "a7be944ced85ece768aab6fe4c4b56d0f1807c6c287fdaa8056f15f3e4a74396",
+      "flags": [],
+      "output_bytes": 5833627
+    },
+    "keyboard120": {
+      "name": "keyboard120",
+      "wall_seconds": 38.36964200000148,
+      "engine_seconds": 37.6,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "39f596a1fd0cc53999df027e3c032602223b60e862700b21c5d2fa2571fa9c6d",
+      "output_bytes": 5833337
+    },
+    "lean120": {
+      "name": "lean120",
+      "wall_seconds": 33.859709599997586,
+      "engine_seconds": 33.2,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "ffe5dd6cb64506578c42daa1d953faf7c2585aa73a064c8b6ac0542d2bd418e1",
+      "output_bytes": 2362731
+    },
+    "lean_keyboard120": {
+      "name": "lean_keyboard120",
+      "wall_seconds": 30.552822300000116,
+      "engine_seconds": 30.1,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "cdbb24997d43240d0f34798d77cdbeeb5cf66c2c8c83e7a67c5d77a54e62f83f",
+      "output_bytes": 2362770
+    },
+    "nokbd120": {
+      "name": "nokbd120",
+      "wall_seconds": 30.339581399999588,
+      "engine_seconds": 29.8,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "a7be944ced85ece768aab6fe4c4b56d0f1807c6c287fdaa8056f15f3e4a74396",
+      "flags": [
+        "-k"
+      ],
+      "output_bytes": 5833619
+    },
+    "select120": {
+      "name": "select120",
+      "wall_seconds": 30.464706200000364,
+      "engine_seconds": 30.0,
+      "steps": 1280.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "bbe4b93b7538f722b0a430d6d6ff8a4c5003456a14832bc72e0cc8c24c59fca7",
+      "flags": [
+        "-k",
+        "-o",
+        "CD"
+      ],
+      "output_bytes": 3548538
+    },
+    "selected600": {
+      "name": "selected600",
+      "wall_seconds": 293.0039285000021,
+      "engine_seconds": 290.0,
+      "steps": 3109.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "b82b179c23715f7b39542a3afab94e52ffbabd5d6bcb4d00d5be17b08c3d368d",
+      "flags": [
+        "-k",
+        "-o:CD"
+      ],
+      "output_bytes": 17527322
+    },
+    "step010600": {
+      "name": "step010600",
+      "wall_seconds": 190.08913210000173,
+      "engine_seconds": 188.0,
+      "steps": 7526.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "2eca9e0d01262957e01237b9bf60d4f31be5b371d17a17c8010de8e27e1a0765",
+      "flags": [
+        "-k",
+        "-o:CD"
+      ],
+      "output_bytes": 17526174
+    },
+    "step025600": {
+      "name": "step025600",
+      "wall_seconds": 194.11718409999958,
+      "engine_seconds": 192.0,
+      "steps": 4213.0,
+      "normal_exit": true,
+      "engine_sha256": "ffd778f185da97a05933d4a2fc36501a9f77b0a7589af38519d28861e4b05dd0",
+      "input_sha256": "1aca4dcca4b1ff4fe64df020c3984183541fcd37af23cc4b22897314efefdd84",
+      "flags": [
+        "-k",
+        "-o:CD"
+      ],
+      "output_bytes": 17526275
+    }
+  },
+  "notes": [
+    "Independent cases executed serially.",
+    "120 s repeated baseline 39.06 vs 31.01 s; output-only speedups cannot be inferred from one noisy pair.",
+    "0.25 s and 0.1 s caps used unchanged native automatic error control.",
+    "0.1 s short run only 2% faster than 0.25 s and deviated slightly more from reference; selected 0.25 s.",
+    "No room, vent, material, HRR curve, target, ignition threshold, or tolerance removed/relaxed.",
+    "select120 used a malformed -o argument and omitted spreadsheet files; excluded from valid candidates."
+  ]
+}

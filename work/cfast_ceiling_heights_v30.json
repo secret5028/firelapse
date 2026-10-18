@@ -1,0 +1,6984 @@
+{
+  "policy": "Native CAD tags first; otherwise same-building use-based defaults. Core/vertical vent endpoints retain structural height. Plenum omitted. Boundary thermal material unchanged for controlled comparison.",
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+  "rooms": {
+    "B1_R0": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R1": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "DA"
+      ]
+    },
+    "B1_R2": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "상부층외벽선",
+        "상부OPEN",
+        "(109대)",
+        "B109",
+        "-",
+        "주차장",
+        "B101",
+        "-",
+        "계단실 1",
+        "B107",
+        "-",
+        "F.R 1",
+        "지하1층바닥",
+        "지하1층바닥",
+        "갑",
+        "범",
+        "W=300",
+        "아연도철제그레이팅",
+        "지하1층바닥",
+        "OPEN 트랜치",
+        "W=200",
+        "OPEN 트랜치",
+        "W=200",
+        "아연도철제그레이팅",
+        "상부",
+        "OPEN (D=1,600)",
+        "OPEN 트랜치",
+        "W=200",
+        "방우테스터기",
+        "갑",
+        "벽체용 방습판",
+        "벽체용 방습판",
+        "OPEN 트랜치",
+        "W=200",
+        "벽체용 방습판",
+        "갑",
+        "B106",
+        "-",
+        "문서창고",
+        "갑",
+        "유"
+      ]
+    },
+    "B1_R3": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R4": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "장비반입구",
+        "H=2,700"
+      ]
+    },
+    "B1_R5": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B115",
+        "-",
+        "발전기실"
+      ]
+    },
+    "B1_R6": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B112",
+        "-",
+        "전기실",
+        "H=2,700",
+        "H=2,400",
+        "B119",
+        "-",
+        "창 고 2"
+      ]
+    },
+    "B1_R7": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R8": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "DA"
+      ]
+    },
+    "B1_R9": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R10": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R11": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B111",
+        "-",
+        "기계실",
+        "B102",
+        "-",
+        "계단실 2",
+        "B116",
+        "중앙감시실",
+        "지하1층바닥",
+        "갑",
+        "OPEN 트랜치",
+        "W=150"
+      ]
+    },
+    "B1_R12": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R13": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R14": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R15": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B118",
+        "염수분무실",
+        "방"
+      ]
+    },
+    "B1_R16": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "상부EV PIT."
+      ]
+    },
+    "B1_R17": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "유"
+      ]
+    },
+    "B1_R18": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R19": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.홀 2",
+        "B104",
+        "화"
+      ]
+    },
+    "B1_R20": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R21": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R22": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "갑"
+      ]
+    },
+    "B1_R23": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.홀 1",
+        "B103",
+        "갑",
+        "갑"
+      ]
+    },
+    "B1_R24": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B105",
+        "-",
+        "사사창고"
+      ]
+    },
+    "B1_R25": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R26": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "B1_R27": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B117",
+        "-",
+        "F.R 2"
+      ]
+    },
+    "B1_R28": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "B114",
+        "P I T",
+        "-"
+      ]
+    },
+    "B1_R29": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "B1_R30": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "갑"
+      ]
+    },
+    "B1_CE1": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "B1_CE2": {
+      "height_m": 5.1,
+      "structural_height_m": 5.1,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "1F_R0": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "자재 입고",
+        "완제품 출하",
+        "지상1층바닥",
+        "방",
+        "방",
+        "아연도철제그레이팅",
+        "-",
+        "하역장",
+        "행거도어",
+        "행거도어",
+        "DA",
+        "장비반입구",
+        "우레탄/W",
+        "우레탄/W",
+        "우레탄/W",
+        "우레탄/W",
+        "우레탄/W",
+        "D/W"
+      ]
+    },
+    "1F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "DA",
+        "(배기)"
+      ]
+    },
+    "1F_R2": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "121",
+          "labels": [
+            "자재사무실"
+          ],
+          "position": [
+            15.768293308230568,
+            66.75260111037278
+          ],
+          "native_point": [
+            14008708.29330823,
+            -1763503.898889627
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "자재사무실"
+      ]
+    },
+    "1F_R3": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "119",
+          "labels": [
+            "ESD자재창고"
+          ],
+          "position": [
+            21.4842933082291,
+            66.75260111037278
+          ],
+          "native_point": [
+            14014424.29330823,
+            -1763503.898889627
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "ESD자재창고",
+        "우레탄/W",
+        "우레탄/W"
+      ]
+    },
+    "1F_R4": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "122",
+          "labels": [
+            "회의실"
+          ],
+          "position": [
+            27.238634535940946,
+            66.73062744654794
+          ],
+          "native_point": [
+            14020178.63453594,
+            -1763525.872553452
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "회의실",
+        "우레탄/W"
+      ]
+    },
+    "1F_R5": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "118",
+          "labels": [
+            "사무실2"
+          ],
+          "position": [
+            31.31960749225982,
+            66.8187512037789
+          ],
+          "native_point": [
+            14024259.60749226,
+            -1763437.748796221
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "사무실2",
+        "품질통합"
+      ]
+    },
+    "1F_R6": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "117",
+          "labels": [
+            "사무실1"
+          ],
+          "position": [
+            38.34836627343975,
+            66.8187512037789
+          ],
+          "native_point": [
+            14031288.36627344,
+            -1763437.748796221
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "사무실1",
+        "D/W",
+        "우레탄/W",
+        "품질통합"
+      ]
+    },
+    "1F_R7": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "123",
+          "labels": [
+            "분석실"
+          ],
+          "position": [
+            46.71395266933905,
+            62.598115500369886
+          ],
+          "native_point": [
+            14039653.95266934,
+            -1767658.38449963
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "분석실",
+        "갑",
+        "우레탄/W",
+        "D/W",
+        "AT IQC"
+      ]
+    },
+    "1F_R8": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "116",
+          "labels": [
+            "측정실"
+          ],
+          "position": [
+            56.819170485279756,
+            62.59811770788906
+          ],
+          "native_point": [
+            14049759.17048528,
+            -1767658.382292111
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "측정실",
+        "Electrical Testing"
+      ]
+    },
+    "1F_R9": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "115",
+          "labels": [
+            "다목적실"
+          ],
+          "position": [
+            67.61256900683111,
+            58.332106051429946
+          ],
+          "native_point": [
+            14060552.56900683,
+            -1771924.39394857
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "다목적실"
+      ]
+    },
+    "1F_R10": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "1F_R11": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "1F_R12": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "111",
+          "labels": [
+            "자재창고"
+          ],
+          "position": [
+            37.60135984003864,
+            47.29657244100099
+          ],
+          "native_point": [
+            14030541.35984004,
+            -1782959.927558999
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "지상1층바닥",
+        "자재창고"
+      ]
+    },
+    "1F_R13": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "112",
+          "labels": [
+            "문서보관실"
+          ],
+          "position": [
+            51.29443941649879,
+            52.957388130478876
+          ],
+          "native_point": [
+            14044234.4394165,
+            -1777299.111869521
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "문서보관실"
+      ]
+    },
+    "1F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "1F_R15": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "103",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            59.91726392043893,
+            41.97941282276679
+          ],
+          "native_point": [
+            14052857.26392044,
+            -1788277.087177233
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        },
+        {
+          "height_m": 4.0,
+          "room_number": "114",
+          "labels": [
+            "홍보관"
+          ],
+          "position": [
+            67.73005932699016,
+            47.25949238975204
+          ],
+          "native_point": [
+            14060670.05932699,
+            -1782997.007610248
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 1",
+        "홍보관",
+        "-",
+        "계단실 1",
+        "안 내",
+        "갑",
+        "(인테리어마감공사)",
+        "(벽체,천정 인테리어 마감공사 별도)",
+        "유",
+        "HALL",
+        "LOBBY"
+      ]
+    },
+    "1F_R16": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "106",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            55.21250871442135,
+            52.72256972041487
+          ],
+          "native_point": [
+            14048152.50871442,
+            -1777533.930279585
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "1F_R17": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "1F_R18": {
+      "height_m": 2.7,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.7,
+          "room_number": "113",
+          "labels": [
+            "MDF실"
+          ],
+          "position": [
+            50.63596327018058,
+            48.11567439584587
+          ],
+          "native_point": [
+            14043575.96327018,
+            -1782140.825604154
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "MDF실",
+        "갑"
+      ]
+    },
+    "1F_R19": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "105",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            53.97919920890854,
+            49.674628013697884
+          ],
+          "native_point": [
+            14046919.19920891,
+            -1780581.871986302
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "1F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "1F_R21": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "1F_R22": {
+      "height_m": 4.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 4.0,
+          "room_number": "104",
+          "labels": [
+            "ELEV.홀 2"
+          ],
+          "position": [
+            17.35485064150089,
+            48.32374575586596
+          ],
+          "native_point": [
+            14010294.8506415,
+            -1781932.754244134
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 2",
+        "갑"
+      ]
+    },
+    "1F_R23": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "107",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            20.856040982520426,
+            47.62240162541889
+          ],
+          "native_point": [
+            14013796.04098252,
+            -1782634.098374581
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "1F_R24": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "(15인승)",
+        "승객용"
+      ]
+    },
+    "1F_R25": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "1F_R26": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "1F_R27": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "1F_R28": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "108",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            21.227473291321076,
+            42.55920761382504
+          ],
+          "native_point": [
+            14014167.47329132,
+            -1787697.292386175
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "1F_R29": {
+      "height_m": 2.7,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.7,
+          "room_number": "110",
+          "labels": [
+            "방풍실 2"
+          ],
+          "position": [
+            17.206655523090376,
+            40.91425262627877
+          ],
+          "native_point": [
+            14010146.65552309,
+            -1789342.247373721
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "방풍실 2"
+      ]
+    },
+    "1F_R30": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "1F_R31": {
+      "height_m": 2.7,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.7,
+          "room_number": "109",
+          "labels": [
+            "방풍실 1"
+          ],
+          "position": [
+            54.569071494848686,
+            37.74754131849886
+          ],
+          "native_point": [
+            14047509.07149485,
+            -1792508.958681501
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+        }
+      ],
+      "room_names": [
+        "방풍실 1"
+      ]
+    },
+    "1F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "1F_CE2": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "2F_R0": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "알미늄 그릴",
+        "공조실",
+        "-"
+      ]
+    },
+    "2F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "209",
+          "labels": [
+            "RF생산라인1"
+          ],
+          "position": [
+            37.78170812938879,
+            58.13280416725979
+          ],
+          "native_point": [
+            14114821.70812939,
+            -1772123.69583274
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "지상2층바닥",
+        "RF생산라인1",
+        "D/W"
+      ]
+    },
+    "2F_R2": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "203",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            57.676581872348834,
+            42.29150434712301
+          ],
+          "native_point": [
+            14134716.58187235,
+            -1787964.995652877
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "210",
+          "labels": [
+            "RF생산라인2"
+          ],
+          "position": [
+            65.54815640825836,
+            61.516541318499776
+          ],
+          "native_point": [
+            14142588.15640826,
+            -1768739.9586815
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 1",
+        "화",
+        "화",
+        "화",
+        "화",
+        "RF생산라인2",
+        "갑",
+        "유",
+        "우레탄/W",
+        "갑"
+      ]
+    },
+    "2F_R3": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "실외기실",
+        "-",
+        "알미늄 그릴",
+        "D/W"
+      ]
+    },
+    "2F_R4": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "214",
+          "labels": [
+            "ELEV.홀 3"
+          ],
+          "position": [
+            19.70607149484931,
+            56.63856131850093
+          ],
+          "native_point": [
+            14096746.07149485,
+            -1773617.938681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "갑",
+        "ELEV.홀 3",
+        "화"
+      ]
+    },
+    "2F_R5": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "2F_R6": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "2F_R7": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "211",
+          "labels": [
+            "여자탈의실"
+          ],
+          "position": [
+            68.55802393863814,
+            50.872511542083885
+          ],
+          "native_point": [
+            14145598.02393864,
+            -1779383.988457916
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "여자탈의실"
+      ]
+    },
+    "2F_R8": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "2F_R9": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "206",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            54.898004100628896,
+            52.08614605142975
+          ],
+          "native_point": [
+            14131938.00410063,
+            -1778170.35394857
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "2F_R10": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "216",
+          "labels": [
+            "고주파 납땜"
+          ],
+          "position": [
+            14.980490341100449,
+            53.186061514597895
+          ],
+          "native_point": [
+            14092020.4903411,
+            -1777070.438485402
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "알미늄 그릴",
+        "고주파 납땜",
+        "D/W"
+      ]
+    },
+    "2F_R11": {
+      "height_m": 5.5,
+      "structural_height_m": 5.5,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "-",
+        "계단실 1"
+      ]
+    },
+    "2F_R12": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "2F_R13": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "2F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "204",
+          "labels": [
+            "ELEV.홀 2"
+          ],
+          "position": [
+            17.354850644100225,
+            48.3257146240021
+          ],
+          "native_point": [
+            14094394.8506441,
+            -1781930.785375998
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 2",
+        "갑",
+        "화"
+      ]
+    },
+    "2F_R15": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "207",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            20.824404927869182,
+            47.75082736955301
+          ],
+          "native_point": [
+            14097864.40492787,
+            -1782505.672630447
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "2F_R16": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "205",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            54.77980253550959,
+            47.593059416260076
+          ],
+          "native_point": [
+            14131819.80253551,
+            -1782663.44058374
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "2F_R17": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "(15인승)",
+        "ELEV.",
+        "승객용"
+      ]
+    },
+    "2F_R18": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "217",
+          "labels": [
+            "남자탈의실"
+          ],
+          "position": [
+            68.55802393863814,
+            43.42245910831093
+          ],
+          "native_point": [
+            14145598.02393864,
+            -1786834.040891689
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "우레탄/W",
+        "남자탈의실"
+      ]
+    },
+    "2F_R19": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "2F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "2F_R21": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "2F_R22": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "2F_R23": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "208",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            21.382988038949406,
+            42.522973555606086
+          ],
+          "native_point": [
+            14098422.98803895,
+            -1787733.526444394
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "2F_R24": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "212",
+          "labels": [
+            "휴게실"
+          ],
+          "position": [
+            17.208850644099584,
+            41.264714624001954
+          ],
+          "native_point": [
+            14094248.8506441,
+            -1788991.785375998
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+        }
+      ],
+      "room_names": [
+        "휴게실"
+      ]
+    },
+    "2F_R25": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "장애인겸용",
+        "ELEV.",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "2F_R26": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "2F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "2F_CE2": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "3F_R0": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "알미늄 그릴",
+        "공조실",
+        "-"
+      ]
+    },
+    "3F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "309",
+          "labels": [
+            "RF생산라인"
+          ],
+          "position": [
+            37.86303979343029,
+            53.46191205180298
+          ],
+          "native_point": [
+            14192936.03979343,
+            -1778214.587948197
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "지상3층바닥",
+        "RF생산라인"
+      ]
+    },
+    "3F_R2": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "303",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            57.677260063308495,
+            42.2908884517351
+          ],
+          "native_point": [
+            14212750.26006331,
+            -1789385.611548265
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "310",
+          "labels": [
+            "Assembly Line"
+          ],
+          "position": [
+            64.87417474330869,
+            63.46061100095699
+          ],
+          "native_point": [
+            14219947.17474331,
+            -1768215.888999043
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 1",
+        "화",
+        "갑",
+        "화",
+        "유",
+        "우레탄/W",
+        "Assembly Line",
+        "D/W",
+        "갑"
+      ]
+    },
+    "3F_R3": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "311",
+          "labels": [
+            "계측기보관실"
+          ],
+          "position": [
+            14.84439493932041,
+            60.91774889365615
+          ],
+          "native_point": [
+            14169917.39493932,
+            -1770758.751106344
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "계측기보관실"
+      ]
+    },
+    "3F_R4": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "314",
+          "labels": [
+            "ELEV.홀 3"
+          ],
+          "position": [
+            19.793156408259165,
+            56.69054131849998
+          ],
+          "native_point": [
+            14174866.15640826,
+            -1774985.9586815
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 3",
+        "화",
+        "갑",
+        "알미늄 그릴"
+      ]
+    },
+    "3F_R5": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "3F_R6": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "3F_R7": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "3F_R8": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "315",
+          "labels": [
+            "A/S 실"
+          ],
+          "position": [
+            64.33750495011009,
+            50.72917813478193
+          ],
+          "native_point": [
+            14219410.50495011,
+            -1780947.321865218
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "A/S 실"
+      ]
+    },
+    "3F_R9": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "316",
+          "labels": [
+            "공작실/설비보관실"
+          ],
+          "position": [
+            70.47128389749014,
+            50.72917813478193
+          ],
+          "native_point": [
+            14225544.28389749,
+            -1780947.321865218
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "공작실/설비보관실"
+      ]
+    },
+    "3F_R10": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "3F_R11": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "306",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            54.894424466840064,
+            52.085971803197026
+          ],
+          "native_point": [
+            14209967.42446684,
+            -1779590.528196803
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "3F_R12": {
+      "height_m": 5.5,
+      "structural_height_m": 5.5,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "계단실 1"
+      ]
+    },
+    "3F_R13": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "3F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "3F_R15": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "304",
+          "labels": [
+            "ELEV.홀 2"
+          ],
+          "position": [
+            17.35552883506898,
+            48.325098728613966
+          ],
+          "native_point": [
+            14172428.52883507,
+            -1783351.401271386
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 2",
+        "갑",
+        "화"
+      ]
+    },
+    "3F_R16": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "307",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            20.784926039221318,
+            47.70844566949495
+          ],
+          "native_point": [
+            14175857.92603922,
+            -1783968.054330505
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "3F_R17": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "305",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            54.81721106089026,
+            47.53666511459096
+          ],
+          "native_point": [
+            14209890.21106089,
+            -1784139.834885409
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "3F_R18": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "(15인승)",
+        "승객용"
+      ]
+    },
+    "3F_R19": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "3F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "3F_R21": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "3F_R22": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "3F_R23": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "317",
+          "labels": [
+            "교육장"
+          ],
+          "position": [
+            67.32880832348928,
+            42.953764694163056
+          ],
+          "native_point": [
+            14222401.80832349,
+            -1788722.735305837
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "우레탄/W",
+        "교육장"
+      ]
+    },
+    "3F_R24": {
+      "height_m": 2.4,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "308",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            21.49906782165999,
+            42.47032822533993
+          ],
+          "native_point": [
+            14176572.06782166,
+            -1789206.17177466
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "3F_R25": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "312",
+          "labels": [
+            "휴게실"
+          ],
+          "position": [
+            17.12507149484918,
+            41.19652131850103
+          ],
+          "native_point": [
+            14172198.07149485,
+            -1790479.978681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+        }
+      ],
+      "room_names": [
+        "휴게실"
+      ]
+    },
+    "3F_R26": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "3F_R28": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "3F_CE0": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "3F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "4F_R0": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "410",
+          "labels": [
+            "RF생산라인"
+          ],
+          "position": [
+            37.43419066973911,
+            52.81351890242013
+          ],
+          "native_point": [
+            14276607.19066974,
+            -1778862.98109758
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "지상4층바닥",
+        "RF생산라인",
+        "화"
+      ]
+    },
+    "4F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "4F_R2": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "4F_R3": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "403",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            59.13631272906059,
+            42.2908884517351
+          ],
+          "native_point": [
+            14298309.31272906,
+            -1789385.611548265
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 1",
+        "화",
+        "갑",
+        "화"
+      ]
+    },
+    "4F_R4": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "4F_R5": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "406",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            55.00113625947961,
+            52.214676309492006
+          ],
+          "native_point": [
+            14294174.13625948,
+            -1779461.823690508
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "4F_R6": {
+      "height_m": 4.5,
+      "structural_height_m": 4.5,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "계단실 1",
+        "-"
+      ]
+    },
+    "4F_R7": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "4F_R8": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "4F_R9": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "404",
+          "labels": [
+            "ELEV.홀 2"
+          ],
+          "position": [
+            17.355528837670136,
+            48.325098728613966
+          ],
+          "native_point": [
+            14256528.52883767,
+            -1783351.401271386
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 2",
+        "갑",
+        "화"
+      ]
+    },
+    "4F_R10": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "407",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            20.80101461579943,
+            47.684636346670004
+          ],
+          "native_point": [
+            14259974.0146158,
+            -1783991.86365333
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "4F_R11": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "405",
+          "labels": [
+            "화장실(남)",
+            "화장실(남)"
+          ],
+          "position": [
+            54.814876213529715,
+            47.51986657931798
+          ],
+          "native_point": [
+            14293987.87621353,
+            -1784156.633420682
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        },
+        {
+          "height_m": 2.4,
+          "room_number": "405",
+          "labels": [
+            "화장실(남)",
+            "화장실(남)"
+          ],
+          "position": [
+            54.814876213529715,
+            47.51986657931798
+          ],
+          "native_point": [
+            14293987.87621353,
+            -1784156.633420682
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)",
+        "화장실(남)"
+      ]
+    },
+    "4F_R12": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "(15인승)",
+        "승객용"
+      ]
+    },
+    "4F_R13": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "4F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "4F_R15": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "4F_R16": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "4F_R17": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "408",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            21.38504502629985,
+            42.47346944825608
+          ],
+          "native_point": [
+            14260558.0450263,
+            -1789203.030551744
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "4F_R18": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "409",
+          "labels": [
+            "휴게실"
+          ],
+          "position": [
+            17.125071497448516,
+            41.19652131850103
+          ],
+          "native_point": [
+            14256298.07149745,
+            -1790479.978681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+        }
+      ],
+      "room_names": [
+        "휴게실"
+      ]
+    },
+    "4F_R19": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "4F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "4F_CE0": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "4F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "5F_R0": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "503",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            57.677260068508986,
+            42.2908884517351
+          ],
+          "native_point": [
+            14380950.26006851,
+            -1789385.611548265
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "509",
+          "labels": [
+            "연구실"
+          ],
+          "position": [
+            37.868071494847754,
+            52.62573577233411
+          ],
+          "native_point": [
+            14361141.07149485,
+            -1779050.764227666
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 1",
+        "화",
+        "지상5층바닥",
+        "화",
+        "갑",
+        "화",
+        "연구실",
+        "G/W"
+      ]
+    },
+    "5F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "5F_R2": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "5F_R3": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "5F_R4": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "506",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            54.80184430068766,
+            52.10613265956795
+          ],
+          "native_point": [
+            14378074.84430069,
+            -1779570.367340432
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": []
+    },
+    "5F_R5": {
+      "height_m": 4.5,
+      "structural_height_m": 4.5,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "계단실 1",
+        "-"
+      ]
+    },
+    "5F_R6": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "5F_R7": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "5F_R8": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "504",
+          "labels": [
+            "ELEV.홀 2"
+          ],
+          "position": [
+            17.35552884026947,
+            48.325098728613966
+          ],
+          "native_point": [
+            14340628.52884027,
+            -1783351.401271386
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 2",
+        "갑",
+        "화"
+      ]
+    },
+    "5F_R9": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "507",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            20.774756989529124,
+            47.68000609611295
+          ],
+          "native_point": [
+            14344047.75698953,
+            -1783996.493903887
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "5F_R10": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "505",
+          "labels": [
+            "화장실(남)",
+            "화장실(남)",
+            "화장실(남)"
+          ],
+          "position": [
+            54.72953703908934,
+            47.484862753274
+          ],
+          "native_point": [
+            14378002.53703909,
+            -1784191.637246726
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        },
+        {
+          "height_m": 2.4,
+          "room_number": "505",
+          "labels": [
+            "화장실(남)",
+            "화장실(남)",
+            "화장실(남)"
+          ],
+          "position": [
+            54.72953703908934,
+            47.484862753274
+          ],
+          "native_point": [
+            14378002.53703909,
+            -1784191.637246726
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        },
+        {
+          "height_m": 2.4,
+          "room_number": "505",
+          "labels": [
+            "화장실(남)",
+            "화장실(남)",
+            "화장실(남)"
+          ],
+          "position": [
+            54.72953703908934,
+            47.484862753274
+          ],
+          "native_point": [
+            14378002.53703909,
+            -1784191.637246726
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)",
+        "화장실(남)",
+        "화장실(남)"
+      ]
+    },
+    "5F_R11": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "(15인승)",
+        "승객용"
+      ]
+    },
+    "5F_R12": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "511",
+          "labels": [
+            "회의실"
+          ],
+          "position": [
+            69.9563470817302,
+            45.62200732267206
+          ],
+          "native_point": [
+            14393229.34708173,
+            -1786054.492677328
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "회의실",
+        "D/W"
+      ]
+    },
+    "5F_R13": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "5F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "5F_R15": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "5F_R16": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "5F_R17": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "508",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            21.352759726509248,
+            42.50113854396591
+          ],
+          "native_point": [
+            14344625.75972651,
+            -1789175.361456034
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "5F_R18": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "510",
+          "labels": [
+            "사무실"
+          ],
+          "position": [
+            69.95953822197953,
+            41.458143854510126
+          ],
+          "native_point": [
+            14393232.53822198,
+            -1790218.35614549
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+        }
+      ],
+      "room_names": [
+        "CME 팀장실",
+        "사무실"
+      ]
+    },
+    "5F_R19": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "5F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "5F_CE0": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "5F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "6F_R0": {
+      "height_m": 2.7,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.7,
+          "room_number": "633",
+          "labels": [
+            "SEVER실"
+          ],
+          "position": [
+            16.50651102837037,
+            66.1730629415431
+          ],
+          "native_point": [
+            14423879.51102837,
+            -1765503.437058457
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "바닥:A/F(H=300)",
+        "SEVER실",
+        "W.H=900",
+        "지상6층바닥",
+        "(W=2,700)",
+        "자동문"
+      ]
+    },
+    "6F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "632",
+          "labels": [
+            "전산사무실"
+          ],
+          "position": [
+            24.91171248398132,
+            66.1611248607719
+          ],
+          "native_point": [
+            14432284.71248398,
+            -1765515.375139228
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "전산사무실",
+        "SGP/W",
+        "지상6층바닥"
+      ]
+    },
+    "6F_R2": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "628",
+          "labels": [
+            "사무실4"
+          ],
+          "position": [
+            34.9108625277313,
+            66.13226220285492
+          ],
+          "native_point": [
+            14442283.86252773,
+            -1765544.237797145
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "사업본부장",
+        "D/W",
+        "사무실4"
+      ]
+    },
+    "6F_R3": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "618",
+          "labels": [
+            "사무실3"
+          ],
+          "position": [
+            38.78913676058983,
+            48.0401806665061
+          ],
+          "native_point": [
+            14446162.13676059,
+            -1783636.319333494
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "지상6층바닥",
+        "사무실3",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W",
+        "G/W"
+      ]
+    },
+    "6F_R4": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "619",
+          "labels": [
+            "G/W",
+            "회의실1"
+          ],
+          "position": [
+            50.76218161761972,
+            68.6391673304272
+          ],
+          "native_point": [
+            14458135.18161762,
+            -1763037.332669573
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "회의실1"
+      ]
+    },
+    "6F_R5": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "610",
+          "labels": [
+            "사무실1"
+          ],
+          "position": [
+            57.702023938638376,
+            63.87854131850122
+          ],
+          "native_point": [
+            14465075.02393864,
+            -1767797.958681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "인사팀",
+        "사무실1",
+        "D/W",
+        "D/W",
+        "D/W",
+        "D/W"
+      ]
+    },
+    "6F_R6": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "609",
+          "labels": [
+            "사무실2"
+          ],
+          "position": [
+            67.88602393863948,
+            63.87854131850122
+          ],
+          "native_point": [
+            14475259.02393864,
+            -1767797.958681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "613",
+          "labels": [
+            "탕비실"
+          ],
+          "position": [
+            63.48121251489829,
+            52.48556131850091
+          ],
+          "native_point": [
+            14470854.2125149,
+            -1779190.938681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "재무팀",
+        "출 납",
+        "사무실2",
+        "탕비실",
+        "유리칸막이",
+        "유리칸막이"
+      ]
+    },
+    "6F_R7": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "620",
+          "labels": [
+            "G/W",
+            "회의실2"
+          ],
+          "position": [
+            50.76218161761972,
+            65.84047717204203
+          ],
+          "native_point": [
+            14458135.18161762,
+            -1765836.022827958
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W",
+        "회의실2"
+      ]
+    },
+    "6F_R8": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "621",
+          "labels": [
+            "G/W",
+            "회의실3"
+          ],
+          "position": [
+            50.76218161761972,
+            63.026316002487874
+          ],
+          "native_point": [
+            14458135.18161762,
+            -1768650.183997512
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W",
+        "회의실3"
+      ]
+    },
+    "6F_R9": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "624",
+          "labels": [
+            "회의실6"
+          ],
+          "position": [
+            34.9607803048475,
+            60.18061170931401
+          ],
+          "native_point": [
+            14442333.78030485,
+            -1771495.888290686
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W",
+        "D/W",
+        "회의실6"
+      ]
+    },
+    "6F_R10": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "SGP/W",
+        "창고",
+        "이동식경사로"
+      ]
+    },
+    "6F_R11": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "627",
+          "labels": [
+            "PJ 회의실",
+            "D/W"
+          ],
+          "position": [
+            26.024849162718965,
+            59.33847539407907
+          ],
+          "native_point": [
+            14433397.84916272,
+            -1772338.024605921
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "PJ 회의실",
+        "D/W",
+        "G/W"
+      ]
+    },
+    "6F_R12": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "625",
+          "labels": [
+            "회의실7"
+          ],
+          "position": [
+            30.98926026942172,
+            60.18061170931401
+          ],
+          "native_point": [
+            14438362.26026942,
+            -1771495.888290686
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "G/W",
+        "D/W",
+        "회의실7"
+      ]
+    },
+    "6F_R13": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "622",
+          "labels": [
+            "회의실4"
+          ],
+          "position": [
+            50.76218161761972,
+            59.57069427708484
+          ],
+          "native_point": [
+            14458135.18161762,
+            -1772105.805722915
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W",
+        "회의실4"
+      ]
+    },
+    "6F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "610",
+          "labels": [
+            "ELEV.홀 3"
+          ],
+          "position": [
+            19.884143155939455,
+            55.71526552180808
+          ],
+          "native_point": [
+            14427257.14315594,
+            -1775961.234478192
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "화",
+        "D/W",
+        "갑",
+        "ELEV.홀 3",
+        "G/W"
+      ]
+    },
+    "6F_R15": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "603",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            57.67726007111014,
+            42.2908884517351
+          ],
+          "native_point": [
+            14465050.26007111,
+            -1789385.611548265
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        },
+        {
+          "height_m": 2.4,
+          "room_number": "606",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            54.90234592857996,
+            52.219794374610046
+          ],
+          "native_point": [
+            14462275.34592858,
+            -1779456.70562539
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "617",
+          "labels": [
+            "복  도"
+          ],
+          "position": [
+            55.611071494849966,
+            56.17956131850087
+          ],
+          "native_point": [
+            14462984.07149485,
+            -1775496.938681499
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 1",
+        "화장실(여)",
+        "화",
+        "갑",
+        "화",
+        "복  도",
+        "WD"
+      ]
+    },
+    "6F_R16": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "612",
+          "labels": [
+            "회의실"
+          ],
+          "position": [
+            66.26050138410756,
+            52.85034266035791
+          ],
+          "native_point": [
+            14473633.50138411,
+            -1778826.157339642
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "회의실"
+      ]
+    },
+    "6F_R17": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "611",
+          "labels": [
+            "CFO 실"
+          ],
+          "position": [
+            70.87902393864897,
+            52.61607513217996
+          ],
+          "native_point": [
+            14478252.02393865,
+            -1779060.42486782
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "CFO 실"
+      ]
+    },
+    "6F_R18": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "6F_R19": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "6F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "623",
+          "labels": [
+            "G/W",
+            "회의실5"
+          ],
+          "position": [
+            50.76218161761972,
+            53.12688053950592
+          ],
+          "native_point": [
+            14458135.18161762,
+            -1778549.619460494
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "회의실5"
+      ]
+    },
+    "6F_R21": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "6F_R22": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "631",
+          "labels": [
+            "사무실7"
+          ],
+          "position": [
+            14.89353426498019,
+            52.96009571957484
+          ],
+          "native_point": [
+            14422266.53426498,
+            -1778716.404280425
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "고충처리상담",
+        "사무실7",
+        "G/W"
+      ]
+    },
+    "6F_R23": {
+      "height_m": 4.5,
+      "structural_height_m": 4.5,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "계단실 1",
+        "-"
+      ]
+    },
+    "6F_R24": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "629",
+          "labels": [
+            "사무실5"
+          ],
+          "position": [
+            50.94167882536749,
+            47.97230160325398
+          ],
+          "native_point": [
+            14458314.67882537,
+            -1783704.198396746
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W",
+        "사무실5"
+      ]
+    },
+    "6F_R25": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "6F_R26": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "614",
+          "labels": [
+            "대회의실"
+          ],
+          "position": [
+            67.35002970092864,
+            47.57280971955902
+          ],
+          "native_point": [
+            14474723.02970093,
+            -1784103.690280441
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "대회의실",
+        "(인테리어마감공사)",
+        "벽체는 건축공사",
+        "차음벽시공",
+        "bar"
+      ]
+    },
+    "6F_R27": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "626",
+          "labels": [
+            "회의실8"
+          ],
+          "position": [
+            24.665551778640292,
+            47.42252641638697
+          ],
+          "native_point": [
+            14432038.55177864,
+            -1784253.973583613
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "회의실8"
+      ]
+    },
+    "6F_R28": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "6F_R29": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "604",
+          "labels": [
+            "ELEV.홀 2"
+          ],
+          "position": [
+            17.538629095370197,
+            46.976273655432124
+          ],
+          "native_point": [
+            14424911.62909537,
+            -1784700.226344568
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "ELEV.홀 2",
+        "갑",
+        "화"
+      ]
+    },
+    "6F_R30": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "607",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            20.77475699212846,
+            47.68000609611295
+          ],
+          "native_point": [
+            14428147.75699213,
+            -1783996.493903887
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "6F_R31": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "605",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            54.67826908582174,
+            47.488484847428026
+          ],
+          "native_point": [
+            14462051.26908582,
+            -1784188.015152572
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "6F_R32": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "(15인승)",
+        "승객용"
+      ]
+    },
+    "6F_R33": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "6F_R34": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "6F_R35": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "6F_R36": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "P.S"
+      ]
+    },
+    "6F_R37": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "630",
+          "labels": [
+            "사무실6"
+          ],
+          "position": [
+            24.80590917794143,
+            41.764344564363
+          ],
+          "native_point": [
+            14432178.90917794,
+            -1789912.155435637
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "시스템사업본부장",
+        "D/W",
+        "사무실6"
+      ]
+    },
+    "6F_R38": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "수납"
+      ]
+    },
+    "6F_R39": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "615",
+          "labels": [
+            "소회의실1"
+          ],
+          "position": [
+            69.70789601759134,
+            41.82554534473684
+          ],
+          "native_point": [
+            14477080.89601759,
+            -1789850.954655263
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "소회의실1",
+        "(인테리어마감공사)",
+        "bar"
+      ]
+    },
+    "6F_R40": {
+      "height_m": 2.4,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "608",
+          "labels": [
+            "화장실(여)",
+            "시스템사업본부장"
+          ],
+          "position": [
+            21.352759729108584,
+            42.50113854396591
+          ],
+          "native_point": [
+            14428725.75972911,
+            -1789175.361456034
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "6F_R41": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "616",
+          "labels": [
+            "소회의실2"
+          ],
+          "position": [
+            64.68913703286125,
+            41.0008778746801
+          ],
+          "native_point": [
+            14472062.13703286,
+            -1790675.62212532
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+        }
+      ],
+      "room_names": [
+        "소회의실2",
+        "(인테리어마감공사)"
+      ]
+    },
+    "6F_R42": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV.",
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "6F_R43": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "6F_CE0": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "6F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 4.5,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "7F_R0": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "지상7층SL바닥",
+        "SLOPE",
+        "SLOPE",
+        "점검사다리(W=400)",
+        "SLOPE",
+        "SLOPE",
+        "o150 RD",
+        "/",
+        "SLOPE",
+        "OPEN 트랜치(W=200)",
+        "OPEN 트랜치(W=200)",
+        "아연도철제그레이팅",
+        "(하부PS에연결)",
+        "SLOPE",
+        "o100 RD",
+        "/",
+        "SLOPE",
+        "o100 RD",
+        "/",
+        "o100 RD",
+        "/",
+        "o100 선홈통",
+        "/",
+        "OPEN 트랜치(W=200)",
+        "o100 선홈통",
+        "/",
+        "SLOPE",
+        "알미늄 그릴"
+      ]
+    },
+    "7F_R1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "727",
+          "labels": [
+            "사무실5"
+          ],
+          "position": [
+            45.903202184139445,
+            67.46036256576804
+          ],
+          "native_point": [
+            14536659.20218414,
+            -1764216.137434232
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "사무실5",
+        "D/W"
+      ]
+    },
+    "7F_R2": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "726",
+          "labels": [
+            "사무실4"
+          ],
+          "position": [
+            50.690696454488716,
+            67.4558245097171
+          ],
+          "native_point": [
+            14541446.69645449,
+            -1764220.675490283
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "사무실4",
+        "D/W"
+      ]
+    },
+    "7F_R3": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "725",
+          "labels": [
+            "사무실3"
+          ],
+          "position": [
+            55.69069645447962,
+            67.45582450972097
+          ],
+          "native_point": [
+            14546446.69645448,
+            -1764220.675490279
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "사무실3",
+        "D/W"
+      ]
+    },
+    "7F_R4": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "712",
+          "labels": [
+            "회의실"
+          ],
+          "position": [
+            60.71629692942042,
+            68.99907471822803
+          ],
+          "native_point": [
+            14551472.29692942,
+            -1762677.425281772
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W",
+        "회의실"
+      ]
+    },
+    "7F_R5": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "711",
+          "labels": [
+            "사무실2"
+          ],
+          "position": [
+            68.45808317416959,
+            62.705541318498945
+          ],
+          "native_point": [
+            14559214.08317417,
+            -1768970.958681501
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "기획실2",
+        "사무실2",
+        "DOOR상부 1시간내화 D/W"
+      ]
+    },
+    "7F_R6": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "713",
+          "labels": [
+            "Acceelerator room"
+          ],
+          "position": [
+            60.75932951990944,
+            65.68517130218697
+          ],
+          "native_point": [
+            14551515.32951991,
+            -1765991.328697813
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "D/W"
+      ]
+    },
+    "7F_R7": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "728",
+          "labels": [
+            "사무실6"
+          ],
+          "position": [
+            51.04229877928083,
+            61.12084367567786
+          ],
+          "native_point": [
+            14541798.29877928,
+            -1770555.656324322
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "사무실6",
+        "D/W",
+        "D/W",
+        "G/W",
+        "G/W",
+        "G/W"
+      ]
+    },
+    "7F_R8": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "714",
+          "labels": [
+            "상황실겸 회의실"
+          ],
+          "position": [
+            60.38195780931892,
+            61.35447701942894
+          ],
+          "native_point": [
+            14551137.95780932,
+            -1770322.022980571
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "상황실겸 회의실",
+        "D/W",
+        "상황실겸 회의실"
+      ]
+    },
+    "7F_R9": {
+      "height_m": 5.7,
+      "structural_height_m": 5.7,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV기계실",
+        "-",
+        "지상7층바닥",
+        "지상7층바닥"
+      ]
+    },
+    "7F_R10": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "709",
+          "labels": [
+            "복  도"
+          ],
+          "position": [
+            48.955029672459204,
+            56.09733458832602
+          ],
+          "native_point": [
+            14539711.02967246,
+            -1775579.165411674
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "복  도",
+        "갑"
+      ]
+    },
+    "7F_R11": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "716",
+          "labels": [
+            "사무실7"
+          ],
+          "position": [
+            47.717071494847914,
+            51.595541318499045
+          ],
+          "native_point": [
+            14538473.07149485,
+            -1780080.958681501
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "715",
+          "labels": [
+            "회의실"
+          ],
+          "position": [
+            46.16897439275999,
+            43.663048020360065
+          ],
+          "native_point": [
+            14536924.97439276,
+            -1788013.45197964
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "717",
+          "labels": [
+            "부속창고"
+          ],
+          "position": [
+            50.16207149484762,
+            45.95652131849897
+          ],
+          "native_point": [
+            14540918.07149485,
+            -1785719.978681501
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "탕비실",
+        "탕비실",
+        "사무실7",
+        "회의실",
+        "부속창고",
+        "(인테리어마감공사)",
+        "벽체는 건축공사"
+      ]
+    },
+    "7F_R12": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "724",
+          "labels": [
+            "탕비실2"
+          ],
+          "position": [
+            64.19221251489944,
+            54.04856131849988
+          ],
+          "native_point": [
+            14554948.2125149,
+            -1777627.9386815
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "탕비실2",
+        "P.S"
+      ]
+    },
+    "7F_R13": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "7F_R14": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "710",
+          "labels": [
+            "사무실1"
+          ],
+          "position": [
+            69.09652569356876,
+            53.259682872141866
+          ],
+          "native_point": [
+            14559852.52569357,
+            -1778416.817127858
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "기획실1",
+        "사무실1",
+        "벽체는 건축공사",
+        "(조적 및 미장공사)"
+      ]
+    },
+    "7F_R15": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "7F_R16": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "E.P.S"
+      ]
+    },
+    "7F_R17": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "T.P.S"
+      ]
+    },
+    "7F_R18": {
+      "height_m": 2.4,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "706",
+          "labels": [
+            "화장실(여)"
+          ],
+          "position": [
+            54.7711775152693,
+            52.33805941625792
+          ],
+          "native_point": [
+            14545527.17751527,
+            -1779338.440583742
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(여)"
+      ]
+    },
+    "7F_R19": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "703",
+          "labels": [
+            "ELEV.홀 1"
+          ],
+          "position": [
+            57.25615640824981,
+            43.44219623732488
+          ],
+          "native_point": [
+            14548012.15640825,
+            -1788234.303762675
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "화",
+        "ELEV.홀 1",
+        "지상7층바닥",
+        "갑",
+        "화",
+        "자동문",
+        "(인테리어마감공사)",
+        "자동문",
+        "Rest Area",
+        "Rest Area"
+      ]
+    },
+    "7F_R20": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "721",
+          "labels": [
+            "임원화장실"
+          ],
+          "position": [
+            64.12075598506999,
+            52.61238822414316
+          ],
+          "native_point": [
+            14554876.75598507,
+            -1779064.111775857
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "임원화장실"
+      ]
+    },
+    "7F_R21": {
+      "height_m": 5.7,
+      "structural_height_m": 5.7,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "-",
+        "계단실 1"
+      ]
+    },
+    "7F_R22": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "720",
+          "labels": [
+            "임원휴게실"
+          ],
+          "position": [
+            64.56907149484869,
+            49.72685749887205
+          ],
+          "native_point": [
+            14555325.07149485,
+            -1781949.642501128
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "임원휴게실",
+        "(인테리어마감공사)"
+      ]
+    },
+    "7F_R23": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "719",
+          "labels": [
+            "임원실1"
+          ],
+          "position": [
+            69.59149091445943,
+            46.88976062217398
+          ],
+          "native_point": [
+            14560347.49091446,
+            -1784786.739377826
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "임원실1",
+        "(인테리어마감공사)"
+      ]
+    },
+    "7F_R24": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "C.H"
+      ]
+    },
+    "7F_R25": {
+      "height_m": 2.4,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 2.4,
+          "room_number": "705",
+          "labels": [
+            "화장실(남)"
+          ],
+          "position": [
+            54.82180254591003,
+            47.54105941625903
+          ],
+          "native_point": [
+            14545577.80254591,
+            -1784135.440583741
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "화장실(남)"
+      ]
+    },
+    "7F_R26": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "718",
+          "labels": [
+            "비서실"
+          ],
+          "position": [
+            64.54607149484764,
+            42.62054131849891
+          ],
+          "native_point": [
+            14555302.07149485,
+            -1789055.958681501
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        },
+        {
+          "height_m": 3.0,
+          "room_number": "723",
+          "labels": [
+            "탕비실1"
+          ],
+          "position": [
+            64.07238432286977,
+            46.52455669369101
+          ],
+          "native_point": [
+            14554828.38432287,
+            -1785151.943306309
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "비서실",
+        "탕비실1",
+        "(인테리어마감공사)"
+      ]
+    },
+    "7F_R27": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "7F_R28": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "7F_R29": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "704",
+          "labels": [
+            "전실"
+          ],
+          "position": [
+            17.339505788499082,
+            45.12254131849909
+          ],
+          "native_point": [
+            14508095.5057885,
+            -1786553.958681501
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "갑",
+        "전실"
+      ]
+    },
+    "7F_R30": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "CAD room-number/height tag",
+      "confidence": "tag_interpretation",
+      "tags": [
+        {
+          "height_m": 3.0,
+          "room_number": "708",
+          "labels": [
+            "휴게실"
+          ],
+          "position": [
+            17.339505788499082,
+            42.66461385631192
+          ],
+          "native_point": [
+            14508095.5057885,
+            -1789011.886143688
+          ],
+          "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+        }
+      ],
+      "room_names": [
+        "지상7층바닥",
+        "휴게실"
+      ]
+    },
+    "7F_R31": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "장애인겸용",
+        "(15인승)",
+        "ELEV.",
+        "ELEV.",
+        "(15인승)",
+        "전망용"
+      ]
+    },
+    "7F_R32": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "7F_CE0": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "7F_CE1": {
+      "height_m": 3.0,
+      "structural_height_m": 5.7,
+      "basis": "same-building occupied-room default (observed 3.0 m tags)",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "승강로"
+      ]
+    },
+    "PH_R1": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "PH_R2": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "FAN RM",
+        "PH103",
+        "-",
+        "옥탑층바닥",
+        "알미늄 그릴",
+        "(하부PS에연결)",
+        "T.P.S",
+        "E.P.S",
+        "하부",
+        "하부",
+        "갑"
+      ]
+    },
+    "PH_R3": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "PH_R4": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "PH101",
+        "계단실 1"
+      ]
+    },
+    "PH_R5": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": [
+        "ELEV기계실",
+        "PH102",
+        "-",
+        "갑"
+      ]
+    },
+    "PH_R6": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    },
+    "PH_R7": {
+      "height_m": 3.3,
+      "structural_height_m": 3.3,
+      "basis": "open structural/service volume assumption",
+      "confidence": "assumed",
+      "tags": [],
+      "room_names": []
+    }
+  },
+  "all_tags": [
+    {
+      "height_m": 4.0,
+      "room_number": "103",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        59.91726392043893,
+        41.97941282276679
+      ],
+      "native_point": [
+        14052857.26392044,
+        -1788277.087177233
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "119",
+      "labels": [
+        "ESD자재창고"
+      ],
+      "position": [
+        21.4842933082291,
+        66.75260111037278
+      ],
+      "native_point": [
+        14014424.29330823,
+        -1763503.898889627
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "117",
+      "labels": [
+        "사무실1"
+      ],
+      "position": [
+        38.34836627343975,
+        66.8187512037789
+      ],
+      "native_point": [
+        14031288.36627344,
+        -1763437.748796221
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "114",
+      "labels": [
+        "홍보관"
+      ],
+      "position": [
+        67.73005932699016,
+        47.25949238975204
+      ],
+      "native_point": [
+        14060670.05932699,
+        -1782997.007610248
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "112",
+      "labels": [
+        "문서보관실"
+      ],
+      "position": [
+        51.29443941649879,
+        52.957388130478876
+      ],
+      "native_point": [
+        14044234.4394165,
+        -1777299.111869521
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "104",
+      "labels": [
+        "ELEV.홀 2"
+      ],
+      "position": [
+        17.35485064150089,
+        48.32374575586596
+      ],
+      "native_point": [
+        14010294.8506415,
+        -1781932.754244134
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "107",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        20.856040982520426,
+        47.62240162541889
+      ],
+      "native_point": [
+        14013796.04098252,
+        -1782634.098374581
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "108",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        21.227473291321076,
+        42.55920761382504
+      ],
+      "native_point": [
+        14014167.47329132,
+        -1787697.292386175
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.7,
+      "room_number": "110",
+      "labels": [
+        "방풍실 2"
+      ],
+      "position": [
+        17.206655523090376,
+        40.91425262627877
+      ],
+      "native_point": [
+        14010146.65552309,
+        -1789342.247373721
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "123",
+      "labels": [
+        "분석실"
+      ],
+      "position": [
+        46.71395266933905,
+        62.598115500369886
+      ],
+      "native_point": [
+        14039653.95266934,
+        -1767658.38449963
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "105",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        53.97919920890854,
+        49.674628013697884
+      ],
+      "native_point": [
+        14046919.19920891,
+        -1780581.871986302
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "106",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        55.21250871442135,
+        52.72256972041487
+      ],
+      "native_point": [
+        14048152.50871442,
+        -1777533.930279585
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.7,
+      "room_number": "113",
+      "labels": [
+        "MDF실"
+      ],
+      "position": [
+        50.63596327018058,
+        48.11567439584587
+      ],
+      "native_point": [
+        14043575.96327018,
+        -1782140.825604154
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "115",
+      "labels": [
+        "다목적실"
+      ],
+      "position": [
+        67.61256900683111,
+        58.332106051429946
+      ],
+      "native_point": [
+        14060552.56900683,
+        -1771924.39394857
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 2.7,
+      "room_number": "109",
+      "labels": [
+        "방풍실 1"
+      ],
+      "position": [
+        54.569071494848686,
+        37.74754131849886
+      ],
+      "native_point": [
+        14047509.07149485,
+        -1792508.958681501
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "121",
+      "labels": [
+        "자재사무실"
+      ],
+      "position": [
+        15.768293308230568,
+        66.75260111037278
+      ],
+      "native_point": [
+        14008708.29330823,
+        -1763503.898889627
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "111",
+      "labels": [
+        "자재창고"
+      ],
+      "position": [
+        37.60135984003864,
+        47.29657244100099
+      ],
+      "native_point": [
+        14030541.35984004,
+        -1782959.927558999
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "116",
+      "labels": [
+        "측정실"
+      ],
+      "position": [
+        56.819170485279756,
+        62.59811770788906
+      ],
+      "native_point": [
+        14049759.17048528,
+        -1767658.382292111
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "122",
+      "labels": [
+        "회의실"
+      ],
+      "position": [
+        27.238634535940946,
+        66.73062744654794
+      ],
+      "native_point": [
+        14020178.63453594,
+        -1763525.872553452
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 4.0,
+      "room_number": "118",
+      "labels": [
+        "사무실2"
+      ],
+      "position": [
+        31.31960749225982,
+        66.8187512037789
+      ],
+      "native_point": [
+        14024259.60749226,
+        -1763437.748796221
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-006-01-______AT 1____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "209",
+      "labels": [
+        "RF생산라인1"
+      ],
+      "position": [
+        37.78170812938879,
+        58.13280416725979
+      ],
+      "native_point": [
+        14114821.70812939,
+        -1772123.69583274
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "203",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        57.676581872348834,
+        42.29150434712301
+      ],
+      "native_point": [
+        14134716.58187235,
+        -1787964.995652877
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "206",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        54.898004100628896,
+        52.08614605142975
+      ],
+      "native_point": [
+        14131938.00410063,
+        -1778170.35394857
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "207",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        20.824404927869182,
+        47.75082736955301
+      ],
+      "native_point": [
+        14097864.40492787,
+        -1782505.672630447
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "208",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        21.382988038949406,
+        42.522973555606086
+      ],
+      "native_point": [
+        14098422.98803895,
+        -1787733.526444394
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "214",
+      "labels": [
+        "ELEV.홀 3"
+      ],
+      "position": [
+        19.70607149484931,
+        56.63856131850093
+      ],
+      "native_point": [
+        14096746.07149485,
+        -1773617.938681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "204",
+      "labels": [
+        "ELEV.홀 2"
+      ],
+      "position": [
+        17.354850644100225,
+        48.3257146240021
+      ],
+      "native_point": [
+        14094394.8506441,
+        -1781930.785375998
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "205",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        54.77980253550959,
+        47.593059416260076
+      ],
+      "native_point": [
+        14131819.80253551,
+        -1782663.44058374
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "212",
+      "labels": [
+        "휴게실"
+      ],
+      "position": [
+        17.208850644099584,
+        41.264714624001954
+      ],
+      "native_point": [
+        14094248.8506441,
+        -1788991.785375998
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "210",
+      "labels": [
+        "RF생산라인2"
+      ],
+      "position": [
+        65.54815640825836,
+        61.516541318499776
+      ],
+      "native_point": [
+        14142588.15640826,
+        -1768739.9586815
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "216",
+      "labels": [
+        "고주파 납땜"
+      ],
+      "position": [
+        14.980490341100449,
+        53.186061514597895
+      ],
+      "native_point": [
+        14092020.4903411,
+        -1777070.438485402
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "211",
+      "labels": [
+        "여자탈의실"
+      ],
+      "position": [
+        68.55802393863814,
+        50.872511542083885
+      ],
+      "native_point": [
+        14145598.02393864,
+        -1779383.988457916
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "217",
+      "labels": [
+        "남자탈의실"
+      ],
+      "position": [
+        68.55802393863814,
+        43.42245910831093
+      ],
+      "native_point": [
+        14145598.02393864,
+        -1786834.040891689
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-007-01-______AT 2____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "303",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        57.677260063308495,
+        42.2908884517351
+      ],
+      "native_point": [
+        14212750.26006331,
+        -1789385.611548265
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "306",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        54.894424466840064,
+        52.085971803197026
+      ],
+      "native_point": [
+        14209967.42446684,
+        -1779590.528196803
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "305",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        54.81721106089026,
+        47.53666511459096
+      ],
+      "native_point": [
+        14209890.21106089,
+        -1784139.834885409
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "304",
+      "labels": [
+        "ELEV.홀 2"
+      ],
+      "position": [
+        17.35552883506898,
+        48.325098728613966
+      ],
+      "native_point": [
+        14172428.52883507,
+        -1783351.401271386
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "307",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        20.784926039221318,
+        47.70844566949495
+      ],
+      "native_point": [
+        14175857.92603922,
+        -1783968.054330505
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "308",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        21.49906782165999,
+        42.47032822533993
+      ],
+      "native_point": [
+        14176572.06782166,
+        -1789206.17177466
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "314",
+      "labels": [
+        "ELEV.홀 3"
+      ],
+      "position": [
+        19.793156408259165,
+        56.69054131849998
+      ],
+      "native_point": [
+        14174866.15640826,
+        -1774985.9586815
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "309",
+      "labels": [
+        "RF생산라인"
+      ],
+      "position": [
+        37.86303979343029,
+        53.46191205180298
+      ],
+      "native_point": [
+        14192936.03979343,
+        -1778214.587948197
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "312",
+      "labels": [
+        "휴게실"
+      ],
+      "position": [
+        17.12507149484918,
+        41.19652131850103
+      ],
+      "native_point": [
+        14172198.07149485,
+        -1790479.978681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "317",
+      "labels": [
+        "교육장"
+      ],
+      "position": [
+        67.32880832348928,
+        42.953764694163056
+      ],
+      "native_point": [
+        14222401.80832349,
+        -1788722.735305837
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "316",
+      "labels": [
+        "공작실/설비보관실"
+      ],
+      "position": [
+        70.47128389749014,
+        50.72917813478193
+      ],
+      "native_point": [
+        14225544.28389749,
+        -1780947.321865218
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "310",
+      "labels": [
+        "Assembly Line"
+      ],
+      "position": [
+        64.87417474330869,
+        63.46061100095699
+      ],
+      "native_point": [
+        14219947.17474331,
+        -1768215.888999043
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "311",
+      "labels": [
+        "계측기보관실"
+      ],
+      "position": [
+        14.84439493932041,
+        60.91774889365615
+      ],
+      "native_point": [
+        14169917.39493932,
+        -1770758.751106344
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "315",
+      "labels": [
+        "A/S 실"
+      ],
+      "position": [
+        64.33750495011009,
+        50.72917813478193
+      ],
+      "native_point": [
+        14219410.50495011,
+        -1780947.321865218
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-008-01-______AT 3____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "403",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        59.13631272906059,
+        42.2908884517351
+      ],
+      "native_point": [
+        14298309.31272906,
+        -1789385.611548265
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "405",
+      "labels": [
+        "화장실(남)",
+        "화장실(남)"
+      ],
+      "position": [
+        54.814876213529715,
+        47.51986657931798
+      ],
+      "native_point": [
+        14293987.87621353,
+        -1784156.633420682
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "404",
+      "labels": [
+        "ELEV.홀 2"
+      ],
+      "position": [
+        17.355528837670136,
+        48.325098728613966
+      ],
+      "native_point": [
+        14256528.52883767,
+        -1783351.401271386
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "407",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        20.80101461579943,
+        47.684636346670004
+      ],
+      "native_point": [
+        14259974.0146158,
+        -1783991.86365333
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "408",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        21.38504502629985,
+        42.47346944825608
+      ],
+      "native_point": [
+        14260558.0450263,
+        -1789203.030551744
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "410",
+      "labels": [
+        "RF생산라인"
+      ],
+      "position": [
+        37.43419066973911,
+        52.81351890242013
+      ],
+      "native_point": [
+        14276607.19066974,
+        -1778862.98109758
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "406",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        55.00113625947961,
+        52.214676309492006
+      ],
+      "native_point": [
+        14294174.13625948,
+        -1779461.823690508
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "405",
+      "labels": [
+        "화장실(남)",
+        "화장실(남)"
+      ],
+      "position": [
+        54.814876213529715,
+        47.51986657931798
+      ],
+      "native_point": [
+        14293987.87621353,
+        -1784156.633420682
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "409",
+      "labels": [
+        "휴게실"
+      ],
+      "position": [
+        17.125071497448516,
+        41.19652131850103
+      ],
+      "native_point": [
+        14256298.07149745,
+        -1790479.978681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-009-01-______AT 4____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "503",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        57.677260068508986,
+        42.2908884517351
+      ],
+      "native_point": [
+        14380950.26006851,
+        -1789385.611548265
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "505",
+      "labels": [
+        "화장실(남)",
+        "화장실(남)",
+        "화장실(남)"
+      ],
+      "position": [
+        54.72953703908934,
+        47.484862753274
+      ],
+      "native_point": [
+        14378002.53703909,
+        -1784191.637246726
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "504",
+      "labels": [
+        "ELEV.홀 2"
+      ],
+      "position": [
+        17.35552884026947,
+        48.325098728613966
+      ],
+      "native_point": [
+        14340628.52884027,
+        -1783351.401271386
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "507",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        20.774756989529124,
+        47.68000609611295
+      ],
+      "native_point": [
+        14344047.75698953,
+        -1783996.493903887
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "508",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        21.352759726509248,
+        42.50113854396591
+      ],
+      "native_point": [
+        14344625.75972651,
+        -1789175.361456034
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "505",
+      "labels": [
+        "화장실(남)",
+        "화장실(남)",
+        "화장실(남)"
+      ],
+      "position": [
+        54.72953703908934,
+        47.484862753274
+      ],
+      "native_point": [
+        14378002.53703909,
+        -1784191.637246726
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "505",
+      "labels": [
+        "화장실(남)",
+        "화장실(남)",
+        "화장실(남)"
+      ],
+      "position": [
+        54.72953703908934,
+        47.484862753274
+      ],
+      "native_point": [
+        14378002.53703909,
+        -1784191.637246726
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "506",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        54.80184430068766,
+        52.10613265956795
+      ],
+      "native_point": [
+        14378074.84430069,
+        -1779570.367340432
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "509",
+      "labels": [
+        "연구실"
+      ],
+      "position": [
+        37.868071494847754,
+        52.62573577233411
+      ],
+      "native_point": [
+        14361141.07149485,
+        -1779050.764227666
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "510",
+      "labels": [
+        "사무실"
+      ],
+      "position": [
+        69.95953822197953,
+        41.458143854510126
+      ],
+      "native_point": [
+        14393232.53822198,
+        -1790218.35614549
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "511",
+      "labels": [
+        "회의실"
+      ],
+      "position": [
+        69.9563470817302,
+        45.62200732267206
+      ],
+      "native_point": [
+        14393229.34708173,
+        -1786054.492677328
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-010-01-______AT 5____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "603",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        57.67726007111014,
+        42.2908884517351
+      ],
+      "native_point": [
+        14465050.26007111,
+        -1789385.611548265
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "606",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        54.90234592857996,
+        52.219794374610046
+      ],
+      "native_point": [
+        14462275.34592858,
+        -1779456.70562539
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "605",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        54.67826908582174,
+        47.488484847428026
+      ],
+      "native_point": [
+        14462051.26908582,
+        -1784188.015152572
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "604",
+      "labels": [
+        "ELEV.홀 2"
+      ],
+      "position": [
+        17.538629095370197,
+        46.976273655432124
+      ],
+      "native_point": [
+        14424911.62909537,
+        -1784700.226344568
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "607",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        20.77475699212846,
+        47.68000609611295
+      ],
+      "native_point": [
+        14428147.75699213,
+        -1783996.493903887
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "608",
+      "labels": [
+        "화장실(여)",
+        "시스템사업본부장"
+      ],
+      "position": [
+        21.352759729108584,
+        42.50113854396591
+      ],
+      "native_point": [
+        14428725.75972911,
+        -1789175.361456034
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "610",
+      "labels": [
+        "사무실1"
+      ],
+      "position": [
+        57.702023938638376,
+        63.87854131850122
+      ],
+      "native_point": [
+        14465075.02393864,
+        -1767797.958681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "609",
+      "labels": [
+        "사무실2"
+      ],
+      "position": [
+        67.88602393863948,
+        63.87854131850122
+      ],
+      "native_point": [
+        14475259.02393864,
+        -1767797.958681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "611",
+      "labels": [
+        "CFO 실"
+      ],
+      "position": [
+        70.87902393864897,
+        52.61607513217996
+      ],
+      "native_point": [
+        14478252.02393865,
+        -1779060.42486782
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "615",
+      "labels": [
+        "소회의실1"
+      ],
+      "position": [
+        69.70789601759134,
+        41.82554534473684
+      ],
+      "native_point": [
+        14477080.89601759,
+        -1789850.954655263
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "614",
+      "labels": [
+        "대회의실"
+      ],
+      "position": [
+        67.35002970092864,
+        47.57280971955902
+      ],
+      "native_point": [
+        14474723.02970093,
+        -1784103.690280441
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "612",
+      "labels": [
+        "회의실"
+      ],
+      "position": [
+        66.26050138410756,
+        52.85034266035791
+      ],
+      "native_point": [
+        14473633.50138411,
+        -1778826.157339642
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "613",
+      "labels": [
+        "탕비실"
+      ],
+      "position": [
+        63.48121251489829,
+        52.48556131850091
+      ],
+      "native_point": [
+        14470854.2125149,
+        -1779190.938681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "617",
+      "labels": [
+        "복  도"
+      ],
+      "position": [
+        55.611071494849966,
+        56.17956131850087
+      ],
+      "native_point": [
+        14462984.07149485,
+        -1775496.938681499
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "616",
+      "labels": [
+        "소회의실2"
+      ],
+      "position": [
+        64.68913703286125,
+        41.0008778746801
+      ],
+      "native_point": [
+        14472062.13703286,
+        -1790675.62212532
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "618",
+      "labels": [
+        "사무실3"
+      ],
+      "position": [
+        38.78913676058983,
+        48.0401806665061
+      ],
+      "native_point": [
+        14446162.13676059,
+        -1783636.319333494
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 2.7,
+      "room_number": "633",
+      "labels": [
+        "SEVER실"
+      ],
+      "position": [
+        16.50651102837037,
+        66.1730629415431
+      ],
+      "native_point": [
+        14423879.51102837,
+        -1765503.437058457
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "632",
+      "labels": [
+        "전산사무실"
+      ],
+      "position": [
+        24.91171248398132,
+        66.1611248607719
+      ],
+      "native_point": [
+        14432284.71248398,
+        -1765515.375139228
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "629",
+      "labels": [
+        "사무실5"
+      ],
+      "position": [
+        50.94167882536749,
+        47.97230160325398
+      ],
+      "native_point": [
+        14458314.67882537,
+        -1783704.198396746
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "630",
+      "labels": [
+        "사무실6"
+      ],
+      "position": [
+        24.80590917794143,
+        41.764344564363
+      ],
+      "native_point": [
+        14432178.90917794,
+        -1789912.155435637
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "628",
+      "labels": [
+        "사무실4"
+      ],
+      "position": [
+        34.9108625277313,
+        66.13226220285492
+      ],
+      "native_point": [
+        14442283.86252773,
+        -1765544.237797145
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "610",
+      "labels": [
+        "ELEV.홀 3"
+      ],
+      "position": [
+        19.884143155939455,
+        55.71526552180808
+      ],
+      "native_point": [
+        14427257.14315594,
+        -1775961.234478192
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "631",
+      "labels": [
+        "사무실7"
+      ],
+      "position": [
+        14.89353426498019,
+        52.96009571957484
+      ],
+      "native_point": [
+        14422266.53426498,
+        -1778716.404280425
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "619",
+      "labels": [
+        "G/W",
+        "회의실1"
+      ],
+      "position": [
+        50.76218161761972,
+        68.6391673304272
+      ],
+      "native_point": [
+        14458135.18161762,
+        -1763037.332669573
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "620",
+      "labels": [
+        "G/W",
+        "회의실2"
+      ],
+      "position": [
+        50.76218161761972,
+        65.84047717204203
+      ],
+      "native_point": [
+        14458135.18161762,
+        -1765836.022827958
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "621",
+      "labels": [
+        "G/W",
+        "회의실3"
+      ],
+      "position": [
+        50.76218161761972,
+        63.026316002487874
+      ],
+      "native_point": [
+        14458135.18161762,
+        -1768650.183997512
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "622",
+      "labels": [
+        "회의실4"
+      ],
+      "position": [
+        50.76218161761972,
+        59.57069427708484
+      ],
+      "native_point": [
+        14458135.18161762,
+        -1772105.805722915
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "623",
+      "labels": [
+        "G/W",
+        "회의실5"
+      ],
+      "position": [
+        50.76218161761972,
+        53.12688053950592
+      ],
+      "native_point": [
+        14458135.18161762,
+        -1778549.619460494
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "624",
+      "labels": [
+        "회의실6"
+      ],
+      "position": [
+        34.9607803048475,
+        60.18061170931401
+      ],
+      "native_point": [
+        14442333.78030485,
+        -1771495.888290686
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "625",
+      "labels": [
+        "회의실7"
+      ],
+      "position": [
+        30.98926026942172,
+        60.18061170931401
+      ],
+      "native_point": [
+        14438362.26026942,
+        -1771495.888290686
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "626",
+      "labels": [
+        "회의실8"
+      ],
+      "position": [
+        24.665551778640292,
+        47.42252641638697
+      ],
+      "native_point": [
+        14432038.55177864,
+        -1784253.973583613
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "627",
+      "labels": [
+        "PJ 회의실",
+        "D/W"
+      ],
+      "position": [
+        26.024849162718965,
+        59.33847539407907
+      ],
+      "native_point": [
+        14433397.84916272,
+        -1772338.024605921
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-011-01-______AT 6____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "703",
+      "labels": [
+        "ELEV.홀 1"
+      ],
+      "position": [
+        57.25615640824981,
+        43.44219623732488
+      ],
+      "native_point": [
+        14548012.15640825,
+        -1788234.303762675
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "702",
+      "labels": [
+        "계단실 2"
+      ],
+      "position": [
+        10.81443702578872,
+        43.453613856311904
+      ],
+      "native_point": [
+        14501570.43702579,
+        -1788222.886143688
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "708",
+      "labels": [
+        "휴게실"
+      ],
+      "position": [
+        17.339505788499082,
+        42.66461385631192
+      ],
+      "native_point": [
+        14508095.5057885,
+        -1789011.886143688
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "706",
+      "labels": [
+        "화장실(여)"
+      ],
+      "position": [
+        54.7711775152693,
+        52.33805941625792
+      ],
+      "native_point": [
+        14545527.17751527,
+        -1779338.440583742
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 2.4,
+      "room_number": "705",
+      "labels": [
+        "화장실(남)"
+      ],
+      "position": [
+        54.82180254591003,
+        47.54105941625903
+      ],
+      "native_point": [
+        14545577.80254591,
+        -1784135.440583741
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "709",
+      "labels": [
+        "복  도"
+      ],
+      "position": [
+        48.955029672459204,
+        56.09733458832602
+      ],
+      "native_point": [
+        14539711.02967246,
+        -1775579.165411674
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "719",
+      "labels": [
+        "임원실1"
+      ],
+      "position": [
+        69.59149091445943,
+        46.88976062217398
+      ],
+      "native_point": [
+        14560347.49091446,
+        -1784786.739377826
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "716",
+      "labels": [
+        "사무실7"
+      ],
+      "position": [
+        47.717071494847914,
+        51.595541318499045
+      ],
+      "native_point": [
+        14538473.07149485,
+        -1780080.958681501
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "715",
+      "labels": [
+        "회의실"
+      ],
+      "position": [
+        46.16897439275999,
+        43.663048020360065
+      ],
+      "native_point": [
+        14536924.97439276,
+        -1788013.45197964
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "718",
+      "labels": [
+        "비서실"
+      ],
+      "position": [
+        64.54607149484764,
+        42.62054131849891
+      ],
+      "native_point": [
+        14555302.07149485,
+        -1789055.958681501
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "717",
+      "labels": [
+        "부속창고"
+      ],
+      "position": [
+        50.16207149484762,
+        45.95652131849897
+      ],
+      "native_point": [
+        14540918.07149485,
+        -1785719.978681501
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "720",
+      "labels": [
+        "임원휴게실"
+      ],
+      "position": [
+        64.56907149484869,
+        49.72685749887205
+      ],
+      "native_point": [
+        14555325.07149485,
+        -1781949.642501128
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "724",
+      "labels": [
+        "탕비실2"
+      ],
+      "position": [
+        64.19221251489944,
+        54.04856131849988
+      ],
+      "native_point": [
+        14554948.2125149,
+        -1777627.9386815
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "721",
+      "labels": [
+        "임원화장실"
+      ],
+      "position": [
+        64.12075598506999,
+        52.61238822414316
+      ],
+      "native_point": [
+        14554876.75598507,
+        -1779064.111775857
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "711",
+      "labels": [
+        "사무실2"
+      ],
+      "position": [
+        68.45808317416959,
+        62.705541318498945
+      ],
+      "native_point": [
+        14559214.08317417,
+        -1768970.958681501
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "704",
+      "labels": [
+        "전실"
+      ],
+      "position": [
+        17.339505788499082,
+        45.12254131849909
+      ],
+      "native_point": [
+        14508095.5057885,
+        -1786553.958681501
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "723",
+      "labels": [
+        "탕비실1"
+      ],
+      "position": [
+        64.07238432286977,
+        46.52455669369101
+      ],
+      "native_point": [
+        14554828.38432287,
+        -1785151.943306309
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "710",
+      "labels": [
+        "사무실1"
+      ],
+      "position": [
+        69.09652569356876,
+        53.259682872141866
+      ],
+      "native_point": [
+        14559852.52569357,
+        -1778416.817127858
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "727",
+      "labels": [
+        "사무실5"
+      ],
+      "position": [
+        45.903202184139445,
+        67.46036256576804
+      ],
+      "native_point": [
+        14536659.20218414,
+        -1764216.137434232
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "726",
+      "labels": [
+        "사무실4"
+      ],
+      "position": [
+        50.690696454488716,
+        67.4558245097171
+      ],
+      "native_point": [
+        14541446.69645449,
+        -1764220.675490283
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "725",
+      "labels": [
+        "사무실3"
+      ],
+      "position": [
+        55.69069645447962,
+        67.45582450972097
+      ],
+      "native_point": [
+        14546446.69645448,
+        -1764220.675490279
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "728",
+      "labels": [
+        "사무실6"
+      ],
+      "position": [
+        51.04229877928083,
+        61.12084367567786
+      ],
+      "native_point": [
+        14541798.29877928,
+        -1770555.656324322
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "712",
+      "labels": [
+        "회의실"
+      ],
+      "position": [
+        60.71629692942042,
+        68.99907471822803
+      ],
+      "native_point": [
+        14551472.29692942,
+        -1762677.425281772
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "713",
+      "labels": [
+        "Acceelerator room"
+      ],
+      "position": [
+        60.75932951990944,
+        65.68517130218697
+      ],
+      "native_point": [
+        14551515.32951991,
+        -1765991.328697813
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    },
+    {
+      "height_m": 3.0,
+      "room_number": "714",
+      "labels": [
+        "상황실겸 회의실"
+      ],
+      "position": [
+        60.38195780931892,
+        61.35447701942894
+      ],
+      "native_point": [
+        14551137.95780932,
+        -1770322.022980571
+      ],
+      "source": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\dxf\\A31-012-01-______AT 7____.dxf"
+    }
+  ]
+}

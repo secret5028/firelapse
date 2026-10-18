@@ -1,0 +1,18 @@
+{
+  "status": "installed_and_checked",
+  "url": "http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html",
+  "model_sha256": "f70f0811c9712c0be1200efb44eafe924794dfc5a52f7b71fa08db7cac699441",
+  "results_sha256": "fa288e0a354a59b598398b89baec055fd82b61e983f6300ac0ff7aae13da9a92",
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+  "targets": 117,
+  "rooms": 116,
+  "other_rooms_ignited": 0,
+  "browser_checks": [
+    "117 target summary",
+    "three visible flames at t685 including source",
+    "next ignition navigation",
+    "ignited filter",
+    "ignition playback",
+    "no shader/console errors"
+  ]
+}

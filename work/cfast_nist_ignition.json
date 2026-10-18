@@ -1,0 +1,43 @@
+{
+  "description": "작업실과 인접 A/S실에 별도 목재 상판을 놓은 비교 시나리오. 위치·수량은 현장 조사값 아님. 최초 작업대 묶음에 이미 포함된 가구를 중복 계상하지 않음.",
+  "defaults_file": "cfast_nist_desk.json",
+  "evidence_based": true,
+  "targets": [
+    {
+      "id": "DeskA",
+      "name": "별도 작업대 상판 A",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        0,
+        2.8
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 2,
+      "depth_m": 0.6,
+      "back": "CFAST_TWO_SIDED"
+    },
+    {
+      "id": "DeskB",
+      "name": "A/S실 별도 상판 B",
+      "room_key": "3F_R8",
+      "offset_xy_m": [
+        0,
+        0
+      ],
+      "target_height_m": 0.75,
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "width_m": 2,
+      "depth_m": 0.6,
+      "back": "CFAST_TWO_SIDED"
+    }
+  ]
+}

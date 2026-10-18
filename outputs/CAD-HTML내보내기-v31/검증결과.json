@@ -1,0 +1,34 @@
+{
+  "first": {
+    "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-HTML내보내기-v31\\소방-3D-결과.html",
+    "bytes": 12257886,
+    "hashes": {
+      "building.json": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+      "cfast-demo.json": "9ffff8ffc1c6dd837b79ebf4a58c17645670cb3928c7172ceed004bec576fda0"
+    },
+    "module_count": 4,
+    "time": 600,
+    "floor": "3F",
+    "mode": "real",
+    "embedded_source_bytes": 227676,
+    "duration": 1800,
+    "rooms": 156
+  },
+  "reexport": {
+    "path": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-HTML내보내기-v31\\재저장-검증.html",
+    "bytes": 12256738,
+    "hashes": {
+      "building.json": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+      "cfast-demo.json": "9ffff8ffc1c6dd837b79ebf4a58c17645670cb3928c7172ceed004bec576fda0"
+    },
+    "module_count": 4,
+    "time": 1800,
+    "floor": "all",
+    "mode": "zones",
+    "embedded_source_bytes": 227676,
+    "duration": 1800,
+    "rooms": 156
+  },
+  "browser_result": "HTTP standalone: restored, 156 rooms, 20 fuel units, 30min floor counts verified, no console errors",
+  "file_protocol": "Direct file:// opening was blocked by browser tool policy; not runtime-tested"
+}

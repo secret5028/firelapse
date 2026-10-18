@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "job": "2cb3ae17c64d418b9c02b5c94ea410dd",
+  "summary": {
+    "version": "cad-upload-v1",
+    "floors": [
+      "B1",
+      "1F"
+    ],
+    "rooms": 67,
+    "openings": 159,
+    "vertical_links": 5,
+    "warnings": [],
+    "levels_source": "도면 층 높이",
+    "height_sources": [
+      "previous_reviewed_CAD_source_hash",
+      "previous_reviewed_CAD_source_hash",
+      "previous_reviewed_CAD_source_hash"
+    ],
+    "aligned": [
+      {
+        "floor": "B1",
+        "method": "cores edges 16 (full 3) + columns 4 (←1F)"
+      },
+      {
+        "floor": "1F",
+        "method": "base"
+      }
+    ]
+  },
+  "server_pid": 11588,
+  "port": "8882",
+  "executable": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-웹앱연결-v11\\배포본\\소방 크로키 업-로컬웹앱\\소방 크로키 업.exe"
+}

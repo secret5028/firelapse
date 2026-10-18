@@ -1,0 +1,20 @@
+{
+  "files": [
+    {
+      "destination": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\model.html",
+      "backup": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-HTML내보내기-v31\\backup\\app\\model.html",
+      "before": "12bca550a257f15a4da1fb60e903a73f340e016f5ae2b81b323837b9a03f9365",
+      "after": "2c175d5a8eaaac75243f42d20aeecbd1b201544b89a3142a0281c50119a68b1a"
+    },
+    {
+      "destination": "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\_internal\\cad_engine\\integrated_viewer.html",
+      "backup": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d\\outputs\\CAD-HTML내보내기-v31\\backup\\app\\integrated_viewer.html",
+      "before": "12bca550a257f15a4da1fb60e903a73f340e016f5ae2b81b323837b9a03f9365",
+      "after": "2c175d5a8eaaac75243f42d20aeecbd1b201544b89a3142a0281c50119a68b1a"
+    }
+  ],
+  "unchanged": {
+    "building.json": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "cfast-demo.json": "9ffff8ffc1c6dd837b79ebf4a58c17645670cb3928c7172ceed004bec576fda0"
+  }
+}

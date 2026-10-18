@@ -1,0 +1,47 @@
+{
+  "8c388560bc23f92ad9fb03ed2b50c3f09dd2b7d3fb1cef31441e52a2d122a67d": {
+    "floor": "B1",
+    "level": -4.2,
+    "top": 0.9
+  },
+  "6fd852af924b52d7654af0a663d588a860965fcf87a15a7c7ace8e4f8dacc4c6": {
+    "floor": "1F",
+    "level": 0.9,
+    "top": 6.4
+  },
+  "2ce3c33b577534b3b744af3742e60d04fe7060859fe973423cdab621e3b1f0d3": {
+    "floor": "2F",
+    "level": 6.4,
+    "top": 11.9
+  },
+  "9a37bf28c299dc601b2327afa8ea5f4c166b71c767059ffa74d742b51f442712": {
+    "floor": "3F",
+    "level": 11.9,
+    "top": 17.4
+  },
+  "4f4fd698eb6239eebe004b273d898a2d7817c8ff97a16316d2f11e49e15eaa5d": {
+    "floor": "4F",
+    "level": 17.4,
+    "top": 21.9
+  },
+  "dba0c37ef4bc2fab5431b181edb8bf9e4af824e8212a8d3d625268e54ce5f44e": {
+    "floor": "5F",
+    "level": 21.9,
+    "top": 26.4
+  },
+  "d3b2c65d948ad85189179cf2eb9ed0be475a1beacd224c63e0a6bf3411c482e3": {
+    "floor": "6F",
+    "level": 26.4,
+    "top": 30.9
+  },
+  "f147602997ce8e49f62792bc52207d0b7b05bc64d2b980d7f8f416095b977f67": {
+    "floor": "7F",
+    "level": 30.9,
+    "top": 36.6
+  },
+  "a5ed797d8381e495d94f435ec1b4cc1268e52c26cec98f046d3a17ef107feda3": {
+    "floor": "PH",
+    "level": 36.6,
+    "top": 39.9
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "status": "installed_and_browser_checked",
+  "url": "http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html",
+  "model_sha256": "37f04f8d2c35048fcd3a61a411d1b607ce1c8bff212a2cdff3ffce4db95198d3",
+  "results_sha256": "22122f44c968705129d5bdf7bb3b01b4b01a2a7d2662c50e5250c22ebcb87ea8",
+  "building_sha256": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+  "mode": "prescribed_design_fire",
+  "browser_checks": [
+    "input HRR and computed HRR chart",
+    "secondary ignition section hidden in baseline",
+    "t=0 no smoke or visible flame",
+    "t=1800 all floors: 38 smoke display rooms, one 1000kW fire",
+    "no wall clipping, user wall transparency 98% restored",
+    "legacy tools and floor controls present",
+    "no browser error logs"
+  ],
+  "screenshot": "화면-30분.jpg",
+  "physical_validation": false
+}

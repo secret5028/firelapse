@@ -1,0 +1,22 @@
+{
+  "id": "comparison_1MW_t2",
+  "name": "비교용 지정 화재 · 1 MW",
+  "basis": "CFAST 7.7.7 사용자 지침의 사용자 지정 t² 성장 및 HRR 표 입력 방식. 수치는 이전 계산과 비교하기 위한 시나리오 가정이며 NIST 표준 화재나 건물 평균값이 아님.",
+  "peak_kW": 1000,
+  "growth_seconds": 300,
+  "steady_seconds": 1500,
+  "decay_seconds": 0,
+  "end_behavior": "hold",
+  "max_duration_seconds": 1800,
+  "sample_seconds": 15,
+  "area_m2": 1,
+  "base_height_m": 0,
+  "heat_of_combustion_kJ_kg": 18100,
+  "radiative_fraction": 0.33,
+  "formula": {"CARBON": 6, "HYDROGEN": 10, "OXYGEN": 5},
+  "co_yield": 0.006171682,
+  "soot_yield": 0.015,
+  "fuel_basis": "목재를 나타내는 대리 조성 및 기존 예제 물성. 실제 가구 시험자료·재실용도별 화재하중 자료는 아직 적용하지 않음.",
+  "secondary_ignition": "off",
+  "sources": ["https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Manuals/CFAST_Users_Guide/Input_File_Chapter.tex"]
+}

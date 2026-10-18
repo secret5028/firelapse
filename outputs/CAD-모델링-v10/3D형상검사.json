@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "three_revision": "180",
+  "transport_objects": 1026,
+  "vertices": 26449,
+  "floor_parenting": "passed",
+  "finite_geometry": "passed",
+  "ramp_slope_and_reverse": "passed",
+  "scope": "CPU geometry construction; no WebGL/browser runtime test"
+}

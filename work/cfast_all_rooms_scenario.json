@@ -1,0 +1,52 @@
+{
+  "description": "계산에 포함된 계단·승강로 이외의 각 실에 기본 목재 가연물 1개씩 배치. 기존 화재실 A/B와 홀 C 유지. 실제 물품 조사값 아님.",
+  "targets": [
+    {
+      "id": "FuelA",
+      "name": "가연물 A",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        1.0,
+        0
+      ],
+      "target_height_m": 0.5,
+      "normal": [
+        -1,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "FuelB",
+      "name": "가연물 B",
+      "room_key": "3F_R9",
+      "offset_xy_m": [
+        -1.3,
+        1
+      ],
+      "target_height_m": 0.5,
+      "normal": [
+        0.792624,
+        -0.609711,
+        0
+      ]
+    },
+    {
+      "id": "FuelC",
+      "name": "인접 홀 가연물 C",
+      "room_key": "3F_R2",
+      "offset_xy_m": [
+        0,
+        0
+      ],
+      "target_height_m": 0.5,
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    }
+  ],
+  "defaults_file": "cfast_material_defaults.json",
+  "auto_place_other_rooms": true
+}

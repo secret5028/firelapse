@@ -1,0 +1,2217 @@
+{
+  "schema_version": 1,
+  "floors": [
+    {
+      "name": "B1",
+      "shift": [
+        142.98,
+        15.13
+      ],
+      "scale": 1.0,
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "z": 0.0,
+      "h": 5.1
+    },
+    {
+      "name": "1F",
+      "shift": [
+        0.0,
+        0.0
+      ],
+      "scale": 1.0,
+      "align": "base",
+      "z": 5.1,
+      "h": 5.5
+    },
+    {
+      "name": "2F",
+      "shift": [
+        -84.1,
+        0.0
+      ],
+      "scale": 1.0,
+      "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "z": 10.6,
+      "h": 5.5
+    },
+    {
+      "name": "3F",
+      "shift": [
+        -162.133,
+        1.42
+      ],
+      "scale": 1.0,
+      "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "z": 16.1,
+      "h": 5.5
+    },
+    {
+      "name": "4F",
+      "shift": [
+        -246.233,
+        1.42
+      ],
+      "scale": 1.0,
+      "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "z": 21.6,
+      "h": 4.5
+    },
+    {
+      "name": "5F",
+      "shift": [
+        -330.333,
+        1.42
+      ],
+      "scale": 1.0,
+      "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "z": 26.1,
+      "h": 4.5
+    },
+    {
+      "name": "6F",
+      "shift": [
+        -414.433,
+        1.42
+      ],
+      "scale": 1.0,
+      "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "z": 30.6,
+      "h": 4.5
+    },
+    {
+      "name": "7F",
+      "shift": [
+        -497.816,
+        1.42
+      ],
+      "scale": 1.0,
+      "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+      "z": 35.1,
+      "h": 5.7
+    },
+    {
+      "name": "PH",
+      "shift": [
+        -582.636,
+        1.42
+      ],
+      "scale": 1.0,
+      "align": "cores edges 2 (full 0) + columns 2 (←7F)",
+      "z": 40.8,
+      "h": 3.3
+    }
+  ],
+  "nodes": [
+    {
+      "kind": "elev",
+      "x": 14.152000000000044,
+      "y": 48.70900000000006,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 0.0,
+      "z1": 5.1000000000000005,
+      "floor": "B1",
+      "room_id": "R20",
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "R20"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75,
+      "y": 38.79600000000005,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 0.0,
+      "z1": 5.1000000000000005,
+      "floor": "B1",
+      "room_id": "CE1",
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000001455,
+      "y": 38.79600000000005,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 0.0,
+      "z1": 5.1000000000000005,
+      "floor": "B1",
+      "room_id": "CE2",
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "CE2"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 41.631069999999454,
+      "y": 6.312611500000003,
+      "w": 2.372858000000633,
+      "h": 8.996028999999908,
+      "z0": 0.0,
+      "z1": 5.1000000000000005,
+      "floor": "B1",
+      "room_id": null,
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R2"
+      ],
+      "association": "contained_core_in_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.248225500001354,
+      "y": 50.553625999999895,
+      "w": 3.7071690000011586,
+      "h": 3.713999999999942,
+      "z0": 0.0,
+      "z1": 5.1000000000000005,
+      "floor": "B1",
+      "room_id": "R18",
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "core_id": "C4",
+      "access_room_ids": [
+        "R18"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 14.032654500000717,
+      "y": 43.068625999999995,
+      "w": 3.469689000001381,
+      "h": 3.9839999999999236,
+      "z0": 0.0,
+      "z1": 5.1000000000000005,
+      "floor": "B1",
+      "room_id": "R22",
+      "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+      "core_id": "C5",
+      "access_room_ids": [
+        "R22"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 14.152000000000044,
+      "y": 48.727499999999964,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 5.1000000000000005,
+      "z1": 10.600000000000001,
+      "floor": "1F",
+      "room_id": "R24",
+      "align": "base",
+      "core_id": "C0",
+      "access_room_ids": [
+        "R24"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75,
+      "y": 38.81549999999993,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 5.1000000000000005,
+      "z1": 10.600000000000001,
+      "floor": "1F",
+      "room_id": "CE1",
+      "align": "base",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.149999999999636,
+      "y": 38.81549999999993,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 5.1000000000000005,
+      "z1": 10.600000000000001,
+      "floor": "1F",
+      "room_id": "CE2",
+      "align": "base",
+      "core_id": "C2",
+      "access_room_ids": [
+        "CE2"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.522949500000323,
+      "y": 43.08792399999993,
+      "w": 3.3571690000007948,
+      "h": 3.9839999999999236,
+      "z0": 5.1000000000000005,
+      "z1": 10.600000000000001,
+      "floor": "1F",
+      "room_id": "R26",
+      "align": "base",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R26"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 44.34953399999904,
+      "y": 38.3744385,
+      "w": 6.004000000000815,
+      "h": 1.3109709999998813,
+      "z0": 5.1000000000000005,
+      "z1": 10.600000000000001,
+      "floor": "1F",
+      "room_id": null,
+      "align": "base",
+      "core_id": "C4",
+      "access_room_ids": [],
+      "association": "unresolved_access"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24794949999887,
+      "y": 49.87292400000001,
+      "w": 3.7071690000011586,
+      "h": 3.713999999999942,
+      "z0": 5.1000000000000005,
+      "z1": 10.600000000000001,
+      "floor": "1F",
+      "room_id": null,
+      "align": "base",
+      "core_id": "C5",
+      "access_room_ids": [
+        "R15"
+      ],
+      "association": "contained_core_in_room"
+    },
+    {
+      "kind": "elev",
+      "x": 14.151999999998225,
+      "y": 48.727499999999964,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 10.600000000000001,
+      "z1": 16.1,
+      "floor": "2F",
+      "room_id": "R17",
+      "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "R17"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75,
+      "y": 38.81549999999993,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 10.600000000000001,
+      "z1": 16.1,
+      "floor": "2F",
+      "room_id": "CE1",
+      "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.149999999999636,
+      "y": 38.81549999999993,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 10.600000000000001,
+      "z1": 16.1,
+      "floor": "2F",
+      "room_id": "CE2",
+      "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "CE2"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.522949499998504,
+      "y": 43.08792399999993,
+      "w": 3.3571690000007948,
+      "h": 3.9839999999999236,
+      "z0": 10.600000000000001,
+      "z1": 16.1,
+      "floor": "2F",
+      "room_id": "R21",
+      "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R21"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24794949999887,
+      "y": 49.87292400000001,
+      "w": 3.7071690000011586,
+      "h": 3.713999999999942,
+      "z0": 10.600000000000001,
+      "z1": 16.1,
+      "floor": "2F",
+      "room_id": "R11",
+      "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+      "core_id": "C4",
+      "access_room_ids": [
+        "R11"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75000000000182,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 16.1,
+      "z1": 21.6,
+      "floor": "3F",
+      "room_id": "CE0",
+      "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "CE0"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000001455,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 16.1,
+      "z1": 21.6,
+      "floor": "3F",
+      "room_id": "CE1",
+      "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 14.153000000002066,
+      "y": 48.727499999999964,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 16.1,
+      "z1": 21.6,
+      "floor": "3F",
+      "room_id": "R18",
+      "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "R18"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.523628000000826,
+      "y": 43.08730800000012,
+      "w": 3.3571700000011333,
+      "h": 3.9839999999999236,
+      "z0": 16.1,
+      "z1": 21.6,
+      "floor": "3F",
+      "room_id": "R21",
+      "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R21"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24862800000119,
+      "y": 49.872307999999975,
+      "w": 3.707170000001497,
+      "h": 3.713999999999942,
+      "z0": 16.1,
+      "z1": 21.6,
+      "floor": "3F",
+      "room_id": "R12",
+      "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+      "core_id": "C4",
+      "access_room_ids": [
+        "R12"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75000000000182,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 21.599999999999998,
+      "z1": 26.099999999999998,
+      "floor": "4F",
+      "room_id": "CE0",
+      "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "CE0"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000001455,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 21.599999999999998,
+      "z1": 26.099999999999998,
+      "floor": "4F",
+      "room_id": "CE1",
+      "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 14.153000000000247,
+      "y": 48.727499999999964,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 21.599999999999998,
+      "z1": 26.099999999999998,
+      "floor": "4F",
+      "room_id": "R12",
+      "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "R12"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.523628000002645,
+      "y": 43.08730800000012,
+      "w": 3.3571700000011333,
+      "h": 3.9839999999999236,
+      "z0": 21.599999999999998,
+      "z1": 26.099999999999998,
+      "floor": "4F",
+      "room_id": "R15",
+      "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R15"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24862800000119,
+      "y": 49.872307999999975,
+      "w": 3.707170000001497,
+      "h": 3.713999999999942,
+      "z0": 21.599999999999998,
+      "z1": 26.099999999999998,
+      "floor": "4F",
+      "room_id": "R6",
+      "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+      "core_id": "C4",
+      "access_room_ids": [
+        "R6"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75000000000182,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 26.099999999999998,
+      "z1": 30.599999999999998,
+      "floor": "5F",
+      "room_id": "CE0",
+      "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "CE0"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000003274,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 26.099999999999998,
+      "z1": 30.599999999999998,
+      "floor": "5F",
+      "room_id": "CE1",
+      "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 14.153000000002066,
+      "y": 48.727499999999964,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 26.099999999999998,
+      "z1": 30.599999999999998,
+      "floor": "5F",
+      "room_id": "R11",
+      "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "R11"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.523628000002645,
+      "y": 42.762308000000075,
+      "w": 3.3571699999993143,
+      "h": 4.6340000000000146,
+      "z0": 26.099999999999998,
+      "z1": 30.599999999999998,
+      "floor": "5F",
+      "room_id": "R15",
+      "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R15"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24862800000301,
+      "y": 50.19730800000002,
+      "w": 3.707170000001497,
+      "h": 4.364000000000033,
+      "z0": 26.099999999999998,
+      "z1": 30.599999999999998,
+      "floor": "5F",
+      "room_id": "R5",
+      "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+      "core_id": "C4",
+      "access_room_ids": [
+        "R5"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75000000000182,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 30.599999999999998,
+      "z1": 35.099999999999994,
+      "floor": "6F",
+      "room_id": "CE0",
+      "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "CE0"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000001455,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 30.599999999999998,
+      "z1": 35.099999999999994,
+      "floor": "6F",
+      "room_id": "CE1",
+      "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 14.153000000002066,
+      "y": 48.727499999999964,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 30.599999999999998,
+      "z1": 35.099999999999994,
+      "floor": "6F",
+      "room_id": "R32",
+      "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "R32"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.523628000000826,
+      "y": 42.762308000000075,
+      "w": 3.3571700000011333,
+      "h": 4.6340000000000146,
+      "z0": 30.599999999999998,
+      "z1": 35.099999999999994,
+      "floor": "6F",
+      "room_id": "R35",
+      "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R35"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24862800000301,
+      "y": 50.19730800000002,
+      "w": 3.707169999999678,
+      "h": 4.364000000000033,
+      "z0": 30.599999999999998,
+      "z1": 35.099999999999994,
+      "floor": "6F",
+      "room_id": "R23",
+      "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+      "core_id": "C4",
+      "access_room_ids": [
+        "R23"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75000000000182,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 35.1,
+      "z1": 40.800000000000004,
+      "floor": "7F",
+      "room_id": "CE0",
+      "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "CE0"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000003274,
+      "y": 38.81449999999995,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 35.1,
+      "z1": 40.800000000000004,
+      "floor": "7F",
+      "room_id": "CE1",
+      "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+      "core_id": "C1",
+      "access_room_ids": [
+        "CE1"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 13.750213000002987,
+      "y": 42.762308000000075,
+      "w": 2.904000000000451,
+      "h": 4.6340000000000146,
+      "z0": 35.1,
+      "z1": 40.800000000000004,
+      "floor": "7F",
+      "room_id": "R28",
+      "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+      "core_id": "C2",
+      "access_room_ids": [
+        "R28"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.24862800000119,
+      "y": 50.19730800000002,
+      "w": 3.707169999999678,
+      "h": 4.364000000000033,
+      "z0": 35.1,
+      "z1": 40.800000000000004,
+      "floor": "7F",
+      "room_id": "R21",
+      "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+      "core_id": "C3",
+      "access_room_ids": [
+        "R21"
+      ],
+      "association": "dedicated_room"
+    },
+    {
+      "kind": "stair",
+      "x": 60.4472130000031,
+      "y": 49.872307999999975,
+      "w": 3.3040000000000873,
+      "h": 3.713999999999942,
+      "z0": 40.800000000000004,
+      "z1": 44.1,
+      "floor": "PH",
+      "room_id": "R4",
+      "align": "cores edges 2 (full 0) + columns 2 (←7F)",
+      "core_id": "C0",
+      "access_room_ids": [
+        "R4"
+      ],
+      "association": "dedicated_room"
+    }
+  ],
+  "connections": [
+    {
+      "kind": "elev",
+      "from_floor": "B1",
+      "from_core": "C0",
+      "to_floor": "1F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9807
+    },
+    {
+      "kind": "elev",
+      "from_floor": "1F",
+      "from_core": "C0",
+      "to_floor": "2F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "2F",
+      "from_core": "C0",
+      "to_floor": "3F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.999
+    },
+    {
+      "kind": "elev",
+      "from_floor": "3F",
+      "from_core": "C2",
+      "to_floor": "4F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "4F",
+      "from_core": "C2",
+      "to_floor": "5F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "5F",
+      "from_core": "C2",
+      "to_floor": "6F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "B1",
+      "from_core": "C1",
+      "to_floor": "1F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9789
+    },
+    {
+      "kind": "elev",
+      "from_floor": "1F",
+      "from_core": "C1",
+      "to_floor": "2F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "2F",
+      "from_core": "C1",
+      "to_floor": "3F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9989
+    },
+    {
+      "kind": "elev",
+      "from_floor": "3F",
+      "from_core": "C0",
+      "to_floor": "4F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "4F",
+      "from_core": "C0",
+      "to_floor": "5F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "5F",
+      "from_core": "C0",
+      "to_floor": "6F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "6F",
+      "from_core": "C0",
+      "to_floor": "7F",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "B1",
+      "from_core": "C2",
+      "to_floor": "1F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9789
+    },
+    {
+      "kind": "elev",
+      "from_floor": "1F",
+      "from_core": "C2",
+      "to_floor": "2F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "2F",
+      "from_core": "C2",
+      "to_floor": "3F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9989
+    },
+    {
+      "kind": "elev",
+      "from_floor": "3F",
+      "from_core": "C1",
+      "to_floor": "4F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "4F",
+      "from_core": "C1",
+      "to_floor": "5F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "5F",
+      "from_core": "C1",
+      "to_floor": "6F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "6F",
+      "from_core": "C1",
+      "to_floor": "7F",
+      "to_core": "C1",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "B1",
+      "from_core": "C4",
+      "to_floor": "1F",
+      "to_core": "C5",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.6901
+    },
+    {
+      "kind": "stair",
+      "from_floor": "1F",
+      "from_core": "C5",
+      "to_floor": "2F",
+      "to_core": "C4",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "2F",
+      "from_core": "C4",
+      "to_floor": "3F",
+      "to_core": "C4",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9993
+    },
+    {
+      "kind": "stair",
+      "from_floor": "3F",
+      "from_core": "C4",
+      "to_floor": "4F",
+      "to_core": "C4",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "4F",
+      "from_core": "C4",
+      "to_floor": "5F",
+      "to_core": "C4",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.8511
+    },
+    {
+      "kind": "stair",
+      "from_floor": "5F",
+      "from_core": "C4",
+      "to_floor": "6F",
+      "to_core": "C4",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "6F",
+      "from_core": "C4",
+      "to_floor": "7F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "7F",
+      "from_core": "C3",
+      "to_floor": "PH",
+      "to_core": "C0",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.7585
+    },
+    {
+      "kind": "stair",
+      "from_floor": "B1",
+      "from_core": "C5",
+      "to_floor": "1F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.7339
+    },
+    {
+      "kind": "stair",
+      "from_floor": "1F",
+      "from_core": "C3",
+      "to_floor": "2F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "2F",
+      "from_core": "C3",
+      "to_floor": "3F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9993
+    },
+    {
+      "kind": "stair",
+      "from_floor": "3F",
+      "from_core": "C3",
+      "to_floor": "4F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "4F",
+      "from_core": "C3",
+      "to_floor": "5F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.8597
+    },
+    {
+      "kind": "stair",
+      "from_floor": "5F",
+      "from_core": "C3",
+      "to_floor": "6F",
+      "to_core": "C3",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "6F",
+      "from_core": "C3",
+      "to_floor": "7F",
+      "to_core": "C2",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.865
+    }
+  ],
+  "groups": [
+    {
+      "kind": "elev",
+      "x": 14.152000000000044,
+      "y": 48.70900000000006,
+      "w": 2.095,
+      "h": 1.9,
+      "z0": 0.0,
+      "z1": 35.099999999999994,
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F"
+      ],
+      "room_ids": {
+        "B1": "R20",
+        "1F": "R24",
+        "2F": "R17",
+        "3F": "R18",
+        "4F": "R12",
+        "5F": "R11",
+        "6F": "R32"
+      },
+      "core_ids": {
+        "B1": "C0",
+        "1F": "C0",
+        "2F": "C0",
+        "3F": "C2",
+        "4F": "C2",
+        "5F": "C2",
+        "6F": "C2"
+      },
+      "access_room_ids": {
+        "B1": [
+          "R20"
+        ],
+        "1F": [
+          "R24"
+        ],
+        "2F": [
+          "R17"
+        ],
+        "3F": [
+          "R18"
+        ],
+        "4F": [
+          "R12"
+        ],
+        "5F": [
+          "R11"
+        ],
+        "6F": [
+          "R32"
+        ]
+      },
+      "nodes": [
+        {
+          "kind": "elev",
+          "x": 14.152000000000044,
+          "y": 48.70900000000006,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 0.0,
+          "z1": 5.1000000000000005,
+          "floor": "B1",
+          "room_id": "R20",
+          "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "R20"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 14.152000000000044,
+          "y": 48.727499999999964,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 5.1000000000000005,
+          "z1": 10.600000000000001,
+          "floor": "1F",
+          "room_id": "R24",
+          "align": "base",
+          "core_id": "C0",
+          "access_room_ids": [
+            "R24"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 14.151999999998225,
+          "y": 48.727499999999964,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 10.600000000000001,
+          "z1": 16.1,
+          "floor": "2F",
+          "room_id": "R17",
+          "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "R17"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 14.153000000002066,
+          "y": 48.727499999999964,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 16.1,
+          "z1": 21.6,
+          "floor": "3F",
+          "room_id": "R18",
+          "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "R18"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 14.153000000000247,
+          "y": 48.727499999999964,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 21.599999999999998,
+          "z1": 26.099999999999998,
+          "floor": "4F",
+          "room_id": "R12",
+          "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "R12"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 14.153000000002066,
+          "y": 48.727499999999964,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 26.099999999999998,
+          "z1": 30.599999999999998,
+          "floor": "5F",
+          "room_id": "R11",
+          "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "R11"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 14.153000000002066,
+          "y": 48.727499999999964,
+          "w": 2.095,
+          "h": 1.9,
+          "z0": 30.599999999999998,
+          "z1": 35.099999999999994,
+          "floor": "6F",
+          "room_id": "R32",
+          "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "R32"
+          ],
+          "association": "dedicated_room"
+        }
+      ],
+      "overlaps": [
+        0.9807,
+        1.0,
+        0.999,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    },
+    {
+      "kind": "elev",
+      "x": 60.75,
+      "y": 38.79600000000005,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 0.0,
+      "z1": 40.800000000000004,
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F"
+      ],
+      "room_ids": {
+        "B1": "CE1",
+        "1F": "CE1",
+        "2F": "CE1",
+        "3F": "CE0",
+        "4F": "CE0",
+        "5F": "CE0",
+        "6F": "CE0",
+        "7F": "CE0"
+      },
+      "core_ids": {
+        "B1": "C1",
+        "1F": "C1",
+        "2F": "C1",
+        "3F": "C0",
+        "4F": "C0",
+        "5F": "C0",
+        "6F": "C0",
+        "7F": "C0"
+      },
+      "access_room_ids": {
+        "B1": [
+          "CE1"
+        ],
+        "1F": [
+          "CE1"
+        ],
+        "2F": [
+          "CE1"
+        ],
+        "3F": [
+          "CE0"
+        ],
+        "4F": [
+          "CE0"
+        ],
+        "5F": [
+          "CE0"
+        ],
+        "6F": [
+          "CE0"
+        ],
+        "7F": [
+          "CE0"
+        ]
+      },
+      "nodes": [
+        {
+          "kind": "elev",
+          "x": 60.75,
+          "y": 38.79600000000005,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 0.0,
+          "z1": 5.1000000000000005,
+          "floor": "B1",
+          "room_id": "CE1",
+          "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75,
+          "y": 38.81549999999993,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 5.1000000000000005,
+          "z1": 10.600000000000001,
+          "floor": "1F",
+          "room_id": "CE1",
+          "align": "base",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75,
+          "y": 38.81549999999993,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 10.600000000000001,
+          "z1": 16.1,
+          "floor": "2F",
+          "room_id": "CE1",
+          "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75000000000182,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 16.1,
+          "z1": 21.6,
+          "floor": "3F",
+          "room_id": "CE0",
+          "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "CE0"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75000000000182,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 21.599999999999998,
+          "z1": 26.099999999999998,
+          "floor": "4F",
+          "room_id": "CE0",
+          "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "CE0"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75000000000182,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 26.099999999999998,
+          "z1": 30.599999999999998,
+          "floor": "5F",
+          "room_id": "CE0",
+          "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "CE0"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75000000000182,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 30.599999999999998,
+          "z1": 35.099999999999994,
+          "floor": "6F",
+          "room_id": "CE0",
+          "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "CE0"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 60.75000000000182,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 35.1,
+          "z1": 40.800000000000004,
+          "floor": "7F",
+          "room_id": "CE0",
+          "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "CE0"
+          ],
+          "association": "dedicated_room"
+        }
+      ],
+      "overlaps": [
+        0.9789,
+        1.0,
+        0.9989,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    },
+    {
+      "kind": "elev",
+      "x": 58.150000000001455,
+      "y": 38.79600000000005,
+      "w": 1.9,
+      "h": 1.825,
+      "z0": 0.0,
+      "z1": 40.800000000000004,
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F"
+      ],
+      "room_ids": {
+        "B1": "CE2",
+        "1F": "CE2",
+        "2F": "CE2",
+        "3F": "CE1",
+        "4F": "CE1",
+        "5F": "CE1",
+        "6F": "CE1",
+        "7F": "CE1"
+      },
+      "core_ids": {
+        "B1": "C2",
+        "1F": "C2",
+        "2F": "C2",
+        "3F": "C1",
+        "4F": "C1",
+        "5F": "C1",
+        "6F": "C1",
+        "7F": "C1"
+      },
+      "access_room_ids": {
+        "B1": [
+          "CE2"
+        ],
+        "1F": [
+          "CE2"
+        ],
+        "2F": [
+          "CE2"
+        ],
+        "3F": [
+          "CE1"
+        ],
+        "4F": [
+          "CE1"
+        ],
+        "5F": [
+          "CE1"
+        ],
+        "6F": [
+          "CE1"
+        ],
+        "7F": [
+          "CE1"
+        ]
+      },
+      "nodes": [
+        {
+          "kind": "elev",
+          "x": 58.150000000001455,
+          "y": 38.79600000000005,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 0.0,
+          "z1": 5.1000000000000005,
+          "floor": "B1",
+          "room_id": "CE2",
+          "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "CE2"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.149999999999636,
+          "y": 38.81549999999993,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 5.1000000000000005,
+          "z1": 10.600000000000001,
+          "floor": "1F",
+          "room_id": "CE2",
+          "align": "base",
+          "core_id": "C2",
+          "access_room_ids": [
+            "CE2"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.149999999999636,
+          "y": 38.81549999999993,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 10.600000000000001,
+          "z1": 16.1,
+          "floor": "2F",
+          "room_id": "CE2",
+          "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "CE2"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.150000000001455,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 16.1,
+          "z1": 21.6,
+          "floor": "3F",
+          "room_id": "CE1",
+          "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.150000000001455,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 21.599999999999998,
+          "z1": 26.099999999999998,
+          "floor": "4F",
+          "room_id": "CE1",
+          "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.150000000003274,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 26.099999999999998,
+          "z1": 30.599999999999998,
+          "floor": "5F",
+          "room_id": "CE1",
+          "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.150000000001455,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 30.599999999999998,
+          "z1": 35.099999999999994,
+          "floor": "6F",
+          "room_id": "CE1",
+          "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "elev",
+          "x": 58.150000000003274,
+          "y": 38.81449999999995,
+          "w": 1.9,
+          "h": 1.825,
+          "z0": 35.1,
+          "z1": 40.800000000000004,
+          "floor": "7F",
+          "room_id": "CE1",
+          "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+          "core_id": "C1",
+          "access_room_ids": [
+            "CE1"
+          ],
+          "association": "dedicated_room"
+        }
+      ],
+      "overlaps": [
+        0.9789,
+        1.0,
+        0.9989,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    },
+    {
+      "kind": "stair",
+      "x": 60.248225500001354,
+      "y": 50.553625999999895,
+      "w": 3.7071690000011586,
+      "h": 3.713999999999942,
+      "z0": 0.0,
+      "z1": 44.1,
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F",
+        "PH"
+      ],
+      "room_ids": {
+        "B1": "R18",
+        "2F": "R11",
+        "3F": "R12",
+        "4F": "R6",
+        "5F": "R5",
+        "6F": "R23",
+        "7F": "R21",
+        "PH": "R4"
+      },
+      "core_ids": {
+        "B1": "C4",
+        "1F": "C5",
+        "2F": "C4",
+        "3F": "C4",
+        "4F": "C4",
+        "5F": "C4",
+        "6F": "C4",
+        "7F": "C3",
+        "PH": "C0"
+      },
+      "access_room_ids": {
+        "B1": [
+          "R18"
+        ],
+        "1F": [
+          "R15"
+        ],
+        "2F": [
+          "R11"
+        ],
+        "3F": [
+          "R12"
+        ],
+        "4F": [
+          "R6"
+        ],
+        "5F": [
+          "R5"
+        ],
+        "6F": [
+          "R23"
+        ],
+        "7F": [
+          "R21"
+        ],
+        "PH": [
+          "R4"
+        ]
+      },
+      "nodes": [
+        {
+          "kind": "stair",
+          "x": 60.248225500001354,
+          "y": 50.553625999999895,
+          "w": 3.7071690000011586,
+          "h": 3.713999999999942,
+          "z0": 0.0,
+          "z1": 5.1000000000000005,
+          "floor": "B1",
+          "room_id": "R18",
+          "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+          "core_id": "C4",
+          "access_room_ids": [
+            "R18"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24794949999887,
+          "y": 49.87292400000001,
+          "w": 3.7071690000011586,
+          "h": 3.713999999999942,
+          "z0": 5.1000000000000005,
+          "z1": 10.600000000000001,
+          "floor": "1F",
+          "room_id": null,
+          "align": "base",
+          "core_id": "C5",
+          "access_room_ids": [
+            "R15"
+          ],
+          "association": "contained_core_in_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24794949999887,
+          "y": 49.87292400000001,
+          "w": 3.7071690000011586,
+          "h": 3.713999999999942,
+          "z0": 10.600000000000001,
+          "z1": 16.1,
+          "floor": "2F",
+          "room_id": "R11",
+          "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+          "core_id": "C4",
+          "access_room_ids": [
+            "R11"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24862800000119,
+          "y": 49.872307999999975,
+          "w": 3.707170000001497,
+          "h": 3.713999999999942,
+          "z0": 16.1,
+          "z1": 21.6,
+          "floor": "3F",
+          "room_id": "R12",
+          "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+          "core_id": "C4",
+          "access_room_ids": [
+            "R12"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24862800000119,
+          "y": 49.872307999999975,
+          "w": 3.707170000001497,
+          "h": 3.713999999999942,
+          "z0": 21.599999999999998,
+          "z1": 26.099999999999998,
+          "floor": "4F",
+          "room_id": "R6",
+          "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+          "core_id": "C4",
+          "access_room_ids": [
+            "R6"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24862800000301,
+          "y": 50.19730800000002,
+          "w": 3.707170000001497,
+          "h": 4.364000000000033,
+          "z0": 26.099999999999998,
+          "z1": 30.599999999999998,
+          "floor": "5F",
+          "room_id": "R5",
+          "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+          "core_id": "C4",
+          "access_room_ids": [
+            "R5"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24862800000301,
+          "y": 50.19730800000002,
+          "w": 3.707169999999678,
+          "h": 4.364000000000033,
+          "z0": 30.599999999999998,
+          "z1": 35.099999999999994,
+          "floor": "6F",
+          "room_id": "R23",
+          "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+          "core_id": "C4",
+          "access_room_ids": [
+            "R23"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.24862800000119,
+          "y": 50.19730800000002,
+          "w": 3.707169999999678,
+          "h": 4.364000000000033,
+          "z0": 35.1,
+          "z1": 40.800000000000004,
+          "floor": "7F",
+          "room_id": "R21",
+          "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R21"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 60.4472130000031,
+          "y": 49.872307999999975,
+          "w": 3.3040000000000873,
+          "h": 3.713999999999942,
+          "z0": 40.800000000000004,
+          "z1": 44.1,
+          "floor": "PH",
+          "room_id": "R4",
+          "align": "cores edges 2 (full 0) + columns 2 (←7F)",
+          "core_id": "C0",
+          "access_room_ids": [
+            "R4"
+          ],
+          "association": "dedicated_room"
+        }
+      ],
+      "overlaps": [
+        0.6901,
+        1.0,
+        0.9993,
+        1.0,
+        0.8511,
+        1.0,
+        1.0,
+        0.7585
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    },
+    {
+      "kind": "stair",
+      "x": 14.032654500000717,
+      "y": 43.068625999999995,
+      "w": 3.469689000001381,
+      "h": 3.9839999999999236,
+      "z0": 0.0,
+      "z1": 40.800000000000004,
+      "floors": [
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F"
+      ],
+      "room_ids": {
+        "B1": "R22",
+        "1F": "R26",
+        "2F": "R21",
+        "3F": "R21",
+        "4F": "R15",
+        "5F": "R15",
+        "6F": "R35",
+        "7F": "R28"
+      },
+      "core_ids": {
+        "B1": "C5",
+        "1F": "C3",
+        "2F": "C3",
+        "3F": "C3",
+        "4F": "C3",
+        "5F": "C3",
+        "6F": "C3",
+        "7F": "C2"
+      },
+      "access_room_ids": {
+        "B1": [
+          "R22"
+        ],
+        "1F": [
+          "R26"
+        ],
+        "2F": [
+          "R21"
+        ],
+        "3F": [
+          "R21"
+        ],
+        "4F": [
+          "R15"
+        ],
+        "5F": [
+          "R15"
+        ],
+        "6F": [
+          "R35"
+        ],
+        "7F": [
+          "R28"
+        ]
+      },
+      "nodes": [
+        {
+          "kind": "stair",
+          "x": 14.032654500000717,
+          "y": 43.068625999999995,
+          "w": 3.469689000001381,
+          "h": 3.9839999999999236,
+          "z0": 0.0,
+          "z1": 5.1000000000000005,
+          "floor": "B1",
+          "room_id": "R22",
+          "align": "cores edges 16 (full 3) + columns 4 (←1F)",
+          "core_id": "C5",
+          "access_room_ids": [
+            "R22"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.522949500000323,
+          "y": 43.08792399999993,
+          "w": 3.3571690000007948,
+          "h": 3.9839999999999236,
+          "z0": 5.1000000000000005,
+          "z1": 10.600000000000001,
+          "floor": "1F",
+          "room_id": "R26",
+          "align": "base",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R26"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.522949499998504,
+          "y": 43.08792399999993,
+          "w": 3.3571690000007948,
+          "h": 3.9839999999999236,
+          "z0": 10.600000000000001,
+          "z1": 16.1,
+          "floor": "2F",
+          "room_id": "R21",
+          "align": "cores edges 20 (full 5) + columns 22 (←1F)",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R21"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.523628000000826,
+          "y": 43.08730800000012,
+          "w": 3.3571700000011333,
+          "h": 3.9839999999999236,
+          "z0": 16.1,
+          "z1": 21.6,
+          "floor": "3F",
+          "room_id": "R21",
+          "align": "cores edges 20 (full 5) + columns 21 (←2F)",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R21"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.523628000002645,
+          "y": 43.08730800000012,
+          "w": 3.3571700000011333,
+          "h": 3.9839999999999236,
+          "z0": 21.599999999999998,
+          "z1": 26.099999999999998,
+          "floor": "4F",
+          "room_id": "R15",
+          "align": "cores edges 20 (full 5) + columns 21 (←3F)",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R15"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.523628000002645,
+          "y": 42.762308000000075,
+          "w": 3.3571699999993143,
+          "h": 4.6340000000000146,
+          "z0": 26.099999999999998,
+          "z1": 30.599999999999998,
+          "floor": "5F",
+          "room_id": "R15",
+          "align": "cores edges 18 (full 3) + columns 21 (←4F)",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R15"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.523628000000826,
+          "y": 42.762308000000075,
+          "w": 3.3571700000011333,
+          "h": 4.6340000000000146,
+          "z0": 30.599999999999998,
+          "z1": 35.099999999999994,
+          "floor": "6F",
+          "room_id": "R35",
+          "align": "cores edges 20 (full 5) + columns 21 (←5F)",
+          "core_id": "C3",
+          "access_room_ids": [
+            "R35"
+          ],
+          "association": "dedicated_room"
+        },
+        {
+          "kind": "stair",
+          "x": 13.750213000002987,
+          "y": 42.762308000000075,
+          "w": 2.904000000000451,
+          "h": 4.6340000000000146,
+          "z0": 35.1,
+          "z1": 40.800000000000004,
+          "floor": "7F",
+          "room_id": "R28",
+          "align": "cores edges 15 (full 3) + columns 20 (←6F)",
+          "core_id": "C2",
+          "access_room_ids": [
+            "R28"
+          ],
+          "association": "dedicated_room"
+        }
+      ],
+      "overlaps": [
+        0.7339,
+        1.0,
+        0.9993,
+        1.0,
+        0.8597,
+        1.0,
+        0.865
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    }
+  ],
+  "unmatched": [
+    {
+      "floor": "B1",
+      "kind": "stair",
+      "room_id": null,
+      "core_id": "C3",
+      "reason": "no_unambiguous_adjacent_floor_match"
+    },
+    {
+      "floor": "1F",
+      "kind": "stair",
+      "room_id": null,
+      "core_id": "C4",
+      "reason": "no_unambiguous_adjacent_floor_match"
+    }
+  ]
+}

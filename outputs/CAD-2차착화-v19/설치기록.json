@@ -1,0 +1,23 @@
+{
+  "status": "installed_and_browser_checked",
+  "date": "2026-10-15",
+  "url": "http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html",
+  "files": {
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\model.html": "4db7dfa29b342f2675df323bfc8b170fa20b44331ce4098bb3c18f31dbe75500",
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\cfast-demo.json": "47853930658263f6c4a5431bf656f2ede1820e2fc16fa65fcf9f0ca12047a146",
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\data\\d018b4bb75da4475b1fd75447603c1a0\\cad-output\\building.json": "0c4adcbb3226df39e450a08654a0569fa0632b16aeeab7785c0e796d3d319360",
+    "C:\\Users\\예방\\Desktop\\소방 크로키 업-로컬웹앱\\_internal\\cad_engine\\integrated_viewer.html": "4db7dfa29b342f2675df323bfc8b170fa20b44331ce4098bb3c18f31dbe75500"
+  },
+  "browser_checks": [
+    "225s original fire only",
+    "300s original plus FuelA",
+    "640s FuelB still unignited",
+    "800s original plus FuelA and FuelB, total 2000 kW",
+    "1800s secondary fuel curves ended, original only",
+    "FuelC never ignited",
+    "top/isometric/basic/real: clipping plane count 0 and wall opacity 0.45",
+    "no browser console errors"
+  ],
+  "screenshot": "2차착화-13분20초.jpg",
+  "physics_validation": false
+}

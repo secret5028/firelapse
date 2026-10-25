@@ -1,0 +1,12 @@
+{
+  "revision": "v7_section1.1",
+  "default_top_n": 3,
+  "weights": {"fuel": 1.0, "ventilation_restriction": 1.0, "connectivity": 1.0, "passage_adjacency": 1.0, "fire_isolation": 1.0},
+  "ventilation_ratio_clip": 3.0,
+  "inferred_isolation_weight": 0.5,
+  "window_open_fraction": 0.5,
+  "constant_factor_contribution": 0.0,
+  "ranking_order": ["burning_rooms_desc", "smoke_risk_rooms_desc", "first_FO_s_asc"],
+  "states": ["open_except_confirmed", "closed"],
+  "limitations": ["① 점수는 입력 지표의 상대 순위이며 위험도 예측값이 아니다. 후보 선별용.", "두 극단 상태의 비교이며 모든 개폐 조합의 최악을 보증하지 않는다."]
+}

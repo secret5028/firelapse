@@ -1,0 +1,10 @@
+{
+  "fire_floor": "3F",
+  "fire_room": "R9",
+  "scope_floor": "3F",
+  "duration_s": 1800,
+  "max_added_ignitions": 4,
+  "pilot_assumed": false,
+  "solid_ignition_C": 369,
+  "flashover": {"enabled": true}
+}

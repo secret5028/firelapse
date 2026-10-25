@@ -1,0 +1,141 @@
+r6a 문 좌표 수정 및 A → B → C 결과 (2026-10-25)
+
+변경: rule_graph.point의 b측 실 중심 근사를 제거. opening_frame의 a 원점 포함 절대 좌표를 양쪽에 동일 적용.
+CAD 좌표가 있으면 해당 중심점을 사용. CAD 좌표 없는 WALL 개구부의 기존 함수는 수평 위치와 바닥 높이를 반환하므로 실제 문 중심 높이까지 재구성한 것은 아님.
+검사: 133개 Python 검사 통과. 문 방향 반전/입력 순서/닫힌 문/방화문/수직 위쪽 간선 및 계산용 원점 변경에 따른 CAD 통과거리 불변 포함.
+추가 좌표 수정: 가상 셀 경계는 원래 실의 아핀 좌표변환을 역으로 적용해 CAD 위치로 통일. 기존 문 CAD 좌표와 계산용 원점(100m 간격)을 섞던 오류 제거.
+CFAST 엔진, 솔버, 5초 출력 격자, 기존 전이 방식 및 운영 3D는 변경하지 않음.
+
+A: 상층 최고 487.748℃, 센서 최고 493.253℃, 차이 5.504℃: 합격.
+B1은 600℃ 미도달이므로 A만으로 600℃ 부근의 모든 건물에서 상층 추종을 보증하지 않음. 초기 0~25초 표본은 하층, 25~30초 사이 상층 편입.
+B: 수정된 범용 생성기의 입력 3건과 완료된 기존 B 입력이 바이트 동일. 엔진/출력 파일 해시도 확인해 재실행 없이 재사용.
+  B1: 합격, 원 측정 계산시간 2.922초
+    R2: 조건 None초, 공급 None초, 실제발열 첫 표본 None초, 연속 양수 HRR 0초
+    R3: 조건 None초, 공급 None초, 실제발열 첫 표본 None초, 연속 양수 HRR 0초
+  B2: 합격, 원 측정 계산시간 6.109초
+    R2: 조건 881.0초, 공급 941.0초, 실제발열 첫 표본 945.0초, 연속 양수 HRR 255초
+    R3: 조건 1023.0초, 공급 1083.0초, 실제발열 첫 표본 1085.0초, 연속 양수 HRR 115초
+  B3: 합격, 원 측정 계산시간 31.094초
+    R2: 조건 311.0초, 공급 371.0초, 실제발열 첫 표본 375.0초, 연속 양수 HRR 825초
+    R3: 조건 449.0초, 공급 509.0초, 실제발열 첫 표본 510.0초, 연속 양수 HRR 690초
+B2/B3에서 센서 >600℃ 첫 표본의 상층 평균은 607.5~700.9℃. 해당 표본의 국부 가스=상층 평균. 센서 열응답 지연은 남아 있으며 모든 건물에서 오판정 없음을 보증하지 않음.
+
+C: 원래 30실 → 40 계산 셀, 대기 포함 화원 29개. 3600초, 출력5초.
+기존 층 시험 예산을 유지: 실행당 실제 시간 1200초(20분). 최초 화원만 켠 기준 1회 + 규칙 시나리오 1회, 사건별 재실행 없음.
+초기 화원의 입력 HRR·면적 곡선 동일, 셀 분할 전후 체적 및 총 연료 에너지 보존 확인.
+초기 실의 연료 예산 전체는 최초 화원 셀에 한 번만 남음. 나머지 셀에 중복 연료를 만들지 않아 초기 실 내부 균등 연소를 재현하지 않음.
+좌표계 오류 발견으로 첫 기준 계산은 중단·보존: 실제 576.3초 사용, 마지막 진행 약 2520초. 최종 비교 시간에 합산하지 않으며 작업 총비용에는 포함. 반복 수렴 또는 임계값 튜닝 재실행이 아님.
+  baseline_native: 완료=True, 실제 계산시간=943.8280000000013초
+    상태 표본의 양수 dt 요약: {"positive_dt_min_s": 0.002013, "positive_dt_median_s": 0.148, "basis": "observed status only; exclude initialization dt=0 from positive-step summary"}
+    단계수 12428, 실제 발열 실 1, 60초 이상 지속 실 1, >1kW 실 1, 최대 동시 >1kW 실 1
+    연소 실: CAD_3F_R2
+    첫 센서 >600℃ 출력 표본에서 상층 <600℃인 셀: 없음 (5초 표본 진단, 실제 임계 통과 시각과 구분)
+    셀 / 출발실 / 구간 지연(s) / 조건시각 추정(s) / 실제발열 첫 표본(s) / 최고kW / 연속 양수 HRR(s)
+    CAD_3F_R2_C0 / initial / 0.00 / 0.0 / 5.0 / 50000.00 / 3595
+    CAD_3F_R0 / CAD_3F_R4 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R0 / baseline_standby_disabled
+    CAD_3F_R1_C0 / CAD_3F_R1_C2 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C0 / baseline_standby_disabled
+    CAD_3F_R1_C1 / CAD_3F_R1_C3 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C1 / baseline_standby_disabled
+    CAD_3F_R1_C2 / CAD_3F_R1_C4 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C2 / baseline_standby_disabled
+    CAD_3F_R1_C3 / CAD_3F_R1_C5 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C3 / baseline_standby_disabled
+    CAD_3F_R1_C4 / CAD_3F_R1_C6 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C4 / baseline_standby_disabled
+    CAD_3F_R1_C5 / CAD_3F_R1_C7 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C5 / baseline_standby_disabled
+    CAD_3F_R1_C6 / CAD_3F_R2_C0 / 114.27 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C6 / baseline_standby_disabled
+    CAD_3F_R1_C7 / CAD_3F_R2_C0 / 99.05 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R1_C7 / baseline_standby_disabled
+    CAD_3F_R3 / CAD_3F_R4 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R3 / baseline_standby_disabled
+    CAD_3F_R4 / CAD_3F_R1_C4 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R4 / baseline_standby_disabled
+    CAD_3F_R6 / CAD_3F_R2_C0 / 95.42 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R6 / baseline_standby_disabled
+    CAD_3F_R7 / CAD_3F_R2_C0 / 97.05 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R7 / baseline_standby_disabled
+    CAD_3F_R8 / CAD_3F_R2_C0 / 103.38 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R8 / baseline_standby_disabled
+    CAD_3F_R9 / CAD_3F_R2_C0 / 112.37 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R9 / baseline_standby_disabled
+    CAD_3F_R10_C0 / CAD_3F_R11 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R10_C0 / baseline_standby_disabled
+    CAD_3F_R10_C1 / CAD_3F_R10_C0 / 30.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R10_C1 / baseline_standby_disabled
+    CAD_3F_R11 / CAD_3F_R2_C0 / 94.25 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R11 / baseline_standby_disabled
+    CAD_3F_R13 / CAD_3F_R4 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R13 / baseline_standby_disabled
+    CAD_3F_R15 / CAD_3F_R4 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R15 / baseline_standby_disabled
+    CAD_3F_R16 / CAD_3F_R15 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R16 / baseline_standby_disabled
+    CAD_3F_R17 / CAD_3F_R2_C0 / 105.33 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R17 / baseline_standby_disabled
+    CAD_3F_R19 / CAD_3F_R16 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R19 / baseline_standby_disabled
+    CAD_3F_R20 / CAD_3F_R17 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R20 / baseline_standby_disabled
+    CAD_3F_R22 / CAD_3F_R16 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R22 / baseline_standby_disabled
+    CAD_3F_R23 / CAD_3F_R2_C0 / 111.88 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R23 / baseline_standby_disabled
+    CAD_3F_R24 / CAD_3F_R15 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R24 / baseline_standby_disabled
+    CAD_3F_R25 / CAD_3F_R15 / 60.00 / None / None / 0.00 / 0
+    전이 미발생: CAD_3F_R25 / baseline_standby_disabled
+  scenario: 완료=False, 실제 계산시간=1200.3899999999994초
+    상태 표본의 양수 dt 요약: {"positive_dt_min_s": 0.000281, "positive_dt_median_s": 0.101, "basis": "observed status only; exclude initialization dt=0 from positive-step summary"}
+    CFAST 미완료: wall_time_budget; 마지막 진행 약 3240/3600초. 부분 결과는 완료로 저장하지 않습니다.
+    상태 표본 통계: {"samples": 521, "min_dt_s": 0.0, "median_dt_s": 0.101, "last": {"native_time_s": 3240.0, "dt_s": 0.242, "steps": 15444}, "basis": "distinct case.status snapshots polled every 1 wall second; NOT every accepted solver step"}
+    완료 아님: 저장된 3230초까지의 부분 관측에서 발열 9실 / 60초 지속 9실. 1시간 완료나 최종 전이 수로 해석 금지.
+    부분 관측 연소 실: CAD_3F_R2, CAD_3F_R1, CAD_3F_R6, CAD_3F_R7, CAD_3F_R8, CAD_3F_R9, CAD_3F_R11, CAD_3F_R17, CAD_3F_R23
+    CAD_3F_R2_C0: 출발 initial, 지연 0.00s, 조건시각 0.00, 실제발열 첫 표본 5.00, 최고 50000.00kW, 연속 3225s; initial_source; 출발 센서 최고 미도달/해당없음℃
+    CAD_3F_R0: 출발 CAD_3F_R4, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 49.97℃
+    CAD_3F_R1_C0: 출발 CAD_3F_R1_C2, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 143.10℃
+    CAD_3F_R1_C1: 출발 CAD_3F_R1_C3, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 147.62℃
+    CAD_3F_R1_C2: 출발 CAD_3F_R1_C4, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 205.86℃
+    CAD_3F_R1_C3: 출발 CAD_3F_R1_C5, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 213.19℃
+    CAD_3F_R1_C4: 출발 CAD_3F_R1_C6, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 299.60℃
+    CAD_3F_R1_C5: 출발 CAD_3F_R1_C7, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 307.51℃
+    CAD_3F_R1_C6: 출발 CAD_3F_R2_C0, 지연 114.27s, 조건시각 482.50, 실제발열 첫 표본 600.00, 최고 6250.00kW, 연속 2630s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R1_C7: 출발 CAD_3F_R2_C0, 지연 99.05s, 조건시각 482.50, 실제발열 첫 표본 585.00, 최고 6250.00kW, 연속 2645s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R3: 출발 CAD_3F_R4, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 49.97℃
+    CAD_3F_R4: 출발 CAD_3F_R1_C4, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 205.86℃
+    CAD_3F_R6: 출발 CAD_3F_R2_C0, 지연 95.42s, 조건시각 482.50, 실제발열 첫 표본 585.00, 최고 742.99kW, 연속 2645s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R7: 출발 CAD_3F_R2_C0, 지연 97.05s, 조건시각 482.50, 실제발열 첫 표본 585.00, 최고 752.71kW, 연속 2645s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R8: 출발 CAD_3F_R2_C0, 지연 103.38s, 조건시각 482.50, 실제발열 첫 표본 590.00, 최고 1000.00kW, 연속 2640s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R9: 출발 CAD_3F_R2_C0, 지연 112.37s, 조건시각 482.50, 실제발열 첫 표본 600.00, 최고 1000.00kW, 연속 2630s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R10_C0: 출발 CAD_3F_R11, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 397.83℃
+    CAD_3F_R10_C1: 출발 CAD_3F_R10_C0, 지연 30.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 211.71℃
+    CAD_3F_R11: 출발 CAD_3F_R2_C0, 지연 94.25s, 조건시각 482.50, 실제발열 첫 표본 580.00, 최고 1000.00kW, 연속 2650s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R13: 출발 CAD_3F_R4, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 49.97℃
+    CAD_3F_R15: 출발 CAD_3F_R4, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 49.97℃
+    CAD_3F_R16: 출발 CAD_3F_R15, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 20.00℃
+    CAD_3F_R17: 출발 CAD_3F_R2_C0, 지연 105.33s, 조건시각 482.50, 실제발열 첫 표본 595.00, 최고 1000.00kW, 연속 1535s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R19: 출발 CAD_3F_R16, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 20.00℃
+    CAD_3F_R20: 출발 CAD_3F_R17, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 413.26℃
+    CAD_3F_R22: 출발 CAD_3F_R16, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 20.00℃
+    CAD_3F_R23: 출발 CAD_3F_R2_C0, 지연 111.88s, 조건시각 482.50, 실제발열 첫 표본 600.00, 최고 1000.00kW, 연속 2630s; actual_source_burning; 출발 센서 최고 1301.81℃
+    CAD_3F_R24: 출발 CAD_3F_R15, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 20.00℃
+    CAD_3F_R25: 출발 CAD_3F_R15, 지연 60.00s, 조건시각 미도달/해당없음, 실제발열 첫 표본 미도달/해당없음, 최고 0.00kW, 연속 0s; parent_sensor_threshold_not_reached; 출발 센서 최고 20.00℃
+    부분 관측 첫 센서 >600℃ 표본에서 상층 <600℃인 셀: 없음
+
+경계 및 한계:
+센서 배치 불가(출발실 제외, 수신 화원 가능): {"CAD_3F_R13": "T4b placement unavailable: cannot establish outside unattenuated flame cone", "CAD_3F_R19": "T4b placement unavailable: cannot establish outside unattenuated flame cone", "CAD_3F_R20": "T4b placement unavailable: cannot establish outside unattenuated flame cone"}
+통과 공간: CAD_3F_CE0, CAD_3F_CE1, CAD_3F_R12, CAD_3F_R18, CAD_3F_R21, CAD_3F_R26, CAD_3F_R2_C1, CAD_3F_R2_C2, CAD_3F_R5
+경로 미도달: CAD_3F_R14, CAD_3F_R28
+이번 실제 입력에는 수직 개구부가 없음: 층간/계단 하향 전이는 이번 결과로 검증하지 않음.
+기준 실행은 초기 화원만 켠 대조군. 기존 반복 전이 방식의 동일 결과/속도 비교가 아니므로 가속배수로 해석하지 않음.
+타깃600℃+경로 지연은 명시적 전이 가정. 실제 FO/FGI 발생 시각 또는 확률 예측 아님.
+순정 엔진만 사용: 프로젝트 bulk·혼합물 추가연소 OFF. 관련 확장 진단을 0 또는 검증 완료로 꾸며 넣지 않음.
+센서 국부 가스는 플룸 가우시안 꼬리를 포함할 수 있음. 셀별 sensor_tracking.json을 별도로 저장.
+dt 통계는 case.status를 실제 시간 1초마다 읽은 관측 표본이며 모든 솔버 단계의 최솟값/중앙값이 아님.
+닫힌 일반문 600초 관통, 복도 거리/0.5m/s, 단일 최단 경로, 외기 우선 공급 상한 등은 사용자 조절 가능한 가정.
+엔진 SHA256: 317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9
+
+세부 근거: simulation/results/room_rule_r6a_20261025/C/의 rule_manifest.json, comparison.json, 각 실행 analysis.json.

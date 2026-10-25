@@ -1,0 +1,1130 @@
+실감 표현 수정 2026-10-26 / 사용자: 예전과 다르다는 지적
+- lite_viewer 기본 연기 불투명도40→100%. legacy_real_bridge displaySmokeDensity(od,legacyTexture)로 간략모드의 양수 표시농도만 최소1로렌더링(계산OD아님); 0은0유지, 기존정밀모드변경없음. 기존회색32step볼륨셰이더·움직이는질감사용, 색은외곽선만. 실감보기버튼헤더로복원/접어도항상보임. 작은화염·실경계마스크유지.
+- 계산결과/연소·전이시각/열·산소·임계/MC시계열무수정,새시뮬없음. 화면에농도·불투명도표시용임을명시. 같은S06 1930초확인/브라우저오류없음/JS문법+0연기보존검사통과. real-view-restored.png캡처.
+
+최신 2026-10-26 / 문분출 기본ON·색규칙3D·R2 MC10 완료 / 요청5단계까지 후정지
+- B3재실행없음: 저장최고205.583kW vs요청1907kW=10.78%. 간략최고수신R3이며R2=0이라동일실비교아님. 저장native B3T4 DJET2/3=175.999/150.152kW.
+- 4단계: simulation/results/lite_v8_stage4_R2_20261026, 승인R2입력3600초/BDF25.991초. R2내부3셀만연소. 3D20분캡처PNG,보고 specs/간략엔진-v8-색규칙3D-20261026.txt. 28원래공간/38셀/균등표시기호219개.
+- 5단계: simulation/results/lite_v8_mc_R2_10_20261026. seed20261025/필수2+무작위8/직렬 . 10개3600초완주/BDF10/Radau0/시간초과0. 배치벽시계2173.093초(36분13초),적분31.537~968.132초,표본예산1200초.
+- 연소실수S00~09=2,1,2,2,3,2,6,5,5,5. 연기위험2단계실수=2,0,3,2,1,1,2,0,3,1. 무작위8: FO6/8,FGI0/8,백드래프트7/8,롤오버1/8,피난한계8/8 . 실제발생확률아님,20표본관문을통과했다고하지않음.
+- 기본3D=S06(연소→연기위험→빠른FO선택). R2,R1,R6,R9,R10,R23실제HRR>0,1930초6실동시양수. 모든10표본+4단계기준사례선택가능. 승인용도명우선표시(예R2공장)/OCR원본보존.
+- 에너지출력잔차최대.011977%(허용.1%내),질량최대1.591731%(보고용). O2모두양수,기존연료음수오차최저-5.844e-5 . 출력구적진단이지내부단계완전보존증명아님.
+- 중요후처리수정: 초기summarize의untenable scores.all_met KeyError를record.all_met fallback으로수정. 저장BDF결과·state에서재집계/장부/재생복원,시뮬재실행0. 원래오류는summary-before-postprocess-fix.json/aggregate-before...보존,정식summary.json/summaries.json/aggregate.json/progress.json은복원완료상태. tools/recover_lite_mc_v8_r2.py / publish_lite_mc_v8_r2.py 실행완료.
+- UI lite_viewer.js /cfbt/lite/active.json/catalog.json/result/<id>. config/lite-viewer.json activeS06,screening-selection mc_roomR2. 서버PID5152 포트8780,tab5현재URL. ?legacy=1종전정밀경로보존. 전체연기·실감·연료기호토글,실클릭수치,접이식MC표,층전체카메라맞춤.
+- 기본ON adapter.py,room_oxygen실험은기본OFF보호. visualization.py CADclip·조건색·회색상층범위패키지. OD.24/작은화염/연료큐브표시가정명시 . MC중엔진pySHA불변,정밀·솔버·출력10s불변 . 21검사통과 . 
+- 보고 specs/간략엔진-v8-R2-MC10-20261026.txt . S06-32m10s-scene.png 및MC-summary.png 캡처 . 요청범위종료,추가표본·튜닝·재실행없이정지 . 
+
+최신 2026-10-26 / N=8 추가6회 및 v8 8.1절3단계 문분출 검증 완료 / 보고 후 정지
+- 사용자확정: 층별O2유지,받는실하층소비. 실단위산소재고OFF. 이전AGENTS폐기유지.
+- N8: 기존N5 10회SHA확인후재사용, R2/R9/R8 두상태6회직렬추가112.093s. 합16회완주. ②R3,R2,R1,R9,R8,R23,R0,R4. R2①6→②2/R1①1→②3. 모두개방선택. 문분출OFF 기준선. 결과 lite_v8_approved_n8_20261025/보고 specs/간략엔진-v8-N8추가6회-20261025.txt.
+- door_jet.py/react + core/adapter/numerics/runner/result_adapter: 문으로이미운반된상층연료에서반응; 수신하층O2/10s 예산에서플룸인출예약후모든제트공유. 상층반응은유출연료예약. 동일xi의연료/O2/열,열수신상층1회. 순정분출entrainment동일식아님/외부·가상셀제외. 기본OFF보존;검증만ON. 고체HRR/상층반응/문분출별도기록. 정밀·솔버·출력10s불변.
+- tools/run_lite_door_jet.py: B3단독1200s1회(전체1.956s,jet0),B3전이1회(5.258s,수신R3최대205.583kW),3F역사적표준3600s1회(전체55.515s/적분48.977s) 직렬완료. 새CFAST/MC/재시도없음. 원래CFAST비교입력으로,승인용도표N8입력과구분.
+- 3F8실연소: R2→R1/R6/R7/R8/R9/R11/R23(첫실제HRR2110s). CFAST표준1⊆간략8⊆공격조건통과9,공통구간2850s/순서합격. 공격native부분종료2850s한계. R17조건통과지만고체미연소.
+- 전v5동일manifest와연소집합/10초출력첫HRR같음. FO1/FGI1/BD3/rollover0 전후동일. 문분출누적598.802MJ/상층추가0. 최대온도차R4 3600s94.787→277.707C(고체전이아님). 전51.043s는프로파일포함이라속도개선주장안함.
+- 에너지잔차3F.00270138% 합격/질량.0975965%보고만. 기존연료질량분율음수약-6.115e-5남음(전후유사)/내부단계완전보존증명아님. 22검사통과. 실행중liteSHA불변.
+- r5B3 DJET참조정정: T4 176/150kW,T0최종138/43.6kW,단독0/0. 명세1907/443값은해당저장B3와불일치. native-reference.json 경로SHA보존.
+- 결과 simulation/results/lite_v8_door_jet_20261026, 비교report_lite_door_jet.py, 보고 specs/간략엔진-v8-문분출연소-검증보고-20261026.txt. 문분출옵션검증합격하지만기본OFF/기존선별결과보존. 다음단계색표시·MC미실행. 추가실행전새사용자지시.
+- 뷰어순위설정top_n8/result_path N8로갱신,기존mc_roomR1보존. 서비스payload확인. 운영3D화재재생교체·서버재시작없음.
+
+최신 2026-10-25 / v8 승인 용도표 적용 8.1절2단계 완료 / 직렬10회후정지
+- 사용자 승인표를 approved_uses_v8.json으로기록(해당building SHA한정). fire_load_table.json toilet40MJ/m²·250kW/m² 가정추가. 기타기존mean/rhrf, R2만1800사용자지정(이전600×3,실측아님). 최초alpha.047/coverage.5 유지.
+- 화장실R11/R16/R17/R24 후보·대기화원제외/유동온도노드유지. R14/R28 <1m²·개구부0검증후후보·그래프·계산실제외. 적격17실,원래계산28실/셀38존. 제외사유score/input에기록.
+- 외기없을때Q상한750*내부maxA√H,있으면1500*외기sumA√H. 원래도면gross상한,동일화원두상태. §2다른실item_peak는유지하되load/HRRPUA/coverage승인표반영. 원본/정밀/열·산소코드무수정.
+- ① R1(4.463725)1,R3(3.786675)2,R0(3.710068)3,R4(3.359988)4,R23(2.953950)5. R2(2.903281)6으로②미실행. R2Qorigin40634.225kW/1800MJm2;R1Q76071.033/600MJm2.
+- ②10회3600초전부완주190.617초, BDF10/Radau0. 순위R3,R1,R23,R0,R4. 모두개방상태선택. 연소2/1/1/1/1,위험전부0,주의11/15/13/11/11. R0최고546.858>R4최고499.964로후순위분리.
+- R3→R4 추가전이: 조건1588.037,공급1648.037s. R3최고1007.770C/FO공통조건1590s. 화장실전이없음. R2시뮬안전판정아님.
+- screening_v8_approved.py / run_lite_screening_v8_approved.py로구버전보존. 시험16건통과, 실행중SHA및이전v8정밀·물리·원본입력불변검증. 에너지장부최대.002685%,질량.254430%(10초출력진단).
+- 결과 simulation/results/lite_v8_approved_screening_20261025. 보고 specs/간략엔진-v8-승인용도표·상위5비교-20261025.txt. 서비스approved버전/서버PID24936 동일기존재생인자로재시작,API후보17·10완주확인. 기존3D화재재생교체없음.
+- 여기서정지. MC/문분출/색개편/추가R2계산/추가최적화없음. 후속사용자지시대기.
+
+최신 2026-10-25 / v8 8.1절2단계 완료 / N5×극단2상태 직렬10회 후 정지
+- screening_v8.py: 최초 화원만 연료식 min(.5*A*현재HRRPUA400, 1*1500*외기gross합A√H), alpha.047, 현재연료예산 유지. 입력peak 미사용. §2 타실대기item_peak 유지, 최초실형제셀은새공급면적몫. 정밀/열/산소수식 미수정.
+- ① R1 4.464662(1), R0 3.886628(2), R3 3.607609(3), R4 3.537406(4), R23 3.055198(5). R2 2.980753(6) ->②미실행/안전판정아님. 가중치변경없음.
+- Qorigin kW: R1 76071.033, R2 65014.760, R0 13999.856, R3 3342.072, R4 7244.860, R23 3622.430. 외기없는유연료14실은식상0; 내부문fallback 임의추가안함/선택시명시오류. 후보상위5에는없음.
+- ②3600초10회전부완주178.192초, BDF10/Radau0,직렬. 새5키(연소,위험,주의,FO,화점최고T) 순위 R0,R1,R23,R4,R3;모두개방상태가나쁨.
+- R0→R4 전이(조건488.217,공급548.217s),연소2실/위험0/주의11/FO490s/화점1051.237C. 나머지각1실연소/위험0,주의15/13/11/9 순. R1①1위②2위.
+- 완료후 originmax가뷰어소수1자리였던것을저장room_summary원시진단으로후처리만정정,재적분없음/순위불변. auditjson/후처리hash저장. 실행중원본SHA불변,보호열코드현시점불변. 12검사통과.
+- 결과 simulation/results/lite_v8_screening_20261025. 전체30실Q및R1R2원값보고 specs/간략엔진-v8-연료기준화점·상위5비교-20261025.txt. 장부최대에너지.002849%,질량.555315%(10초출력진단/질량보고만).
+- service/viewer v8순위패널연결/서버PID26616 동일기존재생인자로재시작. API10완주확인. 기존화재재생교체없음. MC/문분출/색개편/추가최적화실행없음. 여기서정지.
+
+최신 2026-10-25 / v7 8.1절 3단계 완료 / N5×극단2상태 직렬10회 후 정지
+- v7 §1.1 구현: screening_v7.py/settings.json. 연료log10양수MJ, 환기peak/(1500grossΣA√H)3clip후minmax,확정문차단2-hop,인접0/1직접,1-(확정+.5추정)/문수직접. 가중치모두1. v6코드/완료결과보존.
+- ① R1 3.624696(1), R0 3.374018(2), R4 3.364485(3), R3 3.234924(4), R23 2.664463(5). R2 2.610260/6위 -> 상위5밖으로②미실행. 끼워맞추기/가중치수정없음.
+- R1/R2 원값: 에너지1161189.576/585132.840MJ,log6.064903/5.767254,peak둘50MW,환기비.480102/.256073,연결686.71434/1242.29964㎡,인접1/0,가중방화비0/.222222.
+- ②3600s×10직렬모두완주/총183.024s, fallback0. 모두원래1실연소/연기3요인위험0/FO복합없음 -> 5실공동1위. R1폐쇄내부3이벤트/4셀실제연소는같은1실. 최고상층전체535.91C(R4개방),600C미달. R2안전판정아님/미평가.
+- 개방:확정6닫힘/추정4+일반13열림/창43유효.5/통로3열림. 폐쇄:모든문창닫힘/통로항상열림. 새창파괴/문분출/임계/산소/벽변경없음. 기존자기실HRR곡선보존,최초실셀배분유지.
+- 현재공유r8.prepare소스에는열린방화문flag제거/간선허용이이미있음. 지난인계의열린방화문일괄차단설명과불일치. 이번그파일미수정/SHA보존. 추정4개열림간선입력검증통과.
+- 결과 simulation/results/lite_v7_screening_20261025 (score/comparison/cases/input/BDF/result/state/manifest/diagnostic). 보고 specs/간략엔진-v7-상위5·극단2상태-비교보고-20261025.txt. 전후입력소스SHA불변. v7선별검사8건통과/서비스조회검증. 열·산소물리코드미수정.
+- UI screening.js/service를v7 2N방식/나쁜상태/공동순위로갱신. 기존3D화재재생교체없음. 서버동일인자로재시작,추가계산없음. v6결과를v7로재표시하지않는revision가드.
+- 여기서정지. MC/문분출연소/위험색개편/임계값튜닝/추가R2계산/추가최적화 금지. 사용자후속지시대기.
+
+최신 2026-10-25 / v7 8.1절 2단계 방화문 재분류만 완료 / 보고 후 정지
+- 현행 specs/Claude명세-확정상태-v7-20261025.md 18611B. 이번 범위 5절 면적<=80 AND (core_kind OR 이름 선두 코어토큰)만. 점수/그래프/물리수식 미수정.
+- door_class_rules.json / door_classification.py 변경. 큰 실은 core_kind가 있어도 제외. 선두키워드만, 후방OCR무시. 기존 자동fire_door가 재분류 때 도면명시로 승격되는 문제도 방지. 사용자정정 우선. 검사11건 통과.
+- 문23개: 전 확정18+추정1+일반4 -> 확정6+추정4+일반13. R2연결9개 확정1(D3/R12계단)+추정2(W26TPS,W27EPS)+일반6(D7,D8,D10,D12,D13,D14).
+- R4 실제82.90207㎡라80초과: 규칙2제외. 명세예상R4유지와다르지만수치조건대로적용. D0은반대측R15코어로확정유지. R2는325.0738㎡.
+- 결과 simulation/results/lite_v7_door_reclassification_20261025: before/after,classified-source,설정이력,보존SHA. 보고 specs/간략엔진-v7-방화문재분류-문별보고-20261025.txt. 원본입력/명세/정밀소스/v6결과JSON66파일불변.
+- 기존3D서버는코드캐시갱신위해동일인자로재시작. 기존화재재생/저장v6순위표보존. 이번에는문분류API만확인,①②실행없음.
+- 열린방화문간선 변경은 아직미적용(면적/토큰재분류와별개),정밀r8동결. 다음단계v7점수/극단2상태전에확인필요.
+- ①v7점수,②10회,MC,문분출연소,색표시,추가속도작업 진행금지. 사용자후속지시대기.
+
+최신 2026-10-25 / v6 8.1절 2단계 완료 / N=5 순차 비교 후 정지
+- 현행 specs/Claude명세-확정상태-v6-20261025.md. 사용자 확정 ②정렬을 1.1절에 기록: 연소실수↓, 연기위험실수↓, 최초FO↑. 동률 공동순위, 미완료 제외.
+- ①5지표 min-max/동일가중점수 구현 screening.py, 기본N3(1~적격전체). 3F30원래실 중23후보. 기존문분류 보존(재분류 후속단계).
+- ①상위5 R1(3.204942), R24(2.622006), R10(2.499989), R16(2.085899), R17(2.038265).
+- ②3600s×5 직렬 모두완주/총134.984s. 적분55.361/14.562/10.979/13.943/12.586s(위 순서). 산소재고OFF/누적E제거True(v6채택)/추가속도작업없음.
+- 모두 실제연소 원래1실, 연기3요인위험0실, 공통FO조건없음 -> ②공동1위. R1내부4셀연소/추가3이벤트는같은실로합산. 최고상층318.63/502.46/202.17/458.06/359.52C.
+- 대표개폐: 방화문19닫힘/일반문4열림/창43닫힘/영구통로3열림. 확률>=.5디지털대표화일뿐 MC최악/수학적기대값아님. 전이600C미달+방화간선제외. 기존OCR방화문과분류/화장실연료가정한계. 임계값튜닝없음.
+- 결과 simulation/results/lite_v6_screening_20261025. 보고 specs/간략엔진-v6-후보점수·상위5비교-20261025.txt. 진단json/각입력·manifest·시계열·장부저장. 40검사통과,물리코드실행중SHA불변.
+- UI screening.js / service: N기본3(현재사용자시험선택5저장), ①②표,상위N색상,다음MC화점선택. 실제MC안돌림. 3D재생기존유지. 서버8780PID25384(기존sameproject/result),새순위패널로만연결.
+- MC,문분출,문재분류,정밀r8수정,추가최적화/추가실행하지말것. 2단계보고후정지.
+
+최신 2026-10-25 / v5 §3.0a-3 1회 완료 / 속도개선·엄격동일성불합격·정지
+- 현행 specs/Claude명세-확정상태-v5-20261025.md(16101B). 누적E제거+국소희소패턴만, remove_cumulative_state=True 실험옵션. 산소재고OFF, 기본경로보존(옵션기본OFF).
+- 3F3600s 직렬1회51.043s(계측포함), v4동일계측169.976s 대비3.33배. 상태441→440, 열묶음441→107, RHS151209→43244, Jac당RHS452.13→113.06, Jac325→344/시간163.639→44.614s. 스텝1225→1219.
+- 8연소실/첫HRR출력시각동일, 내부이벤트최대3.20953s차. 상태최대상대차20.1746>1e-6; 상층최대차51.4666C(R11,2240s),하층54.3399C(R1_C7,2440s). 엄격동일성실패. 기준완화/재실행없음.
+- 36검사통과. 저장기존3F361상태의동일활성이력/RHS에서E제외물리미분완전동일. 시간적분결과동일은아님. 새물리식을추가하지않음.
+- E는출력RHS Qp/Q 사다리꼴누적후처리; 적분제어에는안씀. 벽offset정정. 기존legacy에너지감쇠/산소재고옵션보존. 운영3D/MC미채택.
+- 결과 simulation/results/lite_v5_sparse_20261025. 보고 specs/간략엔진-v5-누적상태제거·희소패턴-시험결과-20261025.txt. 추가최적화/계산금지,보고후정지.
+
+최신 2026-10-25 / v4 §3.0a 프로파일 1회 완료 / 보고 후 정지
+- 현행 specs/Claude명세-확정상태-v4-20261025.md. 산소 재고 OFF, 기존 층별 산소 유지. 이번 범위 프로파일만, 후속 최적화 금지.
+- 3F3600초 1회 직렬/BDF/상태441. 계측 포함169.976s. 저장L1e151.394s와 manifest/출력상태배열/이벤트시각 완전 동일. 실제8실, R17미연소. 감시75파일SHA불변.
+- RHS151209회/평균1.0914ms, 실제nfev3943과구분. 수치Jac325회(초기62+내부263), Jac시간163.639s=96.27%, 내부RHS146941회/160.278s. LU956회/.678s.
+- 이벤트재시작7/입력절점54/BDF초기화62(28.956s). 초기화를제외한Jac135.057s. 정적jac_sparsity441열그룹=441상태, E행/열전체True 때문에열묶음효과없음. 희소패턴/해석Jac는검토후보만,미수정.
+- 결과 simulation/results/lite_v4_profile_20261025. 보고 specs/간략엔진-v4-3.0a-프로파일1회-20261025.txt. 재실행/최적화/MC/3D/문분출 없음. 정지유지.
+- v4 L3상한이actualHRR집합에서조건통과이벤트집합으로변경됨; 이전산소재고시험은당시기준불합격이력. 이번에재집계안함.
+
+최신 명세 지정: specs/Claude명세-확정상태-v3-20261025.md만 현행 기준으로 사용. 구 확정상태/L1 문서는 현행 지시로 사용하지 말 것. v3 14376바이트/59행3.0 확인. 완료된 1단계 시작 명세와 SHA256 완전 동일, 추가 계산 불필요. L3불합격 보고 후 정지 유지. 검증기록: simulation/results/lite_room_oxygen_stage1_20261025/v3-spec-verification.json
+
+최신 2026-10-25 / 확정명세 §3.0 간략 산소 / §8.1 1단계 완료·L3 불합격·정지
+- 사용자 요청: 1단계만, 병렬 금지. B1/B2/B3/3F 각1회 직렬 완료. 다음 단계 시작하지 말 것.
+- oxygen_inventory_mode=True 실험 옵션: 셀당 mO2 1개, τ10s 선형 상한, LOL OFF. 내부 유입은 donor 산소, 외기만 .23. 기존 상층 반응은 공유 산소 잔여 예산. 기존 모드 보존/새 모드 운영 미채택.
+- B1 1.555s 추가전이0; B2 1.650s 추가전이0; B3 3.659s R2 270/R3 370초, 실제연소930/830초. 3F3600초 완주139.074s/9실.
+- 이전 L1e 151.394s/8실 대비 R17추가(928.859kW/1000s), 다른실2110→2600초. 전체manifest동일. native공격 공통2850초 집합상한위반으로L3불합격,순서통과. 임계값튜닝/재계산없음.
+- 34검사통과. 에너지출력잔차4건<=.1%, 산소10초진단잔차 B3 1.157%/3F .1165%; 수락스텝보존인증아님. 원본/정밀/공통조건표63파일 작업전후불변.
+- 실 산소 표시 mO2/mroom은질량비대용값,vol%아님. 조건표의상하층키는같은지표별칭. 기존threshold유지한근사한계명시.
+- 결과 simulation/results/lite_room_oxygen_stage1_20261025. 보고 specs/간략산소-3.0-1단계-시험결과-20261025.txt.
+- 새모드 MC의 condition_summary 폐쇄위험 상태offset은아직미연결; MC/3D/문분출/방화문후속단계없음. 정지.
+
+최신 2026-10-25 / 간략 L1e §1.5 완료 / MC20 완료16·미완료4·수치관문실패
+- 사용자 최신24899바이트 로컬명세 §1.5.1~1.5.7 및 FO/FGI 추가 정의 적용. 순정 엔진·r8 전이·원본 fire_zone 불변. 공통 conditions.py 표시 점수 변경은 사용자 명시 승인.
+- softplus 폭10atol, built-in BDF, singular만Radau1회. τ20s 상층 재고 반응/주연소 산소예약/같은ξ 열·O2·연료 처리. 가스반응 근사는 순정 문분출 구현과 동등하지 않음.
+- 기존5singular 재현; 마지막RHS시도와직전완료구간 상태/개구부 저장. 수락스텝 최종상태라고 주장하지 말것. MC 1488.6s/4병렬, 실패4, fallback0. 자동추가시행없음.
+- 3F 원래문분류 입력 L3 통과:151.394s/8실, 순서동일. native공격 공통2850s만 비교. B3단독1.515s/903.636C. 두 검증사례 상층추가발열0이므로 반응효과로 BD과다판정이 해결됐다고 주장하지 말것.
+- MC 상층발열 양수 완료표본 0건. 상세 upper-reaction-summary.json. 실패표본 제외로 전체최악 보증불가.
+- 조건표 점수=min(T,F,O),3요인AND/기존context bool별도. FO Thomas내부표면적에서개방면적제외+실제고체/상층HRR+하층O2. FGI gas.hot_C+legacy온도의존LFL(혼합Hc unknown). 물리전이에는피드백없음.
+- 같은seed20261025, 자동방화문19/일반4(이전18/5발언정정). 규칙2=18,규칙3=1. ELEV홀 OCR오염과과분류주의. AUDIT_PASS3alwaysopen. r8는열린방화문도전이간선제거(유동은따름)한계보존.
+-3D 문분류/근거/정정목록과기호 연결. /cfbt/lite/doors 저장은 simulation/config/lite-door-overrides.json. 시뮬재생은기존enriched_floor60_v7, 새MC로교체안함. 서버PID25304/8780 유지.
+- tools/refresh_lite_l1e_scores.py로 저장상태만최신점수재집계. 상태파일SHA불변. result.json/summary/aggregate가최종점수, BDF내result는실행당시초안점수(physics동일). 원시시도보존.
+- 검증29건 통과, JS2파일구문검사통과. 보고 specs/간략엔진-L1e-조건점수·문분류·MC20-시험결과-20261025.txt. 결과 simulation/results/lite_l1e_20261025.
+- 다음은검토후결정. 표본확대/실패재실행/임계값튜닝/정밀모드수정 하지말것.
+
+최신 2026-10-25 / L1 1.4 탐색용채택·MC20표본 완료 / 14완료·6실패·진단통과3
+- 사용자specs/Claude지시-간략엔진L1-20261025.md 1.4절명시지시. 표준셀상층300C/실간600C/복사OFF 탐색용채택. 기존열모델4파일(core/adapter/shared_inputs/radiation) L1c해시동일. 원본/r8/native63파일불변. 수락스텝장부/새압력솔버/열모델수정없음.
+- 출력진단기준사용자변경: 질량0.5%/에너지0.1%. 기존L1c표준 .107620/.001646%로통과. 이것은10s출력진단이며수락스텝보존인증아님. L4-output-gate.json에기준변경기록.
+- simulation/pyrocast_lite/montecarlo.py 추가: 종류별Bernoulli pfire.2/door.5/window.3/fixed0, seedPCG64[20261025,index],18random+2mandatory=20. fixed_count옵션은종류별전체N목표반올림에서고정열림을빼고비복원추첨,불가능한고정충돌거부. 문0/1·창0/.5. 부모/공급은각조합r8prepare공유. 창파괴실행OFF/기존미래창cap가정유지.
+- MC결과 simulation/results/lite_l1d_20261025. tools/run_lite_l1d.py 4프로세스/표본600s예산/자동안전재시도0. 전체1385.260s(23:05),20시도모두종료(session84812 exit0),14완료/6실패(30%). 시간min90.715/median258.898/mean266.301/max600.531s; 병렬경합포함벽시계라기존단독118과직접비교금지.
+- 실패S00,S04,S10,S13,S15: Factor is exactly singular(Scipy sparseLU;수치Jac overflow경고관측). S07은600초예산,안전출력1250s까지부분. 실패를0위험/1시간완료로세지않음. 일부수치실패는state저장없고traceback만있음. 재시도·솔버튜닝없음.
+- 완료14중진단통과3=S06,S12,S18. 나머지11(S01,S02,S03,S05,S08,S09,S11,S14,S16,S17,S19) 출력진단기준초과. aggregate에raw완료집계와qualified3집계를분리. 표준한건L4합격을모든MC조합보증으로확장하지말것. 탐색용설정채택은유지하되파일럿실패많음명시.
+- 실제입력일반문23/개폐창43(외기37+내부6)/영구통로3. 명시방화문/고정창0. S00 all_fire_doors_open은해당요인변화없음,나머지조건추첨. S01 all_openings_closed는통로까지막는이상적폐쇄대조(추가가정),가상셀경계열림/기존실외누설유지. 분류불명창개폐창/문일반문가정. 고정state사용자옵션우선. seed및모든조합저장20유일.
+- 조건비율분모=완료random13(18중5실패),forced2제외. raw FO13/13,FGI8/13,BD13/13,untenable13/13. qualifiedrandom3은FO/BD/피난3/3,FGI0/3. 발생확률아님/출력진단실패포함raw잠정값. rollout/rollover는판정식없어미평가(None),0%아님.
+- raw최악 FO S05=1실/410s; FGI S17=7실/1050s; BD S17=16실/530s; 피난한계 S08=12실/160s. 이들모두출력진단불합격이므로검증된최악으로표시금지. qualified최악/개구부조합별도aggregate. 최대실제연소9실=S09(진단불합격).
+- boundary=원래실최고상층온도600±30C끝포함(셀최고따로). 완료random원래실-표본쌍1/390=.2564%,표본은1/13=7.6923%. S12에1실. 부분S07경계1은전체비율에서제외.
+- S01닫힘조건후처리: Yf>=legacyYf_backdraft.1/O2vol<legacyLOC.12/Tupper>=inputgas.hot_C300. 시간교집합없음. 기존BD조건1실460s(온도조건없는다른판정)과구분,개방안전보증아님. S01자체진단mass.578622> .5로불합격. 실제문열림/점화계산안함.
+- 보고 specs/간략엔진-L1d-채택·MC20표본-시험결과-20261025.txt, plot mc20-overview.png/pdf 확인. sample-summary.csv/opening-combinations.csv/room-boundaries.csv와samples/Sxx/sample,result,summary,state,manifest 저장. 17검사통과. report/plot tools는읽기전용,새적분없음. runner에고정편차문구+범위한계metadata추가;운영3D/API교체없음.
+- 다음은결과검토후결정. 20추가시행/실패자동재실행/진단기준완화/열모델수정 하지말것.
+
+이전 2026-10-25 / L1 1.3 셀트리거·복사전후 비교 완료 / 새L3통과·복사비채택·L4미확인
+- 사용자최신1.3절 명시승인, 순서①셀상층300C→3F표준1회②복사2항→단독B2B3→3F표준공격각1회③재정의관문. 모두완료. 결과 simulation/results/lite_l1c_20261025, 보고 specs/간략엔진-L1c-셀트리거·복사전후-시험결과-20261025.txt. 미종료계산없음.
+- adapter: 셀도parent상층온도-cell_temperature_C(표준300/공격250),실간600/500C. r8 resolve설정그대로,지연중복없음,판상태없음. 기존HRR>0셀트리거폐기. tests10통과.
+- radiation.py: CFAST radiation.f90:53,87-92 defabsup=.50/m는fgasabsorbOFF/CONSTANT일때만. 기본CALCULATED(input_namelist2652)는CO2/H2O/soot absorb계산. Lm3.6Vu/(2A+per*depth),sigma5.67e-8 prec19. 단순grey근사,순정RAD4재현아님.
+- FiniteWalls 기존hr에gas-wall복사이미있어 ON에서는그항제거후상층epsg epsw sigma(Tw4-Tu4)접촉면적항대체(중복방지),하층흡수OFF. 화원복사epsg몫상층/나머지벽. Tw는기존벽1노드대용. OFF는기존식. 열분배국부장부검사통과. radiation기본False유지.
+- ①복사전표준3600s완료118.152s,8원래실/15셀,60s지속8실. C1/C2첫실제510/570s,C1상층600통과2042.769s,다른실공급2102.769s/첫표본2110s. 기존8실집합동일.
+- ②단독B2/B3후보ON각1회(1.289/1.274s): HRR동일. B2최고569.891C vsOFF550.631/native641.378,초기최대과대71.65→98.15C악화. B3최고787.406 vsOFF903.795/native1136.394,후기RMS168.98→309.87C악화. radiation-decision.json 비채택. 임계값/계수튜닝없음. 그래프isolation-before-after.png/pdf생성·확인.
+- ③전후비교완성위해ON표준/공격시험각1회. 표준61.665s/1원래실/3셀,C1상층최고580C미달. 공격187.332s/10원래실/18셀,60s지속8실. 추가R17최장30s·peak886.53kW,R10_C0 10s·50.20kW. native공격8실과집합다름(공격은보고용). 다른실첫표본440s,R10 590s.
+- 새관문1.3.3은표준전후모두통과:2850s공통구간(native공격미완료),native표준{R2}⊆lite⊆native공격8실,동시군포함공통착화순서일치. 3600s실적별도,공격native미완료를1h완료로외삽금지. 기존1실=정답이라는해석없음.
+- L4 저장10s상태읽기진단(audit_lite_l1c.py)만: 누적질량잔차전.107620%/후.139855%,에너지전.001646%/후.014108%. 분모max(초기재고,누적총유입),P0/(RT)재고. 10s유출입적분오차/압력폐쇄식영향분리못함. 확정물리보존오차로단정금지,0.1%합격도불가. 수락스텝누적장부없어MC20표본미시행. 추가재계산없음.
+- core 진단에외부질량/엔탈피입출+열분해질량추가(물리계산불변). sourceguard63파일불변,r8/native변경0,새native실행0. 각3F manifestsettings/cells/parents/initial_source는해당r8표준공격과동일. 저장시작codehash유지;후반진단/metadata추가로현재hash다를수있음.
+- 유지: 셀상층트리거+복사OFF. 후보ON은실험보관. 운영3D교체없음. 다음은L4수락스텝장부와열모델차이별도검토;임의로MC/물리모델튜닝재개하지말것.
+
+이전 2026-10-25 / L1 1.2 입력 일치·단독 원인 격리·3F 완료 / L3 불일치 중단
+- 사용자1.2절 적용: Cd0.70, 덱LOL 질량분율 기본0.15~0.16 순정tanhsmooth 식. legacy 원본호환은 보존. 600C/지연/연료창/열모델 변경없음. r8/native/원본63파일 SHA 불변, 테스트9건 통과.
+- 결과 simulation/results/lite_l1b_20261025. 보고 specs/간략엔진-L1b-원인격리·3F비교-시험결과-20261025.txt. 실행 tools/run_lite_l1b.py, 보고/그림 tools/report_lite_l1b.py 및 plot_lite_l1b.py. 계산 모두 종료, 추가 실행하지 말 것.
+- B2/B3 단독1200s, 저장 r5 compare/*/T1/baseline_native와 물리덱행 동일/CSV해시 확인. native 새실행0. 실제HRR 차이<1e-8kW, 발열에너지차이 반올림오차, 산소제한발열감소 양쪽없음. 열전달/열배분 우선검토근거이나 복사35% 하나가 원인이라고 확정불가. 해당 모델수정은 승인후만.
+- B2 native최고641.378C/lite550.631C(-14.15%),적분1.240s. B3 1136.394/903.795C(-20.47%),1.329s. 초기300초에는lite가더높고 후기낮음. 내내과소라고말하지말것. 초기보고단위오류W→kW/mol_frac→vol%정정, 저장JSON/CSV만 다시읽었고 재계산없음. overlay PNG/PDF 저장·화면확인.
+- L3 표준3F3600s 1회완료: 전처리.084s/적분125.355s/후처리.633s. native저장558.235s 대비4.45배시간비지만 결과다름. 동일settings/cells/parents/initial_source manifest확인.
+- native원래R2 1실(3셀), lite R2,R1,R6,R7,R8,R9,R11,R23 8실(15셀). R17은이벤트있어도actualHRR0→연소제외. L3 집합/순서불일치→실패중단. L4잔차0.1% 미실시,MC/20표본/3D교체안함.
+- 차이: R2형제C1/C2 firstactual native390/595s,lite180/350s(판300C 대신HRR>0 트리거). lite부모C1상층1877.622s에600C통과,1937.622s공급,1940s첫HRR. native판589.773/상층600.042C,lite상층765.792C. 경계판정량+선행셀시각+열응답차이가겹침. 임계값조정금지,실험결과를탐색합격으로표시금지.
+
+이전 2026-10-25 / L1 1.1 공유입력·유한벽 반영 / L2 B1·B3 통과·B2 불합격 중단
+- 사용자 최신 specs/Claude지시-간략엔진L1-20261025.md 1.1절 적용. 보고 specs/간략엔진-L1a-공유입력·유한벽-시험결과-20261025.txt. 결과 simulation/results/lite_l1a_20261025. 이전 L1 결과 보존.
+- 최초 벽물성만 B3: kpc96000/eps.94, 다른값기존. R1상층737.543C(기존523.832),R2/R3실제300/410s,적분2.395s. native1034.995C보다28.7%낮아 사용자15%조건에따라 유한벽1노드전환. 외기이전어댑터도20C였음(0C아니었음).
+- shared_inputs.py: 생성된native덱 MATL/COMP/CHEM/INIT 파서(프로젝트부분집합), 실별천장/벽/바닥물성/두께,chi.35,Hc20MJ/kg,실내외20C공유. LEAK_AREA_RATIO는실→외기 벽/바닥누설(source initialization.f90)이며 문창누설아님. 문창임의누설제거,실별누설geometry면적복제. Cd.68 vsnative.7/LOL10~15vol선형 vs15~16mass tanh차이는지시대로유지·기록.
+- finite wall: 실당천장/벽/바닥각1노드,열용량rho cp d A,앞뒤반두께저항,뒤외기,직접화원복사분표면면적비분배(근사). BDF상태에3N추가,희소구조확장. 새압력솔버/스텝퍼없음. 원본호환Model은기존반무한식. 원본fire_zone.py·r8·CFAST 변경0(63파일해시검사).
+- L2재시험1200s: B1적분1.177s/R1 444.2C/추가없음 통과; B2 1.210s/R1 561.8C/추가없음 불합격; B3 2.769s/R1 849.8C/R2첫270s·930s지속/R3첫370s·830s지속 통과. 상층R2/R3=1077.5/1332.7C. 기준600C변경·추가튜닝없음.
+- B1~B3 새r8 생성case.in과기존r7 B저장case.in문자완전일치확인. 이전공급모드이름차이경고는이번사례최종덱에선해소(상한때문). native재실행0. reference모든실표 comparison.json. 표본간격native5s/lite10s로첫HRR시각격자구분.
+- 검사8건통과(벽노드장부포함). 전체질량에너지0.1% L4는미실시. L2B2실패로L3 3F·L4·MC·운영3D교체안함. native/간략물리동등성미보증. B3finite후에도R1약17.9%낮지만추가수정반복안함.
+- tools/run_lite_l1a.py는새결과폴더에계약+B1~B3실행,기존시도재실행거부. 추가물리실행은중단상태. mixed-Hc는legacyFGI조건혼합정의없어명시거부;가스재연소/롤오버/soot미평가그대로.
+
+최신 2026-10-25 / 간략 L1 구현 / L2 B2·B3 미전이로 중단
+- 사용자 L1 지시가 이전 간략 새 솔버 설계를 대체. fire_zone.py 지정 원본을 simulation/pyrocast_lite/core.py로 복사. 원본·r8·CFAST 변경 없음. source-guard/verification 해시 검사.
+- adapter.py: r8 prepare/resolve의 셀·부모·지연·공급곡선 공유. 판 상태 없이 실간 상층>기준 / 셀 부모 실제HRR>0. legacy pyro feedback OFF, 창 파괴 OFF, floor-only. runner.py: SciPy BDF 이벤트/입력절점에서 현재 상태 이어 적분, 0초 재실행0, 10초 출력. 원본 조건표 보존, rollover/soot/가스재연소 원본에 없음→미평가.
+- 보고서 specs/간략엔진-L1-구현시험결과-20261025.txt. 결과 simulation/results/lite_l1_20261025. 실행 tools/run_lite_l1.py. SciPy1.18.1/OpenCV4.14 프로젝트 simulation/deps에 설치(기존 정밀 requirements 변경 없음). PYTHONPATH simulation/deps; 기존 bundled Python3.12 사용.
+- L0 원본 vs 호환 복사 전체 상태 배열동일(0차이), 원본3.371초/복사3.354초. OFF5.433초이며 미연 공급 달라짐. T_pyro는 다른 실 착화가 아니라 최초 화원 열분해 피드백임. 과거5~12초를 재현했다고 주장하지 않음.
+- L1 B1/B2/B3/3F manifest·부모·곡선 일치. L2 1200초 B1 0.911초/R1상층331.7C/미전이 통과; B2 .867초/406.4C 미전이 불합격; B3 .999초/523.8C 미전이 불합격. B1~B3 모두 원래R1만 실제연소. 임계값/연료/창 조절·재시도없음. L3 3F, L4 잔차, MC20표본·구현, 운영3D교체 하지않음.
+- 원인 후보: 원본 kpc=1.35e6 유지 vs CFAST 입력k*rho*cp=96000(20mm유한벽). 방사분율.30 vs .35, 유동/플룸/벽 모델차이. 센서만 치환해도 동일온도 안됨. 벽값을 맞춰 재계산한 것은 아님. 다음에는 원본벽값고정 vs r8재료대응 여부 결정 필요. 600C를 내려 통과시키지말것.
+- 이벤트 연속/지연중복/비가역/HRR0/범위/예산·비율 검사6건통과. 수지0.1% 미평가이므로 보존검증완료라고 말하지말것. 코드에 source bound clipping/P0 density 남음. 현재실험결과를 탐색검증완료로 출시하지말것.
+- B1~3 native 참고는 기존 r7 room_involvement(이번r8 item_peak와 대기공급다름). 첫 추가착화 전 온도차이 참고만; 전체속도비/동등정확도 근거아님. r8정밀결과/운영3D 아래기록그대로. 추가물리실행 중단상태.
+
+최신 2026-10-25 / 간략 엔진 r1 Claude 검토안 준비 / 구현 전·재계산 없음
+- 사용자 지시: 정밀 r8은 더 수정하지 않고, 같은 전이 규칙·사용자 설정을 쓰는 간략 엔진 설계부터 Claude 검토용으로 준비.
+- 설계 specs/간략엔진-r1-공통전이·계산축약-Claude검토-20261025.txt. 검토 묶음 reviews/간략엔진-r1-공통전이·계산축약-Claude검토-20261025/ 및 동명 ZIP. 검토요청.txt를 붙여넣고 ZIP 첨부. 46개 파일, 소스/근거 41개 사본, SHA 및 ZIP 검사 완료.
+- 권고 초안: 별도 2층 구역 네트워크, 준정상 압력·보존적 반암시적 상태 갱신, 소수 노드 벽체·PC/FC 센서. r8 설정/부모/지연/공급/셀 분할 공유. 평균온도로 판 트리거 대체 금지. 산소·미연 가스·화학에너지 장부 유지. 순정 개구부 재연소를 통째로 삭제하지 않음.
+- 미확정 핵심은 압력 폐쇄식·혼합 제한 반응·국부 판 노출. 이번에 구현/속도 측정하지 않았음. 1초 단계·검증 허용치도 검토 제안이며 확정값 아님. NIST 검증 엔진으로 표현 금지.
+- MC 고정 개수(사용자 원래 70%=7/10)와 종류별 독립 확률 구분. 중간 개방 개입 결과는 미계산. 점수/고립의 미구현 진단을 안전/0으로 처리하지 않음.
+- 정밀 코드/원본 엔진/운영 3D 결과 불변. 새 시뮬레이션 없음. 기존 표준 3600초 완료·공격 2850초 안전 부분 결과는 아래 r8 기록 그대로. 사용자/Claude 검토 후 별도 간략 구현 단계로 이어갈 것.
+
+최신 2026-10-25 / r8 동결·사용자 설정 구현 / 표준 완료·공격 예산 중단 / 두 실행 완주 기준 불합격
+- 사용자 specs/Claude지시-실단위규칙r8-동결-20261025.md 적용. 정밀 구조 r7 동결. 엔진·솔버·센서·경로 정밀화 없음. 기본 item_peak, room_involvement 선택(k 기본0.7); 8개 사용자 변수 범위, 3프리셋+개별값, 기본값 여부/출처 저장. 범위는 프로젝트 가정·T4b 판 기준이며 NIST 검증 기준 아님. 열린 방화문은 초기 개방 시나리오, 닫힌 방화문 차단.
+- 보고서 specs/실단위규칙-r8-동결-구현시험결과-20261025.txt. 결과 simulation/results/room_rule_r8_20261025/{comparison.json,final-summary.json,code-verification.json,http-validation.json}. tools/report_room_rule_r8.py는 원시 출력 읽기/보고만 하며 재계산하지 않음.
+- 같은 원3F 입력(30실→40계산구획), 3600초/5초출력. baseline 최초 화원만 등록해 새로1회34.890초 완주. 두 프리셋의 동일 baseline 공유. 캐시 room_rule_r8_baselines/54e21b139868fb92c5337685. 덱·엔진·기간·출력해시 일치시 재사용. mock 실행차단 상태에서도 캐시 읽기 검증.
+- 표준/공격 동시에 각각1회 실행(session21640 정상종료). 회차당1800초, stall_timeout_s=0, 자동재시도없음. 전체묶음 벽시계1840.157초. 순정 SHA317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9 불변.
+- 표준 item_peak: native558.235초(9분18초),3600초완료,9097단계. 실제 연소는 원래R2 1실/3셀, 처음발열C0=5초,C1=390초,C2=595초. r7 item_peak와 case.in 동일 및 compartments/devices/vents 출력 숫자 배열 모두동일. 엔진로그 단계수/실시간은다름.
+- 공격 item_peak:1800.344초예산중단,마지막native2860초(47:40),안전출력2850초(47:30). actual>0 및60초지속8원래실: R2,R1,R6,R7,R8,R9,R11,R23. R2형제280/385초; 실간첫발열960초, R1내부C4=1075초. 외부실2세대전이는없음. 원래실세대표 generation-table.json. 전체1시간완료나16실달성으로표시금지.
+- 공격 상태표본361개: 양수dt min0.001011/median0.072345초,최종표본24392단계/dt0.005331. 전체솔버통계가아님. timeout뒤재실행/임계값조절없음. 비교전체범위는null; 부분실적8실을1시간범위로합치지않음. 미완료와미착화구분.
+- UI simulation/viewer/frozen_rule_controls.js: r8 별도검토패널,8값범위·프리셋·공급·선택병렬비교·적용값기본여부·진행상태·부분결과. 기존3D 재생파일 자동교체안함. r8 운영결과교체는 사용자승인후. 원래가스/반복설정은r8미적용 명시. 운영재생은 mixture_r2_20261022/enriched_floor60_v7/playback.json 그대로.
+- 서버 tools/serve_cfbt_building.py: /cfbt/r8/schema,review,run. 기본1회/옵션공격1회,검토결과만저장,state.latest 바꾸지않음. 같은요청이미시도면재실행안하고검토참조. 서버8780 session54332(상향권한localhost,기존project인수유지). 브라우저4 새검증탭은정상,구3번탭은재시작중연결오류data페이지로남을수있음. 정상링크 http://127.0.0.1:8780/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html .
+- 150 Python검사통과;최근runner3검사 재통과. JS구문통과. HTTP24개범위/비수치잘못된요청모두400,계산시작0. 입력단계56오류사례검사. 표준·공격프리셋 전환,room_involvement k0.7/item_peak k1 표시 브라우저확인. 기준재사용 해시검증. 전이수는합격기준아님.
+- 새 코어 rule_settings.py/room_rule_r8.py, 실행 tools/run_room_rule_r8.py. 기존r7 prepare는 선택coverage인자만추가, 기존기본동작보존. 조건표/순정산소열유동유지. 출력용 provenance comparison_shared 보정은 수치 입력/출력 변경 아님.
+- 다음은 별도 지시가 있어야 간략 엔진 작업. 정밀모드 추가개선/공격재시도/운영결과교체를 자동으로 하지 말 것.
+
+최신 2026-10-25 / r7 구현·B·C·item_peak 비교 완료 / C 성능기준 불합격
+- 보고서 specs/실단위규칙-r7-구현시험결과-20261025.txt. 최종요약 simulation/results/room_rule_r7_20261025/final_summary.json. 실행 모두종료(session23320 exit0). 기준·전실공급·item_peak 외 자동추가실행 없음. 운영3D계산결과 자동교체안함.
+- 사용자r7 구현: room_rule_r7.py/rule_graph_r7.py 별도시험모드. 기존 r6·순정엔진·조건표 유지. 초기실 셀면적분배, room_involvement/item_peak, 동일실셀300C/거리0.05m/s/천장-.2m판, 실간T4b600C, 복도즉시부모600C/화원없음, cone불가fallback. 16실은 합격조건 아님.
+- 50MW는 기존 scenario.json 최초peak 및 demonstration과 생성기 --primary-kw=50000(:21,:47)의 직접 입력. 합산오류 아님. 최초R2 3셀각1/3 예산, 시작셀16.667MW/195044.28MJ. 분할전50MW>시작셀수치상한31.274MW, 분할후16.667MW<상한. 초기curve시간/모양 유지, HRR/면적/에너지스케일. 방전체연료장부 보존(의도제외통과공간은omitted_fuel).
+- 중요: room_involvement의 R2형제2셀 각28.173MW로 총잠재73.013MW. item_peak는 각16.667MW로총50MW. 에너지보존과총peak보존은다름. 후속R1_C6/C7은6.25->약30MW, R11 1->2.748MW. 이 차이는규정r7적용결과이며 튜닝없음.
+- B 신규실행모두합격(기존결과재사용안함): B1 2.859s 전이없음; B2 7.250s 두실255/115초실제발열; B3 32.907s 두실60초이상발열. 1200s 고정입력.
+- C 같은원입력 mixture_r3f_cache_20261023/floor60/scenario.json(원30실->40셀,31화원),순정CFAST7.7.7 SHA317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9. 빈sidecar/&CFBT없음/5초출력/3600s.
+- baseline_native: 41.578초에3600s완주. 최초R2_C0만활성(형제도꺼짐),원래실1개. 기존r6a baseline943.828초와입력공급량달라동등정확도가속률로해석금지.
+- room_involvement: 1800.437초예산으로2030s에서중단. 안전prefix2020s분석,completed.json없음. 실제발열8원래실(R2,R1,R6,R7,R8,R9,R11,R23),연속60초7실(R11양수연속50초). 원래실2세대전이없음. R2_C1/C2 실제390/585s, R1_C4는C6에서980s에실제발열. 27948단계마지막관측,양수dt표본min.0002008/median.06164(전체단계통계아님).
+- item_peak: 554.453초(9분14초)에3600s완주,9075단계. 실제연소는R2원래실1곳내3셀뿐(C1 390s,C2 595s). 실간출발PC_R2_C1판최고589.773<600,상층최고600.042; 대용판과10.269C차이때문에조건불충족. C0/C2판은600초과하지만선택된C1경로조건을대체하지않음. 빠른대신다른실전이가없으므로최종표준승인근거없음.
+- 그래프남은문제: 정적Dijkstra 단일부모로R1_C2는같은실C4 대신외부R4(센서최고187.874C)를선택. 활성C4가있어도대안경로300C는평가안함. 셀간전이가모든이웃OR가아님. 임의로경로규칙/임계값바꾸지않았고보고서에한계명시. 복도직접부모센서미달로멈춘목적실은이실행에서없음(빈목록명시). 수직개구부없는입력이므로층간검증아님.
+- fallback R13/R19/R20은폐쇄하지않고far-corner고정높이. 센서sensor_quality/quality_label. playback.py/overlay.js에판정불확실전달/상세보기/상태표시지원추가. r7시험JSON을완전재생payload로새운영3D에연결한것은아님;기존운영결과그대로.
+- 실행기실수별도보존: 첫 room_involvement에legacy90초진행감시가남아676.469초/1020s에서조기종료. C/room_involvement_watchdog90_aborted 및discarded-attempt.json. 사용자에게명시했고입력동일확인후stall_timeout_s=0정정하여위1800초시험1회. 기준은재사용. 예산초과후재시도안함. 전체native사용시간(폐기시도/B포함)3115.953초. 성능표와폐기비용분리.
+- 140 Python검사통과(예산1800/stall0/자동재시도없음회귀포함),JS구문통과. 기존r6 B3건및C 덱재생성동일. 완료5건원시파일/엔진해시검증. code-verification.json. 공급표C/supply-comparison.json, 세대/센서/에너지감사각사례generation-table.json/sensor-audit.json/energy-audit.json. SHAFT는단일층으로HGT없는출력을구분해서감사.
+- 재계산불필요. tools/run_room_rule_r7.py는이미시도한폴더재실행거부. tools/report_room_rule_r7.py는읽기전용보고서재생성. 이번C불합격을완료/표준채택/16실목표달성으로표시하지말것.
+
+최신 2026-10-25 / r6a A·B 합격 / 문·가상경계 좌표 수정 / C 20분 예산 중단, 1시간 미완료
+- 이번 실행 종료. 최종요약 simulation/results/room_rule_r6a_20261025/final_summary.json, 보고서 specs/실단위규칙-r6a-좌표수정-ABC결과-20261025.txt. 사용자 지시의 C 실패 시 보고 기준에 따라 추가 계산·임계값 튜닝하지 않음.
+- 최종 C baseline_native:3600s 정상완료943.828초(15분44초),12428단계,초기 R2만 실제연소. scenario:1200.390초 벽시계예산 초과,마지막약3240s/15444단계,직전진행중(dt .242)이어서 무한정체로확정하지않음. 상태표본 양수dt min.000281/median.101; 전체단계통계아님.
+- 안전하게 완료된 출력격자3230s까지만 partial-analysis.json로 읽음. 원래실9개(R2,R1,R6,R7,R8,R9,R11,R17,R23) 실제발열>0 및60초이상 지속, >1kW관측도동일9. 초기포함9/현재입력30,16목표미검증·미달관측. 40셀/등록29화원을 연소실수로세지말것. C complete=False,완료캐시없음; 부분시계열을3600s로늘리거나운영화면에게시하지않음.
+- 전이정지근거: R1_C6/C7은실제로6.25MW씩발열하지만각센서최고299.60/307.51C라다음셀600C불충족. R11센서397.83,R17 413.26C. 비착화목적실의상위센서미달을분리기록. 사용자값낮추지않음.
+- B2/B3 첫판>600C출력표본의상층607.47~700.95C,해당위치국부가스=상층. C baseline 및부분scenario 첫판>600C인데상층<600C인표본없음. 그러나근사센서열지연/다른건물일반보증과구분. C baseline구형중단본과2500s까지compartment float64배열bytes동일검증.
+- rule_graph.point WALL 좌표는 opening_frame 절대 위치를 양측 공통 사용. b측 중심 근사 제거. 추가로 rule_cells 가상경계 좌표를 원래실 CAD 아핀변환 역변환으로 통일(기존 CAD 문과 계산용 원점 혼합 오류). 133 Python 검사 통과(문 소유방향 반전·닫힘·방화문·상향수직·계산용원점이동시CAD거리불변 포함).
+- A: 천장 아래0.5m(B1 바닥위2.2m), 상층487.748/판493.253C 차5.504C 합격. 최초0~25s표본하층,25~30s상층편입. 600C 미도달이라 A만으로 600C 부근 보증 안됨.
+- B1/B2/B3 모두합격. 수정된 room_rule_r6.prepare 생성 덱은 완료 B 측정 덱과 바이트 동일, 엔진·CSV 해시 검증 후 재사용. B1 미전이, B2 R2/R3 실제HRR양수255/115s, B3 825/690s. 원 측정2.922/6.109/31.094초.
+- C 도구 tools/run_room_rule_r6a_floor.py. simulation/results/room_rule_r6a_20261025/C. 기존 mixture_r3f_cache_20261023/floor60/scenario.json 사용. 원30실->40셀,29화원. 최초curve/체적/분할전후연료보존검사. 순정baseline SHA317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9, &CFBT없음,빈sidecar,3600s,출력5s. 기준1회+규칙1회 순차. 기존층예산 실행당1200초 유지. 자동재시도없음. 수정 후 session98084는종료됨. 추가C실행도구는기존실행존재시거부하므로자동삭제·우회하지말것.
+- 첫 C 기준 실행은 좌표계 혼합 발견으로576초 사용/약2520초 진행에서 명시중단. C_coordinate_mismatch_aborted에 원본 보존, aborted.json과 최종manifest.discarded_attempt에 기록. 최신 C는 거리정정입력(예:R11 구간407->94초), 물리임계값조절없음. 모든 내부 WALL 개구부가CAD좌표 사용 확인. 폐기시도 시간을 최종성능측정과 구분하되 작업총비용에 포함할 것.
+- C 센서불가 R13/R19/R20은 출발점제외(수신화원은가능). C 입력에 FLOOR/수직개구부없음: 층간 전이실험으로 해석금지. 계단하향가정은 이번 범위 미검증. 실제 연소실 집계는 원래실 ID로, 셀 수 아님.
+- C native 완료 후 tools/report_room_rule_r6a.py로 읽기전용 보고서 생성. 3D는 기존 저장결과 유지(8780, server session12239); 실험결과 미게시. 현재 C 완료 여부는 C/comparison.json 및 execution-state.json을 먼저 확인할 것.
+
+이전 2026-10-25 / r6 A 센서 시험 실패 / 지시서대로 B·C 및 범용 그래프 구현 중단
+- 사용자 r6 대화원문 적용(claude/실제폴더없음). A가실패하면보고후정지 명시. 승인없이C가능은B합격조건부이며이번미충족.
+- 추가파일 rule_sensor.py는방사율.05/강판.0001m/천장-.2m/벽각.3m/화원에서가장먼모서리(동률좌표순)/가까운벽수평법선(동률벽고정순) 센서생성. 운영전이모드연결안함. tools/test_room_rule_r6.py는 A만1회, --analyze-only는원시자료재분석. 기존parent_rule/room_rule/native/엔진/solver변경없음.
+- B1고정SHA불변,순정baseline엔진SHA317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9. 초기화원1개만,센서2개측정전용(착화DEVC참조없음),&CFBT없는case.in/빈case.cfbt,1200s/5s,maxdt1그대로. native2.985s정상종료.
+- A결과:상층최고487.7483932C;기존판613.808414209C(600도970~975s);새T4b587.86556307C(600미도달). 최고차100.11716987>허용50으로실패. 상층/새판둘다600미도달이라도달시각차미정의(0아님). 같은시각최대온도차도100.117.
+- 핵심새사실:target.f90:329~335는get_gas_temp_and_velocity로대류국부온도결정;fire.f90:889~957은max(층온도,플룸,천장제트). 새판위치TRGGAST최고676.838C(기존위치는1013.308),상층487.748와다름. 새판최고시앞뒤대류각+.52061kW/m2,순복사-.55805/-.46060. 따라서r5차이를직접복사만으로확정하면안되고저방사율도상층평균센서가아님. 센서방향을돌려도뒷면실내열교환유지. 별도원인격리시험/센서스윕/임계값변경안함.
+- 입력두께/방사율소스확인 input_namelist438~445/772,initialization826~837;이값클램프없음+정상실행. 덱M2=thickness.0001/emissivity.05. 잔존material메타absorptivity/ignition_C는MATL/DEVC에안써짐(오해하지말것).
+- Dijkstra/닫힌문600/통과공간/수직/셀분할/프리셋변수/B전이시험/C3F는 A실패로미구현·미실행. 운영3D와기존모드유지.
+- 센서2개unit검사/원본28·생성28경계검사통과. 코드검사합격과A물리목표실패구분. 실행세션남아있지않음.
+- 결과 simulation/results/room_rule_r6_20261025/A/{analysis.json,rule_manifest.json,case.in,case_devices.csv,...}, 상위verification.json. 보고서 specs/실단위규칙-r6-A센서시험-20261025.txt. 다음엔상층평균기준vs국부온도전이가정설계구분필요. 이번결과맞추려추가위치/방사율/기준조정하지말것.
+
+최신 2026-10-25 / r5 스윕·T4 비교 완료 / 합격 신규방식 없음 / 운영 적용·8실·3F 확대 보류
+- 사용자 r5 + B2 추가확정: R2만 착화하는 조합 우선, 없으면 9개 중 R2 착화가 가장 늦은 조합. 절대600초 기준 폐기. 9조합 모두1200초 완주했고 R2/R3 실제연소; B2=2000kW/큰창(R2 504.868,R3 582.740), B3=2000kW/닫힌창(R2 278.046,R3 351.314). B2/B3 fixtures 신규고정, B1 SHA1d462810e76070188aa2e1d72a30360d744e9168468d882dc51ce7aaf719a27a 불변. 모든T0 자기일관성False이므로 물리정답이아닌 참조값.
+- 0단계 radiation.f90/target.f90: 확인경로는 실내복사, 개구부간 복사교환없음. 이웃실 고온기체·native개구부연소는 존재. input_namelist/fire.f90: 다른실 타깃ID 참조가능; T4 실제실행에서도확인. 출처/해시 stage0-source-audit.json.
+- parent_rule.py/room_rule.py parent_r5: 첫개방문 BFS부모의 천장-.2m 아래향1mm강판600C, 지연/상승120/60/30 preset, FIRE는r4바닥/연료높이와외기우선상한. 원본/Fortran/solver/output5s변경없음. 초기곡선보존/기존모드보존. bulk/mixture/extraOFF. 동적내부문거부/닫힌문으로만이어진대기화원제외. 부모센서는그실이안타도고온유입으로작동가능,다중경로미반영을한계명시.
+- T4 nativeIGN=부모조건시각, 공급시작=IGN+지연, 실제HRR첫양수별도. 이벤트별surface/소스위치구분. T4 fo_transitions=[]/room_rule_transitions별도. 조건표/재생payload/overlay에 가정지연대기·부모조건·실제발열구분. 표준승인전experimental UI여전히비활성/운영결과교체없음.
+- B1/B2/B3 x T0/T1/T2/T4 12비교완료(기존입력/바이너리/sidecar일치5사례원시결과검증재사용). 새방식각scenario1회+stockbaseline별도1회. T1/T2는세입력모두전이없음. T4는모두전이하여B1음성대조위반. B1초기화원만baseline 상층최고487.748C인데PC_R1판613.808C,600초과표본975s; T4 R2트리거974.75/양수HRR1035,R3트리거1099/양수1160. 판600=상층600가정성립안함. 직접화염복사노출원인은배치·소스근거추론(격리시험안함). B1-T4-negative-control.json.
+- B2 T4 부모트리거R2=323/R3=449.75, 실제HRR첫양수385/510,연속815/690s. B3 T4 트리거241/364,실제양수305/425,연속895/775s. T0대비trigger만비교하면안됨.
+- native시나리오시간 B2 T0 54.625s(3회),T4 39.328s(1회)+baseline3.344; B3 T0 87.515(3회),T4 32.891+baseline4.406. T4전체실측43.25/37.844초. 전이결과다르므로동등정확도가속률아님. 신규합격없음/기준임의조정없음/8실·3F16실진행안함.
+- 정상종료CSV E없는3자리 지수8.49-100로기존float로더오류발견. native.py native_float 엄격파서추가(D표기도지원,잘못된수식거부). P2000/3000/4000closed run01원시자료해시검증후캐시로복구,run02만추가실행. reader-recovery.json와복구전result/execution보존. 초기옛600초선정논리의잠정B3는 provisional-before-reader-repair로보존후최종선정. 엔진재실행이아닌로더오류수정.
+- 127Python검사/JS문법/원본28·생성28검사통과. 임시폴더테스트첫실패는workspace temp로수정후전체통과. 세T4실행의지연전HRR0/에너지곡선적분/실제HRR표시/부모ID검증통과. verification.json. 엔진재빌드없음.
+- 결과 simulation/results/room_rule_r5_20261025/{sweep-comparison.json,comparison.json,verification.json,stage0-source-audit.json}. 보고서 specs/실단위규칙-r5-스윕과T4비교-20261025.txt. tools/test_room_rule_r5.py --analyze-only, tools/compare_room_rule_r5.py --analyze-only, tools/report_room_rule_r5.py는재실행없이재분석/보고서. 기존execution있으면새계산거부. 모든프로세스52120/2557/53404종료. 다음은판온도대용전제및트리거설계재검토; 합격없는T4표준채택/무단확대금지.
+
+최신 2026-10-25 / r4 B1 입력 정상화·4방식 비교 완료 / 전이 없음·표준 미선정
+- 사용자 대화 r4 본문 적용. 지정 claude/구현지시-실단위규칙r4-20261025.md 파일은 로컬경로에 없었음. r3의 신규모드방향을 대체하되 과거 floor_r2/fuel_r3 및 기존외부루프 코드 보존. 엔진/Fortran/솔버/출력격자변경없음.
+- fixtures/room_rule_benchmark_3room.json 고정 SHA1d462810e76070188aa2e1d72a30360d744e9168468d882dc51ce7aaf719a27a. 5x5x2.7m3실,문.9x2.1상시개방,실마다1.8x1.2외기창하단.9완전개방,파괴OFF,1200s/5s출력/maxdt1. 초기fastalpha.0469/peak1500kW/10000MJ,대기각400MJ/m2=10000MJ,HRRPUA500,상승60초/상한3549.242. 미지정벽체·연료물성은기존정규화기본값을fixture명시저장. 초기10000MJ/대기peak5000전상한은추가가정명시.
+- room_rule.py 새명시모드 fuel_r4/ceiling_r4/floor_r4. FIRE는기존대표위치바닥/연료상면0~.5m,DEVC와독립;범위밖거부. 외기우선max(A sqrtH),없을때만내부최대*.5,k1기본ON. 최초곡선예외+초과경고. T2천장-.2m아래향한1mm강판500C,T3바닥.1m위향15kW,고정기준. T1기존첫후보.75m(미래결과보고선택안함). 소스·센서좌표별도기록.
+- T0도B1바닥소스및동일상한/공급곡선사용,기존Python판+보충열/반복구조유지. 4방식모두1200s완주,추가착화0. R1 1500kW/연속양수HRR1195s, R2/R3 source HRR=0,DJET=0. T0유한착화참조값없어시각비교불가;60초연소기준미충족. 합격방식없음/표준선정없음/8실·3F시험안함.
+- native계산시간 T0 3.953s(전체4.766)/1회, T1 3.172+stock3.016(전체6.532), T2 3.047+stock3.141(전체6.532), T3 3.078+stock2.922(전체6.281). 전부1803steps@1200s. 새각시나리오1회+별도기준1회. 다화원/반복속도개선입증아님.
+- R2/R3상층최고281.04/146.17C. T0후보최고364.56/74.21C(기준369), T1판74.17/34.78C(369), T2판205.44/103.64C(500), T3열유속1.50/.65kW/m2(15). B1은음성대조로보존;유리하게기준/연료/개방변경안함. 천장500C가가장공격적이라는추측채택안함.
+- 표시후처리combustion_display.py: 실제source HRR>0만burning. IGN+native양수PYROL+HRR0은oxygen/mixing제한,IGN+PYROL0은성장시작/소진등공급없음. conditions/playback/overlay에연결,문연소별도. 기존자료에PYROL정보없으면발열없음까지만표시. 구형실감화염의>1kW표시최솟값은유지(연소중라벨은>0),실제HRR0에화염표시안함.
+- CLI room-rule은trigger명시필수(표준승인전자동선택없음). UI실험옵션여전히비활성,운영결과교체/서버재시작안함. 직접localhost자산검사는sandbox소켓접근거부로못함;브라우저시각검증을완료했다고주장하지말것.
+- 120Python검사/JS문법/원본28+생성28검사통과. r3완료CSV로R2/R3양수공급/HRR0 표시분류검증. B1 result.json의표시필드만후처리갱신(엔진재실행없음),별도postprocessing hash기록.
+- tools/test_room_rule_r4.py는기존실행자료있으면중복실행거부. --analyze-only는읽기분석만, --fixture-only도기존fixture불변. tools/report_room_rule_r4.py로보고서재생성. 모든실행(session99295)종료.
+- 결과 simulation/results/room_rule_r4_20261025/{comparison.json,verification.json,display-validation.json,T0~T3/analysis.json}. 보고서 specs/실단위규칙-r4-B1비교-20261025.txt. 다음은전이발생기준입력조정을별도합의해야함. 합격없는T2를선택하거나무단8실/3F대량실행하지말것.
+
+최신 2026-10-25 / r3 입력 덱 보정·D1~D4 진단 완료 / 합격 실패 / 운영 적용·3F 확대 보류
+- 사용자 붙여넣은 r3 지시 기준. claude/구현지시-실단위규칙r3·정체진단-20261025.md 실제 경로에는 파일 없었음; 대화 원문 적용. Fortran/솔버/출력 격자/엔진 재빌드 없음. 원본28·생성28 검사 통과.
+- room_rule.py fuel_r3: 기존 연료 후보 위치·물성·기준 native target 사용; 기준 배율1.2/1/.8, 상승180/60/30. floor15kW 별도 표시센서. single-opening k*1500*max(A√H) cap 선택 구현, 기본OFF. 이전 floor_r2/기존 외부루프 유지. CLI/API/비활성 experimental UI 연결.
+- D1~D4 각각3실600s, wall600s, serial 완료. 진단 IO 포함 측정 D1=416.734s/148612steps, D2=412.453s/150207, D3=426.937s/150207, D4=412.875s/142095. 보고dt중앙 .0019917/.0020033/.0020033/.0020355s. min2.1712e-7/1e-7/1e-7/2.4138e-7. DASSL_DEBUG의 이전dt변수이며 accepted-step독립계측 아님.
+- D1 native log R2=278/R3=331(반올림); D2는 지시문278/333 TIME이므로 R3 2초차. D3 cap6847kW>기존5000kW, D2와 입력SHA 및 CSV9개 바이트동일. 공급초과 원인/상한효과 검증 안됨. k임의조정안함. D4상승180초 속도개선없음. D1~D4 완주로 이전180s중단은 무한정지증거아님. 추가착화후132k/전체149k단계, 최대오차성분대부분압력; 산소식 단독원인 확정금지.
+- tools/diagnose_room_rule_r3.py --analyze-only로 최종재분석 완료. 실행초기프로세스메모리의 구형정규식(7행만집계)/O2 mol_frac 표시문제 수정해 JSON전부 재생성했음. 최종파일통계만 사용.
+- corrected는 역사적후보 C_2/C_11 명시고정(1.5m), 각369C native 판온도. 원래건물에서 미래결과로 자동선택하지 않음; 일반기본은첫후보. 설정저장재입력 덱동일 회귀검사추가. 화원도 기존후보위치1.5m 재사용해 D1~D4의바닥중앙0m와다름; D1대비속도차를센서만의효과라하지말것.
+- corrected600s: stockbaseline41.922s + scenario40.782s(총82.938s), R2=256±.5s/R3=518±.5s. 기존동일gasOFF두회실행 native합87.343s(전체87.765s), R2=63.594469/R3=122.862931. 순서같지만새규칙늦어합격실패.
+- 중요: corrected와legacy_same_gas_off 모두 IGN/공급은 있으나 R2/R3 실제화원HRR최대0, DJET는별도로발생. actual source>1kW는R1만. 새규칙41초완주를전이성공/정체해결로홍보금지. 1.5m화원이상층안에있음: correctedR2@260s interface.811m/O2 2.273%;R3@520s interface1.153m/O2 1.799%. native 하층플룸높이식 때문에화원높이/판정지연과산소유입의결합을검토할필요. 성공맞추려위치/임계값임의변경안함.
+- 기존방식도 schedule_stable=True지만 R2가자기발열경계이전에재확인안돼 condition_consistent=False/spread_search_complete=False. 옛63/122(gasON) 또는동일OFF값을물리적정답으로취급금지. 새target은기존Python판+보충DJET열과동등하지않음.
+- 114Python검사/JS문법/원본28검사통과. simulation/results/room_rule_r3_20261025/verification.json. diagnostics 비교와 corrected-comparison.json passed=False. 모든프로세스(session44060/33103)종료. 3F16실/3600s·운영서버재시작·3D교체안함.
+- 보고서 specs/실단위규칙-r3-진단과착화보정-20261025.txt. tools/check_room_rule_r3.py --analyze-only는완료결과재검토만; --없이는2방식새계산이므로불필요재실행금지. tools/report_room_rule_r3.py로보고서재생성.
+
+최신 2026-10-25 / 실 단위 전실화재 규칙 구현 / 600초 시험 예산 중단 / 기본 적용 보류
+- 사용자 재게시 구현지시를 적용. room_rule.py 별도 경로: 실당 사전등록 FIRE 하나+바닥0.1m 위쪽 PLATE, 순정 FLUX(기본15kW/m2)/TEMPERATURE(판온도) 단일 조건. 표준60초 상승/유한 연료 곡선. 초기 gross 공급 곡선 유지, 초기실 추가예비그룹 제외 기록.
+- 순정 산소/플룸/개구부 연소 유지. bulk/CO혼합추가연소/문게이트/강제점화/추가FO확대/적응형복사 OFF. 1500*sum(실내문) 동적환기cap 제외, 공급peak/면적HRRPUA/유한에너지상한 근거 기록. 이전mixture ON 대비 CO열예약해제 차이는 명시.
+- baseline_native는 stock build/baseline/cfast-baseline.exe로 동일 geometry/targets/curves+도달불가능 standby 임계값. 시나리오1회+기준1회; 자동재시도 없음. 확장빌드는 기존 adaptive_radiation_20261025(반응/최적화OFF) 사용, Fortran수정/재빌드 없음; 원본28검증 통과.
+- CLI --spread-model room-rule, --room-preset, --room-flux, --room-ramp. 서버옵션검증/CAD전달/playback메타 연결. 기존방식 기본유지. UI 신규옵션은 검증중 비활성. 운영서버재시작/현재3D결과교체 없음.
+- 원본규칙OFF 덱/sidecar바이트동일;106 Python통과. 실제1실대기화원 FLUX5:15~16초,TARGET_TEMP100:19~20초. 확장OFF vsstock 물리CSV배열 비트동일.
+- 짧은고정개방3실60초/5초출력 통합검사완료: baseline2.031초+scenario1.859초. 추가착화없음;보충복사표시전용/조건표/미착화화원숨김 통과. 이는전파성능합격아님.
+- 3실600초고연료시험: stock초기화원only38.969초완료. 새규칙은180.391초 초기시험상한에서native420초까지 진행후중단. 마지막DT.001587초/STEPS71336. 정체확정아님/분포없음. 종료버퍼차이로commonCSV는385초까지만 읽음. R2 275~280초,R3 330~335초,3실actualHRR>1kW. partial재고/조건표후처리검사통과.
+- 단계2 완주미통과로 기존전파방식같은입력완주비교/3F3600초/3프리셋대규모비교 시작안함. 시험3분상한을 제품10분/20분 정책과 혼동금지. 시간제한조정/연료변경으로자동재시도안함. 모든계산종료.
+- tools/test_room_rule.py {stage0,spread,smoke,floor}; floor는spread/comparison.json passed를요구. tools/audit_room_rule.py는기존미완료출력읽기전용.
+- specs/실단위전환-단일실행-구현시험-20261025.txt, simulation/results/room_rule_20261025/{verification.json,spread/comparison.json,smoke_fixed/result.json}. 속도향상/3F16실/1시간완료 주장금지. 기존모드복귀는 합산전원래scenario를사용.
+
+최신 2026-10-25 / 기존 화재실 적응형 복사 시험 완료 / 기본 OFF / 새 실행 없음
+- 사용자: 기존 화재실 간소화, 새 전파 기존 판정 유지, 산소·열 중복 없이 A/B 및 큰 변화 시 복귀.
+- extensions/cfbt/fortran/adaptive_radiation*.inc + hooks 구현. 순정 RAD4로 T^4/현재 화원복사 발열에 대한 응답 행렬을 만들고 안정된 기존 화재실의 광학·형상 계수를 잠시 유지. 산소/연소/벽전도/환기/착화식 변경 없음. 원본28 보존, 생성후크31/7파일.
+- 기본engine_optimization.adaptive_radiation=False. 최소2실 실제연소, 해당실 최신착화후120초+30초안정 후 사용, 계수10초갱신. 온도20K/O2질량분율.005/흡수10%/화원복사10%/위치층높이.1m/개방률.01 변화비 d를 사용, d=.5~1 C1혼합,1이상이면native. 승인된 양의단계에서만모드/행렬변경. 주의: 복귀가 과거 근사오차를 소급제거하지 않음.
+- 빌드 simulation/build/adaptive_radiation_20261025/cfbt/cfast-cfbt.exe SHA885486ecf1a2d608e37c749923fac3a2618e75989b994a6197eb28f539863103. 같은폴더source_snapshot에41파일/manifest/diff/해시보존. 운영서버엔진 oldr2/3D기존결과 유지.
+- 비교 tools/test_adaptive_radiation.py {compat,spread,floor,controlled} 및 --analyze-only. 코드후속분석은완료파일만읽어재계산안함. tools/check_adaptive_convergence.py는짧은controlled 간격절반시험.
+- 실제함수시험 simulation/tests/adaptive_radiation.f90 통과: native기저동일/열수지/면적변화/새실보호/C1/reentrant/환기O2복귀/accepted-only. Python99회귀통과.
+- compat180s: OFF기존r3f동일, ON간소화미작동/동일. spread600s 두회씩: 추가R2@63.276640/R3@121.591842동일, 간소화0회,69.437→72.578초(4.5%느림). converged지만spread_search_completeFalse인기존재확인한계남음.
+- floor: 이전r3f floor60/run02(초기+추가9화원,FO2) 정확동일덱으로 3600초 둘다완료. native797.422초→adaptive689.672초,13.5123%단축. 세션68222/24425 종료. 8실간소화/복귀8건/근사16002004회/최대복사합계잔차1.27e-7W. 현재활성계산없음.
+- 최대차Tu3.1556/Tl5.6835C,O2.09663%p,OD.003732/m,누적bulk.09587%.5초FO/FGI/RO/BD잠재/개구부연소/급상승태그차0. FO실R1/R2,FGI가능R17/R20.
+- 실제연소>1kW 누적9/동시9, 등록10과구분. 기존착화재평가4군(R1/R17/R6/R10)순서동일/최대.25925초차, 미등록신규후보0/0. 16실목표미달. 고정덱 A/B+후보재평가이며새일정을반영한전체외부루프완전수렴아님.
+- controlled: 두지정500kW 화원+400초개방변화에서2실활성→복귀확인. 최대T차.00852C. maxdt절반 T.01598C/O2.000981pp,갱신간격절반 T.00734C/O2.000183pp. 이fixture bulk0,강한추가연소수렴검증대체아님.
+- 결과 simulation/results/adaptive_radiation_20261025 각comparison.json, controlled/convergence.json. 보고서 specs/기존화재실-적응형복사-시험-20261025.txt. 국부비교합격이나기본OFF; 박층경계/강한추가연소/다른형상/전체전파수렴까지일반화하지말것. 기존1h회차1200/전체3600/3회/무진행90초제한유지.
+
+이전 2026-10-23 / 사용자 요청으로 1시간 시나리오 실행 제한 2배 적용
+- 사용자 명시 승인: 1시간 계산 제한을 지금의 두 배 정도로. 이전 기록의 시간예산 증가 금지는 이번 요청 범위에서 대체됨.
+- practical.execution_limits(duration_s): 3600초 이상은 회차1200초/전체3600초, 30분은 기존600초/1800초. 최대3회/3pass, 무진행90초 중단, 자동재시도 없음 유지. 명시적으로 더 짧은 제한은 존중.
+- practical profile, normalize 상한, CAD 입력 생성, run_mixture_r3_floor 및 run_floor_spread_scenario 실행 경로 반영. 과거 결과/scenario/비교 도구의 명시적600초 진단 제한은 소급 변경하지 않음.
+- 순정/확장 연소식, 착화조건, 연료, 엔진 파일은 변경 없음. 서버를 같은 모델/oldr2 결과로 재시작(PID18796), 새 장시간 시뮬레이션은 시작하지 않음. 16실 전파 목표는 여전히 미완료.
+- 추가 간소화: 간편식 후보 선별과 완료 결과 재사용 우선. 연료 평가점/벽체 계산 축소는 별도 근사 검증 필요하며 이번에 적용하지 않음.
+
+이전 2026-10-23 / 정확 캐시 검증 사례1h완주 / 16실전파 미완료
+- r3f native 비교 session22990 종료/정상완료. 3600초까지 엔진591.515초, 출력검증포함599초. r3d와공통3460초까지CSV12종전부동일. oldr2와공통1570초까지조건/온도/O2변화0, 그이후old결과없음.
+- session72532 종료. floor60/run00 1h완료(엔진53.953초/출력확인60.891초), run01은검증결과와exactsignature일치로재사용(591.515초재실행절약). run02 初R2+추가9실+FO R2/R1 입력은3180/3600초에서600.157초예산중단. 정체감시90초가아닌전체시간예산초과. 전체전파시도694.625초/3attempts/완료자료2개(그중1cache)/미수렴.
+- 마지막완주run01 기준fire-spread-audit.json: 실내30실/등록8/실제고체HRR>1kW 누적8/동시최대7(3520초). 16실목표미달. run02미완료를playback에섞지않음. 새로운pending R4/R10 및FO2건未확정. pass2의earliest변경전prefix인과성검사통과/HHR차0. 결과기본UI게시안함; engine/flagsdefault운영전환안함.
+- r3c O2 OFF600.078초에3380/3600 미완료. GDB 7표본 중후속6모두ddajac 내부(벽체/유동/복사/상태갱신), 비율추정 금지. O2 small 결과O1과 동일; 속도이득 불명확.
+- r3d 복사열 정확 캐시: 실별2슬롯/원본RAD4 전체입력 비트일치만 재사용. 기존csv12종 small4사례 전부동일. stress600.469초에3460초 미완료(캐시전r3c3140), 전체공통prefix CSV동일.
+- r3e 벽전도 update=0 정확 캐시 추가. 모든 이전profile/dt/재료/경계/격자 입력포함; acceptedupdate1/2는 원래함수항상실행. small4사례CSV동일. stress2400초/256.328초에속도이득없어운영자가중단. wrapperabnormalexit는실험중단이지자연발생솔버고장아님; operator-stop.json 기록.
+- r3f 동일 cache키 비교를 C memcmp로가속. finite검사는삽입에서만; 비유한키는저장된유한키와같을수없음. signedzero/ULP/NaN/room/wall분리시험통과. 캐시기본False, model.engine_optimization.{radiation_cache,wall_cache} 별도. 원본28그대로, 생성후크22/변경7개.
+- r3f엔진 SHA5da553943264e5cc0c113f516d43d55e6419f34b7262da89eaed6ed8660fb5ab. build/mixture_r3f_cache/cfbt/source_snapshot에정확한원본생성물/확장35파일+manifest+diff저장. 예전build들은공유generated경로가바뀌어실행파일·hash·결과보존,소스스냅샷없음유의.
+- Python93검사통과. r3f small4사례 CSV12종 r3cO2와전부일치. smooth14.344초, maxdt절반 누적열오차.022543%, T .062609C. source8유형검사통과(질량2.9e-17/원소1.28e-7/반응률4.16e-17/reentrant0).
+- tools/check_cache_identity.py는기존CSV전부바이트행비교(prefix검사는공통완성행만,완주아님). 새cache진단2종만제외.
+- pyrocast_cfbt/reuse.py prime_completed: full완료/engine/input/sidecar/output검사, CFBT scalar세팅동일(순서·십진표현만무시). 이후execute가정확한덱hash일치할때만cachehit. 중복/배열/미지원문법거부,새설정값변화거부,출력위변조거부시험. tools/run_mixture_r3_floor.py는stress완료시검증결과를run_01에seed해독립반복이같은덱생성시에만재사용. restart기능아님.
+- 다음: 새로운추가최적화가필요하면미완료floor60/run02(10화원+FO2)를문제입력으로사용. 성공한8화원stalled/smooth검증을처음부터반복하지말것. 원래추가연소정체1570는해결/8화원1h완주했으나10화원비용은여전히미해결. 시간예산만늘리거나기준조작하지않음. 유동함수정확캐시는검토만했고구현안함. 활성계산프로세스없음. specs/혼합물추가연소-r3f-정확캐시-20261023.txt와results/.../verification.json 참조. 현재UI/서버oldr2결과그대로.
+
+이전 2026-10-23 / 혼합물 연속 경계·tau 상한 구현 / 1시간 완주 미완료
+- 사용자: 순정 보존, 확장 경계/반응량 수정·수지/시간 비교, 정체 해결 후3F16실1시간 재실행. 후속Claude 의견: 시도dt 지수식 제외/1-tau 속도상한/누적발열 수렴/보정카운터. 참고하여 구현.
+- specs/혼합물추가연소-r3c-20261023.txt 우선. r3a 지수평균RHS는 성능실패 배제, r3b는3260초까지600.282초 후예산종료(완주아님). 상세results보존.
+- 현재r3c 엔진 simulation/build/mixture_r3c/cfbt/cfast-cfbt.exe SHA d53491160167c0726a1217476c85748f09d949861aacd6179c558425ac9ab373. r2/r3b불변.
+- r3c mixture_smooth_enabled 기본False, 명시적ON만. C1 gate/기준미만0, tau기본10초: k<=1/tau. 순정소비/순유출은 고정tau재고예약, 실제시도dt를추가식에넣지않음. maxdt<=tau입력검사. source함수 시도dt .01/.5/1 동일확인. native소비순유출 예약근사이며 실험검증아님.
+- 추가후크15개(acceptedstep진단+1), 원본28불변. accepted 양의단계에서만 카운터, 수치사후clipping없음. rate_cap_room_steps는모델상한작동이지비상안전보정아님. step_bound_violations=0확인. 순정성분clamp/재정규화횟수는계측하지않음.
+- Python89검사통과. 실제빌드 source8유형 tau1/tau10 검사, 열/O2/원소/재진입/시도dt독립 통과. boundary highk상한검사통과.
+- 소형180초 old13.719s/new14.719s(속도이득없음). new옵션OFF는old정확일치. newvsold maxTu38.320C/O2.45236pp, 누적bulk16.3910->14.2103MJ. maxdt절반 .2->.1 누적열오차.022543%, maxTu.06261C/O2.001863pp 합격. 폭절반 Tu15.019C차(모델민감도).
+- condition-comparison small: FO온도조건 최초100->101s/기간68->66s, FGI R2최초62동일/기간13->14, R3최초69동일/기간23->25. 처방동일화원 입력후처리이며전파루프재실행아님.
+- 프로세스session61076 종료. 실제정체덱 r2_ventilated/run_01 그대로, r3c는3140초 진행상태(완전CSV3145초)에서600.328초 시간예산으로종료. 기존1570정체는넘었으나3600완주/속도문제해결미확인. 반복재시작하지않음. 원래old147.734s에1570정체 기록재사용(입력/엔진검사). 추가OFF기록은180.328s/2120까지만으로완주비교아님.
+- --analyze-only 및 condition-comparison 완료. 공통0~1570초 온도/O2/연기/추가발열 차이0. FO조건R2최초1230초/지속110초동일, FGI충족없음동일. 이후구간은old자료없음. r3c accepted진단8384 forwardsteps/상한작동2645 roomsteps/step위반0/최대dt1초. 순정음수보정0회증명아님.
+- 두 단계 보완 모두600초내1시간완주못함. 검증용옵션으로보존/운영채택보류. 16실탐색조건미충족이라새floor60실행안함. 사용자가추가승인한새방향없이시간제한늘리거나새고연료변형계속돌리지말것.
+- tools/run_mixture_r3_floor.py는small수렴+stalled완주를검사후 실행. 아직 실행안함. 최대3회/600초/1800초,16실목표. 성공해도actual HRR audit 및미수렴여부확인필수.
+- 서버PID8892는여전히r2/oldv7자료. 새빌드default운영/UI전환안함. 기존주소/3D결과유지. 완료검증전새결과게시금지.
+
+이전 2026-10-22 / 반복 제한 수정 + 추가연소 ON/OFF 진단 완료
+- 사용자: 먼저 실행 방법을 개선하고 돌리자. 중간 질문: 산소에 다른 식을 적용할 수 없나?
+- 실사용 practical에 공통 최대3 native runs/3 passes/회차600초/전체1800초. normalize에서도 제한해 CLI후수정/전층예외 우회 방지. 착화 후보실 수는 줄이지 않음. 기본fixed_point; 비교용earliest_single 선택 가능.
+- 실패 자동재시도/시간간격절반 재시도 제거.90초무진행 중단. NativeRunInterrupted로solver_stalled와time_budget 구분. 초기실패summary도 기록. 미완료일정 반영금지.
+- tools/run_floor_spread_scenario.py 96회/48회/1200초→3회/3회/600초. 엔진/반응식/임계값/연료량 변경없음.
+- tools/diagnose_bulk_stall.py + pyrocast_cfbt/diagnostics.py: 원본case.in 바이트/엔진SHA/화원일정 고정, bulk_enabled만 TRUE/FALSE. 기본준비만; --run 실행. 원본결과/3D대체없음. 잠긴 입력파일은execute preserve_input_files=True로재작성안함.
+- 진단 결과 simulation/results/bounded_execution_20261022/r2_bulk_pair/comparison.json. 동일r2_ventilated/run_01덱 SIMULATION3605 유지. ON은1570초정체,wall157.703초. OFF는2120초까지진행 후180.328초예산종료. 둘다전체완료아님! OFF가원래정체지점통과→반응항의존성근거. 불연속단독원인/전체정체해결/속도배수증명아님.
+- 87 unit tests 통과, overlay.js syntax 통과. 원본Fortran/확장inc/engine변경안함.
+- 3D server PID8892로재시작. 동일oldv7 playback유지, 취소r4_prefix watch제거. /cfbt/status busyfalse 확인. 다음 계산UI기본일괄최대3회; 화면결과는옛결과.
+- specs/반복비용제한·산소반응진단-20261022.txt 참고.
+- 다음 산소 대안 설명: FDS의혼합시간 기반한정반응원리(NIST문서 있음)와현재확장hardgate의연속반응률 검토. 반응률이미.1/s있으므로τ추가만으로새해결아님. 하한아래0유지한전환폭/열산소재고보존/시간간격수렴 검증필요. 아직새반응식구현안함. 전체CFAST를독자간편엔진으로교체결정안함.
+- 16실1시간전파목표 여전히 미완료. 긴시나리오추가실행하지않음.
+
+가장 최신 사용자 상태 / 과도하게 오래 걸린 작업 정리
+- 사용자 "죤나 오래 생각하네" 지적. 즉시 늦어진 점 인정하고 균등 배치/작은 화염 반영은 완료,16실1시간목표미완료라고 명확히 답함. 새 실험/수학적엔진변경을 시작하지 말고 현재 확인결과부터 간단히 설명할 것.
+- R2 정상환기 대안(r2_ventilated, O1) run00은3600정상62.438s. run01 추가7건(등록8실) 입력은1570초에서native_progress_stalled로중단145.281s. summary status time_budget / successful1 / committed0. 최종저장playback은최초1화원만계산한1시간이며16실전파결과아님. 이를목표달성으로게시금지.
+- R4환기대안run01도중단, r4_prefix O2진단도중단. 全부완료한것처럼표시금지. rootjobstate취소파일있음. 현재서버31752의watch는취소r4_prefix를가리킴, 기본화면은v7구결과에균등기호덧입힘. sourcecase변경필요시 완료자료의의미부터확인.
+- 전Native8원천항검사/O2컴파일동일source,Python82개검사통과. Fortran 원본28/후크14/실행파일O1,O2보존. 플룸fixed-point root/허용오차변경 등은 생각만 했으며 구현하지않았음. NIST원본물리변경코드없음.
+- 현재완료된사용자수정: 실내균등+개구부앞연료큐브,소형화염기호/계산크기선택,실경계밖큐브0/테라스제외/동일연료예산,표본/대표화원/FO통합구분. 독립큐브화원185개구현아님을화면/보고서에명시.
+- 목표16실은여전히미완료. 실패원인내역과가정별trial보고서가있으므로다시막연히고연료변형10개실행하지말것. 다음실제작업은사용자속도/범위지시에맞춰진행.
+
+추가 진행 갱신 / 앞 구간 사건제안 최적화 + 환기 대안
+- bounded(run01) 1200초 wall budget으로 native2000초에서 미완료. 자동.5초retry(run02)중단. 완료1시간으로게시금지.
+- O2별도빌드동일Fortran소스/후크/수식, 실행SHA84e887cfc5d83d8cb10a17b53af000ee11c5d9df97bf361733177cd65f141938. O1 8354...원본보존. 원천항8검사통과/동일6화원입력의공통1115초prefix Tu/Tl/O2/h/bulk 차이0. Full-horizon old/new 비교완료라고하지않음. o2_exact_run01비교job은중단.
+- native.read_native_csv/read_diagnostic에선택적until_s, load_result allow_prefix 추가(기본기능불변). 미완료CFAST가이미계산한0~1800초정합샘플로만사건제안추출가능. 미래불완전행무시/요청격자검사유지. 미완료전체결과를완료라고게시하는기능아님.
+- native_prefix_seed(선택적)로식에서계산된초기사건제안을full run에넣고iterate에서동일식으로재평가. 강제수동시각아님. 기준/수식동일. seed시간<=추출horizon검사. 새prefix재검증tests포함Python82개통과.
+- tools/continue_native_prefix.py sourcebounded --output r4_prefix --horizon1800 --engine simulation/build/mixture_r2_o2/cfbt/cfast-cfbt.exe --prepared 실행중, session60864. 기존5추가사건→6추가(초기포함7화원), R13새653.924초/R2 1269.9299초. native_prefix_seed evidence는r4_prefix/seed-evidence.json. 初native0전체1h입력재실행중,마지막1830초/1109s, timeout2400. 최종완료후seed_prefix_check필수. 체크포인트재시작아님.
+- 별도정상환기대안 r4_ventilated 실행중 session32678. CLI run_floor_spread_scenario.py --primaryR4 --primary-kw20000 --secondary-kw1000 --passage-kw8000 --loaded-passages --large-room-cap-kw50000 --fire-base-m.02 --ventilated. O1엔진사용. 모든외기창초기.5/계단문열림/내부창.5/실내문열림, 창450℃파괴1.0. 연료/임계값동일. 충분한환기에서16실전파를찾는사용자범위내대안. 강제착화시각없음.
+- ventilated run00이3600초정상완료428.219s. 현재run01 등록6(초기R4+R1@309.481,R3@486.122,R15@553.700,R0@579.961,R13@1074.559) 적분중. 실16달성미확인.
+- 현서버PID31752 --watch-result r4_prefix. savedcase spread60uniform은watch폴더동적연결. ventilated가우선완료/적합하면watch/result연결그폴더로변경. 최종current소스repackage/actualaudit/peak동시16검사/3D확인/그림증거/보고서갱신필수.
+- CFAST developerdiscussion2118(읽음): 산소제한화재의작은dt가knownlimitation, 강제dt확대권고안함. https://github.com/firemodels/cfast/discussions/2118 . native허용오차/산소해법/플룸수식임의수정안함. O2는컴파일만. 스스로새임계값/강제착화로16을만들지말것.
+
+추가 진행 갱신 / r4_uniform_bounded 우선
+- r4_uniform_floor run01은860초까지약400초(작은실다수고공급때매우느림), 중단/원본자료보존. 최종완료아님.
+- 활성새사례 r4_uniform_bounded / unified exec session70628. 실내30/185큐브/174표본 동일. 화원기부.02m 유지, 작은실공급cap1MW, R1/R2 cap50MW, R4 cap20MW, R15통로 cap8MW(실효5.45). 저장연료총량·369℃·600℃·가스·산소기준동일.
+- CLI: python -X utf8 tools/run_floor_spread_scenario.py --output simulation/results/floor_spread_20261022/r4_uniform_bounded --primary R4 --primary-kw 20000 --secondary-kw 1000 --passage-kw 8000 --loaded-passages --large-room-cap-kw 50000 --fire-base-m 0.02
+- 초기native덱/sidecar가floor사례와줄단위완전히같음을검사후완료run00복사로캐시재사용. 그후추가화원입력은여전히0~3600새실행. 체크포인트재시작아님.
+- 새serverPID26276 --watch-result bounded. savedcase spread60uniform은watch경로따름. 현재UI는구결과+균등기호/새계산진행표시, 완료후자동불러옴.
+- 최종16실목표여전히미완료. 완료되면현재playback소스로repackage/actual동시audit/뷰어peak시각확인/보고서및인계갱신필수. 더는등록화원수를실제화염수로보고하지말것.
+
+최신 진행 — 2026-10-22 / 균등 연료·작은 화염·16실 전파 미완료
+- 사용자 거대 화염 축소 + 실제16실 이상 연소 시나리오 재요청. 이어서 문 앞뿐 아니라 실 규모별 균등 연료 배치 누락을 지적함.
+- specs/균등연료·작은화염·1시간전파-20261022.txt 먼저 읽기. 현재 목표16실은 아직 미달/미확인. 등록 화원 수를 실제 화염 수로 세지 말 것.
+- legacy_real_view compact 기호 지름0.35~0.8m/높이0.45~1.2m, actual native Q>1kW일 때만 표시. native 크기 선택도 보존. 실 경계/반자 마스크 유지. 가스 화염OFF.
+- fuel_layout.py 신설: CAD4m 격자+개구부 안쪽 앵커, 실별 면적/에너지 분배 총합1. 새3F실내30/연료군23/큐브185/착화표본174. 실제도면 실 밖 큐브0. 테라스 제외. 독립 native FIRE185개가 아니라 실당 대표 화원, 최초 표본 착화위치 사용. FO 보충 복사4대표점도 표본 면적 가중합으로 보존.
+- cad.adapt practical은 uniform_fuel 기본True, legacy는 유지. model.normalize 단위 예산 검사. playback은 fuel_units 포함. old 저장자료는 기호만 덧입히며 새 좌표 재계산 아님을 명시.
+- overlay는 모든 연료 표본을 큐브로 표시. 회색 일반/주황 실제양의발열원근처/황 FO통합. old legacy 장식가구는 균등표본 존재시 감춤. ui-uniform-fuel.png 저장/현재3D탭4.
+- Python80개 검사 통과. L자/구멍 큐브 경계·예산/복사 가중합/판정면과플룸기부 분리 검증. JS compact/native모드 검사통과. 엔진8354e206...불변.
+- tools/run_floor_spread_scenario.py 재현 가능한고연료시나리오 도구, tools/audit_fire_spread.py 실제native발열/동시수를집계.
+- r1_30mw:3600완료/1실. r1_50mw:3600완료/3실/2추가/FO R1. 목표미달.
+- r4_loaded(구 문앞배치) 중단, r4_uniform(균등/화원기부=.6m) run01은3600정상완료631.5s/등록6실중실제4실(R3/R13 Q0). 그run02는중단, 완료자료 보존. 완료playback게시안함.
+- 원인 진단: R3 연기경계 약.3m/하층O2 16%/상층1%, R13 경계.1m/하층20.5%/상층1%. .6m화원이 상층만흡입하여native소화됨. 순정fire.f90는화원기부와층경계에따라O2공급층을나눔.
+- 새비교 r4_uniform_floor: 열응답표본xyz는동일, 명시적 바닥연료가정으로 플룸기부=.02m 분리. source_xyz/solver_fire_xyz, 사건 surface_xyz도보존. 착화369/FO600/산소.15/가스반응식 변경없음. 강제착화시각없음. UI 기부높이 입력추가(비우면기존판정면높이).
+- 현재활성계산: simulation/results/floor_spread_20261022/r4_uniform_floor. unified exec session16981. 초기run00정상3600완료117.984s. run01(등록6실) 적분중, 마지막800초/186.75s. 610초까지R3 actual1.04MW 관측(비교구기부Q0). R13은1051초착화예정이라그전Q0은정상.
+- 이 시나리오: R4 최초화점/통로가연물적치1200MJ/m²/.5점유, 일반3x에너지2x면적(.65상한). R4 cap20MW(실효16.58),R1/R2 cap50MW,나머지cap8MW. 성장.1875/HRRPUA400. 문D1/D3닫음/나머지열림, 외기창.5 단W0/W2닫힘/450℃파괴1.0. 1시간5초출력. 자세한fuel-setting-audit.json은r4_uniform에보존, floor사례도같은예산.
+- 서버현재PID11272(명령재확인후사용), --watch-result r4_uniform_floor. 8780같은주소. 완료전화면은v7에균등기호만표시/경고. watch상태는현재CLI진행, 완성playback생기면자동최신불러옴. savedcase spread60uniform도floor경로.
+- 다음: 계산계속감시/최종actual native고체HRR>1kW 누적및동시16판정. 100kW이상/지속시간도audit. 목표미달을달성으로표시금지. 완료시현재소스로repackage(진행중추가한표면/기부표시필드반영),audit/보고서갱신/3Dpeak동시시각확인·스크린샷. 필요시source높이대안의run01과기존uniform run01 동일스케줄native비교. 사용자최신질문만답하고16실목표를잊지말것.
+- subagent 금지. CUA재개시 rewriteDocumentation. 현재tab4/browser2 바인딩. restart전CIM명령확인/Start-ProcessHidden. 이전AGENTS폐기.
+
+최신 정정 — 2026-10-22 /3F 테라스
+- specs/테라스분류-정정-20261022.txt와results/terrace_correction_20261022/audit.json부터읽기. 사용자돌출곡선부는테라스라고확인. R27(118.0206㎡)을outdoor/terrace로정정. 실내30실/목표16유지/현재누적6미달.
+- 원본JSON/DXF읽기전용. hash-bound classify_outdoor정정. 노출부층고벽/잘못된천장제거·실내공유벽보존·바닥보존. 난간1.1m는표시용미확인기본값.
+- adapter는R27구획/연료/착화후보/화점선택제외. 테라스연결은OUTSIDE로매핑. 현재구조상R27연결0.
+- 서버가정정building을제공. 기존playback은정정전native시계열보존하고R27표시만제외·화면에정정전계산명시. 새30구획재계산미실행. 정정전결과로새점화비교차단.
+- Python78검사/실도면30실적응/후보·연료제외/시계열불변검사통과. 서버PID20892(명령확인후사용). 이전PID31596종료. 현재URL동일.
+
+최신 표시 수정 — 2026-10-22 / 화염 실 경계
+- 사용자 화염이 실 밖으로 나가는 오류 지적. legacy_real_view.js의 고체 화염 흰색 마스크를 제거하고 해당 CAD 실 폴리곤/내부 빈 공간 마스크로 대체. 화염 로컬 좌표를 실 UV로 매 프레임 변환, 범위 밖 텍스처 참조 차단, 경계 띠를 보수적으로 제거.
+- 화점 고리도 외곽/구멍까지의 거리로 축소. 반자 아래 기존 높이 제한 유지. 화면1311초/mixture60v7에서 직접 확인, ui-flame-boundary-fixed.png 저장. native 좌표42검사/오목형상·내부구멍 거리/연기·조건 JS검사 통과.
+- 시뮬/엔진/결과 재계산 없음. playback SHA78708720... 그대로. 16실 목표는 여전히 미달.
+
+최신 구현 — 2026-10-22 / 혼합물·천장제트·조건테두리
+- specs/혼합물추가연소·제트·테두리-구현검증-20261022.txt 및 simulation/results/mixture_r2_20261022/verification.json부터 읽기.
+- 사용자 r2구현·비교·현재3D반영·고연료1시간/절반이상전파 요청. 과거 구현전 지시는 당시 기록이며 현재는 구현 승인.
+- 원본28파일/후크14경계 보존. 기존 ignition/cfbt엔진2ff8192b...유지, 새 build/mixture_r2/cfbt엔진8354e206...분리.
+- 상층FUEL+실제CO 공통률/기존bulk대체/공유재고·산소제한/1차HOC·HRR동시분할/잠재fuel_co열장부. 소스8사례수지·재진입통과. 입력불가능수율거절.
+- native천장제트16표본/화재실/5초. CAD벽클리핑·표시8m/s상한. 회색전분포·가스화염OFF,전체/개별조건표통일·RAPID복구·실제발열분리.
+- 동일3F31실30분 old125.125s→new126.032s(+0.72%), Tmax431.1456→429.2830℃,최대Tu차4.4896℃/O2차0.02693%p. bulk0인비교이며별도활성3실시험포함. 단발native시간/후처리제외.
+- 판열응답C가속/기하가시성캐시. 원본판과최대차1.14e-13℃. Python77개/JS/원본경계검사통과.
+- 중요: 추가원천항수지와순정전역성분재정규화오차구분. 소형밀폐C수지ON-7.59%,native-only-7.75%. 정밀원소보존/공식NIST검증확장이라고하지말것. 화학에너지장부오차시험0.0092/0.0440%는별개.
+- 1시간v7완료: 3F31실,연료에너지3배,R2화점50MW/R1상한2MW/나머지최대1MW,W0초기50%·파괴가능,W2닫힘·파괴없음가정,D1닫힘D3열림. 임계값369℃/600℃/기존gas그대로. 시각강제없음.
+- v7등록화원7/실제고체발열>1kW6실,추가착화6건,FO전환R2約1225.787s. 최고619.017℃/bulk1004kW. 16실이상목표미달. 사용자후속답변으로목표범위확정: 3F전체31실중16실이상. 건물모든층전체실의절반이아님.
+- 일정안정converged이나자기발열이전조건재확인실패flags유지/spread_search_complete=false. 1시간적분완료와전이검증완료다름. 강한v2~v6/82고연료수치정체미해결. 실제6실을7실연소라고세지말것(R23자체Q거의0).
+- 8780서버PID31596(재사용전명령확인),기본enriched_floor60_v7/playback.json. 저장mixture60v7/mixture60v1/compare30legacy/compare30mixture. 실패시험은목록제외. UI직접검증완료: mixture60v7/3600초/실감보기/회색연기40%/현재조건7실/기간8실/제트18표본/상층976.4kW/가스화염OFF. ui-verified-final.png 저장·탭유지. 누적실제6실과현재화염2개는서로다른수치.
+- 기본31실층계산이다. remote82코어전층연기는이전저장사례vertical30로유지. 전층일반실·외벽창상층고체전파미평가. CAD외부원본읽기전용유지.
+
+최신 검토 r2 — 2026-10-22 / 혼합물 추가연소 (구현 전)
+- 사용자: CO를 독립 반응/화원으로 떼지 말고 같은 연기 혼합물의 추가연소로 근사. 기존 성분 수송은 유지.
+- reviews/혼합물추가연소·천장제트·조건테두리-검토-r2-20261022.txt가 이전 CO 전용 권고를 대체한다.
+- 기존 FUEL bulk를 대체하는 한 혼합물 모듈/공통 진행률, 기존 native연소 후 공유 산소·재고 제한. 실제CO와 잠재fuel_co 구별.
+- 기존연소+추가연소 발열 중복 방지를 위해 공급HRR/HOC/질량·fuel_Q·생성CO 잔여열·FO 통합 예산 전체의 기준 통일이 선행.
+- 공통 진행률은 프로젝트 근사이며 NIST FDS직렬2단반응과 동일/공식검증이라고하지않음.
+- 천장제트 native소수표본/5초/보간표시, 회색연기·가스화염OFF 유지. 전체/개별조건표 일치/RAPID 누락/상층조건과실제발열혼용 수정안 포함.
+- 현재vertical30 위험조건0건, R9최고437.23℃/FUEL0. topology30 R2 1785초FGI보라색 확인. 테두리 기능 삭제 아님, 별도 표시불일치 존재.
+- 이번 문서만 개정. 코드·엔진·기존 결과 변경/빌드/새시뮬 없음. r2 불변검사 JSON 참조.
+
+최신 도면 연결·전층 코어 — 2026-10-22
+- specs/도면연결·전층코어연기-검증-20261022.txt 먼저 읽기. 사용자 문연결 누락 수정·층간 연기 확인 작업.
+- DXF D600 6개 창오분류 + 벽끝점 출입구3개 보정. simulation/data/cad_topology_corrections.json의 building/DXF SHA 일치시만 적용. 원본도면보존.
+- 3F31실30분136.98초완료, 연기14→24실. 나머지7곳연결미확인 유지. D1/D3계단문모두OPEN1.
+- vertical_smoke:true +scope_floor:3F 모드 추가: 화재층31+원격코어/직접출입공간 총82구획/FLOOR35개,30분130.44초완료.
+- 4F~PH연기관측. 원격층 일반실/고체추가착화 및 외벽창→상층착화는 미평가. 전층모든실화재계산이라고하지말것.
+- 가스반응/FGI위험조건은 기존확장. FGI가 위층착화를 자동확정하지않음. 외부화염 열노출모델 후속필요.
+- 운영engine불변. 72단위검사/JS검증. audit.json 및floor/vertical_corrected_30min 참조.
+- 8780서버 PID25900(재사용전명령확인), 기본floor_corrected30. vertical30저장사례/범위선택/층간코어연기버튼.
+- 이번2사례는0추가고체착화/0창파괴. 강제FO/FGI/외벽상층전파시연아님.
+
+최신 표시 보완 — 2026-10-22 / 전층 연기 확산 재생
+- 사용자 '전층 연기 확산 왜 빠졌나, 구현'에 따라 전층 재생 버튼/문 통과 회색 연기/실별 첫 관측 순서를 추가.
+- specs/전층연기-재생복원-20261022.txt 및 smoke-restoration-verification.json 참조.
+- R9 기본 사례 10분/저장 시점 시작 때문에 확산 과정이 안 보였음. 이제 버튼으로 층 전체 구도에서0초 재생.
+- smoke_transport.js: native 방향별 soot/mass/유속 기반 짧은 표시용 연기 궤적, Points 1회 draw. 위험/선택실 필터 없음.
+- 회색 구획 연기는 기존OD/층 높이 그대로. 청정공기/0유량/연결 미확인에 연기 날조 없음. 가스 화염 OFF 유지.
+- 계산 실 수와 실제 연기 표시 실 수 구분. 현재 R9에서0초0실/10분8실/전체기간14실.31실강제연기아님.
+- first: R9 5초/R2 75초/R1등240초/R4 555초/R15등645초. 실내 전면/속도장은 미계산·이동무늬는 표시효과.
+- 새CFAST실행/재계산 없음. 기존31실 결과/화점/조건/창파괴 그대로. 원본 입력SHA09fdc866980f...보존.
+
+이전 구현 — 2026-10-22 r9 / 사용자 코드 수정·실행 승인
+- 현재 엔진 검증 후 창 파괴 구현·관련 코드 정리/최적화까지 사용자 승인. 아래 과거 '코드수정 금지'는 당시 기록이다.
+- specs/창파괴-r9-구현결과·검증-20261022.txt 먼저 읽기. 운영 Fortran/실행파일 변경 없음. 원본28개·후크14개 경계검사 통과.
+- 기존 R9 연결14실 30분 NORMAL EXIT 약18.7초. 신규 선택3F 전체31실 30분도 완료, 창평가37개·후처리 포함102.4초.
+- 고정6건/8회 대신 선택층 전체의 연료군·FO실 기반 유한 예산. 닫힌 문 뒤 실을 삭제하지 않음. 시간예산/미평가 표시는 유지.
+- 창은 순정 조건형VENT,6mm 판 대용/표면450℃초과/사용자 변경/최종분율100%가정/5초출력. 창 때문에 외부재실행0.
+- WIN타깃 후순위·연료DEVC ID매핑·WF공통이력·인과성·요청캐시·실제개방률3D/관측구간. 현재 외기창만 평가.
+- 정확한 벽 경계의 PLATE는 순정 외기 뒷면 경계. '앞뒤 모두 실내'라는 r8 검토 전제를 보완. 투과 생략으로 조기개방 가능 한계 유지.
+- 단위69개/실제native창시험/JS연기·위험 분리/회귀검사 통과. r8 대비64연료후보 열유속·판온도 차이0,착화제안동일,OFF덱동일.
+- 같은 열린창 조건에서31실30분26.0초,1시간46.2초(약1.78배); CSV약2배. 닫힌창30분은OFF95.8/ON102.4초.
+- 중요 미해결: 과거 가산R25는약470초수치정체. 닫힌창31실1시간도1940초에서360초예산종료. 해결/완료라고하지말것.
+- 원인조사허용오차·산소해법·플룸호출 실험은채택안함(산소해법결과큰차이). 확장3파일r8해시동일,운영엔진2ff8192b...유지.
+- 정체/시간예산시소유프로세스만종료, execution-state.json에미완료/마지막시각. 실패결과는completed/playback으로커밋안함.
+- simulation/results/window_r8_20261022/verification.json,regression.json,native_checks/report.json,ui-verified.png 참조.
+- tools/serve_cfbt_building.py가8780 기존주소서비스. 기본결과floor_windows_30min/playback.json; windows60vent는별도환기조건1시간정상사례.
+- UI에서30분/1시간·창기준·최종률·전체층자동예산확인. 회색전층연기·조건테두리·FGI화염OFF유지. gzip전송20MB→1.84MB.
+- MC/새분산연료전면확산/피난지수/설비성능등전체명세완성은아님. 고체/FO일괄반복은여전히전체구간재계산.
+
+이전 확정: 최신 창 파괴 기본값·출력 확정 — 2026-10-22 r8
+- 사용자: 일반유리 문헌 기반 기본값/변경 가능/CSV5초 유지. 코드수정 금지.
+- specs/창파괴-기본값·5초출력-확정-20261022.txt가 r7 미결정값·정밀출력 요구보다 우선.
+- 일반 비강화 단판 판유리6mm 대용, 표면450℃초과. 문헌447~450℃개구형성·탈락 참고 기본이며 NIST공식값아님.
+- 시작온도+80℃/100℃제안은 폐기. 기체온도와 표면온도 구별. 임계값·물성·f_after 사용자변경.
+- 물성 rho2500 cp0.82kJ/kgK k0.95W/mK emissivity0.90. 고온상수/대표점/강화·복층미검증 한계 명시.
+- CSV5초 유지/원본내부최대1초 별개. WF_를VENT ID로 읽고 관측구간 표시. 정밀시각 새진단/빌드요구없음.
+- 하류f(t)직전관측값유지의 해상도·후속착화영향 명시, 판정식 변경 없음. 창타깃분리·ID매핑·WF인과성·캐시보완.
+- reviews/전체프로그램-창파괴기본값·5초출력-Claude검토-20261022-r8.zip. 01→15→13→16→12 우선.
+- 문서/스냅샷정적검사만. 새MC/시뮬/빌드/원본·프로젝트소스 변경 없음. 기존r7ZIP 보존.
+
+최신 창 파괴 명세 — 2026-10-22 r7
+- 사용자:초기개폐고정+화재창파괴예외,기준과파괴후최종개방률사용자설정,균열/탈락단계분리생략,코드수정금지.
+- specs/전체프로그램-사용시나리오-20261022.txt r7, specs/창파괴·동적개방-추가명세-20261022.txt.
+- 순정7.7.7타깃TEMPERATURE/FLUX VENT개방기능활용우선,strict >·1초전환원본동작유지.
+- f_after는창전체면적기준최종분율,f0<=f_after<=1. 50%초기개방과중복계산금지. 자동기준/확률추첨없음.
+- 실제f(t)정본/로그반올림·해상도/보충복사정적schedule문제/3D동기화는검토요점.
+- 창타깃은고체연료G/피난출구와분리. 회차별재평가/성공커밋/인과성보존. 파괴창별외부재실행추가하지않는안.
+- reviews/전체프로그램-창파괴·전층전이-Claude검토-20261022-r7.zip 및동명폴더.
+- 별도 reviews/전체프로그램-창파괴-Claude검토요청-20261022.txt.
+- 전층전이/30분·1시간/두모드·위험레이어/두통행기준/MVP설비표시·이후배연비교유지.
+- 최신01/13/12우선. 소스·엔진·기존결과100파일불변,정적검사만. 코드수정/재빌드/시뮬/MC/브라우저변경없음.
+
+최신 전층 전이 검토 — 2026-10-22 r6
+- 사용자:추가착화6건제한을선택층전층평가가능하게조정하는명세,30분/1시간선택포함Claude자료갱신. 코드수정금지.
+- specs/전체프로그램-사용시나리오-20261022.txt r6, specs/전층전이·실행예산-추가명세-20261022.txt.
+- 추가착화용량은적격미착화연료군G,FO실R별도. 고정6뿐아니라adapter3/profile8회/fixed_point5회도검토.
+- 초기1+G+R성공회차상계는earliest사건계수설계제안;재시도/일괄회차/전체시간은별도유한예산.
+- 전층실목록/후보누락/closed-reachability절단/100구획초과확인. 기간완료·전이탐색완료·실제연소범위분리.
+- 예산중단/미평가/재확인불가는전층탐색완료표시금지. 성공한결과/확정사건만공개,제안pending분리.
+- 30분1800/1시간3600선택,기본30분,1800초이후새사건평가요구. 저장시연은여전히30분3실.
+- reviews/전체프로그램-전층전이·30분1시간-Claude검토-20261022-r6.zip 및동명폴더.
+- 별도 reviews/전체프로그램-전층전이-Claude검토요청-20261022.txt.
+- 최신01/12가과거설계보다우선. 소방시설표시MVP·배연대안비교/성능연동MVP후유지.
+- 소스/엔진/기존결과100파일해시불변、정적문서/행번호/ZIP만검사. 코드수정/빌드/새MC·CFAST/서버변경없음.
+
+최신 추가 — 2026-10-22 / 기간30분·1시간선택
+- specs/전체프로그램-사용시나리오-20261022.txt r5.1:30분1800초/1시간3600초선택,기본30분. 탐색/상세비교기간일치.
+- 문서만수정, UI/코드/시뮬변경없음. 저장시연은기존30분.
+- NIST100개는동일계산구획수. 프로젝트추가착화/회차제한과구별.
+
+최신 사용자 흐름 — 2026-10-22 r5 / 배연 대안 비교 MVP 이후 확정
+- specs/전체프로그램-사용시나리오-20261022.txt를 쉬운 전체 흐름으로 갱신.
+- MVP:도면/OCR·층/실/3D·소방시설표시·조건설정·두탐색모드·간편MC·상위CFAST·세위험레이어·두통행기준·비교/저장.
+- 소방시설 성능 화재연동과 층별/여러층 배연 대안 비교는 MVP 이후.
+- 배연은 간편 후보 선별→소수CFAST, 연기감소와 고립/현상/전파 악화도 비교하는 향후안.
+- 시간중 문창상태 고정,중간배연작전 자동추가안함. 새작전기능은별도후속범위.
+- r4검토ZIP은당시소스/문서스냅샷으로보존. 최신사용흐름은r5이며새검토ZIP은이번요청에서만들지않음.
+- 문서/인계만수정. 기존100개소스·엔진·결과해시불변확인. 코드수정/빌드/새MC·CFAST/브라우저변경없음.
+
+최신 전체흐름 — 2026-10-22 r4 / 사용자 고립·표시·설비 수정 반영
+- 모든사람용실내문은환기닫힘과무관하게통행가능. 잠김·장애물제외. EPS점검문등은피난경로제외.
+- 문창은시나리오내내고정. 중간개방행동없음. 통과시환기변화생략.
+- 일반재실자/보호장비+SCBA소방대원통행기준선택. 같은native자료의후처리이며보기전환은재실행안함.
+- 현상영향/화재전파/고립레이어개별·임의2개·3개중첩.
+- 소방시설은MVP표시까지만. 기존fire-facilities.js에층간펌프수조투시·송수구/배관/구역표시확인.
+  현재모델연결완료라고하지않음. 수리·소화/배연성능화재연동은MVP후.
+- NIST TN1474장비환경표/TN1724/TN2041참고. 인체안전시간보증으로사용금지. 두프로파일수치는아직검토.
+- specs/전체프로그램-사용시나리오-20261022.txt.
+- reviews/전체프로그램-시나리오·고립기준-Claude검토-20261022-r4.zip 및동명폴더.
+- r4의01/09가r3충돌내용보다우선. r3는10배경자료로보존. 코드·엔진·결과불변,빌드/새계산없음.
+
+최신 통합명세 — 2026-10-22 r3 / 두 모드·현상별100점지수
+- 사용자:설정→간편식MC층위험평가→상위시나리오CFAST. 자동최초화점/사용자지정화점두모드.
+- 사용자최신표시:FO/FGI/롤오버0~100지수주표시, 초과℃/%p등원자료는상세보기.
+- 지수는조건충족정도의프로젝트표시안. 경계80/ANDmin·ORmax/표시폭은검토제안이며미구현·NIST공인지수아님.
+- MC는간편식전용,native건수예산독립. 기본CFAST1건/추가별도예산은검토안.
+- source(최초화점) vs receiver(피해실)구별,주순위H_T와H_OD/H_R대안·max_s witness는신규집계안.
+- conditions.py에기존margin/first/duration은있음. 100점지수는없음. 현행착화/FO/가스조건변경금지.
+- 최신 specs/두모드-층위험탐색·조건지수-통합명세-20261022.txt.
+- reviews/두모드-층위험탐색·조건지수-Claude검토-20261022-r3.zip 및동명폴더.
+- 별도 reviews/두모드-층위험탐색·조건지수-Claude검토요청-20261022.txt.
+- 기존86파일스냅샷/원본28소스와구간편식6소스·과거증거3개추가. 원본/프로젝트/legacy분리.
+- 문서·정적무결성검사만수행. 소스/엔진/결과불변,빌드/새시뮬/MC/서버변경없음. Claude직접전송없음.
+
+최신 정정 — 2026-10-22 r2 / 사용자: MC는 간편식에서만
+- 앞선 표본별 CFAST 실행 설계는 잘못 잡은 범위이며 폐기한다.
+- 문·창 조합 MC → 층 전체 적격 화점 후보 간편식 평가/집계 → 소수 실제 사례 선정 → 그 사례만 CFAST.
+- MC 표본 수와 native 사례 건수 예산은 독립. 표본마다 native 덱 생성/실행/전이 루프 금지.
+- 대표실을 MC 전에 고정하지 않고 간편 결과에서 선정. 실제 추첨된 이진 개폐 조합을 native에 전달.
+- 간편 지표 비율은 실제 발생확률 아님. native 조건/시계열과 간편 통계를 구분.
+- canonical specs/층단위-시나리오·균등연료·몬테카를로-검토명세-20261022.txt r2로 개정.
+- 최신 reviews/층단위-시나리오-간소화-Claude검토-20261022-r2.zip 및 동명 폴더.
+- 별도 reviews/층단위-시나리오-Claude검토요청-20261022.txt도 r2. r1 패킷은 역사 기록이며 현행 규칙 아님.
+- 기존 착화/노출/판/FO/가스 기준 보존. 소스·엔진·결과 불변, 빌드/새 계산 없음.
+- 과거 v44/v45는 간편식 재사용 후보, 새 MC 구현/검증 완료 아님.
+
+PyroCast 세션 인계 — 2026-10-22
+
+최신 설계 검토 자료 — 층 단위 시나리오/균등 연료/문·창 몬테카를로 (2026-10-22)
+- 사용자 요청: 합의한 방향의 명세·Claude 검토 자료와 기존 코드 변경 지도를 준비. 코드 수정/새 계산 금지.
+- specs/층단위-시나리오·균등연료·몬테카를로-검토명세-20261022.txt 작성.
+- reviews/층단위-시나리오-간소화-Claude검토-20261022.zip (432364bytes), 동명 폴더.
+  별도 붙여넣기용 reviews/층단위-시나리오-Claude검토요청-20261022.txt.
+- 패킷: 질문/통합명세/코드지도/사실·가정·미검증 구분/NIST 근거/설명용 입력/체크리스트,
+  현재 코드86파일 스냅샷(원본CFAST28파일 별도), 실제 행 번호37곳, SHA manifest, 과거 실측 증거.
+- 설계: 실별 유효 연료 프리셋·총량, 면적당 균등 연료장. 분포 도메인과 기존 유효 연소면적/발열 상한 분리.
+  기존 대표군/개구부 후보가 공유 예산을 참조. FO 전 위치 편향/실내 상세 전면 전파는 해결됐다고 하지 않음.
+- 문·창: 새 개수 비율 키와 기존 per-opening 부분 폭 fraction 키 분리. 문0/1, 열린 외기창 기본유효0.5.
+  고정K개 비복원 추첨/반올림/잠금 제외 분모는 검토 제안. 실제 열림ID·RNG/seed 저장, 중복 캐시 가중치 유지.
+- 현재 adapt는 열림 도달성으로 실을 제거함. 새 층 공통 실 목록/미평가 분모 보존 및 기존 누설 구분이 필수검토.
+- 대표실: 전 실 간편 특징량만 계산(실별CFAST 아님), 발화우려/영향 분리. 기본1+선택대안1은 제안.
+  실제 빈도 데이터 없으면 미확인. 사전식 정렬은 미검증 대안이며 최악/최빈 실 보장 아님. 표본 동안 화점실 고정.
+- 층 기본/수직 경로 선별/필요한 코어 연성/외벽 창 화염을 구분. 외벽 상세보완은 첫MVP 보류,
+  경로 연결만으로 상층 착화 확정하지 않음. 독립층CSV 이어붙이기/상층에 임의 화점 복사는 제외.
+- 기존 착화/노출/판/FO/가스 수식·임계값 보존. 단일 실현값은 기존simulate 사용. 기본earliest_single 유지.
+  CLI connect_cad의build/cfbt vs 서버build/ignition 엔진 선택 차이, 단일worker중첩대기, nested clipping 검토도 포함.
+- 정적검사만 수행: 원본lock28파일/SHA·복사86파일/37anchors/JSON/ZIP 무결성, 기존 소스·엔진·결과 불변 확인.
+  단위/엔진/Monte Carlo 시험·빌드·새 시뮬레이션·서버/3D 변경 없음. 외부 Claude에 직접 전송하지 않음.
+- 다음: Claude 답변을 검토한 뒤 최소 범위/미확정 구현규칙을 확정. 이 자료 자체가 구현 승인/완료를 뜻하지 않음.
+
+최신 구현/실측 — 일괄 반복·조건표·개구부/상층 분리 (2026-10-21)
+- 사용자 직접 구현 승인. Python 실행 구조/표시만 수정. CFAST 원본28파일·Fortran 확장·엔진 재빌드 없음.
+- iteration.py 신설: fixed_point 일괄 사건 병합/앞당김 유지/FO 통합/절단 후 선행 화원 검사.
+  실행된 사건과 제안 사건 분리, 성공한 native 결과만 커밋. 실패·예산·회차 종료도 마지막 평가한 완료 회차를 게시.
+  max_passes=초기 실행 포함한 평가 회차. max_runs는 재시도 포함 native 시도 상한.
+- assess는 reevaluate 옵션만 추가. committed 실제 화원/복사 맥락 보존. 기존 착화의 자기 발열이 섞인
+  출력 구간으로 사건을 앞당기지 않으며 재확인 불가(later_or_missing)를 숨기지 않는다.
+  schedule_stable과 condition_consistent 별도. 앞당김 유지가 모든 위험의 보수적 상한이라는 주장 금지.
+- exposure.py/thermal.py/flashover.py/deck.py는 이전 Claude 검토 스냅샷과 SHA 동일. 착화 물성/수식/FO곡선 유지.
+- conditions.py: 기존 FGI criteria 선별 유지, 추가연소 gas 기준/점화원·강제 창 및 별도 O2 기준 표시.
+  FO AND/OR/미평가3값 논리. 실제 Qbulk/Qvent는 조건표와 분리해 숨기지 않음. 확률/새 등급 없음.
+- viewer: 주황 상층=bulk 추가연소(rollover 확정 아님), 청록 문·방향별 native 개구부 발열 화살표/kW.
+  기존 RO 태그는 하위호환 보존하지만 새 색상은 이를 쓰지 않음. 회색 연기·FGI 가스 화염OFF 유지.
+  조건 선택·조건표·초과량/실제량·연속색/미평가 빗금. 연료군 위치/착화/FO 상태 기호 추가.
+  현재 CAD는 여전히 실당 대표 연료군1개이며 새 분산 연료군을 구현했다고 하지 않는다.
+- UI/API 기간 상한3600초, 긴 기간의 실행 예산을 비례 조정. 1시간 전이 완료 결과로 교체하지 않음.
+- 실측 comparison.json 및 REPORT.txt: simulation/results/iteration_benchmark_20261021/.
+  cad_opening_30min 14실/고체45℃ QA 입력, 같은 기존 엔진e6cb... 캐시 없이 순차 재실행.
+  기존5회: native271.669초/총340.313초. 일괄3회: native174.782초/총218.218초(총35.88% 감소).
+  착화군·위치 같음, 시각 최대3.59275초 차이. Tu최대0.189249℃, O2최대0.015787%p,
+  Fu최대0.557530kg, OD최대0.010278/m 차이. FGI 선별은 R1 출력2시점 차이, 다른 표기 유무 차이0.
+  native 인과 진단2회 통과. 일정 안정이나 기존4건 재확인 불가 플래그가 남아 condition_consistent=false.
+  기본 iteration_mode=earliest_single 유지. fixed_point는 경고가 붙는 명시 선택 모드.
+  저장 원사례와 기존 경로 착화시각/Tu/O2/Fu/OD 차이0. 덱바이트는 이전 작성기의 기본O2=.15 명시 생략 차이.
+- 30→60분 비용 분리 시험(화원/FO 일정 고정, 새 전이 탐색 안 함): 엔진59.360→66.734초,
+  CSV50.673→102.381MB,361→721시점. 후반 화재 약화 사례라 시간1.124배. 전체/최신3실에 그대로 외삽 금지.
+  메모리 최대·CPU시간·전력 미측정. 후반 새 사건 탐색까지 포함한1시간 전이 실행 아님.
+- 소규모 실제 현재 점화 엔진 검사: results/iteration_native_checks/checks.json.
+  사건 없음1회 수렴, 단일 전이 양 방식2회·시각 동일. QA45℃ 입력이며 운영 임계값 변경 아님.
+  단위56개, 원본/생성28파일·14hook 경계, 연기/가스/위험 표시 분리 JS검사 통과.
+- 현재3실 완료결과는 그대로, conditions/연료 위치 기호만 새 playback으로 패키지:
+  results/condition_display_v1/playback.json (native 입력 SHA3717e063... 유지).
+  화면 results/condition_display_v1/conditions-and-vent.png. 실제 브라우저 콘솔 오류0 확인.
+- 로컬8780 서버 마지막 세션27372, 기본 result 위 condition_display_v1. start_building_view.ps1도 해당 결과 우선.
+  IAB tab4가 최종 정상/전달 탭(같은 모델URL). tab3은 재시작 중 연결오류 페이지가 되어 조작정책상 재활용하지 못함.
+- 470초 전층 정체 프로파일링/엔진 상태 저장·복원/전체1시간 새 전이 계산은 이번 완료 범위 아님.
+
+
+최신 문서 수신/검토 — 반복 수렴·조건 표시 (2026-10-21)
+- 사용자 제공 Downloads/구현지시-반복수렴·조건표시-20261021.md를 읽고 현재 코드와
+  대조했다. 이 턴은 정적 검토이며 시뮬 코드 수정/빌드/계산 없음.
+- 문서 방향: 엔진/노출/판/착화/FO 수식 유지. 한 회차의 사건을 일괄 추가하고 앞당김만
+  반영하는 반복 계산. 매 회차는 여전히0초부터 실행한다. 스냅샷/IPC 연속 실행과 다름.
+- 방향은 가볍지만 의사코드 그대로 구현하면 안 됨:
+  (1) assess의 committed는 활성 제외뿐 아니라 supplementary의 실제 추가 화원/복사
+      맥락에도 쓰임. []로 비우면 추가 화원 직접 복사가 사라짐. 실행 맥락과 재평가
+      제외 규칙을 분리해야 함. FO도 실제 ignitions와 재평가 done 집합을 구분.
+  (2) proposed 사건을 먼저 대입한 뒤 run 실패/예산 종료하면 미실행 사건이 최종결과에
+      섞임. executed 사건/FO와 proposed를 분리하고 성공한 회차만 커밋해야 함.
+  (3) later_or_missing을 유지한 상태는 일정 안정과 조건 자기일관성이 다름.
+      flags와 pass_consistency 실패/상한을 남긴 결과를 완전한 조건 수렴이라고 표시하지 않음.
+      앞당김 유지가 모든 실/현상에 보수적 상한임은 보장되지 않음.
+  (4) conditions 표의 FGI는 기존 criteria.fgi_* 대신 gas.*와 새 온도/유입 조건을 사용해
+      기존 FGI_POTENTIAL 의미와 다름. 기존 선별과 새 세변수표를 이름/설정출처로 구분해야 함.
+      실제 상층 엔진의 pilot_assumed/창/force 경로, force O2 기준도 정확히 반영해야 함.
+  (5) FO temperature_or_flux는 AND목록이 아닌 OR+3값 논리. T참+flux미평가→참,
+      T거짓+flux미평가→미평가. 조건표와 실제 Qbulk/문별 native 발열은 분리해 실제값을 숨기지 않음.
+  (6) crossing<=oldtime 필터만으로 사건 구간 끝점 보간의 자기 가열 영향까지 사라지지 않음.
+      기존 수치 근사의 영향과 검증 범위를 명시해야 함.
+- 최종 사건 병합 후 FO 활성화 근거/상한 절단을 다시 검증. 삭제/변경 사건의 이전/새
+  가장 이른 영향 시각 모두 consistency 비교 기준에 포함하고 FIRE 순번 대응도 확인.
+- max_passes와 초기1회 실행 포함 여부/max_runs·재시도 횟수·마지막 평가/실행회차를 명확히
+  해야 함. 2~4회 속도 예측은 미측정이며 연쇄 전이는 여러 회차가 필요할 수 있음.
+- 권고: 위 보완 후 기존 earliest_single 회귀 보존, 일괄 반복은 옵션으로 비교시험.
+  시험 실패 시 기본값은 기존 방식 유지(문서 완료 기준과 같음). 아직 구현 완료 아님.
+
+최신 검토서 수신 — 연속 실행·표시 분리 (2026-10-21)
+- 사용자 첨부 Downloads/검토-연속실행·표시분리-20261021.md를 정적 검토했다.
+  첨부의 구현 지시는 사용자 직접 지시로 자동 적용하지 않았다. 코드 수정/빌드/새 계산 없음.
+- 권고 방향 동의: Python 노출/1D 판/FO 조건 유지 + 지속 CFAST + 메모리 상태 복원 +
+  구간 명령. 잠정 출력은 COMMIT 전 게시하지 않으며 모든 후보 판 상태를 함께 복원.
+- 적용 전 보완: C6/V0의 임의 구간 분할까지 비트 동일 보장은 과도하다. 원래 내부 격자
+  그대로인 경우와 실제 부분 단계 재계산 경우를 나눠 수치 수렴/열수지로 검증해야 한다.
+- SET_TABLE은 HRR뿐 아니라 native mdot/area/height/hoc의 일관성, 착화 후 상대시간,
+  불연속 일정 갱신이 필요하다. source_curves의 전환 전 매듭 보존을 그대로 유지.
+- native 상층 플룸 HRR은 fireinfo(i)%qdot_layers(u)에 이미 저장된다(fire.f90:80/83).
+  cfbt_output에서 진단으로 꺼낼 수 있어 do_fire 내부에 새 연결점을 반드시 만들 필요 없다.
+  전체 화원 HRR과 상층 성분을 중복 합산하지 않는다.
+- 산소 제한 잠재량은 가능하면 기존 fuel_Q/fuel_o2/O2 질량 장부를 출력해서 사용한다.
+  O2 체적분율*층 질량의 단순 곱이나 범용13.1 계수만으로 동일 화학량론이라고 하지 않는다.
+- C1의 사건 포함 출력구간 보간 구조는 코드에서 확인. 실제 영향 크기/새 후보 역전의
+  원인으로서의 크기는 미검증이며 전체 native 계산 오류로 일반화하지 않는다.
+- R0/R1/R2/R3 병목 분리는 유용하나 정체 차이만으로 원인을 확정하지 않는다. 입력·엔진
+  버전·물리 스위치·진단 I/O 오버헤드를 통제해야 한다. 진단만 모드는 gas_sidecar가
+  enabled=True, bulk_enabled=False, vent_gate_enabled=False로 만드는 것을 확인했다.
+- 다음 단계 제안: 표시 분리→판 상태 유지 동등성→스냅샷 복원 시험→고체/FO 구간 처리.
+  아직 연속 실행 또는 표시 분리를 구현 완료한 상태가 아니다.
+
+최신 사용자 결정 / Claude 검토 준비 — 착화 판정 보존 (2026-10-21)
+- 사용자: 착화 판정 조건은 그대로, 사건마다0초부터 다시 돌리는 구조부터 최적화.
+  개구부 연소/실내 상층 연소 표시 분리도 함께. 우선 계산 방향을 Claude 검토용으로 준비.
+- 이 결정은 앞서 제안한 “간편 연속 모드”의 착화 판정 단순화보다 우선한다.
+  임의의 열유속 OR 스위치/유지시간 추가/후보 축소로 판정을 바꾸면 안 된다.
+- 작성 중이던 미연결 events.inc 초안은 삭제했고 declarations.inc는 기존
+  build/ignition/cfbt/build.json의 원본 SHA와 일치하는 바이트로 복원했다.
+  hooks/Fortran 빌드 사본/실행파일은 새로 빌드하지 않았다. 현재 확장 입력과 기존
+  실행파일 빌드 기록 일치, 원본28파일/14hook 경계 확인. 새 시뮬레이션 없음.
+- 검토 자료 reviews/CFBT-연속실행-표시분리-검토-20261021.zip (약425KB).
+  검토요청.txt / 설계안.txt / 현재계산과변경금지사항.txt / 코드위치.txt,
+  현재 소스75개와 해시·실행/중단 증거 포함. 외부 Claude로 직접 전송하지 않았다.
+- 권고 검토안(미구현/미검증): 장기 실행 CFAST + 기존 Python 노출/1D 판정 증분화,
+  직전 관측 구간 native/판 내부 상태 저장, 사건 발견 시 그 구간만 복원·재적분.
+  같은 알고리즘을 Fortran에 이식하는 대안과 비교하도록 요청했다.
+  CSV 온도/O2만으로 이어붙이거나 사건을 다음 출력 시각으로 몰래 지연시키지 않는다.
+- 아직 확정 안 된 기술 쟁점: DASSL/전역/벽체/타깃/누적장부의 완전한 상태 보관,
+  기존 판 적분의 출력격자 보간과 온라인 사건의 수치 동등성, IPC 오버헤드.
+- 표시 계획도 아직 미구현: 문별 방향 DJET와 Qbulk를 분리. Qbulk가 native 화원
+  상층 플룸 발열과 다름, 강제 FGI와 롤오버 인과 판정이 동일하지 않음을 명시.
+  표시 기준/모델 연소 기준을 분리. 실제 온도/O2/연기/HRR 수치는 유지.
+- 현재 3D/서버는 기존 완료 결과와 FGI 화염OFF 상태 그대로다. 새 연속 실행이나
+  표시 분리가 완료됐다고 보고하지 않는다. Claude 답변 후 검토안을 확정하여 구현.
+
+최신 진행 — 전체 연기 표시 및 FGI 화염 표현 OFF (2026-10-21)
+- 사용자: 위험 조건과 무관하게 계산된 모든 연기는 기존 회색 질감으로 표시하고,
+  조건을 만족할 때만 색 테두리를 적용. 이후 FGI 가스 화염 효과는 일단 끄라고 명시.
+- smoke_visual.js: 연기 본체 가시성과 위험 경계를 분리. legacy_real_view/bridge에서
+  gasFlamesEnabled=false를 명시하고 true일 때만 메시를 켠다. 고체 화염·gasStates·
+  native 가스 발열/온도/O2/연기 계산은 유지. UI에도 가스 화염 표현 OFF를 명시.
+- 8780 서버 새 세션83860, 같은 URL/기존 브라우저 탭. Qbulk338.6kW인 기존 점화
+  예시의260s에서 가스 화염 없음, 회색 연기/보라 경계/계산값 유지 확인.
+  화면 simulation/results/ignition_checks/gas-flames-off.png.
+- 연기가3실에만 있던 주원인은 위험색 필터가 아니라 기존 국부 입력의3실 절단 범위.
+  floor_smoke 빌더/단일 실행 분기를 추가했으나 아래 전층 계산은 정체로 중단됐으며 완료되지 않았다.
+  3F CAD31실 중 수평 연결로 접근되는14실/57개구부. 나머지17실은 미계산이며 안전 아님.
+- 간편 전층안은 기존3실의 고체 착화/FO 시각을 시나리오 지정값으로 가져와 native
+  연기/열/O2/실제HRR을14실에서 다시 계산. 새 고체 전이는 평가하지 않는다.
+  기존 사건을 고정하면1회 실행이나, 실제 엔진 시간은 별도 확인 필요.
+  results/cad_floor_smoke_v5_prescribed: 1800s 요청, 예산900s. 13:44:37 시작,
+  13:51:03 마지막470s 출력 이후 약6분 정체하여13:57:25 수동 중단. 정상 완료 아님.
+  이 폴더에 정상 result/playback이 없으면 완료된 전층 결과로 사용하면 안 된다.
+  이전14실18타깃/6타깃 시도도 중단. 완료30분 기존3실 결과는 보존돼 있다.
+  13:57:25 native 프로세스 종료 확인. 전층 완료 result/playback 없음.
+  전층 빌더/단일실행 분기는 준비됐지만 실제1800s 계산 성공/시간 개선은 미검증.
+  결과가 없는 상태에서14실 전층 연기가 화면에 반영됐다고 말하면 안 된다.
+- 서버는 새 playback이 정상 생성되면 floor_smoke를 노출하며 없으면 기존3실을 사용.
+  UI에 계산실수/도면실수, 미연결·미계산, 지정 사건·새 전이 미평가를 표시.
+  이전3실 점화 비교는 별도 명칭으로 남기고 전층 비교로 오인하지 않도록 했다.
+- 단위44개/연기 표시 게이트 JS/구문 검사 통과. Fortran/원본/엔진 재빌드 없음.
+- 사용자 후속 질문: 대공간·가스/유증기 계산 난이도. 연료량 자체보다 공간 평균 가정,
+  연소 공급률, 누출·혼합·점화/폭압의 구분이 핵심이라고 NIST TN1889v1§1.5/3.2로 설명.
+  현재 연기 미연 연료 추가연소는 외부 가스 누출/증발 모델 구현과 다르다고 명시.
+
+최신 정정 — 가스 점화 실감 효과·회색 연기 외곽선·계단실·반자고 (2026-10-21)
+- 사용자 새 요구: FGI 가스가 타는 순간을 실감 보기로 표시, 연기 본체는 기존대로 유지하고
+  위험색은 외곽선에만. 분산 연료/FO 통합 약속의 구현 상태와 반자 높이도 점검해 달라고 했다.
+- 오류 확인: 이전 점화 R21은 stair_inside/core C3 계단실. 단일층에서 코어 분류가
+  생략돼 일반실 연료가 배정됐다. cad.py는 태그/전용 코어/이름으로 독립 식별하고
+  자동 2차 고체 연료를 코어에 배정하지 않는다. 혼합 주차장 이름 속 계단 문구로
+  주차장 전체를 코어로 잡지 않도록 제한했다. 코어 초기 화점 선택은 낮은 대용 연료.
+- 또 반자고 누락: 3F floor.ceil_h=null 때문에 5.5m 구조 층고를 사용하고 있었다.
+  원본 DXF 직접 파싱: 314/R4 홀3,304/R15 홀2,312/R25 휴게실 각각 TEXT 3,000 확인.
+  원본 SHA9a37bf28c299dc601b2327afa8ea5f4c166b71c767059ffa74d742b51f442712는
+  현재 building 3F provenance와 일치. 기록 results/ignition_checks/ceiling-dxf-check.json.
+- ceiling.py 추가: 명시 실 높이→검증 DXF 태그→층별 반자고→구조 높이 미확인 대용.
+  work/cfast_ceiling_heights_v30.json은 예전 building해시와 달라도 무조건 ID로 붙이지 않고
+  실제 원본 DXF SHA와 현재 좌표 변환/실 polygon 포함을 확인하여 재매핑한다.
+  계단/승강로는 구조 높이, 반자 위 공간/붕괴/개별 반자 재료는 미해석. 경계 열물성 대용.
+- 최신 기준 results/cad_exterior_risk_demo_v4_ceiling: R25 휴게실→R15 홀2→R4 홀3,
+  세 실 모두 계산 반자고3m, 계단실 제외. 원래 가산 연료/환기 조건은 유지한 국부 시연.
+  30분 native3회 정상(175.875/172.515/177.610초), no_new_ignition.
+  R25 FO전환309.4198s, R15 고체착화315.5369s. v2/v3(5.5m) 결과는 과거/정정전이다.
+- 최신 점화 비교 results/cad_exterior_ignition_demo_v4_ceiling_250:
+  R4 250s, 보조15초, 반응률.05/s, O2min10vol%, 550초까지. native3회 정상
+  (125.812/148.235/129.203초), no_new_ignition. 기준과 비교는 동일5분 추적 창.
+  380s에는 O2가8.82%라 새 예시에 부적절해 사용 안 함. 250s에는16.46%, 연료0.526kg.
+  255s T83.8687→110.3839℃, O2 16.3042→16.2281%, OD2.32261→2.50411/m,
+  bulk481.8715kW. R15 착화315.5369→313.7386s. prefix 최대 온도차4.68e-6℃.
+  체크 results/ignition_checks/gas_visual_checks.json. 실제 화재/폭연 검증을 뜻하지 않음.
+- playback Qbulk_kW는 native bulk만 분리(Qgas는 DJET 포함). gas_visual.js는 이 값으로만
+  효과를 켜며 점화 전 미래 프레임으로 화염을 보간하지 않는다. 옛 Qbulk 없는 결과는 효과 없음.
+  legacy_real_view.js는 CAD polygon/구멍 마스크와 계산 상층 높이에 별도 가스 화염 메시1개.
+  모양·공간 분포·움직임은 표시용, 발열/O2/연기 계산에는 되먹임 없음. 폭압/전면/속도 미해석.
+  연기는 원래 회색 셰이더/노이즈/alpha 그대로, 위험색은 상층 CAD 둘레의 위아래 경계 선에만.
+  바닥 고체 불꽃과 가스 연소 실 수를 따로 표시. 현재 3D 반자면/실 이름/숫자 캡션 추가.
+- UI: 저장된 예시 점화 비교→FGI 가정 점화 재생(1배속,3초 전), 직전/5초 후,
+  동일시각 기준/점화 토글. 토글 시 시간/카메라 구도를 유지하도록 마지막에 수정했다.
+  기본 기준30분과 점화 비교550초(점화 후5분)를 구분한다. 가정·한계를 화면에 명시.
+- 분산 연료에 대한 정직한 현황: 현 CAD 어댑터는 여전히 실당 대표 연료군1개.
+  문 근처 여러 후보는 독립 연료가 아니다. flashover.source_curves의 FO 후 통합과
+  보충 복사 최대4점 분산은 있으나 FO 전 실내 분산 연료군/각 연료군 착화는 미구현이다.
+  사용자의 설계 방향과 이 누락을 설명했고, 표시용 가구만 늘려 완료라고 하지 않았다.
+  이 기능을 다음에 실제로 연결해야 한다. 이번에는 관련 질문에 현황을 점검·명시했다.
+- 단위43개/가스 표시 게이트 JS검사/구문 검사 통과, native 3+3회 완료와 인과성 검사.
+  원본28파일/14hook 경계검사 통과, 원본/Fortran/엔진은 이번에 수정·재빌드 안 함.
+- 서버 tools/serve_cfbt_building.py, start_building_view.ps1 최신 v4 경로.
+  8780 서버 승인된 로컬 exec 세션36045, 루프백 전용. 현재 같은 URL의 기존 탭 사용.
+  브라우저에서 반자고3m, gray연기/보라윤곽, 점화전0실/후1실, 온도/O2/OD 비교와 콘솔0 확인.
+  화면 results/ignition_checks/gas-before.png,gas-baseline.png,gas-ignited.png.
+- 상세 specs/GAS_FLAME_VISUAL_20261021.txt, specs/CEILING_CORRECTION_20261021.txt.
+  이전 5.5m/계단실 사례를 최신 결과로 사용하지 않는다. 원본 외부 작업 폴더는 읽기만 했다.
+
+최신 구현 — 위험 유형 색상·실/시점 점화 비교·외기면 가산 시연
+- 사용자 최신 요청으로 위험 색상과 실제 점화 가정 비교를 구현했다. 이 요청이
+  아래의 '이번에는 Fortran을 변경하지 않음'이라는 이전 작업 범위보다 최신이다.
+- viewer/risk.js: 위험 보라FGI/가정점화, 붉은BD가능조건, 주황RO가스연소지표,
+  노랑FO기준/공급전환. 실 윤곽/바닥/상층 연기 색상, 겹치는 조건은 상세에 함께 표시.
+  위험 보기에서는 구분용 보라 플룸을 숨겨 위험 색과 혼동을 줄인다. 온도 보기 유지.
+- FGI_POTENTIAL은 사용자 질량분율0.5%/O2체적10% 기본 선별(설정가능), bulk가 없고
+  실제 고체 HRR>1kW가 없는 실. LFL·발생 확률로 부르지 않는다. BD_POTENTIAL 추가.
+- Fortran 확장에 지정실/시각/유한 점화보조창/반응률/O2min 추가. 온도게이트만 우회,
+  기존 연료·산소 재고/chemistry/상층 에너지 경로 유지. 새 연료/임의열 투입 없음.
+  시간 창 시작·끝을 native discontinuity에 넣는 연결1개 추가(총14개). 원본28파일 무수정.
+  별도 build/ignition/cfbt/cfast-cfbt.exe SHA2ff8192b84956b1bb0ef3d9fbc7fe05752d52670773249749b5d020eb57292f2.
+  이전 build/cfbt 바이너리는 보존했다. 현재 서버는 새 엔진 우선.
+- comparison.py: 기준 시나리오에서 후속 고체/FO사건을 재평가, 점화 전 인과검사.
+  경량 비교는 점화 후 약300초까지. 기준 재생도 같은 창으로 자르되 도면/일정은 유지.
+  기준/점화 토글·동일시점 온도/O2/OD·점선 온도·인접 고체 착화시각 차이를 표시한다.
+  /cfbt/ignite POST 비동기 API, comparison GET, 저장된 비교 버튼. 원본 결과 유지.
+  입력/엔진/모듈해시·실/시점/유지시간/반응률이 같은 비교만 캐시 재사용.
+- 현재 CAD 외기면 R25(W1) 선택, R15/R21 포함3실 국부 시연30분.
+  R25 에너지4배/공급최대8배/전체바닥 연료면적/750kW/m2/빠른t2(alpha .1875).
+  외부창10%→450s80%, 실내문15%→300s100%. 조사값이 아닌 가산/복합조건 시연.
+  나머지 연결은 닫힌 절단 경계/미계산. 전체 건물 전파 검증으로 해석하지 않는다.
+- 결과 results/cad_exterior_risk_demo_v2: 실제 native3회 정상(원실행 약114/113/112초).
+  FO600℃ 공급전환314.779s, R15 RO지표95s/FGI조건245s, R21 FGI조건320s,
+  R25 BD가능조건155s, R15 고체착화506.039s. BD발생/폭압을 재현한 것은 아니다.
+- results/cad_exterior_ignition_demo: R21 380s에30초/.2/s/O2min10% 점화 가정,
+  680s까지 실제3회 계산. 385s R21 상층86.52→382.83℃, O2 13.80→11.74%,
+  OD3.29→3.02/m. 최대 온도차296.31℃, R15 착화506.039→491.192s(14.85s빠름).
+  두 사례 모두 no_new_ignition으로 탐색 완료. 개별 최대 변화는 서로 같은 시점이 아님.
+- 단위시험39개 통과. 원본/합성 경계검사28파일·14hook 통과.
+  tests/check_ignition_engine.py 실제검사: forceOFF 이전/새 엔진 zone차0,
+  force전 온도차0.000657℃, 지정실/창 밖 bulk0, 연료없음 bulk0. 시험용 낮은 기준.
+  새비교 출력시간격자 차이는 최대0.001s 이내(표시5초) 허용 확인.
+- 8780 서버 새 API/색상/예시 비교 적용, 현재 브라우저 R21/385s/점화가정 화면.
+  버튼 직접 실행→동일조건 캐시 재사용→비교 완료를 UI로 확인. 오류콘솔 없음.
+  baseline/ignited 토글에서 시각 유지, 온도/O2/연기/착화시각 차이 확인.
+  화면 results/ignition_checks/risk-baseline.png, risk-ignited.png. 서버는 승인된
+  로컬 exec 세션76294에서 실행(소켓 제한 때문에 샌드박스 밖127.0.0.1 바인드).
+- 시작 스크립트는 새 외기면 가산 사례 우선. 비교는 '저장된 예시 점화 비교'로 다시 연다.
+  tools/build_risk_demo.py --output results/cad_exterior_risk_demo_v2,
+  tools/build_ignition_demo.py로 재생성 가능. 동일 입력은 검증된 native캐시 재사용.
+- 상세 specs/RISK_IGNITION_COMPARISON_20261021.txt. 이전 검수ZIP은 최신 코드가 아니다.
+  실제 폭연/화염 전면/점화 발생 확률/PPE 선량은 미구현이며 화면 한계로 표시한다.
+
+최신 결정/구현 — 정밀 확장을 중단하고 실용 탐색 수준으로 전환
+- 사용자: 끝없는 세밀한 계산 대신 MVP보다 안정적인 도면→3D→시뮬 제품 수준을 지향.
+  단순화한 계산은 한계를 명시한다. 이 결정이 구현지시 개정2 전체 구현보다 우선한다.
+- simulation/pyrocast_cfbt/practical.py 추가. CAD/CLI 기본 practical, 기존 재현은 --profile legacy.
+  30분/5초 저장/최대1초 단계, 가스 Ea=0 대표 반응률0.1/s(기존 산소/재고 제한 유지),
+  native 문 연소 변경 OFF. FO는 사용자 임계600℃/연료 면적 기준 유한 공급 처방.
+  FO 후 전달 복사만4개 이내 격자점으로30초 비중 전환; native FIRE/플룸 추가 없음.
+  총600초/기본6회(상한900초/8회), 수렴·출력 실패는 같은 예산에서1회 절반dt 재시도.
+- NIST 원본/Fortran 확장/기존 엔진 바이너리를 변경하거나 재빌드하지 않았다.
+  상세 점화원 래치·펄스/PPE 선량·화염 전파·1000회 시나리오는 추가하지 않았다.
+- cad.py는 building.json/출력폴더/프로젝트를 받으며 --building으로 선택 가능.
+  특정job/3F/R9/예전 연료 파일 필수 의존 제거. 한글 층·실 ID를 안정 ASCII키로 변환.
+  통로/보통실/숙박/공정용 대표 연료 및 구조 문구별 벽체 대용값. 모두 프로젝트 가정.
+  혼합 홀+공정 문구를 저연료 통로로 단정하지 않는다. 문 앞 후보 불가시 대표 바닥면+경고.
+  100구획 초과 병합 불가시 화점 연결범위로 제한, 제외·닫힌 절단경계 가정을 표시한다.
+  Shapely2.2는 기존 로컬 정식패키지를 simulation/deps로 복사했다(네트워크 설치 실패).
+  requirements.txt로 새 환경 설치 가능. 원본 외부프로젝트는 읽기만 했다.
+- 잘못된 열유속 후보 격리, 유효 후보 없는 연료군은 incomplete_exposure.
+  실패시 이전 유효 상태/미확정 사건 구분. vent_gate 온도 적용 범위를 vent_jet만으로 정정.
+  FGI_POTENTIAL은 단순 농도/O2 대용 판정. FGI 기존 태그는 반응+이송 탐색 표시이며
+  실제 점화원 기반 FGI 발생 사건 판정이 아님을 결과에 명시했다.
+- result/playback/3D에 limitations/input_warnings/미평가 정보 추가. FO ON/OFF·임계온도 UI 추가.
+  실감 보기/화점 확대 유지. 기존 결과와 다른 건물의 해시를 대조해 잘못된 재생을 차단한다.
+- 검증: 단위시험36개 통과. tests/check_practical.py 실제1실/2실/낮은 임계값 FO2실/기존FO1실4사례 통과.
+  FO2실은 전환 이전 직접복사 불변과 전환 후 분산 전달 변경까지 확인했다.
+  기존 건물 results/cad_practical_30min: 3F R9,14실/57후보/1800초, 실제 엔진1회 정상19.015초
+  (후처리 포함 총시간이 아님), no_new_ignition, 추가착화0, FO전환0, 무효/미평가0.
+  고체369℃/대표 연료의 새 사례다. 이전45℃ 기능시험과 직접 속도·결과 비교하지 않는다.
+- 8780에서 새 결과 선택·실감 보기·화점 확대·한계 문구 브라우저 확인.
+  결과 선택은 practical30. start_building_view.ps1도 새 결과 우선, --Building 지원.
+  로컬서버는 소켓 샌드박스 제한 때문에 승인된 exec에서 실행했다.
+  화면 기록 results/practical_checks/practical-view.png. 예전 결과/클로드ZIP은 그대로 보존.
+- 제품 범위: 구획·개구부가 추출된 building.json과 기존3D 생성결과에 대한 범용 연결을 보완한 것.
+  모든 DWG/PDF/이미지 자동인식이나 도면 업로드/OCR/3D 생성 웹앱 전체 완성을 주장하지 않는다.
+  여러 실제 도면으로 인식·연결 정확도를 확인하는 작업은 남아 있다.
+- 상세명세 specs/PRACTICAL_SCOPE_20261021.txt. 사용자는 더 세밀한 수식 검토를 계속하기보다
+  지원 도면 범위의 안정성·명시적 기본값·오류 복구·간결한 UI를 원한다.
+
+최신 클로드 검수4차 준비 — 원본/추가항목별 분리
+- 사용자 요청에 따라 NIST CFAST 원본, 추가한 화재전이·가스층/개구부 복사·FO 설정/전환 계산·연료·화점 배치·실당 단일 계산을 구분한 최신 검수 자료를 만들었다.
+- 질문서 reviews/cfast-additions-claude-r4-20261021-질문서.txt, ZIP reviews/cfast-additions-claude-r4-20261021.zip. 독립 묶음171파일/1122358bytes. 이전ZIP은 함께 첨부할 필요 없다.
+-01_NIST_CFAST_ORIGINAL: 빌드에 사용하는 공식 태그 원본28개/URL·해시/공식TeX4개. 전체CFAST Git 복제는 아니다.
+-02_PYROCAST_ADDITIONS: 현행 extensions/cfbt, pyrocast_cfbt, 도구·시험·예시·표시코드.03_INTEGRATION_AND_DIFF: 연결13개/합성사본5개/전체diff/빌드 출처.
+-04_FEATURE_REVIEW: 기능별12항목의 상태·코드행·가정·검수 쟁점, AST 함수 인덱스와 기본설정 추출.05_EVIDENCE: 기존 CAD30분 입력5회·R9시계열/원시 필터, 새FO기능시험 원시CSV/입력/결과, 가스·판·구조분리의 기존 검사 기록.06_CONTEXT는 현행 설명과 과거제안 배경이다.
+- NIST 기본 실내 복사와 추가 문너머 보완, 공급곡선과 실제 연소, FO_thermal과 확정 전환, 한 예산/한 양의 공급/한 구획/한 번 실행을 구분해 검수하도록 요청했다. 직접복사완전대체·균등단위연료배치·OCR용도구조디폴트·엔진연속최적화는 미구현/미적용으로 명시했다.
+- 기존 건물결과는FO추가전 보존된 자료이며600℃ 미도달/바닥미평가를 명시했다. 새FO 기능시험의 고온값과 native/외부판 비교 차이도 숨기지 않고 검수 대상으로 넣었다. 소프트웨어 시험을 실제 화재 검증으로 해석하지 않도록 요청했다.
+- 준비 과정은 표준라이브러리 기반 복사·AST/정적 인덱스·저장값 조회·SHA256·ZIP CRC/내부 해시 확인이다. 시뮬레이션 코드/기존 결과/이전ZIP 불변 확인. 이번 준비에서 새빌드/시험/화재재계산/3D갱신/클로드 직접 전송은 하지 않았다.
+- 재생성 도구는 reviews/build_cfast_additions_r4_review.py이며 기존 묶음 덮어쓰기를 거부한다. 코드 변경 후에는 이 묶음을 최신 소스로 오인하지 않도록 별도 개정본을 만든다.
+
+최신 구조 정리 — CFAST 원본과 추가 코드의 명확한 분리
+- 사용자 요청으로 소스 출처와 빌드 경계를 정리했다. 모델 수식/시나리오 가정 변경은 하지 않았다. 전체 안내는 simulation/SOURCE_BOUNDARIES.txt.
+- vendor/cfast-7.7.7/Source의 공식28파일과 sources.json은 그대로 보존한다. tools/engine_sources.py에서 파일 목록·URL·파일SHA256·목록 자체SHA256(5133c2ec046c83472c942aab2d40731f95d84c9358867a4878344190fa4153c7)을 검사한다. fetch_cfast.py는 고정 목록을 덮어쓰지 않으며 누락 파일만 해시 검증 후 복구한다.
+- 기존 native/declarations.inc,routines.inc는 내용 변경 없이 extensions/cfbt/fortran/으로 이동했다. 원본 연결13곳은 extensions/cfbt/hooks.py에ID·목적·연결 내용으로 명시했다. 기존 prepare_engine.py는 검증·생성 도구로 줄였다.
+- 합성 소스28개는 build/generated/cfbt/Source에만 생성한다. 원본 사본 중5개에 연결점을 넣고 나머지23개는 원본 바이트를 복사한다. MANIFEST.json/CFAST_DIFF.patch를 자동 생성한다. 예전 engine/의5개 전체 사본과 새 생성본이 바이트 일치함을 확인한 뒤 중복 생성본을 제거했다. 비어 있는 옛engine/native 디렉터리도 제거했다.
+- build_engine.py baseline은 원본28개만, cfbt는 검증 후 자동 생성한 명시적28개만 컴파일한다. 임의engine/override 존재 여부로 소스를 고르지 않는다. build.json에 파일별 역할·해시·연결점·추가 코드 해시를 기록한다. --output-root로 build/ 아래 별도 재빌드 가능.
+- pyrocast_cfbt/의Python은 전부 프로젝트 외부 코드다. native.py도 CFAST 원본이 아닌 실행/CSV 어댑터임을 명시했다. FO·열응답·문 복사·추가착화·CAD/3D 연결의 책임을 SOURCE_BOUNDARIES에 구분했다. 순정 엔진만 넣으면 현재 전체 Python 후처리가 동작한다는 뜻은 아니다(확장 진단 출력 필요).
+- tools/verify_engine_boundary.py와 tests/test_engine_boundary.py, tests/check_engine_boundary.py 추가. 원본/목록 변조,추가vendor코드,연결점 중복,생성본 직접 수정 감지 시험 포함. 단위시험27개 통과.
+- build/engine-boundary-check에 순정·확장 엔진을 별도 재빌드했다. 기존 작은 FO시험의 순정/확장OFF/FO공급3가지 입력에 대한 native 출력(상·하층온도,층경계,HRR,DJET) 차이0. 결과 results/verification/engine_boundary_checks.json. 이는 구조 변경 회귀검사이며 새 건물 예측이 아니다.
+- 기존 build/baseline,build/cfbt 실행파일과 당시 build.json은 보존했다. 과거 build.json의engine/ 경로는 당시 기록이며 다음 재빌드부터 새 경계를 기록한다. 기존 건물30분 결과/과거ZIP/3D 화면은 덮어쓰지 않았다.
+
+최신 구현 — 사용자 요청으로 FO 전후 연소 상태 전환 계산
+- 사용자는600℃ 같은 임계값을 고정값으로 써도 되는지, NIST 문서에 맞춰 FO 이후 계산을 요청했다. 별도 질문에서 '상변이'는 고체 상세 열분해/기화가 아니라 'FO 전후 연소 상태 전환과 온도·산소·연기 변화'라고 명시했다. 이번 요청은 아래의 코드 미수정 검토 단계보다 최신이며 구현/기능 계산을 허용한다.
+- flashover.py 추가. flashover.enabled 기본OFF, criteria.fo_temperature_C=600 사용자 조절, criterion=temperature 기본. FO 시점까지 열분해 공급으로 차감한 잔여 연료를 실별 한 예산으로 묶고, 설정 HRRPUA×면적을 목표로 공급 램프/유지/감쇠를 만든다. 전체 공급 적분은 기존 배정 에너지와 같다. 실제 발열·산소·온도·연기는 기존 CFAST가 계산한다.
+- 실당 기존 FIRE ID는 유지한다. 기존 복수 화원은 램프 동안 줄이고 대표 화원 한 개가 잔여 통합 연료를 맡는다. 램프 종료 후 양의 공급은 실당 한 개다. 순정 FIRE 등록/반복문 자체를 제거한 최적화나 연속 엔진 처리는 아니다. 외부 사건마다 전체 기간 재실행 방식이다.
+- 현재는 동일 실에서 유효 화학식/연소열이 같은 연료만 통합한다. 다른 화학을 임의 합치지 않고 오류를 낸다. 미연가스를 새 고체 예산에 다시 넣지 않는다. 기체 두 층과 기존 직접 화염/개구부 복사는 유지한다. 문 복사 대체·새 단위 연료 배치·UI는 별도 검토 대상으로 남는다.
+- NIST FASTLite SP899(1996)3.3절에서 상층600℃ 전환과 FO 후 연료 조건 지정의 선례를 확인했다. 현행7.7.7의 처방 HRR/산소 제한 구조에 맞춘 외부 확장이다. 30초 램프/HRRPUA 값은 탐색 설정이고 NIST 표준값/검증된 통합 알고리즘이라고 하지 않는다.
+- model/deck/spread/cad/playback/__main__에 설정·입력·사건·잔량·메타데이터 연결. FO/FO_transition 태그는 확정 전환 사건 래치이며, FO_thermal은 별도 탐색 기준이다. 유효 바닥 평가면이 없으면 floor_incident_flux=null, floor_flux_evaluated=false로 기록한다. 과거 결과는 소급 수정하지 않았다.
+- 작은 별도1실4×4×3m/180초/기준600℃/전환30초/500kW/㎡/3000MJ/가스 확장OFF 기능 시험:55.7033초 전환, CFAST2회 정상 종료, 전환 전 온도차0℃, 공급 에너지3000MJ 보존.90초 고정곡선→FO 전환: 실제HRR4→8MW, 상층724.8→1200.0℃, 상층O2 11.72→3.02%, OD1.722→2.303/m. 얇은 열경계 등을 쓰는 기능 시험이며 실제 건물 예측/물리 검증값이 아니다.
+- 입력 simulation/examples/fo_transition_check.json, 결과 results/fo_transition_check, 검사 results/verification/fo_transition_checks.json. 22개 단위시험 통과 및 실제 native 비교 확인. 실패한 FO 실행은 사건을 확정하지 않고 이전 유효 결과를 보존하는 시험도 포함한다.
+- CAD용 examples/cad_fo600_30min.json 추가. 기존30분 저장값을 FO600으로 재평가하면 모든 실 전환 후보0건, R9 최대471.3789℃. 새600℃ 전체 건물 엔진 계산/3D 반영을 했다고 하지 않는다. 기존 결과30개 보호 파일과 이전ZIP 불변 확인.
+- 상세: specs/FO-연소상태전환-구현검증-20261021.txt. 이전r3 검토ZIP은 당시 수정 전 코드 스냅샷이다. 현재 추가 구현과 구분한다.
+
+최신 검토3차 — FO 전 연료별 / FO 후 실 단위 연소 + 개구부 열전달
+- 사용자는 복귀 후 새 하이브리드안을 클로드 검토 자료로 준비하도록 요청했다. 구현/재계산은 아직 요청하지 않았다. 아래 이전 종료 메모보다 이 최신 요청을 우선한다. 클로드 답변을 받은 뒤 설계 확정·최적화·UI 순서라는 방향은 유지한다.
+- FO 전에는 대표 연료별 가열·착화·연소, FO 후에는 실제 연소 계산을 실당 하나로 통합하고 실간 전이는 고온층·벽·개구부 열전달로 평가하는 안이다. 여러 native FIRE를 유지하고 연료 장부만 하나로 묶는 것만으로 요구를 충족했다고 하지 않는다.
+- FO 자체가 직접 화염 복사 생략의 충분조건은 아니다. IR 경로 투과율·벽 온도·차폐·화염 가시성에 따른 대체 조건과 부족할 때의 저비용 보완을 검토한다. 내부 대표 FIRE/플룸의 점 근사와 외부 전이의 점 위치 의존을 구분한다.
+- 준비물: reviews/fo-compartment-claude-r3-20261021-질문서.txt 및 reviews/fo-compartment-claude-r3-20261021.zip. 독립 묶음119파일/665070bytes. 이전 코드·입력·공식 TeX·배경 검토에 새 질문서, 예비 근거/계산량, NIST 출처 지도와 저장 결과 감사 자료를 추가했다. 이전 여러 FIRE 유지안은 history/의 배경이다.
+- NIST7.7.7 기술 문서와 NISTIR4709의 층/벽 복사·형상계수·기체 흡수 수식을 근거로 삼되, FO 통합과 수신실 연료 가열은 별도 확장·검증 대상임을 명시했다. FO 전환/새 모드/실행 횟수 단축은 아직 미구현이다.
+- 기존 소스·결과 SHA256 불변, 이전ZIP 불변, 새ZIP CRC/내부 해시/질문서 복사 일치를 검사했다. 운영코드/입력/결과/3D화면 수정, 엔진 빌드, 시험 실행, 화재 재계산, 클로드 직접 전송은 하지 않았다.
+
+저장 사례 FO 확인 — 새 화재 계산 아님
+- 마지막30분 cad_opening_30min의 최초 화점은3F R9. 저장5초 표본361개에서 상층 최대471.37886053268244℃,825초(13분45초). 현재 설정600℃ 온도 기준에 도달하지 않았다. 최종 run_04/case_cfbt_rooms.csv의 구획 인덱스7과 result.json의 R9 온도361개가 모두 일치한다.
+- 바닥20kW/m² 기준은 미평가다. R9에는 표적 후보가 없고 전체28후보도 모두 수직 노출면이다. classify가 빈 floor_flux를0으로 초기화하므로 저장0을 실제 열유속0/기준 미도달로 해석하지 않는다.
+- classify의 FO 태그는 추가 사건만으로 solid_start를 찾는다(spread.py142~147). 초기 R9는 추가 사건에 없어서 초기 화점의FO를 그 태그만으로 판단할 수 없다. FO_thermal의 온도 기준은 별도로 작동한다. 태그 문제는 발견·문서화만 했고 코드 수정은 하지 않았다.
+- 따라서 현재 온도 기준 미도달은 확인되지만 실제 물리FO 부재나 바닥 기준 미도달까지 확정할 수 없다. 이 사례만으로 FO 후 최적화 효과를 측정했다고 하지 않는다.
+- ZIP의 evidence/FO_AUDIT.json, R9_RAW_ROOMS.csv, R9_SAVED_PHENOMENA.json에 출처 해시/원시 필터/태그 한계를 담았다. 저장native5회 실행 시간 합계281.109초, 최종1회56.031초는 과거 로그이며 새 벤치마크/속도 보장이 아니다.
+
+오늘 작업 종료 및 다음 세션 우선순위 — 사용자 명시 지시
+- 사용자는2026-10-20 작업을 여기서 종료했다. 다음 세션은 클로드의2차 검토 답변을 받은 뒤 시작한다. 답변 없이 설계를 임의 확정하거나 새 구현/재계산을 선행하지 않는다.
+- 내일(2026-10-21) 작업 순서: ① 클로드 답변과 현재 검토 자료 대조 ② 화재 확산 방법 확정 ③ 계산 구조/성능 최적화 ④ 시간이 남으면UI 정리.
+- 사용자는 현재 코드에 기능과 임시 처리가 덧붙여져 복잡해졌다고 지적했다. 확산 구조를 확정한 뒤 중복 로직·임시 분기·불필요한 연결을 줄이는 방향으로 정리한다. 오늘 추가 리팩터링이나UI 변경을 수행한 것은 아니다.
+- 최종 준비물은 reviews/room-spread-layout-claude-r2-20261020-질문서.txt와 reviews/room-spread-layout-claude-r2-20261020.zip이다. 이 묶음은 최신 배치안/검토서/현행 코드/공식 문서를 포함한다.
+- 설계 후보는 아직 미구현이다. 현재8780 화면과 마지막30분 저장 결과는 기존 opening30이다. 내일 이를 새 배치안 결과와 혼동하지 않는다.
+- 별도 예약 실행/알림 요청은 없었다. 사용자 복귀 및 클로드 답변 제공 후 이 순서로 이어간다.
+
+최신 클로드 재검토 자료2차 — 개구부·방 형상 기반 소수 대표 화원
+- 사용자가 방 형상·면적·개구부에 따라 소수의 단위 연료 화원을 배치하고 실내 확산과 다음 실 전이를 함께 표시하는 방향을 제시했다. 표시용 불꽃만 늘리는 안이 아니라 대표 큐브와 native FIRE를 대응하는 배치안을 검토한다.
+- 작은 방1개, 양끝 문 연결실2~3개, 큰 방3~4개는 예시이며 확정 기준/NIST 권고가 아니다. 이전2m 문 묶음/최대3개/원형 전선/FO 후 초기 면적비 배분도 확정하지 않았다.
+- reviews/room-spread-layout-claude-r2-20261020-질문서.txt 및 같은 이름의ZIP 작성. 이전 코드/입력/공식 문서를 포함하고 최신 변경 요약, 기존 제안 요약, 정적 검토서, 사용자 첨부 선별 명세2 원문을 추가한 독립 묶음110파일 약569KB다. 이전ZIP을 함께 첨부할 필요는 없다.
+- 이번 질문은 최소 배치 알고리즘, 최초점 보존, 각 대표점 착화 조건, 공유/잔여 연료 예산, 모든 문에 대한 화원 기여, FO 필요성, 엔진 내 연속 처리, 3D 대응과 최소 시험이다. 기존 제안과 Codex 검토 모두 독립적으로 재검토하도록 요청했다.
+- 소스/저장 결과 SHA256 불변, 이전ZIP 불변, ZIP CRC·내부 해시·원문 복사 일치를 확인했다. 코드 수정·엔진 빌드·화재 재계산·운영 화면 갱신·클로드 전송은 하지 않았다. 설계는 아직 미구현이다.
+
+최신 정적 검토 — 사용자 제시 구역 화원/FO 전환 및 선별계산 명세2
+- 사용자 메시지의 문 묶음 기준 최대3화원·Q/HRRPUA 원 확대·FO 후 면적비 배분·엔진 내 연속 계산 제안과 Downloads/선별계산-명세2-20261020.md를 읽었다. 문서 안의 작업 지시/진행 질문은 검토 자료로 취급했다. 새 구현 지시는 아직 없다.
+- reviews/실간전이-선별명세2-검토-20261020.txt에 검토와 현재 함수·행 번호 정리. 문별 소수 화원 방향은 채택 후보이나, 전체Q 합 보존과 구역별 연료 보존의 차이, 플룸 분할/O2 영향, 고정 대표점과 원 겹침 활성화 편향, FO 조건/확대 가정/실제 문 가스 연소 분리, 배분만 바꾸면 총 공급 가속이 포함되지 않는 점을 보완해야 한다.
+- 순정7.7.7 do_fire에는 플룸 잔여 연료의 상부층 연소가 있다. '미연 연료는 문에서만 탐'은 첨부 문서의 오류다. 축적 연료 풀 bulk 확장과 구분한다.
+- 현재 namelist FIRE/VENT 온도 조건은 TEMPERATURE이며 TEMP가 아니다. baseline 진단 출력 어댑터/FO 사건 타입/공유 예산/엔진 내 보충 열 연결은 미구현이다.
+- 명세2의 MC 무확산 비율은 무확산 조건부 결과, 실패 표본 삭제는 성공 조건부 결과, P90 표본1개는 전역 최악 보장이 아님. 로그정규511/795/1027은3분위수 정확 일치 불가. CData MFIR는 power-law 곡선 생성을 지원한다.
+- NIST FO 정의/CData/TN1474 및 태그 고정 문서와 현행 소스를 정적 대조했다. 원자료MD·실행 코드·시나리오·기존 결과·3D 화면 수정이나 화재 재계산은 없다. 이전 클로드ZIP은 보존했다.
+
+최신 검토 자료 — 실간 전파/대표 화원 위치/계산 부하의 클로드 독립 검토 준비
+- 사용자 쟁점: A→B→C 전이에서 B실의2차 착화점에 전체 발열을 몰면 반대편 개구부를 통한3차 전이 경로·시각이 편향될 수 있다. 단순한 실내3D 불꽃 개수 문제가 아니다.
+- 정육면체 단위 가연물 균등 배치, 연료의 균등 분포, 화염 출력의 균등 분포, 기체층 평균 상태는 구분한다. 최초 점 고정/분포 열원/필요한 소수 화원/연속 자동 착화는 논의한 대안이며 새 구현으로 확정하지 않았다.
+- NIST7.7.7 공식 문서 확인: 점열원 화염 복사·기체층 평균·표적 TEMP/FLUX 착화는 문서화돼 있다. 문너머 직접 복사는 기본 기능에 없고, 여러 후보의OR/공통 연료 예산/외부 복사를 연속 계산에 연결하는 것은 추가 구현 여부를 검토해야 한다. 순정 기본 기능만으로 모두 해결된다고 설명하지 않는다.
+- 사용자 요청에 따라 reviews/room-spread-claude-20261020-질문서.txt 및 reviews/room-spread-claude-20261020.zip 작성. ZIP은 현행 코드/원본·확장 Fortran 비교/기존 입력·요약·실행기록/태그 고정 공식 TeX문서/함수 색인/SHA256 목록102파일 약527KB다. 이전 v37~v41 전용 검수 묶음과 별개다.
+- 현재 코드와 결과를 복사해 정적 검토 자료를 만들었고, 보호한 시뮬레이션 소스·저장 결과 SHA256 불변과ZIP CRC를 확인했다. 물리 재계산·엔진 빌드·시험 실행·3D 운영 화면 갱신은 하지 않았다. 클로드에 직접 전송하지 않았다.
+- 핵심 질문은 실당1개 제약의 한계, 필요한 최소 공간 대표화원, 문별표적/직접복사 처리, 전체 재실행 제거, 연료·산소·에너지 중복 방지, 최소 검증이다. 기존 제안을 정당화하지 말고 독립 비교하도록 요청했다.
+
+최신 검토 요청 — 단위 가연물/용도·구조별 디폴트(미적용)
+- 사용자: 홀·통로는 저연료로,문 앞/실내 연료 분리,벽체 현실화의 값과 가벼운 대안을 먼저 정리. 코드/재계산은 아직 하지 않는 범위다.
+- 추가 사용자 지시: CAD/OCR 추출·추론 정보 외에는 건물/실 용도와 RC·철골 등 구조별 대표 디폴트를 적용하는 방향. 추가 실측자료를 필수로 요구하지 않는다.
+- 설정 제안 specs/단위가연물-용도구조디폴트-설정안-20261020.txt 작성. 일정한 연료 단위+용도별 밀도+소수 대표 화원,근거 우선순위,문 앞 예산 중복 방지,구조별 열경계,단위마다 전기간 재실행을 피할 설계 과제를 정리했다. 아직 미구현·미재계산.
+- 새 발견: R2 전체를 홀로 낮추면 안 된다. CAD names에 ELEV.홀/Assembly Line/우레탄/W가 함께 있다. 가스 구획과 별도로 연료 용도 영역의 추론/충돌 표시가 필요하다.
+- DXF에 실내마감표/상세도 참조 주기는 있으나 실제 적층 벽체는 확인 못했다. 캐노피 철골 주기를 건물 전체 구조로 확대하지 않는다. '표준 디폴트'는 법정/실측 확정값이 아닌 프로젝트 대표 구성임을 표시한다.
+- 현재8780 화면/30분 계산 결과는 아래 opening30 입력 그대로다. 새 설정안이 적용된 결과로 설명하지 않는다.
+
+최신 구현 완료: 개구부 후보·착화 높이 수정 및30분 재계산
+- 사용자 요청에 따라 CAD 연결 개구부의 수신실 안쪽0.6/1.5m에 가정 연료면 후보를 생성한다. 닫힌 개구/외부/벽·구멍을 거르는 검사를 추가했다. 실별 대표점 한 곳을 쓰던 CAD 입력을 교체했다.
+- native TARGET에는 affine 좌표 맵의 역전치 법선, FIRE에는 실제 사건의 상대 Z를 TABL HEIGHT로 넣는다. 화원 XY를 임의로0.3m 안쪽으로 옮기던 clipping도 제거했다. 문 너머 화원 복사에는 native FLHGT와 실제 화원 기부 높이를 사용한다.
+- 새 결과 simulation/results/cad_opening_30min: 현재 선택 조건 유지(3F R9 최초 화점, 3F 연결14실, 고체45℃ 탐색 가정),1800초,28후보,5회 정상 엔진 실행, 추가4건 후 no_new_ignition. 미확정 후보0.
+- 추가 착화: R2/D14/274.737282초, R8/D10/842.005700초, R23/D7/1070.393757초, R1/D13/1245.071655초. 모두 해당 수신실 개구부 안쪽0.6m, 바닥+0.76m. 최초 R2의 최대 입사 항은 fire_through_vent다.
+- 추가상한3에서 후보가 남아6으로 확장한 뒤 기존 완료 엔진 캐시를 재사용해 끝까지 확인했다. 최종은 상한 종료가 아니다.
+- 16개 단위시험 통과. tests/check_opening30_results.py 및 results/verification/opening30_checks.json: 모든 후보의 CAD 내측·거리·법선, 사건/화원/표시 높이 일치, 사건 이전 온도차0℃(4단계),1800초/정상 종료 검증.
+- 8780 서버 기본 입력과 start_building_view.ps1은 새30분 결과를 우선 사용한다. 저장 결과 opening30='개구부 후보 · 30분 · 고체45℃ 가정'. 이전 대표점15분 결과는 명시적인 과거 항목으로 보존.
+- 실감보기에서 노란 개구부 윤곽·후보면·연결선, 개구부ID/거리/기부 높이를 표시한다. 화염 기부의 표시용+0.06m 이동을 제거하고 위치 링도 기부 높이를 따른다. 화염 높이는 최종 native FLHGT이며 흔들림은 표시 효과다.
+- 전 구획 최초 화점 탐색은 합의된 간편 계산식으로 유지했다. 이번 재계산은 해당 화재층의 한 최초 화점 조건이며, 전건물30분/전 구획 화점 CFAST 전수 계산이 아니다.
+
+이전 사용자 정정 및 당시 확인한 문제 (위 최신 구현에서 위치·높이·30분 문제 보완)
+- 전 구획을 최초 화점으로 바꾸는 위험 탐색은 합의된 간편 계산식으로 진행한다. CFAST 전 구획 화점 전수 계산은 요청 범위가 아니다.
+- 원래 계산 관찰 기간은30분이다. 새 CAD 연결 저장 결과는 구현자가900초 기능 검증으로 생성했으며1800초 결과를 대체하지 않는다. 현재 화면의15분 자료를30분 완료 결과로 설명하지 않는다.
+- 현재 고체 확산 루프는 새 사건을 입력한 뒤 시작시각0부터 전체 기간을 다시 실행한다. 사건 직전 상태를 저장해 이어 계산하는 restart는 미구현이다.
+- 현재 R2 추가 착화 점은 옛 v35 실별 대표점 XY(62.63,57.77)를 재사용한 가정이다. CAD R2 내부임은 확인했지만 개구부 인근의 최초 착화 위치를 탐색한 결과가 아니다. deck.candidates의 문 근처 후보 생성은 CAD explicit_candidates가 있으면 건너뛴다.
+- 추가 문제: R2 착화 판/사건 Z는 바닥+0.76m인데 deck.py의 모든 FIRE TABL HEIGHT는0으로 기록된다. 실감보기는 native 높이를 따라 바닥에서 화염을 그린다. 판정점과 화염 기부 높이 불일치는 미수정/미재계산 상태다.
+- 보완 방향: 실제 CAD 연결 개구부의 수신실 쪽 가까운 가연물/가정 연료면을 소수 후보로 만들고, 노출·임계값 충족 시점으로 선택한다. 문 근처라는 이유만으로 강제 착화시키지 않는다. 가스의 개구부/상층 연소와 고체 착화점을 구분한다.
+
+최신 추가: CFBT 구현 및 기존 건물 3D 연결 완료 범위
+- 현행 구현은 이 PyroCast 폴더의 simulation/에 있다. 기존 외부 프로젝트 폴더는 읽기만 하고 운영 파일은 보존했다.
+- 통합 명세: specs/CFBT-가스연소-고체확산-통합최종명세-20261020.txt.
+- CFAST7.7.7 별도 확장 엔진: native 가스 추가연소, 외부 고체 착화/재실행 루프. 임계값과 연소속도는 탐색 가정으로 설정한다.
+- 기존 CAD 모델과 연결한 화면: http://127.0.0.1:8780/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html
+- 실행: simulation/start_building_view.ps1. 연결/검증/범위의 상세는 simulation/CAD_CONNECTION.txt와 simulation/README.txt.
+- 전건물 저장 결과: simulation/results/cad_whole_verified. CAD156실을100 native구획으로 연성 계산,900초 정상 완료. 비연결/실외106개 제외. 기본369℃ 조건의 추가 고체 착화0건.
+- 가벼운 별도 화재층 계산: results/cad_floor (3F 연결14실,900초, native 약11초). 전건물 결과와는 별도 경계 조건이다.
+- 추가 착화 연결 기능 시험: results/cad_low_threshold. 명시적으로 고체45℃로 낮춘 가정에서3F R2 약731.3076초에 추가 착화, 두 번째 정상 실행으로 확정. 실제 재료 착화 예측 사례로 해석하지 않는다.
+- 화면의 저장 결과 선택/시간 재생/실 선택/온도·연기·산소/문·층간 유동/사용자 임계값 재계산까지 연결했다. 원본 모델 및 운영 앱을 덮어쓰지는 않았다.
+- 새 화면에서 누락됐던 기존 v35 '실감 보기'를 복원했다. 기본/실감 전환, 입체 연기·화염·상승 플룸·천장 가스, 추가 착화 화원까지 연결했다. 원본 렌더러 출처는 simulation/viewer/legacy-real-view-provenance.json 참조.
+- 이후 '연소점 확대'도 추가했다. 실제 CAD 화원 좌표, 천장 위 카메라, 내부 관찰 연기40%(사용자 조절), 착화 전/후 이동 및5배속 재생, 온도/OD 그래프. 45℃ 기능 시험의3F R2 약731.3076초 추가 착화 장면으로 브라우저 검증한다. 계산 재실행 없이 표시만 변경했다.
+- 사용자 화면이 기본 결과로 되돌아가는 문제: status()의 activeRequest=null/request_id=null 일치로 무요청 load()가 실행되던 오류를 수정했다. 선택 저장 결과·실·시점·연소점 확대/연기 투명도는 같은 건물의 브라우저 로컬 설정으로 복원한다.
+- 화원별 native FLHGT, 최종 입력의 시간별 면적, 현재 연기층/농도를 사용한다. 플룸/천장 가스는 기존 상관식 후처리이며 무늬는 표시 효과다. 저장 playback만 갱신하고 native 재계산은 하지 않았다.
+- 단위시험14개 및 앞서 수행한 실제 baseline OFF·가스 피드백·게이트·고체 이벤트·native 수직 유량 일치 검증 통과. results/verification/cad_connection_checks.json 참조.
+- 이후 작업에서도 폐기된 과거 AGENTS.md는 지침으로 적용하지 않는다. 아래 내용은 이전 작업 기록이다.
+
+1. 가장 최근의 사용자 의도
+- 건물의 여러 화재 조건에서 공간별 위험 우선순위를 찾아 3D에 표시하려는 프로젝트다.
+- CAD 평면 추출 → 3D → 시뮬레이션의 큰 흐름이 있으며 기존 웹앱의 UI와 조작을 유지해 왔다.
+- 간이 계산기의 목적은 CFAST와 온도 수치를 똑같이 맞추는 것이 아니라 위험한 실을 놓치지 않고 우선순위를 잘 잡는 것이다.
+- 그런데 사용자는 현재 구현과 방향이 전반적으로 너무 무겁다고 느껴 방향을 재검토 중이다. v45의 확장 개발을 그대로 계속하라는 뜻이 아니다.
+- 마지막 기술 질문은 “CFAST로 중성대 높이를 계산할 수 있는가?”였다. 가능하다고 설명했으나 새 기능 구현이나 제품 범위 변경은 하지 않았다.
+- 압력차가0인 중성대와 상·하부 연기층 경계 높이는 별개다. 어떤 값을 중심으로 제품을 단순화할지는 아직 정하지 않았다.
+- 사용자가 이전 AGENTS.md 지침을 폐기한다고 명시했다. 기존 폴더의 AGENTS.md와 복구 기록에 있는 과거 지시를 현행 작업 규칙으로 자동 부활시키지 않는다. 과거 구현 사실과 근거 위치를 파악하는 자료로 읽고 현재 요청을 우선한다.
+
+2. 현재 폴더와 실제 코드 위치 — 먼저 확인할 사항
+현재 새 작업 폴더:
+C:\Users\예방\Documents\ChatGPT\PyroCast
+
+2026-10-20 확인 당시 새 폴더에는 .git만 있었고, 이번에 이 인계 파일을 추가했다. 코드와 결과물을 이 폴더로 옮기지 않았다.
+
+기존 코드·검증 결과 폴더:
+C:\Users\예방\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d
+
+아래 복구 기록과 v45 결과가 기존 경로에 존재하는 것을 이번에 확인했다. GitHub의 최신 업로드·동기화 상태와 서버 실행 여부는 이번 인계 작업에서 확인하지 않았다. 다른 컴퓨터에서 계속하려면 실제 코드·데이터가 그 컴퓨터에도 있어야 한다. localhost 주소나 이 메모만으로 파일이 이동되지는 않는다.
+
+3. 먼저 읽을 기록
+기존 폴더 기준:
+- outputs/작업기준-복구-20261014.txt : 구현 경과와 사용자 의도 정정. 최상단v45부터 읽고 필요한 과거 항목만 찾아본다.
+- outputs/CAD-고속탐색-v45/검토결과.txt
+- outputs/CAD-고속탐색-v45/rank-first.json
+- outputs/CAD-고속탐색-v45/summary.json
+- outputs/CAD-고속탐색-v45/batch.json
+- outputs/CAD-고속탐색-v45/suite4.json : 최종27조건 시험. suite/suite2/suite3는 실패·수정 전 시안이며 최종 평가 근거가 아니다.
+- outputs/CAD-고속위험계산-v44/검토결과.txt : 기존 CFAST와 간이판의 차이.
+
+4. 구현 상태와 확인된 범위
+- 기존 운영앱은 기록상v35이며 CFAST 원엔진과 실행wrapper를 보존했다. 이후 v43~v45는 비교용 결과와 UI 복사본이다.
+- v43: 단열 가정·3층/7층 계단문 개방 조건의 CFAST30분 계산 완료 기록. 실행 약398~417초. 원엔진의 범용 수렴 문제를 모두 해결한 것은 아니다.
+- v44: CFAST 실행 없이 도는 독립 실 연결망 간이 모델. 실당 단일 혼합 가스 체적. 초기1조건 실행 약9초. 기존 CFAST 대비 홀 온도와 그을음 과소예측이 있었다.
+- v45: 같은 간이식의 컴파일·고정 구조 재사용·압력 수렴 보강·CPU 병렬 처리. 원v44,운영앱,원CFAST,wrapper는 변경하지 않았다.
+- 3화점×3일괄 실간문 상태×연료배율0.5/1/1.5=27조건을 시험했다. 각 문을 독립적으로 조합한 모든 경우가 아니다. 배율은 민감도 시험 가정이지 검증된 연료 분포가 아니다.
+- v45 세밀한0.5초 계산: 조건당 약1.1초.27조건 순차31.35초/CPU4작업자10.27초. 순차·병렬 원시 결과 동일.
+- v45 빠른2.5초 계산:27조건2.46초. 그 결과의 후보상위20에는 자체0.5초 기준의 온도·상승률·광학밀도 상위10이 모두 들어왔다.
+- 후보 최대값을 만든16조건만 재계산하면 총8.90초. 세 지표 상위10의 구성과 순서가 전체27조건0.5초 기준과 같았다.
+- 이 순위 검증의 기준은 자체 간이모델이다. CFAST나 실제 실험에 대한27조건 위험순위 검증이 아니다. 다른 화점·문 조합의 무누락이나 진짜 전역 최악을 보장하지 않는다.
+- 원입력의 ExampleFire(3F_R9)는 조건부 타깃 없는 시간 화원이라 다른 층 발화 시험에서는 비활성이다. 전실 대칭 확산 모델이 완성된 것으로 해석하지 않는다.
+- 장비착용 소방관의 통합 위험기준, 시간별 퇴로 차단, 대규모 독립문 조건 탐색은 완성되지 않았다.
+
+주요 코드(기존 폴더 기준):
+work/fast_room_v44.py
+work/fast_room_v45.py
+work/reference_flow_v45.py
+work/compare_speed_v45.py
+work/batch_speed_v45.py
+work/rank_screen_v45.py
+work/publish_speed_v45.py
+work/test_speed_v45.py
+
+실행 환경과 재현은 outputs/CAD-고속탐색-v45/재현방법.txt 참조. 일부 재현 스크립트는 현재 출력 결과를 덮어쓰므로 실행 전에 저장 위치와 효과를 확인한다.
+
+5. 과거 실행 주소 — 현재 실행 여부는 확인 필요
+기존 운영앱:
+http://127.0.0.1:8778/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html
+v43 CFAST 비교:
+http://127.0.0.1:8844/lining_open/model.html
+v45 순위 탐색 UI:
+http://127.0.0.1:8846/fast/model.html
+v45 보고서:
+http://127.0.0.1:8846/index.html
+
+6. 새 세션에서 시작할 작업
+현재 파일 위치와 최근 의도를 먼저 확인한다. 그다음 사용자에게 다음 세 가지를 간단히 정리한다.
+① 실제 구현된 것 ② 검증되지 않은 것 ③ 더 가벼운 제품 방향의 선택지.
+“시간별 연기층 높이·중성대·문 유동” 중심으로 단순화하는 방향은 검토 후보이지 확정 사양이 아니다. 이번 시작 요청의 범위는 현황 파악과 방향 검토이며, 새 구현·엔진 수정·대규모 재계산을 자동으로 시작하지 않는다.
+
+[2026-10-26 실감 보기 가시성 후속]
+사용자 탭6 직접 확인: S00 54:40 전체층 선택, 회색 연기와 작은 화염이 건물 구조에 묻혀 보임. lite_viewer.js에 실제 FIRE 위치를 향하는 연소점 확대 추가(해당 층 선택, 실감/연기 켬, 실 중심과 분리). 접힌 패널에도 재생·시간·연기구역/화염 개수 표시. 계산/시계열/화염 크기 변경 없음. JS 구문 검사 통과. 탭6 S00 32:10에서 연기17구역/화염7곳, 화점 확대 스크린샷 확인, 브라우저 오류 없음. 결과 simulation/results/lite_v8_mc_R2_10_20261026/smoke-fire-focus.png. 넓은 실의 연기 내부에서는 회색이 평평하게 보이는 표현 한계 남음. 이전 계산 완료 상태 유지, 재계산 없음.
+
+[2026-10-26 선택·층 시점·성장 화염 UI]
+- lite_viewer.js: 선택한 실/셀 바닥·상단 CAD 경계 하늘색 띠(폭0.12m), 위험선과 독립; 선택 이름/단계 캡션. 목록 및 바닥 클릭 공통select. 터치 PointerEvent 및 드래그/멀티터치 제외 처리(실기 터치 미검증).
+- 층버튼 기존 onclick 감싸 camera.position, orbit.target, zoom 보존. 층변경은 autoFit=false. 명시 확대 버튼만 이동. 3F→4F→3F 육안 검증.
+- legacy_real_view.js: lite growth모드 추가. 실제HRR/해당화원피크 비율 <.25 초기, <.8 성장, 그이상 최성, 피크 이후 <.8 쇠퇴(표시용 가정). 높이0.4+1.35sqrt(r), 지름0.3+0.9sqrt(r), 천장·CAD마스크 유지. 단계별 오렌지→노란색→붉은색. 5개 noise변형, 기존32단계 shader 재사용, 화염메시/입자 추가없음. 계산 불변. peak 미리 저장. GPU 실측 없음.
+- JS syntax 및 단계 함수 표본 확인. 목록R9 선택, 캔버스 클릭R2_C2 전환/테두리 확인, 브라우저error없음. 최종 탭6 S00 1160s R2_C2 선택; selection-growth.png. 기존 엔진/MC 재실행 없음.
+
+[2026-10-26 검은 2존 연기·불꽃 군집]
+검은 연기 팔레트(uDarkSmoke, lite만), 하단 fade 폭 .025로 층 경계 대비 강화. 건물 바닥 밝은 회백색, 벽/보 밝게, 선 흰색. 계산된 h의 흰 점선 및 선택 실의 미세 투명 경계면 추가. h/층 두께 수치 표시. 사용자가 거부한 하층 거의 없음 문구 삭제.
+불꽃은 계산 화원 1개마다 같은 volume shader 안 3갈래 표시. CAD 마스크(홀·실외 제외)·천장 제한 유지. 기존 한 noise와 32단 raymarch 재사용, 파티클/화원/발열량 추가 없음. 성장모드 폭 최대2.4m 높이1.75m(미세 flicker), 실 경계에서 clip. 실제 성능 실측 안함. 계산 결과 재실행 없음.
+JS syntax 통과, 브라우저오류 없음. 탭6 S00 300s에서 검은 상층/밝은 건물/군집화염 확인. screenshot simulation/results/lite_v8_mc_R2_10_20261026/dark-zones-flame-cluster.png.
+
+[2026-10-26 고정3갈래 폐기 → 성장형 표시범위]
+legacy_real_view.js flameFootprint: CAD실/셀 실면적(내부구멍 제외)에서 65% 상당 원지름 최대값 산정(표시가정), 0.6m에서 sqrt(actualHRR/저장peak)에 따라 확대/축소. GPU에서 실제좌표 격자별 불꽃무늬를 확장영역 안에 나타냄; 고정3개 및3회루프 제거. 원점 실제fireposition, 기존CAD 마스크 및천장 clipping 유지. 화원/입자/mesh 추가없음, 한 noise, 기존32raystep. 화면차지면적 증가에 따른GPU비용 실측안함. 기존시뮬/연료/산소/열 unchanged.
+UI 한계문구 변경. 면적/구멍/단조증가/ratio clamp 수치확인 및JS syntax 통과. 탭6 S00 120s→720s 확대 범위 확인, browser error없음. 최종720s, screenshot growing-fire-footprint.png.
+
+[2026-10-26 전체 건물 수직 공간 투시]
+lite_viewer.js에 B.floors[].transport의 실제 region/anchor, 계단 meshes 재사용한 별도 투시 overlay. 전체 보기+수직 공간 투시 ON에서만 금색 계단/파랑승강로를 depthTest false로 벽/슬래브 너머 표시. 알수없는층에임의연결추가없음. 계산/연기전파 무변경. 전체맞춤은 3F계산범위가 아닌 전체 B slab높이 bounds 사용. 층버튼시점고정유지, 명시 건물전체맞춤버튼 추가. JS syntax/browser error없음. 전체건물 gold stairs blue elevator 보임확인. screenshot whole-building-cores.png. UI 현재tab6 전체보기/패널접힘/0초.
+
+[2026-10-26 건물 밝기 완화·외기 개구부 강조 복구]
+lite_viewer.js 바닥 #aab7c0, 벽/보 #b8c3cb, CAD outline #bdcbd5 opacity .42. 재색상은 cadOutline LineSegments만 적용하여 개구부 강조색 훼손 방지. 원본 B의 exterior/out 문·창을 민트색 면/투시 테두리로 전층 표시. 외기 문·창 강조 checkbox 기본 ON, 열림/닫힘과 별도 위치 표시임을 명시. 수직 공간 투시/위험/선택 테두리 유지. JS syntax 및 browser error 확인, 전체보기 screenshot exterior-contrast.png. 계산 재실행 없음.
+
+[2026-10-26 외부 창 강조 단순화]
+lite_viewer.js exteriorWindowFace: 외기연결 window만, 도면 span 3m 이하/형상폭3.6m 이하·두께0.65m 이하·높이2.4m 이하 표시필터. 테라스/난간/발코니 이름 제외. 원본 opening.polys 최소면적 직사각형의 외측(연결 실 폴리곤 내부 판정, 모호하면 실중심 반대면) 1면만 LineLoop 1px opacity .65. 입체 edge와 면채움 삭제. 이는 표시필터이며 법정/제조 표준 인증 분류 아님, 시뮬 데이터 변경없음. 3F W0(26m)/W31(8m) 제외, 일반 창35개. JS syntax/전층좌표유한값 검증, browser error없음. 탭6 전체보기 반영, screenshot exterior-window-face.png.
+
+[2026-10-26 창 강조 뒷면 숨김·입구 가짜 코어 상자 제거]
+lite_viewer.js 외부 창 LineLoop depthTest true, 외측 normal/중심 저장, OrbitControls change마다 카메라 반대면 hidden(벽 투명에도 뒷면 강조 없음). 코어 투시 depthTest false 유지. connected false + to_floor 없음 + meshes 없음인 transport는 전체높이 코어 overlay에서 제외: B1 C3, 1F C4. 정문1F C4는 실제 계단면/층연결 없는 도면기호인데 이전 overlay가 floor.h로 돌출해 노란상자 생성한 원인. 원본 모델/계산 수정없음. JS syntax 통과/browser error없음, 회전 전후 창앞면만 보임 확인, screenshot exterior-facing-only.png.
+
+[2026-10-26 선택 테두리 위치 분리]
+lite_viewer.js selectionGeometry만 변경: CAD 경계에서 실 안쪽 .24m 이동, 폭 .07m 하늘색 ribbon. 높이는 floor+.18 및 ceiling-.18로 위험/연기 경계와 분리. ring winding/holes 고려, .25m 구간별 안쪽 검사로 오목한 경계 바깥 돌출 방지. 조건 테두리/계산값 무변경. caption 실안쪽 선택/실경계 위험 안내. syntax통과 browsererror없음, S06 R2_C0 900s에 빨강위험선과 안쪽하늘색선 동시 확인. screenshot selection-inset.png.
+
+[2026-10-26 대공간 셀 내부 테두리 숨김]
+lite_viewer.js original_room으로 원래 B 실 연결. 위험/롤오버/연기층 경계는 셀경계와 원래 CAD 실경계의 공선 겹침만 표시, 가상분할선/분할점 수직선 제거. 선택은 해당 셀 아닌 원래 실 전체 안쪽 ribbon(기존 .24m), 셀선택 interfacePlane숨김. 클릭/셀별 계산·값·연기/화염은 유지. R1/R2/R10 원래CAD와 cell union 면적동일 확인. syntax통과/browser error없음. S06 R1_C5 2400s 내부격자없음 확인, screenshot room-outline-no-cell-cuts.png. 현재탭6 3F R1확대 40분 정지.
+
+[2026-10-26 선택 테두리 모서리 연속 연결]
+selectionGeometry의 독립 edge조각+삭제 방식 폐기. joinedSelectionRibbons로 각 ring 모서리의 offset교차점 공유, 닫힌 연속 삼각띠 생성. 홀/오목경계/중복끝점 처리, 날카로운각 miter상한4. 좁은형상은 조각삭제 대신 ring전체 간격/폭 축소. 3F 전체실 ring누락0, R26만 inset .1697m, 나머지 .24m. JSsyntax/browsererror없음. R1 기둥·방모서리 폐곡선 시각검증, 내부셀경계숨김 유지. screenshot selection-joined-corners.png. 시뮬무변경.
+
+[2026-10-26 연기·위험 입체테두리 제거]
+lite_viewer.js boundarySegments가 exterior ring(p.o)만 취급(holes 제외), 셀은 원래실 외곽 겹침만 유지. geometry()는 z=0 수평 segment만 생성: 상단duplicate/세로upright 제거. update에서 위험선 높이=연기층경계, scale.z변경제거. 위험색이 있는 경우 동일위치 흰 interfaceLine숨겨 위험색 보존. 선택 joined ribbon/전체건물 코어투시는 그대로. JSsyntax/browsererror통과, S06 R2_C0 900s에서 세로상자없고 빨강수평위험선+하늘선택선 확인. screenshot horizontal-risk-outline.png. 시뮬재실행없음.
+
+[2026-10-26 선택 테두리 바닥만]
+selectionGeometry 상부띠 제거, 바닥+.08m 하늘색 단일띠만 표시. 안쪽offset/연속모서리/depthTest false 그대로(연기너머 선택확인). caption 바닥하늘색으로 변경. 위험 수평선/색상 그대로. JSsyntax/browsererror없음, S06 R2 900s 확인, screenshot selection-floor-only.png.
+
+[2026-10-26 위험 테두리 전체 연결·메뉴 검토]
+lite_viewer.js: 셀별 외곽 조각 표시를 원래 CAD 방 단위의 닫힌 수평 ribbon으로 교체. 일부 셀만 조건 충족해도 원래 방 외곽 전체에 해당 색 표시(전체 방 모든 셀 충족이라는 뜻 아님). 폭 .08m, depthTest false, renderOrder35. 동시 위험은 높이 .14m 간격, 바닥 cyan 선택 유지. FO 우선순위에 숨겨졌던 가스 위험색은 저장된 v8 smoke_stage=2와 Ou/LOC로 동일 기존 조건을 복원하여 함께 표시(새 기준 아님). 상층 롤오버는 저장된 rollover_band 사용. 백드래프트가 FO에 가려진 S09 R2 1500s를 실제 화면에서 빨강+노랑+하늘색 동시 확인. 11개 저장 사례 FGI 표시조건 충족0, rollover_band0: 실제 데이터에서 두 색 시각검증은 불가, 동일 기하 렌더링 경로 적용. 계산/판정 임계값/결과 파일 무변경.
+전체 메뉴 검토 drawer 기본 열림: 간략재생, 건물설정, 작전표시, 이전CFAST, r8설정, 문분류, 화점선별 총7묶음 모두 펼침. 현재/이전 controls는 읽기전용 사본, 이전 미연결 기능 명시. 계산/저장/작전배치 자동실행 없음. 선택값 복사 포함. overlay.css를 HTML head에서 먼저 로드해 시작 시 기존 메뉴가 잠깐 나타났다 사라지는 flash 방지. 메뉴 삭제 없음.
+JS syntax통과, 브라우저 error없음, 7개묶음 모두 로드/접힌항목0. screenshots all-menu-review.png, whole-room-risk-outlines.png, fo-backdraft-separated.png (lite_v8_mc_R2_10_20261026). 서버8780 PID15372 재시작, 현재 탭6 S09 25분 선택실확대 및 메뉴검토창 열림. 시뮬 재실행 없음.
+
+[2026-10-26 배속·플룸 복원·연기 온도색]
+lite_viewer.js 배속 1/5/10/20/30/60(기본20), 이전 overlay.js 배속도 동일. litePlumes/liteHeatSmoke 체크박스 기본ON 추가. cfPlumeLegend 강제숨김 제거. legacy_real_bridge에서 plumesEnabled/temperatureSmoke 전달, legacy_real_view에서 riskColors 존재로 플룸까지 끄던 결합 제거하고 독립 toggle 사용. 기존 상관식/솔버 무변경. 간략 결과+기존 CFAST계열 상관식의 보조 표시이며 순정출력/CFD속도장 동일아님 명시(화원 면적 등 기존 표시입력 한계 유지).
+연기 shader 동일 billow/32ray step 재사용, 부드러운 2단계 명암 bands, 중립회색 .14~.62로 검정완화. 밝은무늬만 층평균온도 uLayerTemp로 80~200℃ 회색→노랑,200~600℃ 노랑→빨강(600이상포화). 모두 표시척도, 착화기준/실제연기색 아님. 온도색OFF이면 기존질감. 상하층별 cache온도 사용, 광학밀도/불투명도/연기범위/화재연산 변경없음. 위험테두리와 독립. 계산재실행없음.
+JS syntax통과/browser consoleerror없음. S06 300s에 보라상승플룸·청록천장가스 확인, 고온구간 빨강/노랑명암 확인. screenshot plume-temperature-smoke-early.png, temperature-smoke-overview.png. 현재탭6 S06 26:10 층전체보기, 패널접힘, 실감/플룸/온도색ON. 새로고침 기본 전체메뉴검토창열림은 기존요청유지.
+
+[2026-10-26 연기 온도색 면적 축소]
+사용자 요청으로 temperatureSmoke 중립바탕 .085/.095/.11~.28/.30/.32 진한회색, 온도색 mask를 bands*.78에서 smoothstep(.62,.82,n)*.68로 변경. 밝은무늬 일부만 색상, 온도척도/플룸·천장가스/계산 그대로. JSsyntax/browsererror통과, S06 1800s 화면확인. screenshot smoke-dark-gray-small-highlights.png. 탭6 30분 층전체, 패널접힘.
+
+[2026-10-26 연기 온도색 분산·소폭 밝기 증가]
+legacy_real_view.js 기존 billow의 coarse/fine 두 noise샘플을 분리 재사용(추가 noise 호출 없음). 온도highlight는 큰 n덩어리 대신 fine smoothstep .52~.78, 강도 .40으로 흩어진 작은 무늬. 중립 바탕 .10/.11/.125~.30/.32/.34로 소폭밝게. 온도/밀도/연기범위/계산 무변경. JSsyntax 및 브라우저error없음. S06 1800s 확인, screenshot smoke-scattered-highlights.png. 현재탭6 30분 층전체.
+
+[2026-10-26 온도색 면→선 무늬]
+사용자 уточ정: 얼룩/덩어리가 아닌 선 느낌. legacy_real_view.js highlight를 wp.y/z+기존coarse/fine noise로 휘어진 얇은 sin stroke의 soft mask로 변경. 온도색 .40/바탕회색/밀도/계산 그대로, 추가noise없음. 표시용 wisp이며 실제유선/속도장 아님. JSsyntax/browsererror통과, S06 1800s 화면에서 선무늬 확인. screenshot smoke-temperature-wisps.png. 탭6 30분 층전체 유지.
+
+[2026-10-26 비주기 연기선·유동방향 설명]
+기본회색 유지. 규칙적인 sin선 제거, 길쭉한 noise좌표에 기존coarse/fine으로 뒤틀림+시간이동 적용한 등치선 mask, 폭·진하기 연속변화. 온도색일때만 noise3 1회추가, 실제유선아닌 표시효과. JSsyntax/browsererror통과, S06 1800s screenshot smoke-irregular-wisps.png. 사용자 유동방향 질문: core.py 높이별슬랩 signed m으로 문창 양방향유량계산됨. 실내공간속도장은 2존모델에 없음. 현재온도선은 유량과미연결, 정확한개구부방향은 결과출력/3D연결작업필요. 엔진/재계산변경없음.
+
+[2026-10-26 직전 연기선 복원]
+사용자 '아까거가 더 낫겠다'에 방금 비주기노이즈 변경만 취소. 바로전 sin 기반 가늘고 휘어진 선 mask 복원, 바탕회색 유지. JSsyntax통과, 3F S06 1800s 화면확인. screenshot smoke-wisps-restored.png. 재계산 없음.
+
+[2026-10-26 선 이전 버전으로 추가 복원]
+사용자 '좀더 아까꺼': 선/sin 제거, fine smoothstep(.52,.78)*n smoothstep(.18,.48),강도.40의 분산 온도무늬 복원(smoke-scattered-highlights 버전). 중립 .10/.11/.125~.30/.32/.34 유지. JSsyntax 통과 및 S06 1800s 확인. screenshot smoke-scattered-restored.png.
+
+[2026-10-26 실내 문 위치 강조 복원]
+원본 CAD 문짝은 groups내 실제leaf로 존재하나 smoke renderOrder10/depthTestfalse로 덮임. 외부창만 별도overlay있던 상태. lite_viewer.js interiorOverlay 추가: kind door+connection_status interior만, 각leaf hinge→closed로 실제문폭·door_h의 단일평면 LineLoop(문짝개폐상태 아닌 위치). leaf없는경우 opening.polys 최장변 fallback. 금색#e6bd68 thin opacity.9, depthTestfalse/order46, raycast없음. 층group 위치·가시성동기화, 실내 문 위치 checkbox기본ON. 방화문분류·개폐·시뮬입력 수정없음. JSsyntax/browsererror통과, S06 1800s 연기속 문확인 screenshot interior-doors-visible.png. 표시용이며 개구부 유동 연결과는 별개.

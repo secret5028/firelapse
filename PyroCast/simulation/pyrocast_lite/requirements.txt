@@ -1,0 +1,6 @@
+# Separate L1 dependencies; native precision requirements remain unchanged.
+numpy>=2.0,<3
+scipy>=1.14,<2
+shapely==2.2.0
+# L0 historical CAD loader only; normalized L1 adapter does not need OpenCV.
+opencv-python-headless>=4.10,<5

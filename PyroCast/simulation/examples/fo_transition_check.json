@@ -1,0 +1,13 @@
+{
+  "name": "FO transition functional check; not the CAD building",
+  "duration_s": 180,
+  "output_step_s": 1,
+  "max_time_step_s": 0.1,
+  "gas": {"enabled": false},
+  "spread": {"enabled": false, "max_runs": 4, "wall_time_budget_s": 180},
+  "flashover": {"enabled": true, "criterion": "temperature", "transition_s": 30, "hrrpua_kW_m2": 500},
+  "criteria": {"fo_temperature_C": 600},
+  "rooms": [{"id": "R1", "origin_m": [0,0,0], "size_m": [4,4,3]}],
+  "openings": [{"id": "D1O", "a": "R1", "b": "OUTSIDE", "face": "RIGHT", "offset_m": 1, "width_m": 2, "top_m": 2.1, "schedule": [[0,1]]}],
+  "fuel_groups": [{"id": "primary", "room": "R1", "initial_time_s": 0, "position_m": [2,2,0.02], "energy_MJ": 3000, "heat_of_combustion_kJ_kg": 20000, "growth_kW_s2": 2, "peak_kW": 4000, "hrrpua_kW_m2": 500}]
+}

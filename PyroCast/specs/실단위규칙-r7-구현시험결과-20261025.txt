@@ -1,0 +1,154 @@
+r7 실 단위 전이 규칙 — 구현 및 고정 입력 시험 (2026-10-25)
+
+순정 CFAST 7.7.7, 엔진·솔버·출력격자 무수정. 엔진 SHA256 317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9
+0. 50MW 출처: SOURCE scenario.json의 최초 peak_kW와 demonstration.primary_peak_kW가 모두50000. 생성기 tools/run_floor_spread_scenario.py:21 기본값, :47 직접 대입. 합산 오류 아님.
+분할 전 최초입력50MW는 시작셀 수치상한31.274MW를 초과. 분할후16.667MW는 이 상한보다 낮음. 초기곡선 추가클램프 없이 면적분할만 적용.
+r6에서 이 전체 곡선과 연료를 최초 셀 한 곳에 남긴 처리 수정. r7은 원래 R2의3셀에 각각1/3 예산. 최초 셀 peak16666.67kW, 에너지195044.28MJ. 다른2셀은 독립 대기 화원.
+room_involvement에서는 R2 형제2셀 공급이 각28.173MW로 정해져 시작셀16.667MW와 합계73.013MW의 잠재공급상한. 최초실 총 에너지 보존과 총 peak50MW 보존은 다름. item_peak는각16.667MW로합계50MW. 이는 실제동시발열과도구분한다.
+기존 fuel_area_m2가 있으면 바닥 대비 피복률로 재사용, coverage_fraction 명시 우선, 둘다 없으면0.5. 결과에 맞춘 재조정 없음.
+일반 전이: T4b600C. 같은실 셀: 화원 위 강판300C와 중심거리/0.05m/s. 기본 상승60초. 이 값은 전이가정이며 FO예측값 아님.
+통과공간도 T4b를 갖지만 화원은 없음. 바로 인접 통과공간의600C 조건을 참조하며 복도를 건너뛰지 않음. 무연료 셀 경계에는 화원위300C판을 만들지 않고600C센서를 참조.
+셀 거리는 기존 직사각형 계산 구획의 중심간 거리. 불규칙 CAD 실을 그대로 복원한 수평 화염해석이 아님.
+불확실 센서: CAD_3F_R13, CAD_3F_R19, CAD_3F_R20; r6a 높이의 가장 먼 모서리 유지, 국부 가열이 판정에 영향을 줄 수 있음.
+엔진의 조건은 엄격한 초과(>)이며 출력은5초. 사건은 구간/추정으로 표시. 기준과 같은 값에서 발생한다고 재해석하지 않음.
+139 Python 검사와 예산/무재시도 회귀검사1건, JS 문법 확인 통과. 기존 방식 보존. r7은 별도 입력 생성기와 실행 도구로 사용.
+
+1. B 새 실행(기존 CSV 재사용 없음):
+B1: 합격=True,1200초 완주=True,계산2.859초
+  R2: 조건구간None,실제발열첫표본None,최대0.00kW,양수연속0.0초
+  R3: 조건구간None,실제발열첫표본None,최대0.00kW,양수연속0.0초
+B2: 합격=True,1200초 완주=True,계산7.250초
+  R2: 조건구간[880.5, 881.5],실제발열첫표본945.0,최대3549.24kW,양수연속255.0초
+  R3: 조건구간[1022.5, 1023.5],실제발열첫표본1085.0,최대3248.15kW,양수연속115.0초
+B3: 합격=True,1200초 완주=True,계산32.907초
+  R2: 조건구간[310.5, 311.5],실제발열첫표본375.0,최대3549.24kW,양수연속825.0초
+  R3: 조건구간[448.5, 449.5],실제발열첫표본510.0,최대3174.36kW,양수연속690.0초
+
+2. 실제3F: 원30실,40계산셀. 같은 기존 C입력,시간3600초,각실행 예산1800초. baseline은 최초셀만 활성,형제셀도 비활성. 16실은 합격기준 아님.
+baseline_native: 완료=True,계산시간=41.57800000000134초,해석시각=3600.0,단계수=4645 (미완료는 마지막관측값)
+  실제발열 원래실 1개(최초포함): CAD_3F_R2
+  연속60초 이상 1개: CAD_3F_R2
+  세대는 가정 그래프의 연소가능 원래실 경로로 계산하며 같은실 셀은 새 세대로 세지 않음. 통과공간은 연소세대로 세지 않음.
+  G3 CAD_3F_R4 -> CAD_3F_R0: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G3 CAD_3F_R1_C2 -> CAD_3F_R1_C0: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R1_C3 -> CAD_3F_R1_C1: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G3 CAD_3F_R4 -> CAD_3F_R1_C2: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R1_C5 -> CAD_3F_R1_C3: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R1_C6 -> CAD_3F_R1_C4: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R1_C7 -> CAD_3F_R1_C5: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R1_C6: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R1_C7: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G0 CAD_3F_R2_C0 -> CAD_3F_R2_C1: 조건None,지연174.67s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G0 CAD_3F_R2_C1 -> CAD_3F_R2_C2: 조건None,지연174.67s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G3 CAD_3F_R4 -> CAD_3F_R3: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G2 CAD_3F_R1_C4 -> CAD_3F_R4: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R6: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R7: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R8: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R9: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G2 CAD_3F_R11 -> CAD_3F_R10_C0: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G2 CAD_3F_R10_C0 -> CAD_3F_R10_C1: 조건None,지연37.53s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R11: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G3 CAD_3F_R4 -> CAD_3F_R13: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G3 CAD_3F_R4 -> CAD_3F_R15: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G4 CAD_3F_R15 -> CAD_3F_R16: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R17: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G5 CAD_3F_R16 -> CAD_3F_R19: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G2 CAD_3F_R17 -> CAD_3F_R20: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G5 CAD_3F_R16 -> CAD_3F_R22: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G1 CAD_3F_R2_C1 -> CAD_3F_R23: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G4 CAD_3F_R15 -> CAD_3F_R24: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  G4 CAD_3F_R15 -> CAD_3F_R25: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, baseline_standby_disabled
+  복도에서 멈춘 목적실: 없음(이 고정 경로에서 직접 부모가 통과공간인 미충족 목적실 없음)
+  공급 근거·피복률·HRRPUA·수치상한: rule_manifest.json / analysis.json; 전체 센서: sensor-audit.json; 에너지분배: energy-audit.json
+  dt 통계: {"samples": 42, "positive_min_dt_s": 0.0212, "positive_median_dt_s": 0.942, "last": {"native_time_s": 3600.0, "dt_s": 0.942, "steps": 4639}, "basis": "distinct snapshots at 1 wall second, NOT every solver step"}; 상태표본 통계이며 전체 단계 통계 아님.
+room_involvement: 완료=False,계산시간=1800.436999999998초,해석시각=2020.0,단계수=27948 (미완료는 마지막관측값)
+  미완료: CFAST 미완료: wall_time_budget; 마지막 진행 약 2030/3600초. 부분 결과는 완료로 저장하지 않습니다.
+  부분출력만 분석하며3600초로 보간/완주처리하지 않음.
+  실제발열 원래실 8개(최초포함): CAD_3F_R2, CAD_3F_R1, CAD_3F_R6, CAD_3F_R7, CAD_3F_R8, CAD_3F_R9, CAD_3F_R11, CAD_3F_R23
+  연속60초 이상 7개: CAD_3F_R2, CAD_3F_R1, CAD_3F_R6, CAD_3F_R7, CAD_3F_R8, CAD_3F_R9, CAD_3F_R23
+  세대는 가정 그래프의 연소가능 원래실 경로로 계산하며 같은실 셀은 새 세대로 세지 않음. 통과공간은 연소세대로 세지 않음.
+  G3 CAD_3F_R4 -> CAD_3F_R0: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R1_C2 -> CAD_3F_R1_C0: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C3 -> CAD_3F_R1_C1: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R4 -> CAD_3F_R1_C2: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C5 -> CAD_3F_R1_C3: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C6 -> CAD_3F_R1_C4: 조건[810.0, 815.0],지연164.16s,실제첫발열980.0,최대14489.72kW,연속1040s, actual_source_burning
+  G1 CAD_3F_R1_C7 -> CAD_3F_R1_C5: 조건[810.0, 815.0],지연164.16s,실제첫발열None,최대0.00kW,연속0s, triggered_but_no_actual_source_HRR; oxygen/mixing check required
+  G1 CAD_3F_R2_C1 -> CAD_3F_R1_C6: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대29997.40kW,연속235s, actual_source_burning
+  G1 CAD_3F_R2_C1 -> CAD_3F_R1_C7: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대29997.40kW,연속100s, actual_source_burning
+  G0 CAD_3F_R2_C0 -> CAD_3F_R2_C1: 조건[210.0, 215.0],지연174.67s,실제첫발열390.0,최대28173.06kW,연속1630s, actual_source_burning
+  G0 CAD_3F_R2_C1 -> CAD_3F_R2_C2: 조건[405.0, 410.0],지연174.67s,실제첫발열585.0,최대28173.06kW,연속1435s, actual_source_burning
+  G3 CAD_3F_R4 -> CAD_3F_R3: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R1_C4 -> CAD_3F_R4: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R6: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대459.17kW,연속600s, actual_source_burning
+  G1 CAD_3F_R2_C1 -> CAD_3F_R7: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대463.92kW,연속605s, actual_source_burning
+  G1 CAD_3F_R2_C1 -> CAD_3F_R8: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대1990.40kW,연속1225s, actual_source_burning
+  G1 CAD_3F_R2_C1 -> CAD_3F_R9: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대3622.43kW,연속1225s, actual_source_burning
+  G2 CAD_3F_R11 -> CAD_3F_R10_C0: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R10_C0 -> CAD_3F_R10_C1: 조건None,지연37.53s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R11: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대2046.38kW,연속50s, actual_source_burning
+  G3 CAD_3F_R4 -> CAD_3F_R13: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R4 -> CAD_3F_R15: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G4 CAD_3F_R15 -> CAD_3F_R16: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R17: 조건[730.0, 735.0],지연60.00s,실제첫발열None,최대0.00kW,연속0s, triggered_but_no_actual_source_HRR; oxygen/mixing check required
+  G5 CAD_3F_R16 -> CAD_3F_R19: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R17 -> CAD_3F_R20: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G5 CAD_3F_R16 -> CAD_3F_R22: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R23: 조건[730.0, 735.0],지연60.00s,실제첫발열795.0,최대1995.89kW,연속1225s, actual_source_burning
+  G4 CAD_3F_R15 -> CAD_3F_R24: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G4 CAD_3F_R15 -> CAD_3F_R25: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  복도에서 멈춘 목적실: 없음(이 고정 경로에서 직접 부모가 통과공간인 미충족 목적실 없음)
+  공급 근거·피복률·HRRPUA·수치상한: rule_manifest.json / analysis.json; 전체 센서: sensor-audit.json; 에너지분배: energy-audit.json
+  dt 통계: {"samples": 247, "positive_min_dt_s": 0.0002008, "positive_median_dt_s": 0.06164, "last": {"native_time_s": 2030.0, "dt_s": 0.04968, "steps": 27948}, "basis": "distinct snapshots at 1 wall second, NOT every solver step"}; 상태표본 통계이며 전체 단계 통계 아님.
+item_peak: 완료=True,계산시간=554.4529999999977초,해석시각=3600.0,단계수=9097 (미완료는 마지막관측값)
+  실제발열 원래실 1개(최초포함): CAD_3F_R2
+  연속60초 이상 1개: CAD_3F_R2
+  세대는 가정 그래프의 연소가능 원래실 경로로 계산하며 같은실 셀은 새 세대로 세지 않음. 통과공간은 연소세대로 세지 않음.
+  G3 CAD_3F_R4 -> CAD_3F_R0: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R1_C2 -> CAD_3F_R1_C0: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C3 -> CAD_3F_R1_C1: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R4 -> CAD_3F_R1_C2: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C5 -> CAD_3F_R1_C3: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C6 -> CAD_3F_R1_C4: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R1_C7 -> CAD_3F_R1_C5: 조건None,지연164.16s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R1_C6: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R1_C7: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G0 CAD_3F_R2_C0 -> CAD_3F_R2_C1: 조건[212.5, 213.5],지연174.67s,실제첫발열390.0,최대16666.67kW,연속3210s, actual_source_burning
+  G0 CAD_3F_R2_C1 -> CAD_3F_R2_C2: 조건[416.5, 417.5],지연174.67s,실제첫발열595.0,최대16666.67kW,연속3005s, actual_source_burning
+  G3 CAD_3F_R4 -> CAD_3F_R3: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R1_C4 -> CAD_3F_R4: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R6: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R7: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R8: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R9: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R11 -> CAD_3F_R10_C0: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R10_C0 -> CAD_3F_R10_C1: 조건None,지연37.53s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R11: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R4 -> CAD_3F_R13: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G3 CAD_3F_R4 -> CAD_3F_R15: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G4 CAD_3F_R15 -> CAD_3F_R16: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R17: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G5 CAD_3F_R16 -> CAD_3F_R19: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G2 CAD_3F_R17 -> CAD_3F_R20: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G5 CAD_3F_R16 -> CAD_3F_R22: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G1 CAD_3F_R2_C1 -> CAD_3F_R23: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G4 CAD_3F_R15 -> CAD_3F_R24: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  G4 CAD_3F_R15 -> CAD_3F_R25: 조건None,지연60.00s,실제첫발열None,최대0.00kW,연속0s, parent_sensor_threshold_not_reached
+  복도에서 멈춘 목적실: 없음(이 고정 경로에서 직접 부모가 통과공간인 미충족 목적실 없음)
+  공급 근거·피복률·HRRPUA·수치상한: rule_manifest.json / analysis.json; 전체 센서: sensor-audit.json; 에너지분배: energy-audit.json
+  dt 통계: {"samples": 393, "positive_min_dt_s": 0.001222, "positive_median_dt_s": 0.2085, "last": {"native_time_s": 3600.0, "dt_s": 0.09817, "steps": 9075}, "basis": "distinct snapshots at 1 wall second, NOT every solver step"}; 상태표본 통계이며 전체 단계 통계 아님.
+
+실행기 정정 이력: 첫 room_involvement 실행은 legacy90초 출력진전 감시가 남아있어676.469초/1020초에서조기중단. 요청한30분 시험이 아니므로 별도보존.
+stall_timeout_s=0으로 정정. 엔진·덱은 동일(바이트확인). 기준계산 재사용, 정정한1800초 실행과 item_peak 비교는 각1회. 위 비교시간과 별도로 조기중단시도676.469초의 작업비용을 포함해야 함.
+
+해석 한계:
+- 기존 r6a baseline943.828초(50MW)와 r7 baseline은 공급곡선 크기가 달라 동등정확도 가속률 비교가 아님. 원본50MW 비용 비중은 별도 프로파일링하지 않음.
+- 이전 C는3240초에 예산중단, 안전출력3230초에서9실. 최종1시간 결과가 아니므로 r7 완료결과와 같은 시각 비교는 별도 읽기분석이 필요.
+- 수치공급상한은 실별 실제 산소 공급한계가 아님. 잔여 미연가스와 FGI/개구부연소 조건에 영향. 추가연소는OFF; 순정 산소제한은 그대로.
+- item_peak에서 실간 경로의 출발센서 PC_R2_C1 최고589.773C<600C라 다른실 착화없음. 그셀 상층최고600.042C로 대용판과약10.269C차이. C0/C2판은600C초과했어도 단일선정경로의 C1조건을 대체하지 않음. T4b는 상층온도를 직접 판정하는 기능이 아님.
+- 정적 Dijkstra 단일부모의 한계: room_involvement의 R1_C2는 같은실C4 대신외부R4를부모로선택. R4센서약188C로미달하여R1내부활성셀C4가있어도다른경로는평가하지않음. 셀간300C가모든인접경로의OR가아님. 이를 바꾸려면 다음 설계결정 필요.
+- 300C 화원위 판도 이웃에서 들어온 열로 가열될 수 있다. 실제 부모화원연소를 확인하는 논리 AND는 순정타깃에 추가하지 않음.
+- 이 C 입력에 수직개구부는 없음. 전층/외벽 수직전파의 검증으로 해석하지 않음.
+- 3D 재생 패키지와 뷰어에 fallback 판정불확실 전달/표시 지원 추가. 운영 화면의 기존 계산결과는 자동 교체하지 않음. r7은 시험결과 JSON/보고서로 분리.
+- 자동재시도/임계값 튜닝/기존 방식 삭제 없음.

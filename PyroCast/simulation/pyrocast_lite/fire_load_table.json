@@ -1,0 +1,186 @@
+{
+  "_source": "EN 1991-1-2:2002 Annex E, Table E.4 (fire load density q_f,k MJ/m2: mean, 80% fractile, Gumbel) / Table E.5 (fire growth t_alpha s to 1 MW, RHRf kW/m2). alpha = 1000 / t_alpha^2 kW/s2",
+  "_order": "실 이름 키워드(names) → 일치 없으면 층 용도(floor_use) → default. 근거 없는 분류는 basis=null로 표시",
+  "classes": {
+    "dwelling": {
+      "label": "주거",
+      "mean": 780,
+      "q80": 948,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "hospital_room": {
+      "label": "병실",
+      "mean": 230,
+      "q80": 280,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "hotel_room": {
+      "label": "호텔 객실",
+      "mean": 310,
+      "q80": 377,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "library": {
+      "label": "도서관",
+      "mean": 1500,
+      "q80": 1824,
+      "t_alpha": 150,
+      "rhrf": 500,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "office": {
+      "label": "사무실",
+      "mean": 420,
+      "q80": 511,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "classroom": {
+      "label": "교실",
+      "mean": 285,
+      "q80": 347,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "shopping": {
+      "label": "판매시설",
+      "mean": 600,
+      "q80": 730,
+      "t_alpha": 150,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "theatre": {
+      "label": "극장·영화관",
+      "mean": 300,
+      "q80": 365,
+      "t_alpha": 150,
+      "rhrf": 500,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "transport": {
+      "label": "교통 공용공간(복도·로비)",
+      "mean": 100,
+      "q80": 122,
+      "t_alpha": 600,
+      "rhrf": 250,
+      "basis": "EN1991-1-2 E.4/E.5"
+    },
+    "shaft_room": {
+      "label": "설비 샤프트(PS·EPS 등)",
+      "mean": 100,
+      "q80": 122,
+      "t_alpha": 600,
+      "rhrf": 250,
+      "basis": null
+    },
+    "parking": {
+      "label": "주차장",
+      "mean": 280,
+      "q80": 340,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": null
+    },
+    "warehouse": {
+      "label": "창고",
+      "mean": 1180,
+      "q80": 1430,
+      "t_alpha": 75,
+      "rhrf": 500,
+      "basis": null
+    },
+    "factory": {
+      "label": "공장",
+      "mean": 600,
+      "q80": 730,
+      "t_alpha": 150,
+      "rhrf": 250,
+      "basis": null
+    },
+    "default": {
+      "label": "기타(미분류)",
+      "mean": 500,
+      "q80": 600,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": null
+    },
+    "toilet": {
+      "label": "화장실",
+      "mean": 40,
+      "q80": 40,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "project_assumption_user_approved_2026-10-25",
+      "assumption": "사용자 지정 40 MJ/m²·250 kW/m². q80=mean은 분포 미지정 고정값, t_alpha는 기존 default 호환값. 이번 v8 화점 성장은 별도 alpha=.047이며 MC 미실행."
+    }
+  },
+  "names": [
+    [
+      "toilet",
+      "화장실|TOILET|RESTROOM|W[.]?C[.]?\\b"
+    ],
+    [
+      "shaft_room",
+      "^(EPS|TPS|AV|AD|DS|PD|PS)\\b|EPS|TPS|AV/PS|AD/PS|파이프\\s*샤프트|덕트\\s*샤프트"
+    ],
+    [
+      "hotel_room",
+      "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+    ],
+    [
+      "hospital_room",
+      "병실|입원|병동|WARD"
+    ],
+    [
+      "library",
+      "도서|서고|문고|열람|LIBRARY"
+    ],
+    [
+      "classroom",
+      "교실|강의|실습실|CLASS"
+    ],
+    [
+      "theatre",
+      "극장|영화|공연|관람|강당|THEATER|THEATRE|CINEMA"
+    ],
+    [
+      "shopping",
+      "판매|매장|근린|상가|점포|SHOP|STORE|음식점|식당|카페|휴게음식|마트"
+    ],
+    [
+      "office",
+      "사무|업무|회의|OFFICE|관리실|방재실|경비|숙직"
+    ],
+    [
+      "dwelling",
+      "세대|거실|침실|안방|드레스|아파트|주택|원룸"
+    ],
+    [
+      "transport",
+      "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
+    ]
+  ],
+  "floor_use": {
+    "lodging": "hotel_room",
+    "apartment": "dwelling",
+    "office": "office",
+    "retail": "shopping",
+    "medical": "hospital_room",
+    "edu": "classroom",
+    "parking": "parking",
+    "warehouse": "warehouse",
+    "factory": "factory",
+    "penthouse": "default",
+    "default": "default"
+  }
+}

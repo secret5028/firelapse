@@ -1,0 +1,18 @@
+{
+  "scope_floor": "3F",
+  "fire_floor": "3F",
+  "fire_room": "R9",
+  "duration_s": 1800,
+  "max_added_ignitions": 6,
+  "max_runs": 22,
+  "solid_ignition_C": 45,
+  "criteria": {"fo_temperature_C": 600},
+  "flashover": {
+    "enabled": true,
+    "criterion": "temperature",
+    "transition_s": 30,
+    "hrrpua_kW_m2": 1000,
+    "decay_fraction": 0.3,
+    "basis": "600 C threshold with exploratory supply ramp; not measured building fuel data"
+  }
+}

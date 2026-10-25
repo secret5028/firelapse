@@ -1,0 +1,30 @@
+전체 연기 표시 및 계산 범위 — 2026-10-21
+
+표시
+- 연기 OD와 층 두께가 있으면 위험 플래그와 무관하게 회색 연기를 표시한다.
+- 위험 유형 조건은 연기 둘레/층 경계의 색에만 적용한다. 회색 질감은 기존 셰이더.
+- FGI 가스 화염 메시 표시는 사용자 요청으로 OFF. 온도/O2/OD/가스 발열 계산은 유지.
+- 조건이 없거나 미계산인 구역에 가상의 연기를 만들지 않는다.
+
+범위와 간편 계산
+- 기존 국부 사례3실은 나머지 개구부를 절단해 닫은 입력이다. 층 전체 결과가 아니다.
+- 빌더가3F31실 중 연결된14실/57개구부를 사용한다.17실 미계산을 UI에 표시한다.
+- 고체 착화/FO 시각은 기존 국부 사례의 시나리오 지정값으로 가져온다.
+- 전층 환기 조건의 새로운 고체 착화/FO 시각을 재예측하지 않는다.
+- 가스 연소/연기/온도/O2/실제 발열은 새 입력의 native 계산값이다.
+- 대상 판정면0, 외부 사건 탐색0, native1회로 재실행 수를 줄인다.
+- 이것은 엔진 시간의 일정 배수 개선을 보장하지 않는다. 실제 실행 시간을 기록한다.
+- 정상1800s 도달과 결과 검증 전에는 전층30분 재생을 완료했다고 표시하지 않는다.
+- 기존3실 점화 비교는 별도로 표기한다. 전층 점화 비교는 같은 전층 입력으로 계산한다.
+
+구현
+simulation/tools/build_floor_smoke_demo.py / pyrocast_cfbt/spread.py / playback.py
+viewer/smoke_visual.js / legacy_real_view.js / legacy_real_bridge.js / overlay.js
+tools/serve_cfbt_building.py / simulation/start_building_view.ps1
+원본 CFAST 및 Fortran 확장/엔진 변경 없음.
+
+실행 결과 정정
+- 14실 단일 native 시도도470s 이후 출력이 정체돼 중단했다.1800s 완료 아님.
+- 결과/playback을 게시하지 않았고 기존 완료3실/30분 계산이 화면에 유지된다.
+- 전층 연기 빌더와 단일 실행 분기의 실제1800s 성공/성능 개선은 미검증이다.
+- 중단 기록: simulation/results/cad_floor_smoke_v5_prescribed/incomplete.json

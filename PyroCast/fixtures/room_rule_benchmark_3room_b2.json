@@ -1,0 +1,1208 @@
+{
+  "duration_s": 1200,
+  "output_step_s": 5,
+  "max_time_step_s": 1,
+  "ambient_C": 20.0,
+  "engine_optimization": {
+    "radiation_cache": false,
+    "wall_cache": false,
+    "adaptive_radiation": false,
+    "adaptive_min_age_s": 120.0,
+    "adaptive_stable_s": 30.0,
+    "adaptive_refresh_s": 10.0
+  },
+  "window_breakage": {
+    "enabled": false,
+    "criterion": "TEMPERATURE",
+    "threshold": 450.0,
+    "post_fraction": 1.0,
+    "material": {
+      "conductivity_W_mK": 0.95,
+      "density_kg_m3": 2500.0,
+      "specific_heat_kJ_kgK": 0.82,
+      "thickness_m": 0.006,
+      "emissivity": 0.9
+    },
+    "preset_id": "ordinary_float_6mm_proxy_v1"
+  },
+  "wall_material": {
+    "conductivity_W_mK": 0.12,
+    "density_kg_m3": 800.0,
+    "specific_heat_kJ_kgK": 1.0,
+    "thickness_m": 0.02,
+    "emissivity": 0.94,
+    "assumed": true,
+    "basis": "declared_project_boundary_assumption"
+  },
+  "gas": {
+    "mixture_enabled": false,
+    "jet_enabled": false,
+    "mixture_smooth_enabled": false,
+    "mixture_o2_width_vol": 0.01,
+    "mixture_temperature_width_C": 10.0,
+    "mixture_fuel_width": 0.0001,
+    "mixture_mixing_time_s": 10.0,
+    "energy_basis": "total_potential_assumption",
+    "enabled": false,
+    "bulk_enabled": false,
+    "vent_gate_enabled": false,
+    "gas_ignition_C": 520.0,
+    "hot_C": 300.0,
+    "oxygen_min_vol_percent": 12.0,
+    "fuel_min_mass_fraction": 0.001,
+    "rate_ref_s_inv": 0.1,
+    "reference_K": 800.0,
+    "activation_J_mol": 170000.0,
+    "vent_ignition_C": 520.0,
+    "pilot_assumed": false,
+    "native_lower_oxygen_limit_mass_fraction": 0.15,
+    "pilot_start_s": 0.0,
+    "pilot_end_s": 1000000000.0,
+    "profile_id": "project_arrhenius_exploration_v1",
+    "basis": "project_assumption_not_a_validated_Kudo_fit"
+  },
+  "spread": {
+    "enabled": true,
+    "max_added_ignitions": 2,
+    "max_runs": 3,
+    "iteration_mode": "fixed_point",
+    "max_passes": 3,
+    "converge_abs_s": 10,
+    "converge_rel": 0.01,
+    "wall_time_budget_s": 600,
+    "run_timeout_s": 600,
+    "event_tolerance_s": 1e-05,
+    "exposure_case": "local",
+    "quadrature_n": 12,
+    "djet_radiative_fraction": 0.3,
+    "djet_r_min_m": 0.5,
+    "near_flame_m": 1.0,
+    "candidate_offsets_m": [
+      0.5,
+      1.5
+    ],
+    "candidate_heights_m": [
+      0.75,
+      1.5
+    ],
+    "plate_dt_s": 0.05,
+    "plate_nodes": 49,
+    "causality_abs": {
+      "ULT": 0.2,
+      "LLT": 0.2,
+      "HGT": 0.002,
+      "HRR": 20.0,
+      "DJET": 20.0
+    },
+    "causality_rel": 0.0001
+  },
+  "criteria": {
+    "oxygen_deficient_vol_percent": 10.0,
+    "hot_C": 300.0,
+    "fuel_rich_mass_fraction": 0.1,
+    "rapid_C_s": 5.0,
+    "window_s": 30.0,
+    "fo_temperature_C": 600.0,
+    "fo_flux_kW_m2": 20.0,
+    "fgi_fuel_mass_fraction": 0.005,
+    "fgi_oxygen_vol_percent": 10.0
+  },
+  "flashover": {
+    "enabled": false,
+    "criterion": "temperature",
+    "transition_s": 30.0,
+    "hrrpua_kW_m2": null,
+    "decay_fraction": 0.3,
+    "area_basis": "floor",
+    "occupancy_fraction": 0.31,
+    "radiation_points": 1,
+    "basis": "user_threshold_and_prescribed_finite_room_supply_not_NIST_default"
+  },
+  "material": {
+    "id": "paper_proxy",
+    "conductivity_W_mK": 0.04184,
+    "density_kg_m3": 500.0,
+    "specific_heat_kJ_kgK": 2.092,
+    "thickness_m": 0.025,
+    "absorptivity": 0.9,
+    "emissivity": 0.9,
+    "ignition_C": 369.0,
+    "proxy": true,
+    "pilot": "assumed"
+  },
+  "name": "room_rule_B1_frozen_r4",
+  "rooms": [
+    {
+      "id": "R1",
+      "origin_m": [
+        0,
+        0,
+        0
+      ],
+      "size_m": [
+        5,
+        5,
+        2.7
+      ]
+    },
+    {
+      "id": "R2",
+      "origin_m": [
+        5,
+        0,
+        0
+      ],
+      "size_m": [
+        5,
+        5,
+        2.7
+      ]
+    },
+    {
+      "id": "R3",
+      "origin_m": [
+        10,
+        0,
+        0
+      ],
+      "size_m": [
+        5,
+        5,
+        2.7
+      ]
+    }
+  ],
+  "openings": [
+    {
+      "id": "D12",
+      "a": "R1",
+      "b": "R2",
+      "face": "RIGHT",
+      "offset_m": 2.05,
+      "width_m": 0.9,
+      "bottom_m": 0,
+      "top_m": 2.1,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "D23",
+      "a": "R2",
+      "b": "R3",
+      "face": "RIGHT",
+      "offset_m": 2.05,
+      "width_m": 0.9,
+      "bottom_m": 0,
+      "top_m": 2.1,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "W1",
+      "a": "R1",
+      "b": "OUTSIDE",
+      "face": "FRONT",
+      "offset_m": 1.6,
+      "width_m": 1.8,
+      "bottom_m": 0.9,
+      "top_m": 2.1,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ],
+      "kind": "window"
+    },
+    {
+      "id": "W2",
+      "a": "R2",
+      "b": "OUTSIDE",
+      "face": "FRONT",
+      "offset_m": 1.6,
+      "width_m": 1.8,
+      "bottom_m": 0.9,
+      "top_m": 2.1,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ],
+      "kind": "window"
+    },
+    {
+      "id": "W3",
+      "a": "R3",
+      "b": "OUTSIDE",
+      "face": "FRONT",
+      "offset_m": 1.6,
+      "width_m": 1.8,
+      "bottom_m": 0.9,
+      "top_m": 2.1,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ],
+      "kind": "window"
+    }
+  ],
+  "fuel_groups": [
+    {
+      "id": "primary",
+      "room": "R1",
+      "position_m": [
+        2.5,
+        2.5,
+        0
+      ],
+      "energy_MJ": 10000,
+      "heat_of_combustion_kJ_kg": 20000,
+      "growth_kW_s2": 0.0469,
+      "peak_kW": 2000,
+      "hrrpua_kW_m2": 500,
+      "fuel_area_m2": 25,
+      "initial_time_s": 0,
+      "co_yield": 0.01,
+      "formula": {
+        "carbon": 1.0,
+        "hydrogen": 1.7,
+        "oxygen": 0.72,
+        "nitrogen": 0.0,
+        "chlorine": 0.0
+      },
+      "formula_assumed": true
+    },
+    {
+      "id": "reserve_R2",
+      "room": "R2",
+      "position_m": [
+        7.5,
+        2.5,
+        0
+      ],
+      "energy_MJ": 10000,
+      "heat_of_combustion_kJ_kg": 20000,
+      "growth_kW_s2": 0.0469,
+      "peak_kW": 5000,
+      "hrrpua_kW_m2": 500,
+      "fuel_area_m2": 25,
+      "co_yield": 0.01,
+      "formula": {
+        "carbon": 1.0,
+        "hydrogen": 1.7,
+        "oxygen": 0.72,
+        "nitrogen": 0.0,
+        "chlorine": 0.0
+      },
+      "formula_assumed": true,
+      "room_rule_curve": {
+        "t": [
+          0.0,
+          60.0,
+          2002.2520074774495,
+          3692.753728172406
+        ],
+        "q": [
+          0.0,
+          3549.2421726334774,
+          3549.2421726334774,
+          0.0
+        ],
+        "area": [
+          0.1,
+          7.098484345266955,
+          7.098484345266955,
+          0.1
+        ],
+        "Q_max_kW": 3549.2421726334774,
+        "caps": {
+          "configured_peak_kW": 5000,
+          "area_hrrpua_kW": 12500.0,
+          "finite_energy_ramp_kW": 233333.33333333334,
+          "numerical_vent_cap_kW": 3549.2421726334774
+        },
+        "limiting_cap": "numerical_vent_cap_kW",
+        "energy_MJ": 10000.0
+      },
+      "room_vent_cap": {
+        "room": "R2",
+        "opening": {
+          "opening_id": "W2",
+          "exterior": true,
+          "effective_area_m2": 2.1600000000000006,
+          "height_m": 1.2000000000000002,
+          "fraction": 1,
+          "A_sqrt_H": 2.3661614484223183
+        },
+        "k": 1.0,
+        "internal_discount": 1.0,
+        "policy": "external_first_r4",
+        "cap_kW": 3549.2421726334774,
+        "basis": "numerical supply cap; exterior opening first in r4, otherwise internal factor 0.5; future maximum/post-breakage fraction; not solved oxygen availability"
+      }
+    },
+    {
+      "id": "reserve_R3",
+      "room": "R3",
+      "position_m": [
+        12.5,
+        2.5,
+        0
+      ],
+      "energy_MJ": 10000,
+      "heat_of_combustion_kJ_kg": 20000,
+      "growth_kW_s2": 0.0469,
+      "peak_kW": 5000,
+      "hrrpua_kW_m2": 500,
+      "fuel_area_m2": 25,
+      "co_yield": 0.01,
+      "formula": {
+        "carbon": 1.0,
+        "hydrogen": 1.7,
+        "oxygen": 0.72,
+        "nitrogen": 0.0,
+        "chlorine": 0.0
+      },
+      "formula_assumed": true,
+      "room_rule_curve": {
+        "t": [
+          0.0,
+          60.0,
+          2002.2520074774495,
+          3692.753728172406
+        ],
+        "q": [
+          0.0,
+          3549.2421726334774,
+          3549.2421726334774,
+          0.0
+        ],
+        "area": [
+          0.1,
+          7.098484345266955,
+          7.098484345266955,
+          0.1
+        ],
+        "Q_max_kW": 3549.2421726334774,
+        "caps": {
+          "configured_peak_kW": 5000,
+          "area_hrrpua_kW": 12500.0,
+          "finite_energy_ramp_kW": 233333.33333333334,
+          "numerical_vent_cap_kW": 3549.2421726334774
+        },
+        "limiting_cap": "numerical_vent_cap_kW",
+        "energy_MJ": 10000.0
+      },
+      "room_vent_cap": {
+        "room": "R3",
+        "opening": {
+          "opening_id": "W3",
+          "exterior": true,
+          "effective_area_m2": 2.1600000000000006,
+          "height_m": 1.2000000000000002,
+          "fraction": 1,
+          "A_sqrt_H": 2.3661614484223183
+        },
+        "k": 1.0,
+        "internal_discount": 1.0,
+        "policy": "external_first_r4",
+        "cap_kW": 3549.2421726334774,
+        "basis": "numerical supply cap; exterior opening first in r4, otherwise internal factor 0.5; future maximum/post-breakage fraction; not solved oxygen availability"
+      }
+    }
+  ],
+  "benchmark_assumptions": {
+    "primary_energy_MJ": 10000,
+    "secondary_peak_before_cap_kW": 5000,
+    "secondary_hrrpua_kW_m2": 500,
+    "alpha_fast_kW_s2": 0.0469,
+    "secondary_ramp_s": 60,
+    "fuel_and_wall_material": "unchanged normalized project defaults; not a measured building",
+    "windows": "full geometric area initially open as B1 explicitly specifies",
+    "T0_supply": "same capped ramp/hold/decay curve as T1-T3, only ignition mechanism differs",
+    "candidate_selection": "T1 first predeclared candidate in each room; no retrospective best-target selection"
+  },
+  "explicit_candidates": [
+    {
+      "id": "C_1",
+      "label": "D12_0.5_0.75",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        5.5,
+        2.5,
+        0.75
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_2",
+      "label": "D12_0.5_1.5",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        5.5,
+        2.5,
+        1.5
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_3",
+      "label": "D12_1.5_0.75",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        6.5,
+        2.5,
+        0.75
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_4",
+      "label": "D12_1.5_1.5",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        6.5,
+        2.5,
+        1.5
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_5",
+      "label": "D23_0.5_0.75",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        9.5,
+        2.5,
+        0.75
+      ],
+      "normal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_6",
+      "label": "D23_0.5_1.5",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        9.5,
+        2.5,
+        1.5
+      ],
+      "normal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_7",
+      "label": "D23_1.5_0.75",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        8.5,
+        2.5,
+        0.75
+      ],
+      "normal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_8",
+      "label": "D23_1.5_1.5",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        8.5,
+        2.5,
+        1.5
+      ],
+      "normal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_9",
+      "label": "W2_0.5_0.75",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        7.5,
+        0.5,
+        0.75
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_10",
+      "label": "W2_0.5_1.5",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        7.5,
+        0.5,
+        1.5
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_11",
+      "label": "W2_1.5_0.75",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        7.5,
+        1.5,
+        0.75
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_12",
+      "label": "W2_1.5_1.5",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        7.5,
+        1.5,
+        1.5
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_13",
+      "label": "floor",
+      "group": "reserve_R2",
+      "room": "R2",
+      "xyz": [
+        7.5,
+        2.5,
+        0.02
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        7.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_14",
+      "label": "D23_0.5_0.75",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        10.5,
+        2.5,
+        0.75
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_15",
+      "label": "D23_0.5_1.5",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        10.5,
+        2.5,
+        1.5
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_16",
+      "label": "D23_1.5_0.75",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        11.5,
+        2.5,
+        0.75
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_17",
+      "label": "D23_1.5_1.5",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        11.5,
+        2.5,
+        1.5
+      ],
+      "normal": [
+        -1.0,
+        -0.0,
+        -0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_18",
+      "label": "W3_0.5_0.75",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        12.5,
+        0.5,
+        0.75
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_19",
+      "label": "W3_0.5_1.5",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        12.5,
+        0.5,
+        1.5
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_20",
+      "label": "W3_1.5_0.75",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        12.5,
+        1.5,
+        0.75
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_21",
+      "label": "W3_1.5_1.5",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        12.5,
+        1.5,
+        1.5
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    },
+    {
+      "id": "C_22",
+      "label": "floor",
+      "group": "reserve_R3",
+      "room": "R3",
+      "xyz": [
+        12.5,
+        2.5,
+        0.02
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "material": {
+        "id": "paper_proxy",
+        "conductivity_W_mK": 0.04184,
+        "density_kg_m3": 500.0,
+        "specific_heat_kJ_kgK": 2.092,
+        "thickness_m": 0.025,
+        "absorptivity": 0.9,
+        "emissivity": 0.9,
+        "ignition_C": 369.0,
+        "proxy": true,
+        "pilot": "assumed"
+      },
+      "fire_source_xyz": [
+        12.5,
+        2.5,
+        0
+      ],
+      "fire_source_base_m": 0,
+      "placement_basis": "B1 fixed floor source independent of exposure sensor"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "revision": "v6_section1.1",
+  "default_top_n": 3,
+  "weights": {"fuel": 1.0, "ventilation_restriction": 1.0, "connectivity": 1.0, "passage_adjacency": 1.0, "fire_isolation": 1.0},
+  "probabilities": {"fire_door": 0.2, "inferred_fire_door": 0.35, "ordinary_door": 0.5, "operable_window": 0.3, "fixed_window": 0.0},
+  "fixed_states": {},
+  "ranking_order": ["burning_rooms_desc", "smoke_risk_rooms_desc", "first_FO_s_asc"],
+  "constant_factor_contribution": 0.0,
+  "limitations": ["① 점수는 입력 지표의 상대 순위이며 위험도 예측값이 아니다. 후보 선별용.", "p>=0.5의 이진 상태는 확률 기대값 자체가 아니라 명세의 대표 상태 규칙이다."]
+}

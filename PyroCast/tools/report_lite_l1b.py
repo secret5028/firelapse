@@ -1,0 +1,90 @@
+"""Read saved L1b evidence; no simulator execution."""
+from pathlib import Path
+import hashlib
+import json
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / 'simulation/results/lite_l1b_20261025'
+def read(p): return json.loads(p.read_text(encoding='utf-8-sig'))
+def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
+
+guard = read(ROOT/'simulation/results/lite_l1_20261025/source-guard.json')
+changed = [p for p,h in guard.items() if sha(Path(p)) != h]
+assert not changed, changed
+lm = read(OUT/'L3/3F/rule_manifest.json')
+nm = read(ROOT/'simulation/results/room_rule_r8_20261025/selected/rule_manifest.json')
+manifest_checks = {k: lm[k] == nm.get(k) for k in ('settings','cells','parents','initial_source')}
+verification = {'frozen_sources_checked':len(guard),'frozen_sources_changed':changed,
+                'native_manifest_fields_equal':manifest_checks,
+                'native_runs_this_turn':0,'tests_passed':9,
+                'lite_code_sha256':{str(p.relative_to(ROOT)):sha(p) for p in (ROOT/'simulation/pyrocast_lite').glob('*.py')}}
+(OUT/'verification.json').write_text(json.dumps(verification,ensure_ascii=False,indent=2),encoding='utf-8')
+iso=read(OUT/'isolation/comparison.json')
+c=read(OUT/'L3/comparison.json')
+s=read(OUT/'L3/3F/summary.json')
+lines=['간략 엔진 L1b — 1.2절 입력 일치·원인 격리·3F 비교 결과 (2026-10-25)',
+'결론: 입력 계수 수정과 지정 계산을 완료했다. L3 연소 실 집합 불일치로 중단한다. 탐색용 채택/MC 합격이 아니다.',
+'', '1. 변경 범위',
+'- Cd=0.70. 산소 하한은 덱 LOWER_OXYGEN_LIMIT 질량분율(기본 0.15)부터 +0.01까지 순정 tanh 식을 사용한다.',
+'- f=clip(0.5+0.5025*tanh(6*(Y-LOL)/0.01-3),0,1). 부피분율 선형 감쇠와 구분한다.',
+'- 근거: vendor/cfast-7.7.7/Source/fire.f90:567, utilities.f90:80-96. 전체 플룸/산소 모델이 CFAST와 같아진 것은 아니다.',
+'- core.py는 원본 호환 legacy 기본값을 보존하고, L1 adapter.py에서 위 공유 입력을 선택한다.',
+'- 600℃, 지연, 연료, 창 입력 및 기존 유한벽 식은 변경하지 않았다. 추가 열전달/연소 모델 수정 없음.',
+'', '2. 최초 화원 단독 비교: 되먹임 차이 제거',
+'- B2/B3 각 1200초. 같은 실/개구부와 초기 화원만 사용하며 간략 쪽 후속 전이를 끈다.',
+'- 저장된 r5/compare/B2,B3/T1/baseline_native를 읽었다. 새 CFAST 실행 0회.',
+'- 저장 CSV SHA256 확인, TIME/INIT/MISC/WALL MATL/COMP/VENT/초기 FIRE·CHEM·TABL 물리 입력 행 일치.',
+'  저장 기준의 수동 타깃 행은 입력 비교에서 제외했다.',
+'- 아래 최고온도 차이 %는 지시서 비교를 위한 섭씨 수치 비율이며 에너지/절대온도 비율이 아니다.',
+'사례 | CFAST 상층 최고℃ | 간략 상층 최고℃ | 차이% | 간략 적분초']
+for r in iso:
+    lines.append(f"{r['case']} | {r['native_peak_upper_C']:.3f} | {r['lite_peak_upper_C']:.3f} | {r['peak_difference_percent_C']:.3f} | {r['wall_seconds']:.3f}")
+lines+=['', '사례/시각 | 상층℃ CFAST/간략/차이 | 층경계m CFAST/간략/차이 | 실제HRR kW CFAST/간략']
+for r in iso:
+    for t,v in r['snapshots'].items():
+        a,b,h=v['ULT_1'],v['HGT_1'],v['HRR_1']
+        lines.append(f"{r['case']} {t}s | {a['native']:.3f}/{a['lite']:.3f}/{a['difference']:+.3f} | {b['native']:.4f}/{b['lite']:.4f}/{b['difference']:+.4f} | {h['native']:.3f}/{h['lite']:.3f}")
+lines+=['', '원인 격리 판단:',
+'- B2/B3 모두 실제 HRR 최대 차이 < 1e-8 kW, 누적 발열량 차이는 반올림 오차 수준이다.',
+'- 두 엔진 모두 단독 비교 구간에서 산소 제한에 따른 공급 대비 발열 감소는 검출되지 않았다.',
+'  검출 허용오차: 공급>1kW, 감소>max(1kW, 공급의0.1%). 판정식 변경이 아닌 보고용 정의다.',
+'- 따라서 이번 단독 비교에서 온도 차이의 우선 검토 대상은 열전달·열배분/층 수송이다.',
+'  직접 복사35%→벽 처리 하나가 유일한 원인이라고 확정하지 않는다. 벽/복사/층 모델 수정은 하지 않았다.',
+'- 시간 내내 낮은 것은 아니다. 300초에는 간략 쪽이 더 높고, 후기에는 더 낮다.',
+'  최고온도 편차 하나로 임계값 통과 시각이나 전이의 과소/과대를 일반화하면 안 된다.',
+'- 초기 보고 변환에서 native W와 mol_frac를 kW/vol%로 읽지 않은 오류를 수정했다.',
+'  저장 결과만 다시 읽어 비교 JSON/CSV를 정정했으며 물리 계산을 반복하지 않았다.',
+'', '3. L3 — 같은 3F 표준 입력, 3600초 1회',
+f"- 완료: {c['complete']}. 원30실→40계산구획. 간략 전처리 {s['times']['preprocess_s']:.3f}s / 적분 {s['times']['integration_s']:.3f}s / 후처리 {s['times']['postprocess_s']:.3f}s.",
+f"- 저장 CFAST 표준 적분 {c['native_integration_s']:.3f}s. 간략 대비 시간비 {c['native_integration_s']/c['lite_integration_s']:.2f}. 결과가 다르므로 동등 정확도 가속률이 아니다.",
+'- CFAST 연소 원래실: R2 1실(3셀). 간략: R2,R1,R6,R7,R8,R9,R11,R23 8실(15셀).',
+'- L3 집합/순서 불일치 → 불합격. R17은 전이 이벤트가 있어도 실제 HRR이 0이므로 연소실에 포함하지 않는다.',
+'- 실제 HRR 양수 시간은 출력표본 기준이다(native5s/lite10s). 공급 시작/조건 시각과 구분한다.',
+'', '차이가 시작되는 곳:',
+'- 동일실 셀: native의 300℃ 화원 위 판 대신 간략은 부모 실제 HRR>0을 사용한다(지정된 판정량 변경).',
+'  R2_C1/C2 첫 양수 HRR: native390/595s, 간략180/350s. 같은 지연값이어도 트리거 시각이 다르다.',
+'- 실간 출발 R2_C1: 간략 상층이1877.622s에600℃를 통과, 60s뒤1937.622s 공급 시작,1940s에 첫 양수 HRR 표본.',
+'  native PC_R2_C1 판 최고589.773℃, 상층 최고600.042℃로 판은 미통과했다. 간략 상층 최고765.792℃.',
+'- 그러므로 판→상층 대체의 경계 차이만이 아니라, 앞선 셀 연소 시작과 열·유동 응답 차이도 함께 존재한다.',
+'  현재 결과만으로 각각의 기여율을 분리할 수 없다. 3실 단독의 낮은 최고온도를 3F에도 일괄 적용할 수 없다.',
+'', '계산 구획 | 원래실 | 첫 실제HRR 양수(s) | 최장 연속 양수(s) | 상층최고℃']
+for r in c['rows']:
+    if r['lite_first_actual_HRR_s'] is not None:
+        lines.append(f"{r['cell']} | {r['original_room']} | {r['lite_first_actual_HRR_s']:.0f} | {r['lite_positive_duration_s']:.0f} | {r['lite_upper_max_C']:.2f}")
+lines+=['', '4. 검증 및 중단 범위',
+f"- 테스트9건 통과. 원본/r8/native 소스 {len(guard)}개 SHA 불변. manifest 주요 항목 동일: {manifest_checks}.",
+'- L4 전체 질량·에너지 잔차0.1% 검증 미실시. 보존 검증 완료라고 주장하지 않는다.',
+'- MC/20표본/운영3D 교체 미실시. 임계값을 바꿔 결과를 맞추지 않았다.',
+'- 다음 수정은 별도 승인 후 결정한다. 이번 결과는 열응답 검토와 판정량 차이 검토의 근거이며 모델 채택 근거가 아니다.',
+'', '5. 증거 위치 (프로젝트 기준)',
+'simulation/results/lite_l1b_20261025/isolation/comparison.json',
+'simulation/results/lite_l1b_20261025/isolation-overlay.png 및 .pdf',
+'simulation/results/lite_l1b_20261025/L3/comparison.json',
+'simulation/results/lite_l1b_20261025/L3/3F/{result.json,summary.json,state.npz,rule_manifest.json}',
+'simulation/results/lite_l1b_20261025/{status.json,verification.json}',
+'tools/run_lite_l1b.py: 실행기. 이미 시작한 계산 재실행 거부.',
+'tools/plot_lite_l1b.py, tools/report_lite_l1b.py: 저장 결과 읽기 전용.']
+report=ROOT/'specs/간략엔진-L1b-원인격리·3F비교-시험결과-20261025.txt'
+report.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+print(json.dumps(verification,ensure_ascii=False,indent=2))
+print(report)

@@ -1,0 +1,22 @@
+{
+  "source_project": "C:\\Users\\예방\\Documents\\Codex\\2026-10-14\\files-pasted-by-the-user-cad3d",
+  "files": {
+    "cad_cfast_plume_math.js": "1b113475740415058343f46e791bf72ac0c78cab63b7b39a570bc4b1b9815f19",
+    "cad_cfast_plume_display.js": "d5c947aef19f09808f353e6cfaba822c006b2d0c7f416652f63fa53ddeeb8f8d",
+    "cad_cfast_realistic.js": "733b1a5a8747c56a49953190b294f710709bf05fd004968da839349d0394882e"
+  },
+  "adaptations": [
+    "module-scoped scene dependencies",
+    "dynamic-area shader diameter",
+    "finite ray axes for aligned cameras",
+    "label correlation-derived plume legend separately from native flame height",
+    "user-controlled smoke display alpha for internal fire-point observation; calculated optical density unchanged",
+    "fire location ring follows native source base height instead of ground level",
+    "solid flame samples clipped to their CAD room polygon and holes, with transformed UVs and conservative raster boundary",
+    "source-location ring radius bounded by CAD room boundary clearance",
+    "compact positive-HRR location symbols with separate native-dimension mode; no solver feedback",
+    "hide older illustrative furniture when current uniform fuel symbols are available"
+  ],
+  "calculation_unchanged": true,
+  "adapted_renderer_sha256": "d0580e14aba5a7c87f223c71a0c2a8280393e7d6e9d51a8f0e40d157b77540b9"
+}

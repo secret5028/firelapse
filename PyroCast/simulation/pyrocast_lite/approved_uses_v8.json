@@ -1,0 +1,108 @@
+{
+  "revision": "v8_approved_uses_20261025",
+  "building_sha256": "90d3c325f238a3c416ef51dfbb64b668b3b144047e78acb8f9e5e1764a6a02ae",
+  "coverage": 0.5,
+  "origin_alpha": 0.047,
+  "vent_cap_k": 1.0,
+  "internal_fallback_fraction": 0.5,
+  "rooms": {
+    "CAD_3F_R0": {
+      "class": "default",
+      "classification_basis": "공조실 전용 항목 없음"
+    },
+    "CAD_3F_R1": {
+      "class": "factory",
+      "classification_basis": "RF생산라인"
+    },
+    "CAD_3F_R2": {
+      "class": "factory",
+      "classification_basis": "Assembly Line; 사용자 승인 1800 유지(이전 시연 600×3, 실측 아님)",
+      "load_override_MJ_m2": 1800,
+      "load_override_basis": "explicit user approval; previous demonstration 600×3, not measured or table default"
+    },
+    "CAD_3F_R3": {
+      "class": "warehouse",
+      "classification_basis": "계측기보관실→창고 추정; 사용자 승인"
+    },
+    "CAD_3F_R4": {
+      "class": "transport",
+      "classification_basis": "ELEV.홀 3"
+    },
+    "CAD_3F_R6": {
+      "class": "shaft_room",
+      "classification_basis": "E.P.S 표기 정규화"
+    },
+    "CAD_3F_R7": {
+      "class": "shaft_room",
+      "classification_basis": "T.P.S 표기 정규화"
+    },
+    "CAD_3F_R8": {
+      "class": "default",
+      "classification_basis": "A/S실 전용 항목 없음"
+    },
+    "CAD_3F_R9": {
+      "class": "factory",
+      "classification_basis": "공작실·설비보관실→공장 추정; 사용자 승인"
+    },
+    "CAD_3F_R10": {
+      "class": "default",
+      "classification_basis": "실명 없음"
+    },
+    "CAD_3F_R11": {
+      "class": "toilet",
+      "classification_basis": "화장실(여); 사용자 가정"
+    },
+    "CAD_3F_R13": {
+      "class": "shaft_room",
+      "classification_basis": "E.P.S 표기 정규화"
+    },
+    "CAD_3F_R14": {
+      "class": "default",
+      "classification_basis": "C.H 의미 미확인"
+    },
+    "CAD_3F_R15": {
+      "class": "transport",
+      "classification_basis": "ELEV.홀 2"
+    },
+    "CAD_3F_R16": {
+      "class": "toilet",
+      "classification_basis": "화장실(남); 사용자 가정"
+    },
+    "CAD_3F_R17": {
+      "class": "toilet",
+      "classification_basis": "화장실(남); 사용자 가정"
+    },
+    "CAD_3F_R19": {
+      "class": "default",
+      "classification_basis": "실명 없음"
+    },
+    "CAD_3F_R20": {
+      "class": "default",
+      "classification_basis": "실명 없음"
+    },
+    "CAD_3F_R22": {
+      "class": "shaft_room",
+      "classification_basis": "P.S 표기 정규화"
+    },
+    "CAD_3F_R23": {
+      "class": "classroom",
+      "classification_basis": "교육장→교실 대응; 사용자 승인, 마감명 제외"
+    },
+    "CAD_3F_R24": {
+      "class": "toilet",
+      "classification_basis": "화장실(여); 사용자 가정"
+    },
+    "CAD_3F_R25": {
+      "class": "default",
+      "classification_basis": "휴게실 전용 항목 없음"
+    },
+    "CAD_3F_R28": {
+      "class": "default",
+      "classification_basis": "실명 없음"
+    }
+  },
+  "remove_from_candidate_and_graph": [
+    "CAD_3F_R14",
+    "CAD_3F_R28"
+  ]
+}

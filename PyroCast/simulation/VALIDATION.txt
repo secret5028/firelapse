@@ -1,0 +1,75 @@
+CFBT 확장 코드 검증 기록 / 2026-10-20
+
+최신 개구부 후보/30분 검증
+- 단위16개 통과. 닫힌/외부 개구부·구멍 배제, 실제 수신실 내측과 native affine 좌표/법선, 화원 TABL 높이 보존을 추가했다.
+- results/cad_opening_30min: 3F R9 최초 화점,3F 연결14실,고체45℃ 가정,1800초,28후보,5회 정상 실행. 추가4건 후 no_new_ignition, 미확정0.
+- 추가 사건 R2(274.737282초),R8(842.005700초),R23(1070.393757초),R1(1245.071655초).
+- tests/check_opening30_results.py가 실제 CAD 내측/개구부 거리/법선, 판정점·native TABL·화염 기부 높이0.76m 일치,1800초와 NORMAL EXIT를 검증했다. 각 사건 이전의 저장 온도 차이0℃.
+- 정량 근거 results/verification/opening30_checks.json. 아래15분/대표점 검증은 과거 입력에 대한 기록이다.
+- 브라우저8780에서 opening30 선택,30:00 끝 시점,후속 R1 선택, R2 착화30초 전/60초 후, 새로고침 복원을 확인했다. 마지막 화면은 R2의9분 시점(785.4kW, 계산 화염 길이2.36m, 기부0.76m, D14 안쪽0.6m)이다. 콘솔 경고/오류 없음.
+- 화면 근거 results/verification/opening30_r2_corrected_3d.png 및 opening30_r2_before.png.
+
+최신 CAD 연결 검증 추가
+- CAD_CONNECTION.txt 및 results/verification/cad_connection_checks.json 참조.
+- 단위 확인14개 통과. 실감 보기의 native 화원 순서·높이·시간별 면적 대응 시험 포함. native baseline OFF 차이0 및 가스 반응/피드백/게이트 시험은 앞선 엔진 검증 결과다.
+- 최신 엔진 SHA256: e6cb5e74a099e11209db49cf2e59da9f47afcba317d65a5899b9777e757a03c6.
+- 전건물156실/100구획과 화재층14실의900초 NORMAL EXIT 확인, 기본369℃의 추가 착화0건.
+- 별도45℃ 기능 시험에서3F R2의 사건 전 온도 차이0℃, 사건 후 최대약3.251℃ 변화와 추가 HRR을 확인했다.
+- native 수직 개구 진단과 Smokeview 유량의 최대 차이 약4.4e-12kg/s.
+- 브라우저에서 기존 3D·시간·모드·위층·추가 착화 이벤트·설정 변경 재계산을 확인했다.
+- 아래8개/엔진185a…/3구획 기록은 초기 구현의 과거 검증 기록이다.
+
+대상: 별도 CFAST-7.7.7 확장 엔진 + 소형 시나리오 실행 코드.
+원본 운영 코드와 기존 결과는 변경하지 않았다.
+검증 범위는 소프트웨어 동작·수지·게이트·피드백이다. 실제 건물 화재 재현 정확도 검증이 아니다.
+
+단위 확인: 8개 통과.
+- 설계 성장·감쇠 전체 에너지와 고체 예산 일치.
+- 미래에 열릴 문 후보 사전 선언.
+- vol% 산소 단위 변환.
+- 판 등온 평형과 문 복사 배경 교체.
+- 착화 전 상태 변화 검출.
+- 마지막 미실행 화원 확정 방지.
+- 다음 실행 실패 시 마지막 유효 결과 보존.
+
+실제 엔진 기능 시험 결과:
+{
+  "baseline_off_max_difference": 0.0,
+  "bulk_peak_W": 674130.1202453424,
+  "bulk_burn_integral_kg": 1.0388554527631517,
+  "initial_solid_budget_kg": 15.0,
+  "bulk_temperature_feedback_max_difference_C": 165.04754488599997,
+  "high_temperature_gate_bulk_W": 0,
+  "high_oxygen_gate_bulk_W": 0,
+  "no_released_fuel_bulk_W": 0,
+  "half_max_timestep_temperature_difference_C": 0.12580056200005174,
+  "solid_events_committed": 1,
+  "solid_runs": 2,
+  "solid_termination": "max_added_ignitions",
+  "scope": "structural_software_checks_with_intentionally_modified_thresholds_not_fire_validation"
+}
+
+시험은 온도·산소·반응계수·표면 착화 기준을 의도적으로 바꿔 경로를 작동시켰다. 위 발열과 온도 차이를 기본 임계값의 건물 예측으로 읽지 않는다. 고체 시험의 확정 착화 실은 R2이며 초기 발화실 R1의 인접실이다.
+
+3구획 180초 기본 탐색:
+종료=no_new_ignition, 성공 실행=3, 추가 고체 이벤트=2
+[
+  {
+    "room": "R1",
+    "t_s": 11.538572533610978,
+    "group": "reserve_R1"
+  },
+  {
+    "room": "R2",
+    "t_s": 100.49779634288036,
+    "group": "reserve_R2"
+  }
+]
+
+판 native 비교: 후보별 최대 온도차의 최댓값 30.600℃. 동일 노출·흡수/방사율·방향 계수를 사용하되 외부는 균일 49노드와 1초 저장 노출을 사용했다. native의 비균일 격자·내부 시간 진행과 다르며, 급격한 국소 기체온도 변화에서 차이가 컸다. 모든 위치의 1℃ 재현을 완료 기준으로 통과했다고 주장하지 않는다.
+
+남은 범위:
+고정된 기존 건물에 대한 별도 CAD/3D 연결과 문 좌표 매핑은 위 최신 추가에 기록했다. 남은 범위는 운영 앱 자체 전환/임의 업로드 모델, 전건물 예측 정확도 검증, 반응 프로파일 실험 검증, 하층 축적가스 반응, 독립적인 모든 누설·기계환기 수지 보고, 추가 노출 모드다.
+
+엔진 SHA256: 185a89759100cd4e3ad2c0c0b3f4bde730c9a202365ce9d54cd168af1699f958
+빌드에 기록된 모든 소스 해시가 현재 파일과 일치함을 확인했다.

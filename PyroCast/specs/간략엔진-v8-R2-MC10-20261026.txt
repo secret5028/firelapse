@@ -1,0 +1,66 @@
+5단계 — R2 MC10 직렬 결과 (2026-10-26)
+
+완주 10/10, 실패·미완료 0/10. 무작위 8/8, 필수 2/2.
+직렬 전체 소요 2173.093초. 표본별 적분 예산 1,200초, 시뮬레이션 길이 3,600초, 출력 10초.
+seed=20261025. workers=1. 실행 중 간략 엔진 소스 SHA 동일: True.
+입력: 승인 N8의 R2 연료/용도/기하. 문·창 상태만 표본별 재추출. 문 분출 기본 ON, 층별 산소 유지, 받는 실 하층 산소 소비.
+R2 연료 하중 1,800 MJ/m², 피복률 0.5, HRRPUA 250 kW/m². 최초 총 peak 40,634.225 kW를 셀에 배분. 임계·지연·확률 튜닝 없음.
+S00 모든 방화문 열림(그 밖의 문·창은 추출 상태), S01 모든 개폐 가능 개구부 닫힘, S02~S09 무작위. 영구 통로는 항상 열림.
+추정 방화문 열림확률 0.35, 확정 0.2, 일반문 0.5, 개폐창 0.3, 고정창 0. 열린 창 유효면적 0.5.
+집계 코드가 피난한계 all_met 위치를 잘못 읽은 오류는 저장 상태로 후처리만 복원했다. 계산 재실행 0회. 원래 오류 요약과 수정 전 집계를 별도 보존했다.
+표본별 합산 시간은 기록된 적분+결과 후처리+복원 시간이며, 최초 전처리/오류 기록 부대 시간은 누락된다. 직렬 전체 소요는 최초 배치의 실제 벽시계 시간이다.
+
+표본 | 완주 | 연소 실 | 연기 위험 실 | 연기 주의 실 | FO/FGI/BD/롤오버 충족 실 | 적분초 | 합산초 | 안전 출력 끝초 | 에너지% | 질량%
+---|---|---|---|---|---|---|---|---|---|---
+S00 | 완료 | 2 | 2 | 8 | 0/0/2/0 | 968.132 | 975.077 | 3600 | 0.004564 | 1.591731
+S01 | 완료 | 1 | 0 | 2 | 0/0/0/0 | 31.537 | 38.116 | 3600 | 0.000575 | 0.293389
+S02 | 완료 | 2 | 3 | 10 | 1/0/2/0 | 98.503 | 105.354 | 3600 | 0.002462 | 1.426356
+S03 | 완료 | 2 | 2 | 6 | 1/0/1/0 | 47.026 | 53.880 | 3600 | 0.002048 | 0.905781
+S04 | 완료 | 3 | 1 | 16 | 0/0/1/1 | 84.086 | 90.915 | 3600 | 0.004019 | 0.790462
+S05 | 완료 | 2 | 1 | 4 | 0/0/1/0 | 46.094 | 52.795 | 3600 | 0.001540 | 0.221867
+S06 | 완료 | 6 | 2 | 9 | 1/0/2/0 | 104.644 | 111.414 | 3600 | 0.002918 | 0.113085
+S07 | 완료 | 5 | 0 | 10 | 1/0/0/0 | 43.081 | 49.696 | 3600 | 0.001285 | 0.105531
+S08 | 완료 | 5 | 3 | 6 | 1/0/2/0 | 137.115 | 143.803 | 3600 | 0.003445 | 1.474810
+S09 | 완료 | 5 | 1 | 9 | 1/0/1/0 | 557.197 | 564.070 | 3600 | 0.011977 | 0.792347
+
+주의/위험 실은 기간 중 한 번이라도 해당한 원래 실의 합집합으로, 두 열은 서로 배타적이지 않다. 셀 수를 실 수로 세지 않는다.
+현상별 표본비율은 공통 조건표를 사용한다. 색 표시는 v8 4.2절 2단계 규칙이며 조건표 지수와 판정 구성이 다르므로 혼동하지 않는다.
+
+현상 | 충족 무작위 표본/완주 무작위 표본 | 최고 지수 | 표본별 최고 지수의 중앙값 | 최악 표본(필수 포함)
+---|---|---|---|---
+FO | 6/8 | 161.43 | 102.75 | S02
+FGI | 0/8 | 94.59 | 81.22 | 없음
+backdraft | 7/8 | 193.03 | 127.31 | S00
+untenable | 8/8 | 미평가 | 미평가 | S04
+rollover | 1/8 | 107.44 | 82.80 | S04
+
+지수 100은 설정 조건 기준이며 발생확률이 아니다. 최고 지수와 충족 지속시간 비율을 저장했다. 무의미한 전체 시간 중앙값을 사용하지 않는다.
+최악 표본 기준: 해당 현상 충족 실 수 많음 → 최초 충족 시각 빠름 → 표본 ID. 표본별 실제 열린 문·창은 sample.json 및 aggregate.json에 저장.
+
+10초 출력 장부 에너지 진단 미통과 표본: []
+에너지 허용 0.1%, 질량 잔차는 보고용. 출력 구적 진단이며 적분 내부 모든 단계의 엄밀 보존 인증은 아니다.
+저장 출력 수치 범위(표시용 양수 처리 전): {"S00": {"all_finite": true, "oxygen_mass_fraction_min": 0.008903640691161684, "unburned_fuel_mass_fraction_min": -4.55928879176079e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S01": {"all_finite": true, "oxygen_mass_fraction_min": 0.0017210064843454981, "unburned_fuel_mass_fraction_min": -2.0804650778792694e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S02": {"all_finite": true, "oxygen_mass_fraction_min": 0.009627157467451854, "unburned_fuel_mass_fraction_min": -3.821299273985154e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S03": {"all_finite": true, "oxygen_mass_fraction_min": 0.006528549999832286, "unburned_fuel_mass_fraction_min": -3.9405578116122234e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S04": {"all_finite": true, "oxygen_mass_fraction_min": 0.006412450030800314, "unburned_fuel_mass_fraction_min": -4.549182209425361e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S05": {"all_finite": true, "oxygen_mass_fraction_min": 0.00872124252719072, "unburned_fuel_mass_fraction_min": -2.9059878331708957e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S06": {"all_finite": true, "oxygen_mass_fraction_min": 0.026148617225275367, "unburned_fuel_mass_fraction_min": -5.8440359409652e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S07": {"all_finite": true, "oxygen_mass_fraction_min": 0.03042939807980473, "unburned_fuel_mass_fraction_min": -5.678725841940524e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S08": {"all_finite": true, "oxygen_mass_fraction_min": 0.006018212575377899, "unburned_fuel_mass_fraction_min": -4.002844072816653e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}, "S09": {"all_finite": true, "oxygen_mass_fraction_min": 0.0008050548066682678, "unburned_fuel_mass_fraction_min": -5.687922245017967e-05, "basis": "raw saved output, before renderer positivity clipping; no new acceptance threshold"}}
+Radau 대체 실행 표본: []
+기존 20표본 중 실패≤1 관문을 10표본에 임의 환산하지 않았다. 이번은 요청한 10표본 탐색이며 20표본 관문 완료로 주장하지 않는다.
+
+모든 개구부 닫힘 표본의 개방 시 위험 구간
+설정 기준: {"fuel_mass_fraction": 0.1, "oxygen_vol_fraction_below": 0.12, "upper_C_at_least": 300.0}
+조건 교집합을 만족한 저장 구간 없음.
+이 구간은 닫힌 상태의 조건 교집합이다. 실제 문 개방이나 점화 사건을 계산한 결과가 아니다.
+
+3D 및 한계
+- 완주 표본은 기존 3D의 간략 계산 사례 선택에 추가했다. 미완료 표본은 재생 선택에 넣지 않고 본 표에 남겼다.
+- 회색 연기는 계산 상층 범위의 표시 효과이며 실제 광학밀도는 계산하지 않는다. 위험 색과 별개로 표시한다.
+- 문 분출·상층 발열은 별도 값. 문 분출을 롤오버로 부르거나 고체 착화 실 수에 더하지 않는다.
+- 실내 열·산소·유동은 프로젝트 간략식. 정밀 CFAST r8 동결, 새 정밀 실행 없음.
+- 창 파괴·수직 전파·정확한 천장 제트 속도·폭압은 생략. 연료 및 문 분류의 추론·가정 유지.
+- 간략 엔진은 CFAST보다 후반 상층 온도가 낮고(단독 화원 −14~−20 %), 전이는 CFAST 표준보다 공격적이고 CFAST 공격 프리셋보다 늦다. 탐색용이며 최종 확인은 CFAST(r8)로 한다.
+- 위 편차 방향과 수치는 검토한 기준 사례의 결과이며 모든 개폐 조합에 대한 보증이 아니다.
+계산은 순정 CFAST 7.7.7(정밀) 또는 CFAST 구역 모델 개념을 참고한 프로젝트 간략 엔진(탐색)이다. 전이는 프로젝트 규칙(상층 온도 기준 + 경로 지연)에 따른 가정이며 FO 발생 예측이 아니다. 조건 충족 비율은 설정한 입력 분포 안의 비율이며 실제 발생 확률이 아니다.
+
+결과: simulation/results/lite_v8_mc_R2_10_20261026
+요청된 5단계 종료. 추가 표본·재실행·튜닝 없이 정지.
+
+3D 기본 사례: S06 / 실제 고체 연소 6실. 선택 기준은 연소 실 수 → 연기 위험 실 수 → 최초 FO가 빠른 순. 모든 위험 유형의 보편적 최악을 의미하지 않는다.
+
+최종 UI 검증: 기존 model.html에서 S06 기본 선택, MC10 결과 목록 및 요약 표시, 32:10에 6실 실제 HRR 양수 확인. 층 전체 카메라 맞춤/실감 보기/연료 기호 토글 확인, 브라우저 JS 오류 없음. 회귀 검사 21건 통과. 최종 캡처 simulation/results/lite_v8_mc_R2_10_20261026/S06-32m10s-scene.png.

@@ -1,0 +1,214 @@
+<div id="cfbt-three-room-view">
+  <style>
+    #cfbt-three-room-view { width:100%; }
+    #cfbt-three-room-view .scene-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:8px 16px; padding-right:90px; }
+    #cfbt-three-room-view .scene-head h3 { margin:0; }
+    #cfbt-three-room-view .scene-canvas { display:block; width:100%; height:clamp(310px,54vw,405px); touch-action:none; cursor:grab; }
+    #cfbt-three-room-view .scene-canvas:active { cursor:grabbing; }
+    #cfbt-three-room-view .scene-legend { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    #cfbt-three-room-view .scale-group { display:inline-flex; align-items:center; gap:8px; }
+    #cfbt-three-room-view .scale { display:inline-block; width:125px; height:8px; background:linear-gradient(to right,var(--blue),var(--orange),var(--red)); }
+    #cfbt-three-room-view .scene-settings { margin-top:12px; }
+    #cfbt-three-room-view .scene-settings .form-label { flex:1 1 160px; }
+    #cfbt-three-room-view .scene-detail { margin:10px 0; min-height:2.5em; }
+    #cfbt-three-room-view .timeline-title { display:flex; justify-content:space-between; align-items:center; margin-top:8px; gap:12px; }
+    #cfbt-three-room-view .event-jumps { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    #cfbt-three-room-view .scene-toolbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    #cfbt-three-room-view .scene-toolbar .form-select { width:auto; }
+    #cfbt-three-room-view .scene-note { margin-left:auto; }
+  </style>
+  <div class="scene-head">
+    <h3>3구획 화재 거동</h3>
+    <span class="text-small text-muted">계산 예제 · 층 평균 · 약 1초 저장</span>
+  </div>
+  <div class="scene-toolbar">
+    <button type="button" class="btn btn-primary" data-play aria-pressed="false">재생</button>
+    <label class="form-label">속도
+      <select class="form-select" data-speed aria-label="재생 속도"><option value="1">1배</option><option value="5">5배</option><option value="10" selected>10배</option></select>
+    </label>
+    <label class="form-label">시점
+      <select class="form-select" data-view aria-label="3D 시점"><option value="orbit">사시</option><option value="top">평면</option><option value="front">정면</option></select>
+    </label>
+    <span class="text-small text-muted scene-note">드래그 회전 · 스크롤 확대</span>
+  </div>
+  <canvas class="scene-canvas" data-scene role="img" aria-label="세 실의 상층과 하층, 층 경계, 문 유동 및 계산된 고체 화원 위치를 보여 주는 회전 가능한 3D 단면">실별 온도는 아래 선택 상세에서도 확인할 수 있습니다.</canvas>
+  <div class="scene-legend text-small">
+    <span data-legend-title>층 온도</span>
+    <span class="scale-group"><span data-scale-min>20℃</span><span class="scale" data-scale></span><span data-scale-max>600℃</span></span>
+    <span class="text-muted">화살표: 방향별 유량 kg/s · 원: 활성 화원</span>
+  </div>
+  <div class="viz-controls scene-settings">
+    <label class="form-label">표시
+      <select class="form-select" data-mode><option value="temperature">층 온도</option><option value="oxygen">산소 농도</option><option value="fuel">미연소 연료량</option></select>
+    </label>
+    <label class="form-label">상세 실
+      <select class="form-select" data-room><option value="R1">R1 · 초기 화점</option><option value="R2" selected>R2 · 인접실</option><option value="R3">R3 · 외부 연결</option></select>
+    </label>
+  </div>
+  <div class="scene-detail tabular-nums" data-detail aria-live="polite"></div>
+  <div class="timeline-title"><label class="form-label" for="cfbt-three-room-time">경과 시간</label><output class="tabular-nums" data-clock aria-live="off">01:50 / 03:00</output></div>
+  <input id="cfbt-three-room-time" class="form-range" type="range" min="0" max="180" step="0.1" value="110" aria-label="시뮬레이션 경과 시간">
+  <div class="event-jumps" data-events aria-label="계산 이벤트로 이동"></div>
+  <script type="application/json" data-values>__SCENE_DATA__</script>
+  <script>
+  (() => {
+    const root=document.getElementById('cfbt-three-room-view');
+    const D=JSON.parse(root.querySelector('[data-values]').textContent);
+    const canvas=root.querySelector('[data-scene]'), ctx=canvas.getContext('2d');
+    const slider=root.querySelector('.form-range'), play=root.querySelector('[data-play]');
+    const roomSelect=root.querySelector('[data-room]'), modeSelect=root.querySelector('[data-mode]');
+    const viewSelect=root.querySelector('[data-view]'), speedSelect=root.querySelector('[data-speed]');
+    const detail=root.querySelector('[data-detail]'), clock=root.querySelector('[data-clock]');
+    const colorProbe=document.createElement('span'); colorProbe.hidden=true; root.append(colorProbe);
+    const colorCanvas=document.createElement('canvas'); colorCanvas.width=1; colorCanvas.height=1;
+    const colorCtx=colorCanvas.getContext('2d',{willReadFrequently:true});
+    const duration=D.time[D.time.length-1], rooms=new Map(D.rooms.map(r=>[r.id,r]));
+    const extent={lo:[Infinity,Infinity,Infinity],hi:[-Infinity,-Infinity,-Infinity]};
+    D.rooms.forEach(r=>r.origin_m.forEach((v,k)=>{extent.lo[k]=Math.min(extent.lo[k],v);extent.hi[k]=Math.max(extent.hi[k],v+r.size_m[k]);}));
+    const center=extent.lo.map((v,k)=>(v+extent.hi[k])/2);
+    const fuelMax=Math.max(.01,...D.rooms.flatMap(r=>[...r.Fu,...r.Fl]));
+    let time=110, selected='R2', mode='temperature', yaw=-.48, pitch=.58, zoom=1;
+    let playing=false, lastFrame=0, animation=0, W=0,H=0,scale=1,ox=0,oy=0, palette={},hitRooms=[];
+    let dragging=null;
+    const snap=value=>Math.min(duration,Math.max(0,Number(value)||0));
+    const fmtTime=value=>`${String(Math.floor(value/60)).padStart(2,'0')}:${String(Math.floor(value%60)).padStart(2,'0')}`;
+    function rgb(token){colorProbe.style.color=`var(${token})`;colorCtx.clearRect(0,0,1,1);colorCtx.fillStyle=getComputedStyle(colorProbe).color;colorCtx.fillRect(0,0,1,1);return [...colorCtx.getImageData(0,0,1,1).data].slice(0,3);}
+    function css(c,a=1){return `rgba(${c[0]},${c[1]},${c[2]},${a})`;}
+    function mix(a,b,f){return a.map((v,k)=>Math.round(v+(b[k]-v)*Math.min(1,Math.max(0,f))));}
+    function paletteRead(){palette={fg:rgb('--foreground'),muted:rgb('--muted-foreground'),border:rgb('--border'),blue:rgb('--blue'),orange:rgb('--orange'),red:rgb('--red'),green:rgb('--green'),bg:rgb('--background')};}
+    function sample(array,t=time){
+      if(!array)return 0;
+      let lo=0,hi=D.time.length-1;
+      while(lo+1<hi){const mid=(lo+hi)>>1;if(D.time[mid]<=t)lo=mid;else hi=mid;}
+      if(t<=D.time[0])return array[0];if(t>=duration)return array[array.length-1];
+      const f=(t-D.time[lo])/(D.time[hi]-D.time[lo]);
+      if(Array.isArray(array[lo]))return array[lo].map((v,k)=>v+(array[hi][k]-v)*f);
+      return array[lo]+(array[hi]-array[lo])*f;
+    }
+    function field(r,upper){return mode==='oxygen'?sample(upper?r.Ou:r.Ol)*100:mode==='fuel'?sample(upper?r.Fu:r.Fl):sample(upper?r.Tu:r.Tl);}
+    function heat(value){
+      if(mode==='oxygen'){const f=Math.min(1,Math.max(0,value/21));return f<.5?mix(palette.red,palette.orange,f*2):mix(palette.orange,palette.green,(f-.5)*2);}
+      const f=Math.min(1,Math.max(0,mode==='fuel'?value/fuelMax:(value-20)/580));
+      return f<.5?mix(palette.blue,palette.orange,f*2):mix(palette.orange,palette.red,(f-.5)*2);
+    }
+    function rawProject(p){
+      const x=p[0]-center[0],y=p[1]-center[1],z=p[2]-center[2];
+      const x1=Math.cos(yaw)*x-Math.sin(yaw)*y,dy=Math.sin(yaw)*x+Math.cos(yaw)*y;
+      const y1=Math.cos(pitch)*z-Math.sin(pitch)*dy,dep=Math.cos(pitch)*dy+Math.sin(pitch)*z;
+      const perspective=28/(28-dep);return [x1*perspective,-y1*perspective,dep];
+    }
+    function project(p){const q=rawProject(p);return [ox+q[0]*scale,oy+q[1]*scale,q[2]];}
+    function fit(){
+      const all=D.rooms.flatMap(r=>[r.origin_m[0],r.origin_m[0]+r.size_m[0]].flatMap(x=>[r.origin_m[1],r.origin_m[1]+r.size_m[1]].flatMap(y=>[r.origin_m[2],r.origin_m[2]+r.size_m[2]+.8].map(z=>rawProject([x,y,z])))));
+      const xs=all.map(p=>p[0]),ys=all.map(p=>p[1]),minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
+      scale=Math.min((W-32)/(maxx-minx),(H-42)/(maxy-miny))*zoom;
+      ox=W/2-(minx+maxx)*scale/2;oy=H/2-(miny+maxy)*scale/2;
+    }
+    function polygon(points,fill,alpha=1,stroke=null,width=1){
+      const p=points.map(project);ctx.beginPath();p.forEach((v,i)=>i?ctx.lineTo(v[0],v[1]):ctx.moveTo(v[0],v[1]));ctx.closePath();
+      if(fill){ctx.fillStyle=css(fill,alpha);ctx.fill();}if(stroke){ctx.strokeStyle=css(stroke);ctx.lineWidth=width;ctx.stroke();}
+    }
+    function line(a,b,color=palette.border,width=1){const p=project(a),q=project(b);ctx.beginPath();ctx.moveTo(...p.slice(0,2));ctx.lineTo(...q.slice(0,2));ctx.strokeStyle=css(color);ctx.lineWidth=width;ctx.stroke();}
+    function label(p,text,second){const q=project(p);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=css(palette.fg);ctx.fillText(text,q[0],q[1]);if(second){ctx.fillStyle=css(palette.muted);ctx.fillText(second,q[0],q[1]+19);}}
+    function cubeFaces(x,y,z,w,d,h,color,alpha){
+      if(h<=.00001)return [];
+      const vertices=[[x,y,z],[x+w,y,z],[x+w,y+d,z],[x,y+d,z],[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]];
+      const definitions=[[[4,5,6,7],[0,0,1]],[[0,1,5,4],[0,-1,0]],[[1,2,6,5],[1,0,0]],[[2,3,7,6],[0,1,0]],[[3,0,4,7],[-1,0,0]]];
+      const view=[Math.sin(yaw)*Math.cos(pitch),Math.cos(yaw)*Math.cos(pitch),Math.sin(pitch)];
+      return definitions.filter(([,n])=>n.reduce((v,nv,k)=>v+nv*view[k],0)>0).map(([ids])=>{const p=ids.map(i=>vertices[i]);return {p,color,alpha,depth:p.reduce((s,v)=>s+rawProject(v)[2],0)/4};});
+    }
+    function wire(r){
+      const [x,y,z]=r.origin_m,[w,d,h]=r.size_m;
+      const p=[[x,y,z],[x+w,y,z],[x+w,y+d,z],[x,y+d,z],[x,y,z+h],[x+w,y,z+h],[x+w,y+d,z+h],[x,y+d,z+h]];
+      [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>line(p[a],p[b],r.id===selected?palette.muted:palette.border,r.id===selected?1.3:1));
+      const centerPoint=[x+w/2,y+d/2,z+h+.6];
+      const value=field(r,true),unit=mode==='oxygen'?'%':mode==='fuel'?' kg':'℃';
+      label(centerPoint,`${r.id}${r.id==='R1'?' · 초기 화점':''}`,`${value.toFixed(mode==='fuel'?2:0)}${unit}`);
+      const points=p.map(project),cp=project([x+w/2,y+d/2,z+h/2]);
+      hitRooms.push({id:r.id,x:cp[0],y:cp[1],minx:Math.min(...points.map(p=>p[0])),maxx:Math.max(...points.map(p=>p[0])),miny:Math.min(...points.map(p=>p[1])),maxy:Math.max(...points.map(p=>p[1]))});
+    }
+    function openingFrame(o){
+      const r=rooms.get(o.a),[x,y,z]=r.origin_m,[w,d]=r.size_m,off=(o.offset_m||0)+o.width_m/2;
+      if(o.face==='RIGHT')return {p:[x+w,y+off,z],n:[1,0,0],e:[0,1,0]};
+      if(o.face==='LEFT')return {p:[x,y+off,z],n:[-1,0,0],e:[0,1,0]};
+      if(o.face==='REAR')return {p:[x+off,y+d,z],n:[0,1,0],e:[1,0,0]};
+      return {p:[x+off,y,z],n:[0,-1,0],e:[1,0,0]};
+    }
+    function fractionAt(o){const a=o.schedule||[[0,1]];if(time>=a[a.length-1][0])return a[a.length-1][1];for(let i=1;i<a.length;i++)if(time<a[i][0]){const f=(time-a[i-1][0])/(a[i][0]-a[i-1][0]);return a[i-1][1]+f*(a[i][1]-a[i-1][1]);}return a[0][1];}
+    function arrow(start,end,mass){
+      const a=project(start),b=project(end),dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy);if(len<2)return;
+      const angle=Math.atan2(dy,dx),head=7;ctx.strokeStyle=css(palette.fg,.85);ctx.fillStyle=css(palette.fg,.85);ctx.lineWidth=1+Math.min(2,Math.sqrt(mass));
+      ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();ctx.beginPath();ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]-head*Math.cos(angle-.5),b[1]-head*Math.sin(angle-.5));ctx.lineTo(b[0]-head*Math.cos(angle+.5),b[1]-head*Math.sin(angle+.5));ctx.closePath();ctx.fill();
+    }
+    function draw(){
+      if(!W)return;paletteRead();fit();ctx.clearRect(0,0,W,H);hitRooms=[];
+      const font=getComputedStyle(root).font;ctx.font=font;ctx.lineJoin='round';
+      const faces=[];
+      D.rooms.forEach(r=>{
+        const [x,y,z]=r.origin_m,[w,d,h]=r.size_m,split=Math.max(.0001,Math.min(h,sample(r.h)));
+        polygon([[x,y,z],[x+w,y,z],[x+w,y+d,z],[x,y+d,z]],palette.fg,r.id===selected?.075:.035);
+        faces.push(...cubeFaces(x,y,z,w,d,split,heat(field(r,false)),.22));
+        faces.push(...cubeFaces(x,y,z+split,w,d,h-split,heat(field(r,true)),.36));
+      });
+      faces.sort((a,b)=>a.depth-b.depth).forEach(f=>polygon(f.p,f.color,f.alpha));
+      D.rooms.forEach(wire);
+      D.openings.forEach(o=>{
+        const {p,n,e}=openingFrame(o),f=fractionAt(o),width=o.width_m*f/2,bottom=o.bottom_m||0,top=o.top_m;
+        const point=(v,h)=>p.map((x,k)=>x+e[k]*v+(k===2?h:0));
+        const a=point(-o.width_m/2,bottom),b=point(-o.width_m/2,top),c=point(o.width_m/2,top),d=point(o.width_m/2,bottom);
+        line(a,b,palette.muted,1.6);line(b,c,palette.muted,1.6);line(c,d,palette.muted,1.6);
+        if(f>0)polygon([point(-width,bottom),point(-width,top),point(width,top),point(width,bottom)],palette.bg,.3);
+        const flows=D.flow[o.id];['ab','ba'].forEach(direction=>{
+          const values=sample(flows[direction]);if(values[0]<.003)return;
+          const sign=direction==='ab'?1:-1,z=Math.min(p[2]+top,Math.max(p[2]+bottom,values[3]));
+          const a=p.map((x,k)=>k===2?z:x-n[k]*.62*sign),b=p.map((x,k)=>k===2?z:x+n[k]*.62*sign);
+          arrow(a,b,values[0]);
+          const q=project(p.map((x,k)=>k===2?z:x));ctx.fillStyle=css(palette.fg);ctx.textAlign='left';ctx.fillText(values[0].toFixed(2),q[0]+7,q[1]-6);
+        });
+        label(point(0,top+.19),`${o.id} · ${Math.round(f*100)}%`);
+      });
+      D.fires.forEach(f=>{
+        if(time<f.time)return;const r=rooms.get(f.room),p=[f.position[0],f.position[1],r.origin_m[2]+.055],q=sample(f.Q);
+        const radius=.12+Math.min(.35,Math.sqrt(Math.max(0,q))/120),circle=Array.from({length:32},(_,i)=>[p[0]+radius*Math.cos(i*Math.PI/16),p[1]+radius*Math.sin(i*Math.PI/16),p[2]]);
+        polygon(circle,q>.01?palette.red:palette.muted,.8);
+      });
+      const r=rooms.get(selected),qSolid=D.fires.filter(f=>f.room===selected&&time>=f.time).reduce((s,f)=>s+sample(f.Q),0);
+      const description=`${selected} · 상층 ${sample(r.Tu).toFixed(0)}℃ / 하층 ${sample(r.Tl).toFixed(0)}℃ · 층 경계 ${sample(r.h).toFixed(2)}m · 상층 O₂ ${(sample(r.Ou)*100).toFixed(1)}% · 고체 ${qSolid.toFixed(0)}kW / 가스 ${sample(r.Qgas).toFixed(0)}kW`;
+      if(detail.textContent!==description)detail.textContent=description;
+      clock.textContent=`${fmtTime(time)} / ${fmtTime(duration)}`;slider.value=time;
+      canvas.setAttribute('aria-label',`${fmtTime(time)}의 3구획 계산. ${detail.textContent}`);
+    }
+    function legend(){
+      const temperature=mode==='temperature',oxygen=mode==='oxygen';
+      root.querySelector('[data-legend-title]').textContent=temperature?'층 온도':oxygen?'산소 농도':'층별 미연소 연료량';
+      root.querySelector('[data-scale-min]').textContent=temperature?'20℃':oxygen?'0%':'0 kg';
+      root.querySelector('[data-scale-max]').textContent=temperature?'600℃':oxygen?'21%':`${fuelMax.toFixed(2)} kg`;
+      root.querySelector('[data-scale]').style.background=oxygen?'linear-gradient(to right,var(--red),var(--orange),var(--green))':'linear-gradient(to right,var(--blue),var(--orange),var(--red))';
+    }
+    function save(){if(!window.openai?.setWidgetState)return;try{Promise.resolve(window.openai.setWidgetState({modelContent:{time_s:Math.round(time*10)/10,room:selected,mode,scenario:'three_room_exploration'},privateContent:{yaw,pitch,zoom,speed:Number(speedSelect.value)}})).catch(()=>{});}catch(_){}}
+    function restore(state){if(!state)return;const m=state.modelContent||{},p=state.privateContent||{};time=snap(m.time_s??time);if(rooms.has(m.room))selected=m.room;if(['temperature','oxygen','fuel'].includes(m.mode))mode=m.mode;for(const [key,range] of Object.entries({yaw:[-100,100],pitch:[.08,1.54],zoom:[.7,2.4]})){if(typeof p[key]==='number'&&p[key]>=range[0]&&p[key]<=range[1]){if(key==='yaw')yaw=p[key];if(key==='pitch')pitch=p[key];if(key==='zoom')zoom=p[key];}}if([1,5,10].includes(p.speed))speedSelect.value=p.speed;roomSelect.value=selected;modeSelect.value=mode;legend();draw();}
+    function pause(){playing=false;detail.setAttribute('aria-live','polite');play.textContent='재생';play.setAttribute('aria-pressed','false');cancelAnimationFrame(animation);}
+    function tick(now){if(!playing||!root.isConnected)return;if(lastFrame)time=snap(time+(now-lastFrame)/1000*Number(speedSelect.value));lastFrame=now;draw();if(time>=duration){pause();save();return;}animation=requestAnimationFrame(tick);}
+    play.addEventListener('click',()=>{if(playing){pause();save();return;}if(time>=duration)time=0;playing=true;detail.setAttribute('aria-live','off');lastFrame=0;play.textContent='일시정지';play.setAttribute('aria-pressed','true');animation=requestAnimationFrame(tick);});
+    slider.max=duration;slider.addEventListener('input',()=>{pause();time=snap(slider.value);draw();});slider.addEventListener('change',save);
+    roomSelect.addEventListener('change',()=>{selected=roomSelect.value;draw();save();});
+    modeSelect.addEventListener('change',()=>{mode=modeSelect.value;legend();draw();save();});
+    speedSelect.addEventListener('change',save);
+    viewSelect.addEventListener('change',()=>{zoom=1;if(viewSelect.value==='top'){yaw=0;pitch=1.53;}else if(viewSelect.value==='front'){yaw=0;pitch=.1;}else{yaw=-.48;pitch=.58;}draw();save();});
+    canvas.addEventListener('pointerdown',e=>{dragging={x:e.clientX,y:e.clientY,yaw,pitch,moved:false};canvas.setPointerCapture(e.pointerId);});
+    canvas.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-dragging.x,dy=e.clientY-dragging.y;if(Math.hypot(dx,dy)>4)dragging.moved=true;yaw=dragging.yaw+dx*.009;pitch=Math.min(1.53,Math.max(.08,dragging.pitch+dy*.007));viewSelect.value='orbit';draw();});
+    canvas.addEventListener('pointerup',e=>{if(!dragging)return;if(!dragging.moved){const box=canvas.getBoundingClientRect(),x=e.clientX-box.left,y=e.clientY-box.top;const candidates=hitRooms.filter(r=>x>=r.minx&&x<=r.maxx&&y>=r.miny&&y<=r.maxy).sort((a,b)=>Math.hypot(x-a.x,y-a.y)-Math.hypot(x-b.x,y-b.y));if(candidates.length){selected=candidates[0].id;roomSelect.value=selected;}}dragging=null;draw();save();});
+    canvas.addEventListener('pointercancel',()=>{dragging=null;});
+    canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.min(2.4,Math.max(.7,zoom*Math.exp(-e.deltaY*.001)));draw();save();},{passive:false});
+    const events=[{time:0,label:'0:00 초기 화점',room:'R1'},...D.ignitions.map(e=>({time:e.t_ign_s,label:`${fmtTime(e.t_ign_s)} ${e.room} 추가 착화`,room:e.room}))];
+    D.openings.forEach(o=>{const a=o.schedule||[];for(let i=1;i<a.length;i++)if(a[i][1]!==a[i-1][1])events.push({time:a[i][0],label:`${fmtTime(a[i][0])} ${o.id} ${Math.round(a[i][1]*100)}%`,room:o.a});});
+    events.sort((a,b)=>a.time-b.time).forEach(event=>{const button=document.createElement('button');button.type='button';button.className='btn';button.textContent=event.label;button.addEventListener('click',()=>{pause();time=event.time;selected=event.room;roomSelect.value=selected;draw();save();});root.querySelector('[data-events]').append(button);});
+    function resize(){const r=canvas.getBoundingClientRect();W=r.width;H=r.height;const dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw();}
+    new ResizeObserver(resize).observe(canvas);
+    const themeObserver=new MutationObserver(()=>draw());
+    themeObserver.observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});if(document.body)themeObserver.observe(document.body,{attributes:true,attributeFilter:['class','style','data-theme']});
+    window.addEventListener('openai:set_globals',e=>{restore(e.detail?.globals?.widgetState);draw();});
+    restore(window.openai?.widgetState);legend();resize();
+  })();
+  </script>
+</div>

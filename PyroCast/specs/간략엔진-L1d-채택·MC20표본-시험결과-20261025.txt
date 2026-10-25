@@ -1,0 +1,118 @@
+간략 엔진 L1d — 1.4절 채택·출력진단·몬테카를로20표본 결과 (2026-10-25)
+1. 채택 범위
+간략 엔진은 CFAST보다 후반 상층 온도가 낮고(단독 화원 −14~−20 %), 전이는 CFAST 표준보다 공격적이고 CFAST 공격 프리셋보다 늦다. 탐색용이며 최종 확인은 CFAST(r8)로 한다.
+위 편차 방향과 수치는 검토한 기준 사례의 결과이며 모든 개폐 조합에 대한 보증이 아니다.
+- 기본구성: r8 표준, 셀 상층300℃/실간600℃, 복사 실험옵션OFF. 열모델 추가수정 없음.
+- 셀의 상층 조건은 부모셀 자체연소 전에도 유입열로 충족될 수 있다. 연소가 시작됐다는 뜻과 구분한다.
+- 1.4절 출력기준: 질량≤0.5%, 에너지≤0.1%. 기존표준 진단 0.107620% / 0.001646% → 통과.
+- 이는 출력10초 재구성 진단의 합격이다. 수락스텝 보존 검증/새 장부상태는 만들지 않았다.
+
+2. 샘플링
+- 3F/최초화점R2/연료프리셋/r8표준 고정, 3600초, 출력10초. seed20261025, PCG64 SeedSequence[seed,index].
+- 총20건: 무작위18건(S02~S19), 필수2건(S00 방화문모두열림, S01 모든개구부닫힘). 각각1회, 자동재실행없음.
+- 종류별 독립열림확률: 방화문0.2/일반문0.5/개폐창0.3/고정창0. 사용자가 변경 가능; fixed_count 옵션도 구현.
+- fixed_count는 종류별 전체N에 round-half-up(N*p)개를목표로, 고정열림개수를뺀나머지를비복원추첨. 고정값과목표가충돌하면거부. 필수극단표본은추첨규칙예외.
+- 실제 입력 분류: 일반문23, 개폐창43(외기37+실내6), 영구통로3. 방화문/고정창 명시0개.
+  미분류창은개폐창/미분류문은일반문으로가정. S00은강제로열방화문이없어해당요인은시험되지않았다.
+- 문은0/1, 창은0/0.5 유효면적. 통로는무작위표본에서열림유지. S01만원개구부모두닫는이상적밀폐대조(통로를막는추가가정).
+- 가상 셀경계는 물리적문이아니므로 닫지 않는다. 층별 실-외기 누설은 기존모델대로 남는다.
+- 창파괴/수직전파/부모복수경로는 추가하지않음. 기존r8 미래창면적 공급상한 근사는그대로이므로 닫힌초기창과상한가정이다를수있다.
+- 재실자의 개폐는 열림 확률로 대체. 시뮬레이션 도중 실제 문열기/백드래프트 발생은 계산하지 않는다.
+
+3. 시간·실패율
+- 시도20, 완료14, 실패/미완료6, 실패율30.0%.
+- 4프로세스 전체벽시계 1385.26s. 표본 총시간 최소/중앙/평균/최대: 90.71/258.90/266.30/600.53s.
+- 표본시간에는 병렬 CPU경합이포함된다. 이전단독118초와 직접가속비교하지않는다. 표본당 적분예산600초, 재시도0.
+- 완료표본 중 출력진단초과: ['S01', 'S02', 'S03', 'S05', 'S08', 'S09', 'S11', 'S14', 'S16', 'S17', 'S19']. 원래조건비율과진단합격표본만의비율을aggregate.json에구분했다.
+표본 | 종류 | 완료 | 총초 | 연소실 | 경계실 | 질량%/에너지% | 출력진단
+S00 | all_fire_doors_open | False | 295.76 | 미평가/부분 | 미평가 | None/None | 미평가
+  실패사유: Factor is exactly singular
+S01 | all_openings_closed | True | 90.71 | 1 | 0 | 0.5786224359481342/0.008006953599977593 | False
+S02 | random | True | 385.34 | 8 | 0 | 0.878283508998378/0.0023176305949264737 | False
+S03 | random | True | 206.08 | 2 | 0 | 2.013419184680205/0.00399549506262881 | False
+S04 | random | False | 301.66 | 미평가/부분 | 미평가 | None/None | 미평가
+  실패사유: Factor is exactly singular
+S05 | random | True | 97.47 | 1 | 0 | 0.5019487683371742/0.0015502158689936294 | False
+S06 | random | True | 99.57 | 5 | 0 | 0.1041235987228899/0.0045282635314022 | True
+S07 | random | False | 600.53 | 미평가/부분 | 1 | 0.48926587074174055/0.0032043500122538385 | False
+  실패사유: L1 integration wall-time budget exceeded
+S08 | random | True | 260.88 | 6 | 0 | 0.5011336707230686/0.0006974681104970541 | False
+S09 | random | True | 260.03 | 9 | 0 | 0.6156721164685722/0.004174349922657165 | False
+S10 | random | False | 491.48 | 미평가/부분 | 미평가 | None/None | 미평가
+  실패사유: Factor is exactly singular
+S11 | random | True | 113.53 | 1 | 0 | 1.056987033807797/0.0016036974106792663 | False
+S12 | random | True | 157.88 | 7 | 1 | 0.20090449050897594/0.0013171395309133404 | True
+S13 | random | False | 352.05 | 미평가/부분 | 미평가 | None/None | 미평가
+  실패사유: Factor is exactly singular
+S14 | random | True | 433.37 | 6 | 0 | 2.4602827014701347/0.0049667624376609106 | False
+S15 | random | False | 463.77 | 미평가/부분 | 미평가 | None/None | 미평가
+  실패사유: Factor is exactly singular
+S16 | random | True | 184.08 | 2 | 0 | 1.221715963752625/0.003352054549800228 | False
+S17 | random | True | 257.77 | 7 | 0 | 0.8879789741571057/0.0014767025794163947 | False
+S18 | random | True | 135.29 | 6 | 0 | 0.17754924862876004/0.0016370170888709925 | True
+S19 | random | True | 138.76 | 2 | 0 | 1.6000847562586153/0.002649373307969636 | False
+
+4. 조건충족비율 및 경계
+- 원래실 기준(셀을합쳐중복제거). 현상별 해당실수는시간중한번이라도조건충족한실수; 최대동시실수도각summary에저장.
+- 아래비율분모는 완료한무작위표본만이다. 필수2건은제외; 실패·미완료를안전/0으로세지않는다.
+- 출력진단실패가있는경우 아래전체완료비율은잠정값이다. 진단합격층별집계를함께확인한다.
+현상 | 조건충족표본/완료무작위 | 비율
+FO | 13/13 | 1.0
+FGI | 8/13 | 0.6153846153846154
+backdraft | 13/13 | 1.0
+untenable | 13/13 | 1.0
+rollover | 미평가/- | None
+출력진단통과 표본만: S06,S12,S18
+  FO: 3/3 (1.0)
+  FGI: 0/3 (0.0)
+  backdraft: 3/3 (1.0)
+  untenable: 3/3 (1.0)
+  rollover: 미평가/- (None)
+- 롤오버는기존L1에판정식/가스추가연소가없어미평가. 0%가아니다. FO/FGI/BD/피난한계는기존코어조건을유지.
+- 경계원래실-표본쌍: 1/390 = 0.002564102564102564. 경계실있는무작위표본비율 0.07692307692307693.
+- boundary는원래실전체의상층최고온도가600±30℃(끝값포함). 개별셀의boundary도별도저장하며두분모를섞지않는다.
+- 이 비율은 지정한입력조합분포안의조건충족비율이며 실제발생확률이아니다. 18무작위표본은파일럿규모다.
+
+5. 현상별 최악 표본(완료표본, 필수2건포함)
+- 순위: 조건충족원래실수많음→최초충족빠름→ID(동률표시용). 미완료구간은순위에서제외.
+FO: S05, 실수1, 최초410.0초, 출력진단합격=False
+  열린문: CAD_3F_D1, CAD_3F_D3, CAD_3F_D5, CAD_3F_D6, CAD_3F_D11, CAD_3F_D12, CAD_3F_D14, CAD_3F_W25, CAD_3F_W30
+  열린창: CAD_3F_W4, CAD_3F_W10, CAD_3F_W11, CAD_3F_W14, CAD_3F_W15, CAD_3F_W23, CAD_3F_W24, CAD_3F_W31, CAD_3F_W32, CAD_3F_W34, CAD_3F_W36, CAD_3F_W39, CAD_3F_W43, CAD_3F_W46, CAD_3F_W48
+  열린통로: CAD_3F_AUDIT_PASS_R15_R16, CAD_3F_AUDIT_PASS_R15_R24, CAD_3F_AUDIT_PASS_R2_R17
+  나머지원개구부닫힘. 전체실효면적조합은opening-combinations.csv 및 해당sample.json 참조.
+FGI: S17, 실수7, 최초1050.0초, 출력진단합격=False
+  열린문: CAD_3F_D0, CAD_3F_D1, CAD_3F_D3, CAD_3F_D5, CAD_3F_D6, CAD_3F_D8, CAD_3F_D9, CAD_3F_D12, CAD_3F_D13, CAD_3F_D14, CAD_3F_W25, CAD_3F_W26, CAD_3F_W30, CAD_3F_EV1
+  열린창: CAD_3F_W4, CAD_3F_W9, CAD_3F_W15, CAD_3F_W17, CAD_3F_W19, CAD_3F_W33, CAD_3F_W34, CAD_3F_W35, CAD_3F_W41, CAD_3F_W43
+  열린통로: CAD_3F_AUDIT_PASS_R15_R16, CAD_3F_AUDIT_PASS_R15_R24, CAD_3F_AUDIT_PASS_R2_R17
+  나머지원개구부닫힘. 전체실효면적조합은opening-combinations.csv 및 해당sample.json 참조.
+backdraft: S17, 실수16, 최초530.0초, 출력진단합격=False
+  열린문: CAD_3F_D0, CAD_3F_D1, CAD_3F_D3, CAD_3F_D5, CAD_3F_D6, CAD_3F_D8, CAD_3F_D9, CAD_3F_D12, CAD_3F_D13, CAD_3F_D14, CAD_3F_W25, CAD_3F_W26, CAD_3F_W30, CAD_3F_EV1
+  열린창: CAD_3F_W4, CAD_3F_W9, CAD_3F_W15, CAD_3F_W17, CAD_3F_W19, CAD_3F_W33, CAD_3F_W34, CAD_3F_W35, CAD_3F_W41, CAD_3F_W43
+  열린통로: CAD_3F_AUDIT_PASS_R15_R16, CAD_3F_AUDIT_PASS_R15_R24, CAD_3F_AUDIT_PASS_R2_R17
+  나머지원개구부닫힘. 전체실효면적조합은opening-combinations.csv 및 해당sample.json 참조.
+untenable: S08, 실수12, 최초160.0초, 출력진단합격=False
+  열린문: CAD_3F_D2, CAD_3F_D4, CAD_3F_D6, CAD_3F_D8, CAD_3F_D11, CAD_3F_D12, CAD_3F_D14, CAD_3F_W26, CAD_3F_W30, CAD_3F_EV0
+  열린창: CAD_3F_W2, CAD_3F_W4, CAD_3F_W10, CAD_3F_W16, CAD_3F_W17, CAD_3F_W18, CAD_3F_W19, CAD_3F_W24, CAD_3F_W33, CAD_3F_W34, CAD_3F_W38, CAD_3F_W39, CAD_3F_W40, CAD_3F_W46, CAD_3F_W48
+  열린통로: CAD_3F_AUDIT_PASS_R15_R16, CAD_3F_AUDIT_PASS_R15_R24, CAD_3F_AUDIT_PASS_R2_R17
+  나머지원개구부닫힘. 전체실효면적조합은opening-combinations.csv 및 해당sample.json 참조.
+rollover: 미평가
+출력진단통과표본 내 최악(조합은aggregate.json의qualified_stratum에별도저장):
+  FO: S06 / 1실 / 530.0초
+  FGI: 조건충족없음 또는 미평가
+  backdraft: S12 / 16실 / 820.0초
+  untenable: S12 / 12실 / 430.0초
+  rollover: 조건충족없음 또는 미평가
+
+6. 닫힌 대조의 개방 시 위험 구간
+기준/출처: {"fuel_mass_fraction": 0.1, "oxygen_vol_fraction_below": 0.12, "upper_C_at_least": 300.0} / {"fuel": "legacy Yf_backdraft", "oxygen": "legacy LOC", "hot": "input gas.hot_C"}
+완료여부: True; 안전출력끝: 3600.0
+저장된출력구간에서해당조건교집합없음.
+- 구간은10초표본의시작/끝이며개방/점화결과를시뮬한것이아니다. 조건없음을개방안전보증으로해석하지않는다.
+
+7. 보존·결과위치
+- 검사17건통과. 원본/r8/native 63파일 SHA불변, 열모델4파일 L1c와동일. 조합유일개수20. native실행0.
+- 운영3D와정밀모드교체없음. 개구부분류누락/물리근사/20표본규모의한계를결과에함께남겼다.
+simulation/results/lite_l1d_20261025/aggregate.json: 비율·최악·시간·진단합격별집계
+sample-summary.csv / opening-combinations.csv / room-boundaries.csv
+samples/Sxx/{sample.json,result.json,summary.json,state.npz,rule_manifest.json}
+L4-output-gate.json / sampling-plan.json / verification.json / status.json

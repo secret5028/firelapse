@@ -1,0 +1,1519 @@
+{
+  "date": "2026-10-26",
+  "source": "PyroCast local workspace",
+  "note": "Config paths normalized for portable replay. Original simulation outputs compressed losslessly; omitted dependencies/builds/review duplicates. Source hashes before portable config edits.",
+  "files": [
+    {
+      "path": "simulation/CAD_CONNECTION.txt",
+      "sha256": "f0d44c1267989993a88f5bf1631082d25aa326a4d224f957790d4351ee7cdd77"
+    },
+    {
+      "path": "simulation/README.txt",
+      "sha256": "c0d74bd7c591d122e10cd82334e8b8c5f4f278bdc2477993b60da3dfe7757f7c"
+    },
+    {
+      "path": "simulation/requirements.txt",
+      "sha256": "f228bdcbbe716f56254944fb118593ace3c4e3a92c6f8870406398515d69f5c6"
+    },
+    {
+      "path": "simulation/run_cfbt.ps1",
+      "sha256": "3d24ea4135c716879f0ab487fa0c625cc0bb4f73965caa9ddb053e08b77afd65"
+    },
+    {
+      "path": "simulation/SOURCE_BOUNDARIES.txt",
+      "sha256": "20dca5bf3a009e4a1d1f39e0e50b861da8070fe00cb5279eca1ce6672fa8401a"
+    },
+    {
+      "path": "simulation/start_building_view.ps1",
+      "sha256": "45d85f2bc004d777172829c72b384226844d4181a348808bcb8bc24ee67ba2a0"
+    },
+    {
+      "path": "simulation/VALIDATION.txt",
+      "sha256": "9c58af126bc5cce23b4df17d26fc7e222d2260b89b6551e3e8bc8df77d8528ca"
+    },
+    {
+      "path": "simulation/config/lite-screening-selection.json",
+      "sha256": "0d620fb5561ae5adb9cb81c6c184988615ad11399cd5ba54c10ff6c521081ab6"
+    },
+    {
+      "path": "simulation/config/lite-viewer.json",
+      "sha256": "30bbc5284979394770224c8bbe8cdf989ee6ca9a3621801753f0a1ba5ca4857a"
+    },
+    {
+      "path": "simulation/data/cad_topology_corrections.json",
+      "sha256": "c19fc52776c6ef837a41fc231f12c9b22d73bd2aa52ed711960874f2d0629e88"
+    },
+    {
+      "path": "simulation/examples/cad_fo600_30min.json",
+      "sha256": "21daf0b448853b8d0ec7b07cad4df7f38238f3e7e7cfb1e55874c7d61c240fea"
+    },
+    {
+      "path": "simulation/examples/cad_opening_30min.json",
+      "sha256": "68db8d7b9262512d168ec43b92e33d1d062c120ec60496f4c3cf08d32b44f4db"
+    },
+    {
+      "path": "simulation/examples/cad_practical_30min.json",
+      "sha256": "b9a84b34a544b4345c246c7437886fc6fb06e297e7588fc4fca821c7e3bfa337"
+    },
+    {
+      "path": "simulation/examples/fo_transition_check.json",
+      "sha256": "2c9f308be88a721e6081cb2a89baee3ca5cdbe388d07a7e3c72b350138eea247"
+    },
+    {
+      "path": "simulation/examples/three_rooms.json",
+      "sha256": "f59909507da47a7d5923e20bfdbd14b4acd7de665527aec3f528bdf35aadf5af"
+    },
+    {
+      "path": "simulation/extensions/__init__.py",
+      "sha256": "ca18a953a024214c0462f00556b3c47536194abced1107a3f7ae85843c134dd6"
+    },
+    {
+      "path": "simulation/extensions/cfbt/hooks.py",
+      "sha256": "ddafe8e698cdb3471f2f941fbccc2c60f84f5ce1d6f8fa1eb8a077845cf984e5"
+    },
+    {
+      "path": "simulation/extensions/cfbt/README.txt",
+      "sha256": "70338dd5384150d11f1b15a35091a38ec8ab8354c749f434cc6eddecc157e698"
+    },
+    {
+      "path": "simulation/extensions/cfbt/__init__.py",
+      "sha256": "008246053a318653c5043f03e6c54a92644cb8b819d067ecbcad72866e6bb60a"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/adaptive_radiation.inc",
+      "sha256": "b4bd916a00fb9a1500ade41f36d6ed18378863c307f496c67a612084d79614d5"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/adaptive_radiation_declarations.inc",
+      "sha256": "ecc1778aeb1a4a34693f10b9eb9225b5801d953e19409d51631967039161f2f4"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/declarations.inc",
+      "sha256": "a46625dc2a8293b249c3c7ca16a651fc43ac7d68c6e276315f8cd29e86bb7a46"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/mixture.inc",
+      "sha256": "5535ccc747becb2a158dc0d712253da8e54728a172a532a3b8297e19eedf91ff"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/radiation_cache.inc",
+      "sha256": "8b1c6b49e3ebfdd0e02b01b54fcd279b25fe6d8b917b0c7e1133d0be0dcf083c"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/routines.inc",
+      "sha256": "b40174973727eacd9565e95873cf7bf41a1b5526648ae2343a14ab6bf0e582bc"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/wall_cache.inc",
+      "sha256": "811bbbfa6908cd5ccd90aa4b13bc67981a845169639ab63856aca5692d23a69b"
+    },
+    {
+      "path": "simulation/extensions/cfbt/fortran/wall_cache_declarations.inc",
+      "sha256": "ccf2f0eb5e0a7151ec737878149c41ade42d3f256c2a71038485fd2de57173ee"
+    },
+    {
+      "path": "simulation/extensions/thermal/plate.c",
+      "sha256": "a9f1041f82b1b224106776d3a35d3a0fb289ea72357ac0c66cde0f60826351f8"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/cad.py",
+      "sha256": "2e02a8e9767b4bfeb7fc6e73e1740b80db108a265bb1ef3bdd9fb066b721ab68"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/ceiling.py",
+      "sha256": "960e07db0acf080205dbea04a7ff4078ff0c0a203be6319c898ae9c5eeb44890"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/combustion_display.py",
+      "sha256": "d95bbd69d02f66d186a5aad3a14f8c0e1039973864a6d493e31c9c983d4f3f35"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/comparison.py",
+      "sha256": "ffb6256b046bc66064a0436a28d53b2e2e01c3d9c4281d748a3f351991b6426e"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/conditions.py",
+      "sha256": "c7e15c19c6bf1c1ddaa4651a654197fb7f956310cea870b7a767df92e97cefec"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/deck.py",
+      "sha256": "95a1e7beb11b4d9aa1c2df1c95cb93e2602bf9753535b0087f178831d14cc280"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/diagnostics.py",
+      "sha256": "c19f698adaec0373a502bf4077c168236cd434dc4ebf2e5e077e5483ced8a1a8"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/exposure.py",
+      "sha256": "b3f68da83dbb0e6d371909e2c3d8c16b8943f9e9ad1e714311a747a2e7b91f88"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/flashover.py",
+      "sha256": "f65e4aa5233ebe4bc1af9d6aee3f99fa021099e1d5d86430a2b65dbc84e30954"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/fuel_layout.py",
+      "sha256": "18412d2c11f40b0c751f1dbbb13e8a1749a215a7c2fd4c0f920c49733ee2f435"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/iteration.py",
+      "sha256": "5729099df2ed7c3f5d474bfcabeca72ccd9e6eded72e8e98a4b4761e28da9d57"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/mixture.py",
+      "sha256": "34c31f0067b883fe2a4ae9fb316c18173e87da7c43ef4f3034d22904c8166e66"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/model.py",
+      "sha256": "6aae8e5f91764222ce07a38290675846616d91b6e961e80cb699bd6bfc8abe0f"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/native.py",
+      "sha256": "f9ae3f192aa9e3dc8485019f53605897d084de9d6eb5c7289cc23ac4ddba4f84"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/openings.py",
+      "sha256": "33b73db5a8ed736f052b3be41bd209fe7828b4d3ac0524642ba01900ff88c6ef"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/outdoor.py",
+      "sha256": "8a38b17dce48c23ed7f36d4f687b0830ea12f39dc96234cbb9df2eba3c7c265e"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/parent_rule.py",
+      "sha256": "7f0701341c5bfab77d0af73c495faff77518984ab7bd4372666af4831911dddb"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/playback.py",
+      "sha256": "9b4e89e7557d1bf32c1adbd8d8f4eef65ceed6c60c869f03fea2afcc604bc3b1"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/practical.py",
+      "sha256": "61107a5efbca1d0b99b917b8fc6a8725cb6ae1208dd4503f3aef0e1461449018"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/reuse.py",
+      "sha256": "4f674dc5a3fb4c88c220fc87504cffbe14366841395ac000213235bcb367bda3"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/room_rule.py",
+      "sha256": "da50d412e5dc53ffa18e6a97c449b36de1597a021d658cb037b6bd536cbd8c95"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/room_rule_r6.py",
+      "sha256": "2c9613db82132324cf7db7f8c5fe0f97d001e32f8640060292c3e459753fcfab"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/room_rule_r7.py",
+      "sha256": "b9e4595422baab54136f40c7f50620847643294661cb40cdc40e319b185c280f"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/room_rule_r8.py",
+      "sha256": "103a30db964bd635b28ad09acfef2ea15f42ec003ff8431e1cccd8b670b8f51d"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/rule_cells.py",
+      "sha256": "614b05a9aa258dda66e9f3b5ece55765feadaa0d5a03470dced0e6f9f6544922"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/rule_graph.py",
+      "sha256": "87032ad49958c613eca24ace2d3384262fca8fddff2f1734e9ea99e0e05bd275"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/rule_graph_r7.py",
+      "sha256": "02d66c590e51a41ace9faa1d3087d9013bfe329067e4dec1d045e6a9615d20c3"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/rule_sensor.py",
+      "sha256": "bc32f76b36cd250c6f284a9ba8c8622458fb0c8b81c610db1b023d3dca19ba7e"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/rule_settings.py",
+      "sha256": "2f54af577bae72a3c0e4229b5a3979e544da32200b4ac70d4ae28597e1835efd"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/spread.py",
+      "sha256": "38403453c607c4bbe4e261d2366d89a02cee0062b4cfc66acdedc9356ab9d138"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/thermal.py",
+      "sha256": "d692c1e925549675eeb4a3e58ee461109520835e57a6878edc3b181e8be8abd1"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/topology.py",
+      "sha256": "eae26ddb0d17f06ee4138d56e1bcb72a77ed8a9a47a03eac1dd0b7348d72a1b2"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/__init__.py",
+      "sha256": "0631feb5793e1046ce677d430b4e3f7f84008bc3438a1ff7451b68e8a5dfb0be"
+    },
+    {
+      "path": "simulation/pyrocast_cfbt/__main__.py",
+      "sha256": "d497995d76d3f7eb2d9a095221f38fce34006d1ef2ac56092d09ba3d65140ec7"
+    },
+    {
+      "path": "simulation/pyrocast_lite/adapter.py",
+      "sha256": "13099e75bc162156049e0f8dafaa7be80e0e01fc11ee37e3083d31d597367326"
+    },
+    {
+      "path": "simulation/pyrocast_lite/approved_uses_v8.json",
+      "sha256": "dd424fa3fd9174555aff381521a741a983cbb1381436a6fba270e9f5eda5ba01"
+    },
+    {
+      "path": "simulation/pyrocast_lite/core.py",
+      "sha256": "d8742588af0bf470aae2709211411ba96e2b0b83de5eb7d3e51801e617eab0e9"
+    },
+    {
+      "path": "simulation/pyrocast_lite/door_classification.py",
+      "sha256": "6f4796333ca46d0b67899f1e77cb15b5680b1cd90b9927e0487f3cd1cac06759"
+    },
+    {
+      "path": "simulation/pyrocast_lite/door_class_rules.json",
+      "sha256": "9262daf61427d8902ad6d15234d7181118abb96fe8de843a3ee818fc33968f07"
+    },
+    {
+      "path": "simulation/pyrocast_lite/door_jet.py",
+      "sha256": "3f3222cfaecf7ae446e04678ac3a0632149c5108a06edabf04eb9d24be35e1d4"
+    },
+    {
+      "path": "simulation/pyrocast_lite/failure_state.py",
+      "sha256": "038f7c736cf7838e70caa37fe85efab968ad0e10d8b3395c32f4b1a2df538165"
+    },
+    {
+      "path": "simulation/pyrocast_lite/fire_load_table.json",
+      "sha256": "5a741ef4e2e277f37d3222eced0b71d8e548853639ee94498c212bc230d4d4da"
+    },
+    {
+      "path": "simulation/pyrocast_lite/montecarlo.py",
+      "sha256": "602d73273281d2b976a57ab6ee9872b368bcf6b07073b2e1321186d6bf71cc50"
+    },
+    {
+      "path": "simulation/pyrocast_lite/numerics.py",
+      "sha256": "8bc072d817e2a237c04594317ef59361858d70007102179896042a4570de4297"
+    },
+    {
+      "path": "simulation/pyrocast_lite/radiation.py",
+      "sha256": "d46c6aa7894840412fd8b192365d0c7ebc549b867460343a6b12da9a256133e4"
+    },
+    {
+      "path": "simulation/pyrocast_lite/README.txt",
+      "sha256": "34fd965888771db329d0e9ebb48a2c5929c6c6fb82f1842a1564fba651fc7cf8"
+    },
+    {
+      "path": "simulation/pyrocast_lite/requirements.txt",
+      "sha256": "3e27239d211081ab01149dc4d269051d064b023b142614799a34022f3a366c8a"
+    },
+    {
+      "path": "simulation/pyrocast_lite/result_adapter.py",
+      "sha256": "8299a8b4a31f5a6571aeb0e75ec5e6c06a18145fe998e8fb9726a562ce639a76"
+    },
+    {
+      "path": "simulation/pyrocast_lite/room_oxygen.py",
+      "sha256": "c4c6172743cd15870e9e0b114de4484fa045a26c1d8608213f4772101d6c42fb"
+    },
+    {
+      "path": "simulation/pyrocast_lite/runner.py",
+      "sha256": "138ba087dc7d93852af9f42a5e98c0d7444252b0b5b17d8a760a73d8c7328f21"
+    },
+    {
+      "path": "simulation/pyrocast_lite/screening.py",
+      "sha256": "601df77c773d95f14611692fe50dc6dc6638a9e60287dd10e953c235ed36c4d3"
+    },
+    {
+      "path": "simulation/pyrocast_lite/screening_settings.json",
+      "sha256": "e238f5d837b0e26b7636c899bb0f85bd5cd625b93939fc5d5a093f510b53e8cf"
+    },
+    {
+      "path": "simulation/pyrocast_lite/screening_v7.py",
+      "sha256": "ceb2097c7b3d2cabe454b14eba392dc9f12eac168c1fa87183c56fc1398696e1"
+    },
+    {
+      "path": "simulation/pyrocast_lite/screening_v7_settings.json",
+      "sha256": "bb3628523f3f696c612a274d2a2cd0aec5813f2915983e5be01414d7af348ba3"
+    },
+    {
+      "path": "simulation/pyrocast_lite/screening_v8.py",
+      "sha256": "3e30fd9dacb2398836c344daa9403a6c6eb160bca9ec3fb2a5acd6125231cfb9"
+    },
+    {
+      "path": "simulation/pyrocast_lite/screening_v8_approved.py",
+      "sha256": "cd649e55f9db1e709c040855156fd27c12b02be8b38da598bd6faf931d78906c"
+    },
+    {
+      "path": "simulation/pyrocast_lite/shared_inputs.py",
+      "sha256": "1807dae70b432990c00eb7aebc2f827b781a0ef472c40f657303132a9b9bdfc6"
+    },
+    {
+      "path": "simulation/pyrocast_lite/visualization.py",
+      "sha256": "8aff3356e3379c284ba1ba748ebb1628faeb8ca1618856ee92b5383438f5bc2f"
+    },
+    {
+      "path": "simulation/pyrocast_lite/__init__.py",
+      "sha256": "5783271862caae08fad6ffbee60bfa0d5e13b9b4e09c939b6e4883729a5a4b01"
+    },
+    {
+      "path": "simulation/tests/adaptive_radiation.f90",
+      "sha256": "b560d8ea768f78eff7916428b4b037a6ab080bcd5244f6878905a0f16f244d6b"
+    },
+    {
+      "path": "simulation/tests/check_cad_results.py",
+      "sha256": "7af48d448e48bc4e393a591c9227aaded5820ff8c61fc63aa44c6904bc5c6f52"
+    },
+    {
+      "path": "simulation/tests/check_engine_boundary.py",
+      "sha256": "c1064708233c4a723234aa84e57d3e9352f9cb8924bd6aef74daa872aeb696da"
+    },
+    {
+      "path": "simulation/tests/check_fo_results.py",
+      "sha256": "7f16a623a949438f2c22c8c4306e2472b2bf3c72afd330584f32925531e0feff"
+    },
+    {
+      "path": "simulation/tests/check_gas_visual.mjs",
+      "sha256": "2048d659050806f459ac4100cc100061a34287e6f7844aef4a761cf31d911094"
+    },
+    {
+      "path": "simulation/tests/check_ignition_engine.py",
+      "sha256": "9091f89660d797337fd39756113e4aef935bcffa27dc8f6594afa785e11d23e4"
+    },
+    {
+      "path": "simulation/tests/check_iteration_native.py",
+      "sha256": "456092f2f639a3f857bebcc7d6dbdf53e982a2754351ee21b68b25cd8ca56708"
+    },
+    {
+      "path": "simulation/tests/check_mixture_source.py",
+      "sha256": "f4ab44ddc6b479e6b2453fb4f2646e31b64070621149dc9b371939e433a3d5c7"
+    },
+    {
+      "path": "simulation/tests/check_mixture_view.mjs",
+      "sha256": "2de1c9b19fb93e86043ac146fef4dcbb5ca8fd4386554376b64c145296cdebe2"
+    },
+    {
+      "path": "simulation/tests/check_opening30_results.py",
+      "sha256": "2450b16a76fcd86859ca89f08f025b94e34c90dca9769326cbe48a07113814f6"
+    },
+    {
+      "path": "simulation/tests/check_practical.py",
+      "sha256": "8715a96fba38c6840e09847df6138a1a4fc78b990f3978e7035c8efe8fa85436"
+    },
+    {
+      "path": "simulation/tests/check_radiation_cache.py",
+      "sha256": "eb3ba14d77e03f10b4e8d4553a4ae182b5c5bab04067939717daca42839b5c77"
+    },
+    {
+      "path": "simulation/tests/check_risk_split.mjs",
+      "sha256": "d0ee315f10ba1dd53ef8ebc98e56c75dbf64417412588456a0d8e1022cd906ad"
+    },
+    {
+      "path": "simulation/tests/check_smoke_transport.mjs",
+      "sha256": "9aff121d412f89cb5716d1e728260926d34b0f860c8420f01f83d8bd62697066"
+    },
+    {
+      "path": "simulation/tests/check_smoke_visual.mjs",
+      "sha256": "b4da1eedbcc3485a05596430c833ffa6eb6b9bbd3a86b52b6bf8751e5622b2ad"
+    },
+    {
+      "path": "simulation/tests/check_topology_results.mjs",
+      "sha256": "e893b8c92e609e3d2d803723d7e0f9e90a40e57375fa8beda24242cecad06415"
+    },
+    {
+      "path": "simulation/tests/check_windows_native.py",
+      "sha256": "7f9d346d995144d2ecd86f7c533847b3325888993c3cb52a8113d87a08a16e00"
+    },
+    {
+      "path": "simulation/tests/check_windows_regression.py",
+      "sha256": "83bdc180f1b62422af444da677b5a1817a0c24e3580a81d68c545e6bc9f22cc2"
+    },
+    {
+      "path": "simulation/tests/mixture_boundary.f90",
+      "sha256": "3b5ad3edca56ddfc92d070113507fc30eeecd01dbf29c34861dd6a35e5e25a8a"
+    },
+    {
+      "path": "simulation/tests/mixture_source.f90",
+      "sha256": "63529559e3e3dfd56e725ab3b866ff396dce580a4a56d43c0af170dd1bf87ede"
+    },
+    {
+      "path": "simulation/tests/radiation_cache.f90",
+      "sha256": "7eed9adcd143dd7043a1c65db491dc9a0eb7f16f2b81c00e8576bb61bc8bb86d"
+    },
+    {
+      "path": "simulation/tests/run_native_checks.py",
+      "sha256": "c3fd1b5942ed1b6783c6004ba2108807c62f31d64425f6e87caf0b9eeb266063"
+    },
+    {
+      "path": "simulation/tests/test_adaptive.py",
+      "sha256": "a3fbfb526258706ce4e4f53404e6bf70ec6b4578622c5a196c4b723d4ec29f85"
+    },
+    {
+      "path": "simulation/tests/test_cad_integration.py",
+      "sha256": "73052fc20d4244ad090690f07c99f6a4682b7f2d280904e2e0de287e24e00bf1"
+    },
+    {
+      "path": "simulation/tests/test_combustion_display.py",
+      "sha256": "ca568379a565a1a30efba1049def25a7f6d21dd0ab0537267a6bf6fa6e62f7a1"
+    },
+    {
+      "path": "simulation/tests/test_core.py",
+      "sha256": "58d75f820686c83ccf4cd57115ef61b65569ea82a2adc9fca425510471a83d9d"
+    },
+    {
+      "path": "simulation/tests/test_diagnostics.py",
+      "sha256": "68d6c9ef5d578e1adc339f4bcfdd989aeef4fc0d701141456b189dcddf6ef460"
+    },
+    {
+      "path": "simulation/tests/test_engine_boundary.py",
+      "sha256": "73a5e9ff5cb264867c89a3e1eb6b04ff1a3cb27a6647f72f642ac2ce62657f5f"
+    },
+    {
+      "path": "simulation/tests/test_flashover.py",
+      "sha256": "b97322841ee6a5a5774c5b0067d005523d66af0c6f8ae6f98ab401a26b3d8f22"
+    },
+    {
+      "path": "simulation/tests/test_ignition.py",
+      "sha256": "255dff3ea307e2f922ebb461e74dd9204f9d09313d3f5f35deb8a7c5a2bd240a"
+    },
+    {
+      "path": "simulation/tests/test_iteration.py",
+      "sha256": "f3a535e4c0975ccf4d80fb61c98abd50d603b0c0ef5492de44469d8891d61a5e"
+    },
+    {
+      "path": "simulation/tests/test_lite_conditions_doors.py",
+      "sha256": "0b606f300fdc462879094518c57a7154922b31ba242f70a8212fe44d857c0076"
+    },
+    {
+      "path": "simulation/tests/test_lite_cumulative_state.py",
+      "sha256": "8d526ae6661187c78f2b7582f3810edb0d03a51ba27556582b9e58df36a84909"
+    },
+    {
+      "path": "simulation/tests/test_lite_doors_v7.py",
+      "sha256": "a5ee78fcfb777ed3617058cdd942e1a2ae33e0bdaaac3dee02381b35f1180206"
+    },
+    {
+      "path": "simulation/tests/test_lite_door_jet.py",
+      "sha256": "12180ff06f673c3d427d5d4d639709571f2e4cbd196ed41afcd541674b15556b"
+    },
+    {
+      "path": "simulation/tests/test_lite_l1.py",
+      "sha256": "968ad33077c1829c87e188f71672aac9887d29ddaab428d9d0e7f70bbfe4f37c"
+    },
+    {
+      "path": "simulation/tests/test_lite_l1e.py",
+      "sha256": "676ee794e5ec06f1c784603a9a52a1c9035e7a8fa8e33128086946350b25a580"
+    },
+    {
+      "path": "simulation/tests/test_lite_montecarlo.py",
+      "sha256": "984362b7bcd765001793678433bb180b44bc159eb8e26dc2c0cda9fb60196a55"
+    },
+    {
+      "path": "simulation/tests/test_lite_room_oxygen.py",
+      "sha256": "6550838c810eccfa098217a0f9ea5e9ab2c80e13ccee0294595bfb5ad0da4fae"
+    },
+    {
+      "path": "simulation/tests/test_lite_screening.py",
+      "sha256": "9fedbc6f90687ac5a311fe0d36f21458af3086baf43d92531f4a3edcb227a967"
+    },
+    {
+      "path": "simulation/tests/test_lite_screening_v7.py",
+      "sha256": "3ab92cc1e11d3445ae0f74b385d4c506264d7a2baf7b52f06171318d281a93c6"
+    },
+    {
+      "path": "simulation/tests/test_lite_screening_v8.py",
+      "sha256": "789c639826b3a44549541a7b7b81396f85dc2c4174c818200644ab846b473ff3"
+    },
+    {
+      "path": "simulation/tests/test_lite_screening_v8_approved.py",
+      "sha256": "26407466a455c23a12dc8414096ab99b13ca57ff641d74f1d845104d342ca2e4"
+    },
+    {
+      "path": "simulation/tests/test_lite_visualization.py",
+      "sha256": "02339127d1519088ba07deb4e59030d9c5cca7c02b1d58f808851c196854189f"
+    },
+    {
+      "path": "simulation/tests/test_mixture.py",
+      "sha256": "053c798efb0dec4ae1f87451e33e98b55bfe395d27cd59346ee245b267b2b117"
+    },
+    {
+      "path": "simulation/tests/test_mixture_smooth.py",
+      "sha256": "67161d30d8f6adee0abd4c5f204490b2c0e5cbbafb5748dfdff61cef1d940da5"
+    },
+    {
+      "path": "simulation/tests/test_native_exponent.py",
+      "sha256": "441acf02444eba789677d9987e7b5c3ec4d5f29fee31843d81bf18d5893e98ea"
+    },
+    {
+      "path": "simulation/tests/test_parent_rule.py",
+      "sha256": "03dd494a785bc960fee0486805ba22a044ac86cc905c408b47ed9c2d4c51da6d"
+    },
+    {
+      "path": "simulation/tests/test_practical.py",
+      "sha256": "06d9a872b5850af734704770b6189680287fce04246987f506434a94c240a8d4"
+    },
+    {
+      "path": "simulation/tests/test_reuse.py",
+      "sha256": "44f1522f0a91fd8342267d81a48bc409aac4e32fa774e34d9298133fc8996882"
+    },
+    {
+      "path": "simulation/tests/test_room_rule.py",
+      "sha256": "6e694d8d5ae171e01374f06c5f37e5a35d08e9c5d8b8d1936d94c034babca339"
+    },
+    {
+      "path": "simulation/tests/test_room_rule_r7.py",
+      "sha256": "e6610552ad71c48f9a3a0bfa3e0fcf48d9c560facd5cbc09568cc655b2cd8f0d"
+    },
+    {
+      "path": "simulation/tests/test_room_rule_r7_budget.py",
+      "sha256": "543cf33b69e9b1214aa377f1e66cb4295a60db40403050fa81d01879b787c3c1"
+    },
+    {
+      "path": "simulation/tests/test_room_rule_r8.py",
+      "sha256": "8536a2ce8eab37dc12efcf235f1e0ec61a5ca9738ca471f08db20b0a003764b5"
+    },
+    {
+      "path": "simulation/tests/test_room_rule_r8_runner.py",
+      "sha256": "472688db016d3e5e01f65fddf5a3929292adc96c27527952f08a28c65fd6dac5"
+    },
+    {
+      "path": "simulation/tests/test_rule_cells.py",
+      "sha256": "154d83226e15a275cc052a5363bf0c4dc18596f3235e51153c6009217632b08f"
+    },
+    {
+      "path": "simulation/tests/test_rule_graph.py",
+      "sha256": "0f22ab24850649cd3cabc7181e84f6fffde7b288b4543b249476f8005172627b"
+    },
+    {
+      "path": "simulation/tests/test_rule_sensor.py",
+      "sha256": "5f67c15d8ea1c47663f9e73dec4e3bc825d4609db8f618176d1ae50b59a56799"
+    },
+    {
+      "path": "simulation/tests/test_topology.py",
+      "sha256": "fecab173d86774121e7bc1b741371aadd5f401b7524572114e8fc77319f26c36"
+    },
+    {
+      "path": "simulation/tests/test_windows.py",
+      "sha256": "13ac5302aa7cac45f46983d3433348c8bf0133c2646b493e4d8d051fbc77185e"
+    },
+    {
+      "path": "simulation/tools/benchmark_iteration.py",
+      "sha256": "6291911df3161c97cb43979a1aaa93a8c945d709c8a04075d1809de8f594ddc3"
+    },
+    {
+      "path": "simulation/tools/build_3d_view.py",
+      "sha256": "87263d79dd76fa2a3f5001f2c75cdb3a8c9775e34c8ded87514721cbe7bad313"
+    },
+    {
+      "path": "simulation/tools/build_engine.py",
+      "sha256": "8f5847d0a511eef1f82197467f47350f20d1749d85ad47707d66685f011ad432"
+    },
+    {
+      "path": "simulation/tools/build_floor_smoke_demo.py",
+      "sha256": "254b353139861fe517cda1c6d8ed6c8eb0d1bcafb97ee874beaad385e6f88c29"
+    },
+    {
+      "path": "simulation/tools/build_ignition_demo.py",
+      "sha256": "1db232d6fe2e009d7fee661cea077c9b594b03aa852731eff6780e3e9f9f6f7d"
+    },
+    {
+      "path": "simulation/tools/build_risk_demo.py",
+      "sha256": "cd310065b9f3d457e0818d69d8d0afd851cd641f597d91fcf9771e7e855243da"
+    },
+    {
+      "path": "simulation/tools/compiler-release.json",
+      "sha256": "90aa88aaf1c851851ab0ab82d16d44a18dc49a3269fa554c4f386b4818cd9ef9"
+    },
+    {
+      "path": "simulation/tools/connect_cad.py",
+      "sha256": "9a3a5bf386b200789bf0f80a4439e908712c0b1bfdd39b16551a3f01eb76b1cb"
+    },
+    {
+      "path": "simulation/tools/engine_sources.py",
+      "sha256": "5bfae21877d10014bba12b8a8a7c1731852249b5f4ba5434abc385140d366676"
+    },
+    {
+      "path": "simulation/tools/fetch_cfast.py",
+      "sha256": "a4e437274137a64fdf318d7c9baa4747457b69bccb246e30981d28fa2425989f"
+    },
+    {
+      "path": "simulation/tools/prepare_engine.py",
+      "sha256": "74d318efa7e50564f158ab3ae2006930092e7408afb6283daaf70c429c632491"
+    },
+    {
+      "path": "simulation/tools/probe_native.py",
+      "sha256": "5332b2fcfae2724b1c1628993b9f80ab0a8467c0801ba60fa229762a112751dd"
+    },
+    {
+      "path": "simulation/tools/verify_engine_boundary.py",
+      "sha256": "9b804d42234136deb274748ba9e8bce6215aaf4e3b44b4ff0bc59e5f44ef3b58"
+    },
+    {
+      "path": "simulation/vendor/cfast-makefile",
+      "sha256": "7320690d2df60c5c89c7e6c8639b146effcadbd3921b86697d4f815501fb7502"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/README.txt",
+      "sha256": "58ab1136a24e2295bc8404bd1a780910105dc8a3db8786d39a8a7fb8dd2f4ead"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/sources.json",
+      "sha256": "5133c2ec046c83472c942aab2d40731f95d84c9358867a4878344190fa4153c7"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/cfast.f90",
+      "sha256": "ff52758df74ceaf0e212e894173adaec65c9a83da5d29f2e9c0754fd8c3a2cc5"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/cfastexit.f90",
+      "sha256": "4b537e57e4b359a4c4f48e5319d05394dfbcf2f65c8e65a75cda7caae989cb16"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/cfast_data.f90",
+      "sha256": "53b334b6496fbed198fe3106ad998bb3ebccb501e27b6f6441434feff2b65a85"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/cfast_parameters.f90",
+      "sha256": "d579e2cd3346af1143e89f2a06d7223b527be242cf0692591935b4c38547922c"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/cfast_structures.f90",
+      "sha256": "1d1ae5feb4ed361ea732c8e81e10a622d8e09731368c3cdde708b4033bb53434"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/compartments.f90",
+      "sha256": "1525cb57bfeb3e73a0801d9e2c0b3df786790d9fc25721d1c105780638197d48"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/conduction.f90",
+      "sha256": "71d82604f3b2ed5b382f6e954bfc65452fc38c628d5595636529ea56c2ad7700"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/convection.f90",
+      "sha256": "d4f2200a3e257e2c701a7ea09937aa2329204008c27c43e028e6d0431ce5d533"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/fire.f90",
+      "sha256": "e954b7f4150094adb021737b3d3eba4cda75ad0b7db5f02ea79a9baf93b5c4d1"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/flowfan.f90",
+      "sha256": "6d75d20f46be07cab47d9c22ca89c3545d7d845db478d96736e068c6d6b99786"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/flowhorizontal.f90",
+      "sha256": "882da02ae3dc483fb47e2230647cd288e9adaf6479829587a893767219577a1b"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/flowvertical.f90",
+      "sha256": "92053b08da72750a9276e5293be4e2c9adf2e8e35691d5e93d39c301223b397d"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/initialization.f90",
+      "sha256": "e4be8a68a00b72baa61aa924d6aaee31c5d94795dc1c94639d42d9ef784a8192"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/input.f90",
+      "sha256": "6259601bbd6af6b2f2086e73a0d83d7a6c25e9cb1ada4cf72c5dd83eb394c0a2"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/input_namelist.f90",
+      "sha256": "a1b6423ba1d4508781ad5907af12666e0b95ff15407708f69b3063f7064ef5a4"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/keyboard_gnu.f90",
+      "sha256": "63063d71a4a4a4f80d6007c6b6624b798090084a93510190794cea88f63609e7"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/numerics.f90",
+      "sha256": "036f770567ebd22a961803c6425d73eea485f41e54d29095dc7a3706df99e6f0"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/output.f90",
+      "sha256": "b1161732172a468ff23ee77423c987e34e47edcf02f7e30e49b202501f80a9f0"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/outputdebug.f90",
+      "sha256": "8318d6682d86d7b0b2c825c88ba4c7e2d3f2d92763bd7d3cd94be0cb4177eb05"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/outputsmv.f90",
+      "sha256": "9bf7b139175be2c2e4850949c615f77196a9177e57451a37d3a3e7456907a95d"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/outputspreadsheet.f90",
+      "sha256": "18261aad6ef3c806495a5acfeb3454c9ed8928e4549de379a015e65fbd842adb"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/prec.f90",
+      "sha256": "3f64f0944defd439180d63a11d283da6120eaa6f255e926dab3afc7e005bd9fa"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/radiation.f90",
+      "sha256": "b8b0fffd4b539a862c63164033df3e5989820af974a47f6047012ffdc6f743a6"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/solve.f90",
+      "sha256": "7190213ae59178679579d658570b0b61264ac8c8a9281664547065c1746aa0be"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/srev.f90",
+      "sha256": "b1d16812c776d9c107889c32077b9a02a673cbcf86e709ba9f2ad754a46d6b2e"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/ssHeaders.f90",
+      "sha256": "46b9c1eb78af0c49a03956b1aa4bec135fd9c30a54fe33d91be127fb309597bb"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/target.f90",
+      "sha256": "8ac54d6f9d4f586c880a4a522f787e8c50c5570ad67cb996d11629efdfe8e678"
+    },
+    {
+      "path": "simulation/vendor/cfast-7.7.7/Source/utilities.f90",
+      "sha256": "7ea9804a34e94ba27b7bfa854c93add8aa59e8889b38ecef53ca5b89ce013029"
+    },
+    {
+      "path": "simulation/viewer/ceiling_jets.js",
+      "sha256": "97d9ebc556a9b39ba04a721359c1e70d625a7687a74d225a45211961d1b3424f"
+    },
+    {
+      "path": "simulation/viewer/frozen_rule_controls.js",
+      "sha256": "38dabaa0576b7c203d4c940b9424c344706790d6991744aa4ef42cc609de670f"
+    },
+    {
+      "path": "simulation/viewer/gas_visual.js",
+      "sha256": "ce93ba3ecc8d0aa4174eb9677218c1406a03ed3db2ea44ca410ab7e3e2cf3e0a"
+    },
+    {
+      "path": "simulation/viewer/legacy-real-view-provenance.json",
+      "sha256": "a432a9879bfc9d7f42cbf3b2f9e3e3392c065a6aa5ab796e077db7e5f27c30da"
+    },
+    {
+      "path": "simulation/viewer/legacy_real_bridge.js",
+      "sha256": "4f16dd33c1af2cd6e489cd7dc96129955751b3b00bb1f9ecdab17d77d23a5173"
+    },
+    {
+      "path": "simulation/viewer/legacy_real_view.js",
+      "sha256": "f83b1c59d1cff89dca122df2dd906edd078a1ca5afcb92088c748b7e20a17051"
+    },
+    {
+      "path": "simulation/viewer/lite_doors.js",
+      "sha256": "26b28dfe1de03277623602654756fe025863dc885eaa00f8a6296e97203c4a85"
+    },
+    {
+      "path": "simulation/viewer/lite_viewer.js",
+      "sha256": "98534cbe77d41d1d46d5846d6a2dfdac76d1e99cf139e3e3696c7f5bf112360d"
+    },
+    {
+      "path": "simulation/viewer/overlay.css",
+      "sha256": "3fa8bccd42027e42bdc5b5034301484aaf0141c89c32b5cff52869550732e2d0"
+    },
+    {
+      "path": "simulation/viewer/overlay.js",
+      "sha256": "54a677bba7a65c7316790334226e514b4501ad815110640f277093d5fa3c43a5"
+    },
+    {
+      "path": "simulation/viewer/risk.js",
+      "sha256": "cf8a9443354d5bc2c84a09d5d0f38c0df1ee26bc134cd0c09e1695a95016cf94"
+    },
+    {
+      "path": "simulation/viewer/scene-fragment.html",
+      "sha256": "5811035f380bfdf238773cdcb3f86cd7937e1a7ff8c163dac444b61fff1dcb80"
+    },
+    {
+      "path": "simulation/viewer/screening.js",
+      "sha256": "ab73571774e9eaccbeb187fd84aeedc0088b14b7a3bde41a667cc68f13e67326"
+    },
+    {
+      "path": "simulation/viewer/smoke_transport.js",
+      "sha256": "7d286a7d44ff2395976a00e237db2d7940f0b8883d9b6231e2f620e4f0a51ad3"
+    },
+    {
+      "path": "simulation/viewer/smoke_visual.js",
+      "sha256": "06e71f7a406dcb16a1f55593658cf9409a564f68be69765e5f522de5911f04b3"
+    },
+    {
+      "path": "tools/audit_fire_spread.py",
+      "sha256": "f4785f086a4122b8f923a4247fbd7184d3a3f9fb96329fd3b71ff4868eccbb37"
+    },
+    {
+      "path": "tools/audit_lite_l1c.py",
+      "sha256": "acb8ea3c5ce464b14c41f0b4b0284f4e3354f6366c2845f8fc10204bd9c0e01e"
+    },
+    {
+      "path": "tools/audit_room_rule.py",
+      "sha256": "cc93c1c38da742dca496ce69a1bf58e05458f39310f828d3ad058157aeb76bed"
+    },
+    {
+      "path": "tools/check_adaptive_convergence.py",
+      "sha256": "cd92f83fb078777164fbe66daafc93a967d45f9ca91eb7d3a09f1c0b129ed79c"
+    },
+    {
+      "path": "tools/check_cache_identity.py",
+      "sha256": "93b8e3596d787b9cb4154da6b91249d6ad4b071c199af9ff9a1d7d87491ec6cf"
+    },
+    {
+      "path": "tools/check_r8_http.py",
+      "sha256": "4d472ebecfb3a06c00a0c29a1b85c5a39248156f87ba02600f9806866c52bde6"
+    },
+    {
+      "path": "tools/check_room_rule_r3.py",
+      "sha256": "d8a603aa9e165dbc1ed32e0e32039eb6c17ac4b5a82e7aea3a7bab64b30b6a1a"
+    },
+    {
+      "path": "tools/compare_mixture_conditions.py",
+      "sha256": "d023262fbc759b5505a2c05b24fe554449ce57b5a185ec8dd1352f29e7a8d6e7"
+    },
+    {
+      "path": "tools/compare_mixture_r3.py",
+      "sha256": "d2ec5c87200ef61f2549f7ed1536abbdb8da5b7e32dbe1685da16254007d405c"
+    },
+    {
+      "path": "tools/compare_room_rule_r5.py",
+      "sha256": "7f02022731e5098ee0e84a8f8d4833160f9a475fd13d1a1046969adeb1acc8e5"
+    },
+    {
+      "path": "tools/continue_native_prefix.py",
+      "sha256": "43788971653e0fc38e7bc46d87bbb732a764e076b7d59688bb1586c12cea4695"
+    },
+    {
+      "path": "tools/diagnose_bulk_stall.py",
+      "sha256": "3c3f02cba22d03c0bfc924f887f9b98e53bdd5b768a3e35071c01e2826c16104"
+    },
+    {
+      "path": "tools/diagnose_room_rule_r3.py",
+      "sha256": "ce2d317e83e7f6afca0f72f0d147072b8f646fd244f53ea5e68384c6246f21ce"
+    },
+    {
+      "path": "tools/extend_lite_screening_v8_n8.py",
+      "sha256": "835602de57319561bf58fc72ad3f76151bc5e7780f90242186ca9c67e63939ec"
+    },
+    {
+      "path": "tools/lite_screening_service.py",
+      "sha256": "29ddb5e09de9109f7bc03e56ce53de4e1451ad439306d014589a1c0df6cc4282"
+    },
+    {
+      "path": "tools/plot_lite_l1b.py",
+      "sha256": "ad71fc5ba21d356760113272193290323a4a9d028f687d66d2022b7c00f7b043"
+    },
+    {
+      "path": "tools/plot_lite_l1c.py",
+      "sha256": "9f12d76da910e11c0628aaaf4320acfd8b6f8bc86a75809346d57fb7ab4336ea"
+    },
+    {
+      "path": "tools/plot_lite_l1d.py",
+      "sha256": "a9e189c54a9f9a88a28bbea6d2c663d82d19b1bab84268898f3ee18e3632e719"
+    },
+    {
+      "path": "tools/profile_lite_v4_stage1.py",
+      "sha256": "e3964b7232ccef69f999d448c03f7528f7b07a197629ef56109fe9f2d993293e"
+    },
+    {
+      "path": "tools/profile_lite_v5_stage3.py",
+      "sha256": "4115fe3d8c3f1af6043ce1bfbd9effaaf9ae422d19c0132a180de477518bf695"
+    },
+    {
+      "path": "tools/publish_lite_mc_v8_r2.py",
+      "sha256": "cf1bba6a8a32ec56e0c85b8b770435a942e0e850b280f84e7527a2c7077e4b5f"
+    },
+    {
+      "path": "tools/recover_lite_mc_v8_r2.py",
+      "sha256": "1824f675860eb6b79ac5d183e21c609934215911987d1d6376514b6a9b69ee3a"
+    },
+    {
+      "path": "tools/refresh_lite_l1e_scores.py",
+      "sha256": "43fac612f095d4f6c6d85503df8bb1b1efae3e042cf554225b3c5ff1a8bdf364"
+    },
+    {
+      "path": "tools/report_lite_doors_v7.py",
+      "sha256": "5f995b6779e6711b578b1327b1ced9bbbea3930cad51e9a10641d24cdfb45ee2"
+    },
+    {
+      "path": "tools/report_lite_door_jet.py",
+      "sha256": "1234712a73a518e2a0644394b971e441c684d16a28ea735d4979231d95da176a"
+    },
+    {
+      "path": "tools/report_lite_l1b.py",
+      "sha256": "3deeee9e8ff5e58a850806d276a72f3310acfe77da27b9cb5f80e0a95f2430be"
+    },
+    {
+      "path": "tools/report_lite_l1c.py",
+      "sha256": "0c82b0513d9df6d98dfa4141b7096b209880c99f62461d9868bae7128b6e66bc"
+    },
+    {
+      "path": "tools/report_lite_l1d.py",
+      "sha256": "b023528a89415010fac839c6e6915b7f0b5d0b4af256b03bcc57f7307b31c5dd"
+    },
+    {
+      "path": "tools/report_lite_l1e.py",
+      "sha256": "910fd440be4112b1059349eef76d44b8ba24cb2e372bd114954da3f762dbe3ed"
+    },
+    {
+      "path": "tools/report_lite_mc_v8_r2.py",
+      "sha256": "b740c9f0fa2d274fd180c3b449717711cbbbf44935b7d3156b353d1d97a37115"
+    },
+    {
+      "path": "tools/report_lite_screening_v6.py",
+      "sha256": "a652b09c91cc467d6546aa8a51c5b00fc2e74a9fcdc05e075994f798dd595bd4"
+    },
+    {
+      "path": "tools/report_lite_screening_v7.py",
+      "sha256": "7b0e9b9d6fcbd9b741e1c4f01787d99cda1b2d707d0a220f177cfa7bb0c638f2"
+    },
+    {
+      "path": "tools/report_lite_screening_v8.py",
+      "sha256": "3ff24c6edd8666d83a91231110a13534231882ea48411e4ce162dbbf85ced0ce"
+    },
+    {
+      "path": "tools/report_lite_screening_v8_approved.py",
+      "sha256": "64e684c6caa55fd47ddf7ea055ef94adeec9152d800b5e4081d3794daad0219f"
+    },
+    {
+      "path": "tools/report_lite_v4_profile.py",
+      "sha256": "705e7d6aa4eb516c129ee38ef053bcf0cc1e1cae7c7a15ad7850293b5a7026bb"
+    },
+    {
+      "path": "tools/report_lite_v5_sparse.py",
+      "sha256": "67d2fb495bbaa94c871c73c8d46d618b373f3c5bd081c23593629fc0a4c02b7e"
+    },
+    {
+      "path": "tools/report_room_oxygen_stage1.py",
+      "sha256": "4360c150718c1fece2da320887e8721e414bb8cf677ad47670f6d363894ba2eb"
+    },
+    {
+      "path": "tools/report_room_rule_r3.py",
+      "sha256": "1b5ded27a65456f02d98e6185bda060d410f1aa8e29a66b5afcb7872268b481b"
+    },
+    {
+      "path": "tools/report_room_rule_r4.py",
+      "sha256": "15aa617fd39a3781f91dbb6252e99769f8e14ddcc7c1833bf21ffde2e9667e36"
+    },
+    {
+      "path": "tools/report_room_rule_r5.py",
+      "sha256": "9d25af13fc6b98f52f6844d78048db0a35f2b7371edc531dca595a5dda522639"
+    },
+    {
+      "path": "tools/report_room_rule_r6a.py",
+      "sha256": "f8ae6fdd702548116e7d33c74ea9e855b8332259fb346377af7192852fc90f62"
+    },
+    {
+      "path": "tools/report_room_rule_r7.py",
+      "sha256": "021f0b0aad71fcecfae9307b23b1233486388e3ee870506d2824fc837cec5c46"
+    },
+    {
+      "path": "tools/report_room_rule_r8.py",
+      "sha256": "b90526cb9fe35d53de28eda4f68e71525f9811158b3112ae8e8bbd9a72f3ba33"
+    },
+    {
+      "path": "tools/run_floor_spread_scenario.py",
+      "sha256": "8b3e395efa4bb35e0e4b79673886d7d20cb5adfb90154341bde082c87bb58a03"
+    },
+    {
+      "path": "tools/run_lite_door_jet.py",
+      "sha256": "2a6253ae593c485d8772a418b76a6ebe4fd749416c28d95b499383976ce61e75"
+    },
+    {
+      "path": "tools/run_lite_l1.py",
+      "sha256": "ccc5578ffeadb2befdeeca7c560dce65797f6bbd7e15ae695f1dc361dec7d017"
+    },
+    {
+      "path": "tools/run_lite_l1a.py",
+      "sha256": "73a62a62fb5f5ec0aabee387e233d4062dda331c5011744ecfda042deaab41fd"
+    },
+    {
+      "path": "tools/run_lite_l1b.py",
+      "sha256": "289c955801d89e7fea460d39883bd9743b6736e1e06fc168dc29f28d8d018f0b"
+    },
+    {
+      "path": "tools/run_lite_l1c.py",
+      "sha256": "8cdf4db9353c758a37a77537b7c2fd971ff758601024882f8ffeab1cc893872d"
+    },
+    {
+      "path": "tools/run_lite_l1d.py",
+      "sha256": "49ab8ae65fc142d9ec338537431a94a29f9c0a176a9a7711000ce421a32df405"
+    },
+    {
+      "path": "tools/run_lite_l1e.py",
+      "sha256": "24c4f9246bedbe4af3511738460eb8818b3f972aa211c83dc1c8c78c8def375b"
+    },
+    {
+      "path": "tools/run_lite_mc_v8_r2.py",
+      "sha256": "0bed0930d4c3fc166ae26a39abb8d4ff97a8a5f2f83b85c288441db921898cb2"
+    },
+    {
+      "path": "tools/run_lite_room_oxygen_stage1.py",
+      "sha256": "25fc947a5488efe389bcac2fa6b8f822de59c0b163d43f2b482815ef1e9c6828"
+    },
+    {
+      "path": "tools/run_lite_screening_v6.py",
+      "sha256": "08557ec9618442b87ef57bdb9fd249b77efcccda7597e29731a263fbb4fd4647"
+    },
+    {
+      "path": "tools/run_lite_screening_v7.py",
+      "sha256": "b65ebd19e5a2eeca0a31811d46cef6f6ed1e3efb4c37bd4aa857be3aee4ed8ea"
+    },
+    {
+      "path": "tools/run_lite_screening_v8.py",
+      "sha256": "13254de2662da9dd2f4d26dac245f0819f9e8e5075653976bf2e839098eafd8b"
+    },
+    {
+      "path": "tools/run_lite_screening_v8_approved.py",
+      "sha256": "4395821bdd5062a4c3ff9d569e63bc3416b4289f9036fddc90839fa46d7a8ec6"
+    },
+    {
+      "path": "tools/run_lite_stage4.py",
+      "sha256": "79d7b75dc7d7b99f1965cfe5b4da7b3226f22c1914654c5142cbb76cc62b97f8"
+    },
+    {
+      "path": "tools/run_mixture_r3_floor.py",
+      "sha256": "4babcb6cd205f1c0776d905c3c8dca889342ce4c948259d732a349dda5588a29"
+    },
+    {
+      "path": "tools/run_room_rule_r6a_floor.py",
+      "sha256": "6567e14c74ae2f5f75f1a0d38e3e90320458506f7919ae6abb7255d99b97a85f"
+    },
+    {
+      "path": "tools/run_room_rule_r7.py",
+      "sha256": "8c7567991293b452d047a090ca7892a0cb79bf55a5d0ca9e89e169654d2c803f"
+    },
+    {
+      "path": "tools/run_room_rule_r8.py",
+      "sha256": "4295e2661a8f9a9844ec872c090434bb8adbb7728901840227949d72cc0cc814"
+    },
+    {
+      "path": "tools/serve_cfbt_building.py",
+      "sha256": "c0bfffe4d2b1673b26d6be98302aa4663bf7c38e7ff1884a90bfa5cbc78d90b0"
+    },
+    {
+      "path": "tools/serve_existing_model.py",
+      "sha256": "dff65a1d4fda628ffaa19a260d0a248d8d8f771ecd919a9175aaf427cd5f8a69"
+    },
+    {
+      "path": "tools/test_adaptive_radiation.py",
+      "sha256": "d79945c4a2adfd25a66b42b38055d2f6cd82e51ccd82cc139da5d84e2d299887"
+    },
+    {
+      "path": "tools/test_room_rule.py",
+      "sha256": "aaf00896ad09552fc16ffd7eae1b5695a9d6a8a5f47b48ba8f3acbbd8ffe04b4"
+    },
+    {
+      "path": "tools/test_room_rule_r4.py",
+      "sha256": "a7a4ce3ec4bf89f3195af913d6760b4268619d9ce239f6ff14bcf4c2e49cc0c7"
+    },
+    {
+      "path": "tools/test_room_rule_r5.py",
+      "sha256": "42401987bc1d42cca106c420ec9b96c8d88147cbce0d1a6a3b60ecb2f62bc653"
+    },
+    {
+      "path": "tools/test_room_rule_r6.py",
+      "sha256": "bb59f8dcea7807c84cb64339e9727b3ad1ed6f38faaac1559de01a4beb762a38"
+    },
+    {
+      "path": "tools/test_room_rule_r6a.py",
+      "sha256": "9d09391c76fd11cec422f0d1e7c37a0e5be578dcdd720ef88ecf3c12b31016a4"
+    },
+    {
+      "path": "specs/CEILING_CORRECTION_20261021.txt",
+      "sha256": "eb1b90f1067087c382bc58aa8b2a7f7087057510dc00ad66fa5b619edc4e7527"
+    },
+    {
+      "path": "specs/CFBT-가스연소-고체확산-통합최종명세-20261020.txt",
+      "sha256": "f6037a361d5bd4abffc9662cacd8f729d5eadacd589bde00715561bfb373ef1f"
+    },
+    {
+      "path": "specs/CFBT-조건부화재거동-최종명세-20261020.txt",
+      "sha256": "e139a533fec15bbebce3cc61dcb56a7c1ba1b5f8a1c70115ea915bff25ac8170"
+    },
+    {
+      "path": "specs/Claude검토-간략엔진r1-20261025.md",
+      "sha256": "a0e0efb92db68a60cd9bf4a84d53c2ef0de95760dd3c183b68c2aef27eeeb92c"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-20261025.md",
+      "sha256": "f932e3ca9650d7d18e2bb38a8ff9fd966f4bcc7ea4a89de120164baafe9f7cb2"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-v3-20261025.md",
+      "sha256": "f932e3ca9650d7d18e2bb38a8ff9fd966f4bcc7ea4a89de120164baafe9f7cb2"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-v4-20261025.md",
+      "sha256": "e93d9e198fc2df479abfed2adcee5639ec5593bdd62fe71fe6caaf88f6309ae7"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-v5-20261025.md",
+      "sha256": "58e0fe7f7e4e95846a77224b175a9bf4ee39136ce5d1beaf3b4129ccd790e253"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-v6-20261025.md",
+      "sha256": "28a988f8dbd5e594ee7c813f5ccec79debb7abccdbaeea7b40c3628c39e0cd34"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-v7-20261025.md",
+      "sha256": "a6e93e8242718cbe0df5b8128f42248ff22a0e99b60261c1c92743a010fbf264"
+    },
+    {
+      "path": "specs/Claude명세-확정상태-v8-20261025.md",
+      "sha256": "6d3ffb96c7e706f08b789abd5750413a59fe09f58a7f93d4a9864cb758e99d05"
+    },
+    {
+      "path": "specs/Claude지시-간략엔진L1-20261025.md",
+      "sha256": "cefb3f97bcc80f704dac5614cfc890a7a7c00120ff7e509cf5aac481bea11b1f"
+    },
+    {
+      "path": "specs/Claude지시-실단위규칙r8-동결-20261025.md",
+      "sha256": "e6883f15a96889d54e74a6cb82d0ab1b44609a955fd915aff4d8c4246e514e1d"
+    },
+    {
+      "path": "specs/FO-연소상태전환-구현검증-20261021.txt",
+      "sha256": "1b26f804a94cafd7158d882d86a155071d82934c37df435e629361279d58fc29"
+    },
+    {
+      "path": "specs/GAS_FLAME_VISUAL_20261021.txt",
+      "sha256": "da9c00fcc3271889c48764849a658ba981dfe434293edb24ce4575d99d5542b7"
+    },
+    {
+      "path": "specs/PRACTICAL_SCOPE_20261021.txt",
+      "sha256": "f150f0545b4a4a3fcdd4dbe048a036c6ccd60f6146dad7d40eb5da96478a2ca1"
+    },
+    {
+      "path": "specs/RISK_IGNITION_COMPARISON_20261021.txt",
+      "sha256": "a9766c528f4c09d0f8f52cea47d4bfc43fb62c52ec71393e168710195769441d"
+    },
+    {
+      "path": "specs/WHOLE_FLOOR_SMOKE_20261021.txt",
+      "sha256": "a3adc82cd302f4ca5d5131644e9b8fa5836da97f086fb8ea6ff6ab6d1a33579c"
+    },
+    {
+      "path": "specs/간략산소-3.0-1단계-시험결과-20261025.txt",
+      "sha256": "fad921a62ecd8ba48a6edf097e54097c47b93ba55284a70d70c48186521fffab"
+    },
+    {
+      "path": "specs/간략엔진-L1-구현시험결과-20261025.txt",
+      "sha256": "37cfa1a9fcaa96ef046395aafda716fbb4565a0207b0648d6773784fcfd66192"
+    },
+    {
+      "path": "specs/간략엔진-L1a-공유입력·유한벽-시험결과-20261025.txt",
+      "sha256": "f2e124c43ca035a1674b9e3a90d7f552e2c92a55ecd24a38e415c59a6ce0f828"
+    },
+    {
+      "path": "specs/간략엔진-L1b-원인격리·3F비교-시험결과-20261025.txt",
+      "sha256": "8af436098a255481ac745ff8e1b0ad8f49d9d85d9196fcbe49c7c6498371635e"
+    },
+    {
+      "path": "specs/간략엔진-L1c-셀트리거·복사전후-시험결과-20261025.txt",
+      "sha256": "0340e053ee8c89edeb09330c078f23e8aafd4e191fd74ed582f3a00db85e6737"
+    },
+    {
+      "path": "specs/간략엔진-L1d-채택·MC20표본-시험결과-20261025.txt",
+      "sha256": "9d38d491a15ce3687c46c27c1a229718fc59b604264a1f109ffd2570abea38f1"
+    },
+    {
+      "path": "specs/간략엔진-L1e-조건점수·문분류·MC20-시험결과-20261025.txt",
+      "sha256": "0918a5b51b13a9c9fcbc565e31907e5b33ac9545765be55b9b20d9ff3da6f353"
+    },
+    {
+      "path": "specs/간략엔진-r1-공통전이·계산축약-Claude검토-20261025.txt",
+      "sha256": "40f2ec5ef6f2e86ef6eca69b583069d323fbeced3bac2fcc904f10c9d4a44d24"
+    },
+    {
+      "path": "specs/간략엔진-v4-3.0a-프로파일1회-20261025.txt",
+      "sha256": "5d6733c9370af1d75f8888b682fc8c6f77c01c62e344e0e6ae876af97c6dd9c5"
+    },
+    {
+      "path": "specs/간략엔진-v5-누적상태제거·희소패턴-시험결과-20261025.txt",
+      "sha256": "62a97dda3f611b0e0d103e8ee4e41dc2de6cfed154cb5bac68cbe6bb1216f6b7"
+    },
+    {
+      "path": "specs/간략엔진-v6-후보점수·상위5비교-20261025.txt",
+      "sha256": "7fde0ae66479aa7993c21828c38d9381e30699504f4a7080fff76de7c6d7f32d"
+    },
+    {
+      "path": "specs/간략엔진-v7-방화문재분류-문별보고-20261025.txt",
+      "sha256": "0aea386b2a10a48ef9256cc72951eeae5804482b81395207dc6b9bd50b51a3d0"
+    },
+    {
+      "path": "specs/간략엔진-v7-상위5·극단2상태-비교보고-20261025.txt",
+      "sha256": "f893bbcc47d75938df758296432f113634d7213d49a74dd0b684e2fa6220de8f"
+    },
+    {
+      "path": "specs/간략엔진-v8-N8추가6회-20261025.txt",
+      "sha256": "73300afba1598f203b179ecb3273a6a6f8f6341e2fdb2562dbf205b87574d9ec"
+    },
+    {
+      "path": "specs/간략엔진-v8-R2-MC10-20261026.txt",
+      "sha256": "66aa590e89a047fa429b3a78fecd24bd1b5d8946e6b4b5d1046ffed06d918cd3"
+    },
+    {
+      "path": "specs/간략엔진-v8-문분출연소-검증보고-20261026.txt",
+      "sha256": "648a325ef43042bf5a4beb799a4589bd56ea850ce4729649c894ff963d281e80"
+    },
+    {
+      "path": "specs/간략엔진-v8-색규칙3D-20261026.txt",
+      "sha256": "bb393fc54017bf1440c31d5b0fac2fd823fb156be02d8e58c2683810ff7b3a8b"
+    },
+    {
+      "path": "specs/간략엔진-v8-승인용도표·상위5비교-20261025.txt",
+      "sha256": "0405b58871c19fa8958ce056bea15ee05c054aa8f10490fbe462cadccfbcf57c"
+    },
+    {
+      "path": "specs/간략엔진-v8-연료기준화점·상위5비교-20261025.txt",
+      "sha256": "49026c7721d8df99008fa822c64405f3d431e4b2e4487bb9588c9ed89d5f59fe"
+    },
+    {
+      "path": "specs/균등연료·작은화염·1시간전파-20261022.txt",
+      "sha256": "c578395785ef1e2fb21035c1c2b9a5b46d3ff6b3d052c4cbdda5f06067a95ca4"
+    },
+    {
+      "path": "specs/기존화재실-적응형복사-시험-20261025.txt",
+      "sha256": "dc48878c9bc51249254b7ff5fcb4d45f8906884ba23ec59b3f75d66120a47c30"
+    },
+    {
+      "path": "specs/단위가연물-용도구조디폴트-설정안-20261020.txt",
+      "sha256": "410e92ddda002c784e36423783052a91522616af72a49d5126cdc51ca1caea6d"
+    },
+    {
+      "path": "specs/도면연결·전층코어연기-검증-20261022.txt",
+      "sha256": "1cddce24a537c7b18a5ba2505b9928f6501e01447e9121aa6ffa469df3fd3ec9"
+    },
+    {
+      "path": "specs/두모드-층위험탐색·조건지수-통합명세-20261022.txt",
+      "sha256": "30e8cc497b43c31278b741e97032009e608d5feecc28a32edae34495df2d8b8b"
+    },
+    {
+      "path": "specs/반복비용제한·산소반응진단-20261022.txt",
+      "sha256": "19981ccb283868fb24ff1408000b9c6a6fea178587140bae0726338a691af580"
+    },
+    {
+      "path": "specs/실단위규칙-r3-진단과착화보정-20261025.txt",
+      "sha256": "63e8639c77a30a3c2812af929a4c5e1ec8a4399b45cdfb0cfd02d761d9044e7f"
+    },
+    {
+      "path": "specs/실단위규칙-r4-B1비교-20261025.txt",
+      "sha256": "fbd992f83ba7e48ec701128a6b297166a4ef51d20c28fd3527da40c022b4ab37"
+    },
+    {
+      "path": "specs/실단위규칙-r5-스윕과T4비교-20261025.txt",
+      "sha256": "e938916653ecc2e511533037d655dd5fef288f44d22632d775cdf0930a3d3721"
+    },
+    {
+      "path": "specs/실단위규칙-r6-A센서시험-20261025.txt",
+      "sha256": "7df75a7ee5ed0e8ded535c504bd3ab5052905f881db8d09dd6e441258e93b57f"
+    },
+    {
+      "path": "specs/실단위규칙-r6a-좌표수정-ABC결과-20261025.txt",
+      "sha256": "5efe728ae5d1517ce478ca38f48b9f4e3838449b30771eea804a60468b0d3cb2"
+    },
+    {
+      "path": "specs/실단위규칙-r7-구현시험결과-20261025.txt",
+      "sha256": "e7fd18da77023423e8d91f3941c241a4bf9577d86e469e50ec28aad52611374f"
+    },
+    {
+      "path": "specs/실단위규칙-r8-동결-구현시험결과-20261025.txt",
+      "sha256": "82dfb1619a3badbc5a9f912740b8729719d294f422198023be5a507168aa55d6"
+    },
+    {
+      "path": "specs/실단위전환-단일실행-구현시험-20261025.txt",
+      "sha256": "9783972b35899b64dac4b15e883903a19b708d00883a790d7a6314abc5065935"
+    },
+    {
+      "path": "specs/인접실확산-루프명세-추가검토-20261020.txt",
+      "sha256": "8c5f081829a6f1694e8e339f7e35acc47e91c99aaa3926e35d8adc0c2c8b964e"
+    },
+    {
+      "path": "specs/전체프로그램-사용시나리오-20261022.txt",
+      "sha256": "f261ae300c6b0dbda1dd0a033d4e48369ed52510602d7ede65dd3f68f1b45756"
+    },
+    {
+      "path": "specs/전층연기-재생복원-20261022.txt",
+      "sha256": "07fbbcd384a85d96bec5905e51a3ef33fbf1c5513c48e3fd5de2661935751d62"
+    },
+    {
+      "path": "specs/전층전이·실행예산-추가명세-20261022.txt",
+      "sha256": "e611655b2046f3f29b33ff41a5ec879050671a963abed7e4117c9a9da81ee730"
+    },
+    {
+      "path": "specs/창파괴-r9-구현결과·검증-20261022.txt",
+      "sha256": "ffb2beb34d832524e07e5af417a3b261393c5b6dae14afcfe83bec860f76d3bb"
+    },
+    {
+      "path": "specs/창파괴-기본값·5초출력-확정-20261022.txt",
+      "sha256": "005f63ed32740d6c36acaf2c1c6d2d9f82fc8ce0258e9a674d1d49e6d99cdee1"
+    },
+    {
+      "path": "specs/창파괴·동적개방-추가명세-20261022.txt",
+      "sha256": "a222c4ddc9a5cb27f832aeef49b8754e5c359182f2a241bf01f3afc9f72804d0"
+    },
+    {
+      "path": "specs/층단위-시나리오·균등연료·몬테카를로-검토명세-20261022.txt",
+      "sha256": "e92c38dbefe051baff5c4914c3022a22a8987dbd513fcb6bda03e13f30813b77"
+    },
+    {
+      "path": "specs/테라스분류-정정-20261022.txt",
+      "sha256": "b71a5ddd546746ecee5b31f0a7ba703fc58d5f9f02837c516b02428bc29d8d51"
+    },
+    {
+      "path": "specs/혼합물추가연소-r3-20261023.txt",
+      "sha256": "0e9dda4b2ee35b903493de7f22c4d8bc2b95982817c6067044cda6a2105bef75"
+    },
+    {
+      "path": "specs/혼합물추가연소-r3c-20261023.txt",
+      "sha256": "4d2cf8ad4ebadbefe36cd1064bedab17f3d8506b8fb7d3da464987d67321d198"
+    },
+    {
+      "path": "specs/혼합물추가연소-r3d-정확캐시-20261023.txt",
+      "sha256": "9866f78f5d8a5092e98bd79f6881d36bfb5c88017995c5b19cf8e3f41b9cbd0b"
+    },
+    {
+      "path": "specs/혼합물추가연소-r3f-정확캐시-20261023.txt",
+      "sha256": "f36081803c0301ac99b43a6740b14336265d4af10072b38d31d8e6751855a35e"
+    },
+    {
+      "path": "specs/혼합물추가연소·제트·테두리-구현검증-20261022.txt",
+      "sha256": "9190950ff5909f840f00afb3da6c7e0809c14cc35dfd537671f6365c9c642c6a"
+    },
+    {
+      "path": "fixtures/room_rule_benchmark_3room.json",
+      "sha256": "1d462810e76070188aa2e1d72a30360d744e9168468d882dc51ce7aaf719a27a"
+    },
+    {
+      "path": "fixtures/room_rule_benchmark_3room_b2.json",
+      "sha256": "13b95e7e84b5fc4cc552f64de5a4b318eb857fbf11eff41d126b667b3ff6dbee"
+    },
+    {
+      "path": "fixtures/room_rule_benchmark_3room_b3.json",
+      "sha256": "221fbfff0cc010808250784f43f5635dc6079700666ab1073b90ef391bc70ffd"
+    },
+    {
+      "path": "SESSION_HANDOFF.txt",
+      "sha256": "1a3bc03b107fb2705f6bdc3e2c4314024b1a07ddf197e7023ec94926225fa12a"
+    },
+    {
+      "path": "cad-project/model.html",
+      "sha256": "2cf717847b50b738bff38f0ed25032dd47623315a22a281bff19102d4ca3d3b3"
+    },
+    {
+      "path": "cad-project/building.json",
+      "sha256": "90d3c325f238a3c416ef51dfbb64b668b3b144047e78acb8f9e5e1764a6a02ae"
+    },
+    {
+      "path": "cad-project/plans.html",
+      "sha256": "6783b493e398c80e4568327bbf6aeac7ad3e01a847ac7639205f48b59ef280ba"
+    },
+    {
+      "path": "cad-project/work/cad-web/local-resources/cad-assets/LICENSE",
+      "sha256": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+    },
+    {
+      "path": "cad-project/work/cad-web/local-resources/cad-assets/three.module.js",
+      "sha256": "76dea8151bc9352aef3528b4262e249b2604f62543828328db978d060d61a495"
+    },
+    {
+      "path": "cad-project/work/cad-web/local-resources/cad-assets/addons/controls/OrbitControls.js",
+      "sha256": "5a44a9e86a2a0fb11933eed69bc2cd33c76a496854c1aed6ed776efa87d7b064"
+    },
+    {
+      "path": "cad-project/work/cad-web/local-resources/cad-assets/addons/exporters/OBJExporter.js",
+      "sha256": "1f86eb4275fea0eef64e8e85a9acbfe2b7ab76556f8f093d28dbd0a39bb21d66"
+    },
+    {
+      "path": "cad-project/work/cad-web/local-resources/cad-assets/addons/renderers/CSS2DRenderer.js",
+      "sha256": "a4f0f79184c043f6b9d2654d8ba051e49a7d631d34e8f437c1804798a68c379f"
+    },
+    {
+      "path": "saved_results/lite_v8_stage4_R2_20261026/playback.json.gz",
+      "uncompressed_sha256": "26291fed63d8d6125f336376924552d4e31e55c652be5f519aa992e056ff3a17"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S00/playback.json.gz",
+      "uncompressed_sha256": "2977e5ed2d22ff87664124d17b1c9c1ed1c690c638eaff56c7cd6fd292186e74"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S01/playback.json.gz",
+      "uncompressed_sha256": "110fb5bc1ed8cc9c90f7d2871dde002edb15e251414afa6c03a41aa89b92463a"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S02/playback.json.gz",
+      "uncompressed_sha256": "6edd9ae5c40651cde56519c2c4d4ee24e6fb76b0765725125cc6c9f159074529"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S03/playback.json.gz",
+      "uncompressed_sha256": "f67621ad4bc177380c0c1808eaf8d098e7449f54815a397ed53c58502376e190"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S04/playback.json.gz",
+      "uncompressed_sha256": "1fe4a9280d761691540f141d1338c55b4d0d37c60c6dc233fd9d61444b7c3878"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S05/playback.json.gz",
+      "uncompressed_sha256": "63028d5d58ed031aa11f415e6b8ebcc456f206a064c9fac72a2d14d0b256ac48"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S06/playback.json.gz",
+      "uncompressed_sha256": "843ced6068be3cdf14b6101ac7b49b106a516f94067d9606d6ab66796204ae6f"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S07/playback.json.gz",
+      "uncompressed_sha256": "26d9bf2b29a5131d7c73641983d9ff893a820681ae91885af69e06468c30aebf"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S08/playback.json.gz",
+      "uncompressed_sha256": "c550cd0d2c9effbbc393daf8860a0dc561df706f529842e62a2d6bfd7a14d2fd"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/S09/playback.json.gz",
+      "uncompressed_sha256": "2e208b57e0ea20106b6a83447808e8824f759800fea016e9dd23671031dfa6ef"
+    },
+    {
+      "path": "saved_results/room_rule_r8_20261025/source-scenario.json.gz",
+      "uncompressed_sha256": "910b7bf5ab82e09808c0fdf0f81bcc2d2432bb4be26347dd37c225cfc2cee682"
+    },
+    {
+      "path": "saved_results/room_rule_r8_20261025/comparison.json.gz",
+      "uncompressed_sha256": "6101845aebc19f58dd7acc7598a5f005688a282e5c3cacbd66f95ecd6419d14b"
+    },
+    {
+      "path": "saved_results/room_rule_r8_20261025/batch-state.json.gz",
+      "uncompressed_sha256": "c9899f2230c07c3bdb7ca85128b5b89d5dabb2a1b8723b9d0e04df6f8742988f"
+    },
+    {
+      "path": "saved_results/room_rule_r8_20261025/final-summary.json.gz",
+      "uncompressed_sha256": "a53520539bd8864ce99f51e059cb6ceca0369e33df091d14239e7c7338955d8b"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_screening_20261025/comparison.json.gz",
+      "uncompressed_sha256": "6353fa644c72573fd1e994134ee4e4f8830ac002f9080115abe0856f6b77aca4"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_screening_20261025/progress.json.gz",
+      "uncompressed_sha256": "6353fa644c72573fd1e994134ee4e4f8830ac002f9080115abe0856f6b77aca4"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_screening_20261025/score.json.gz",
+      "uncompressed_sha256": "18f3094f97d4dba97279e135063bdf7c397b5778f95b522e839d065a51ee5676"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_screening_20261025/validation.json.gz",
+      "uncompressed_sha256": "3a0e520646b4661f0902a5ecf7d531a31036e29a747dba079cde31438a08cea8"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_n8_20261025/comparison.json.gz",
+      "uncompressed_sha256": "03e147002ab80f5b7eb4f232d21c61d299b8b0c78f5176ff41d0cd1244ff7427"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_n8_20261025/progress.json.gz",
+      "uncompressed_sha256": "03e147002ab80f5b7eb4f232d21c61d299b8b0c78f5176ff41d0cd1244ff7427"
+    },
+    {
+      "path": "saved_results/lite_v8_approved_n8_20261025/score.json.gz",
+      "uncompressed_sha256": "58ee4f8d5024c9563b14feac0a49b7fccacf8bdea1071f85f773eaaa3be8ce88"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/aggregate.json.gz",
+      "uncompressed_sha256": "90016eca6f7a753ffd1732805098695f0806a7af861fc349bc519738dcae45d9"
+    },
+    {
+      "path": "saved_results/lite_v8_mc_R2_10_20261026/summaries.json.gz",
+      "uncompressed_sha256": "c4bf3c3368362113c92737dc005ccc5a319a8fe12aa767212efaf27769a21e33"
+    },
+    {
+      "path": "docs/current-view.png",
+      "sha256": "229be7eb4e5ab8398de6e95700dbbc27b3964b81106a4e5a8673ded3ce45e883"
+    }
+  ]
+}

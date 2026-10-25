@@ -1,0 +1,166 @@
+{
+  "active_path": "simulation/results/lite_v8_mc_R2_10_20261026/S06/playback.json",
+  "cases": [
+    {
+      "id": "stage4",
+      "label": "R2 화점 · 승인 연료 · 확정 방화문 닫힘/나머지 열림 · 1시간",
+      "path": "simulation/results/lite_v8_stage4_R2_20261026/playback.json"
+    },
+    {
+      "id": "S00",
+      "label": "R2 S00 · 방화문 모두 열림 · 연소 2 / 연기 위험 2실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S00/playback.json"
+    },
+    {
+      "id": "S01",
+      "label": "R2 S01 · 모두 닫힘 · 연소 1 / 연기 위험 0실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S01/playback.json"
+    },
+    {
+      "id": "S02",
+      "label": "R2 S02 · 무작위 · 연소 2 / 연기 위험 3실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S02/playback.json"
+    },
+    {
+      "id": "S03",
+      "label": "R2 S03 · 무작위 · 연소 2 / 연기 위험 2실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S03/playback.json"
+    },
+    {
+      "id": "S04",
+      "label": "R2 S04 · 무작위 · 연소 3 / 연기 위험 1실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S04/playback.json"
+    },
+    {
+      "id": "S05",
+      "label": "R2 S05 · 무작위 · 연소 2 / 연기 위험 1실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S05/playback.json"
+    },
+    {
+      "id": "S06",
+      "label": "R2 S06 · 무작위 · 연소 6 / 연기 위험 2실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S06/playback.json"
+    },
+    {
+      "id": "S07",
+      "label": "R2 S07 · 무작위 · 연소 5 / 연기 위험 0실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S07/playback.json"
+    },
+    {
+      "id": "S08",
+      "label": "R2 S08 · 무작위 · 연소 5 / 연기 위험 3실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S08/playback.json"
+    },
+    {
+      "id": "S09",
+      "label": "R2 S09 · 무작위 · 연소 5 / 연기 위험 1실",
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S09/playback.json"
+    }
+  ],
+  "progress_text": "R2 MC10 직렬 종료 · 완주 10/10 · 실패/미완료 0 · 실제 발생확률 아님",
+  "mc_summary": {
+    "completed": 10,
+    "wall_s": 2173.0929263,
+    "rates": {
+      "FO": {
+        "numerator": 6,
+        "denominator_completed_random": 8,
+        "fraction": 0.75,
+        "maximum_score": 1.6142534351808204,
+        "median_of_sample_maxima": 1.0274587554560717
+      },
+      "FGI": {
+        "numerator": 0,
+        "denominator_completed_random": 8,
+        "fraction": 0.0,
+        "maximum_score": 0.9459274558385024,
+        "median_of_sample_maxima": 0.812175864312836
+      },
+      "backdraft": {
+        "numerator": 7,
+        "denominator_completed_random": 8,
+        "fraction": 0.875,
+        "maximum_score": 1.9302972168230141,
+        "median_of_sample_maxima": 1.2730605904685226
+      },
+      "untenable": {
+        "numerator": 8,
+        "denominator_completed_random": 8,
+        "fraction": 1.0,
+        "maximum_score": null,
+        "median_of_sample_maxima": null
+      },
+      "rollover": {
+        "numerator": 1,
+        "denominator_completed_random": 8,
+        "fraction": 0.125,
+        "maximum_score": 1.0743770683244545,
+        "median_of_sample_maxima": 0.8279584161844804
+      }
+    },
+    "rows": [
+      {
+        "id": "S00",
+        "complete": true,
+        "burning": 2,
+        "smoke_risk": 2
+      },
+      {
+        "id": "S01",
+        "complete": true,
+        "burning": 1,
+        "smoke_risk": 0
+      },
+      {
+        "id": "S02",
+        "complete": true,
+        "burning": 2,
+        "smoke_risk": 3
+      },
+      {
+        "id": "S03",
+        "complete": true,
+        "burning": 2,
+        "smoke_risk": 2
+      },
+      {
+        "id": "S04",
+        "complete": true,
+        "burning": 3,
+        "smoke_risk": 1
+      },
+      {
+        "id": "S05",
+        "complete": true,
+        "burning": 2,
+        "smoke_risk": 1
+      },
+      {
+        "id": "S06",
+        "complete": true,
+        "burning": 6,
+        "smoke_risk": 2
+      },
+      {
+        "id": "S07",
+        "complete": true,
+        "burning": 5,
+        "smoke_risk": 0
+      },
+      {
+        "id": "S08",
+        "complete": true,
+        "burning": 5,
+        "smoke_risk": 3
+      },
+      {
+        "id": "S09",
+        "complete": true,
+        "burning": 5,
+        "smoke_risk": 1
+      }
+    ]
+  },
+  "display_default_basis": "completed sample: burning room count, smoke-risk room count, earlier FO; not a universal worst-case claim",
+  "active_case_id": "S06"
+}

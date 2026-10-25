@@ -1,0 +1,28 @@
+{
+  "name": "three_room_exploration",
+  "duration_s": 180,
+  "gas": {
+    "enabled": true,
+    "bulk_enabled": true,
+    "vent_gate_enabled": true,
+    "pilot_assumed": true,
+    "rate_ref_s_inv": 0.1,
+    "basis": "Exploration assumption: rate_ref=0.1/s at 800 K; not calibrated to an experiment"
+  },
+  "rooms": [
+    {"id": "R1", "origin_m": [0,0,0], "size_m": [4,4,3]},
+    {"id": "R2", "origin_m": [4,0,0], "size_m": [4,4,3]},
+    {"id": "R3", "origin_m": [8,0,0], "size_m": [4,4,3]}
+  ],
+  "openings": [
+    {"id": "D12", "a": "R1", "b": "R2", "face": "RIGHT", "offset_m": 1.5, "width_m": 1, "top_m": 2.1, "schedule": [[0,0.02],[59.9,0.02],[60,1]]},
+    {"id": "D23", "a": "R2", "b": "R3", "face": "RIGHT", "offset_m": 1.5, "width_m": 1, "top_m": 2.1, "schedule": [[0,1]]},
+    {"id": "D3O", "a": "R3", "b": "OUTSIDE", "face": "RIGHT", "offset_m": 1.5, "width_m": 1, "top_m": 2.1, "schedule": [[0,1]]}
+  ],
+  "fuel_groups": [
+    {"id": "primary", "room": "R1", "initial_time_s": 0, "position_m": [2,2,0], "energy_MJ": 300, "heat_of_combustion_kJ_kg": 20000, "growth_kW_s2": 2, "peak_kW": 2000, "hrrpua_kW_m2": 1000},
+    {"id": "reserve_R1", "room": "R1", "energy_MJ": 100, "heat_of_combustion_kJ_kg": 20000, "growth_kW_s2": 0.047, "peak_kW": 1000, "hrrpua_kW_m2": 500},
+    {"id": "reserve_R2", "room": "R2", "energy_MJ": 100, "heat_of_combustion_kJ_kg": 20000, "growth_kW_s2": 0.047, "peak_kW": 1000, "hrrpua_kW_m2": 500},
+    {"id": "reserve_R3", "room": "R3", "energy_MJ": 100, "heat_of_combustion_kJ_kg": 20000, "growth_kW_s2": 0.047, "peak_kW": 1000, "hrrpua_kW_m2": 500}
+  ]
+}

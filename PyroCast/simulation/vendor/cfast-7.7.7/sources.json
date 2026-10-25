@@ -1,0 +1,145 @@
+{
+  "tag": "CFAST-7.7.7",
+  "files": [
+    {
+      "file": "prec.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/prec.f90",
+      "sha256": "3f64f0944defd439180d63a11d283da6120eaa6f255e926dab3afc7e005bd9fa"
+    },
+    {
+      "file": "cfast_parameters.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/cfast_parameters.f90",
+      "sha256": "d579e2cd3346af1143e89f2a06d7223b527be242cf0692591935b4c38547922c"
+    },
+    {
+      "file": "cfast_structures.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/cfast_structures.f90",
+      "sha256": "1d1ae5feb4ed361ea732c8e81e10a622d8e09731368c3cdde708b4033bb53434"
+    },
+    {
+      "file": "cfast_data.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/cfast_data.f90",
+      "sha256": "53b334b6496fbed198fe3106ad998bb3ebccb501e27b6f6441434feff2b65a85"
+    },
+    {
+      "file": "convection.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/convection.f90",
+      "sha256": "d4f2200a3e257e2c701a7ea09937aa2329204008c27c43e028e6d0431ce5d533"
+    },
+    {
+      "file": "keyboard_gnu.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/keyboard_gnu.f90",
+      "sha256": "63063d71a4a4a4f80d6007c6b6624b798090084a93510190794cea88f63609e7"
+    },
+    {
+      "file": "srev.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/srev.f90",
+      "sha256": "b1d16812c776d9c107889c32077b9a02a673cbcf86e709ba9f2ad754a46d6b2e"
+    },
+    {
+      "file": "cfastexit.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/cfastexit.f90",
+      "sha256": "4b537e57e4b359a4c4f48e5319d05394dfbcf2f65c8e65a75cda7caae989cb16"
+    },
+    {
+      "file": "utilities.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/utilities.f90",
+      "sha256": "7ea9804a34e94ba27b7bfa854c93add8aa59e8889b38ecef53ca5b89ce013029"
+    },
+    {
+      "file": "ssHeaders.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/ssHeaders.f90",
+      "sha256": "46b9c1eb78af0c49a03956b1aa4bec135fd9c30a54fe33d91be127fb309597bb"
+    },
+    {
+      "file": "outputdebug.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/outputdebug.f90",
+      "sha256": "8318d6682d86d7b0b2c825c88ba4c7e2d3f2d92763bd7d3cd94be0cb4177eb05"
+    },
+    {
+      "file": "compartments.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/compartments.f90",
+      "sha256": "1525cb57bfeb3e73a0801d9e2c0b3df786790d9fc25721d1c105780638197d48"
+    },
+    {
+      "file": "conduction.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/conduction.f90",
+      "sha256": "71d82604f3b2ed5b382f6e954bfc65452fc38c628d5595636529ea56c2ad7700"
+    },
+    {
+      "file": "flowfan.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/flowfan.f90",
+      "sha256": "6d75d20f46be07cab47d9c22ca89c3545d7d845db478d96736e068c6d6b99786"
+    },
+    {
+      "file": "flowhorizontal.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/flowhorizontal.f90",
+      "sha256": "882da02ae3dc483fb47e2230647cd288e9adaf6479829587a893767219577a1b"
+    },
+    {
+      "file": "flowvertical.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/flowvertical.f90",
+      "sha256": "92053b08da72750a9276e5293be4e2c9adf2e8e35691d5e93d39c301223b397d"
+    },
+    {
+      "file": "fire.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/fire.f90",
+      "sha256": "e954b7f4150094adb021737b3d3eba4cda75ad0b7db5f02ea79a9baf93b5c4d1"
+    },
+    {
+      "file": "numerics.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/numerics.f90",
+      "sha256": "036f770567ebd22a961803c6425d73eea485f41e54d29095dc7a3706df99e6f0"
+    },
+    {
+      "file": "radiation.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/radiation.f90",
+      "sha256": "b8b0fffd4b539a862c63164033df3e5989820af974a47f6047012ffdc6f743a6"
+    },
+    {
+      "file": "target.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/target.f90",
+      "sha256": "8ac54d6f9d4f586c880a4a522f787e8c50c5570ad67cb996d11629efdfe8e678"
+    },
+    {
+      "file": "outputsmv.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/outputsmv.f90",
+      "sha256": "9bf7b139175be2c2e4850949c615f77196a9177e57451a37d3a3e7456907a95d"
+    },
+    {
+      "file": "outputspreadsheet.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/outputspreadsheet.f90",
+      "sha256": "18261aad6ef3c806495a5acfeb3454c9ed8928e4549de379a015e65fbd842adb"
+    },
+    {
+      "file": "output.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/output.f90",
+      "sha256": "b1161732172a468ff23ee77423c987e34e47edcf02f7e30e49b202501f80a9f0"
+    },
+    {
+      "file": "solve.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/solve.f90",
+      "sha256": "7190213ae59178679579d658570b0b61264ac8c8a9281664547065c1746aa0be"
+    },
+    {
+      "file": "initialization.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/initialization.f90",
+      "sha256": "e4be8a68a00b72baa61aa924d6aaee31c5d94795dc1c94639d42d9ef784a8192"
+    },
+    {
+      "file": "input_namelist.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/input_namelist.f90",
+      "sha256": "a1b6423ba1d4508781ad5907af12666e0b95ff15407708f69b3063f7064ef5a4"
+    },
+    {
+      "file": "input.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/input.f90",
+      "sha256": "6259601bbd6af6b2f2086e73a0d83d7a6c25e9cb1ada4cf72c5dd83eb394c0a2"
+    },
+    {
+      "file": "cfast.f90",
+      "url": "https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/cfast.f90",
+      "sha256": "ff52758df74ceaf0e212e894173adaec65c9a83da5d29f2e9c0754fd8c3a2cc5"
+    }
+  ]
+}

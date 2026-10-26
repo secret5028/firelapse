@@ -32,8 +32,8 @@ window.stage2Done=(async()=>{
   ok(!store.dispatch('jobs/finish',{id:'b'}),'wrong job finished');store.dispatch('jobs/finish',{id:'a'});
   equal(Object.keys(legacyDispatchBridge(store)),['dispatch'],'legacy bridge has reader');
   ok(LABELS.upperCombustion==='상층 연소'&&!Object.values(LABELS).some(s=>/bulk/i.test(s)),'forbidden label');
-  equal(Object.values(RENDER_POLICY).map(p=>p.order),[0,10,20,30,40,40,50,60,70],'render policy order');
-  equal(['FO','FGI','backdraft','rollover','smoke'].map(t=>Math.round(riskHeight(0,t)*1000)),[20,35,50,65,80],'risk offsets');
+  equal(Object.values(RENDER_POLICY).map(p=>p.order),[0,10,15,20,22,23,25,26,27,28,30,35,40,46,70,72,73],'render policy order');
+  equal(['FO','FGI','backdraft','rollover'].map(t=>Math.round(riskHeight(0,3,[1.2,1.7],t)*1000)),[1200,1340,1480,1620],'risk offsets');
   const scene=new THREE.Scene();let now=1000;
   for(let cycle=0;cycle<50;cycle++){
    const layers=createEmptyLayers(THREE),queue=new Map();let next=0;

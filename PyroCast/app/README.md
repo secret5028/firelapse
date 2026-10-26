@@ -18,7 +18,7 @@ Input objects are not mutated. Unknown engines are rejected rather than labelled
 - `cell_conditions` keeps original cell-level flags and scores. Existing room-level “any cell meets condition” flags remain available, with null for unknown values.
 - R1, R2 and R10 have multiple cells. By user approval, their aggregate fields are null with `aggregation="none"` (`aggregation_status="not_defined"`), while every cell value remains available. Single-cell rooms retain the cell values with `aggregation="single"`. No mean/max aggregation is authorized; adding one requires separate approval.
 - Future room-detail UI must expand the cell list for multi-cell rooms and display **방 평균 없음**. This is a recorded UI requirement, not a stage-1 viewer change. The existing “any cell meets condition → show room” condition policy remains unchanged.
-- `legacy_color` is archival. Shared condition flags are not equivalent to every old display colour gate. Changing their visual use belongs to the later layer stage.
+- Stage-3 user correction: `legacy_color`/`display_v8` compatibility gates drive risk rendering; shared condition flags remain detailed-panel data. They are not interchangeable. See `specs/Claude검토-3단계기준-기존화면코드-20261026.md`.
 - Missing seed, supply HRR, engine hash, fallback list or opening-risk evaluation remains null/explicitly unavailable. A missing list is not interpreted as an evaluated empty list.
 - A building snapshot covers the saved scenario's rooms, not the entire CAD building. The three supplied examples cover 3F only.
 
@@ -41,3 +41,15 @@ The test reads S06, S09 and stage4 sequentially, writes gzip JSON snapshots and 
 Run `npm run test:stage2` with Playwright available. Alternatively set `PYROCAST_PLAYWRIGHT` to an existing package path. `PYROCAST_BROWSER` and `PYROCAST_THREE` can override the installed Chrome and saved Three.js r160 asset used by the fixture. All fixture requests are intercepted from local files; no server or external request is needed. The fixture uses real Three.js and WebGL (software rendering), allocates a test mesh/material/texture, and repeats mount/dispose 50 times. Results are in `simulation/results/ui_refactor_stage2_20261026/verification.json` and `fixture.png`.
 
 The new host has not replaced the live 3D viewer. Real rendering layers, panels, browser performance at full building scale and native-result playback remain later work. Server routing and cache-key changes are not included.
+
+## Stage 3 — first layer (building)
+
+Use `readLegacyBuildingSource({building: B, groups, sourceHash})` after the CAD loader has created its static meshes. The verified source hash must match `building/1.source_hash`. `createBuildingLayers(THREE, {geometryFor})` replaces only the empty building layer; the rest remain empty. The provider returns the same source identity while CAD geometry is unchanged. It is a read-only asset capability, not a reference to another display layer.
+
+The building layer shares the imported geometry, copies Mesh/Line objects and clones materials. It reproduces the existing install() colour overrides without modifying the source materials. Disposal frees only its cloned materials and objects; source geometry stays owned by the CAD loader. Shut down the legacy host before a future live switchover, and dispose the layer before the CAD loader frees borrowed geometry. No new room-wall extrusion, cell-boundary building walls or custom shaders are created. Material colour/opacity/depth settings are preserved except the documented colour overrides.
+
+Building/resultMeta identities are compared; a result-only change, seek, selection, layer toggle or floor change does not regenerate geometry. Floor changes only change visibility. `renderPolicy` rejects Groups and applies to actual Mesh/Line objects/materials.
+
+The corrected legacy order is smoke 10, plume 15, flame 20, gas flame 22, smoke boundary 23, cell line 25, band 26, interface plane/line 27/28, exterior window 30, risk 35, selection 40, interior door 46, core 70/72/73. Existing transparent material opacity is retained (risk 1, selection .95, door .9), superseding the earlier uniform-opacity proposal. Risk ribbon height follows the smoke interface plus .14 m/type with the legacy clamps; it is not floor-fixed. The `displayV8Gates` helper freezes old visual gates; actual risk rendering is not yet implemented.
+
+`npm run test:building` uses the frozen legacy CAD HTML geometry construction block and the actual lite_viewer.js colour override block as its isolated reference. It renders building-only reference and layer with the same camera, lighting, renderer, viewport and clock (180000 ms), in 3F isometric/top/all-building views. It is not a full S06/S09 fire-scene comparison; that follows when the other layers are implemented. `PYROCAST_MODEL` can override the model path found in the stage-0 manifest. Evidence is under `simulation/results/ui_refactor_stage3_building_20261026/`.

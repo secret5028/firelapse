@@ -1,5 +1,4 @@
 // Stage 2 creates containers only. Existing shaders remain untouched.
-import {applyRenderPolicy} from '../scene/render_order.js';
 export class EmptyLayer {
  static id='empty';
  constructor(THREE){this.THREE=THREE;this.state='new';this.resources=new Set();this.unsubscribers=[];this.group=null;this.frame=null;}
@@ -7,8 +6,8 @@ export class EmptyLayer {
   if(this.state!=='new')throw Error('Layer cannot be mounted again');this.state='mounted';this.scene=scene;
   this.group=new this.THREE.Group();this.group.name=this.constructor.id;scene.add(this.group);
   if(this.constructor.id==='openings'){
-   for(const kind of ['window','door']){const group=new this.THREE.Group();group.name=kind;applyRenderPolicy(group,'openings.'+kind);this.group.add(group);}
-  }else applyRenderPolicy(this.group,this.constructor.id);
+   for(const kind of ['window','door']){const group=new this.THREE.Group();group.name=kind;this.group.add(group);}
+  }
   this.unsubscribers.push(store.subscribe('floor',()=>{}));
  }
  own(resource){if(this.state!=='mounted')throw Error('Layer is not mounted');this.resources.add(resource);return resource;}

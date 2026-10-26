@@ -1,0 +1,412 @@
+{
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "pyrocast.building/1"
+    },
+    "building_id": {
+      "type": "string"
+    },
+    "source_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "units": {
+      "type": "object",
+      "properties": {
+        "length": {
+          "const": "m"
+        },
+        "origin": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "up": {
+          "const": "z"
+        }
+      },
+      "required": [
+        "length",
+        "origin",
+        "up"
+      ],
+      "additionalProperties": false
+    },
+    "floors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "floor_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "elevation_m": {
+            "type": "number"
+          },
+          "height_m": {
+            "type": "number"
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "room_id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "usage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "core_kind": {
+                  "enum": [
+                    "stair",
+                    "elevator",
+                    "shaft",
+                    "lobby",
+                    "corridor",
+                    null
+                  ]
+                },
+                "polygon_m": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  "minItems": 3
+                },
+                "holes_m": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "number"
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
+                    },
+                    "minItems": 3
+                  }
+                },
+                "polygons_m": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "polygon_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "minItems": 3
+                      },
+                      "holes_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                          },
+                          "minItems": 3
+                        }
+                      }
+                    },
+                    "required": [
+                      "polygon_m",
+                      "holes_m"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "floor_z_m": {
+                  "type": "number"
+                },
+                "ceiling_z_m": {
+                  "type": "number"
+                },
+                "cells": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cell_id": {
+                        "type": "string"
+                      },
+                      "polygon_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "number"
+                          },
+                          "minItems": 2,
+                          "maxItems": 2
+                        },
+                        "minItems": 3
+                      },
+                      "holes_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "array",
+                            "items": {
+                              "type": "number"
+                            },
+                            "minItems": 2,
+                            "maxItems": 2
+                          },
+                          "minItems": 3
+                        }
+                      },
+                      "polygons_m": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "polygon_m": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "number"
+                                },
+                                "minItems": 2,
+                                "maxItems": 2
+                              },
+                              "minItems": 3
+                            },
+                            "holes_m": {
+                              "type": "array",
+                              "items": {
+                                "type": "array",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  },
+                                  "minItems": 2,
+                                  "maxItems": 2
+                                },
+                                "minItems": 3
+                              }
+                            }
+                          },
+                          "required": [
+                            "polygon_m",
+                            "holes_m"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "cell_id",
+                      "polygon_m",
+                      "holes_m",
+                      "polygons_m"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "room_id",
+                "name",
+                "usage",
+                "core_kind",
+                "polygon_m",
+                "holes_m",
+                "polygons_m",
+                "floor_z_m",
+                "ceiling_z_m",
+                "cells"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "openings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "opening_id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "door",
+                    "window",
+                    "passage",
+                    "vertical"
+                  ]
+                },
+                "door_class": {
+                  "enum": [
+                    "fire_confirmed",
+                    "fire_estimated",
+                    "ordinary",
+                    "fixed",
+                    null
+                  ]
+                },
+                "door_class_basis": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "user_override": {
+                  "type": "boolean"
+                },
+                "a": {
+                  "type": "string"
+                },
+                "b": {
+                  "type": "string"
+                },
+                "center_m": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "width_m": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sill_m": {
+                  "type": "number"
+                },
+                "soffit_m": {
+                  "type": "number"
+                },
+                "exterior": {
+                  "type": "boolean"
+                },
+                "initial_fraction": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "source_kind": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "opening_id",
+                "kind",
+                "door_class",
+                "door_class_basis",
+                "user_override",
+                "a",
+                "b",
+                "center_m",
+                "width_m",
+                "sill_m",
+                "soffit_m",
+                "exterior",
+                "initial_fraction",
+                "source_kind"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "floor_id",
+          "name",
+          "elevation_m",
+          "height_m",
+          "rooms",
+          "openings"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "ref": {
+            "type": "string"
+          },
+          "msg": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "ref",
+          "msg"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "scope": {
+      "type": "string"
+    },
+    "geometry_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "building_id",
+    "source_hash",
+    "units",
+    "floors",
+    "errors",
+    "scope",
+    "geometry_notes"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pyrocast.local/contracts/building-1.json"
+}

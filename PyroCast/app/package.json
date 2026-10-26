@@ -1,0 +1,7 @@
+{
+  "name": "pyrocast-ui-contracts",
+  "private": true,
+  "type": "module",
+  "scripts": {"test": "node tests/contracts.test.mjs", "test:stage2": "node tests/stage2.test.mjs"},
+  "devDependencies": {"ajv": "8.20.0"}
+}

@@ -1,0 +1,807 @@
+{
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "pyrocast.result/1"
+    },
+    "result_id": {
+      "type": "string"
+    },
+    "engine": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "enum": [
+            "lite",
+            "cfast"
+          ]
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "version",
+        "sha256"
+      ],
+      "additionalProperties": false
+    },
+    "scenario": {
+      "type": "object",
+      "properties": {
+        "building_id": {
+          "type": "string"
+        },
+        "floor_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "origin_room_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "settings_snapshot": {
+          "type": "object"
+        },
+        "settings_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "opening_state": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "building_id",
+        "floor_id",
+        "origin_room_id",
+        "settings_snapshot",
+        "settings_hash",
+        "seed",
+        "opening_state"
+      ],
+      "additionalProperties": false
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "partial",
+        "failed"
+      ]
+    },
+    "t_end_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "dt_out_s": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "limits_text": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "time_s": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "rooms": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/series"
+      }
+    },
+    "cells": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/series"
+      }
+    },
+    "conditions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/timeline"
+      }
+    },
+    "cell_conditions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/timeline"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "t_s": {
+            "type": "number"
+          },
+          "kind": {
+            "enum": [
+              "ignition",
+              "supply_start",
+              "window_break",
+              "rule_trigger"
+            ]
+          },
+          "room_id": {
+            "type": "string"
+          },
+          "cell_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parent_room_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "basis": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "t_s",
+          "kind",
+          "room_id",
+          "cell_id",
+          "parent_room_id",
+          "basis"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "opening_risk": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "opening_risk_status": {
+      "enum": [
+        "evaluated",
+        "not_evaluated",
+        "not_provided"
+      ]
+    },
+    "boundary_rooms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "boundary_by_cell": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "fallback_sensors": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "legacy_color": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "color": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "rollover_band": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "LOC_vol_fraction": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "color",
+          "rollover_band",
+          "LOC_vol_fraction"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "ref": {
+            "type": "string"
+          },
+          "msg": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "ref",
+          "msg"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "aggregation_policy": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "result_id",
+    "engine",
+    "scenario",
+    "status",
+    "t_end_s",
+    "dt_out_s",
+    "limits_text",
+    "time_s",
+    "rooms",
+    "cells",
+    "conditions",
+    "cell_conditions",
+    "events",
+    "opening_risk",
+    "opening_risk_status",
+    "boundary_rooms",
+    "boundary_by_cell",
+    "fallback_sensors",
+    "legacy_color",
+    "errors",
+    "notes",
+    "source_refs",
+    "aggregation_policy"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pyrocast.local/contracts/result-1.json",
+  "$defs": {
+    "series": {
+      "type": "object",
+      "properties": {
+        "T_upper_C": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "T_lower_C": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "interface_m": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "O2_upper_volfrac": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "O2_lower_volfrac": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "fuel_upper_massfrac": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "HRR_actual_kW": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "HRR_supply_kW": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "HRR_doorjet_kW": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "HRR_upperburn_kW": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "O2_basis": {
+          "enum": [
+            "layered",
+            "room_proxy",
+            null
+          ]
+        },
+        "aggregation": {
+          "enum": [
+            "single",
+            "none"
+          ]
+        },
+        "aggregation_status": {
+          "enum": [
+            "direct",
+            "not_defined"
+          ]
+        },
+        "source_cells": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "room_id": {
+          "type": "string"
+        },
+        "field_sources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "legacy_optical": {
+          "type": "object",
+          "properties": {
+            "ODu": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "ODl": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "ODu",
+            "ODl"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "T_upper_C",
+        "T_lower_C",
+        "interface_m",
+        "O2_upper_volfrac",
+        "O2_lower_volfrac",
+        "fuel_upper_massfrac",
+        "HRR_actual_kW",
+        "HRR_supply_kW",
+        "HRR_doorjet_kW",
+        "HRR_upperburn_kW",
+        "O2_basis",
+        "aggregation",
+        "aggregation_status",
+        "source_cells",
+        "room_id",
+        "field_sources",
+        "legacy_optical"
+      ],
+      "additionalProperties": false
+    },
+    "criterion": {
+      "type": "object",
+      "properties": {
+        "met": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "degree": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "r_T": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "r_F": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "r_O": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bottleneck": {
+          "enum": [
+            "T",
+            "F",
+            "O",
+            null
+          ]
+        },
+        "dominant": {
+          "enum": [
+            "T",
+            "F",
+            "O",
+            null
+          ]
+        },
+        "status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "burning_upper": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "met",
+        "degree",
+        "r_T",
+        "r_F",
+        "r_O",
+        "bottleneck",
+        "dominant",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "conditionFrame": {
+      "type": "object",
+      "properties": {
+        "smoke_stage": {
+          "enum": [
+            0,
+            1,
+            2,
+            null
+          ]
+        },
+        "smoke_factors": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "hot",
+              "fuel",
+              "deep"
+            ]
+          }
+        },
+        "FO": {
+          "$ref": "#/$defs/criterion"
+        },
+        "FGI": {
+          "$ref": "#/$defs/criterion"
+        },
+        "backdraft": {
+          "$ref": "#/$defs/criterion"
+        },
+        "rollover": {
+          "$ref": "#/$defs/criterion"
+        },
+        "untenable": {
+          "$ref": "#/$defs/criterion"
+        },
+        "source_cells": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aggregation": {
+          "enum": [
+            "single",
+            "cell_any"
+          ]
+        }
+      },
+      "required": [
+        "smoke_stage",
+        "smoke_factors",
+        "FO",
+        "FGI",
+        "backdraft",
+        "rollover",
+        "untenable",
+        "source_cells",
+        "aggregation"
+      ],
+      "additionalProperties": false
+    },
+    "timeline": {
+      "type": "object",
+      "patternProperties": {
+        "^(0|[1-9][0-9]*)$": {
+          "$ref": "#/$defs/conditionFrame"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

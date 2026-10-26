@@ -1,0 +1,338 @@
+{
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "pyrocast.screening/1"
+    },
+    "building_id": {
+      "type": "string"
+    },
+    "floor_id": {
+      "type": "string"
+    },
+    "stage1": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "room_id": {
+            "type": "string"
+          },
+          "rank": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "score": {
+            "type": "number"
+          },
+          "factors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "raw": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "norm": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "raw",
+                "norm"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "room_id",
+          "rank",
+          "score",
+          "factors"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "top_n": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stage2": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "room_id": {
+            "type": "string"
+          },
+          "rank": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "worse_state": {
+            "enum": [
+              "open",
+              "closed",
+              null
+            ]
+          },
+          "burning_rooms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "smoke_risk_rooms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "smoke_caution_rooms": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "first_FO_s": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result_ids": {
+            "type": "object",
+            "properties": {
+              "open": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "closed": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "open",
+              "closed"
+            ],
+            "additionalProperties": false
+          },
+          "tied_states": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "complete",
+              "partial",
+              "failed"
+            ]
+          }
+        },
+        "required": [
+          "room_id",
+          "rank",
+          "worse_state",
+          "burning_rooms",
+          "smoke_risk_rooms",
+          "smoke_caution_rooms",
+          "first_FO_s",
+          "result_ids",
+          "tied_states",
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "mc": {
+      "type": "object",
+      "properties": {
+        "origin_room_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "seed": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "samples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sample_id": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "failed"
+                ]
+              },
+              "result_id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "opening_state": {
+                "type": "object",
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "sample_id",
+              "status",
+              "result_id",
+              "opening_state"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "aggregate": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "origin_room_id",
+        "seed",
+        "samples",
+        "aggregate"
+      ],
+      "additionalProperties": false
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "ref": {
+            "type": "string"
+          },
+          "msg": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "ref",
+          "msg"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "source_revision": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "building_id",
+    "floor_id",
+    "stage1",
+    "top_n",
+    "stage2",
+    "mc",
+    "errors",
+    "source_revision"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pyrocast.local/contracts/screening-1.json"
+}

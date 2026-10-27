@@ -5,7 +5,8 @@ const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({building:null,result:null,screening:null,
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true},
+ realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,fuelMarkers:true},
+ openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true},
  risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
@@ -20,12 +21,13 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
   dispatch(action,p={}){
    switch(action){
     case 'floor/set':if(p.floor_id!==null&&typeof p.floor_id!=='string')throw Error('Invalid floor');put('floor',{floor_id:p.floor_id});return true;
-    case 'camera/fit':if(!['floor','all','top','room'].includes(p.mode))throw Error('Invalid camera mode');put('camera',{mode:p.mode,target:p.target??null,pose:p.pose??null});return true;
+    case 'camera/fit':if(!['floor','all','top','room','fire'].includes(p.mode))throw Error('Invalid camera mode');put('camera',{mode:p.mode,target:p.target??null,pose:p.pose??null});return true;
+    case 'openings/set':if(Object.keys(p).some(k=>!Object.hasOwn(state.openings,k)||typeof p[k]!=='boolean'))throw Error('Invalid opening display');put('openings',{...state.openings,...p});return true;
     case 'selection/set':if(!['list','click','touch'].includes(p.source)||![p.room_id,p.cell_id].every(v=>v===null||typeof v==='string'))throw Error('Invalid selection');put('selection',p);return true;
     case 'layers/toggle':if(!Object.hasOwn(state.layers,p.id))throw Error('Unknown layer');if(p.visible!==undefined&&typeof p.visible!=='boolean')throw Error('Invalid visibility');put('layers',{...state.layers,[p.id]:p.visible??!state.layers[p.id]});return true;
     case 'realView/set':
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
-     for(const k of ['enabled','temperatureSmoke'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
+     for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{show:{...state.risk.show,[p.type]:p.visible}});return true;

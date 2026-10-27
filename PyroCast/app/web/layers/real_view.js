@@ -2,12 +2,12 @@ import {createRealView} from '../../../simulation/viewer/legacy_real_bridge.js';
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
 // facades share this resource session, never refer to one another or duplicate it.
-export function createRealViewSession(THREE,{sourceFor,camera}={}){
+export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
  if(typeof sourceFor!=='function'||!camera?.isCamera)throw Error('Raw playback source provider and host camera required');
- const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[]};
+ const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[]};
  function clear(){
   session.renderer?.detach();for(const resource of session.resources)resource.dispose();session.resources.clear();
-  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];
+  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];
  }
  function gather(){session.root.traverse(o=>{
   if(o.geometry)session.resources.add(o.geometry);
@@ -23,7 +23,9 @@ export function createRealViewSession(THREE,{sourceFor,camera}={}){
    const source=frame.building&&frame.resultMeta?sourceFor(frame.building,frame.resultMeta):null;
    if(frame.building&&frame.resultMeta&&(!source||source.source_hash!==frame.building.source_hash||source.result_id!==frame.resultMeta.result_id))throw Error('Missing/mismatched raw real-view source');
    if(source!==session.source){clear();if(source){session.source=source;
-    try{session.renderer=createRealView({THREE,C:camera,groups:source.groups,B:source.B},source.data,session.root);gather();session.builds++;}
+    try{
+     if(fuelSymbols)for(const u of source.data.fuel_symbols||[]){const box=new THREE.BoxGeometry(.4,.4,.4),geometry=new THREE.EdgesGeometry(box);box.dispose();const g=new THREE.LineSegments(geometry,new THREE.LineBasicMaterial({color:'#a6b4ba',transparent:true,opacity:.55}));g.position.set(...u.position_m);g.raycast=()=>{};session.root.add(g);session.units.push({u,g});}
+     session.renderer=createRealView({THREE,C:camera,groups:source.groups,B:source.B},source.data,session.root);gather();session.builds++;}
     catch(error){gather();clear();throw error;}
    }}session.building=frame.building;session.result=frame.resultMeta;
   }
@@ -39,6 +41,7 @@ export function createRealViewSession(THREE,{sourceFor,camera}={}){
    flameDisplay:'growth',plumesEnabled:frame.layers.plume,temperatureSmoke:settings.temperatureSmoke});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
   session.renderer.animate(session.lastAnimateMs);
+  for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
   // The unchanged bridge hardcodes flamesEnabled=true. Mask only flame draw
   // objects/lights after update; no shader, HRR or geometry changes. Next update
   // restores native visibility before applying the checkbox again.

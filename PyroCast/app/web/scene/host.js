@@ -3,14 +3,17 @@ const mounted=new WeakMap();
 export function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
  scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000),
- rendererFactory=()=>new THREE.WebGLRenderer({antialias:true,alpha:true}),layers=createEmptyLayers(THREE),seriesAt=()=>null}){
- if(!container||mounted.has(container)||container.querySelector('canvas'))throw Error('Container already owns a canvas/host');
+ rendererFactory=()=>new THREE.WebGLRenderer({antialias:true,alpha:true}),layers=createEmptyLayers(THREE),seriesAt=()=>null,
+ adoptedRenderer=null,legendContainer=null}){
+ if(!container||mounted.has(container)||(container.querySelector('canvas')&&container.querySelector('canvas')!==adoptedRenderer?.domElement))throw Error('Container already owns a canvas/host');
  const ids=layers.map(l=>l.constructor.id);if(new Set(ids).size!==ids.length)throw Error('Duplicate layer IDs');
  let disposed=false,running=false,raf=null,lastTime=null,renderer=null,legendAnchor=null;const cleanups=[];
  const alive=()=>{if(disposed)throw Error('Host disposed');};
  const listen=(target,name,fn,options)=>{alive();target.addEventListener(name,fn,options);const off=()=>target.removeEventListener(name,fn,options);cleanups.push(off);return off;};
  function providePlumeLegend(){alive();if(legendAnchor)return legendAnchor;
-  const doc=container.ownerDocument;if(doc.getElementById('cfMeaning')||doc.getElementById('cfPlumeLegend'))throw Error('Legacy plume legend already owned by another viewer');
+  const doc=container.ownerDocument;
+  if(legendContainer){if(legendContainer.id!=='cfMeaning'||doc.getElementById('cfMeaning')!==legendContainer||doc.getElementById('cfPlumeLegend'))throw Error('Invalid borrowed legend');legendAnchor=legendContainer;cleanups.push(()=>{doc.getElementById('cfPlumeLegend')?.remove();legendAnchor=null;});return legendAnchor;}
+  if(doc.getElementById('cfMeaning')||doc.getElementById('cfPlumeLegend'))throw Error('Legacy plume legend already owned by another viewer');
   legendAnchor=doc.createElement('span');legendAnchor.id='cfMeaning';legendAnchor.hidden=true;container.append(legendAnchor);
   cleanups.push(()=>{doc.getElementById('cfPlumeLegend')?.remove();legendAnchor.remove();legendAnchor=null;});return legendAnchor;
  }
@@ -46,10 +49,10 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
  function dispose(){if(disposed)return;stop();disposed=true;const errors=[];
   for(const off of cleanups.splice(0))try{off();}catch(e){errors.push(e);}
   for(const layer of [...layers].reverse())try{layer.dispose();}catch(e){errors.push(e);}
-  if(renderer){try{renderer.renderLists?.dispose();renderer.dispose();renderer.forceContextLoss?.();}catch(e){errors.push(e);}renderer.domElement.remove();}
+  if(renderer&&!adoptedRenderer){try{renderer.renderLists?.dispose();renderer.dispose();renderer.forceContextLoss?.();}catch(e){errors.push(e);}renderer.domElement.remove();}
   mounted.delete(container);if(errors.length)throw new AggregateError(errors,'Host cleanup failed');
  }
- try{mounted.set(container,true);renderer=rendererFactory();container.append(renderer.domElement);camera.up.set(0,0,1);
+ try{mounted.set(container,true);renderer=adoptedRenderer||rendererFactory();if(!adoptedRenderer)container.append(renderer.domElement);camera.up.set(0,0,1);
   if(layers.some(l=>l.needsPlumeLegend))providePlumeLegend();
   for(const layer of layers)layer.mount(scene,store);
   bindPicking();

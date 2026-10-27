@@ -1,0 +1,20 @@
+[
+  {
+    "view": "all-front",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "all-back",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "all-off",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  }
+]

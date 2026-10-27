@@ -10,7 +10,7 @@ window.ready=(async()=>{
  const start=model.indexOf('const mat='),end=model.indexOf('// ---- 문짝',start);assert(start>0&&end>start,'Legacy builder markers missing');
  const oldScene=new T.Scene();class Label extends T.Object3D{}
  // Execute the unchanged geometry construction block, not a reimplementation.
- const legacy=new Function('THREE','B','S','CSS2DObject','dark','ceilStateDefault','applyCeil',model.slice(start,end)+';return {groups,mat,ceilState};')
+ const legacy=new Function('THREE','B','S','CSS2DObject','dark','ceilStateDefault','applyCeil',model.slice(start,end)+';return {groups,mat,ceilState,shp};')
   (T,B,oldScene,Label,true,f=>Math.min(f.h-.3,Math.max(f.ceil_rule?.min_h||2.4,f.h-(f.ceil_rule?.plenum||1))),()=>{});
  const XR=['wall','door_head','win_low','win_head','beam'];
  for(const k of XR){Object.assign(legacy.mat[k],{opacity:.45,transparent:true,depthWrite:false,side:T.DoubleSide});}

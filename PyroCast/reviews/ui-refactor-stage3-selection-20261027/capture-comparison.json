@@ -1,0 +1,20 @@
+[
+  {
+    "view": "R2",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "R3-cell",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "none",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  }
+]

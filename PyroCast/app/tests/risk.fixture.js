@@ -85,5 +85,6 @@ window.riskReady=(async()=>{
   assert(disposed===resources.length&&risk.resources.size===0,'Risk resources leaked');assert(store.diagnostics().subscriptions===0,'Subscriptions retained');equal(JSON.stringify([building,result]),before,'Adapted input changed');
   return {case_id:'S09',origin:'R2',floor:'3F',clock_ms:180000,capture_times:[1800,overlapTime],first_overlap:overlapRooms,records,rooms:stats.rooms,cells:stats.cells,builds:stats.buildCount,unchanged_frames:500,conditions_forbidden_test:true,strict_gates:true,synthetic_four_type_OR:true,synthetic_grey_and_selected_interface:true,adapted_inputs_only:true,geometry_materials_exact:true,owned_resources:resources.length,disposed_resources:disposed,remaining_resources:risk.resources.size,remaining_subscriptions:0};
  };
+ window.riskFixtureContext={data,building,result,old,oldUpdate,refReal,refRoot,risk};
  return true;
 })();

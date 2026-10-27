@@ -1,0 +1,11 @@
+{
+  "checked": "2026-10-27T16:20:50.934722+09:00",
+  "checked_files": 237,
+  "changed": [
+    {
+      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\viewer\\overlay.js",
+      "role": "viewer_baseline"
+    }
+  ],
+  "frozen_unchanged": true
+}

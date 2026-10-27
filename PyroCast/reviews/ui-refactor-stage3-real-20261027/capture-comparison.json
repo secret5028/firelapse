@@ -1,0 +1,26 @@
+[
+  {
+    "view": "smoke-on-plume-on",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "smoke-on-plume-off",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "smoke-off-plume-on",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  },
+  {
+    "view": "smoke-off-plume-off",
+    "changed_pixels": 0,
+    "total_pixels": 700000,
+    "max_channel_difference": 0
+  }
+]

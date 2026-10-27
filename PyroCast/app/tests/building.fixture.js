@@ -26,7 +26,7 @@ window.ready=(async()=>{
  new Function('B','groups',viewer.slice(colourStart,colourEnd))(B,referenceGroups);
  const light=scene=>{scene.background=new T.Color('#0c1c29');scene.add(new T.HemisphereLight(0xffffff,0x666666,1.6));const d=new T.DirectionalLight(0xffffff,1.4);d.position.set(40,-60,90);scene.add(d);};
  light(reference);const scene=new T.Scene();light(scene);
- const store=createStore({validators:{building:v=>v.schema==='fixture'}}),layer=new BuildingLayer(T,{geometryFor:()=>asset});
+ const store=createStore({validators:{building:v=>v.schema==='fixture',result:v=>v.schema==='fixture-result'}}),layer=new BuildingLayer(T,{geometryFor:()=>asset});
  store.dispatch('building/set',{schema:'fixture',source_hash:hash});
  const activeLayers=[layer];
  const host=createSceneHost({container:document.querySelector('#scene'),THREE:T,store,scene,layers:activeLayers,clock:{now:()=>180000}});

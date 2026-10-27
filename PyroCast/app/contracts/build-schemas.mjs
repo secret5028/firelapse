@@ -25,7 +25,8 @@ const frame=obj({smoke_stage:en(0,1,2,null),smoke_factors:arr(en('hot','fuel','d
  FO:ref('criterion'),FGI:ref('criterion'),backdraft:ref('criterion'),rollover:ref('criterion'),untenable:ref('criterion'),
  source_cells:arr(str),aggregation:en('single','cell_any')});
 const timeline={type:'object',patternProperties:{'^(0|[1-9][0-9]*)$':ref('conditionFrame')},additionalProperties:false};
-const cell=obj({cell_id:str,polygon_m:ring,holes_m:arr(ring),polygons_m:arr(poly)});
+const cell=obj({cell_id:str,polygon_m:ring,holes_m:arr(ring),polygons_m:arr(poly),
+ legacy_display:obj({z_m:num,height_m:num,single_zone:bool})},['cell_id','polygon_m','holes_m','polygons_m']);
 const room=obj({room_id:str,name:str,usage:nullable(str),core_kind:en('stair','elevator','shaft','lobby','corridor',null),
  polygon_m:ring,holes_m:arr(ring),polygons_m:arr(poly),floor_z_m:num,ceiling_z_m:num,cells:arr(cell)});
 const opening=obj({opening_id:str,kind:en('door','window','passage','vertical'),

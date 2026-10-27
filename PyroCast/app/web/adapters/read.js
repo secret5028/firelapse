@@ -30,7 +30,8 @@ export function adaptBuilding({scenario,playback,sourceHash}){
   const room=byRoom.get(c.original_room??c.key),p=polygons(c.cad_polys);
   if(!room){issue(errors,'UNMAPPED_CELL',c.key,'Explicit original_room does not exist; cell excluded');continue;}
   if(!p.length){issue(errors,'MISSING_GEOMETRY',c.key,'No cell polygons');continue;}
-  room.cells.push({cell_id:c.key,...shapes(p)});
+  room.cells.push({cell_id:c.key,...shapes(p),legacy_display:{z_m:c.z_m,height_m:c.height_m,
+   single_zone:!!playback.solvers[c.solver_id]?.single_zone}});
  }
  for(const v of unique(scenario.openings,'id',errors)){
   if(![v.a,v.b].every(id=>id==='OUTSIDE'||byRoom.has(id))){issue(errors,'UNMAPPED_OPENING',v.id,'Opening endpoint missing; opening excluded');continue;}
@@ -111,7 +112,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   }
  }
  notes.push('Multi-cell room continuous series and scalar scores have no legacy aggregate: null, not a newly invented average/max. Cell series remain exact.');
- notes.push('conditions are stored shared-condition flags, NOT reconstructed legacy screen colour gates; legacy_color is archival only. No render policy is changed in stage 1.');
+ notes.push('conditions are stored shared-condition flags, NOT legacy screen colour gates; legacy_color and cell smoke_stage preserve the separate display compatibility inputs.');
  const events=[];
  for(const e of p.events||[]){const rid=cellRoom.get(e.room),parent=cellRoom.get(e.parent)??null;
   if(!rid){issue(errors,'UNMAPPED_EVENT',e.room,'Event cell not mapped');continue;}

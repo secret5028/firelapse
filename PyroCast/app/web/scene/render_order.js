@@ -12,8 +12,8 @@ export const riskHeight=(floorZ,height,activeHeights,type)=>{const i=['FO','FGI'
 // Display compatibility only. Shared conditions.*.met remains panel data.
 export function displayV8Gates({color,smoke_stage,oxygen,loc,rollover_band}){
  const gas=smoke_stage===2&&Number.isFinite(loc)&&Number.isFinite(oxygen);
- return {FO:color==='#ef4444',FGI:color==='#a855f7'||(gas&&oxygen>=loc),
-  backdraft:color==='#facc15'||(gas&&oxygen<loc),rollover:color==='#f97316'||rollover_band===true};
+ return {FO:color==='#ef4444',FGI:gas&&oxygen>=loc,
+  backdraft:gas&&oxygen<loc,rollover:rollover_band===true};
 }
 export const LABELS=Object.freeze({building:'건물',openings:'문·창',core:'계단·승강기',smoke:'연기',flame:'화염',plume:'상승 플룸',risk:'위험 테두리',selection:'선택 실',upperCombustion:'상층 연소'});
 export function applyRenderPolicy(object,key){const p=RENDER_POLICY[key];if(!p)throw Error('Unknown render policy');

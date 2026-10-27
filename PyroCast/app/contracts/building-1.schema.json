@@ -231,6 +231,26 @@
                           ],
                           "additionalProperties": false
                         }
+                      },
+                      "legacy_display": {
+                        "type": "object",
+                        "properties": {
+                          "z_m": {
+                            "type": "number"
+                          },
+                          "height_m": {
+                            "type": "number"
+                          },
+                          "single_zone": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "z_m",
+                          "height_m",
+                          "single_zone"
+                        ],
+                        "additionalProperties": false
                       }
                     },
                     "required": [

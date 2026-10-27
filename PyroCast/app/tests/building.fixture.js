@@ -3,6 +3,7 @@ import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
 import {BuildingLayer} from '../web/layers/building.js';
 import {createSceneHost} from '../web/scene/host.js';
 import {createStore} from '../web/state/store.js';
+import {createSeriesCache} from '../web/state/series_cache.js';
 import {applyRenderPolicy,RENDER_POLICY,riskHeight,displayV8Gates} from '../web/scene/render_order.js';
 const assert=(v,msg)=>{if(!v)throw Error(msg);};
 window.ready=(async()=>{
@@ -26,10 +27,11 @@ window.ready=(async()=>{
  new Function('B','groups',viewer.slice(colourStart,colourEnd))(B,referenceGroups);
  const light=scene=>{scene.background=new T.Color('#0c1c29');scene.add(new T.HemisphereLight(0xffffff,0x666666,1.6));const d=new T.DirectionalLight(0xffffff,1.4);d.position.set(40,-60,90);scene.add(d);};
  light(reference);const scene=new T.Scene();light(scene);
- const store=createStore({validators:{building:v=>v.schema==='fixture',result:v=>v.schema==='fixture-result'}}),layer=new BuildingLayer(T,{geometryFor:()=>asset});
+ const seriesCache=createSeriesCache();
+ const store=createStore({seriesCache,validators:{building:v=>['fixture','pyrocast.building/1'].includes(v.schema),result:v=>['fixture-result','pyrocast.result/1'].includes(v.schema)}}),layer=new BuildingLayer(T,{geometryFor:()=>asset});
  store.dispatch('building/set',{schema:'fixture',source_hash:hash});
  const activeLayers=[layer];
- const host=createSceneHost({container:document.querySelector('#scene'),THREE:T,store,scene,layers:activeLayers,clock:{now:()=>180000}});
+ const host=createSceneHost({container:document.querySelector('#scene'),THREE:T,store,scene,layers:activeLayers,clock:{now:()=>180000},seriesAt:()=>seriesCache.get(store.get('result')?.result_id)});
  const meta={id:'unchanged'},frame={building:store.get('building'),resultMeta:meta,floor:{floor_id:'3F'}};
  host.render();const buildCount=layer.buildCount,identities=[...layer.floorGroups.values()].flatMap(g=>g.children).map(o=>[o,o.geometry,o.material]);
  for(let i=0;i<500;i++)layer.setData({...frame,t_s:i*10,selection:{room_id:'R'+i%3}});
@@ -51,6 +53,6 @@ window.ready=(async()=>{
   const matCount=layer.resources.size;let materialsDisposed=0;for(const m of layer.resources)m.addEventListener('dispose',()=>materialsDisposed++);
   host.dispose();assert(layer.resources.size===0&&materialsDisposed===matCount,'Owned materials leaked');assert(sourceDisposed===0,'Borrowed geometry disposed');assert(sourcePreserved,'Source material changed');
   return {sourcePreserved,borrowed_geometry_disposals:sourceDisposed,materials_disposed:materialsDisposed,building_objects:policyCount,builds:buildCount,unchanged_frames:500,result_change_rebuilt:false,floors:asset.floors.length,clock_ms:180000,group_policy_rejected:groupRejected,subscriptions:store.diagnostics().subscriptions};};
- window.buildingFixtureContext={B,viewer,hash,legacy,asset,scene,reference,referenceGroups,store,host,activeLayers};
+ window.buildingFixtureContext={B,viewer,hash,legacy,asset,scene,reference,referenceGroups,store,host,activeLayers,seriesCache};
  return true;
 })();

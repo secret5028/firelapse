@@ -40,6 +40,7 @@ for(const id of ['S06','S09','stage4']){
   values+=r.HRR_supply_kW.length;
   const geom=building.floors.flatMap(f=>f.rooms).flatMap(r=>r.cells).find(x=>x.cell_id===c.key);
   assert.deepEqual(geom.polygons_m,c.cad_polys.map(x=>({polygon_m:x.o,holes_m:x.h||[]})));
+  assert.deepEqual(geom.legacy_display,{z_m:c.z_m,height_m:c.height_m,single_zone:!!s.single_zone});
   if(geom.polygons_m.length>1)multipolygons++;
   for(const key of ['FO','FGI','backdraft','rollover','untenable'])for(let i=0;i<p.time_s.length;i++){
    const src=s.conditions?.[key],dest=result.cell_conditions[c.key][i][key];

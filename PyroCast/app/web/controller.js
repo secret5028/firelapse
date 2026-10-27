@@ -33,8 +33,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  // calls this host instead of drawing a second scene/starting a second loop.
  const renderer={domElement:R.domElement,setSize:(w,h)=>R.setSize(w,h),render:(scene,camera)=>{
   const hidden=[];
-  for(const row of buildingAsset.floors){const clone=buildingLayer.floorGroups.get(row.id);if(clone){clone.position.copy(row.group.position);clone.visible=row.group.visible;}
-   row.objects.forEach((source,i)=>{if(clone?.children[i]){const dst=clone.children[i];dst.visible=source.visible;dst.position.copy(source.position);dst.quaternion.copy(source.quaternion);dst.scale.copy(source.scale);}
+  buildingLayer.syncSource();
+  for(const row of buildingAsset.floors){row.objects.forEach(source=>{
     hidden.push([source,source.visible]);source.visible=false;});
   }
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}

@@ -108,3 +108,9 @@ The whole-page comparison stopped at S06 890 s per user instruction: 3,923 chang
 
 ## Building scope correction — still stopped (2026-10-27)
 The building adapter now follows the exact legacy install colour branches across the whole floor hierarchy, including glass and stair treads. Nested transforms/visibility are retained and circular CAD userData is shallow-copied. The read-only install probe matches all 1,222 source objects to 1,222 clones (3F: 156 registered, 153 visible). S09 at 1800 s still differs by 164 pixels, bbox (559,233)-(809,454). Comparison stopped at that first difference as instructed; the remaining three scenes were not run. Picking planes remain unchanged at 76 modern draw calls. Live overlay is not promoted. Evidence: simulation/results/ui_refactor_stage3_building_scope_20261027/.
+
+## Building shared materials — visual gate passed (2026-10-28)
+
+Building clones now borrow original materials as well as geometry. The first override saves each unique material's color, opacity and transparent flag; rebuild/dispose restores them without disposing borrowed resources. Run `node app/tests/building_materials.test.mjs` for the 50-cycle shared-resource restoration check. The actual scene contains 1,222 source/clone pairs with identical material references and equal sets of 701 material IDs.
+
+S09 1800 s / 1420 s, S06 890 s and whole-building/core ON all compare at zero changed pixels. The last comparison was completed from the already-saved PNG pair after the browser session ended; its per-scene browser metadata was not recovered. Evidence: `simulation/results/ui_refactor_stage3_shared_material_20261027/summary.json`, detailed first-three-scene `verification.json`, and four image pairs. Picking planes and frozen engine/server/shader files remain unchanged. This resolves the previous visual gate only; the live overlay is still not promoted and broader interaction testing is outside this change.

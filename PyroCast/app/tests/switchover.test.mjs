@@ -19,7 +19,7 @@ async function installScopeProbe(){
  window.__scopeReport=()=>{
   const building=window.__ui?.layers.find(l=>l.constructor.id==='building');
   const visible=object=>{for(let n=object;n;n=n.parent)if(!n.visible)return false;return true;};
-  const rows=[...touched].map(([object,style])=>{let n=object;while(n&&!groups.includes(n))n=n.parent;const clone=building?.sourceObjects.get(object);return {name:object.name||'(unnamed)',type:object.type,floor:n?.name,parent:object.parent?.name||object.parent?.type,style,visible:visible(object),clone:!!clone,clone_color:clone?.material.color.getHexString(),clone_opacity:clone?.material.opacity,original_draws:window.__drawn.filter(x=>x===object).length,clone_draws:window.__drawn.filter(x=>x===clone).length};});
+  const rows=[...touched].map(([object,style])=>{let n=object;while(n&&!groups.includes(n))n=n.parent;const clone=building?.sourceObjects.get(object);return {name:object.name||'(unnamed)',type:object.type,floor:n?.name,parent:object.parent?.name||object.parent?.type,style,visible:visible(object),clone:!!clone,material_id:object.material.id,clone_material_id:clone?.material.id,material_same:clone?.material===object.material,clone_color:clone?.material.color.getHexString(),clone_opacity:clone?.material.opacity,original_draws:window.__drawn.filter(x=>x===object).length,clone_draws:window.__drawn.filter(x=>x===clone).length};});
   const extras=building?[...building.sourceObjects].filter(([source])=>!touched.has(source)).map(([o])=>o.name):[];
   return {original_install_count:touched.size,clone_count:building?.sourceObjects.size??0,extra_clones:extras,rows,render_info:{...R.info.render},pick_draw_calls:window.__drawn.filter(o=>o.material?.opacity===0&&o.userData.liteRoom).length};
  };
@@ -57,7 +57,7 @@ try{
     await document.fonts.ready;for(let i=0;i<6;i++)await new Promise(requestAnimationFrame);
    },scenario);
    row[mode]=await page.evaluate(()=>({panel:document.querySelector('#cfbtPanel').innerHTML,caption:document.querySelector('.cfbtSceneCaption').textContent,canvas:document.querySelectorAll('#v canvas').length,legend:document.querySelectorAll('#cfMeaning').length,pose:{position:window.__cad.C.position.toArray(),target:window.__cad.O.target.toArray(),zoom:window.__cad.C.zoom},ui:document.documentElement.dataset.pyrocastUi,diagnostics:window.__ui?.diagnostics?.(),scope:window.__scopeReport()}));
-   if(mode==='modern'){const s=row.modern.scope;if(s.extra_clones.length||s.clone_count!==s.original_install_count||s.rows.some(x=>!x.clone||x.clone_color!==x.style.color.slice(1)||x.style.opacity!==null&&x.clone_opacity!==x.style.opacity))throw Error('Install target/colour mismatch');}
+   if(mode==='modern'){const s=row.modern.scope;if(s.extra_clones.length||s.clone_count!==s.original_install_count||s.rows.some(x=>!x.clone||!x.material_same||x.clone_color!==x.style.color.slice(1)||x.style.opacity!==null&&x.clone_opacity!==x.style.opacity))throw Error('Install target/colour mismatch');}
    if(errors.length)throw Error(mode+': '+errors.join('; '));
    await page.screenshot({path:path.join(out,`${scenario.name}-${mode}.png`),fullPage:true});
   }

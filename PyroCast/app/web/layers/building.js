@@ -1,11 +1,13 @@
 import {EmptyLayer,createEmptyLayers} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
-// Borrow CAD geometry; clone materials. Original colours are never overwritten.
+// Borrow both CAD geometry and materials; restore install() colour overrides.
 export class BuildingLayer extends EmptyLayer {
  static id='building';
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.bindings=[];this.buildCount=0;}
- clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;}
+  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;}
+ clearGeometry(){for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;
+   if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
+  this.materialState.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;}
  build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
   for(const floor of asset.floors){const g=new T.Group();g.name=floor.id;g.position.copy(floor.group.position);g.quaternion.copy(floor.group.quaternion);g.scale.copy(floor.group.scale);this.group.add(g);this.floorGroups.set(floor.id,g);
    const parents=new Map([[floor.group,g]]);
@@ -15,7 +17,9 @@ export class BuildingLayer extends EmptyLayer {
    };
    for(const [i,source] of floor.objects.entries()){const view=Object.create(source);view.userData={};
     const object=new source.constructor().copy(view,false),style=floor.styles[i];object.userData={...source.userData};
-    const material=this.own(source.material.clone());material.color.set(style.color);if(style.opacity!==null)material.opacity=style.opacity;object.material=material;
+    const material=source.material;
+    if(!this.materialState.has(material))this.materialState.set(material,{color:material.color.clone(),opacity:material.opacity,transparent:material.transparent});
+    material.color.set(style.color);if(style.opacity!==null)material.opacity=style.opacity;object.material=material;
     applyRenderPolicy(object,'building');parentFor(source.parent).add(object);parents.set(source,object);this.sourceObjects.set(source,object);this.bindings.push({source,object});
    }
   }
@@ -33,7 +37,7 @@ export class BuildingLayer extends EmptyLayer {
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
- diagnostics(){return {buildCount:this.buildCount,ownedMaterials:this.resources.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size};}
+ diagnostics(){return {buildCount:this.buildCount,ownedMaterials:0,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size};}
  dispose(){this.clearGeometry();this.lastBuilding=null;this.lastResult=null;this.geometryFor=null;super.dispose();}
 }
 export function createBuildingLayers(THREE,options){return [new BuildingLayer(THREE,options),...createEmptyLayers(THREE).filter(layer=>layer.constructor.id!=='building')];}

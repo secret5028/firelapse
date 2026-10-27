@@ -1,0 +1,1368 @@
+{
+  "modes": [
+    {
+      "mode": "modern",
+      "errors": [],
+      "checks": [
+        {
+          "name": "case S06",
+          "fetches": 1,
+          "data": {
+            "selected": "S06",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "case S09",
+          "fetches": 1,
+          "data": {
+            "selected": "S09",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "case S06",
+          "fetches": 1,
+          "data": {
+            "selected": "S06",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "case S09",
+          "fetches": 1,
+          "data": {
+            "selected": "S09",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "floor 전체",
+          "fetches": 0,
+          "data": {
+            "floor": "all",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor B1",
+          "fetches": 0,
+          "data": {
+            "floor": "B1",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 1F",
+          "fetches": 0,
+          "data": {
+            "floor": "1F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 2F",
+          "fetches": 0,
+          "data": {
+            "floor": "2F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 3F",
+          "fetches": 0,
+          "data": {
+            "floor": "3F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 4F",
+          "fetches": 0,
+          "data": {
+            "floor": "4F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 5F",
+          "fetches": 0,
+          "data": {
+            "floor": "5F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 6F",
+          "fetches": 0,
+          "data": {
+            "floor": "6F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 7F",
+          "fetches": 0,
+          "data": {
+            "floor": "7F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor PH",
+          "fetches": 0,
+          "data": {
+            "floor": "PH",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "liteCores false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": false,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteCores true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteExterior false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteExterior true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteDoors false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteDoors true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteSmoke false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": false,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteSmoke true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteFuel false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteFuel true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "litePlumes false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": false,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "litePlumes true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteHeatSmoke false",
+          "fetches": 0,
+          "data": {
+            "checked": false,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "liteHeatSmoke true",
+          "fetches": 0,
+          "data": {
+            "checked": true,
+            "store": {
+              "building": true,
+              "openings": true,
+              "core": true,
+              "smoke": true,
+              "flame": true,
+              "plume": true,
+              "risk": true,
+              "selection": true
+            }
+          }
+        },
+        {
+          "name": "real toggle",
+          "fetches": 0,
+          "data": "false"
+        },
+        {
+          "name": "real toggle",
+          "fetches": 0,
+          "data": "true"
+        },
+        {
+          "name": "opacity .15",
+          "fetches": 0,
+          "data": ".15"
+        },
+        {
+          "name": "opacity .4",
+          "fetches": 0,
+          "data": ".4"
+        },
+        {
+          "name": "opacity 1",
+          "fetches": 0,
+          "data": "1"
+        },
+        {
+          "name": "liteFocus",
+          "fetches": 0,
+          "data": {
+            "position": [
+              72.66999999999999,
+              35.447500000000005,
+              34.099999999999994
+            ],
+            "target": [
+              57.669999999999995,
+              53.4475,
+              17.1
+            ]
+          }
+        },
+        {
+          "name": "liteFireFocus",
+          "fetches": 0,
+          "data": {
+            "position": [
+              63.67,
+              45.34536796564403,
+              22.1
+            ],
+            "target": [
+              57.67,
+              53.34536796564403,
+              16.900000000000002
+            ]
+          }
+        },
+        {
+          "name": "liteWhole",
+          "fetches": 0,
+          "data": {
+            "position": [
+              95.79550876212147,
+              0.15199123787854063,
+              77.4530596383336
+            ],
+            "target": [
+              42.519999999999996,
+              53.427499999999995,
+              18.849999999999998
+            ]
+          }
+        },
+        {
+          "name": "liteBuilding",
+          "fetches": 0,
+          "data": {
+            "position": [
+              130.79798262963118,
+              -54.24448262963115,
+              120.7397808925943
+            ],
+            "target": [
+              41.08,
+              35.4735,
+              22.049999999999997
+            ]
+          }
+        },
+        {
+          "name": "resize",
+          "fetches": 0,
+          "data": {
+            "width": 1100,
+            "height": 344,
+            "aspect": 3.197674418604651
+          }
+        },
+        {
+          "name": "resize",
+          "fetches": 0,
+          "data": {
+            "width": 1440,
+            "height": 454,
+            "aspect": 3.171806167400881
+          }
+        }
+      ],
+      "entry": {
+        "ui": "modern",
+        "canvas": 1,
+        "legend": 1,
+        "fetches": 11
+      },
+      "playback": [
+        {
+          "speed": 1,
+          "wall_s": 60.057,
+          "t_s": 60,
+          "fetches": 0
+        },
+        {
+          "speed": 20,
+          "wall_s": 60.127,
+          "t_s": 1200,
+          "fetches": 0
+        }
+      ],
+      "fetches": [
+        {
+          "url": "/cad-result/d018b4bb75da4475b1fd75447603c1a0/building.json",
+          "status": 200
+        },
+        {
+          "url": "/cad-result/d018b4bb75da4475b1fd75447603c1a0/legacy-context.json",
+          "status": 200
+        },
+        {
+          "url": "/api/jobs/d018b4bb75da4475b1fd75447603c1a0/hydraulics",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/active.json",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/model-info",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/catalog.json",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/overlay.js",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/r8/schema",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/r8/review",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/doors",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/screening",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S06",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S09",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S06",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S09",
+          "status": 200
+        }
+      ],
+      "fetch_count": 15,
+      "dispose": {
+        "remaining_scene_objects": [
+          "Group",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "route-context-CAD|1",
+          "Mesh",
+          "LineSegments",
+          "Mesh",
+          "Line",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "ArrowHelper",
+          "Line",
+          "Mesh",
+          "LineSegments",
+          "LineSegments",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Sprite",
+          "Mesh",
+          "Sprite",
+          "Mesh",
+          "Sprite",
+          "Mesh",
+          "Sprite",
+          "Group",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Mesh",
+          "Group",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh",
+          "LineLoop",
+          "Mesh"
+        ],
+        "tracked_resources": 9075,
+        "undisposed_resources": [
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "CylinderGeometry",
+          "MeshStandardMaterial",
+          "CylinderGeometry",
+          "MeshStandardMaterial",
+          "CylinderGeometry",
+          "MeshStandardMaterial",
+          "CylinderGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "BoxGeometry",
+          "MeshStandardMaterial",
+          "RingGeometry",
+          "MeshStandardMaterial",
+          "BufferGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "BufferGeometry",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "LineBasicMaterial",
+          "MeshBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "BufferGeometry",
+          "LineBasicMaterial",
+          "CylinderGeometry",
+          "MeshBasicMaterial",
+          "CylinderGeometry",
+          "MeshBasicMaterial",
+          "ConeGeometry",
+          "MeshBasicMaterial",
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SpriteMaterial",
+          1009,
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SpriteMaterial",
+          1009,
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SpriteMaterial",
+          1009,
+          "SphereGeometry",
+          "MeshBasicMaterial",
+          "SpriteMaterial",
+          1009
+        ],
+        "subscriptions": 0,
+        "layers": [
+          {
+            "id": "building",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "openings",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "core",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "smoke",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "flame",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "plume",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "risk",
+            "state": "disposed",
+            "resources": 0
+          },
+          {
+            "id": "selection",
+            "state": "disposed",
+            "resources": 0
+          }
+        ],
+        "host": {
+          "running": false,
+          "disposed": true,
+          "pendingFrame": false,
+          "canvasCount": 1,
+          "sceneObjects": 3785
+        },
+        "render_restored": true,
+        "remaining_panels": 0,
+        "extra_links": [
+          "http://127.0.0.1:8780/cfbt/overlay.css"
+        ],
+        "active_intervals": [
+          1,
+          2
+        ],
+        "connected_listener_leaks": [
+          "click",
+          "pagehide",
+          "pagehide"
+        ]
+      }
+    },
+    {
+      "mode": "legacy",
+      "errors": [],
+      "checks": [
+        {
+          "name": "case S06",
+          "fetches": 1,
+          "data": {
+            "selected": "S06",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "case S09",
+          "fetches": 1,
+          "data": {
+            "selected": "S09",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "case S06",
+          "fetches": 1,
+          "data": {
+            "selected": "S06",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "case S09",
+          "fetches": 1,
+          "data": {
+            "selected": "S09",
+            "rooms": 38
+          }
+        },
+        {
+          "name": "floor 전체",
+          "fetches": 0,
+          "data": {
+            "floor": "all",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor B1",
+          "fetches": 0,
+          "data": {
+            "floor": "B1",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 1F",
+          "fetches": 0,
+          "data": {
+            "floor": "1F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 2F",
+          "fetches": 0,
+          "data": {
+            "floor": "2F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 3F",
+          "fetches": 0,
+          "data": {
+            "floor": "3F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 4F",
+          "fetches": 0,
+          "data": {
+            "floor": "4F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 5F",
+          "fetches": 0,
+          "data": {
+            "floor": "5F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 6F",
+          "fetches": 0,
+          "data": {
+            "floor": "6F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor 7F",
+          "fetches": 0,
+          "data": {
+            "floor": "7F",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "floor PH",
+          "fetches": 0,
+          "data": {
+            "floor": "PH",
+            "camera_unchanged": true
+          }
+        },
+        {
+          "name": "liteCores false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "liteCores true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "liteExterior false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "liteExterior true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "liteDoors false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "liteDoors true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "liteSmoke false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "liteSmoke true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "liteFuel false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "liteFuel true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "litePlumes false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "litePlumes true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "liteHeatSmoke false",
+          "fetches": 0,
+          "data": {
+            "checked": false
+          }
+        },
+        {
+          "name": "liteHeatSmoke true",
+          "fetches": 0,
+          "data": {
+            "checked": true
+          }
+        },
+        {
+          "name": "real toggle",
+          "fetches": 0,
+          "data": "false"
+        },
+        {
+          "name": "real toggle",
+          "fetches": 0,
+          "data": "true"
+        },
+        {
+          "name": "opacity .15",
+          "fetches": 0,
+          "data": ".15"
+        },
+        {
+          "name": "opacity .4",
+          "fetches": 0,
+          "data": ".4"
+        },
+        {
+          "name": "opacity 1",
+          "fetches": 0,
+          "data": "1"
+        },
+        {
+          "name": "liteFocus",
+          "fetches": 0,
+          "data": {
+            "position": [
+              72.66999999999999,
+              35.447500000000005,
+              34.099999999999994
+            ],
+            "target": [
+              57.669999999999995,
+              53.4475,
+              17.1
+            ]
+          }
+        },
+        {
+          "name": "liteFireFocus",
+          "fetches": 0,
+          "data": {
+            "position": [
+              63.67,
+              45.34536796564403,
+              22.1
+            ],
+            "target": [
+              57.67,
+              53.34536796564403,
+              16.900000000000002
+            ]
+          }
+        },
+        {
+          "name": "liteWhole",
+          "fetches": 0,
+          "data": {
+            "position": [
+              95.79550876212147,
+              0.15199123787854063,
+              77.4530596383336
+            ],
+            "target": [
+              42.519999999999996,
+              53.427499999999995,
+              18.849999999999998
+            ]
+          }
+        },
+        {
+          "name": "liteBuilding",
+          "fetches": 0,
+          "data": {
+            "position": [
+              130.79798262963118,
+              -54.24448262963115,
+              120.7397808925943
+            ],
+            "target": [
+              41.08,
+              35.4735,
+              22.049999999999997
+            ]
+          }
+        },
+        {
+          "name": "resize",
+          "fetches": 0,
+          "data": {
+            "width": 1100,
+            "height": 344,
+            "aspect": 3.197674418604651
+          }
+        },
+        {
+          "name": "resize",
+          "fetches": 0,
+          "data": {
+            "width": 1440,
+            "height": 454,
+            "aspect": 3.171806167400881
+          }
+        }
+      ],
+      "entry": {
+        "ui": "legacy",
+        "canvas": 1,
+        "legend": 1,
+        "fetches": 10
+      },
+      "playback": [
+        {
+          "speed": 1,
+          "wall_s": 60.047,
+          "t_s": 60,
+          "fetches": 0
+        },
+        {
+          "speed": 20,
+          "wall_s": 60.04,
+          "t_s": 1190,
+          "fetches": 0
+        }
+      ],
+      "fetches": [
+        {
+          "url": "/cad-result/d018b4bb75da4475b1fd75447603c1a0/building.json",
+          "status": 200
+        },
+        {
+          "url": "/cad-result/d018b4bb75da4475b1fd75447603c1a0/legacy-context.json",
+          "status": 200
+        },
+        {
+          "url": "/api/jobs/d018b4bb75da4475b1fd75447603c1a0/hydraulics",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/active.json",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/catalog.json",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/overlay.js",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/r8/schema",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/r8/review",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/doors",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/screening",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S06",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S09",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S06",
+          "status": 200
+        },
+        {
+          "url": "/cfbt/lite/result/S09",
+          "status": 200
+        }
+      ],
+      "fetch_count": 14
+    }
+  ],
+  "playback_wall_target_s": 60,
+  "fetch_equal": false,
+  "served_bundle_sha256": "79089ada45f6087cfecbe94b0d66def05aa9d04c11015f84651fada9afcd86e3"
+}

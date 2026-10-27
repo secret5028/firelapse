@@ -45,7 +45,7 @@ export async function attachScreening(panel,viewer){
  async function post(start=false){if(!n.checkValidity()){n.reportValidity();return;}status.textContent='저장 중…';try{const response=await fetch('/cfbt/lite/screening',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:Number(n.value),mc_room:choice.value,run:start})});const payload=await response.json();if(!response.ok)throw Error(payload.error);if(start){status.textContent='순차 계산 시작. 결과 새로고침으로 확인하세요.';run.disabled=true;}else render(payload);}catch(e){status.textContent=e.message;}}
  save.onclick=()=>post();run.onclick=()=>post(true);choice.onchange=()=>post();refresh.onclick=load;n.oninput=draw;
  const show=()=>{group.visible=toggle.checked&&['all','3F'].includes(viewer.getFloor());};toggle.onchange=show;show();
- const timer=setInterval(show,250);window.addEventListener('pagehide',()=>{clearInterval(timer);clear();S.remove(group);},{once:true});await load();
+ let disposed=false;const timer=setInterval(show,250);const dispose=()=>{if(disposed)return;disposed=true;clearInterval(timer);clear();S.remove(group);window.removeEventListener('pagehide',dispose);host.remove();};window.addEventListener('pagehide',dispose,{once:true});await load();return {dispose};
 }
 
 

@@ -54,4 +54,5 @@ export async function attachFrozenRules(panel,getOptions){
   }catch(e){error.textContent=e.message;}finally{submitting=false;submit.disabled=false;await refresh().catch(e=>error.textContent=e.message);}
  });
  await refresh();
+ return {dispose(){if(poll){clearInterval(poll);poll=null;}host.remove();}};
 }

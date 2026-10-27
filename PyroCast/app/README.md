@@ -1,7 +1,17 @@
-# UI contracts — stage 1
+# PyroCast UI — production host and contracts
 
 Interface source: `specs/Claude계약초안-스토어·레이어·스키마-20261026.md`.
-This directory is not connected to the running viewer yet. It contains pure read adapters and JSON Schema draft 2020-12 contracts. It does not import or run either simulation engine.
+The running viewer uses this directory's scene host by default. `?ui=legacy` selects the preserved viewer. The pure read adapters and JSON Schema draft 2020-12 contracts do not import or run either simulation engine. Historical stage notes below describe earlier checkpoints.
+
+## Production entry (2026-10-28)
+
+Run `python tools/build_ui_bundle.py` from the project root after editing `app/web` sources. Its default output is the actual served `simulation/viewer/overlay.js`; do not hand-edit that generated file. `entry.js` selects the modern host for lite playback and preserves the old path for `?ui=legacy` and non-lite results. Server routes and cache keys are unchanged.
+
+`controller.dispose()` restores the borrowed CAD renderer and building materials, disposes owned layer and menu resources, disconnects observers/listeners/timers, clears the series cache and removes its panels/styles. It also runs on `pagehide`. The CAD scene/canvas remains owned by the original loader. Auxiliary legacy menu modules now return optional disposers; their legacy UI and network behaviour are unchanged.
+
+Run `node app/tests/production_switch.test.mjs` with Playwright configured as below and the local server on 8780. This exercises both paths against the served bundle, blocks writes, performs real 60-second playback at 1x/20x, captures legacy, and measures control fetches and modern cleanup. Evidence: `simulation/results/ui_refactor_production_20261028/`.
+
+**Stage 4 pending:** the 38 invisible picking planes still issue **76 modern draw calls**. This is explicitly deferred; this switch does not optimize or remove them.
 
 ## Entry points
 

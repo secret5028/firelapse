@@ -20,7 +20,7 @@ export function createLitePanel(){
  document.body.append(panel);const $=id=>document.getElementById(id);
  const selectionLabel=document.createElement('div');selectionLabel.className='cfbtSceneCaption';selectionLabel.style.borderColor='#42e8ff';selectionLabel.style.color='#9af3ff';$('v').append(selectionLabel);
 
- return {panel,$,selectionLabel};
+ return {panel,$,selectionLabel,style};
 }
 export function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionLabel,riskStatus}){
  const time=data.time_s[index],stamp=t=>Math.floor(t/60).toString().padStart(2,'0')+':'+Math.floor(t%60).toString().padStart(2,'0'),name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||(r.cad_names||[]).slice(0,2).join(' / ')}`;
@@ -42,6 +42,7 @@ export function updateLitePanel({data,index,selected,clicked,playing,floor,$,sel
  $('liteRiskStatus').textContent=riskStatus;
 }
 export async function createMenuReview(panel,viewer){
+ const cleanups=[];let disposed=false;
  const drawer=document.createElement('aside');drawer.id='pyroMenuReview';drawer.setAttribute('aria-label','전체 메뉴 검토');
  drawer.innerHTML='<header><strong>전체 메뉴·표시 검토</strong><button type="button" id="reviewClose">3D로 돌아가기</button></header><p>삭제 전 검토용입니다. 아래는 현재·이전 메뉴를 모두 펼친 읽기 전용 목록입니다. 숨겨졌던 기능도 나열하며, 표시 효과를 한꺼번에 켜거나 계산·저장을 실행하지 않습니다.</p><nav id="reviewNav"></nav><div id="reviewSections"></div>';
  document.body.append(drawer);drawer.querySelector('#reviewClose').onclick=()=>{drawer.hidden=true;};
@@ -73,9 +74,9 @@ export async function createMenuReview(panel,viewer){
  const modules=[['5 · 동결 정밀 r8 설정·저장된 결과','./frozen_rule_controls.js','attachFrozenRules'],['6 · 문 자동 분류·정정 메뉴','./lite_doors.js','attachLiteDoors'],['7 · 화점 선별·상위 N·비교 결과','./screening.js','attachScreening']];
  for(const [title,path,method] of modules){
   const host=section(title),disabled=document.createElement('fieldset');disabled.disabled=true;host.append(disabled);
-  try{const module=await import(path);await module[method](disabled,method==='attachFrozenRules'?()=>{throw Error('메뉴 검토 화면에서는 계산하지 않습니다.');}:viewer);for(const d of disabled.querySelectorAll('details'))d.open=true;}
+  try{const module=await import(path);const component=await module[method](disabled,method==='attachFrozenRules'?()=>{throw Error('메뉴 검토 화면에서는 계산하지 않습니다.');}:viewer);if(component?.dispose)cleanups.push(()=>component.dispose());for(const d of disabled.querySelectorAll('details'))d.open=true;}
   catch(e){const p=document.createElement('p');p.textContent='메뉴 로드 실패: '+e.message;host.append(p);}
  }
  const note=document.createElement('p');note.textContent='입력란이 회색인 것은 검토용이기 때문입니다. 유지·삭제할 항목을 지정하면 실제 메뉴에 반영합니다. 기존 작전 표시는 계산된 화재·연기와 별개의 수동 기호입니다.';sections.append(note);
- return drawer;
+ drawer.dispose=()=>{if(disposed)return;disposed=true;for(const off of cleanups.reverse())off();drawer.remove();};return drawer;
 }

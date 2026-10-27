@@ -17,9 +17,10 @@ import {createLitePanel,updateLitePanel,createMenuReview} from './panels/legacy_
 // No simulation, write API, cached-result key or solver imports.
 export async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={}){
  const {THREE:T,B,S,C,O,R,groups,shp,legacyRoot}=viewer;
- const info=await (await fetch('/cfbt/model-info')).json();
- if(initial.building_sha256!==info.building_sha256)throw Error('다른 건물의 계산 결과입니다. 표시하지 않습니다.');
- const {panel,$,selectionLabel}=createLitePanel();legacyRoot.visible=false;
+ // The unchanged lite API rejects payloads from another building before serving.
+ // Subsequent case installs must still match this initial server-validated hash.
+ const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
+ const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length}});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
@@ -34,7 +35,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const renderer={domElement:R.domElement,setSize:(w,h)=>R.setSize(w,h),render:(scene,camera)=>{
   const hidden=[];
   buildingLayer.syncSource();
-  for(const row of buildingAsset.floors){row.objects.forEach(source=>{
+  for(const row of buildingAsset.floors){const clone=buildingLayer.floorGroups.get(row.id);if(clone)clone.visible=row.group.visible;row.objects.forEach(source=>{
     hidden.push([source,source.visible]);source.visible=false;});
   }
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}
@@ -113,6 +114,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
  await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();host.dispose();cache.clear();panel.remove();selectionLabel.remove();review.remove();}
+ function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

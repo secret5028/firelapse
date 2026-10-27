@@ -28,7 +28,8 @@ window.ready=(async()=>{
  light(reference);const scene=new T.Scene();light(scene);
  const store=createStore({validators:{building:v=>v.schema==='fixture'}}),layer=new BuildingLayer(T,{geometryFor:()=>asset});
  store.dispatch('building/set',{schema:'fixture',source_hash:hash});
- const host=createSceneHost({container:document.querySelector('#scene'),THREE:T,store,scene,layers:[layer],clock:{now:()=>180000}});
+ const activeLayers=[layer];
+ const host=createSceneHost({container:document.querySelector('#scene'),THREE:T,store,scene,layers:activeLayers,clock:{now:()=>180000}});
  const meta={id:'unchanged'},frame={building:store.get('building'),resultMeta:meta,floor:{floor_id:'3F'}};
  host.render();const buildCount=layer.buildCount,identities=[...layer.floorGroups.values()].flatMap(g=>g.children).map(o=>[o,o.geometry,o.material]);
  for(let i=0;i<500;i++)layer.setData({...frame,t_s:i*10,selection:{room_id:'R'+i%3}});
@@ -50,5 +51,6 @@ window.ready=(async()=>{
   const matCount=layer.resources.size;let materialsDisposed=0;for(const m of layer.resources)m.addEventListener('dispose',()=>materialsDisposed++);
   host.dispose();assert(layer.resources.size===0&&materialsDisposed===matCount,'Owned materials leaked');assert(sourceDisposed===0,'Borrowed geometry disposed');assert(sourcePreserved,'Source material changed');
   return {sourcePreserved,borrowed_geometry_disposals:sourceDisposed,materials_disposed:materialsDisposed,building_objects:policyCount,builds:buildCount,unchanged_frames:500,result_change_rebuilt:false,floors:asset.floors.length,clock_ms:180000,group_policy_rejected:groupRejected,subscriptions:store.diagnostics().subscriptions};};
+ window.buildingFixtureContext={B,viewer,hash,legacy,asset,scene,reference,referenceGroups,store,host,activeLayers};
  return true;
 })();

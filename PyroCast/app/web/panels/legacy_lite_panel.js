@@ -1,4 +1,3 @@
-import {flameGrowthStyle} from '../../../simulation/viewer/legacy_real_view.js';
 export function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';style.href='/cfbt/overlay.css';document.head.append(style);
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -24,10 +23,7 @@ export function createLitePanel(){
 }
 export function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionLabel,riskStatus}){
  const time=data.time_s[index],stamp=t=>Math.floor(t/60).toString().padStart(2,'0')+':'+Math.floor(t%60).toString().padStart(2,'0'),name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||(r.cad_names||[]).slice(0,2).join(' / ')}`;
-  const source=data.fires.find(f=>f.cad_key===selected.key),peak=source?Math.max(...source.Q_kW):0;
-  const flameStage=source?flameGrowthStyle(source.Q_kW[index],peak,time,data.time_s[source.Q_kW.indexOf(peak)]).stage:'화원 없음';
-  const zone=data.solvers[selected.solver_id],layerH=Math.max(0,Math.min(zone.height_m,zone.h[index]));
-  selectionLabel.hidden=!(floor==='all'||selected.cad_floor===floor);selectionLabel.textContent=`선택: ${name(selected)}\n바닥 하늘색 = 선택한 방 · 내부 셀 경계 숨김\n화염 단계: ${flameStage} (발열량 기준 표시)\n상층 두께 ${(zone.height_m-layerH).toFixed(2)}m / 하층 높이 ${layerH.toFixed(2)}m\n외곽 수평선 = 연기층 경계 · 위험 조건 시 해당 색상`;
+  selectionLabel.hidden=!(floor==='all'||selected.cad_floor===floor);
   const visibleRooms=data.rooms.filter(r=>floor==='all'||r.cad_floor===floor),visibleKeys=new Set(visibleRooms.map(r=>r.key));
   const smokeCount=$('liteSmoke').checked?visibleRooms.filter(r=>{const s=data.solvers[r.solver_id];return s.ODu[index]>0&&s.height_m-s.h[index]>.01;}).length:0;
   const fireCount=data.fires.filter(f=>visibleKeys.has(f.cad_key)&&f.Q_kW[index]>0).length;

@@ -13,6 +13,7 @@ import {SelectionLayer} from './layers/selection.js';
 import {createSceneHost} from './scene/host.js';
 import {createLitePanel,updateLitePanel,createMenuReview} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
+import {createDisplayPanel} from './panels/display.js';
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
 // No simulation, write API, cached-result key or solver imports.
@@ -24,6 +25,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length}});
  const shell=createPanelShell({panel,store});
+ const display=createDisplayPanel({store,selectionLabel});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
  const coreAsset=readLegacyCoreSource({building:B,groups,sourceHash:initial.building_sha256,shapeFor:shp});
@@ -32,6 +34,14 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  const layers=[buildingLayer,openings,core,...real,risk,selection];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
+ const referenceToggle=$('layer_reference'),referenceVisible=referenceToggle?.checked;
+ const legacyChildren=legacyRoot.children.map(o=>[o,o.visible]),people=legacyRoot.children.at(-1);
+ let operationsVisible=null;
+ function syncOperations(){const visible=store.get('layers').operations;if(visible===operationsVisible)return;operationsVisible=visible;
+  if(referenceToggle){referenceToggle.checked=visible;referenceToggle.onchange?.();}
+  legacyRoot.visible=visible;for(const [object] of legacyChildren)object.visible=visible&&(object.name==='operation-overlays'||object===people);
+ }
+ cleanup.push(()=>{for(const [object,visible] of legacyChildren)object.visible=visible;if(referenceToggle){referenceToggle.checked=referenceVisible;referenceToggle.onchange?.();}});
  // Keep the CAD controls/labels and its single canvas. The CAD animation loop
  // calls this host instead of drawing a second scene/starting a second loop.
  const renderer={domElement:R.domElement,setSize:(w,h)=>R.setSize(w,h),render:(scene,camera)=>{
@@ -51,9 +61,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  function render(){if(!ready||busy||disposed)return;busy=true;try{
   const f=viewer.getFloor();if(f!==lastFloor){lastFloor=f;store.dispatch('floor/set',{floor_id:f==='all'?null:f});}
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
+  syncOperations();
   host.render();
-  const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings')]);
-  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});shell.syncStatus();lastPanel=signature;}
+  const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
+  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});display.hud({building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')});shell.syncStatus();lastPanel=signature;}
  }finally{busy=false;}}
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
@@ -73,6 +84,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.05;
   O.target.copy(center);C.position.copy(center).add(new T.Vector3(1,-1,1.1).normalize().multiplyScalar(distance));O.update();recordCamera(viewer.getFloor()==='all'?'all':'floor');render();
  }
+ for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').children){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
  cleanup.push(store.subscribe('selection',s=>{if(!data)return;selected=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id)||selected;$('liteRoom').value=selected.key;if(s.source!=='list'||ready)clicked=true;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);render();}));
@@ -86,7 +98,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  handler($('liteWhole'),'onclick',fitFloor);handler($('liteBuilding'),'onclick',()=>{viewer.setFloor('all');render();fitFloor();});
  for(const [id,layer] of [['liteCores','core'],['liteSmoke','smoke'],['litePlumes','plume']])handler($(id),'onchange',()=>{store.dispatch('layers/toggle',{id:layer,visible:$(id).checked});render();});
  for(const [id,key] of [['liteExterior','exterior'],['liteDoors','interior']])handler($(id),'onchange',()=>{store.dispatch('openings/set',{[key]:$(id).checked});render();});
- for(const [id,key] of [['liteFuel','fuelMarkers'],['liteHeatSmoke','temperatureSmoke']])handler($(id),'onchange',()=>{store.dispatch('realView/set',{[key]:$(id).checked});render();});
+ handler($('liteFuel'),'onchange',()=>{store.dispatch('realView/set',{fuelMarkers:$('liteFuel').checked});render();});
  handler($('liteOpacity'),'onchange',()=>{store.dispatch('realView/set',{smokeOpacity:+$('liteOpacity').value});render();});
  handler($('liteReal'),'onclick',()=>{const enabled=!store.get('realView').enabled;store.dispatch('realView/set',{enabled});$('liteReal').setAttribute('aria-pressed',String(enabled));render();});
  handler($('litePlay'),'onclick',()=>{store.dispatch('playback/play',{playing:!store.get('playback').playing});render();});
@@ -116,7 +128,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
  await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);review.hidden=true;handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

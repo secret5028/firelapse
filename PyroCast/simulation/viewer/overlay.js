@@ -3,7 +3,6 @@ import * as __external0 from '/cfbt/legacy_real_bridge.js';
 import * as __external1 from '/cfbt/risk.js';
 import * as __external2 from '/cfbt/ceiling_jets.js';
 import * as __external3 from '/cfbt/smoke_transport.js';
-import * as __external4 from '/cfbt/legacy_real_view.js';
 // app/web/panels/legacy_overlay.js
 const __module0=(()=>{
 // CFAST results on the preserved CAD scene. Values come exclusively from the completed payload.
@@ -444,9 +443,9 @@ const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({building:null,result:null,screening:null,
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,fuelMarkers:true},
+ realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',fuelMarkers:true},
  openings:{exterior:true,interior:true},
- layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true},
+ layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false},
  risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
@@ -468,6 +467,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
+     if(p.temperaturePattern!==undefined&&!['weak','current','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
     case 'risk/threshold':{
@@ -998,10 +998,10 @@ const {createRealView}=__external0;
 // facades share this resource session, never refer to one another or duplicate it.
 function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
  if(typeof sourceFor!=='function'||!camera?.isCamera)throw Error('Raw playback source provider and host camera required');
- const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[]};
+ const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[],smokeMaterials:[]};
  function clear(){
   session.renderer?.detach();for(const resource of session.resources)resource.dispose();session.resources.clear();
-  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];
+  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];session.smokeMaterials=[];
  }
  function gather(){session.root.traverse(o=>{
   if(o.geometry)session.resources.add(o.geometry);
@@ -1009,6 +1009,7 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
    for(const value of Object.values(m))if(value?.isTexture)session.resources.add(value);
    for(const u of Object.values(m.uniforms||{}))if(u.value?.isTexture)session.resources.add(u.value);
    if(m.uniforms?.uFire?.value===1)session.flames.push(o);
+   if(m.uniforms?.uTemperatureSmoke&&m.uniforms.uFire.value===0&&m.uniforms.uGas.value===0)session.smokeMaterials.push(m);
   }
   if(o.isPointLight)session.lights.push(o);
  });}
@@ -1034,6 +1035,12 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
    smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,customRiskBoundaries:true,legacySmokeTexture:true,
    flameDisplay:'growth',plumesEnabled:frame.layers.plume,temperatureSmoke:settings.temperatureSmoke});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
+  // Display only. The frozen shader has a binary colour gate and a temperature
+  // input, not an independent highlight gain. Weak remaps only the display input.
+  for(const material of session.smokeMaterials){const u=material.uniforms,mode=settings.temperaturePattern??'current';
+   u.uTemperatureSmoke.value=settings.temperatureSmoke&&mode!=='off'?1:0;
+   if(mode==='weak')u.uLayerTemp.value=80+.35*Math.max(0,Math.min(200,u.uLayerTemp.value)-80);
+  }
   session.renderer.animate(session.lastAnimateMs);
   for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
   // The unchanged bridge hardcodes flamesEnabled=true. Mask only flame draw
@@ -1371,7 +1378,6 @@ return {createSceneHost};
 
 // app/web/panels/legacy_lite_panel.js
 const __module23=(()=>{
-const {flameGrowthStyle}=__external4;
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';style.href='/cfbt/overlay.css';document.head.append(style);
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1397,10 +1403,7 @@ function createLitePanel(){
 }
 function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionLabel,riskStatus}){
  const time=data.time_s[index],stamp=t=>Math.floor(t/60).toString().padStart(2,'0')+':'+Math.floor(t%60).toString().padStart(2,'0'),name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||(r.cad_names||[]).slice(0,2).join(' / ')}`;
-  const source=data.fires.find(f=>f.cad_key===selected.key),peak=source?Math.max(...source.Q_kW):0;
-  const flameStage=source?flameGrowthStyle(source.Q_kW[index],peak,time,data.time_s[source.Q_kW.indexOf(peak)]).stage:'화원 없음';
-  const zone=data.solvers[selected.solver_id],layerH=Math.max(0,Math.min(zone.height_m,zone.h[index]));
-  selectionLabel.hidden=!(floor==='all'||selected.cad_floor===floor);selectionLabel.textContent=`선택: ${name(selected)}\n바닥 하늘색 = 선택한 방 · 내부 셀 경계 숨김\n화염 단계: ${flameStage} (발열량 기준 표시)\n상층 두께 ${(zone.height_m-layerH).toFixed(2)}m / 하층 높이 ${layerH.toFixed(2)}m\n외곽 수평선 = 연기층 경계 · 위험 조건 시 해당 색상`;
+  selectionLabel.hidden=!(floor==='all'||selected.cad_floor===floor);
   const visibleRooms=data.rooms.filter(r=>floor==='all'||r.cad_floor===floor),visibleKeys=new Set(visibleRooms.map(r=>r.key));
   const smokeCount=$('liteSmoke').checked?visibleRooms.filter(r=>{const s=data.solvers[r.solver_id];return s.ODu[index]>0&&s.height_m-s.h[index]>.01;}).length:0;
   const fireCount=data.fires.filter(f=>visibleKeys.has(f.cad_key)&&f.Q_kW[index]>0).length;
@@ -1525,8 +1528,65 @@ function createPanelShell({panel,store}){
 return {createPanelShell};
 })();
 
-// app/web/controller.js
+// app/web/panels/display.js
 const __module25=(()=>{
+const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
+function createDisplayPanel({store,selectionLabel}){
+ const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
+ const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
+ const listen=(node,event,fn)=>{node.addEventListener(event,fn);cleanups.push(()=>node.removeEventListener(event,fn));};
+ pane.innerHTML='<h3>레이어</h3><div id="displayLayers"></div><h3>위험 유형</h3><div id="displayRisks"></div><h3>임계값</h3><div class="displaySettings"><label>테두리 <input id="displayRibbon" type="number" min="0" step="5" value="100"></label><label>주의 <input id="displayCaution" type="number" min="0" step="5" value="70"></label><span id="displayError" role="alert"></span></div><h3>연기</h3><div id="displaySmokeSettings" class="displaySettings"></div>';
+ const bindings=[];
+ function toggle(host,id,label,color,read,write,existing=false,tip=''){
+  const row=document.createElement('div');row.className='displayToggle';const text=document.createElement('label');text.htmlFor=id;text.innerHTML=`<i style="background:${color}"></i>`;text.append(label);row.append(text);
+  if(tip){const info=document.createElement('span');info.className='displayInfo';info.tabIndex=0;info.textContent='ⓘ';info.title=tip;info.dataset.tip=tip;row.append(info);}
+  let input;if(existing){input=$(id);const oldLabel=input.closest('label');move(input,row);oldLabel.remove();}else{input=document.createElement('input');input.type='checkbox';input.id=id;row.append(input);listen(input,'change',()=>write(input.checked));}
+  input.setAttribute('role','switch');host.append(row);bindings.push(()=>input.checked=read());return input;
+ }
+ for(const [id,label,color,layer] of [['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
+ for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
+ toggle($('displayLayers'),'liteCores','계단·승강기 투시','#ffc342',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
+ toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
+ toggle($('displayLayers'),'displayOperations','작전 기호 (차량·인원)','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
+ for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
+ const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
+ const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
+ const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="weak">약하게</option><option value="current" selected>현재</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="약하게는 표시용 온도 입력을 낮춰 노란색 쪽으로 약화합니다. 실제 온도·HUD는 그대로입니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
+ listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
+ for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
+ const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
+ meaning.innerHTML=phenomena.map(([k,n,c])=>`<span class="legendChip"><i style="background:${c}"></i>${n}</span>`).join('')+'<span class="legendChip"><i style="background:#9ca3af"></i><span id="legendCaution"></span></span><span class="legendChip">┄ 경계 ±30℃</span><span class="legendChip"><i style="background:#42e8ff"></i>선택</span>';
+ $('liteLegend').remove();
+ const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
+ const toolbar=$('resetView').parentElement;move($('liteFocus'),toolbar);move($('liteFireFocus'),toolbar);$('resetView').textContent='⟲';$('resetView').title='시점 복원';$('liteFocus').textContent='실 확대';$('liteFireFocus').textContent='연소점';
+ selectionLabel.replaceChildren();selectionLabel.classList.add('compactHUD');selectionLabel.innerHTML='<div class="hudTitle"><b id="hudRoom"></b><span id="hudPill"></span></div><div class="hudValues"><span>상층 <b id="hudT"></b></span><span>O₂ <b id="hudO"></b></span><span>연기층 <b id="hudH"></b></span></div>';
+ const style=document.createElement('style');style.dataset.pyrocastDisplay='true';style.textContent=`
+ #shellPane-display{padding:12px 16px;box-sizing:border-box}#shellPane-display h3{font-size:12px;color:#b8cbd8;margin:14px 0 8px;font-weight:500}
+ .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
+ .displayInfo{font-size:12px;color:#b6cedb;cursor:help}.displaySettings{padding:10px;border:1px solid #496273;border-radius:7px;display:grid;gap:9px}.displaySettings label{display:flex;justify-content:space-between;gap:10px;align-items:center}.displaySettings input{width:68px}.displaySettings input,.displaySettings select{background:#1d4158;color:#eef5fa;border:1px solid #6a8d9f;border-radius:4px;padding:5px}#displayError{color:#ffc1b0;font-size:11px}#displayError:empty{display:none}
+ #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:wrap;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px}
+ #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeLegend br,#displayLegend #cfPlumeNumbers{display:none}
+ body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
+ @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
+ `;document.head.append(style);
+ function sync(){bindings.forEach(f=>f());const t=store.get('risk').threshold;$('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('legendCaution').textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('displayTemperature').value=store.get('realView').temperaturePattern;$('liteOpacity').value=store.get('realView').smokeOpacity;}
+ for(const slice of ['layers','openings','realView','risk'])cleanups.push(store.subscribe(slice,sync));sync();
+ function hud({building,result,series,index,selection}){
+  const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
+  $('hudRoom').textContent=(room?.name||selection.room_id||'실 선택')+(cell&&cell!==room?.room_id?' · '+cell.split('_').at(-1):'');
+  const scores=phenomena.map(([key,name,color])=>({key,name,color,value:cell?result.index_by_cell[cell]?.[key]?.[index]:null})).filter(s=>Number.isFinite(s.value)).sort((a,b)=>b.value-a.value),top=scores[0];
+  $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
+  const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);$('hudO').textContent=format(s?.O2_upper_volfrac[index]==null?null:s.O2_upper_volfrac[index]*100,' %',1);$('hudH').textContent=format(s?.interface_m[index],' m',2);
+  selectionLabel.title=cell?'상층 산소 · 바닥에서 연기층 경계까지의 높이':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
+ }
+ return {hud,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
+}
+
+return {createDisplayPanel};
+})();
+
+// app/web/controller.js
+const __module26=(()=>{
 const {createStore}=__module2;
 const {createSeriesCache}=__module1;
 const {adaptBuilding,adaptResult}=__module3;
@@ -1542,6 +1602,7 @@ const {SelectionLayer}=__module21;
 const {createSceneHost}=__module22;
 const {createLitePanel,updateLitePanel,createMenuReview}=__module23;
 const {createPanelShell}=__module24;
+const {createDisplayPanel}=__module25;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
 // No simulation, write API, cached-result key or solver imports.
@@ -1553,6 +1614,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length}});
  const shell=createPanelShell({panel,store});
+ const display=createDisplayPanel({store,selectionLabel});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
  const coreAsset=readLegacyCoreSource({building:B,groups,sourceHash:initial.building_sha256,shapeFor:shp});
@@ -1561,6 +1623,14 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  const layers=[buildingLayer,openings,core,...real,risk,selection];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
+ const referenceToggle=$('layer_reference'),referenceVisible=referenceToggle?.checked;
+ const legacyChildren=legacyRoot.children.map(o=>[o,o.visible]),people=legacyRoot.children.at(-1);
+ let operationsVisible=null;
+ function syncOperations(){const visible=store.get('layers').operations;if(visible===operationsVisible)return;operationsVisible=visible;
+  if(referenceToggle){referenceToggle.checked=visible;referenceToggle.onchange?.();}
+  legacyRoot.visible=visible;for(const [object] of legacyChildren)object.visible=visible&&(object.name==='operation-overlays'||object===people);
+ }
+ cleanup.push(()=>{for(const [object,visible] of legacyChildren)object.visible=visible;if(referenceToggle){referenceToggle.checked=referenceVisible;referenceToggle.onchange?.();}});
  // Keep the CAD controls/labels and its single canvas. The CAD animation loop
  // calls this host instead of drawing a second scene/starting a second loop.
  const renderer={domElement:R.domElement,setSize:(w,h)=>R.setSize(w,h),render:(scene,camera)=>{
@@ -1580,9 +1650,10 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  function render(){if(!ready||busy||disposed)return;busy=true;try{
   const f=viewer.getFloor();if(f!==lastFloor){lastFloor=f;store.dispatch('floor/set',{floor_id:f==='all'?null:f});}
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
+  syncOperations();
   host.render();
-  const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings')]);
-  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});shell.syncStatus();lastPanel=signature;}
+  const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
+  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});display.hud({building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')});shell.syncStatus();lastPanel=signature;}
  }finally{busy=false;}}
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
@@ -1602,6 +1673,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   const vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.05;
   O.target.copy(center);C.position.copy(center).add(new T.Vector3(1,-1,1.1).normalize().multiplyScalar(distance));O.update();recordCamera(viewer.getFloor()==='all'?'all':'floor');render();
  }
+ for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').children){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
  cleanup.push(store.subscribe('selection',s=>{if(!data)return;selected=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id)||selected;$('liteRoom').value=selected.key;if(s.source!=='list'||ready)clicked=true;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);render();}));
@@ -1615,7 +1687,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  handler($('liteWhole'),'onclick',fitFloor);handler($('liteBuilding'),'onclick',()=>{viewer.setFloor('all');render();fitFloor();});
  for(const [id,layer] of [['liteCores','core'],['liteSmoke','smoke'],['litePlumes','plume']])handler($(id),'onchange',()=>{store.dispatch('layers/toggle',{id:layer,visible:$(id).checked});render();});
  for(const [id,key] of [['liteExterior','exterior'],['liteDoors','interior']])handler($(id),'onchange',()=>{store.dispatch('openings/set',{[key]:$(id).checked});render();});
- for(const [id,key] of [['liteFuel','fuelMarkers'],['liteHeatSmoke','temperatureSmoke']])handler($(id),'onchange',()=>{store.dispatch('realView/set',{[key]:$(id).checked});render();});
+ handler($('liteFuel'),'onchange',()=>{store.dispatch('realView/set',{fuelMarkers:$('liteFuel').checked});render();});
  handler($('liteOpacity'),'onchange',()=>{store.dispatch('realView/set',{smokeOpacity:+$('liteOpacity').value});render();});
  handler($('liteReal'),'onclick',()=>{const enabled=!store.get('realView').enabled;store.dispatch('realView/set',{enabled});$('liteReal').setAttribute('aria-pressed',String(enabled));render();});
  handler($('litePlay'),'onclick',()=>{store.dispatch('playback/play',{playing:!store.get('playback').playing});render();});
@@ -1645,7 +1717,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
  await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);review.hidden=true;handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }
@@ -1654,9 +1726,9 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module26=(()=>{
+const __module27=(()=>{
 const {attach:attachLegacy}=__module0;
-const {attachModern}=__module25;
+const {attachModern}=__module26;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -1672,4 +1744,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module26.attach;
+export const attach=__module27.attach;

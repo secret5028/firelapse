@@ -4,10 +4,10 @@ import {createRealView} from '../../../simulation/viewer/legacy_real_bridge.js';
 // facades share this resource session, never refer to one another or duplicate it.
 export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
  if(typeof sourceFor!=='function'||!camera?.isCamera)throw Error('Raw playback source provider and host camera required');
- const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[]};
+ const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[],smokeMaterials:[]};
  function clear(){
   session.renderer?.detach();for(const resource of session.resources)resource.dispose();session.resources.clear();
-  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];
+  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];session.smokeMaterials=[];
  }
  function gather(){session.root.traverse(o=>{
   if(o.geometry)session.resources.add(o.geometry);
@@ -15,6 +15,7 @@ export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}
    for(const value of Object.values(m))if(value?.isTexture)session.resources.add(value);
    for(const u of Object.values(m.uniforms||{}))if(u.value?.isTexture)session.resources.add(u.value);
    if(m.uniforms?.uFire?.value===1)session.flames.push(o);
+   if(m.uniforms?.uTemperatureSmoke&&m.uniforms.uFire.value===0&&m.uniforms.uGas.value===0)session.smokeMaterials.push(m);
   }
   if(o.isPointLight)session.lights.push(o);
  });}
@@ -40,6 +41,12 @@ export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}
    smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,customRiskBoundaries:true,legacySmokeTexture:true,
    flameDisplay:'growth',plumesEnabled:frame.layers.plume,temperatureSmoke:settings.temperatureSmoke});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
+  // Display only. The frozen shader has a binary colour gate and a temperature
+  // input, not an independent highlight gain. Weak remaps only the display input.
+  for(const material of session.smokeMaterials){const u=material.uniforms,mode=settings.temperaturePattern??'current';
+   u.uTemperatureSmoke.value=settings.temperatureSmoke&&mode!=='off'?1:0;
+   if(mode==='weak')u.uLayerTemp.value=80+.35*Math.max(0,Math.min(200,u.uLayerTemp.value)-80);
+  }
   session.renderer.animate(session.lastAnimateMs);
   for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
   // The unchanged bridge hardcodes flamesEnabled=true. Mask only flame draw

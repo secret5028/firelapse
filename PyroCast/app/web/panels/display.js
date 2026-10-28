@@ -3,7 +3,7 @@ export function createDisplayPanel({store,selectionLabel}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
  const listen=(node,event,fn)=>{node.addEventListener(event,fn);cleanups.push(()=>node.removeEventListener(event,fn));};
- pane.innerHTML='<h3>레이어</h3><div id="displayLayers"></div><h3>위험 유형</h3><div id="displayRisks"></div><h3>임계값</h3><div class="displaySettings"><label>테두리 <input id="displayRibbon" type="number" min="0" step="5" value="100"></label><label>주의 <input id="displayCaution" type="number" min="0" step="5" value="70"></label><span id="displayError" role="alert"></span></div><h3>연기</h3><div id="displaySmokeSettings" class="displaySettings"></div>';
+ pane.innerHTML='<h3>보기</h3><div id="displayViewSettings"></div><h3>레이어</h3><div id="displayLayers"></div><h3>위험 유형</h3><div id="displayRisks"></div><h3>임계값</h3><div class="displaySettings"><label>테두리 <input id="displayRibbon" type="number" min="0" step="5" value="100"></label><label>주의 <input id="displayCaution" type="number" min="0" step="5" value="70"></label><span id="displayError" role="alert"></span></div><h3>연기</h3><div id="displaySmokeSettings" class="displaySettings"></div>';
  const bindings=[];
  function toggle(host,id,label,color,read,write,existing=false,tip=''){
   const row=document.createElement('div');row.className='displayToggle';const text=document.createElement('label');text.htmlFor=id;text.innerHTML=`<i style="background:${color}"></i>`;text.append(label);row.append(text);
@@ -11,6 +11,7 @@ export function createDisplayPanel({store,selectionLabel}){
   let input;if(existing){input=$(id);const oldLabel=input.closest('label');move(input,row);oldLabel.remove();}else{input=document.createElement('input');input.type='checkbox';input.id=id;row.append(input);listen(input,'change',()=>write(input.checked));}
   input.setAttribute('role','switch');host.append(row);bindings.push(()=>input.checked=read());return input;
  }
+ toggle($('displayViewSettings'),'displayReal','실감 보기','#62dcb0',()=>store.get('realView').enabled,enabled=>store.dispatch('realView/set',{enabled}));
  for(const [id,label,color,layer] of [['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#ffc342',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
@@ -41,7 +42,7 @@ export function createDisplayPanel({store,selectionLabel}){
  for(const slice of ['layers','openings','realView','risk'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
-  $('hudRoom').textContent=(room?.name||selection.room_id||'실 선택')+(cell&&cell!==room?.room_id?' · '+cell.split('_').at(-1):'');
+  $('hudRoom').textContent=$('liteRoom').selectedOptions[0]?.textContent||'실 선택';
   const scores=phenomena.map(([key,name,color])=>({key,name,color,value:cell?result.index_by_cell[cell]?.[key]?.[index]:null})).filter(s=>Number.isFinite(s.value)).sort((a,b)=>b.value-a.value),top=scores[0];
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
   const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);$('hudO').textContent=format(s?.O2_upper_volfrac[index]==null?null:s.O2_upper_volfrac[index]*100,' %',1);$('hudH').textContent=format(s?.interface_m[index],' m',2);

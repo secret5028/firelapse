@@ -1,6 +1,6 @@
 {
-  "scope": "stage4 item4 exploration tab, pending two clarifications",
-  "status": "implemented_available_paths; MC execution unavailable",
+  "scope": "stage4 item4 including both clarified UI corrections",
+  "status": "complete within user-approved item4 scope",
   "pixel_comparisons": [
     {
       "scene": "S09-1800",
@@ -57,9 +57,14 @@
     "resources": 0
   },
   "page_errors": [],
-  "open_questions": [
-    "MC execution endpoint absent; server unchanged, run disabled pending user response",
-    "Contents of user-referenced two fixes not present; clarification pending"
-  ],
-  "overlay_sha256": "69fb94d60437ced01278e898a76f1bf43674e11a461fe67779f7aa8559746d02"
+  "open_questions": [],
+  "overlay_sha256": "f3b8aa669f1707065c69918e1c02287e8ba291eab4a2d9c9f8537fcb6475f036",
+  "clarified_fixes": {
+    "hudMatchesSelector": true,
+    "fitButtonsHidden": true,
+    "realViewInDisplay": true,
+    "reviewFoldedAtBottom": true
+  },
+  "mc_execution": "disabled by user decision; tooltip: 서버 실행 경로는 5단계",
+  "stage5_backlog": "POST /cfbt/lite/mc; not implemented"
 }

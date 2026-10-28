@@ -30,6 +30,12 @@ try{
 
  await modern.evaluate(async()=>{const $=id=>document.getElementById(id);$('liteCase').value='S09';await $('liteCase').onchange();[...$('fbtn').children].find(b=>b.textContent==='3F').click();$('liteRoom').value='CAD_3F_R2_C0';$('liteRoom').onchange();$('liteTime').value=1420;$('liteTime').oninput();$('liteWhole').click();$('shellTab-display').click();window.__ui.render();});
 
+ await modern.click('#shellTab-result');
+ assert(await modern.locator('#liteWhole').isHidden());assert(await modern.locator('#liteBuilding').isHidden());assert(await modern.locator('#liteReal').isHidden());assert.equal(await modern.locator('#resultCase #resultTools').count(),0);
+ assert.equal(await modern.locator('#hudRoom').textContent(),await modern.locator('#liteRoom option:checked').textContent());assert((await modern.locator('#hudRoom').textContent()).startsWith('3F R2_C0 · 공장'));
+ assert.equal(await modern.locator('#resultContent > :last-child').getAttribute('id'),'resultMenuReview');assert(await modern.locator('#pyroMenuReview').isHidden());await modern.click('#resultMenuReview > summary');assert(await modern.locator('#resultReviewMount #pyroMenuReview').isVisible());assert.equal(await modern.locator('#pyroMenuReview').evaluate(e=>getComputedStyle(e).position),'static');await modern.click('#resultMenuReview > summary');
+ await modern.click('#shellTab-display');await modern.uncheck('#displayReal');assert.equal(await modern.evaluate(()=>window.__ui.store.get('realView').enabled),false);await modern.check('#displayReal');assert.equal(await modern.evaluate(()=>window.__ui.store.get('realView').enabled),true);
+ report.clarifiedFixes={hudMatchesSelector:true,fitButtonsHidden:true,realViewInDisplay:true,reviewFoldedAtBottom:true};
  await modern.click('#shellTab-explore');
  const stable=()=>modern.evaluate(()=>({id:window.__ui.store.get('result').result_id,selection:window.__ui.store.get('selection'),time:window.__ui.store.get('playback').t_s,p:window.__cad.C.position.toArray().map(v=>+v.toFixed(10)),q:window.__cad.C.quaternion.toArray().map(v=>+v.toFixed(10)),target:window.__cad.O.target.toArray().map(v=>+v.toFixed(10))}));
  const before=await stable(),fetchStart=await modern.evaluate(()=>window.__fetches);
@@ -43,10 +49,10 @@ try{
  await modern.fill('#exploreN','5');await modern.click('#exploreRun');await modern.waitForFunction(()=>document.getElementById('exploreStatus').textContent.startsWith('② 실행 요청 완료'));
  assert.deepEqual(report.posts[0],{path:'/cfbt/lite/screening',body:{top_n:5,mc_room:'CAD_3F_R2',run:true}});assert.deepEqual(await stable(),before);
  const posts=report.posts.length;await modern.fill('#exploreN','999');await modern.click('#exploreRun');assert.equal(report.posts.length,posts);await modern.fill('#exploreN','8');await modern.locator('#exploreN').dispatchEvent('change');
- assert(await modern.locator('#exploreMC').isDisabled());assert.equal(await modern.locator('#exploreRules').getAttribute('open'),null);
+ assert(await modern.locator('#exploreMC').isDisabled());assert.equal(await modern.locator('#exploreMC').getAttribute('title'),'서버 실행 경로는 5단계');assert.equal(await modern.locator('#exploreMC').textContent(),'MC 실행');assert.equal(await modern.locator('#exploreRules').getAttribute('open'),null);
  await modern.click('#exploreRules > summary');await modern.waitForSelector('#r8Run');report.ruleContext=await modern.locator('#exploreRuleContext').textContent();await modern.click('#r8Run');await modern.waitForFunction(()=>!document.getElementById('r8Run').disabled);
  assert.equal(report.posts[1].path,'/cfbt/r8/run');assert.deepEqual(report.posts[1].body.options,{fire_floor:'3F',fire_room:'R2',duration_s:3600});assert.equal(report.posts[1].body.compare_aggressive,false);
- mockScreeningFailure=true;await modern.click('#exploreRun');await modern.waitForFunction(()=>document.getElementById('exploreStatus').textContent.includes('busy fixture'));assert.equal(await modern.locator('#exploreRanking tr[data-room]').count(),8);mockScreeningFailure=false;report.busyErrorPreservesRanking=true;
+ mockScreeningFailure=true;await modern.click('#exploreRun');await modern.waitForFunction(()=>document.getElementById('exploreStatus').textContent.includes('busy fixture'));assert.equal(await modern.locator('#exploreRanking tr[data-room]').count(),8);mockScreeningFailure=false;report.busyErrorPreservesRanking=true;await modern.click('#exploreRefresh');await modern.waitForFunction(()=>document.getElementById('exploreStatus').textContent.startsWith('적격'));
  await modern.click('#exploreRules > summary');assert.deepEqual(await stable(),before);
  const f0=await modern.evaluate(()=>window.__fetches);await modern.click('#exploreResults');await modern.waitForFunction(()=>document.getElementById('resultMCStatus').textContent.startsWith('집계 완료'));report.mcReadFetches=(await modern.evaluate(()=>window.__fetches))-f0;assert.equal(report.mcReadFetches,10);assert.deepEqual(await stable(),before);
  await modern.click('#shellTab-explore');await modern.evaluate(()=>document.getElementById('shellPane-explore').scrollTop=0);await modern.screenshot({path:path.join(out,'explore-desktop.png'),fullPage:true});

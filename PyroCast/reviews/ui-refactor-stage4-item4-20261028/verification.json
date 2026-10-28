@@ -283,6 +283,12 @@
       }
     }
   ],
+  "clarifiedFixes": {
+    "hudMatchesSelector": true,
+    "fitButtonsHidden": true,
+    "realViewInDisplay": true,
+    "reviewFoldedAtBottom": true
+  },
   "rows": {
     "candidates": 17,
     "ranking": 8

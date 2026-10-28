@@ -78,7 +78,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   syncOperations();
   host.render();
   const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
-  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')};display.hud(context);results.update(context);shell.syncStatus();lastPanel=signature;}
+  if(signature!==lastPanel){$('liteReal').setAttribute('aria-pressed',String(store.get('realView').enabled));updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')};display.hud(context);results.update(context);shell.syncStatus();lastPanel=signature;}
  }finally{busy=false;}}
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
@@ -152,7 +152,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const descriptions=[...rules.querySelectorAll(':scope > p, :scope > form > p')].filter(p=>p.getAttribute('role')!=='alert');
   $('exploreRules').querySelector('summary').title=descriptions.map(p=>p.textContent).join(' ');for(const p of descriptions)p.hidden=true;
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}
- const review=await createMenuReview(panel,viewer);review.hidden=true;handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
+ const review=await createMenuReview(panel,viewer);results.mountReview(review);handler($('reviewClose'),'onclick',()=>{$('resultMenuReview').open=false;});handler($('liteReview'),'onclick',()=>{$('shellTab-result').click();$('resultMenuReview').open=true;});document.body.classList.add('cfbtReady');resize();
  function dispose(){if(disposed)return;disposed=true;screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {createStore} from '../web/state/store.js';
+import {screeningRows,mcEstimate} from '../web/panels/explore.js';
+const store=createStore(),result=store.get('result'),camera=store.get('camera'),selection=store.get('selection');
+assert.deepEqual(store.get('exploration'),{top_n:8,origin_room_id:null,samples:10});
+store.dispatch('exploration/set',{origin_room_id:'CAD_3F_R2',top_n:5,samples:20});
+assert.equal(store.get('result'),result);assert.equal(store.get('camera'),camera);assert.equal(store.get('selection'),selection);
+for(const p of [{top_n:0},{top_n:1.5},{samples:NaN},{samples:Infinity},{samples:0},{origin_room_id:3},{unexpected:true}])assert.throws(()=>store.dispatch('exploration/set',p));
+const fixture={score:{ranked:[{room:'R1',name:'홀',rank1:1},{room:'R2',name:'창고',rank1:2}]},comparison:{rows:[{room:'R2',rank2:1,first_FO_s:null},{room:'R1',rank2:2,first_FO_s:600}]}};
+const raw=JSON.stringify(fixture),rows=screeningRows(fixture);assert.equal(rows.second[0].room,'R2');assert.equal(rows.second[0].rank1,2);assert.equal(rows.second[0].first_FO_s,null);assert.equal(JSON.stringify(fixture),raw);
+assert.equal(mcEstimate(null,10),null);assert.equal(mcEstimate({completed:0,wall_s:100},10),null);assert.equal(mcEstimate({completed:10,wall_s:200},20),400);
+console.log('PASS: isolated exploration state, validation, server order/null preservation, measured estimate');

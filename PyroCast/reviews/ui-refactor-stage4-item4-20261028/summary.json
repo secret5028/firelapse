@@ -1,0 +1,65 @@
+{
+  "scope": "stage4 item4 exploration tab, pending two clarifications",
+  "status": "implemented_available_paths; MC execution unavailable",
+  "pixel_comparisons": [
+    {
+      "scene": "S09-1800",
+      "changed_pixels": 0,
+      "bbox": null,
+      "size": [
+        1000,
+        600
+      ]
+    },
+    {
+      "scene": "S09-1420",
+      "changed_pixels": 0,
+      "bbox": null,
+      "size": [
+        1000,
+        600
+      ]
+    },
+    {
+      "scene": "S06-890",
+      "changed_pixels": 0,
+      "bbox": null,
+      "size": [
+        1000,
+        600
+      ]
+    },
+    {
+      "scene": "all-core",
+      "changed_pixels": 0,
+      "bbox": null,
+      "size": [
+        1000,
+        600
+      ]
+    }
+  ],
+  "candidate_rows": 17,
+  "stage2_rows": 8,
+  "N_default": 8,
+  "selection_fetches": 0,
+  "mc_saved_result_reads": 10,
+  "post_tests": "intercepted; no actual computation or config writes",
+  "post_paths": [
+    "/cfbt/lite/screening",
+    "/cfbt/r8/run",
+    "/cfbt/lite/screening"
+  ],
+  "busy_response_preserves_ranking": true,
+  "dispose": {
+    "shell": 0,
+    "subscriptions": 0,
+    "resources": 0
+  },
+  "page_errors": [],
+  "open_questions": [
+    "MC execution endpoint absent; server unchanged, run disabled pending user response",
+    "Contents of user-referenced two fixes not present; clarification pending"
+  ],
+  "overlay_sha256": "69fb94d60437ced01278e898a76f1bf43674e11a461fe67779f7aa8559746d02"
+}

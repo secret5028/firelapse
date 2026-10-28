@@ -1,3 +1,4 @@
+import {infoTip} from './explanations.js';
 export const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 const finite=Number.isFinite;
 const number=(v,d=0)=>finite(v)?v.toFixed(d):'미평가';
@@ -53,7 +54,7 @@ export function createResultsPanel({panel,store}){
   if(previous!==result){const list=$('resultLimits').querySelector('ul');list.replaceChildren();for(const text of [...result.limits_text,'지수는 저장된 조건값 × 100이며 실제 발생 확률이 아닙니다. 여러 셀로 나뉜 방은 평균을 만들지 않습니다.','MC 집계는 저장된 완주 표본만 읽습니다. 미완료·읽기 실패·미평가 값은 안전으로 세지 않습니다.','연기 무늬와 화염·플룸은 표시 효과입니다. 온도 입력은 변경하지 않습니다.'])append(list,'li',text);previous=result;}
  }
  function mc(summary,full=null){const host=$('resultMCRows');host.replaceChildren();for(const [key,name] of resultTypes){const r=summary?.rates?.[key],q=full?.[key],tr=append(host,'tr');tr.dataset.type=key;for(const text of [name,r?`${r.numerator}/${r.denominator_completed_random}`:'미평가',q?(q.unknown?'≥':'')+q.rooms:'미집계',r&&finite(r.maximum_score)?number(r.maximum_score*100):'미평가'])append(tr,'td',text);if(q?.unknown)tr.title='미평가 값이 있어 최대 실 수는 확인된 하한입니다.';}
-  $('resultMCBasis').textContent=summary?`조건 표본·지수 최대: 무작위 완주 / 최대 실: 전체 완주 ${summary.completed}표본`:'';
+  $('resultMCBasis').replaceChildren();if(summary)$('resultMCBasis').append(infoTip(`조건 표본·지수 최대: 무작위 완주 / 최대 실: 전체 완주 ${summary.completed}표본`));
   $('resultMCStatus').textContent=summary?`저장 ${summary.completed}/${summary.rows.length}표본`:'저장 MC 집계 없음';$('resultMCLoad').disabled=!summary;
  }
  mc(null);

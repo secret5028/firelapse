@@ -560,7 +560,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
-     if(p.temperaturePattern!==undefined&&!['current','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
+     if(p.temperaturePattern!==undefined&&!['current','weak','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
     case 'risk/threshold':{
@@ -1125,7 +1125,7 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
   const enabled=settings.enabled&&(frame.layers.smoke||frame.layers.flame||frame.layers.plume);
   session.renderer.update({enabled,time:frame.t_s,sample,floor:frame.floor.floor_id??'all',
    smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,customRiskBoundaries:true,legacySmokeTexture:true,
-   flameDisplay:'growth',plumesEnabled:frame.layers.plume,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
+   flameDisplay:'growth',plumesEnabled:frame.layers.plume,noiseAmp:settings.temperaturePattern==='weak'?.4:1,noiseScale:1,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
   session.renderer.animate(session.lastAnimateMs);
   for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
@@ -1638,7 +1638,7 @@ function createDisplayPanel({store,selectionLabel}){
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
- const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
+ const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="weak">약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;

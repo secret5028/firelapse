@@ -150,7 +150,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
  const vertex=`varying vec3 vLocal;void main(){vLocal=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
  const fragment=`precision highp float;
  varying vec3 vLocal;uniform vec3 uCamera,uSize;uniform sampler2D uMask;uniform vec2 uMaskOffset,uMaskScale;
- uniform float uTime,uOD,uFire,uGas,uPower,uStyle,uPhase,uOpacity,uRiskMix,uGrowth,uDarkSmoke,uCluster,uTemperatureSmoke,uLayerTemp;uniform vec3 uRiskColor,uStageColor;${noise}
+ uniform float uTime,uOD,uFire,uGas,uPower,uStyle,uPhase,uOpacity,uRiskMix,uGrowth,uDarkSmoke,uCluster,uTemperatureSmoke,uLayerTemp,uNoiseAmp,uNoiseScale;uniform vec3 uRiskColor,uStageColor;${noise}
  void main(){
  vec3 ray=normalize(vLocal-uCamera),safeRay=vec3(ray.x<0.?-max(-ray.x,.00001):max(ray.x,.00001),ray.y<0.?-max(-ray.y,.00001):max(ray.y,.00001),ray.z<0.?-max(-ray.z,.00001):max(ray.z,.00001));
  vec3 ta=(vec3(0.)-uCamera)/safeRay,tb=(vec3(1.)-uCamera)/safeRay;
@@ -215,8 +215,16 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
   vec3 neutral=mix(vec3(.10,.11,.125),vec3(.30,.32,.34),bands);
   float warmth=smoothstep(80.,200.,uLayerTemp);
   vec3 heat=mix(vec3(1.,.80,.22),vec3(.96,.19,.07),clamp((uLayerTemp-200.)/400.,0.,1.));
-  float highlight=smoothstep(.52,.78,fine)*smoothstep(.18,.48,n);
-  col=mix(neutral,heat,highlight*.40*warmth);
+  float patternFine=fine,patternN=n;
+  if(uNoiseScale!=1.){
+   vec3 patternDrift=drift*uNoiseScale;
+   patternFine=noise3(patternDrift*2.07+7.);
+   patternN=.68*noise3(patternDrift)+.32*patternFine;
+  }
+  float highlight=smoothstep(.52,.78,patternFine)*smoothstep(.18,.48,patternN);
+  // Keep the default expression exactly; amplitude affects RGB highlights only.
+  if(uNoiseAmp==1.)col=mix(neutral,heat,highlight*.40*warmth);
+  else col=mix(neutral,heat,highlight*.40*warmth*uNoiseAmp);
  }
  sum.rgb+=(1.-sum.a)*col*a;sum.a+=(1.-sum.a)*a;
  }
@@ -228,7 +236,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
  }`;
  // Diagnostic overlay: smoke is drawn over geometry, then flames over all smoke.
  // This changes visibility only, not extinction, temperature, HRR or ignition.
- function make(mask,root){const mat=new THREE.ShaderMaterial({uniforms:{uCamera:{value:new THREE.Vector3()},uSize:{value:new THREE.Vector3()},uMask:{value:mask},uMaskOffset:{value:new THREE.Vector2(0,0)},uMaskScale:{value:new THREE.Vector2(1,1)},uTime:{value:0},uOD:{value:0},uFire:{value:0},uGas:{value:0},uPower:{value:0},uStyle:{value:0},uPhase:{value:0},uOpacity:{value:1},uRiskMix:{value:0},uDarkSmoke:{value:0},uTemperatureSmoke:{value:0},uLayerTemp:{value:20},uRiskColor:{value:new THREE.Color('#b16cff')}},vertexShader:vertex,fragmentShader:fragment,transparent:true,depthWrite:false,depthTest:false,side:THREE.FrontSide});const m=new THREE.Mesh(box,mat);m.renderOrder=10;m.raycast=()=>{};m.visible=false;root.add(m);return m}
+ function make(mask,root){const mat=new THREE.ShaderMaterial({uniforms:{uCamera:{value:new THREE.Vector3()},uSize:{value:new THREE.Vector3()},uMask:{value:mask},uMaskOffset:{value:new THREE.Vector2(0,0)},uMaskScale:{value:new THREE.Vector2(1,1)},uTime:{value:0},uOD:{value:0},uFire:{value:0},uGas:{value:0},uPower:{value:0},uStyle:{value:0},uPhase:{value:0},uOpacity:{value:1},uRiskMix:{value:0},uDarkSmoke:{value:0},uTemperatureSmoke:{value:0},uLayerTemp:{value:20},uNoiseAmp:{value:1},uNoiseScale:{value:1},uRiskColor:{value:new THREE.Color('#b16cff')}},vertexShader:vertex,fragmentShader:fragment,transparent:true,depthWrite:false,depthTest:false,side:THREE.FrontSide});const m=new THREE.Mesh(box,mat);m.renderOrder=10;m.raycast=()=>{};m.visible=false;root.add(m);return m}
  for(const r of rows){const ps=geometry(r),pts=ps.flatMap(p=>p.o),xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys),w=Math.max(...xs)-x,d=Math.max(...ys)-y;
   const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const ctx=canvas.getContext('2d');ctx.fillStyle='black';ctx.fillRect(0,0,256,256);ctx.fillStyle='white';ctx.beginPath();
   for(const p of ps)for(const ring of [p.o,...p.h]){ring.forEach((v,i)=>{const px=(v[0]-x)/w*256,py=(v[1]-y)/d*256;i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.closePath()}ctx.fill('evenodd');
@@ -304,7 +312,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
  }
  function updateMesh(m,now){m.updateWorldMatrix(true,false);const u=m.material.uniforms;u.uCamera.value.copy(C.position);m.worldToLocal(u.uCamera.value);u.uSize.value.copy(m.scale);u.uTime.value=now/1000;const p=u.uCamera.value,inside=p.x>0&&p.x<1&&p.y>0&&p.y<1&&p.z>0&&p.z<1;m.material.side=inside?THREE.BackSide:THREE.FrontSide}
  return {
-  setState(s){state=s;active=s.enabled;plumeDisplay.update({...s,enabled:s.enabled&&s.plumesEnabled!==false});for(const v of volumes){const a=s.cached.get(v.r.key),z=v.r.core_kind?0:Math.max(0,Math.min(v.r.height,a[3])),lo=v.lower?0:z,hi=v.lower?z:v.r.height,od=Math.max(0,a[v.lower?5:4]),risk=!v.lower&&s.riskColors?.get(v.r.key),visibility=smokeLayerVisibility({enabled:active,smokeEnabled:s.smokeEnabled,opticalDensity:od,thickness:hi-lo,riskColor:risk});v.mesh.visible=visibility.visible;v.mesh.position.set(v.x,v.y,lo+.01);v.mesh.scale.set(v.w,v.d,Math.max(.001,hi-lo-.01));v.mesh.material.uniforms.uOD.value=od;v.mesh.material.uniforms.uDarkSmoke.value=s.darkSmoke?1:0;v.mesh.material.uniforms.uTemperatureSmoke.value=s.temperatureSmoke?1:0;v.mesh.material.uniforms.uLayerTemp.value=a[v.lower?2:1];v.mesh.material.uniforms.uOpacity.value=s.smokeOpacity??1;v.mesh.material.uniforms.uRiskMix.value=0;if(risk)v.mesh.material.uniforms.uRiskColor.value.set(risk);if(v.boundary){v.boundary.visible=visibility.outlineVisible;v.boundary.position.z=lo+.01;v.boundary.scale.z=Math.max(.001,hi-lo-.01);if(risk)v.boundary.material.color.set(risk)}}
+  setState(s){state=s;active=s.enabled;plumeDisplay.update({...s,enabled:s.enabled&&s.plumesEnabled!==false});for(const v of volumes){const a=s.cached.get(v.r.key),z=v.r.core_kind?0:Math.max(0,Math.min(v.r.height,a[3])),lo=v.lower?0:z,hi=v.lower?z:v.r.height,od=Math.max(0,a[v.lower?5:4]),risk=!v.lower&&s.riskColors?.get(v.r.key),visibility=smokeLayerVisibility({enabled:active,smokeEnabled:s.smokeEnabled,opticalDensity:od,thickness:hi-lo,riskColor:risk});v.mesh.visible=visibility.visible;v.mesh.position.set(v.x,v.y,lo+.01);v.mesh.scale.set(v.w,v.d,Math.max(.001,hi-lo-.01));v.mesh.material.uniforms.uOD.value=od;v.mesh.material.uniforms.uDarkSmoke.value=s.darkSmoke?1:0;v.mesh.material.uniforms.uTemperatureSmoke.value=s.temperatureSmoke?1:0;v.mesh.material.uniforms.uLayerTemp.value=a[v.lower?2:1];v.mesh.material.uniforms.uNoiseAmp.value=s.noiseAmp??1;v.mesh.material.uniforms.uNoiseScale.value=s.noiseScale??1;v.mesh.material.uniforms.uOpacity.value=s.smokeOpacity??1;v.mesh.material.uniforms.uRiskMix.value=0;if(risk)v.mesh.material.uniforms.uRiskColor.value.set(risk);if(v.boundary){v.boundary.visible=visibility.outlineVisible;v.boundary.position.z=lo+.01;v.boundary.scale.z=Math.max(.001,hi-lo-.01);if(risk)v.boundary.material.color.set(risk)}}
    for(const e of gasFlames){const {v,mesh}=e,a=s.cached.get(v.r.key),g=s.gasStates?.get(v.r.key);const z=v.r.core_kind?0:Math.max(0,Math.min(v.r.height,a[3]));e.q=g?.q||0;mesh.visible=active&&s.gasFlamesEnabled===true&&!!g?.active&&v.r.height-z>.01;mesh.position.set(v.x,v.y,z+.01);mesh.scale.set(v.w,v.d,Math.max(.001,v.r.height-z-.01));mesh.material.uniforms.uPower.value=g?.intensity||0;}
    for(const e of flames){const {f,flame,light,fuel,ring}=e,j=Math.min((f.hrr?.length||1)-1,Math.floor(s.time/s.step)),u=s.time/s.step-j,interp=a=>a?THREE.MathUtils.lerp(a[j],a[Math.min(j+1,a.length-1)],u):0,ign=f.ignition_time!==null&&s.time>=f.ignition_time,q=ign?(f.hrr?interp(f.hrr):s.q):0,r=rows.find(r=>r.key===f.room_key)||fire,h=Math.max(0,Math.min(r.height-f.base_height-.1,f.flame_height?interp(f.flame_height):s.h)),c=f.position,width=Math.max(.3,Math.min(2,h*.62));e.q=q;e.physicalHeight=h;e.maxHeight=Math.max(.05,r.height-f.base_height-.1);flame.visible=active&&s.flamesEnabled&&q>(s.positiveHrrOnly?0:1.0);flame.position.set(c[0]-width/2,c[1]-width/2,f.base_height);flame.scale.set(width,width,Math.max(.001,h));if(flame.visible)sizeFlame(e);if(light){light.position.set(c[0],c[1],f.base_height+Math.max(.2,h*.3));light.intensity=flame.visible?1.2*Math.min(1,q/1000):0;}ring.visible=active&&q>(s.positiveHrrOnly?0:1.0);if(fuel){fuel.visible=active;fuel.traverse(m=>{if(m.userData.fuelColor!==undefined)m.material.color.setHex(m.userData.fuelColor)})}}
   },

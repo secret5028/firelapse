@@ -1,0 +1,8 @@
+{
+  "default_roundtrip_changed_pixels": 0,
+  "weak_changed_pixels": 37332,
+  "smoke_temperature_unchanged": true,
+  "optical_density_unchanged": true,
+  "flame_and_gas_uniforms_unchanged": true,
+  "hud_unchanged": true
+}

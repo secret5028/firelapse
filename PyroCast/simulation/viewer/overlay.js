@@ -1239,11 +1239,20 @@ class RiskLayer extends EmptyLayer {
 return {RiskLayer};
 })();
 
-// app/web/layers/selection.js
+// app/web/scene/picking.js
 const __module20=(()=>{
+// Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
+const ROOM_PICK_LAYER=31;
+
+return {ROOM_PICK_LAYER};
+})();
+
+// app/web/layers/selection.js
+const __module21=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module8;
 const {joinedSelectionRibbons}=__module18;
+const {ROOM_PICK_LAYER}=__module20;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1258,6 +1267,7 @@ class SelectionLayer extends EmptyLayer {
    for(const cell of room.cells){const z=cell.legacy_display?.z_m;if(!Number.isFinite(z))throw Error('Selection requires adapter cell floor height');
     const group=new T.Group();group.name=cell.cell_id;this.group.add(group);
     const pick=new T.Mesh(this.own(new T.ShapeGeometry(polygons(cell).map(shape))),pickMaterial);pick.position.z=z+.07;
+    pick.layers.set(ROOM_PICK_LAYER);
     pick.userData.liteRoom=cell.cell_id;pick.userData.roomId=room.room_id;pick.userData.floorId=floor.floor_id;group.add(pick);
     if(!sharedRibbons.has(z)){const pts=[];
      // Select the original room, even when picking a partitioned solver cell.
@@ -1288,8 +1298,9 @@ return {SelectionLayer};
 })();
 
 // app/web/scene/host.js
-const __module21=(()=>{
+const __module22=(()=>{
 const {createEmptyLayers}=__module7;
+const {ROOM_PICK_LAYER}=__module20;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1312,6 +1323,7 @@ function createSceneHost({container,THREE,store,clock={now:()=>performance.now()
  function moveCamera(value){const p=value.pose;if(p?.position)camera.position.fromArray(p.position);if(p?.up)camera.up.fromArray(p.up);if(p?.quaternion)camera.quaternion.fromArray(p.quaternion);else if(Array.isArray(value.target))camera.lookAt(...value.target);camera.updateMatrixWorld();}
  function bindPicking(){
   const ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),pointers=new Set();let down=null;
+  ray.layers.set(ROOM_PICK_LAYER);
   const canvas=renderer.domElement;
   listen(canvas,'pointerdown',e=>{pointers.add(e.pointerId);down=pointers.size===1&&e.button===0?{id:e.pointerId,x:e.clientX,y:e.clientY,tolerance:e.pointerType==='touch'?10:5,source:e.pointerType==='touch'?'touch':'click'}:null;});
   listen(canvas,'pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>down.tolerance)down=null;});
@@ -1358,7 +1370,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module22=(()=>{
+const __module23=(()=>{
 const {flameGrowthStyle}=__external4;
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';style.href='/cfbt/overlay.css';document.head.append(style);
@@ -1445,8 +1457,76 @@ async function createMenuReview(panel,viewer){
 return {createLitePanel,updateLitePanel,createMenuReview};
 })();
 
+// app/web/panels/shell.js
+const __module24=(()=>{
+// Stage 4 shell only: keep the working legacy panel intact in the result tab.
+function createPanelShell({panel,store}){
+ const $=id=>document.getElementById(id),cleanups=[],moves=[];
+ const move=(node,parent)=>{const marker=document.createComment('shell restore');node.before(marker);moves.push(()=>{marker.replaceWith(node);});parent.append(node);};
+ const listen=(node,type,fn)=>{node.addEventListener(type,fn);cleanups.push(()=>node.removeEventListener(type,fn));};
+ const style=document.createElement('style');style.dataset.pyrocastShell='true';style.textContent=`
+ body.pyroShell{--shell-top:62px;--shell-bottom:58px;--shell-side:340px;--shell-mobile:42px}
+ body.pyroShell>header:not(#pyroShellHeader){display:none!important}
+ body.pyroShell #v{left:0!important;right:var(--shell-side)!important;top:var(--shell-top)!important;bottom:var(--shell-bottom)!important}
+ #pyroShellHeader,#pyroShellSidebar,#pyroShellTimeline{position:fixed;box-sizing:border-box;z-index:125;color:#eaf3f8;background:#142b3b;font:13px/1.45 system-ui,'Malgun Gothic',sans-serif}
+ #pyroShellHeader{top:0;left:0;right:0;min-height:48px;display:flex;align-items:center;gap:14px;padding:8px 14px;border-bottom:1px solid #496273}
+ #pyroShellHeader .brand{font-weight:700;white-space:nowrap}#pyroShellHeader #fbtn{flex:1;min-width:0}
+ #pyroShellHeader #fbtn button[aria-pressed=true]{background:#e7be66;color:#142b3b;border-color:#f0d18e}
+ #pyroShellSidebar{top:var(--shell-top);right:0;bottom:var(--shell-bottom);width:var(--shell-side);display:flex;flex-direction:column;border-left:1px solid #496273}
+ #pyroShellTabs{display:flex;flex-shrink:0;border-bottom:1px solid #496273}
+ #pyroShellTabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent;background:transparent;padding:12px 5px}
+ #pyroShellTabs button[aria-selected=true]{border-bottom-color:#42c4e8;color:#a2efff;background:#1c3e52}
+ #pyroShellSidebar .pyroPane{flex:1;min-height:0;overflow:auto}#pyroShellSidebar [hidden]{display:none!important}
+ body.pyroShell #cfbtPanel{position:static;max-height:none;width:100%;border:0;overflow:visible;padding:12px;left:auto;right:auto;bottom:auto;font-size:12px}
+ #pyroShellSidebar #cfbtPanel .row{align-items:flex-start}#pyroShellSidebar #cfbtPanel select{min-width:0;max-width:100%}
+ #pyroShellTimeline{bottom:0;left:0;right:0;min-height:58px;padding:9px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid #496273}
+ #pyroShellTimeline .track{position:relative;flex:1;min-width:70px;padding-bottom:6px}#shellTime{width:100%;margin:0;accent-color:#42c4e8}
+ #shellMarks{position:absolute;left:7px;right:7px;height:6px;bottom:0;pointer-events:none}#shellMarks i{position:absolute;height:6px;border-left:2px solid #ffb34d}#shellMarks i.fo{border-color:#ef4444}
+ #shellClock{white-space:nowrap;font-variant-numeric:tabular-nums}#shellStatus{max-width:200px;white-space:nowrap;font-size:12px}
+ #pyroShellHeader button,#pyroShellSidebar>button,#pyroShellTabs button,#pyroShellTimeline button,#pyroShellTimeline select{color:inherit;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit;cursor:pointer}
+ #pyroShellTabs button{border-radius:0;border-width:0 0 2px}#shellMobileToggle{display:none}
+ #pyroShellHeader button:focus-visible,#pyroShellTabs button:focus-visible,#pyroShellTimeline :focus-visible{outline:2px solid #42c4e8;outline-offset:2px}
+ @media(max-width:860px){body.pyroShell{--shell-mobile:42px}body.pyroShell.shellExpanded{--shell-mobile:46vh}body.pyroShell #v{right:0!important;bottom:calc(var(--shell-bottom) + var(--shell-mobile))!important}
+ #pyroShellSidebar{top:auto;left:0;width:100%;height:var(--shell-mobile);border-left:0;border-top:1px solid #496273}#shellMobileToggle{display:block;min-height:40px;flex-shrink:0}body.pyroShell:not(.shellExpanded) #pyroShellTabs,body.pyroShell:not(.shellExpanded) .pyroPane{display:none!important}
+ #pyroShellHeader{gap:8px;padding:6px 8px}#pyroShellHeader .brand{font-size:12px}#pyroShellHeader #fbtn{flex-wrap:nowrap!important;overflow-x:auto}#pyroShellHeader #fbtn button{white-space:nowrap}#shellStatus{display:none}#pyroShellTimeline{padding:8px;gap:6px}#shellClock{font-size:11px}}
+ `;document.head.append(style);document.body.classList.add('pyroShell');
+ const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand">PyroCast</span>';
+ const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
+ const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"><div id="shellMarks" aria-hidden="true"></div></div><output id="shellClock"></output><span id="shellStatus"></span>';
+ document.body.append(header,sidebar,timeline);move($('fbtn'),header);
+ const tabs=[],panes=[];
+ for(const [id,label] of [['building','건물'],['explore','탐색'],['result','결과'],['display','표시']]){
+  const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);
+  const pane=document.createElement('section');pane.id='shellPane-'+id;pane.className='pyroPane';pane.role='tabpanel';pane.setAttribute('aria-labelledby',tab.id);pane.tabIndex=0;sidebar.append(pane);panes.push(pane);
+  listen(tab,'click',()=>activate(id));listen(tab,'keydown',e=>{const i=tabs.indexOf(tab);let next;if(e.key==='ArrowRight')next=(i+1)%tabs.length;else if(e.key==='ArrowLeft')next=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=tabs.length-1;else return;e.preventDefault();tabs[next].click();tabs[next].focus();});
+ }
+ function activate(id){tabs.forEach(t=>{const active=t.id==='shellTab-'+id;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;});panes.forEach(p=>p.hidden=p.id!=='shellPane-'+id);}
+ move(panel,$('shellPane-result'));activate('result');
+ listen($('shellMobileToggle'),'click',()=>{const expanded=document.body.classList.toggle('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded',String(expanded));$('shellMobileToggle').textContent=expanded?'패널 접기':'결과 패널 펼치기';});
+ listen($('shellPlay'),'click',()=>store.dispatch('playback/play',{playing:!store.get('playback').playing}));
+ listen($('shellSpeed'),'change',()=>{store.dispatch('playback/speed',{speed:+$('shellSpeed').value});$('liteSpeed').value=$('shellSpeed').value;});
+ listen($('shellTime'),'input',()=>{const t_s=Math.floor(+$('shellTime').value/10)*10;store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s});});
+ const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
+ function sync(){const p=store.get('playback');$('shellPlay').textContent=p.playing?'일시정지':'재생';$('shellPlay').setAttribute('aria-pressed',String(p.playing));$('shellSpeed').value=p.speed;$('shellTime').max=p.t_end_s;$('shellTime').value=p.t_s;$('shellClock').textContent=`${stamp(p.t_s)} / ${stamp(p.t_end_s)}`;}
+ function marks(){const r=store.get('result'),host=$('shellMarks');host.replaceChildren();if(!r?.t_end_s)return;
+  const entries=r.events.filter(e=>e.kind==='supply_start').map(e=>({t:e.t_s,title:`${e.room_id} 연료 공급 시작`,fo:false}));
+  for(const [id,frames] of Object.entries(r.conditions)){const i=r.time_s.findIndex((_,i)=>frames[i]?.FO?.met===true);if(i>=0)entries.push({t:r.time_s[i],title:`${id} FO 조건 충족`,fo:true});}
+  for(const e of entries){const mark=document.createElement('i');mark.style.left=Math.min(100,e.t/r.t_end_s*100)+'%';mark.className=e.fo?'fo':'';mark.title=e.title+' '+stamp(e.t);host.append(mark);}
+ }
+ const floors=()=>{const id=store.get('floor').floor_id;for(const b of $('fbtn').children)b.setAttribute('aria-pressed',String(b.textContent===(id??'전체')));};
+ const oldFloorAttributes=[...$('fbtn').children].map(b=>[b,b.getAttribute('aria-pressed')]);
+ cleanups.push(()=>{for(const [b,value] of oldFloorAttributes)if(value===null)b.removeAttribute('aria-pressed');else b.setAttribute('aria-pressed',value);});
+ cleanups.push(store.subscribe('playback',sync),store.subscribe('result',marks),store.subscribe('floor',floors));sync();marks();floors();
+ const sizes=()=>{document.body.style.setProperty('--shell-top',header.getBoundingClientRect().height+'px');document.body.style.setProperty('--shell-bottom',timeline.getBoundingClientRect().height+'px');};
+ const ro=new ResizeObserver(sizes);ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>ro.disconnect());
+ return {syncStatus:()=>$('shellStatus').textContent=$('liteVisible').textContent,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
+}
+
+return {createPanelShell};
+})();
+
 // app/web/controller.js
-const __module23=(()=>{
+const __module25=(()=>{
 const {createStore}=__module2;
 const {createSeriesCache}=__module1;
 const {adaptBuilding,adaptResult}=__module3;
@@ -1458,9 +1538,10 @@ const {OpeningsLayer}=__module11;
 const {CoreLayer}=__module12;
 const {createRealViewLayers}=__module17;
 const {RiskLayer}=__module19;
-const {SelectionLayer}=__module20;
-const {createSceneHost}=__module21;
-const {createLitePanel,updateLitePanel,createMenuReview}=__module22;
+const {SelectionLayer}=__module21;
+const {createSceneHost}=__module22;
+const {createLitePanel,updateLitePanel,createMenuReview}=__module23;
+const {createPanelShell}=__module24;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
 // No simulation, write API, cached-result key or solver imports.
@@ -1471,11 +1552,12 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length}});
+ const shell=createPanelShell({panel,store});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
  const coreAsset=readLegacyCoreSource({building:B,groups,sourceHash:initial.building_sha256,shapeFor:shp});
  const buildingLayer=new BuildingLayer(T,{geometryFor:()=>buildingAsset}),openings=new OpeningsLayer(T,{geometryFor:()=>openingsAsset,camera:C}),core=new CoreLayer(T,{geometryFor:()=>coreAsset});
- let rawSource=null,data=null,selected=null,clicked=false,autoFit=true,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
+ let rawSource=null,data=null,selected=null,clicked=false,autoFit=false,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  const layers=[buildingLayer,openings,core,...real,risk,selection];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
@@ -1500,7 +1582,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
   host.render();
   const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings')]);
-  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});lastPanel=signature;}
+  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});shell.syncStatus();lastPanel=signature;}
  }finally{busy=false;}}
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
@@ -1510,9 +1592,9 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  }
  R.render=frame;
  cleanup.push(()=>{R.render=originalRender;});
- function resize(){document.documentElement.style.setProperty('--cfbt-height',panel.getBoundingClientRect().height+'px');const v=$('v');R.setSize(v.clientWidth,v.clientHeight);viewer.L2?.setSize(v.clientWidth,v.clientHeight);C.aspect=v.clientWidth/Math.max(1,v.clientHeight);C.updateProjectionMatrix();if(autoFit&&data)fitFloor();render();}
- const observer=new ResizeObserver(resize);observer.observe(panel);cleanup.push(()=>observer.disconnect());on(window,'resize',resize);
- function fitFloor(){autoFit=true;const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
+ function resize(){const v=$('v');R.setSize(v.clientWidth,v.clientHeight);viewer.L2?.setSize(v.clientWidth,v.clientHeight);C.aspect=v.clientWidth/Math.max(1,v.clientHeight);C.updateProjectionMatrix();render();}
+ const observer=new ResizeObserver(resize);observer.observe($('v'));cleanup.push(()=>observer.disconnect());on(window,'resize',resize);
+ function fitFloor(){const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
   const bounds=new T.Box3();
   if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab||[])for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}}
   else for(const r of rooms)for(const p of r.cad_polys)for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m+r.height_m));}
@@ -1562,8 +1644,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    add('연기 위험은 2단계 색 규칙, 현상 조건은 공통 조건표 기준. 실제 발생확률이 아닙니다.');}}
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
- await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);review.hidden=true;handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
+ function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }
@@ -1572,9 +1654,9 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module24=(()=>{
+const __module26=(()=>{
 const {attach:attachLegacy}=__module0;
-const {attachModern}=__module23;
+const {attachModern}=__module25;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -1590,4 +1672,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module24.attach;
+export const attach=__module26.attach;

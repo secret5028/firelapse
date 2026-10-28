@@ -1,4 +1,5 @@
 import {createEmptyLayers} from '../layers/empty.js';
+import {ROOM_PICK_LAYER} from './picking.js';
 const mounted=new WeakMap();
 export function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -21,6 +22,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
  function moveCamera(value){const p=value.pose;if(p?.position)camera.position.fromArray(p.position);if(p?.up)camera.up.fromArray(p.up);if(p?.quaternion)camera.quaternion.fromArray(p.quaternion);else if(Array.isArray(value.target))camera.lookAt(...value.target);camera.updateMatrixWorld();}
  function bindPicking(){
   const ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),pointers=new Set();let down=null;
+  ray.layers.set(ROOM_PICK_LAYER);
   const canvas=renderer.domElement;
   listen(canvas,'pointerdown',e=>{pointers.add(e.pointerId);down=pointers.size===1&&e.button===0?{id:e.pointerId,x:e.clientX,y:e.clientY,tolerance:e.pointerType==='touch'?10:5,source:e.pointerType==='touch'?'touch':'click'}:null;});
   listen(canvas,'pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>down.tolerance)down=null;});

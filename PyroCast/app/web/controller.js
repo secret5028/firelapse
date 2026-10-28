@@ -12,6 +12,7 @@ import {RiskLayer} from './layers/risk.js';
 import {SelectionLayer} from './layers/selection.js';
 import {createSceneHost} from './scene/host.js';
 import {createLitePanel,updateLitePanel,createMenuReview} from './panels/legacy_lite_panel.js';
+import {createPanelShell} from './panels/shell.js';
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
 // No simulation, write API, cached-result key or solver imports.
@@ -22,11 +23,12 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length}});
+ const shell=createPanelShell({panel,store});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
  const coreAsset=readLegacyCoreSource({building:B,groups,sourceHash:initial.building_sha256,shapeFor:shp});
  const buildingLayer=new BuildingLayer(T,{geometryFor:()=>buildingAsset}),openings=new OpeningsLayer(T,{geometryFor:()=>openingsAsset,camera:C}),core=new CoreLayer(T,{geometryFor:()=>coreAsset});
- let rawSource=null,data=null,selected=null,clicked=false,autoFit=true,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
+ let rawSource=null,data=null,selected=null,clicked=false,autoFit=false,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  const layers=[buildingLayer,openings,core,...real,risk,selection];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
@@ -51,7 +53,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
   host.render();
   const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings')]);
-  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});lastPanel=signature;}
+  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});shell.syncStatus();lastPanel=signature;}
  }finally{busy=false;}}
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
@@ -61,9 +63,9 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  }
  R.render=frame;
  cleanup.push(()=>{R.render=originalRender;});
- function resize(){document.documentElement.style.setProperty('--cfbt-height',panel.getBoundingClientRect().height+'px');const v=$('v');R.setSize(v.clientWidth,v.clientHeight);viewer.L2?.setSize(v.clientWidth,v.clientHeight);C.aspect=v.clientWidth/Math.max(1,v.clientHeight);C.updateProjectionMatrix();if(autoFit&&data)fitFloor();render();}
- const observer=new ResizeObserver(resize);observer.observe(panel);cleanup.push(()=>observer.disconnect());on(window,'resize',resize);
- function fitFloor(){autoFit=true;const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
+ function resize(){const v=$('v');R.setSize(v.clientWidth,v.clientHeight);viewer.L2?.setSize(v.clientWidth,v.clientHeight);C.aspect=v.clientWidth/Math.max(1,v.clientHeight);C.updateProjectionMatrix();render();}
+ const observer=new ResizeObserver(resize);observer.observe($('v'));cleanup.push(()=>observer.disconnect());on(window,'resize',resize);
+ function fitFloor(){const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
   const bounds=new T.Box3();
   if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab||[])for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}}
   else for(const r of rooms)for(const p of r.cad_polys)for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m+r.height_m));}
@@ -113,8 +115,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    add('연기 위험은 2단계 색 규칙, 현상 조건은 공통 조건표 기준. 실제 발생확률이 아닙니다.');}}
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
- await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);review.hidden=true;handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
+ function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

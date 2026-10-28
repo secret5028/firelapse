@@ -1,6 +1,7 @@
 import {EmptyLayer} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
 import {joinedSelectionRibbons} from './risk_geometry.js';
+import {ROOM_PICK_LAYER} from '../scene/picking.js';
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 export class SelectionLayer extends EmptyLayer {
@@ -15,6 +16,7 @@ export class SelectionLayer extends EmptyLayer {
    for(const cell of room.cells){const z=cell.legacy_display?.z_m;if(!Number.isFinite(z))throw Error('Selection requires adapter cell floor height');
     const group=new T.Group();group.name=cell.cell_id;this.group.add(group);
     const pick=new T.Mesh(this.own(new T.ShapeGeometry(polygons(cell).map(shape))),pickMaterial);pick.position.z=z+.07;
+    pick.layers.set(ROOM_PICK_LAYER);
     pick.userData.liteRoom=cell.cell_id;pick.userData.roomId=room.room_id;pick.userData.floorId=floor.floor_id;group.add(pick);
     if(!sharedRibbons.has(z)){const pts=[];
      // Select the original room, even when picking a partitioned solver cell.

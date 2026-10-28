@@ -1,5 +1,5 @@
 import {EmptyLayer} from './empty.js';
-import {applyRenderPolicy,displayV8Gates} from '../scene/render_order.js';
+import {applyRenderPolicy} from '../scene/render_order.js';
 import {boundarySegments,joinedSelectionRibbons} from './risk_geometry.js';
 
 const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
@@ -40,14 +40,16 @@ export class RiskLayer extends EmptyLayer {
   if(frame.resultMeta!==this.resultMeta)this.resultMeta=frame.resultMeta;
   this.updateVisibility();
  }
- tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)row.meshes.forEach(m=>m.visible=false);return;}
+ tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)row.meshes.forEach(m=>m.visible=false);return;}
   const series=f.series?.cells;if(!series)throw Error('Risk layer requires adapted cell series; raw playback is not supported');
+  if(!r.index_by_cell)throw Error('Risk layer requires adapted saved indices');
+  const {ribbon,caution}=f.risk.threshold;
   let i=0,hi=r.time_s.length-1;while(i<hi){const mid=Math.ceil((i+hi)/2);if(r.time_s[mid]<=f.t_s)i=mid;else hi=mid-1;}
-  const roomRisk=new Set();this.counts=Object.fromEntries(types.map(k=>[k,0]));this.activeRooms=[];
+  const meets=(id,type,threshold)=>f.risk.show[type]!==false&&Number.isFinite(r.index_by_cell[id]?.[type]?.[i])&&r.index_by_cell[id][type][i]>=threshold;
+  const roomRisk=new Set(),cautionRooms=new Set();this.counts=Object.fromEntries(types.map(k=>[k,0]));this.activeRooms=[];
   for(const row of this.rooms){const active=new Map();
-   for(const v of row.members){const s=series[v.id],d=r.legacy_color[v.id],h=s?.interface_m[i];if(!s||!d||!Number.isFinite(h))continue;
-    const gates=displayV8Gates({color:d.color[i],smoke_stage:r.cell_conditions[v.id]?.[i]?.smoke_stage,oxygen:s.O2_upper_volfrac[i],loc:d.LOC_vol_fraction,rollover_band:d.rollover_band[i]});
-    for(const type of types)if(gates[type])active.set(type,Math.min(active.get(type)??Infinity,h));
+   for(const v of row.members){const s=series[v.id],h=s?.interface_m[i];if(!s||!Number.isFinite(h))continue;
+    for(const type of types)if(meets(v.id,type,ribbon))active.set(type,Math.min(active.get(type)??Infinity,h));
    }
    const onFloor=f.floor.floor_id===null||f.floor.floor_id===row.floorId;
    if(active.size)roomRisk.add(row.id);
@@ -55,8 +57,11 @@ export class RiskLayer extends EmptyLayer {
    row.meshes.forEach((m,j)=>{m.visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false;m.position.z=z_m+Math.min(height-.04,base+j*.14);if(m.visible)this.counts[types[j]]++;});
    if(onFloor&&active.size)this.activeRooms.push({room_id:row.id,types:[...active.keys()],heights:row.meshes.map(m=>m.position.z)});
   }
-  for(const v of this.views){const s=series[v.id],d=r.legacy_color[v.id];v.group.visible=(f.floor.floor_id===null||f.floor.floor_id===v.floorId)&&!!s&&!!d;if(!s||!d)continue;
-   const height=v.meta.height_m,value=s.interface_m[i],h=Number.isFinite(value)?Math.max(0,Math.min(height,value)):null,color=d.color[i];
+  for(const v of this.views){const s=series[v.id];v.group.visible=(f.floor.floor_id===null||f.floor.floor_id===v.floorId)&&!!s;if(!s)continue;
+   const height=v.meta.height_m,value=s.interface_m[i],h=Number.isFinite(value)?Math.max(0,Math.min(height,value)):null;
+   const activeType=types.findIndex(type=>meets(v.id,type,ribbon)),isCaution=activeType<0&&f.risk.show.smoke!==false&&types.some(type=>meets(v.id,type,caution));
+   const color=activeType>=0?colors[activeType]:isCaution?'#9ca3af':'';
+   if(v.group.visible&&h!==null&&isCaution&&!roomRisk.has(v.roomId))cautionRooms.add(v.roomId);
    const selected=f.selection.cell_id===v.id||(!f.selection.cell_id&&f.selection.room_id===v.roomId);
    const hasInterface=f.layers.smoke&&!v.meta.single_zone&&s.legacy_optical.ODu[i]>0&&h!==null&&h>.05&&h<height-.05;
    v.interfaceLine.visible=hasInterface&&!color&&!roomRisk.has(v.roomId);v.interfaceLine.position.z=v.meta.z_m+(h??0);
@@ -64,8 +69,9 @@ export class RiskLayer extends EmptyLayer {
    v.line.position.z=v.meta.z_m+(h??0);v.line.visible=h!==null&&!!color&&!roomRisk.has(v.roomId);v.line.material.color.set(color||'#9ca3af');v.line.material.gapSize=r.boundary_by_cell[v.id]?.[i] ? .25 : 0;
    v.tint.material.color.set(color||'#fff');v.tint.material.opacity=color?.startsWith('#9c') ? .025 : color?.length ? .1 : 0;
   }
+  this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
  summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (현재 층/시점, 저장된 판정)`;}
- diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[]};}
- dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];super.dispose();}
+ diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],cautionRooms:this.cautionRooms||[]};}
+ dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }

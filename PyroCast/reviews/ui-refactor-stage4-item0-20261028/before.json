@@ -1,0 +1,2165 @@
+{
+  "case_id": "S09",
+  "time_s": 1420,
+  "clock_ms": 180000,
+  "threshold": null,
+  "diagnostics": {
+    "buildCount": 2,
+    "rooms": 28,
+    "cells": 38,
+    "resources": 528,
+    "counts": {
+      "FO": 1,
+      "FGI": 0,
+      "backdraft": 1,
+      "rollover": 0
+    },
+    "activeRooms": [
+      {
+        "room_id": "CAD_3F_R2",
+        "types": [
+          "FO",
+          "backdraft"
+        ],
+        "heights": [
+          16.26,
+          16.400000000000002,
+          16.540000000000003,
+          16.68
+        ]
+      }
+    ]
+  },
+  "cells": {
+    "CAD_3F_R0": {
+      "room_id": "CAD_3F_R0",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R1_C0": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.2199704204088067,
+          "r_F": 0,
+          "r_O": 1.7001388505737314,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.22952067247458166,
+          "r_T": 0.4399408408176134,
+          "r_F": 0.22952067247458166,
+          "r_O": 1.2904950200046332,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.16221686612228678,
+          "r_T": 0.4399408408176134,
+          "r_F": 0.16221686612228678,
+          "r_O": 0.7748964424492004,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.25381202354862314,
+          "r_T": 0.25381202354862314,
+          "r_F": 16.22168661222868,
+          "r_O": 1.0754125166705277,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C1": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.19783589754800923,
+          "r_F": 0,
+          "r_O": 1.7314278774455907,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.20184243186702205,
+          "r_T": 0.39567179509601846,
+          "r_F": 0.20184243186702205,
+          "r_O": 1.295933930715847,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.14424981602012285,
+          "r_T": 0.39567179509601846,
+          "r_F": 0.14424981602012285,
+          "r_O": 0.7716442762229558,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.2282721894784722,
+          "r_T": 0.2282721894784722,
+          "r_F": 14.424981602012284,
+          "r_O": 1.079944942263206,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C2": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0.27387889931094805,
+          "r_T": 0.27387889931094805,
+          "r_F": 0.6180011531446679,
+          "r_O": 1.742350296983539,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.3206343433631511,
+          "r_T": 0.5477577986218961,
+          "r_F": 0.3206343433631511,
+          "r_O": 1.2624322616740857,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.2204421373769922,
+          "r_T": 0.5477577986218961,
+          "r_F": 0.2204421373769922,
+          "r_O": 0.7921217085136278,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.3160141145895554,
+          "r_T": 0.3160141145895554,
+          "r_F": 22.04421373769922,
+          "r_O": 1.0520268847284047,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C3": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.21869251213252652,
+          "r_F": 0,
+          "r_O": 1.6685071876512678,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.30016257127932017,
+          "r_T": 0.43738502426505305,
+          "r_F": 0.30016257127932017,
+          "r_O": 1.2722168380189813,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.21228092643637025,
+          "r_T": 0.43738502426505305,
+          "r_F": 0.21228092643637025,
+          "r_O": 0.7860295274484334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.25233751399906906,
+          "r_T": 0.25233751399906906,
+          "r_F": 21.228092643637027,
+          "r_O": 1.060180698349151,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C4": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0.3123954218371488,
+          "r_T": 0.3123954218371488,
+          "r_F": 0.6312642137657855,
+          "r_O": 1.1639675647290637,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.5509942887808735,
+          "r_T": 0.6247908436742976,
+          "r_F": 0.5509942887808735,
+          "r_O": 1.2114576638815555,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.37124272780136813,
+          "r_T": 0.6247908436742976,
+          "r_F": 0.37124272780136813,
+          "r_O": 0.8254518748892659,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.36045625596594094,
+          "r_T": 0.36045625596594094,
+          "r_F": 37.12427278013681,
+          "r_O": 1.0095480532346295,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C5": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.24346313268599828,
+          "r_F": 0,
+          "r_O": 1.6202660310244446,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.48692626537199657,
+          "r_T": 0.48692626537199657,
+          "r_F": 0.5039436593194319,
+          "r_O": 1.2268203262811868,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.35194263687969535,
+          "r_T": 0.48692626537199657,
+          "r_F": 0.35194263687969535,
+          "r_O": 0.8151152850811182,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.28091899925307495,
+          "r_T": 0.28091899925307495,
+          "r_F": 35.19426368796954,
+          "r_O": 1.022350271900989,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C6": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.31514515872769483,
+          "r_F": 0,
+          "r_O": 0.8428715441874388,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.6302903174553897,
+          "r_T": 0.6302903174553897,
+          "r_F": 0.9757880878832291,
+          "r_O": 1.1255149786541625,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.6302903174553897,
+          "r_T": 0.6302903174553897,
+          "r_F": 0.656497646308409,
+          "r_O": 0.8884821783498187,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.36362902930118635,
+          "r_T": 0.36362902930118635,
+          "r_F": 65.6497646308409,
+          "r_O": 0.9379291488784688,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R1_C7": {
+      "room_id": "CAD_3F_R1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0.0854608163004931,
+          "r_T": 0.2649122750267326,
+          "r_F": 0.0854608163004931,
+          "r_O": 1.7171732880342978,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.5298245500534652,
+          "r_T": 0.5298245500534652,
+          "r_F": 0.8869290201170933,
+          "r_O": 1.1578789184022762,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.5298245500534652,
+          "r_T": 0.5298245500534652,
+          "r_F": 0.6126194352302362,
+          "r_O": 0.8636481622619671,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.3056680096462299,
+          "r_T": 0.3056680096462299,
+          "r_F": 61.261943523023625,
+          "r_O": 0.9648990986685635,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R2_C0": {
+      "room_id": "CAD_3F_R2",
+      "conditions": {
+        "FO": {
+          "met": true,
+          "degree": 1.1972893250012226,
+          "r_T": 1.1972893250012226,
+          "r_F": 2.064859442514796,
+          "r_O": 1.5724823958604077,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.6007809998158737,
+          "r_T": 2.3945786500024453,
+          "r_F": 0.702577303021598,
+          "r_O": 0.6007809998158737,
+          "bottleneck": "O",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.25143099814607534,
+          "r_T": 2.3945786500024453,
+          "r_F": 0.25143099814607534,
+          "r_O": 1.664500042954884,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.5006508331798948,
+          "r_T": 1.3814876826937186,
+          "r_F": 25.143099814607535,
+          "r_O": 0.5006508331798948,
+          "bottleneck": "O",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#ef4444",
+      "visible_line": false,
+      "tint": "ef4444",
+      "opacity": 0.1
+    },
+    "CAD_3F_R2_C1": {
+      "room_id": "CAD_3F_R2",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0.13040442099834182,
+          "r_T": 0.8439013604636919,
+          "r_F": 0.13040442099834182,
+          "r_O": 1.158856968015825,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.7818483207650588,
+          "r_T": 1.6878027209273838,
+          "r_F": 1.0016374794758383,
+          "r_O": 0.7818483207650588,
+          "bottleneck": "O",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.48481844608540137,
+          "r_T": 1.6878027209273838,
+          "r_F": 0.48481844608540137,
+          "r_O": 1.2790204614387022,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.6515402673042157,
+          "r_T": 0.9737323389965675,
+          "r_F": 48.481844608540136,
+          "r_O": 0.6515402673042157,
+          "bottleneck": "O",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#facc15",
+      "visible_line": false,
+      "tint": "facc15",
+      "opacity": 0.1
+    },
+    "CAD_3F_R2_C2": {
+      "room_id": "CAD_3F_R2",
+      "conditions": {
+        "FO": {
+          "met": true,
+          "degree": 1.1300811233546006,
+          "r_T": 1.1300811233546006,
+          "r_F": 2.064859442514796,
+          "r_O": 1.4748288617307344,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.6353781710460824,
+          "r_T": 2.2601622467092013,
+          "r_F": 0.6353781710460824,
+          "r_O": 0.661160777193907,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.24262693317170084,
+          "r_T": 2.2601622467092013,
+          "r_F": 0.24262693317170084,
+          "r_O": 1.5124914158462208,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.5509673143282557,
+          "r_T": 1.3039397577168468,
+          "r_F": 24.262693317170083,
+          "r_O": 0.5509673143282557,
+          "bottleneck": "O",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#ef4444",
+      "visible_line": false,
+      "tint": "ef4444",
+      "opacity": 0.1
+    },
+    "CAD_3F_R3": {
+      "room_id": "CAD_3F_R3",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R4": {
+      "room_id": "CAD_3F_R4",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R5": {
+      "room_id": "CAD_3F_R5",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R6": {
+      "room_id": "CAD_3F_R6",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R7": {
+      "room_id": "CAD_3F_R7",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0.019829173515598292,
+          "r_T": 0.4394592736947643,
+          "r_F": 0.019829173515598292,
+          "r_O": 1.7520833333228492,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.6795664877046328,
+          "r_T": 0.8789185473895286,
+          "r_F": 1.301828466092032,
+          "r_O": 0.6795664877046328,
+          "bottleneck": "O",
+          "dominant": "F",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.8180795256802627,
+          "r_T": 0.8789185473895286,
+          "r_F": 0.8180795256802627,
+          "r_O": 1.4715263599558792,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.507068392724728,
+          "r_T": 0.507068392724728,
+          "r_F": 81.80795256802627,
+          "r_O": 0.5663054064205273,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R8": {
+      "room_id": "CAD_3F_R8",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.34337189477105995,
+          "r_F": 0,
+          "r_O": 1.4195178804600552,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.6867437895421199,
+          "r_F": 0,
+          "r_O": 0.9260619586188511,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.6867437895421199,
+          "r_F": 0,
+          "r_O": 1.0798413547743844,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.3961983401204538,
+          "r_F": 0,
+          "r_O": 0.7717182988490426,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R9": {
+      "room_id": "CAD_3F_R9",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.4646726846522951,
+          "r_F": 0,
+          "r_O": 0.4795186374344762,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.7142013388662655,
+          "r_T": 0.9293453693045902,
+          "r_F": 0.9200399719575222,
+          "r_O": 0.7142013388662655,
+          "bottleneck": "O",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.5698793060040687,
+          "r_T": 0.9293453693045902,
+          "r_F": 0.5698793060040687,
+          "r_O": 1.4001653953595437,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.5361607899834174,
+          "r_T": 0.5361607899834174,
+          "r_F": 56.98793060040687,
+          "r_O": 0.5951677823885545,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R10_C0": {
+      "room_id": "CAD_3F_R10",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.15476276470369746,
+          "r_F": 0,
+          "r_O": 1.6186004139706551,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.3095255294073949,
+          "r_T": 0.3095255294073949,
+          "r_F": 0.7004836774610439,
+          "r_O": 1.153936599147038,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.3095255294073949,
+          "r_T": 0.3095255294073949,
+          "r_F": 0.5113826393160422,
+          "r_O": 0.8665987375209139,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.1785724208119586,
+          "r_T": 0.1785724208119586,
+          "r_F": 51.13826393160422,
+          "r_O": 0.9616138326225316,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R10_C1": {
+      "room_id": "CAD_3F_R10",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.1310797267359112,
+          "r_F": 0,
+          "r_O": 1.7506536876921832,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.2621594534718224,
+          "r_T": 0.2621594534718224,
+          "r_F": 0.659856993640092,
+          "r_O": 1.1566724685210454,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.2621594534718224,
+          "r_T": 0.2621594534718224,
+          "r_F": 0.4873022948461037,
+          "r_O": 0.8645489775326187,
+          "bottleneck": "T",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.151245838541436,
+          "r_T": 0.151245838541436,
+          "r_F": 48.73022948461037,
+          "r_O": 0.9638937237675379,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R11": {
+      "room_id": "CAD_3F_R11",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R12": {
+      "room_id": "CAD_3F_R12",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.4407825202455329,
+          "r_F": 0,
+          "r_O": 0.15564506991493057,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.5170614522583332,
+          "r_T": 0.8815650404910658,
+          "r_F": 0.5170614522583332,
+          "r_O": 0.6932957180245719,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.3246813407683387,
+          "r_T": 0.8815650404910658,
+          "r_F": 0.3246813407683387,
+          "r_O": 1.4423859458548651,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.5085952156679225,
+          "r_T": 0.5085952156679225,
+          "r_F": 32.46813407683388,
+          "r_O": 0.5777464316871432,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R13": {
+      "room_id": "CAD_3F_R13",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R15": {
+      "room_id": "CAD_3F_R15",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R16": {
+      "room_id": "CAD_3F_R16",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R17": {
+      "room_id": "CAD_3F_R17",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.5079960142506575,
+          "r_F": 0,
+          "r_O": 0.17331897027349294,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.5894423083882154,
+          "r_T": 1.015992028501315,
+          "r_F": 0.5894423083882154,
+          "r_O": 0.7120003366183543,
+          "bottleneck": "F",
+          "dominant": "T",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.35598842101633976,
+          "r_T": 1.015992028501315,
+          "r_F": 0.35598842101633976,
+          "r_O": 1.4044937180079158,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.5861492472122972,
+          "r_T": 0.5861492472122972,
+          "r_F": 35.59884210163398,
+          "r_O": 0.5933336138486286,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R18": {
+      "room_id": "CAD_3F_R18",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R19": {
+      "room_id": "CAD_3F_R19",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R20": {
+      "room_id": "CAD_3F_R20",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R21": {
+      "room_id": "CAD_3F_R21",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R22": {
+      "room_id": "CAD_3F_R22",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R23": {
+      "room_id": "CAD_3F_R23",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.4349693390827114,
+          "r_F": 0,
+          "r_O": 0.44214128157218896,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0.6600993957171718,
+          "r_T": 0.8699386781654228,
+          "r_F": 1.0309935469358031,
+          "r_O": 0.6600993957171718,
+          "bottleneck": "O",
+          "dominant": "F",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0.6495372194886415,
+          "r_T": 0.8699386781654228,
+          "r_F": 0.6495372194886415,
+          "r_O": 1.5149233683414294,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0.5018876989415901,
+          "r_T": 0.5018876989415901,
+          "r_F": 64.95372194886416,
+          "r_O": 0.5500828297643098,
+          "bottleneck": "T",
+          "dominant": "F",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "#9ca3af",
+      "visible_line": true,
+      "tint": "9ca3af",
+      "opacity": 0.025
+    },
+    "CAD_3F_R24": {
+      "room_id": "CAD_3F_R24",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R25": {
+      "room_id": "CAD_3F_R25",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_R26": {
+      "room_id": "CAD_3F_R26",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_CE0": {
+      "room_id": "CAD_3F_CE0",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    },
+    "CAD_3F_CE1": {
+      "room_id": "CAD_3F_CE1",
+      "conditions": {
+        "FO": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.03333333333333333,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "FGI": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 2.1025,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "backdraft": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.06666666666666667,
+          "r_F": 0,
+          "r_O": 0.47562425683709864,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated"
+        },
+        "rollover": {
+          "met": false,
+          "degree": 0,
+          "r_T": 0.038461538461538464,
+          "r_F": 0,
+          "r_O": 1.7520833333333334,
+          "bottleneck": "F",
+          "dominant": "O",
+          "status": "evaluated",
+          "burning_upper": false
+        }
+      },
+      "index": {
+        "FO": null,
+        "FGI": null,
+        "backdraft": null,
+        "rollover": null
+      },
+      "legacy_color": "",
+      "visible_line": false,
+      "tint": "ffffff",
+      "opacity": 0
+    }
+  },
+  "legend": "■ FO · ■ FGI 가능 · ━ 롤오버 진행 조건 띠 · ■ 백드래프트 잠재 · 회색: 연기 주의 · 점선: 전이 온도 기준 ±30℃",
+  "errors": []
+}

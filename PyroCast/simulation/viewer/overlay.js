@@ -447,7 +447,7 @@ const initial=()=>({building:null,result:null,screening:null,
  realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,fuelMarkers:true},
  openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true},
- risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true}},
+ risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -469,7 +469,12 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
      put('realView',{...state.realView,...p});return true;
-    case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{show:{...state.risk.show,[p.type]:p.visible}});return true;
+    case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
+    case 'risk/threshold':{
+     const threshold={...state.risk.threshold,...p};
+     if(Object.keys(p).some(k=>!['ribbon','caution'].includes(k))||Object.values(threshold).some(v=>!Number.isFinite(v)||v<0)||threshold.caution>threshold.ribbon)throw Error('Invalid risk thresholds');
+     put('risk',{...state.risk,threshold});return true;
+    }
     case 'playback/seek':put('playback',{...state.playback,t_s:Math.max(0,Math.min(state.playback.t_end_s,finite(p.t_s)))});return true;
     case 'playback/play':if(typeof p.playing!=='boolean')throw Error('Invalid play state');put('playback',{...state.playback,playing:p.playing});return true;
     case 'playback/speed':if(![1,5,10,20,30,60].includes(p.speed))throw Error('Invalid playback speed');put('playback',{...state.playback,speed:p.speed});return true;
@@ -582,7 +587,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
  for(const f of building.floors)for(const r of f.rooms){roomCells.set(r.room_id,r.cells.map(c=>c.cell_id));for(const c of r.cells)cellRoom.set(c.cell_id,r.room_id);}
  const meta=new Map(unique(p.rooms,'key',errors).map(c=>[c.key,c]));
  const originalResult=new Map((sourceResult?.rooms||[]).map(r=>[r.id,r]));
- const cells={},cellConditions={},legacyColor={},boundaryByCell={},boundaries=new Set();
+ const cells={},cellConditions={},indexByCell={},legacyColor={},boundaryByCell={},boundaries=new Set();
  const oxygenProxy=sourceResult?.physical_parameters?.oxygen_inventory_mode===true;
  for(const [cid,rid] of cellRoom){
   const c=meta.get(cid),s=c&&p.solvers[c.solver_id];
@@ -592,6 +597,10 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
   const supply=originalResult.get(c.solver_id)?.supply_HRR_kW;
   row.HRR_supply_kW=series(supply,n,cid+'.supply');row.field_sources.HRR_supply_kW=supply?'saved result.rooms.supply_HRR_kW':'unavailable';cells[cid]=row;
   cellConditions[cid]=Object.fromEntries(p.time_s.map((_,i)=>[String(i),frame(s,i,cid)]));
+  // Presentation scale only: retain saved degree and unknowns, without re-scoring factors.
+  indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft','rollover'].map(key=>[key,p.time_s.map((_,i)=>{
+   const degree=cellConditions[cid][i][key].degree;return Number.isFinite(degree)?degree*100:null;
+  })]));
   const d=s.display_v8;legacyColor[cid]={color:copy(d?.color??Array(n).fill('')),rollover_band:copy(d?.rollover_band??unknown(n)),LOC_vol_fraction:d?.LOC_vol_fraction??null};
   boundaryByCell[cid]=copy(d?.boundary??unknown(n));if(d?.boundary?.some(v=>v===true))boundaries.add(rid);
  }
@@ -629,7 +638,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -1150,7 +1159,7 @@ return {boundarySegments,joinedSelectionRibbons};
 // app/web/layers/risk.js
 const __module19=(()=>{
 const {EmptyLayer}=__module7;
-const {applyRenderPolicy,displayV8Gates}=__module8;
+const {applyRenderPolicy}=__module8;
 const {boundarySegments,joinedSelectionRibbons}=__module18;
 
 const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
@@ -1191,14 +1200,16 @@ class RiskLayer extends EmptyLayer {
   if(frame.resultMeta!==this.resultMeta)this.resultMeta=frame.resultMeta;
   this.updateVisibility();
  }
- tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)row.meshes.forEach(m=>m.visible=false);return;}
+ tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)row.meshes.forEach(m=>m.visible=false);return;}
   const series=f.series?.cells;if(!series)throw Error('Risk layer requires adapted cell series; raw playback is not supported');
+  if(!r.index_by_cell)throw Error('Risk layer requires adapted saved indices');
+  const {ribbon,caution}=f.risk.threshold;
   let i=0,hi=r.time_s.length-1;while(i<hi){const mid=Math.ceil((i+hi)/2);if(r.time_s[mid]<=f.t_s)i=mid;else hi=mid-1;}
-  const roomRisk=new Set();this.counts=Object.fromEntries(types.map(k=>[k,0]));this.activeRooms=[];
+  const meets=(id,type,threshold)=>f.risk.show[type]!==false&&Number.isFinite(r.index_by_cell[id]?.[type]?.[i])&&r.index_by_cell[id][type][i]>=threshold;
+  const roomRisk=new Set(),cautionRooms=new Set();this.counts=Object.fromEntries(types.map(k=>[k,0]));this.activeRooms=[];
   for(const row of this.rooms){const active=new Map();
-   for(const v of row.members){const s=series[v.id],d=r.legacy_color[v.id],h=s?.interface_m[i];if(!s||!d||!Number.isFinite(h))continue;
-    const gates=displayV8Gates({color:d.color[i],smoke_stage:r.cell_conditions[v.id]?.[i]?.smoke_stage,oxygen:s.O2_upper_volfrac[i],loc:d.LOC_vol_fraction,rollover_band:d.rollover_band[i]});
-    for(const type of types)if(gates[type])active.set(type,Math.min(active.get(type)??Infinity,h));
+   for(const v of row.members){const s=series[v.id],h=s?.interface_m[i];if(!s||!Number.isFinite(h))continue;
+    for(const type of types)if(meets(v.id,type,ribbon))active.set(type,Math.min(active.get(type)??Infinity,h));
    }
    const onFloor=f.floor.floor_id===null||f.floor.floor_id===row.floorId;
    if(active.size)roomRisk.add(row.id);
@@ -1206,8 +1217,11 @@ class RiskLayer extends EmptyLayer {
    row.meshes.forEach((m,j)=>{m.visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false;m.position.z=z_m+Math.min(height-.04,base+j*.14);if(m.visible)this.counts[types[j]]++;});
    if(onFloor&&active.size)this.activeRooms.push({room_id:row.id,types:[...active.keys()],heights:row.meshes.map(m=>m.position.z)});
   }
-  for(const v of this.views){const s=series[v.id],d=r.legacy_color[v.id];v.group.visible=(f.floor.floor_id===null||f.floor.floor_id===v.floorId)&&!!s&&!!d;if(!s||!d)continue;
-   const height=v.meta.height_m,value=s.interface_m[i],h=Number.isFinite(value)?Math.max(0,Math.min(height,value)):null,color=d.color[i];
+  for(const v of this.views){const s=series[v.id];v.group.visible=(f.floor.floor_id===null||f.floor.floor_id===v.floorId)&&!!s;if(!s)continue;
+   const height=v.meta.height_m,value=s.interface_m[i],h=Number.isFinite(value)?Math.max(0,Math.min(height,value)):null;
+   const activeType=types.findIndex(type=>meets(v.id,type,ribbon)),isCaution=activeType<0&&f.risk.show.smoke!==false&&types.some(type=>meets(v.id,type,caution));
+   const color=activeType>=0?colors[activeType]:isCaution?'#9ca3af':'';
+   if(v.group.visible&&h!==null&&isCaution&&!roomRisk.has(v.roomId))cautionRooms.add(v.roomId);
    const selected=f.selection.cell_id===v.id||(!f.selection.cell_id&&f.selection.room_id===v.roomId);
    const hasInterface=f.layers.smoke&&!v.meta.single_zone&&s.legacy_optical.ODu[i]>0&&h!==null&&h>.05&&h<height-.05;
    v.interfaceLine.visible=hasInterface&&!color&&!roomRisk.has(v.roomId);v.interfaceLine.position.z=v.meta.z_m+(h??0);
@@ -1215,10 +1229,11 @@ class RiskLayer extends EmptyLayer {
    v.line.position.z=v.meta.z_m+(h??0);v.line.visible=h!==null&&!!color&&!roomRisk.has(v.roomId);v.line.material.color.set(color||'#9ca3af');v.line.material.gapSize=r.boundary_by_cell[v.id]?.[i] ? .25 : 0;
    v.tint.material.color.set(color||'#fff');v.tint.material.opacity=color?.startsWith('#9c') ? .025 : color?.length ? .1 : 0;
   }
+  this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
  summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (현재 층/시점, 저장된 판정)`;}
- diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[]};}
- dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];super.dispose();}
+ diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],cautionRooms:this.cautionRooms||[]};}
+ dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }
 
 return {RiskLayer};
@@ -1355,7 +1370,7 @@ function createLitePanel(){
  <div id="liteBody"><div class="row"><select id="liteSpeed" aria-label="재생 배속"><option>1</option><option>5</option><option>10</option><option selected>20</option><option>30</option><option>60</option></select>배 <label><input id="liteSmoke" type="checkbox" checked>전체 연기층</label><label><input id="liteFuel" type="checkbox" checked>균등 연료 기호</label><span class="grow"></span><select id="liteCase" aria-label="간략 계산 사례"></select><button id="liteRefresh">MC 결과 새로고침</button></div>
  <div class="row"><label><input id="litePlumes" type="checkbox" checked>상승 플룸·천장 고온 가스</label><label><input id="liteHeatSmoke" type="checkbox" checked>연기 온도색</label></div><div>연기 밝은 무늬: 회색(낮은 온도) → 노랑(200℃) → 빨강(600℃ 이상). 층 평균 온도의 표시용 색상이며 실제 연기색·착화 기준이 아닙니다.</div>
  <input id="liteTime" type="range" aria-label="간략 시뮬레이션 시간" min="0" step="10" style="width:100%">
- <div id="liteRiskStatus" role="status"></div><div>위험 테두리: 방 안의 일부 셀이라도 해당하면 원래 방 외곽 전체에 표시 · 여러 유형은 높이를 조금 띄워 함께 표시</div><div id="liteLegend"><span style="color:#ef4444">■ FO</span> · <span style="color:#a855f7">■ FGI 가능</span> · <span style="color:#f97316">━ 롤오버 진행 조건 띠</span> · <span style="color:#facc15">■ 백드래프트 잠재</span> · 회색: 연기 주의 · 점선: 전이 온도 기준 ±30℃</div>
+ <div id="liteRiskStatus" role="status"></div><div>위험 테두리: 방 안의 일부 셀이라도 해당하면 원래 방 외곽 전체에 표시 · 여러 유형은 높이를 조금 띄워 함께 표시</div><div id="liteLegend"><span style="color:#ef4444">■ FO</span> · <span style="color:#a855f7">■ FGI</span> · <span style="color:#f97316">━ 롤오버</span> · <span style="color:#facc15">■ 백드래프트</span> · 회색: 주의 · 점선: 전이 온도 기준 ±30℃</div>
  <div>조건 충족 단계이며 발생 예측 아님. 문 분출 연소와 상층 연소는 별도입니다.</div>
  <div>화염 단계(표시용): <span style="color:#ff7a14">초기</span> → <span style="color:#ffa824">성장기</span> → <span style="color:#fff08c">최성기</span> → <span style="color:#ff3b09">쇠퇴기</span>. 각 화원 실제 발열량의 최고값 대비 크기·최고 시점 기준이며 실제 불꽃 온도·FO 판정이 아닙니다. 불꽃 범위는 발열량과 실·셀 면적에 따라 화원 주변에서 확대·축소됩니다. 최대 범위는 면적 65% 상당 원을 실 경계로 자른 표시용 가정이며, 불꽃 수는 계산 화원 수가 아닙니다.</div>
  <div class="row"><label>실·셀 <select id="liteRoom" aria-label="간략 실 선택"></select></label><button id="liteFocus">선택 실 확대</button><button id="liteWhole">층 전체</button><label>연기 불투명도 <select id="liteOpacity" aria-label="간략 연기 불투명도"><option value="1" selected>100% · 기본</option><option value=".4">40% · 내부 관찰</option><option value=".15">15%</option></select></label></div>

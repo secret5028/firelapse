@@ -8,7 +8,7 @@ const initial=()=>({building:null,result:null,screening:null,
  realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,fuelMarkers:true},
  openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true},
- risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true}},
+ risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 export function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -30,7 +30,12 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
      put('realView',{...state.realView,...p});return true;
-    case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{show:{...state.risk.show,[p.type]:p.visible}});return true;
+    case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
+    case 'risk/threshold':{
+     const threshold={...state.risk.threshold,...p};
+     if(Object.keys(p).some(k=>!['ribbon','caution'].includes(k))||Object.values(threshold).some(v=>!Number.isFinite(v)||v<0)||threshold.caution>threshold.ribbon)throw Error('Invalid risk thresholds');
+     put('risk',{...state.risk,threshold});return true;
+    }
     case 'playback/seek':put('playback',{...state.playback,t_s:Math.max(0,Math.min(state.playback.t_end_s,finite(p.t_s)))});return true;
     case 'playback/play':if(typeof p.playing!=='boolean')throw Error('Invalid play state');put('playback',{...state.playback,playing:p.playing});return true;
     case 'playback/speed':if(![1,5,10,20,30,60].includes(p.speed))throw Error('Invalid playback speed');put('playback',{...state.playback,speed:p.speed});return true;

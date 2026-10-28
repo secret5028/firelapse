@@ -81,7 +81,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
  for(const f of building.floors)for(const r of f.rooms){roomCells.set(r.room_id,r.cells.map(c=>c.cell_id));for(const c of r.cells)cellRoom.set(c.cell_id,r.room_id);}
  const meta=new Map(unique(p.rooms,'key',errors).map(c=>[c.key,c]));
  const originalResult=new Map((sourceResult?.rooms||[]).map(r=>[r.id,r]));
- const cells={},cellConditions={},legacyColor={},boundaryByCell={},boundaries=new Set();
+ const cells={},cellConditions={},indexByCell={},legacyColor={},boundaryByCell={},boundaries=new Set();
  const oxygenProxy=sourceResult?.physical_parameters?.oxygen_inventory_mode===true;
  for(const [cid,rid] of cellRoom){
   const c=meta.get(cid),s=c&&p.solvers[c.solver_id];
@@ -91,6 +91,10 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   const supply=originalResult.get(c.solver_id)?.supply_HRR_kW;
   row.HRR_supply_kW=series(supply,n,cid+'.supply');row.field_sources.HRR_supply_kW=supply?'saved result.rooms.supply_HRR_kW':'unavailable';cells[cid]=row;
   cellConditions[cid]=Object.fromEntries(p.time_s.map((_,i)=>[String(i),frame(s,i,cid)]));
+  // Presentation scale only: retain saved degree and unknowns, without re-scoring factors.
+  indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft','rollover'].map(key=>[key,p.time_s.map((_,i)=>{
+   const degree=cellConditions[cid][i][key].degree;return Number.isFinite(degree)?degree*100:null;
+  })]));
   const d=s.display_v8;legacyColor[cid]={color:copy(d?.color??Array(n).fill('')),rollover_band:copy(d?.rollover_band??unknown(n)),LOC_vol_fraction:d?.LOC_vol_fraction??null};
   boundaryByCell[cid]=copy(d?.boundary??unknown(n));if(d?.boundary?.some(v=>v===true))boundaries.add(rid);
  }
@@ -128,7 +132,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }

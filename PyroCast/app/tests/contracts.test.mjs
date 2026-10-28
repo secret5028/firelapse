@@ -10,7 +10,7 @@ import {adaptBuilding,adaptResult,adaptScreening,SERIES_MAP,validateContract,any
 const require=createRequire(import.meta.url);
 let Ajv;try{Ajv=require('ajv/dist/2020').default;}catch(e){if(!process.env.PYROCAST_AJV)throw e;Ajv=require(process.env.PYROCAST_AJV).default;}
 const root=fileURLToPath(new URL('../../',import.meta.url));
-const out=path.join(root,'simulation/results/ui_refactor_stage1_20261026');fs.mkdirSync(out,{recursive:true});
+const out=path.resolve(root,process.env.PYROCAST_CONTRACTS_OUT||'simulation/results/ui_refactor_stage1_20261026');fs.mkdirSync(out,{recursive:true});
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const hashes={};
 function read(rel){const buf=fs.readFileSync(path.join(root,rel));hashes[rel]=hash(buf);return JSON.parse(buf.toString('utf8').replace(/^\uFEFF/,''));}
@@ -45,6 +45,7 @@ for(const id of ['S06','S09','stage4']){
   for(const key of ['FO','FGI','backdraft','rollover','untenable'])for(let i=0;i<p.time_s.length;i++){
    const src=s.conditions?.[key],dest=result.cell_conditions[c.key][i][key];
    assert.equal(dest.met,(src?.scores?.all_met??src?.all_met)?.[i]??null);assert.equal(dest.degree,src?.scores?.degree?.[i]??null);conditions+=2;
+   if(key!=='untenable')assert.equal(result.index_by_cell[c.key][key][i],Number.isFinite(dest.degree)?dest.degree*100:null);
    for(const [newKey,oldKey] of [['r_T','temperature'],['r_F','fuel'],['r_O','oxygen']]){assert.equal(dest[newKey],src?.scores?.factors?.[oldKey]?.[i]??null);conditions++;}
   }
  }

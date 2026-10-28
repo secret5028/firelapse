@@ -92,7 +92,15 @@ The host provisions `#cfMeaning` before mounting these layers and removes it and
 
 Run `npm run test:real-view`, then `python app/tests/compare_real_view.py` from the repository root. S09, 3F, R2 origin uses saved simulation time 1800 s and an independently fixed animation clock 180000 ms. All four smoke/plume ON/OFF combinations compare the direct legacy call against the wrappers. Checks cover uniform parity, reduced motion, appearance/flame toggles, unchanged geometry, raw-input identity, legend cleanup and an isolated remount with GPU counts returning to zero. Evidence is under `simulation/results/ui_refactor_stage3_real_20261027/`. This remains an isolated building+real-view fixture; live routing and the unfinished risk/selection layers are unchanged.
 
-## Stage 3 — risk layer
+## Stage 4 item 0 — saved risk indices (2026-10-28)
+
+Modern risk display now reads `result.index_by_cell[cell_id][phenomenon][time_index]`, copied as saved `scores.degree * 100`; null remains unknown. No factor recomputation or room scalar aggregate is introduced. Each original room independently ORs its member cells for the four ribbons. Default store `risk.threshold` is `{ribbon:100,caution:70}`; `risk/threshold` changes either value without rebuilding geometry. Grey caution is the lower index band; existing boundary flags retain dashed outlines. Ribbon colors, spacing and render policy are unchanged.
+
+Only the existing legend wording changes in the panel. Threshold inputs and the new panel layout remain pending. `?ui=legacy` keeps the old `display_v8` behavior. Raw saved results, shaders, render_order.js, engine and server are untouched; only the UI adapter contract gains index arrays.
+
+From the repository root run `node app/tests/risk_index.test.mjs`. Run the saved-data contract suite with `PYROCAST_CONTRACTS_OUT` set to a new evidence directory to preserve earlier snapshots. `risk_index_scene.test.mjs before|after` captures the served S09 1420 s scene at clock 180000 ms. Evidence: `simulation/results/ui_refactor_stage4_item0_20261028/`. Earlier stage-3 pixel-equality risk fixtures below are historical, no longer acceptance tests for the intentionally changed gates. The 76 picking draw calls remain deferred to item 1.
+
+## Stage 3 — risk layer (historical compatibility gate)
 
 `new RiskLayer(THREE)` consumes only building/1, result metadata and adapted cell series via `frame.series.cells`. Configure the host's `seriesAt` capability to return the active series cache (arrays on the saved time grid). No playback source, CAD-loader capability, fetch or engine import is accepted by this layer. The building read adapter now also retains optional `cell.legacy_display` fields z_m, height_m and single_zone; these are required for rendering risk geometry without looking back at playback. The legacy omitted single_zone flag is false exactly as in the old display. Older snapshots remain schema-valid, but need re-adaptation before mounting this layer.
 

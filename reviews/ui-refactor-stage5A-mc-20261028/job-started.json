@@ -1,0 +1,39 @@
+{
+  "room": "CAD_3F_R3",
+  "samples": 2,
+  "duration_s": 3600,
+  "seed": 20261025,
+  "building_sha256": "90d3c325f238a3c416ef51dfbb64b668b3b144047e78acb8f9e5e1764a6a02ae",
+  "workers": 1,
+  "budget_s_per_sample": 1200,
+  "parameters": {
+    "smooth_state_bounds": true,
+    "upper_combustion_enabled": true,
+    "door_jet_enabled": true,
+    "oxygen_inventory_mode": false,
+    "remove_cumulative_state": true
+  },
+  "sha256": {
+    "simulation\\pyrocast_lite\\__init__.py": "5783271862caae08fad6ffbee60bfa0d5e13b9b4e09c939b6e4883729a5a4b01",
+    "simulation\\pyrocast_lite\\adapter.py": "13099e75bc162156049e0f8dafaa7be80e0e01fc11ee37e3083d31d597367326",
+    "simulation\\pyrocast_lite\\core.py": "d8742588af0bf470aae2709211411ba96e2b0b83de5eb7d3e51801e617eab0e9",
+    "simulation\\pyrocast_lite\\door_classification.py": "6f4796333ca46d0b67899f1e77cb15b5680b1cd90b9927e0487f3cd1cac06759",
+    "simulation\\pyrocast_lite\\door_jet.py": "3f3222cfaecf7ae446e04678ac3a0632149c5108a06edabf04eb9d24be35e1d4",
+    "simulation\\pyrocast_lite\\failure_state.py": "038f7c736cf7838e70caa37fe85efab968ad0e10d8b3395c32f4b1a2df538165",
+    "simulation\\pyrocast_lite\\montecarlo.py": "602d73273281d2b976a57ab6ee9872b368bcf6b07073b2e1321186d6bf71cc50",
+    "simulation\\pyrocast_lite\\numerics.py": "8bc072d817e2a237c04594317ef59361858d70007102179896042a4570de4297",
+    "simulation\\pyrocast_lite\\radiation.py": "d46c6aa7894840412fd8b192365d0c7ebc549b867460343a6b12da9a256133e4",
+    "simulation\\pyrocast_lite\\result_adapter.py": "8299a8b4a31f5a6571aeb0e75ec5e6c06a18145fe998e8fb9726a562ce639a76",
+    "simulation\\pyrocast_lite\\room_oxygen.py": "c4c6172743cd15870e9e0b114de4484fa045a26c1d8608213f4772101d6c42fb",
+    "simulation\\pyrocast_lite\\runner.py": "138ba087dc7d93852af9f42a5e98c0d7444252b0b5b17d8a760a73d8c7328f21",
+    "simulation\\pyrocast_lite\\screening.py": "601df77c773d95f14611692fe50dc6dc6638a9e60287dd10e953c235ed36c4d3",
+    "simulation\\pyrocast_lite\\screening_v7.py": "ceb2097c7b3d2cabe454b14eba392dc9f12eac168c1fa87183c56fc1398696e1",
+    "simulation\\pyrocast_lite\\screening_v8.py": "3e30fd9dacb2398836c344daa9403a6c6eb160bca9ec3fb2a5acd6125231cfb9",
+    "simulation\\pyrocast_lite\\screening_v8_approved.py": "cd649e55f9db1e709c040855156fd27c12b02be8b38da598bd6faf931d78906c",
+    "simulation\\pyrocast_lite\\shared_inputs.py": "1807dae70b432990c00eb7aebc2f827b781a0ef472c40f657303132a9b9bdfc6",
+    "simulation\\pyrocast_lite\\visualization.py": "8aff3356e3379c284ba1ba748ebb1628faeb8ca1618856ee92b5383438f5bc2f"
+  },
+  "mandatory": 2,
+  "random": 0,
+  "fallback": "one Radau on numerical failure within remaining integration budget"
+}

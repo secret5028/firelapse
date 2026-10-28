@@ -331,13 +331,6 @@
   ],
   "patterns": [
     {
-      "mode": "weak",
-      "changedUniforms": [
-        "uLayerTemp"
-      ],
-      "materials": 76
-    },
-    {
       "mode": "off",
       "changedUniforms": [
         "uTemperatureSmoke"

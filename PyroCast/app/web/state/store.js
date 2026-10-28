@@ -29,7 +29,7 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
-     if(p.temperaturePattern!==undefined&&!['weak','current','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
+     if(p.temperaturePattern!==undefined&&!['current','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
     case 'risk/threshold':{

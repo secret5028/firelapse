@@ -1,18 +1,18 @@
 [
   {
-    "path": "simulation/viewer/legacy_real_view.js",
-    "sha256": "f83b1c59d1cff89dca122df2dd906edd078a1ca5afcb92088c748b7e20a17051"
+    "sha256": "f83b1c59d1cff89dca122df2dd906edd078a1ca5afcb92088c748b7e20a17051",
+    "path": "simulation/viewer/legacy_real_view.js"
   },
   {
-    "path": "simulation/viewer/legacy_real_bridge.js",
-    "sha256": "4f16dd33c1af2cd6e489cd7dc96129955751b3b00bb1f9ecdab17d77d23a5173"
+    "sha256": "4f16dd33c1af2cd6e489cd7dc96129955751b3b00bb1f9ecdab17d77d23a5173",
+    "path": "simulation/viewer/legacy_real_bridge.js"
   },
   {
-    "path": "app/web/scene/render_order.js",
-    "sha256": "b907586fb9d87c1c74e6943479b3524ffb05d20cd77f6019eb7b93546bda9cca"
+    "sha256": "b907586fb9d87c1c74e6943479b3524ffb05d20cd77f6019eb7b93546bda9cca",
+    "path": "app/web/scene/render_order.js"
   },
   {
-    "path": "simulation/viewer/overlay.js",
-    "sha256": "71741936b0eb039856dd5298f77e9c9f36aea449e77a00b84621c537beb8b4cb"
+    "sha256": "9b067e59606df0a4924b9e008c42112b3502ecd667eb921a97bebff5512d5e74",
+    "path": "simulation/viewer/overlay.js"
   }
 ]

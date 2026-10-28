@@ -467,7 +467,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
-     if(p.temperaturePattern!==undefined&&!['weak','current','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
+     if(p.temperaturePattern!==undefined&&!['current','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
     case 'risk/threshold':{
@@ -998,10 +998,10 @@ const {createRealView}=__external0;
 // facades share this resource session, never refer to one another or duplicate it.
 function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
  if(typeof sourceFor!=='function'||!camera?.isCamera)throw Error('Raw playback source provider and host camera required');
- const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[],smokeMaterials:[]};
+ const session={root:null,renderer:null,source:null,building:undefined,result:undefined,users:0,builds:0,updates:0,lastAnimateMs:null,resources:new Set(),flames:[],lights:[],units:[]};
  function clear(){
   session.renderer?.detach();for(const resource of session.resources)resource.dispose();session.resources.clear();
-  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];session.smokeMaterials=[];
+  session.root?.clear();session.renderer=null;session.source=null;session.flames=[];session.lights=[];session.units=[];
  }
  function gather(){session.root.traverse(o=>{
   if(o.geometry)session.resources.add(o.geometry);
@@ -1009,7 +1009,6 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
    for(const value of Object.values(m))if(value?.isTexture)session.resources.add(value);
    for(const u of Object.values(m.uniforms||{}))if(u.value?.isTexture)session.resources.add(u.value);
    if(m.uniforms?.uFire?.value===1)session.flames.push(o);
-   if(m.uniforms?.uTemperatureSmoke&&m.uniforms.uFire.value===0&&m.uniforms.uGas.value===0)session.smokeMaterials.push(m);
   }
   if(o.isPointLight)session.lights.push(o);
  });}
@@ -1033,14 +1032,8 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
   const enabled=settings.enabled&&(frame.layers.smoke||frame.layers.flame||frame.layers.plume);
   session.renderer.update({enabled,time:frame.t_s,sample,floor:frame.floor.floor_id??'all',
    smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,customRiskBoundaries:true,legacySmokeTexture:true,
-   flameDisplay:'growth',plumesEnabled:frame.layers.plume,temperatureSmoke:settings.temperatureSmoke});
+   flameDisplay:'growth',plumesEnabled:frame.layers.plume,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
-  // Display only. The frozen shader has a binary colour gate and a temperature
-  // input, not an independent highlight gain. Weak remaps only the display input.
-  for(const material of session.smokeMaterials){const u=material.uniforms,mode=settings.temperaturePattern??'current';
-   u.uTemperatureSmoke.value=settings.temperatureSmoke&&mode!=='off'?1:0;
-   if(mode==='weak')u.uLayerTemp.value=80+.35*Math.max(0,Math.min(200,u.uLayerTemp.value)-80);
-  }
   session.renderer.animate(session.lastAnimateMs);
   for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
   // The unchanged bridge hardcodes flamesEnabled=true. Mask only flame draw
@@ -1551,7 +1544,7 @@ function createDisplayPanel({store,selectionLabel}){
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
- const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="weak">약하게</option><option value="current" selected>현재</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="약하게는 표시용 온도 입력을 낮춰 노란색 쪽으로 약화합니다. 실제 온도·HUD는 그대로입니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
+ const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;

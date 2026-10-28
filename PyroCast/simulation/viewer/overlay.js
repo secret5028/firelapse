@@ -422,8 +422,39 @@ async function attachLegacy(viewer){
 return {attach};
 })();
 
-// app/web/state/series_cache.js
+// app/web/panels/building.js
 const __module1=(()=>{
+const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
+const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
+function doorCategory(row){return row.door_class==='fire'?(row.confidence==='inferred'?'inferred':['confirmed','user'].includes(row.confidence)?'confirmed':'unknown'):['ordinary','external'].includes(row.door_class)?'ordinary':'unknown';}
+function buildingTable(score){
+ const rows=new Map([...score.ranked,...score.excluded].map(r=>[r.room,r]));
+ const uses=score.approved_input?.room_uses||{};
+ return [...new Set([...rows.keys(),...Object.keys(uses)])].map(id=>{const r=rows.get(id),b=r?.origin_budget,u=uses[id]??b?.classification;
+  return {id,name:u?.name??r?.name??'',usage:u?.label??'미확인',area:u?.area_m2??b?.area_m2??r?.area_m2,load:u?.load_MJ_m2??b?.fuel_load_MJ_m2,coverage:u?.coverage??b?.coverage,hrrpua:u?.hrrpua_kW_m2??b?.hrrpua_kW_m2,basis:[u?.classification_basis,u?.value_basis,u?.table_basis,u?.excluded_reason??r?.excluded_reason].filter(Boolean).join(' · ')};
+ }).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
+}
+function openingCounts(doors,openings){const counts={confirmed:0,inferred:0,ordinary:0,window:0,unknown:0};for(const r of doors||[])counts[doorCategory(r)]++;counts.window=(openings||[]).filter(r=>r.class?.includes('window')).length;return counts;}
+function createBuildingPanel({store,onSave,onRefresh}){
+ const $=id=>document.getElementById(id),root=document.createElement('div');root.id='buildingContent';$('shellPane-building').append(root);
+ root.innerHTML='<h3>개구부 분류 <span tabindex="0" title="기존 분류 API의 입력 범위입니다. 확정은 분류 규칙상 확정 또는 사용자 정정이며 내화 성능 검증이 아닙니다. 창 개수는 시뮬레이션 입력의 창이며 3D 강조 필터와 별개입니다.">ⓘ</span></h3><div id="buildingScope"></div><div id="buildingOpeningSummary"></div><button id="buildingRefresh">새로고침</button><div id="buildingStatus" role="status"></div><h3>문 목록 <span tabindex="0" title="정정은 기존 /cfbt/lite/doors 경로로 저장합니다. 이후 탐색 입력에 적용되며 현재 재생 결과는 바꾸지 않습니다.">ⓘ</span></h3><div class="buildingScroll"><table><thead><tr><th>문 · 연결</th><th>분류</th><th>정정</th></tr></thead><tbody id="buildingDoors"></tbody></table></div><h3>실 용도·연료 <span tabindex="0" title="승인된 용도·연료값을 그대로 읽습니다. 미제공 값은 미확인입니다. 각 실을 펼치면 CAD 원문과 적용 근거를 확인할 수 있습니다.">ⓘ</span></h3><div class="buildingScroll"><table><thead><tr><th>실·용도</th><th>면적<br>m²</th><th>하중<br>MJ/m²</th><th>피복률</th><th>HRRPUA<br>kW/m²</th></tr></thead><tbody id="buildingFuel"></tbody></table></div>';
+ const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}#buildingContent h3 span{cursor:help}#buildingOpeningSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}#buildingOpeningSummary div{border:1px solid #496273;border-radius:6px;text-align:center;padding:7px 2px}#buildingOpeningSummary b{display:block;font-size:18px;margin-top:4px}#buildingContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px;cursor:pointer}#buildingContent button:disabled{opacity:.5;cursor:default}#buildingContent :focus-visible{outline:2px solid #42e8ff}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingDoors td:nth-child(2),#buildingDoors td:nth-child(3){white-space:nowrap}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingScope,#buildingStatus{font-size:11px;color:#b8cbd8;margin:8px 0}`;document.head.append(style);
+ const append=(p,tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;p.append(e);return e;};
+ function render(){const s=store.get('buildingReview'),counts=openingCounts(s.doors?.rows,s.openings);$('buildingStatus').textContent=s.status;const floors=[...new Set(s.rooms.map(r=>r.id.split('_')[1]))];$('buildingScope').textContent=floors.length?`분류 입력 · ${floors.join(' / ')}`:'분류 입력 읽는 중';
+  $('buildingOpeningSummary').replaceChildren();for(const [key,label] of [['confirmed','확정'],['inferred','추정'],['ordinary','일반'],['window','창']]){const c=append($('buildingOpeningSummary'),'div',label);c.dataset.category=key;append(c,'b',s.doors&&s.openings?counts[key]:'—');}if(counts.unknown)$('buildingScope').textContent+=` · 미분류 문 ${counts.unknown}`;
+  $('buildingDoors').replaceChildren();for(const row of s.doors?.rows||[]){const tr=append($('buildingDoors'),'tr');tr.dataset.id=row.id;const identity=append(tr,'td');append(identity,'b',short(row.id));append(identity,'div',`${short(row.a)} ↔ ${short(row.b)}`);const detail=append(identity,'details');append(detail,'summary','근거');const source=append(detail,'div',`${row.connected_names.join(' / ')} · ${row.reason}`);source.className='buildingSource';const label=({confirmed:'확정 방화문',inferred:'추정 방화문',ordinary:row.door_class==='external'?'외기문':'일반문',unknown:'미분류'})[doorCategory(row)];append(tr,'td',label+(row.confidence==='user'?' · 정정':''));const button=append(append(tr,'td'),'button',row.door_class==='fire'?'일반문으로':'방화문으로');button.disabled=s.saving;button.onclick=()=>onSave(row.id,row.door_class==='fire'?'ordinary':'fire');}
+  $('buildingFuel').replaceChildren();for(const row of s.rooms){const tr=append($('buildingFuel'),'tr');tr.dataset.room=row.id;const first=append(tr,'td'),details=append(first,'details');append(details,'summary',`${short(row.id)} · ${row.usage}`);const source=append(details,'div',`CAD 원문: ${row.name||'미제공'}\n근거: ${row.basis||'미제공'}`);source.className='buildingSource';for(const text of [number(row.area,1),number(row.load),Number.isFinite(row.coverage)?number(row.coverage*100)+'%':'미확인',number(row.hrrpua)])append(tr,'td',text);}
+  $('buildingRefresh').disabled=s.saving;
+ }
+ $('buildingRefresh').onclick=onRefresh;const off=store.subscribe('buildingReview',render);render();
+ return {dispose(){off();root.remove();style.remove();}};
+}
+
+return {doorCategory,buildingTable,openingCounts,createBuildingPanel};
+})();
+
+// app/web/state/series_cache.js
+const __module2=(()=>{
 // One active immutable series payload, outside the observable metadata store.
 function frozenCopy(value){const data=structuredClone(value);const visit=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(visit);Object.freeze(x);}};visit(data);return data;}
 function createSeriesCache(){
@@ -436,12 +467,12 @@ return {createSeriesCache};
 })();
 
 // app/web/state/store.js
-const __module2=(()=>{
+const __module3=(()=>{
 // Pure state transitions. I/O belongs to a future boundary controller.
-const {createSeriesCache}=__module1;
+const {createSeriesCache}=__module2;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
-const initial=()=>({building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,samples:10},
+const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,samples:10},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
  realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',fuelMarkers:true},
@@ -459,6 +490,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
   subscribe(slice,fn){if(!listeners.has(slice)||typeof fn!=='function')throw Error('Invalid subscription');listeners.get(slice).add(fn);return ()=>listeners.get(slice).delete(fn);},
   dispatch(action,p={}){
    switch(action){
+    case 'buildingReview/set':if(Object.keys(p).some(k=>!Object.hasOwn(state.buildingReview,k)))throw Error('Invalid building review');put('buildingReview',{...state.buildingReview,...p});return true;
     case 'exploration/set':{
      if(Object.keys(p).some(k=>!Object.hasOwn(state.exploration,k)))throw Error('Unknown exploration setting');
      for(const k of ['top_n','samples'])if(p[k]!==undefined&&(!Number.isSafeInteger(p[k])||p[k]<1))throw Error('Positive integer required');
@@ -510,7 +542,7 @@ return {createStore,seriesCache,store,legacyDispatchBridge};
 })();
 
 // app/web/adapters/read.js
-const __module3=(()=>{
+const __module4=(()=>{
 // Pure read adapters: no DOM, fetch, engine imports, defaults, or simulation.
 const copy=x=>structuredClone(x);
 const issue=(errors,code,ref,msg)=>errors.push({code,ref:String(ref),msg});
@@ -671,7 +703,7 @@ return {snapshotHash,adaptBuilding,SERIES_MAP,anyKnown,adaptResult,adaptScreenin
 })();
 
 // app/web/adapters/legacy_building.js
-const __module4=(()=>{
+const __module5=(()=>{
 // References are borrowed from the CAD loader, never from another display layer.
 // The three install() branches, in their original order. A colour-bearing
 // material alone is not enough: only objects touched by a branch are selected.
@@ -700,7 +732,7 @@ return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
 // app/web/adapters/legacy_openings.js
-const __module5=(()=>{
+const __module6=(()=>{
 // Read-only CAD-loader capability. No classification or opening-state inference.
 function readLegacyOpeningsSource({building,groups,sourceHash}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
@@ -714,7 +746,7 @@ return {readLegacyOpeningsSource};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module6=(()=>{
+const __module7=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; filtering remains in the display layer.
 function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
@@ -729,7 +761,7 @@ return {readLegacyCoreSource};
 })();
 
 // app/web/layers/empty.js
-const __module7=(()=>{
+const __module8=(()=>{
 // Stage 2 creates containers only. Existing shaders remain untouched.
 class EmptyLayer {
  static id='empty';
@@ -759,7 +791,7 @@ return {EmptyLayer,LAYER_IDS,LAYER_TYPES,createEmptyLayers};
 })();
 
 // app/web/scene/render_order.js
-const __module8=(()=>{
+const __module9=(()=>{
 const policy=(order,depthTest,depthWrite,transparent=null,opacity=null)=>Object.freeze({order,depthTest,depthWrite,transparent,opacity});
 // Verified legacy values replace the draft. Null preserves CAD material flags.
 const RENDER_POLICY=Object.freeze({building:policy(0,null,null),
@@ -792,9 +824,9 @@ return {RENDER_POLICY,RISK_TYPES,RISK_COLORS,riskHeight,displayV8Gates,LABELS,ap
 })();
 
 // app/web/layers/building.js
-const __module9=(()=>{
-const {EmptyLayer,createEmptyLayers}=__module7;
-const {applyRenderPolicy}=__module8;
+const __module10=(()=>{
+const {EmptyLayer,createEmptyLayers}=__module8;
+const {applyRenderPolicy}=__module9;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -841,7 +873,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module10=(()=>{
+const __module11=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -883,10 +915,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module11=(()=>{
-const {EmptyLayer}=__module7;
-const {applyRenderPolicy}=__module8;
-const {exteriorWindowFace}=__module10;
+const __module12=(()=>{
+const {EmptyLayer}=__module8;
+const {applyRenderPolicy}=__module9;
+const {exteriorWindowFace}=__module11;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -946,9 +978,9 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module12=(()=>{
-const {EmptyLayer}=__module7;
-const {applyRenderPolicy}=__module8;
+const __module13=(()=>{
+const {EmptyLayer}=__module8;
+const {applyRenderPolicy}=__module9;
 
 class CoreLayer extends EmptyLayer {
  static id='core';
@@ -998,7 +1030,7 @@ return {CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module13=(()=>{
+const __module14=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1072,7 +1104,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module14=(()=>{
+const __module15=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1080,7 +1112,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module15=(()=>{
+const __module16=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1088,7 +1120,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module16=(()=>{
+const __module17=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1096,11 +1128,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module17=(()=>{
-const {createRealViewSession}=__module13;
-const {createSmokeLayer}=__module14;
-const {createFlameLayer}=__module15;
-const {createPlumeLayer}=__module16;
+const __module18=(()=>{
+const {createRealViewSession}=__module14;
+const {createSmokeLayer}=__module15;
+const {createFlameLayer}=__module16;
+const {createPlumeLayer}=__module17;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1110,7 +1142,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module18=(()=>{
+const __module19=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1164,10 +1196,10 @@ return {boundarySegments,joinedSelectionRibbons};
 })();
 
 // app/web/layers/risk.js
-const __module19=(()=>{
-const {EmptyLayer}=__module7;
-const {applyRenderPolicy}=__module8;
-const {boundarySegments,joinedSelectionRibbons}=__module18;
+const __module20=(()=>{
+const {EmptyLayer}=__module8;
+const {applyRenderPolicy}=__module9;
+const {boundarySegments,joinedSelectionRibbons}=__module19;
 
 const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
@@ -1247,7 +1279,7 @@ return {RiskLayer};
 })();
 
 // app/web/scene/picking.js
-const __module20=(()=>{
+const __module21=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -1255,11 +1287,11 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/selection.js
-const __module21=(()=>{
-const {EmptyLayer}=__module7;
-const {applyRenderPolicy}=__module8;
-const {joinedSelectionRibbons}=__module18;
-const {ROOM_PICK_LAYER}=__module20;
+const __module22=(()=>{
+const {EmptyLayer}=__module8;
+const {applyRenderPolicy}=__module9;
+const {joinedSelectionRibbons}=__module19;
+const {ROOM_PICK_LAYER}=__module21;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1305,9 +1337,9 @@ return {SelectionLayer};
 })();
 
 // app/web/scene/host.js
-const __module22=(()=>{
-const {createEmptyLayers}=__module7;
-const {ROOM_PICK_LAYER}=__module20;
+const __module23=(()=>{
+const {createEmptyLayers}=__module8;
+const {ROOM_PICK_LAYER}=__module21;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1377,7 +1409,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module23=(()=>{
+const __module24=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';style.href='/cfbt/overlay.css';document.head.append(style);
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1461,7 +1493,7 @@ return {createLitePanel,updateLitePanel,createMenuReview};
 })();
 
 // app/web/panels/shell.js
-const __module24=(()=>{
+const __module25=(()=>{
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1529,7 +1561,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display.js
-const __module25=(()=>{
+const __module26=(()=>{
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 function createDisplayPanel({store,selectionLabel}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
@@ -1587,7 +1619,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module26=(()=>{
+const __module27=(()=>{
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 const finite=Number.isFinite;
 const number=(v,d=0)=>finite(v)?v.toFixed(d):'미평가';
@@ -1653,13 +1685,335 @@ function createResultsPanel({panel,store}){
 return {resultTypes,selectedScores,summarizeMCPlayback,createResultsPanel};
 })();
 
+// app/web/adapters/attention.js
+const __module28=(()=>{
+// Presentation ranking only. Never substitute legacy smoke counts for indices.
+function attentionRanking(comparison,saved){
+ const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
+ const compare=(a,b)=>{const x=key(a),y=key(b);for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]<y[i]?-1:1;return 0;};
+ const rows=(comparison?.rows||[]).map(row=>{const pair=(row.state_results||[]).map(c=>{const identity=[c.room,c.state,c.result_folder,c.times?.total_s,c.burning_room_count,c.first_FO_s,c.safe_end_s];const found=saved.records.find(s=>s.identity.every((v,i)=>v===identity[i]));return {...c,attention_room_count:found?.attention_room_count??null,index_complete:!!(found?.complete&&!found.unknown_rooms.length)};});
+  const valid=pair.length===2&&pair.every(c=>c.index_complete&&c.complete);if(!valid)return {...row,rank2:null,attention_room_count:null,index_complete:false};
+  const worst=[...pair].sort(compare)[0];return {...row,rank2:null,index_complete:true,attention_room_count:worst.attention_room_count,burning_room_count:worst.burning_room_count,first_FO_s:worst.first_FO_s,worst_state:worst.state};
+ });
+ const good=rows.filter(r=>r.index_complete).sort((a,b)=>compare(a,b)||a.room.localeCompare(b.room));let rank=0;for(let i=0;i<good.length;i++){if(i===0||compare(good[i-1],good[i]))rank=i+1;good[i].rank2=rank;}
+ return [...good,...rows.filter(r=>!r.index_complete)];
+}
+
+return {attentionRanking};
+})();
+
+// app/web/data/saved_attention.js
+const __module29=(()=>{
+// Generated by tools/export_ui_attention.py from saved results only.
+const savedAttention = {
+  "schema": "pyrocast.ui-attention/1",
+  "threshold": 70,
+  "kinds": [
+    "FO",
+    "FGI",
+    "backdraft",
+    "rollover"
+  ],
+  "records": [
+    {
+      "attention_rooms": [
+        "CAD_3F_R3",
+        "CAD_3F_R4"
+      ],
+      "attention_room_count": 2,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R3",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R3\\open_except_confirmed",
+        24.098559699996258,
+        2,
+        1590.0,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "5caca8206f18f09a8c68888895675a1020e4862c8bdeddea7929f86ff3631bd4"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R3"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R3",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R3\\closed",
+        12.752143999998225,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "c4ebc03a301c5aeae210d303fdaa1d0302cd7517a37768a83552446d845dfb85"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R2"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R2",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R2\\open_except_confirmed",
+        25.471592800000508,
+        1,
+        930.0,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "b38e490e8f1dc2b9bfd305bc889b8e72e084b81f2c8fcfebd2f8fc78930c8510"
+    },
+    {
+      "attention_rooms": [],
+      "attention_room_count": 0,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R2",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R2\\closed",
+        28.931953300001624,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "067f12d7db656fe32c71f588784eb4f5d38f2b18d1c0f194fcd9772b673edba2"
+    },
+    {
+      "attention_rooms": [],
+      "attention_room_count": 0,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R1",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R1\\open_except_confirmed",
+        24.638894199997594,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "c1e01a9bbf73728a051b0e183ca3f614f884f58fb6266471bf6cf9e5f9c4a95b"
+    },
+    {
+      "attention_rooms": [],
+      "attention_room_count": 0,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R1",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R1\\closed",
+        36.15712850000273,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "fdef16e446f9a1ec97972911cf5dde170c583c2a4b634b49f0ea15ecbbd646b8"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R9"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R9",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R9\\open_except_confirmed",
+        15.5820004000052,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "ed9797ce0d91564a426927c9054889df4d0862b533100cc73206af69144454ed"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R9"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R9",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R9\\closed",
+        14.422403699994902,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "6a0e4181f5f82f9dbbf5a18c8e28633fcf2b0f6d131a36c3f0bc73d82327941a"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R8"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R8",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R8\\open_except_confirmed",
+        14.339497300003131,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "a0cfece3ae211aa84be09626c47baafc0a7151e79f25144c53da3702cd0af639"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R8"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R8",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R8\\closed",
+        13.040854300001229,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "af1e6f7f982953f4b4af95370aa7910c490671b5753f01f341f4a26e4784978a"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R23"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R23",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R23\\open_except_confirmed",
+        14.196333799998683,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "fe0ca07a8138343efbfe358f28edc5fcabf326388b26b13fd7fb21985c9e7268"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R23"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R23",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R23\\closed",
+        12.797113000000536,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "19a033b99a6adc4abe84878b3904708a02f549ec974acdba0104006ea0e7fc17"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R0"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R0",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R0\\open_except_confirmed",
+        13.444232000001648,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "9feb0c246e890c57deb25ab26f38e00ed60866779ac79bfd3f1b232632b731b5"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R0"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R0",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R0\\closed",
+        12.772539899997355,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "d9e7d52b46e8d5ca0e1b522c0cf633ed2498f0d4f35d73888e74295a00917c44"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R4"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R4",
+        "open_except_confirmed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R4\\open_except_confirmed",
+        23.221728399999847,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "df0aff2dcb613f5f82e1db7491d64bcc9d8bdd8e646b1a6d1a31c2662cba1119"
+    },
+    {
+      "attention_rooms": [
+        "CAD_3F_R4"
+      ],
+      "attention_room_count": 1,
+      "unknown_rooms": [],
+      "identity": [
+        "CAD_3F_R4",
+        "closed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R4\\closed",
+        16.02941290000308,
+        1,
+        null,
+        3600.0
+      ],
+      "complete": true,
+      "source_sha256": "565431f226b33f8949c74650ee5460649a6da10e17b2795128f003646f267ff2"
+    }
+  ],
+  "basis": "union of original rooms across cells/time; any phenomenon degree*100 >=70; no simulation"
+};
+
+return {savedAttention};
+})();
+
 // app/web/panels/explore.js
-const __module27=(()=>{
+const __module30=(()=>{
+const {attentionRanking}=__module28;
+const {savedAttention}=__module29;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
  const first=payload.score.ranked,byId=new Map(first.map(r=>[r.room,r]));
- return {first,second:(payload.comparison?.rows||[]).map(r=>({...r,rank1:byId.get(r.room)?.rank1??r.rank1,name:byId.get(r.room)?.name??r.name}))};
+ return {first,second:attentionRanking(payload.comparison,savedAttention).map(r=>({...r,rank1:byId.get(r.room)?.rank1??r.rank1,name:byId.get(r.room)?.name??r.name}))};
 }
 function mcEstimate(summary,samples){
  return finite(summary?.wall_s)&&summary.wall_s>0&&summary.completed>0?summary.wall_s/summary.completed*samples:null;
@@ -1670,8 +2024,8 @@ function createExplorePanel({store,onRun,onRefresh,onResults}){
  const $=id=>document.getElementById(id),root=document.createElement('div');root.id='exploreContent';$('shellPane-explore').append(root);
  root.innerHTML=`<h3>① 후보 순위 <span tabindex="0" title="기존 서버가 계산한 상대 순위입니다. 위험도 예측값이 아닙니다.">ⓘ</span></h3>
  <div class="exploreCard"><form id="exploreRunForm"><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
- <h3>② 시뮬레이션 순위 <span tabindex="0" title="기존 서버 순위: 연소 실 수 → 연기 위험 도달 실 수 → 최초 FO가 빠른 순. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
- <div class="exploreCard"><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th>연기</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
+ <h3>② 시뮬레이션 순위 <span tabindex="0" title="표시 순위: 연소 실 수 → 주의 이상 실 수 → 최초 FO가 빠른 순. 주의 이상은 4현상 중 최대 지수 ≥70인 원래 방 수입니다. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
+ <div class="exploreCard"><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th title="4현상 최대 지수 ≥70인 실 수">주의 ≥70</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
  <h3>③ 몬테카를로</h3><div class="exploreCard"><label>화점 <select id="exploreOrigin" disabled></select></label><label>표본 수 <input id="exploreSamples" type="number" min="1" step="1" value="10" required></label><div id="exploreEstimate" title="저장된 MC 전체 경과시간 ÷ 완료 표본 수 × 요청 표본 수. 다른 화점과 개폐 조건의 소요시간은 달라질 수 있습니다.">예상 시간 —</div><div class="exploreButtons"><button id="exploreMC" disabled title="서버 실행 경로는 5단계">MC 실행</button><button id="exploreResults" disabled>결과 보기</button></div><div id="exploreMCStatus" role="status">MC 실행 · 5단계</div></div>
  <details id="exploreRules"><summary>규칙 설정</summary><div id="exploreRuleContext"></div><div id="exploreRuleMount"></div></details>`;
  const style=document.createElement('style');style.dataset.pyrocastExplore='true';style.textContent=`
@@ -1679,7 +2033,8 @@ function createExplorePanel({store,onRun,onRefresh,onResults}){
  `;document.head.append(style);
  let payload=null,summary=null,mcOrigin=null,pending=false;
  const pretty=id=>id?.replace(/^CAD_/,'').replaceAll('_',' ')||'미선택';
- const originName=id=>{const row=payload?.score.ranked.find(r=>r.room===id);return row?`${pretty(id)} · ${row.name||''}`:pretty(id);};
+ const useName=row=>row?.origin_budget?.classification?.label??payload?.score.approved_input?.room_uses?.[row?.room]?.label??'용도 미확인';
+ const originName=id=>{const row=payload?.score.ranked.find(r=>r.room===id);return row?`${pretty(id)} · ${useName(row)}`:pretty(id);};
  const cell=(tr,value)=>{const td=document.createElement('td');td.textContent=value;tr.append(td);return td;};
  function sync(){const state=store.get('exploration');$('exploreN').value=state.top_n;$('exploreSamples').value=state.samples;$('exploreOrigin').value=state.origin_room_id||'';
   for(const tr of root.querySelectorAll('tr[data-room]'))tr.setAttribute('aria-selected',String(tr.dataset.room===state.origin_room_id));
@@ -1696,13 +2051,13 @@ function createExplorePanel({store,onRun,onRefresh,onResults}){
  $('exploreRefresh').onclick=onRefresh;$('exploreResults').onclick=onResults;
  const off=store.subscribe('exploration',sync);
  function update(value){payload=value;const {first,second}=screeningRows(value);$('exploreN').max=first.length;$('exploreOrigin').replaceChildren();for(const row of first)$('exploreOrigin').add(new Option(originName(row.room),row.room));$('exploreOrigin').disabled=!first.length;
-  $('exploreCandidates').replaceChildren();for(const row of first){const tr=document.createElement('tr');cell(tr,count(row.rank1));cell(tr,`${pretty(row.room)} · ${row.name||''}`).title=row.reason||'';cell(tr,finite(row.score)?row.score.toFixed(3):'—');$('exploreCandidates').append(tr);}
-  $('exploreRanking').replaceChildren();for(const row of second){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');tr.title=row.complete?({closed:'모두 닫힘',open_except_confirmed:'확정 방화문 제외 모두 열림'}[row.worst_state]||''):'미완료 · 부분 결과';cell(tr,count(row.rank2));cell(tr,pretty(row.room));cell(tr,count(row.rank1));cell(tr,count(row.burning_room_count));cell(tr,count(row.smoke_risk_room_count));cell(tr,finite(row.first_FO_s)?`${Math.floor(row.first_FO_s/60)}:${String(Math.floor(row.first_FO_s%60)).padStart(2,'0')}`:'—');
+  $('exploreCandidates').replaceChildren();for(const row of first){const tr=document.createElement('tr');cell(tr,count(row.rank1));cell(tr,`${pretty(row.room)} · ${useName(row)}`).title=row.reason||'';cell(tr,finite(row.score)?row.score.toFixed(3):'—');$('exploreCandidates').append(tr);}
+  $('exploreRanking').replaceChildren();for(const row of second){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');tr.title=row.complete?({closed:'모두 닫힘',open_except_confirmed:'확정 방화문 제외 모두 열림'}[row.worst_state]||''):'미완료 · 부분 결과';cell(tr,count(row.rank2));cell(tr,pretty(row.room));cell(tr,count(row.rank1));cell(tr,count(row.burning_room_count));cell(tr,count(row.attention_room_count));cell(tr,finite(row.first_FO_s)?`${Math.floor(row.first_FO_s/60)}:${String(Math.floor(row.first_FO_s%60)).padStart(2,'0')}`:'—');
    const choose=()=>{if(first.some(r=>r.room===row.room))store.dispatch('exploration/set',{origin_room_id:row.room});};tr.onclick=choose;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}};$('exploreRanking').append(tr);
   }
   if(!second.length){const tr=document.createElement('tr'),td=cell(tr,'저장된 ② 결과 없음');td.colSpan=6;$('exploreRanking').append(tr);}
   const progress=value.progress;$('exploreStatus').textContent=progress?.running?`② 계산 중 ${progress.completed??0}/${progress.total??'—'} · ${progress.current_room??''}`:progress?.error?'② 실패 · '+progress.error:`적격 ${first.length}실`;
-  const c=value.comparison;$('exploreRankBasis').textContent=c?`저장 결과 · 상위 ${c.top_n} × 2상태 · ${c.complete_scenarios??'—'}/${c.attempted_scenarios??'—'} 완료`:'② 실행 대기';
+  const c=value.comparison;$('exploreRankBasis').textContent=c?`저장 결과 · 상위 ${c.top_n} × 2상태 · ${c.complete_scenarios??'—'}/${c.attempted_scenarios??'—'} 완료`:'② 실행 대기';if(second.some(r=>!r.index_complete))$('exploreRankBasis').textContent+=' · 새 결과 지수 미집계';$('exploreRankBasis').title='저장 결과 원값의 지수 ≥70 집계. 새 실행의 집계는 서버 연결 전까지 별도 자료 갱신이 필요합니다. 미집계는 0 또는 기존 연기 수로 대체하지 않습니다.';
   if(value.saved_score?.opening_states&&JSON.stringify(value.saved_score.opening_states)!==JSON.stringify(value.score.opening_states))$('exploreRankBasis').textContent+=' · 현재 문 설정과 다름';
   const current=store.get('exploration');if(!first.some(r=>r.room===current.origin_room_id)){const proposed=value.selection?.mc_room??c?.default_mc_room??first[0]?.room;store.dispatch('exploration/set',{origin_room_id:first.some(r=>r.room===proposed)?proposed:first[0]?.room??null});}
   sync();
@@ -1714,25 +2069,26 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module28=(()=>{
-const {createStore}=__module2;
-const {createSeriesCache}=__module1;
-const {adaptBuilding,adaptResult,adaptScreening}=__module3;
-const {readLegacyBuildingSource}=__module4;
-const {readLegacyOpeningsSource}=__module5;
-const {readLegacyCoreSource}=__module6;
-const {BuildingLayer}=__module9;
-const {OpeningsLayer}=__module11;
-const {CoreLayer}=__module12;
-const {createRealViewLayers}=__module17;
-const {RiskLayer}=__module19;
-const {SelectionLayer}=__module21;
-const {createSceneHost}=__module22;
-const {createLitePanel,updateLitePanel,createMenuReview}=__module23;
-const {createPanelShell}=__module24;
-const {createDisplayPanel}=__module25;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module26;
-const {createExplorePanel}=__module27;
+const __module31=(()=>{
+const {createBuildingPanel,buildingTable}=__module1;
+const {createStore}=__module3;
+const {createSeriesCache}=__module2;
+const {adaptBuilding,adaptResult,adaptScreening}=__module4;
+const {readLegacyBuildingSource}=__module5;
+const {readLegacyOpeningsSource}=__module6;
+const {readLegacyCoreSource}=__module7;
+const {BuildingLayer}=__module10;
+const {OpeningsLayer}=__module12;
+const {CoreLayer}=__module13;
+const {createRealViewLayers}=__module18;
+const {RiskLayer}=__module20;
+const {SelectionLayer}=__module22;
+const {createSceneHost}=__module23;
+const {createLitePanel,updateLitePanel,createMenuReview}=__module24;
+const {createPanelShell}=__module25;
+const {createDisplayPanel}=__module26;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module27;
+const {createExplorePanel}=__module30;
 const {attachFrozenRules}=__external4;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -1757,11 +2113,15 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null;
  const exploreAbort=new AbortController();
+ const buildingPanel=createBuildingPanel({store,onSave:saveDoor,onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
+ async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
+ async function saveDoor(id,door_class){if(store.get('buildingReview').saving||disposed)return;store.dispatch('buildingReview/set',{saving:true,status:'저장 중…'});try{const response=await fetch('/cfbt/lite/doors',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({id,door_class})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(disposed)return;store.dispatch('buildingReview/set',{doors:value,status:id+' · 저장 완료'});await refreshScreening();}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'저장 실패 · '+e.message});}finally{if(!disposed)store.dispatch('buildingReview/set',{saving:false});}}
+
  const explore=createExplorePanel({store,onRun:()=>runScreening(),onRefresh:()=>refreshScreening(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  const ruleOptions=()=>{const row=screeningPayload?.score.ranked.find(r=>r.room===store.get('exploration').origin_room_id);if(!row)throw Error('탐색 화점을 먼저 선택하세요.');return {fire_floor:row.floor,fire_room:row.room.replace('CAD_'+row.floor+'_',''),duration_s:data.time_s.at(-1)};};
  function ruleContext(){try{const o=ruleOptions();$('exploreRuleContext').textContent=`정밀 검토 · ${o.fire_floor} ${o.fire_room} · ${o.duration_s/60}분 · 문·창: 서버 기본값`;}catch{$('exploreRuleContext').textContent='탐색 화점 선택 대기';}}
  cleanup.push(store.subscribe('exploration',ruleContext));
- function acceptScreening(value){screeningPayload=value;store.dispatch('screening/set',adaptScreening({...value,buildingId:store.get('building').building_id,floorId:value.score.ranked[0]?.floor??null}));explore.update(value);ruleContext();if(screeningPoll){clearTimeout(screeningPoll);screeningPoll=null;}if(value.progress?.running)screeningPoll=setTimeout(()=>refreshScreening(),3000);}
+ function acceptScreening(value){screeningPayload=value;store.dispatch('buildingReview/set',{rooms:buildingTable(value.score),openings:value.score.opening_states});store.dispatch('screening/set',adaptScreening({...value,buildingId:store.get('building').building_id,floorId:value.score.ranked[0]?.floor??null}));explore.update(value);ruleContext();if(screeningPoll){clearTimeout(screeningPoll);screeningPoll=null;}if(value.progress?.running)screeningPoll=setTimeout(()=>refreshScreening(),3000);}
  async function refreshScreening(){const seq=++screeningRequest;try{const response=await fetch('/cfbt/lite/screening',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&seq===screeningRequest)acceptScreening(value);}catch(error){if(!disposed)explore.status('탐색 목록 읽기 실패 · '+error.message);}}
  async function runScreening(){if(screeningBusy||disposed)return;const state=store.get('exploration');if(!screeningPayload?.score.ranked.some(r=>r.room===state.origin_room_id)||state.top_n>screeningPayload.score.ranked.length){explore.status('적격 실 범위의 N과 화점을 선택하세요.');return;}
   screeningBusy=true;explore.busy(true);let message='';try{const response=await fetch('/cfbt/lite/screening',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:state.top_n,mc_room:state.origin_room_id,run:true})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);message='② 실행 요청 완료 · 직렬 계산';await refreshScreening();}catch(error){message='② 실행 요청 실패 · '+error.message;}finally{screeningBusy=false;if(!disposed){explore.busy(false);if(!screeningPayload?.progress?.running)explore.status(message);}}}
@@ -1786,7 +2146,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),seriesAt:()=>cache.get(store.get('result')?.result_id)});
  const on=(node,event,fn)=>{node.addEventListener(event,fn);cleanup.push(()=>node.removeEventListener(event,fn));};
  const handler=(node,event,fn)=>{const old=node[event];node[event]=fn;cleanup.push(()=>{node[event]=old;});};
- const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||(r.cad_names||[]).slice(0,2).join(' / ')}`;
+ const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||'용도 미확인'}`;
  const index=()=>Math.min(data.time_s.length-1,Math.floor(store.get('playback').t_s/10));
  function recordCamera(mode){store.dispatch('camera/fit',{mode,target:O.target.toArray(),pose:{position:C.position.toArray(),quaternion:C.quaternion.toArray(),up:C.up.toArray(),zoom:C.zoom}});}
  function render(){if(!ready||busy||disposed)return;busy=true;try{
@@ -1863,14 +2223,14 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
- await install(initial,chosen);await catalog();await refreshScreening();
+ await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();
  try{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;
   // Keep the existing controls and I/O intact; move explanations to one tooltip.
   const descriptions=[...rules.querySelectorAll(':scope > p, :scope > form > p')].filter(p=>p.getAttribute('role')!=='alert');
   $('exploreRules').querySelector('summary').title=descriptions.map(p=>p.textContent).join(' ');for(const p of descriptions)p.hidden=true;
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}
  const review=await createMenuReview(panel,viewer);results.mountReview(review);handler($('reviewClose'),'onclick',()=>{$('resultMenuReview').open=false;});handler($('liteReview'),'onclick',()=>{$('shellTab-result').click();$('resultMenuReview').open=true;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function dispose(){if(disposed)return;disposed=true;screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }
@@ -1879,9 +2239,9 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module29=(()=>{
+const __module32=(()=>{
 const {attach:attachLegacy}=__module0;
-const {attachModern}=__module28;
+const {attachModern}=__module31;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -1897,4 +2257,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module29.attach;
+export const attach=__module32.attach;

@@ -1,3 +1,4 @@
+import {createBuildingPanel,buildingTable} from './panels/building.js';
 import {createStore} from './state/store.js';
 import {createSeriesCache} from './state/series_cache.js';
 import {adaptBuilding,adaptResult,adaptScreening} from './adapters/read.js';
@@ -40,11 +41,15 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null;
  const exploreAbort=new AbortController();
+ const buildingPanel=createBuildingPanel({store,onSave:saveDoor,onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
+ async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
+ async function saveDoor(id,door_class){if(store.get('buildingReview').saving||disposed)return;store.dispatch('buildingReview/set',{saving:true,status:'저장 중…'});try{const response=await fetch('/cfbt/lite/doors',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({id,door_class})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(disposed)return;store.dispatch('buildingReview/set',{doors:value,status:id+' · 저장 완료'});await refreshScreening();}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'저장 실패 · '+e.message});}finally{if(!disposed)store.dispatch('buildingReview/set',{saving:false});}}
+
  const explore=createExplorePanel({store,onRun:()=>runScreening(),onRefresh:()=>refreshScreening(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  const ruleOptions=()=>{const row=screeningPayload?.score.ranked.find(r=>r.room===store.get('exploration').origin_room_id);if(!row)throw Error('탐색 화점을 먼저 선택하세요.');return {fire_floor:row.floor,fire_room:row.room.replace('CAD_'+row.floor+'_',''),duration_s:data.time_s.at(-1)};};
  function ruleContext(){try{const o=ruleOptions();$('exploreRuleContext').textContent=`정밀 검토 · ${o.fire_floor} ${o.fire_room} · ${o.duration_s/60}분 · 문·창: 서버 기본값`;}catch{$('exploreRuleContext').textContent='탐색 화점 선택 대기';}}
  cleanup.push(store.subscribe('exploration',ruleContext));
- function acceptScreening(value){screeningPayload=value;store.dispatch('screening/set',adaptScreening({...value,buildingId:store.get('building').building_id,floorId:value.score.ranked[0]?.floor??null}));explore.update(value);ruleContext();if(screeningPoll){clearTimeout(screeningPoll);screeningPoll=null;}if(value.progress?.running)screeningPoll=setTimeout(()=>refreshScreening(),3000);}
+ function acceptScreening(value){screeningPayload=value;store.dispatch('buildingReview/set',{rooms:buildingTable(value.score),openings:value.score.opening_states});store.dispatch('screening/set',adaptScreening({...value,buildingId:store.get('building').building_id,floorId:value.score.ranked[0]?.floor??null}));explore.update(value);ruleContext();if(screeningPoll){clearTimeout(screeningPoll);screeningPoll=null;}if(value.progress?.running)screeningPoll=setTimeout(()=>refreshScreening(),3000);}
  async function refreshScreening(){const seq=++screeningRequest;try{const response=await fetch('/cfbt/lite/screening',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&seq===screeningRequest)acceptScreening(value);}catch(error){if(!disposed)explore.status('탐색 목록 읽기 실패 · '+error.message);}}
  async function runScreening(){if(screeningBusy||disposed)return;const state=store.get('exploration');if(!screeningPayload?.score.ranked.some(r=>r.room===state.origin_room_id)||state.top_n>screeningPayload.score.ranked.length){explore.status('적격 실 범위의 N과 화점을 선택하세요.');return;}
   screeningBusy=true;explore.busy(true);let message='';try{const response=await fetch('/cfbt/lite/screening',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:state.top_n,mc_room:state.origin_room_id,run:true})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);message='② 실행 요청 완료 · 직렬 계산';await refreshScreening();}catch(error){message='② 실행 요청 실패 · '+error.message;}finally{screeningBusy=false;if(!disposed){explore.busy(false);if(!screeningPayload?.progress?.running)explore.status(message);}}}
@@ -69,7 +74,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),seriesAt:()=>cache.get(store.get('result')?.result_id)});
  const on=(node,event,fn)=>{node.addEventListener(event,fn);cleanup.push(()=>node.removeEventListener(event,fn));};
  const handler=(node,event,fn)=>{const old=node[event];node[event]=fn;cleanup.push(()=>{node[event]=old;});};
- const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||(r.cad_names||[]).slice(0,2).join(' / ')}`;
+ const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||'용도 미확인'}`;
  const index=()=>Math.min(data.time_s.length-1,Math.floor(store.get('playback').t_s/10));
  function recordCamera(mode){store.dispatch('camera/fit',{mode,target:O.target.toArray(),pose:{position:C.position.toArray(),quaternion:C.quaternion.toArray(),up:C.up.toArray(),zoom:C.zoom}});}
  function render(){if(!ready||busy||disposed)return;busy=true;try{
@@ -146,14 +151,14 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
- await install(initial,chosen);await catalog();await refreshScreening();
+ await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();
  try{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;
   // Keep the existing controls and I/O intact; move explanations to one tooltip.
   const descriptions=[...rules.querySelectorAll(':scope > p, :scope > form > p')].filter(p=>p.getAttribute('role')!=='alert');
   $('exploreRules').querySelector('summary').title=descriptions.map(p=>p.textContent).join(' ');for(const p of descriptions)p.hidden=true;
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}
  const review=await createMenuReview(panel,viewer);results.mountReview(review);handler($('reviewClose'),'onclick',()=>{$('resultMenuReview').open=false;});handler($('liteReview'),'onclick',()=>{$('shellTab-result').click();$('resultMenuReview').open=true;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function dispose(){if(disposed)return;disposed=true;screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

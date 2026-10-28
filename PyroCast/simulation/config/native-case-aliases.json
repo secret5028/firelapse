@@ -1,0 +1,74 @@
+{
+  "spread60uniform": {
+    "label": "균등 바닥 연료 · 통로 적치 가정 · 3F 1시간 전파 탐색",
+    "relative_path": "floor_spread_20261022/r4_uniform_bounded/playback.json"
+  },
+  "mixture60v7": {
+    "label": "고연료 1시간 · 테라스 정정 전 계산 · 실내 표시 30실",
+    "relative_path": "mixture_r2_20261022/enriched_floor60_v7/playback.json"
+  },
+  "mixture60v1": {
+    "label": "혼합물 · 1시간 전파 탐색 v1 · 2실 연소",
+    "relative_path": "mixture_r2_20261022/enriched_floor60/playback.json"
+  },
+  "compare30legacy": {
+    "label": "동일 조건 비교 · 기존 방식 · 3F 30분",
+    "relative_path": "mixture_r2_20261022/cad30_view_legacy/playback.json"
+  },
+  "compare30mixture": {
+    "label": "동일 조건 비교 · 혼합물 방식 · 3F 30분",
+    "relative_path": "mixture_r2_20261022/cad30_view_mixture/playback.json"
+  },
+  "topology30": {
+    "label": "3F 연결 보정 · 31실 · 30분",
+    "relative_path": "topology_audit_20261022/floor_corrected_30min/playback.json"
+  },
+  "vertical30": {
+    "label": "화재층 + 전층 코어·출입 공간 · 82구획 · 30분",
+    "relative_path": "topology_audit_20261022/vertical_corrected_30min/playback.json"
+  },
+  "windows30": {
+    "label": "연결 보정 전 · 3F 31실 · 30분 · 창 평가",
+    "relative_path": "window_r8_20261022/floor_windows_30min/playback.json"
+  },
+  "windows60": {
+    "label": "3F 전체 31실 · 1시간 · 창 파괴 평가 450℃",
+    "relative_path": "window_r8_20261022/floor_windows_60min/playback.json"
+  },
+  "windows60vent": {
+    "label": "3F 전체 31실 · 1시간 · 외기 창 초기 50% 개방",
+    "relative_path": "window_r8_20261022/floor_windows_60min_ventilated/playback.json"
+  },
+  "conditions_v1": {
+    "label": "조건표·개구부/상층 표시 분리 · 기존 3실 계산",
+    "relative_path": "condition_display_v1/playback.json"
+  },
+  "floor_smoke": {
+    "label": "연결층 전체 연기 · 화원/FO 시각 지정",
+    "relative_path": "cad_floor_smoke_v5_prescribed/playback.json"
+  },
+  "exterior_demo": {
+    "label": "R25 휴게실→홀2·홀3 · 반자고3m · 연료 가산 · 계단 제외",
+    "relative_path": "cad_exterior_risk_demo_v4_ceiling/playback.json"
+  },
+  "practical30": {
+    "label": "실용 탐색 · 30분 · 용도별 대표 연료",
+    "relative_path": "cad_practical_30min/playback.json"
+  },
+  "opening30": {
+    "label": "개구부 후보 · 30분 · 고체 45℃ 가정",
+    "relative_path": "cad_opening_30min/playback.json"
+  },
+  "floor": {
+    "label": "이전 15분 · 화재층 기본값 · 대표점",
+    "relative_path": "cad_floor/playback.json"
+  },
+  "building": {
+    "label": "이전 15분 · 연결 건물 기본값 · 대표점",
+    "relative_path": "cad_whole_verified/playback.json"
+  },
+  "test45": {
+    "label": "이전 15분 · 고체 45℃ 시험 · 대표점",
+    "relative_path": "cad_low_threshold/playback.json"
+  }
+}

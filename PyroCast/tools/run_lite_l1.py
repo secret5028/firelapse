@@ -20,6 +20,9 @@ SOURCE=Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
 def save(path,value):
     path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text(json.dumps(value,ensure_ascii=False,indent=2,allow_nan=False)+'\n','utf-8')
+    if path.name=='result.json' and isinstance(value,dict) and 'shared_conditions' in value and 'room_summary' in value:
+        from export_ui_attention import result_index
+        result_index(path)
 
 
 def legacy():

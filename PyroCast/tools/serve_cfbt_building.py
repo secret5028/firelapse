@@ -11,7 +11,7 @@ import re
 import sys
 import threading
 import time
-from urllib.parse import urlsplit,unquote
+from urllib.parse import urlsplit,unquote,parse_qs
 
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
@@ -25,11 +25,11 @@ from pyrocast_cfbt.comparison import compare_ignition,comparison_key
 def execution_key(options,building_sha,engine):
     """Reuse verified native outputs only for identical code, engine and inputs."""
     implementation=hashlib.sha256()
-    for path in [Path(__file__),*sorted((SIM/'pyrocast_cfbt').glob('*.py'))]:
+    for path in sorted((SIM/'pyrocast_cfbt').glob('*.py')):
         implementation.update(path.name.encode());implementation.update(path.read_bytes())
     for path in [*sorted((SIM/'data').glob('*.json')), *sorted((SIM/'extensions/thermal').glob('*.c')), *list((SIM/'build').glob('plate.dll'))]:
         implementation.update(path.name.encode());implementation.update(path.read_bytes())
-    payload={'options':options,'building_sha256':building_sha,
+    payload={'cache_schema':'engine-inputs-v2-no-server', 'options':options,'building_sha256':building_sha,
              'engine_sha256':hashlib.sha256(Path(engine).read_bytes()).hexdigest(),
              'implementation_sha256':implementation.hexdigest()}
     return hashlib.sha256(json.dumps(payload,sort_keys=True).encode()).hexdigest()[:24]
@@ -123,24 +123,12 @@ def main():
     engine=SIM/'build/mixture_r2/cfbt/cfast-cfbt.exe'
     lock=threading.Lock();pool=ThreadPoolExecutor(max_workers=1)
     r8_folder=SIM/'results/room_rule_r8_20261025'
-    saved_cases={'spread60uniform':('균등 바닥 연료 · 통로 적치 가정 · 3F 1시간 전파 탐색',(watch/'playback.json') if watch else SIM/'results/floor_spread_20261022/r4_uniform_bounded/playback.json'),
-                 'mixture60v7':('고연료 1시간 · 테라스 정정 전 계산 · 실내 표시 30실',SIM/'results/mixture_r2_20261022/enriched_floor60_v7/playback.json'),
-                 'mixture60v1':('혼합물 · 1시간 전파 탐색 v1 · 2실 연소',SIM/'results/mixture_r2_20261022/enriched_floor60/playback.json'),
-                 'compare30legacy':('동일 조건 비교 · 기존 방식 · 3F 30분',SIM/'results/mixture_r2_20261022/cad30_view_legacy/playback.json'),
-                 'compare30mixture':('동일 조건 비교 · 혼합물 방식 · 3F 30분',SIM/'results/mixture_r2_20261022/cad30_view_mixture/playback.json'),
-                 'topology30':('3F 연결 보정 · 31실 · 30분',SIM/'results/topology_audit_20261022/floor_corrected_30min/playback.json'),
-                 'vertical30':('화재층 + 전층 코어·출입 공간 · 82구획 · 30분',SIM/'results/topology_audit_20261022/vertical_corrected_30min/playback.json'),
-                 'windows30':('연결 보정 전 · 3F 31실 · 30분 · 창 평가',SIM/'results/window_r8_20261022/floor_windows_30min/playback.json'),
-                 'windows60':('3F 전체 31실 · 1시간 · 창 파괴 평가 450℃',SIM/'results/window_r8_20261022/floor_windows_60min/playback.json'),
-                 'windows60vent':('3F 전체 31실 · 1시간 · 외기 창 초기 50% 개방',SIM/'results/window_r8_20261022/floor_windows_60min_ventilated/playback.json'),
-                 'conditions_v1':('조건표·개구부/상층 표시 분리 · 기존 3실 계산',SIM/'results/condition_display_v1/playback.json'),
-                 'floor_smoke':('연결층 전체 연기 · 화원/FO 시각 지정',SIM/'results/cad_floor_smoke_v5_prescribed/playback.json'),
-                 'exterior_demo':('R25 휴게실→홀2·홀3 · 반자고3m · 연료 가산 · 계단 제외',SIM/'results/cad_exterior_risk_demo_v4_ceiling/playback.json'),
-                 'practical30':('실용 탐색 · 30분 · 용도별 대표 연료',SIM/'results/cad_practical_30min/playback.json'),
-                 'opening30':('개구부 후보 · 30분 · 고체 45℃ 가정',SIM/'results/cad_opening_30min/playback.json'),
-                 'floor':('이전 15분 · 화재층 기본값 · 대표점',SIM/'results/cad_floor/playback.json'),
-                 'building':('이전 15분 · 연결 건물 기본값 · 대표점',SIM/'results/cad_whole_verified/playback.json'),
-                 'test45':('이전 15분 · 고체 45℃ 시험 · 대표점',SIM/'results/cad_low_threshold/playback.json')}
+    from result_catalog import ResultCatalog
+    catalog_index=ResultCatalog(SIM/'results', SIM/'config/native-case-aliases.json')
+    import lite_mc_service as mc_service
+    def saved_cases():
+        rows=catalog_index.cases(sha, 'native')
+        return {r['id']:(r['label'],Path(r['path'])) for r in rows}
     def latest():
         with lock:
             path=state['latest'] or (args.result if args.result.is_file() else SIM/'results/cad_floor_smoke_v5_prescribed/playback.json')
@@ -220,12 +208,13 @@ def main():
             if path=='/cfbt/model-info':
                 return self.json({'building_sha256':sha,'floors':[{'name':f['name'],'rooms':[{'id':r['id'],'area_m2':r.get('area',0)} for r in f['rooms'] if 'outdoor' not in r.get('tags',[])]} for f in building['floors'] if f.get('rooms')]})
             if path=='/cfbt/cases':
-                return self.json([{'id':key,'label':label} for key,(label,file) in saved_cases.items() if file.is_file() and json.loads(file.read_text('utf-8')).get('building_sha256')==sha])
+                return self.json([{'id':key,'label':label} for key,(label,file) in saved_cases().items()])
             if path.startswith('/cfbt/case/'):
                 key=path[len('/cfbt/case/'):]
-                if key not in saved_cases or not saved_cases[key][1].is_file():return self.send_error(404)
-                if json.loads(saved_cases[key][1].read_text('utf-8')).get('building_sha256')!=sha:return self.send_error(404)
-                return self.json(present_playback(json.loads(saved_cases[key][1].read_text('utf-8'))))
+                cases=saved_cases()
+                if key not in cases or not cases[key][1].is_file():return self.send_error(404)
+                if json.loads(cases[key][1].read_text('utf-8')).get('building_sha256')!=sha:return self.send_error(404)
+                return self.json(present_playback(json.loads(cases[key][1].read_text('utf-8'))))
             if path=='/cfbt/r8/schema':
                 from pyrocast_cfbt.rule_settings import schema
                 return self.json(schema())
@@ -235,6 +224,9 @@ def main():
                 saved=SIM/'config/lite-door-overrides.json'
                 overrides=json.loads(saved.read_text('utf-8')) if saved.exists() else {}
                 return self.json(classify_doors(raw,overrides)[1])
+            if path=='/cfbt/lite/mc':
+                with lock:busy=state['busy']
+                return self.json({**mc_service.status(sha),'server_busy':busy,'available':True})
             if path=='/cfbt/lite/screening':
                 import lite_screening_service as screening
                 return self.json(screening.payload())
@@ -297,6 +289,10 @@ def main():
                 conf=SIM/'config/lite-viewer.json'
                 if not conf.is_file():return self.json({'error':'No adopted lite result'},404)
                 cfg=json.loads(conf.read_text('utf-8'))
+                cfg['cases']=catalog_index.cases(sha,'lite',cfg.get('cases',[]))
+                requested_room=parse_qs(urlsplit(self.path).query).get('mc_room',[None])[0]
+                current_summary=mc_service.summary(sha,requested_room)
+                if current_summary:cfg['mc_summary']=current_summary;cfg['progress_text']='MC 저장 결과 · '+str(current_summary['completed'])+'표본 완료'
                 if path.endswith('catalog.json'):
                     return self.json({k:v for k,v in cfg.items() if k!='active_path'})
                 chosen=cfg.get('active_path') if path.endswith('active.json') else next((x['path'] for x in cfg.get('cases',[]) if x['id']==path.rsplit('/',1)[-1]),None)
@@ -344,12 +340,30 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
-            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening'):return self.json({'error':'지원하지 않는 요청입니다'},405)
+            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc'):return self.json({'error':'지원하지 않는 요청입니다'},405)
             if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
             try:
                 length=int(self.headers.get('Content-Length','0'))
                 if not 0<length<=100000:raise ValueError('요청 크기 오류')
                 body=json.loads(self.rfile.read(length));base_path=None
+                if mc_service.status(sha).get('running'):return self.json({'error':'현재 MC 계산 중입니다'},409)
+                if request_path=='/cfbt/lite/mc':
+                    with lock:
+                        import lite_screening_service as screening
+                        if state['busy'] or (screening.payload().get('progress') or {}).get('state')=='running':return self.json({'error':'현재 계산 중입니다'},409)
+                        request,mc_input=mc_service.prepare_request(body,sha)
+                        destination=mc_service.reserve(request,mc_input)
+                        state.update(busy=True,kind='lite_mc',error=None,started=time.monotonic())
+                    def work_mc():
+                        try:
+                            mc_service.compute(destination)
+                            catalog_index.scan(force=True)
+                        except Exception as exc:
+                            with lock:state['error']=str(exc)
+                        finally:
+                            with lock:state['busy']=False
+                    pool.submit(work_mc)
+                    return self.json({'started':True,'id':destination.name,'workers':1,'budget_s_per_sample':1200},202)
                 if request_path=='/cfbt/lite/screening':
                     import lite_screening_service as screening
                     if not isinstance(body,dict) or set(body)-{'top_n','mc_room','run'}:raise ValueError('후보 선택 요청 오류')
@@ -409,7 +423,7 @@ def main():
                         if isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or not lo<=v<=hi:raise ValueError('점화 비교 설정 오류: '+key)
                     selected_case=body.get('case','latest')
                     if selected_case=='latest':base_path=Path(latest()).with_name('result.json') if latest() else None
-                    elif selected_case in saved_cases:base_path=saved_cases[selected_case][1].with_name('result.json')
+                    elif selected_case in saved_cases():base_path=saved_cases()[selected_case][1].with_name('result.json')
                     if not base_path or not base_path.is_file():raise ValueError('기준 계산 결과가 없습니다.')
                     base=json.loads(base_path.read_text('utf-8'))
                     outdoor_ids={f"CAD_{f['name']}_{r['id']}" for f in building['floors'] for r in f['rooms'] if 'outdoor' in r.get('tags',[])}

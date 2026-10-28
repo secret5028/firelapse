@@ -1,0 +1,12 @@
+{
+  "mc": {
+    "state": "idle",
+    "running": false,
+    "server_busy": false,
+    "available": true
+  },
+  "lite_cases": 11,
+  "native_cases": 31,
+  "s06": true,
+  "s09": true
+}

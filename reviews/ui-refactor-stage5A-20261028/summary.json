@@ -1,0 +1,55 @@
+{
+  "scope": "stage5A",
+  "implemented": [
+    "folder-indexed cases",
+    "serial MC CLI route and UI",
+    "automatic attention sidecars",
+    "server SHA excluded from execution_key"
+  ],
+  "contracts": 7,
+  "actual_solver_runs": 0,
+  "pixel": {
+    "scene": "S09-1420",
+    "changed_pixels": 0,
+    "bbox": null,
+    "size": [
+      1000,
+      600
+    ]
+  },
+  "frozen_files": 55,
+  "http": {
+    "real_http": true,
+    "fake_worker": true,
+    "solver_calls": 0,
+    "accepted": 202,
+    "duplicate": 409,
+    "native_while_mc": 409,
+    "invalid": 400,
+    "finished": "completed",
+    "attention_records": 16,
+    "lite_cases": 11,
+    "native_cases": 31
+  },
+  "live": {
+    "mc": {
+      "state": "idle",
+      "running": false,
+      "server_busy": false,
+      "available": true
+    },
+    "lite_cases": 11,
+    "native_cases": 31,
+    "s06": true,
+    "s09": true
+  },
+  "cache_note": "one-time migration; old results preserved; future server-only edits excluded",
+  "catalog": {
+    "files": 45,
+    "native": 31,
+    "lite": 11,
+    "cold_scan_s": 19.659,
+    "warm_scan_s": 2.93
+  },
+  "overlay_sha256": "d1c1f8478bdd21572bf2272f8cbf3b6f2d3561e43c378e57ff328f763827f53f"
+}

@@ -20,9 +20,11 @@ def payload(top_n=None):
     if not destination.is_relative_to((SIM/'results').resolve()):raise ValueError('Invalid result directory')
     comparison=read(destination/'comparison.json')
     legacy=comparison is not None and comparison.get('revision')!='v8_approved_screening'
+    from export_ui_attention import comparison_attention
     return {'score':scored,'comparison':None if legacy else comparison,'legacy_comparison_not_reused':legacy,
             'progress':read(destination/'progress.json'),'saved_score':read(destination/'score.json'),
-            'selection':selection,'playback_replaced':False}
+            'selection':selection,'playback_replaced':False,
+            'attention':comparison_attention(None if legacy else comparison)}
 
 def select(top_n,mc_room=None):
     if type(top_n) is not int:raise ValueError('N must be an integer')

@@ -11,8 +11,8 @@
 - 에너지출력잔차최대.011977%(허용.1%내),질량최대1.591731%(보고용). O2모두양수,기존연료음수오차최저-5.844e-5 . 출력구적진단이지내부단계완전보존증명아님.
 - 중요후처리수정: 초기summarize의untenable scores.all_met KeyError를record.all_met fallback으로수정. 저장BDF결과·state에서재집계/장부/재생복원,시뮬재실행0. 원래오류는summary-before-postprocess-fix.json/aggregate-before...보존,정식summary.json/summaries.json/aggregate.json/progress.json은복원완료상태. tools/recover_lite_mc_v8_r2.py / publish_lite_mc_v8_r2.py 실행완료.
 - UI lite_viewer.js /cfbt/lite/active.json/catalog.json/result/<id>. config/lite-viewer.json activeS06,screening-selection mc_roomR2. 서버PID5152 포트8780,tab5현재URL. ?legacy=1종전정밀경로보존. 전체연기·실감·연료기호토글,실클릭수치,접이식MC표,층전체카메라맞춤.
-- 기본ON adapter.py,room_oxygen실험은기본OFF보호. visualization.py CADclip·조건색·회색상층범위패키지. OD.24/작은화염/연료큐브표시가정명시 . MC중엔진pySHA불변,정밀·솔버·출력10s불변 . 21검사통과 . 
-- 보고 specs/간략엔진-v8-R2-MC10-20261026.txt . S06-32m10s-scene.png 및MC-summary.png 캡처 . 요청범위종료,추가표본·튜닝·재실행없이정지 . 
+- 기본ON adapter.py,room_oxygen실험은기본OFF보호. visualization.py CADclip·조건색·회색상층범위패키지. OD.24/작은화염/연료큐브표시가정명시 . MC중엔진pySHA불변,정밀·솔버·출력10s불변 . 21검사통과 .
+- 보고 specs/간략엔진-v8-R2-MC10-20261026.txt . S06-32m10s-scene.png 및MC-summary.png 캡처 . 요청범위종료,추가표본·튜닝·재실행없이정지 .
 
 최신 2026-10-26 / N=8 추가6회 및 v8 8.1절3단계 문분출 검증 완료 / 보고 후 정지
 - 사용자확정: 층별O2유지,받는실하층소비. 실단위산소재고OFF. 이전AGENTS폐기유지.
@@ -1128,3 +1128,185 @@ legacy_real_view.js 기존 billow의 coarse/fine 두 noise샘플을 분리 재�
 
 [2026-10-26 실내 문 위치 강조 복원]
 원본 CAD 문짝은 groups내 실제leaf로 존재하나 smoke renderOrder10/depthTestfalse로 덮임. 외부창만 별도overlay있던 상태. lite_viewer.js interiorOverlay 추가: kind door+connection_status interior만, 각leaf hinge→closed로 실제문폭·door_h의 단일평면 LineLoop(문짝개폐상태 아닌 위치). leaf없는경우 opening.polys 최장변 fallback. 금색#e6bd68 thin opacity.9, depthTestfalse/order46, raycast없음. 층group 위치·가시성동기화, 실내 문 위치 checkbox기본ON. 방화문분류·개폐·시뮬입력 수정없음. JSsyntax/browsererror통과, S06 1800s 연기속 문확인 screenshot interior-doors-visible.png. 표시용이며 개구부 유동 연결과는 별개.
+
+[2026-10-26 GitHub 업로드 완료]
+사용자 지정 https://github.com/secret5028/3d_fire main에 19e0499f93bd2e65c703ad16906e0e47dac32239 업로드 완료. 기존 1c060fc 체크포인트 이력/파일 보존, PyroCast/에 최신 코드·명세·fixtures·현재 CAD모델·assets·11개저장재생(gzip) 추가, 루트README최신링크추가. 총385파일, 약39MiB. 설치deps/plotdeps/컴파일build/중복reviews 제외. 원격ls-remote로SHA일치확인, staging clean.
+업로드 작업 checkout: simulation/results/github-publish-20261026 (root PyroCast .git은 아직 빈기존저장소, 원격없음). 다음업로드는 이 checkout의 origin/main을기준으로 보존해 진행, forcepush금지. 연결GitHub플러그인계정은대상접근404, PC git인증으로push성공. Git safe.directory는명령단위만사용/전역예외추가없음. commit identity는기존저장소와같은 Codex checkpoint.
+포터블 실행: repo/PyroCast에서 pip install -r requirements-viewer.txt 후 python start_viewer.py (port기본8780, 기존서버있으면 --port8781). 저장gzip 최초복원, 계산안돌림. 사본8783에서 7메뉴정상/S06/실내문ON/consoleerror0 검증; Python188문법통과·sourcecopy hash불일치0·credential패턴0. 임시서버3680종료,사용자8780서버유지. 이전AGENTS현행지침폐기는유지. 원본CFAST/Three소스기존공백은정리하지않고보존.
+
+[2026-10-26 웹앱 리팩토링 0단계]
+사용자 위험 유형별 테두리 중첩·동시 표시 확정, 단일색/구간 분할 미채택. 계획서 갱신. 0단계 결과 specs/웹앱리팩토링-0단계결과-20261026.md. simulation/results/ui_refactor_stage0_20261026에 237경로 해시, 소스/자산 zip, 간략3건+정밀1건 gzip, 메뉴DOM 목록, S06 R2 300/900/1800s와 S09 1500s 캡처 저장. overlay.js attach를 attachLegacy로 감싼 진입점만 수정, ?ui=legacy는 현재lite화면으로 복귀(기존 ?legacy 정밀과 구분). 기본동작 동일. 엔진/설정/서버/결과 해시 무변경. 계산0회, 브라우저오류0, 한캔버스 확인. JS문법/백업무결성 통과. 순수JS 스토어 선택, 아직 스토어구현없음. 1단계 미착수. 실감보기셰이더 파일불변. 임시검증탭은정리, 사용자기존탭유지. 현재일부선별/정정메뉴는읽기전용검토창이라사용가능으로오인금지. 다음: 데이터계약/어댑터 단계.
+
+[2026-10-26 웹앱 리팩토링 1단계 완료]
+사용자 지정 specs/Claude계약초안-스토어·레이어·스키마-20261026.md 기준. app/contracts JSON Schema 3종, app/web/adapters/read.js 순수 읽기 어댑터, app/tests/contracts.test.mjs 추가. S06/S09/stage4 저장자료 변환 스냅샷은 simulation/results/ui_refactor_stage1_20261026/. 사례별 28방/38셀/69개구부/361표본, 셀시계열137180값과 조건342950값 직접동일, 오류0. 원본자료해시불변. 동결237파일검사: 0단계 overlay.js 변경만 존재, 엔진/서버/기존설정/저장결과불변. 새시뮬0회. 2단계진행하지않음/현재뷰어미연결/캐시키별도승인보류.
+주의: R2_C1다중폴리곤을 polygons_m로보존. R1/R2/R10 방연속집계규칙없으므로 셀값보존·방합성값null, 기존조건OR유지. 사용자 후속승인: 다중셀 aggregation="none", 단일셀="single"로 확정하여 스키마/어댑터/스냅샷3건 갱신·재검증통과. 후속 실상세UI는 셀목록 펼침+"방 평균 없음" 표시. 새집계규칙은별도승인. native CFAST읽기매핑은아직미검증/미지원엔진명시거부. legacy_color는보존, commonconditions와기존대표색게이트차이있으므로 다음단계연결시검토. 상세보고 specs/웹앱리팩토링-1단계결과-20261026.md, 실행방법 app/README.md.
+
+[2026-10-26 웹앱 리팩토링 2단계 완료]
+계약 2·3절대로 app/web/state/store.js(순수 JS, 읽기전용 슬라이스, seq 폐기, 단일 작업), series_cache.js, scene/host.js(단일 canvas/renderer/RAF, clock 주입, dispose), render_order.js, layers/empty.js(8개 빈 레이어) 구현. 실제뷰어 연결/3단계는 미진행. 레이어간 참조·계산·새 셰이더 없음. 화면라벨 상층 연소; legacy overlay.js 설명의 bulk 한 문장도 교체(내부필드명 불변).
+실제 Chrome156/Three r160/WebGL 소프트웨어 합성fixture 50회 mount/dispose 통과: canvas/window리스너/store구독/RAF/scene자식/GPU geometry·texture 잔존 모두0; 매회geometry/material/texture3개 해제 확인. floor/set 카메라상태·행렬 불변, 표시toggle fetch0, 고정clock 위상동일, seq오래된응답폐기, 작업중복거부, 메타/series분리 확인. 자료 simulation/results/ui_refactor_stage2_20261026/verification.json,fixture.png; 재현 app/tests/stage2.test.mjs. 전체legacy셰이더/실건물 메모리검증은아직아님.
+동결237파일검사 통과(viewer overlay.js만0단계+이번문구변경). 엔진/서버/설정/계산결과/캐시키불변, 새시뮬0회. 상세 specs/웹앱리팩토링-2단계결과-20261026.md. 사용자지시대로 보고후정지. 캐시키는5단계전별도승인.
+
+[2026-10-26 3단계 첫 건물 레이어 완료·정지]
+최신 specs/Claude검토-3단계기준-기존화면코드-20261026.md 우선. 계약추정값폐기: 실제 renderOrder(연기10/플룸15/화염20/위험35/선택40/문46/코어70·72·73), 연기층기준리본+.14m, display_v8호환게이트로 문서·정책상수정정. 기존opacity위험1/선택.95/문.9유지. Group정책적용거부 Mesh/Line재질에적용.
+app/web/layers/building.js + adapters/legacy_building.js 구현. CAD로더 정적기하를빌리고 Mesh/Line·재질복제, 기존install색상적용. 원본재질불변; dispose복제재질355개해제, 원본기하dispose0. 9층355개객체. building/resultMeta동일성검사; 500프레임+결과메타교체에도build1. 새벽/셀경계생성없음. 실제사용자화면연결은아직안함. 다른레이어미착수.
+고정clock180000ms·동일카메라/광원/렌더러로 기존model.html기하생성블록+lite_viewer색블록의 건물분리장면과 비교: 3F사선/위/전체 3장 각700000픽셀 차이0. 전체화재장면비교아님. 2단계50회회귀통과·동결237검사통과·셰이더해시불변·계산0.
+보고 specs/웹앱리팩토링-3단계-건물결과-20261026.md; 증거 simulation/results/ui_refactor_stage3_building_20261026/.
+Git: 기존publish checkout simulation/results/github-publish-20261026의 codex/ui-refactor-layer-building 브랜치. 승인1·2단계선행체크포인트88178ff, 건물레이어단일커밋 a428f18. checkout clean. push안함. 다음레이어전사용자검토대기. 루트repo는여전히초기미커밋이므로이checkout이커밋이력기준.
+
+[2026-10-27 openings 레이어 완료 — 사용자 지시대로 정지]
+- 최신 3단계 메모 2절 openings만 이식. 코어 및 다음 레이어 미진행, live viewer 전환 없음.
+- app/web/layers/openings.js + openings_geometry.js + adapters/legacy_openings.js.
+- 외부 창 매 tick 카메라 법선 dot>0 판정, 기존 문/창 필터·렌더 정책 유지.
+- 3F 앞/뒤/상부 기준 비교 각 700,000픽셀 중 차이 0. 611개 CAD 후보와 423개 선 기하/재질 일치.
+- 500프레임 기하 재생성 없음, 소유 자원 425개 전부 해제. 기존 건물 회귀 검사 통과.
+- 보고: specs/웹앱리팩토링-3단계-문창결과-20261027.md
+- 증거: simulation/results/ui_refactor_stage3_openings_20261027/
+- Git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building, commit 6ff04c4. 1레이어 1커밋, checkout clean, push 없음.
+- 계산 엔진/서버/캐시/셰이더 변경 없음, 새 시뮬레이션 0회. 다음 작업은 사용자 지시 후.
+
+[2026-10-27 core 레이어 완료 — 사용자 지시대로 정지]
+- 3단계 메모 2절 core만 이식. 전체 보기 AND 체크박스 ON일 때만 표시, 층별 보기 숨김.
+- app/web/layers/core.js + adapters/legacy_core.js. shell .10/r70, tread .86/r72, edge .95/r73 모두 depthTest false.
+- transport 42건 중 연결 없는 B1 C3/1F C4 제외, shell 40 + tread 470 + edge 40.
+- 전체 앞/뒤/체크 OFF 캡처 각각 차이 0픽셀. 500프레임 재생성 없음, 소유 자원 1100개 해제, 잔여 구독 0.
+- 보고 specs/웹앱리팩토링-3단계-코어결과-20261027.md, 증거 simulation/results/ui_refactor_stage3_core_20261027/.
+- Git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building, commit acdc207. clean, push 없음.
+- live viewer 전환 및 계산 엔진/서버/캐시/셰이더 수정 없음, 시뮬레이션 0회. 다음 레이어 미진행.
+
+[2026-10-27 smoke/flame/plume 완료 — 사용자 지시대로 정지]
+- app/web/layers/real_view.js 공유 세션 + smoke.js/flame.js/plume.js, real_view_layers.js 묶음. createRealView import 래퍼, raw playback 그대로.
+- legacy_real_view/bridge SHA 불변. 호스트가 cfMeaning 제공/회수, realView 표시 슬라이스 추가. 프레임당 1회 animate(clock ms), reduced motion 0.
+- S09 3F R2 원 화점, 저장 시각 1800s / clock180000ms. 연기/플룸 ON/OFF 4조합 각각 픽셀 차이0. uTime180, reduced 0.
+- 500갱신 기하 유지, 소유자원296 모두해제, 재마운트 GPU geometry/texture0. stage2 50cycle회귀통과.
+- report specs/웹앱리팩토링-3단계-실감레이어결과-20261027.md, evidence simulation/results/ui_refactor_stage3_real_20261027/.
+- Git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building: fa63b2a(smoke/shared), d7b12fd(flame), 8a791e8(plume+verification). clean, push없음.
+- 원 운영화면 전환 없음. 위험/선택 다음 레이어 미진행. 계산 엔진/서버/캐시/원본shader 변경없음. 시뮬레이션0회.
+
+[2026-10-27 risk 레이어 완료 — 사용자 지시대로 정지]
+- app/web/layers/risk.js/risk_geometry.js. 어댑터 building/result/cell series만 사용; raw playback 접근 없음. shared conditions.met 접근 proxy금지검사통과.
+- 최신 엄격한 display_v8 게이트 FO color, FGI/BD stage+O2/LOC, rollover_band; 색만으로 켜는 helper fallback 제거. 원 방 OR.
+- 리본4순서/높이/폭, 셀외곽선/바닥틴트/중립연기경계/비셀선택면 보존. 선택테두리/피킹 다음단계 미구현.
+- building cell legacy_display(z_m,height_m,single_zone) 추가 보존. old snapshot schema유효하지만 risk에는 재어댑트 필요.
+- S09 3F R2 1800s + 첫중첩1420s(FO+BD), 연기ON/clock180000ms 각각 픽셀차0.
+- 4유형 OR/min h/회색점선/선택면 합성검사, 500갱신무재생성, 자원528전부해제. contracts3건 및 stage2 50회 회귀통과.
+- report specs/웹앱리팩토링-3단계-위험결과-20261027.md; evidence simulation/results/ui_refactor_stage3_risk_20261027/.
+- Git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building, commit90ebdc8, clean/push없음.
+- 운영화면전환/엔진/서버/캐시/셰이더 변경없음. 시뮬레이션0회. 지수기준전환/selection 다음작업은 사용자지시후.
+
+[2026-10-27 selection 레이어 완료 — 사용자 지시대로 정지]
+- app/web/layers/selection.js: 원 방 바닥리본 #42e8ff/.95/depthTest false/r40, 셀 바닥 투명피킹 z+.07. DOM/이벤트 없음.
+- host.js가 포인터/레이캐스트 소유, 마우스5px/터치10px, 멀티터치 취소, 보이는층만 selection/set 디스패치.
+- S09 3F R2 화점 1800s clock180000ms, R2선택/R3셀선택/미선택 3장 모두 픽셀차0.
+- R3는 실제 단일셀. R2 각 셀 선택시 원래 방 리본1개 검증. 실제 mouse/touch 및 경계값/취소/숨긴층 통과.
+- 500갱신 build1, 자원68전부해제, 남은구독0, stage2 50cycle 누수0/fetch0 회귀통과.
+- report specs/웹앱리팩토링-3단계-선택결과-20261027.md, evidence simulation/results/ui_refactor_stage3_selection_20261027/.
+- Git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building, commit441de4d, clean/push없음.
+- 엔진/서버/캐시/셰이더 및 운영화면 변경없음, 시뮬레이션0회. 다음은 사용자 지시 후 S06/S09/R2 전체 장면 전환.
+
+[2026-10-27 3단계 운영 전환 초안 — S06 차이 중단]
+- 사용자 지시: 기본 새호스트/?ui=legacy, 패널그대로, 전체4장비교, S06차이면중단,1commit/no push.
+- app/web/entry.js/controller.js/panels/, host 기존canvas/legend인계 옵션, store fire모드/문창표시, real_view 연료기호옵션 초안.
+- 서버허용경로한정 때문에 tools/build_ui_bundle.py로 25module묶음 생성. 검증용출력 simulation/results/ui_refactor_stage3_switchover_20261027/overlay.js ONLY. 실제 simulation/viewer/overlay.js 이번턴미수정/운영전환안함.
+- 기존server꺼져있어 simulation/start_building_view.ps1 동일설정 실행, exec session92433(port8780). server코드불변. 테스트POST전부차단,시뮬0회.
+- 전체model+패널 캡처clock180000/1440x1080: S09 1800 2722px,1420 2700px,S06 FO직후890s 3923px차이. S06 직후검사중단,전체코어미실행.
+- 패널HTML/선택라벨/camerapose동일, canvas1/cfMeaning1. S06 firstFO880s;890s 38셀 모든위험게이트동일,차이셀/유형없음. 건물외곽표면차이로보이나 정확한재질/합성정렬원인미확정. 보조게이트복원/추가수정금지상태.
+- 보고 specs/웹앱리팩토링-3단계-전환중단-20261027.md. 기존엔진/서버/캐시키/셰이더237동결검사통과(기존0단계overlay변경1건만).
+- 새controller는픽셀0불합격/전체UI회귀미완. 배포하지말것. host adopt와store확장도stage2회귀아직미검증.
+- Git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building, 1개초안commit 1cb3a6d, clean/no push.
+- 다음사용자지시기다림. 보조게이트차이는없으므로CAD렌더차이해결허용후재개가능.
+
+[2026-10-27 건물 레이어 범위 수정 — 첫 장면 차이로 중단]
+- legacy_building 선택=install 전체traverse 색변경집합. building nested부모transform/visibility+순환userData얕은복제, controller source-map동기화.
+- 실제install코드proxy검사: 전체1222/1222, 3F등록156/156·가시153/153(종전42). 누락/추가/색불일치0.
+- S09 1800 픽셀164차이, bbox(559,233)-(809,454), max58. 첫장면차이에서지시대로중단. 나머지1420/S06890/전체코어미실행.
+- bbox중앙3점hit GridHelper,3F_wall,3F_R1,3F_slab. 원인미확정·추가수정금지. 피킹76drawcall유지.
+- engine/server/cache/shader237동결검사통과. 운영overlay불변·전환보류. 시뮬0회.
+- report specs/웹앱리팩토링-3단계-건물범위결과-20261027.md; evidence simulation/results/ui_refactor_stage3_building_scope_20261027/.
+
+- Git commit 41e603a (codex/ui-refactor-layer-building), checkout clean, push 없음. 이번 커밋은 범위수정+검증증거. 운영 전환은 여전히 보류.
+
+[2026-10-28 건물 원본 재질 공유 — 4장면 픽셀0, 요청 범위 완료]
+- building.js Mesh/Line 원본material직접참조·geometry빌림. unique재질별 최초color/opacity/transparent저장, rebuild/dispose복원. borrowed자원dispose없음.
+- 1222원본/복제객체 참조동일, material.id집합701/701완전일치. 소유재질0. 50회합성재구성/dispose검사 원본자원dispose0·구독0.
+- S091800/S091420/S06890/전체코어ON 픽셀차0. 전체코어는 두PNG저장후세션종료되어저장PNG비교완료,별도browsermetadata없음 명시.
+- 피킹76drawcall유지. 동결237통과. 운영overlay미배포,엔진/서버/캐시/셰이더불변,시뮬0회.
+- report specs/웹앱리팩토링-3단계-재질공유결과-20261028.md; evidence simulation/results/ui_refactor_stage3_shared_material_20261027/summary.json. git checkout reviews/ui-refactor-stage3-shared-material-20261028에도보존.
+- 사용자지시대로다음작업하지않고정지. 로컬8780서버는계속요청시꺼져있었음;이턴에서서버재시작안함.
+
+- commit e89a5df (codex/ui-refactor-layer-building), checkout clean, push 없음.
+
+[2026-10-28 운영 전환 적용 완료 — 1커밋 후 정지]
+- 실제 simulation/viewer/overlay.js에 build_ui_bundle.py 산출물 배포. 기본modern, ?ui=legacy기존경로. HTTP/디스크SHA191014dc90dfdcfe676c79d90e92d1a9f33794ba537d67bf7dde2e4d99908dbe 일치. 서버파일무수정.
+- controller 중복model-info fetch제거(기존서버lite API건물SHA검증유지), CAD above표시존중, dispose/pagehide CSS·레이아웃·CADrenderer복원. 메뉴3모듈 선택적dispose반환+패널연결.
+- 실제운영회귀각75조작오류0: 사례4/층10/CAD18+패널7체크각OFFON/실감2/불투명도3/확대4/resize2. 최종건물가시성차이0. focus/resizelegacy동일.
+- fetch14vs14 URL/상태/순서동일. 사례전환1씩·나머지0. 실제60s modern1x60,20x1200;legacy1x60,20x1190(10s표본차).
+- modern dispose추적6951자원 미해제0/추가장면0/타이머0/연결이벤트0/구독0/패널0/링크0, CAD캔버스1유지. 전체heap GC증명아님.
+- 최종modern모두재실행. legacy는modern-only최종수정전동일75검사완료기록재사용 명시. evidence simulation/results/ui_refactor_production_20261028/, report specs/웹앱리팩토링-3단계-운영전환결과-20261028.md. legacy-live.png보존.
+- 피킹76drawcall미수정, app/README.md4단계보류명시. 동결237frozen_unchanged=true, 서버/엔진/캐시/셰이더불변·시뮬0회.
+- git checkout simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building, commit fd9325a. clean, push없음.
+- 기존server 8780 시작스크립트동일실행(session45300). 운영전환완료. 다음단계요청대기.
+
+
+## 2026-10-28 — Stage 4 item 0 completed; STOP
+User authorized only item 0 of specs/Claude지시-4단계-패널재설계-r2-20261028.md. Mockup opened. Modern risk now uses saved degree*100 via adapter index_by_cell[cell][type], default risk.threshold ribbon100/caution70. Legacy gates retained for ?ui=legacy. Panel legend wording only; no layout, input UI, picking optimization or engine changes. One commit 5d78206 in simulation/results/github-publish-20261026, no push, clean checkout. Actual simulation/viewer/overlay.js rebuilt.
+S09 3F 1420s, clock180000: FO R2 -> R2; FGI none -> none; backdraft R2 -> none; rollover none -> none. Grey caution now R7/R9. R2 BD indices C0=25.1431,C1=48.4818,C2=24.2627 (fuel bottleneck); full T/F/O in report. Contract cases S06/S09/stage4 pass; source series unchanged; unit tests and browser error0. Frozen237 check true, render_order/shaders unchanged.
+Report: specs/웹앱리팩토링-4단계-항목0-결과-20261028.md. Evidence: simulation/results/ui_refactor_stage4_item0_20261028 (before/after png/json, comparison, mockup, contracts, frozen/unit). Stage3 legacy pixel risk fixtures are historical; new risk_index.test.mjs checks intended index gates. Item1+ NOT authorized/started. Stop pending user review.
+## 2026-10-28 — Stage 4 item 1 completed; STOP
+User authorized shell DOM + four tabs + bottom timeline + picking layer mask only. Completed one commit cdd6e6f in simulation/results/github-publish-20261026, no push, clean checkout. Actual simulation/viewer/overlay.js rebuilt/served.
+New app/web/panels/shell.js: 340px sidebar, three empty panes, entire old panel moved to Result, store-backed timeline, mobile <=860 collapsible panel, original floor buttons. Resize no longer fitFloor; explicit camera controls retained. Selection hit meshes object.layers=31, host Raycaster=31, camera layer0. No material.visible workaround.
+Draw calls: stage3 S09 1800 902->826; modern S09 1420 902->826; modern1800 897->821 (item0 risk-gate difference). All 38 hit planes cost76 draws before; reduction exactly76 across4scenes.
+Visual reference fd9325a bundle: WebGL-only1000x600, fixedcamera/clock180000,risk layer disabled both sides, S09 1800/1420,S06 890,all-core all0differentpixels. New full-page desktop/mobile captures separate. Actual trusted mouse and touch picking pass; tabs/timeline fetch0; disposal shell0/subscriptions0/resources0. Frozen237 unchanged, render_order/shaders unchanged. Synthetic pointer test failed pointercapture initially; replaced harness with actual browser input, no product workaround.
+Report specs/웹앱리팩토링-4단계-항목1-결과-20261028.md. Evidence simulation/results/ui_refactor_stage4_item1_20261028. Tests app/tests/shell.test.mjs + compare_shell.py. Item2+ NOT authorized/started. Stop pending user review.
+## 2026-10-28 — Stage 4 item 2 completed; STOP
+User authorized display tab/store + legend chips + compact HUD + thresholds + view/camera button relocation only. One commit 5257f03 in simulation/results/github-publish-20261026, no push, clean checkout. Live overlay rebuilt, HTTP/disk SHA71741936b0eb039856dd5298f77e9c9f36aea449e77a00b84621c537beb8b4cb equal.
+New panels/display.js: 9 layer switches (operations default OFF), 4 types + caution, thresholds100/70, opacity100/40/15, pattern current default/weak/off. Existing duplicate inputs moved/removed from Result. HUD selected cell name, highest saved index pill and Tu/Ou/interface height, no synthetic room average. cfMeaning single anchor with chips + legacy plume legend. Top/oblique in header; reset/zoom/room/fire in 3D toolbar. Existing handlers now record camera store state. Engine/server/shaders/render_order frozen.
+Weak pattern limitation: frozen shader has no gain uniform. Only uLayerTemp display remapping (80+.35*max(0,min(200,T)-80)) and uTemperatureSmoke off gate are used; weak shifts red toward muted yellow, not independent strength control. User optional question was unanswered; proceeded with explicit tooltip/report assumption. HUD/calculation temperature unchanged. Current restores all uniforms exactly. No shader edit.
+Tests:14 toggles OFF/ON/original -> exact state,0 fetch; thresholds validation; opacity;76 smoke material uniforms only expected2names; HUD FO120/718C/6.0%/.31m forR2C0; camera action modes; DOM legend1/plume1/numbers3/Result duplicates0; disposal DOM0/subscriptions0/ownedresources0/errors0. Final desktop/mobile captures inspected. Visual comparison directly to cdd6e6f (already stage3-equivalent), samepose/1000x600/clock180000, riskOFF and operationsOFF both sides: S09 1800/1420, S06 890, all-core all0pixels. Test comparison name stage3 is inherited; previous-overlay.js is cdd6e6f, documented. Final CSS switch styling/unused HUD code cleanup only after WebGL captures; UI checks rerun on final build. Risk unit pass, frozen237 true.
+Report specs/웹앱리팩토링-4단계-항목2-결과-20261028.md. Evidence simulation/results/ui_refactor_stage4_item2_20261028 and checkout reviews/ui-refactor-stage4-item2-20261028 (no model-source.txt). Tests display.test.mjs/compare_display.py. CRLF in new test/evidence files normalized to LF before amend; diff check clean. Item3+ not started. Stop for user review.
+
+## 2026-10-28 — Item 2 temperature-pattern correction; STOP
+User explicitly chose current/off only and prohibited temperature remapping. Removed weak UI option, explanatory tooltip and uLayerTemp proxy; store rejects weak. Wrapper now passes existing temperatureSmoke boolean (enabled && pattern != off) to frozen renderer, no direct uniform writes/material list. Both shader SHAs and render_order unchanged. Live bundle HTTP/disk SHA9b067e59606df0a4924b9e008c42112b3502ecd667eb921a97bebff5512d5e74 equal.
+Final UI tests rerun: options exactly current/off, 76 smoke materials off changes uTemperatureSmoke only, uLayerTemp unchanged, current restores all uniforms;14 toggles state exact,fetch0,HUDsame,errors0,dispose0. Desktop/mobile captures updated. Four existing pixel-zero pairs retained from previous default-current comparison, not rerun; report explicitly notes this. Specs report/README corrected (old weak assumption superseded). Commit5236545 in publish checkout, clean,no push. Item3 not started.
+
+## 2026-10-28 — Stage 4 item 3 completed; STOP
+User said continue; proceeded only to next authorized sequence item (result panel) under specs/Claude지시-4단계-패널재설계-r2-20261028.md. Commit8ab8504 in simulation/results/github-publish-20261026, clean,no push. Served/disk overlay SHAa3af415902af75a2eabd3d87413bbe48b10c50f26c63b0707c257981ac21a8cd equal.
+New panels/results.js: saved case controls, four saved-index bars/threshold markers, saved bottleneck one line with full tooltip, selected-cell quantities, multi-cell list (no room average), MC table and one limits drawer. Legacy panel retained hidden for handlers, necessary controls moved. Controller calls results.update and owns sequential abortable on-demand MC reads via existing result API. No engine/server/schema/cache-key/shader/render-order modifications, no simulations.
+MC catalogue already provides random8 numerator/maxscore; max-room counts require explicit saved sample read button. 10 complete payloads sequentially read, original-room cell dedup, ever>=100 over time per sample, max over all10 inclmandatory. Table identifies population difference. Null gives >= lower bound; incomplete/errors not safe. Counts FO6/8,FGI0/8,BD7/8,RO1/8; maxrooms1,0,2,1; randompeak161.4253,94.5927,193.0297,107.4377. Independent local saved-data check agrees.
+Tests results.unit.mjs/results.test.mjs/compare_results.py: four WebGL comparisons to5236545, samecamera/1000x600/clock180000,riskOFF+operationsOFF both, all0pixels. Harness comparison name stage3 historical, actual previous bundle5236545. S091420R2C0score119.7289/60.0781/25.1431/50.0651 exact; markers70/100->80/120 restored; R2three-cell/R3single; result controlsfetch0, MC10GETs activecase/time/camera unchanged; errors0; disposalDOM0/subscriptions0/ownedresources0. Final one-line bottleneck CSS afterpixelcapture followed by complete UI regression/capture refresh. Frozen237true, bothshaders/render_order hashes unchanged. Capture reviewed desktop/mobile.
+Evidence simulation/results/ui_refactor_stage4_item3_20261028 and checkout reviews/ui-refactor-stage4-item3-20261028. Report specs/웹앱리팩토링-4단계-항목3-결과-20261028.md. Item4 exploration next, not started. STOP for review.
+
+
+2026-10-28 — stage4 item4 exploration tab (partial acceptance pending)
+Commit 7742f93 in simulation/results/github-publish-20261026, codex/ui-refactor-layer-building; no push. Checkout clean. Root source + live simulation/viewer/overlay.js updated.
+Implemented app/web/panels/explore.js: candidate rank table, N default8 + existing screening run, 6-column stage2 table with click/keyboard origin selection, MC sample count/measured-time estimate/saved-results view, folded unchanged frozen_rule_controls.js. exploration state is independent of current scene selection/result/camera. Existing POST /cfbt/lite/screening and /cfbt/r8/run only. The latter explicitly uses selected floor/room + current result horizon, server-default door/window configuration, separate native review.
+Pending questions sent asynchronously, not answered: (1) User's 'two fixes above' are absent from visible context/spec; contents requested. (2) There is NO MC execution API in current server. MC run remains disabled; asked whether to retain disabled state or supply an existing endpoint. No endpoint invented and server unchanged. Do NOT call entire item4 complete until resolved. No item5 work.
+Verification: four S09-1800/S09-1420/S06-890/all-core scenes compare exactly0 pixels vs8ab8504 (same camera/clock, risk off). 17 candidate rows,8 saved stage2 rows. Candidate selection/samples causes0 fetches and preserves camera (1e-10 float comparison), result/time/scene selection. MC saved read10 GETs, no simulation. POST routes intercepted; success +409 error preservation and N max validation tested. Dispose DOM/subscriptions/resources all0, page errors0. Engine/server/shader/render_order frozen; module frozen_rule_controls.js byte-identical to previous commit. Evidence simulation/results/ui_refactor_stage4_item4_20261028; copied JSON/PNG to Git reviews/ui-refactor-stage4-item4-20261028. Screenshot desktop intentionally contains injected busy fixture error from error-path test; real server was not called with POST. UI capture at top + MC lower + mobile. Root summary.json has pending scopes.
+
+2026-10-28 — item4 clarifications resolved, final correction 6145cc8 (no push)
+User approved MC card + saved results only. MC 실행 disabled, exact tooltip 서버 실행 경로는 5단계. app/README.md Stage5 backlog adds POST /cfbt/lite/mc as planned, not implemented. No server change.
+Both clarified fixes implemented: display HUD equals selected option label (3F R2_C0 · 공장 (승인 용도)); case card fit buttons removed from visible UI, hidden legacy compatibility nodes retained; real view moved to displayReal switch dispatching realView/set; entire existing read-only menu review moved into resultMenuReview details at bottom of Results (no modal). Legacy path unchanged.
+Browser tests extended for all corrections. Four 3D comparisons still0 pixels, page errors0, dispose DOM/subscriptions/resources0. Existing screening/r8 POSTs intercepted only, no simulation. New screenshots show normal status rather than prior injected busy error. All pending questions resolved; summary.json updated. Worktree clean at6145cc8; item4 complete within approved scope. STOP before further stages.
+
+2026-10-28 — stage4 item5 complete, commit d1d06a2 (no push)
+User clarified two fixes were NOT the prior HUD/button fixes: (1) all-zero stage2 smoke column: report cause, define >=70 max phenomenon-index room count and sort burning desc / attention desc / firstFO asc; (2) candidate/MC names use approved usage instead of CAD source labels. Both implemented alongside Building tab.
+Building UI: confirmed6/inferred4/ordinary13/windows43, door23, room fuel30 rows from existing 3F APIs. Uses existing GET/POST /cfbt/lite/doors {id,door_class}; backend saves config/lite-door-overrides.json unchanged. Successful response updates UI then cheap screening refresh; errors retain old class. CAD originals/evidence expandable in Building only (legacy read-only menu and ?ui=legacy preserved). No classification 3D markers. store buildingReview new metadata slice.
+Cause: old screening.py smoke_risk count uses gas hot AND fuel>=LFL AND depth; not common phenomenon indices. New UI aggregation reads sixteen existing result.json files via tools/export_ui_attention.py -> app/web/data/saved_attention.js, no simulation or source-result rewrite. Room union across cells/time any FO/FGI/backdraft/rollover degree*100>=70. Re-select worse extreme under new tuple, rank tied tuples equally. R3 rank1=2burning/2attention; R2 rank2=1/1; R0/R23/R4/R8/R9 tied3=1/1; R1 rank8=1/0. Previous R1 rank3 was old metric. Frontend uses source identity matching; unmatched/incomplete/unknown records => unranked/unknown, never fake0. IMPORTANT: frozen server API lacks index series, so future newly run screening requires export script + UI bundle rebuild until stage5 adds this aggregate. README states this limitation. Do not silently claim automatic live aggregate refresh.
+4 controlled scenes pixel0 vs6145cc8 (already stage3 equal), errors0, dispose0. Browser test mocked POST success/failure, real override file unchanged. Threshold edge, cell dedup, unknown and stale identity tests pass. Engine/server/shader/render_order and legacy lite_doors.js hashes unchanged. Evidence root simulation/results/ui_refactor_stage4_item5_20261028 copied to Git reviews/ui-refactor-stage4-item5-20261028. Checkout clean; root served overlay rebuilt. Stop before item6.
+
+
+2026-10-28 / 4단계 항목6 완료 · 사용자 지시대로 정지
+- 커밋 fbcab5f (실제 체크아웃 simulation/results/github-publish-20261026, codex/ui-refactor-layer-building). 작업트리 clean, push 없음.
+- app/web/panels/explanations.js: 새 패널 경계에서 기존 설명을 ⓘ data-tip으로 이동. 동결/legacy 모듈은 수정하지 않고 기존 DOM만 처리. 새로 갱신되는 규칙 보고도 처리. keyboard/touch tooltip·Escape·dispose. 건물 CAD 원문은 유지, 근거 설명만 tip. MC 집계 기준 tip.
+- 설명 전수표 simulation/results/ui_refactor_stage4_item6_20261028/text-audit.md: 61 이동, 451 CAD 진단+조작힌트1 유지(오류/상태 템플릿별 사유 별도). title-only 기존ⓘ도 data-tip. 가정과한계 본문 제외. 단순 레이블/숫자 미포함.
+- 데스크톱1440x1080·모바일390x844 4탭=8장, screenshots.html. legacy 추가1장.
+- S09/1800,1420·S06/890·전체coreON clock180000/동일camera1000x600: 위험ON 포함 변경픽셀 각각0. 비교 기준 d1d06a2 (stage3와 비위험 동일 검증된 직전 버전).
+- 작전initialOFF, 위험4+1 roundtrip, legacy canvas/meaning각1, tooltip keyboard/Escape, dynamic refresh, dispose DOM/subscriptions/resources0, pageerrors0, POST0. 새 계산/실제 설정 저장 없음.
+- 셰이더2개/render_order/서버2개/frozen controls SHA d1d06a2와 동일. stage0 237파일 검사 frozen_unchanged true(기존 viewer4차이 제외). 보고 frozen-sha.json.
+- 소스9개와 compact evidence를 커밋. 원본 계산·서버·셰이더 무수정. 다음 단계 자동 진행 금지.
+
+
+2026-10-28 — Stage5A minimal server integration completed; STOP, no push
+User unfroze server and approved folder-scan cases, POST /cfbt/lite/mc, automatic attention exports, excluding server SHA from execution_key. Implemented tools/result_catalog.py, lite_mc_service.py, run_lite_mc.py and minimal existing CLI/server/controller/explore integrations. Existing native aliases18 moved to JSON; catalog native31/lite11 for current building, S06/S09 preserved. Result save creates index-summary.json; screening API supplies attention16 records, no frontend rebuild required for future results.
+MC uses adopted engine/make_samples, serial one worker,1200s per-sample integration budget shared BDF/Radau fallback. POST room/samples2..1000/duration1800or3600/seed, GET progress, duplicate409, persistent job/process interruption handling; partial failures explicit. Source provider remains existing approved3F. Snapshot origin metadata corrected to actual selected initialfuel. Completion only refreshes lists/summary, never active playback. No actual MC run performed (unit mocks, HTTP fake worker, UI intercepted POST). Engine/shaders/render_order55 source files unchanged.
+Tests server_stage5.test.py7 passed; server_stage5_http.py202/400/409 including native exclusion; server_stage5_ui.test.mjs invalid input/doubleclick/completion/error, dispose0, errors0, legacy1canvas1legend. S091420 clock180000 riskON equal1000x600camera pixels0 vsfbcab5f. Final catalog-serial guard retested UI; retained exact same visual comparison. Evidence results/ui_refactor_stage5A_20261028 and Git reviews/ui-refactor-stage5A-20261028.
+Production8780 oldPID10288 idle restarted same args asPID19116: python -X utf8 tools/serve_cfbt_building.py C:/Users/예방/Documents/Codex/2026-10-14/files-pasted-by-the-user-cad3d --port8780 --result simulation/results/condition_display_v1/playback.json. Logs in evidencefolder. NewMC GET available/idle; servedbundleupdated. No ongoing MC. Cache schema engine-inputs-v2-no-server means one-time key migration; retained old outputs, no rekey trick. Later server-only edits preserve key. README/spec report updated. Git repository remains simulation/results/github-publish-20261026, branch codex/ui-refactor-layer-building. Stop after single commit, no push.

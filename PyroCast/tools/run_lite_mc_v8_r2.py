@@ -39,14 +39,15 @@ def summarize(m,r,sample):
     s['door_jet_heat_MJ']=r['door_jet']['cumulative_heat_MJ']
     return s
 
-def execute(sample):
-    folder=OUT/sample['id'];base.save(folder/'sample.json',sample);start=time.perf_counter();attempts=[]
+def execute(sample, out=None, publish=True):
+    destination=Path(out) if out is not None else OUT
+    folder=destination/sample['id'];base.save(folder/'sample.json',sample);start=time.perf_counter();attempts=[]
     for method in ('BDF','Radau'):
         budget=1200-sum(a['integration_s'] for a in attempts)
         if budget<=0:break
         st=time.perf_counter();m,manifest=prepare(sample['scenario'],PARAMS);prep=time.perf_counter()-st
         dest=folder/method;base.save(dest/'rule_manifest.json',manifest);base.save(dest/'contract.json',m.contract)
-        run(m,3600,10,budget,method=method);r=results(m)
+        run(m,sample['scenario'].get('duration_s',3600),10,budget,method=method);r=results(m)
         base.save(dest/'result.json',r);np.savez_compressed(dest/'state.npz',t=m.sol.t,y=m.sol.y)
         attempts.append(dict(solver=method,complete=r['ok'],integration_s=m.integration['wall_seconds'],preprocess_s=prep,
                              postprocess_s=r['postprocess_wall_seconds'],failure=m.integration['failure']))
@@ -57,11 +58,12 @@ def execute(sample):
     r.update(seed=sample['seed'],mc_sample_id=sample['id'],lite_revision='v8_door_jet_adopted',physical_parameters=m.P)
     base.save(folder/'result.json',r);base.save(folder/'summary.json',s)
     if r['ok']:
-        pb=package(m,r,sample['scenario'],f"R2 MC {sample['id']} · {sample['kind']} · 1시간")
+        pb=package(m,r,sample['scenario'],f"{sample['scenario'].get('fire_room', sample.get('source_room', 'R2'))} MC {sample['id']} · {sample['kind']}")
         base.save(folder/'playback.json',pb)
-        p=ROOT/'simulation/config/lite-viewer.json';cfg=read(p)
-        cfg['cases'].append(dict(id=sample['id'],label=pb['label'],path=str(folder/'playback.json')))
-        base.save(p,cfg)
+        if publish:
+            p=ROOT/'simulation/config/lite-viewer.json';cfg=read(p)
+            cfg['cases'].append(dict(id=sample['id'],label=pb['label'],path=str(folder/'playback.json')))
+            base.save(p,cfg)
     return s
 
 def main():

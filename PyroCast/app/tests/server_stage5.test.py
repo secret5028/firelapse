@@ -35,8 +35,11 @@ class Contracts(unittest.TestCase):
                 atomic_json(out/sample['id']/'playback.json',{'schema':'pyrocast-cad-playback-1','engine_kind':'pyrocast_lite','time_s':[0,1800],'complete':True,'building_sha256':'A','rooms':[{'original_room':'R3'}]})
                 return dict(sample_id=sample['id'],kind=sample['kind'],complete=True,burning_original_rooms=['R3'])
             aggregate=dict(completed=1,failed_or_incomplete=1,condition_sample_rates_random_only={},worst_including_mandatory={})
-            with patch.object(cli.adopted,'make_samples',return_value=samples),patch.object(cli.adopted,'current_hashes',return_value={}),patch.object(cli.adopted,'execute',side_effect=execute),patch.object(cli.adopted,'aggregate',return_value=aggregate):
+            def evidence(folder):
+                self.assertIn('공장',read(folder/'playback.json')['rooms'][0]['display_name'])
+            with patch.object(cli,'write_mc',side_effect=evidence) as proof,patch.object(cli.adopted,'make_samples',return_value=samples),patch.object(cli.adopted,'current_hashes',return_value={}),patch.object(cli.adopted,'execute',side_effect=execute),patch.object(cli.adopted,'aggregate',return_value=aggregate):
                 summary=cli.run_batch(out/'request.json',out)
+                proof.assert_called_once_with(out/'S00')
             self.assertEqual(calls,[('S00','R3',False),('S01','R3',False)])
             self.assertEqual(read(out/'progress.json')['failed_or_incomplete'],1)
             self.assertEqual(read(out/'started.json')['budget_s_per_sample'],1200)

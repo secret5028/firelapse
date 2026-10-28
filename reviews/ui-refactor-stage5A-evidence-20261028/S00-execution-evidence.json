@@ -1,0 +1,390 @@
+{
+  "schema": "pyrocast.execution-evidence/1",
+  "engine_kind": "pyrocast_lite",
+  "building_sha256": "90d3c325f238a3c416ef51dfbb64b668b3b144047e78acb8f9e5e1764a6a02ae",
+  "input_snapshot_sha256": "c8c25b9ae296e614214e060b33d7ed8a6b1a123ccfaf1d1ff45048a2ea9c2538",
+  "job_input_sha256": "75ce66fbda6fcd8b91e6ad54c03bb629b3f4a78f63981feacc757eb16048cfec",
+  "engine_files": {
+    "simulation/pyrocast_lite/__init__.py": "5783271862caae08fad6ffbee60bfa0d5e13b9b4e09c939b6e4883729a5a4b01",
+    "simulation/pyrocast_lite/adapter.py": "13099e75bc162156049e0f8dafaa7be80e0e01fc11ee37e3083d31d597367326",
+    "simulation/pyrocast_lite/core.py": "d8742588af0bf470aae2709211411ba96e2b0b83de5eb7d3e51801e617eab0e9",
+    "simulation/pyrocast_lite/door_classification.py": "6f4796333ca46d0b67899f1e77cb15b5680b1cd90b9927e0487f3cd1cac06759",
+    "simulation/pyrocast_lite/door_jet.py": "3f3222cfaecf7ae446e04678ac3a0632149c5108a06edabf04eb9d24be35e1d4",
+    "simulation/pyrocast_lite/failure_state.py": "038f7c736cf7838e70caa37fe85efab968ad0e10d8b3395c32f4b1a2df538165",
+    "simulation/pyrocast_lite/montecarlo.py": "602d73273281d2b976a57ab6ee9872b368bcf6b07073b2e1321186d6bf71cc50",
+    "simulation/pyrocast_lite/numerics.py": "8bc072d817e2a237c04594317ef59361858d70007102179896042a4570de4297",
+    "simulation/pyrocast_lite/radiation.py": "d46c6aa7894840412fd8b192365d0c7ebc549b867460343a6b12da9a256133e4",
+    "simulation/pyrocast_lite/result_adapter.py": "8299a8b4a31f5a6571aeb0e75ec5e6c06a18145fe998e8fb9726a562ce639a76",
+    "simulation/pyrocast_lite/room_oxygen.py": "c4c6172743cd15870e9e0b114de4484fa045a26c1d8608213f4772101d6c42fb",
+    "simulation/pyrocast_lite/runner.py": "138ba087dc7d93852af9f42a5e98c0d7444252b0b5b17d8a760a73d8c7328f21",
+    "simulation/pyrocast_lite/screening.py": "601df77c773d95f14611692fe50dc6dc6638a9e60287dd10e953c235ed36c4d3",
+    "simulation/pyrocast_lite/screening_v7.py": "ceb2097c7b3d2cabe454b14eba392dc9f12eac168c1fa87183c56fc1398696e1",
+    "simulation/pyrocast_lite/screening_v8.py": "3e30fd9dacb2398836c344daa9403a6c6eb160bca9ec3fb2a5acd6125231cfb9",
+    "simulation/pyrocast_lite/screening_v8_approved.py": "cd649e55f9db1e709c040855156fd27c12b02be8b38da598bd6faf931d78906c",
+    "simulation/pyrocast_lite/shared_inputs.py": "1807dae70b432990c00eb7aebc2f827b781a0ef472c40f657303132a9b9bdfc6",
+    "simulation/pyrocast_lite/visualization.py": "8aff3356e3379c284ba1ba748ebb1628faeb8ca1618856ee92b5383438f5bc2f"
+  },
+  "engine_sha256": "d4a67c38412852b541bd225001e5fd1937d3d99924c41a30ba95eafb20bae1d0",
+  "parameters": {
+    "smooth_state_bounds": true,
+    "upper_combustion_enabled": true,
+    "door_jet_enabled": true,
+    "oxygen_inventory_mode": false,
+    "remove_cumulative_state": true
+  },
+  "rule_settings": {
+    "revision": "room_rule_r8_frozen",
+    "frozen_structure": "r7",
+    "preset": "standard",
+    "preset_label": "표준",
+    "room_supply": "item_peak",
+    "values": {
+      "temperature_C": 600.0,
+      "open_delay_s": 60.0,
+      "ramp_s": 60.0,
+      "closed_delay_s": 600.0,
+      "cell_temperature_C": 300.0,
+      "v_spread_m_s": 0.05,
+      "coverage_default": 0.5,
+      "vent_cap_k": 1.0
+    },
+    "parameters": {
+      "temperature_C": {
+        "value": 600.0,
+        "label": "실간 기준 · T4b 판(상층 대용)",
+        "unit": "℃",
+        "minimum": 450.0,
+        "maximum": 700.0,
+        "default_value": 600.0,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      },
+      "open_delay_s": {
+        "value": 60.0,
+        "label": "열린 문 착화 지연",
+        "unit": "s",
+        "minimum": 15.0,
+        "maximum": 300.0,
+        "default_value": 60.0,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      },
+      "ramp_s": {
+        "value": 60.0,
+        "label": "착화 후 상승 시간",
+        "unit": "s",
+        "minimum": 30.0,
+        "maximum": 300.0,
+        "default_value": 60.0,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      },
+      "closed_delay_s": {
+        "value": 600.0,
+        "label": "닫힌 일반문 관통 지연",
+        "unit": "s",
+        "minimum": 180.0,
+        "maximum": 1800.0,
+        "default_value": 600.0,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      },
+      "cell_temperature_C": {
+        "value": 300.0,
+        "label": "셀 간 기준 · 화원 위 판",
+        "unit": "℃",
+        "minimum": 200.0,
+        "maximum": 500.0,
+        "default_value": 300.0,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      },
+      "v_spread_m_s": {
+        "value": 0.05,
+        "label": "실내 화염 확산 속도",
+        "unit": "m/s",
+        "minimum": 0.01,
+        "maximum": 0.2,
+        "default_value": 0.05,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      },
+      "coverage_default": {
+        "value": 0.5,
+        "label": "전실 공급 연료 피복률",
+        "unit": "fraction",
+        "minimum": 0.2,
+        "maximum": 1.0,
+        "default_value": 0.5,
+        "is_default": true,
+        "source": "default",
+        "applicable": false
+      },
+      "vent_cap_k": {
+        "value": 1.0,
+        "label": "수치 공급 상한 계수",
+        "unit": "",
+        "minimum": 0.5,
+        "maximum": 1.5,
+        "default_value": 1.0,
+        "is_default": true,
+        "source": "default",
+        "applicable": true
+      }
+    },
+    "assumption": "허용 범위·프리셋·전이 규칙은 프로젝트 가정이며 문헌으로 검증된 기준 또는 발생확률이 아닙니다. 실간 기준은 상층 온도 자체가 아닌 T4b 판 온도입니다.",
+    "supply_is_default": true
+  },
+  "rule_manifest_sha256": "5f71e2a67c78f74fa23ede846d13781bff42c34efaa78c8d33e987731be15880",
+  "door_corrections": {
+    "CAD_3F_D0": {
+      "door_class": "fire",
+      "door_class_basis": 2,
+      "door_class_confidence": "confirmed",
+      "door_class_reason": "80㎡ 이하 코어 연결: CAD_3F_R15 27.26㎡ (ELEV.홀)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D1": {
+      "door_class": "fire",
+      "door_class_basis": 2,
+      "door_class_confidence": "confirmed",
+      "door_class_reason": "80㎡ 이하 코어 연결: CAD_3F_R15 27.26㎡ (ELEV.홀) / CAD_3F_R21 19.60㎡ (stair)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D2": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D3": {
+      "door_class": "fire",
+      "door_class_basis": 2,
+      "door_class_confidence": "confirmed",
+      "door_class_reason": "80㎡ 이하 코어 연결: CAD_3F_R12 23.63㎡ (stair)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D4": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D5": {
+      "door_class": "fire",
+      "door_class_basis": 2,
+      "door_class_confidence": "confirmed",
+      "door_class_reason": "80㎡ 이하 코어 연결: CAD_3F_R15 27.26㎡ (ELEV.홀)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D6": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D7": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D8": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D9": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D10": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D11": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D12": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D13": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_D14": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_W25": {
+      "door_class": "fire",
+      "door_class_basis": 3,
+      "door_class_confidence": "inferred",
+      "door_class_reason": "설비·샤프트·창고 연결:  P.S /  화장실(남)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_W26": {
+      "door_class": "fire",
+      "door_class_basis": 3,
+      "door_class_confidence": "inferred",
+      "door_class_reason": "설비·샤프트·창고 연결:  T.P.S /  ELEV.홀 1 화 갑 화 유 우레탄/W Assembly Line D/W 갑",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_W27": {
+      "door_class": "fire",
+      "door_class_basis": 3,
+      "door_class_confidence": "inferred",
+      "door_class_reason": "설비·샤프트·창고 연결:  E.P.S /  ELEV.홀 1 화 갑 화 유 우레탄/W Assembly Line D/W 갑",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_W28": {
+      "door_class": "fire",
+      "door_class_basis": 3,
+      "door_class_confidence": "inferred",
+      "door_class_reason": "설비·샤프트·창고 연결:  E.P.S /  ELEV.홀 3 화 갑 알미늄 그릴",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_W29": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_W30": {
+      "door_class": "ordinary",
+      "door_class_basis": 6,
+      "door_class_confidence": "default",
+      "door_class_reason": "일반문 기본값",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_EV0": {
+      "door_class": "fire",
+      "door_class_basis": 2,
+      "door_class_confidence": "confirmed",
+      "door_class_reason": "80㎡ 이하 코어 연결: CAD_3F_R15 27.26㎡ (ELEV.홀) / CAD_3F_R18 7.66㎡ (elev)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    },
+    "CAD_3F_EV1": {
+      "door_class": "fire",
+      "door_class_basis": 2,
+      "door_class_confidence": "confirmed",
+      "door_class_reason": "80㎡ 이하 코어 연결: CAD_3F_R15 27.26㎡ (ELEV.홀) / CAD_3F_R18 7.66㎡ (elev)",
+      "door_class_revision": "v7_section5_area_core_token",
+      "door_source_fire_flag": false
+    }
+  },
+  "applied_user_door_overrides": {},
+  "verification_rule_dependencies": {
+    "simulation/pyrocast_cfbt/__init__.py": "0631feb5793e1046ce677d430b4e3f7f84008bc3438a1ff7451b68e8a5dfb0be",
+    "simulation/pyrocast_cfbt/__main__.py": "d497995d76d3f7eb2d9a095221f38fce34006d1ef2ac56092d09ba3d65140ec7",
+    "simulation/pyrocast_cfbt/cad.py": "2e02a8e9767b4bfeb7fc6e73e1740b80db108a265bb1ef3bdd9fb066b721ab68",
+    "simulation/pyrocast_cfbt/ceiling.py": "960e07db0acf080205dbea04a7ff4078ff0c0a203be6319c898ae9c5eeb44890",
+    "simulation/pyrocast_cfbt/combustion_display.py": "d95bbd69d02f66d186a5aad3a14f8c0e1039973864a6d493e31c9c983d4f3f35",
+    "simulation/pyrocast_cfbt/comparison.py": "ffb6256b046bc66064a0436a28d53b2e2e01c3d9c4281d748a3f351991b6426e",
+    "simulation/pyrocast_cfbt/conditions.py": "c7e15c19c6bf1c1ddaa4651a654197fb7f956310cea870b7a767df92e97cefec",
+    "simulation/pyrocast_cfbt/deck.py": "95a1e7beb11b4d9aa1c2df1c95cb93e2602bf9753535b0087f178831d14cc280",
+    "simulation/pyrocast_cfbt/diagnostics.py": "c19f698adaec0373a502bf4077c168236cd434dc4ebf2e5e077e5483ced8a1a8",
+    "simulation/pyrocast_cfbt/exposure.py": "b3f68da83dbb0e6d371909e2c3d8c16b8943f9e9ad1e714311a747a2e7b91f88",
+    "simulation/pyrocast_cfbt/flashover.py": "f65e4aa5233ebe4bc1af9d6aee3f99fa021099e1d5d86430a2b65dbc84e30954",
+    "simulation/pyrocast_cfbt/fuel_layout.py": "18412d2c11f40b0c751f1dbbb13e8a1749a215a7c2fd4c0f920c49733ee2f435",
+    "simulation/pyrocast_cfbt/iteration.py": "5729099df2ed7c3f5d474bfcabeca72ccd9e6eded72e8e98a4b4761e28da9d57",
+    "simulation/pyrocast_cfbt/mixture.py": "34c31f0067b883fe2a4ae9fb316c18173e87da7c43ef4f3034d22904c8166e66",
+    "simulation/pyrocast_cfbt/model.py": "6aae8e5f91764222ce07a38290675846616d91b6e961e80cb699bd6bfc8abe0f",
+    "simulation/pyrocast_cfbt/native.py": "f9ae3f192aa9e3dc8485019f53605897d084de9d6eb5c7289cc23ac4ddba4f84",
+    "simulation/pyrocast_cfbt/openings.py": "33b73db5a8ed736f052b3be41bd209fe7828b4d3ac0524642ba01900ff88c6ef",
+    "simulation/pyrocast_cfbt/outdoor.py": "8a38b17dce48c23ed7f36d4f687b0830ea12f39dc96234cbb9df2eba3c7c265e",
+    "simulation/pyrocast_cfbt/parent_rule.py": "7f0701341c5bfab77d0af73c495faff77518984ab7bd4372666af4831911dddb",
+    "simulation/pyrocast_cfbt/playback.py": "9b4e89e7557d1bf32c1adbd8d8f4eef65ceed6c60c869f03fea2afcc604bc3b1",
+    "simulation/pyrocast_cfbt/practical.py": "61107a5efbca1d0b99b917b8fc6a8725cb6ae1208dd4503f3aef0e1461449018",
+    "simulation/pyrocast_cfbt/reuse.py": "4f674dc5a3fb4c88c220fc87504cffbe14366841395ac000213235bcb367bda3",
+    "simulation/pyrocast_cfbt/room_rule.py": "da50d412e5dc53ffa18e6a97c449b36de1597a021d658cb037b6bd536cbd8c95",
+    "simulation/pyrocast_cfbt/room_rule_r6.py": "2c9613db82132324cf7db7f8c5fe0f97d001e32f8640060292c3e459753fcfab",
+    "simulation/pyrocast_cfbt/room_rule_r7.py": "b9e4595422baab54136f40c7f50620847643294661cb40cdc40e319b185c280f",
+    "simulation/pyrocast_cfbt/room_rule_r8.py": "103a30db964bd635b28ad09acfef2ea15f42ec003ff8431e1cccd8b670b8f51d",
+    "simulation/pyrocast_cfbt/rule_cells.py": "614b05a9aa258dda66e9f3b5ece55765feadaa0d5a03470dced0e6f9f6544922",
+    "simulation/pyrocast_cfbt/rule_graph.py": "87032ad49958c613eca24ace2d3384262fca8fddff2f1734e9ea99e0e05bd275",
+    "simulation/pyrocast_cfbt/rule_graph_r7.py": "02d66c590e51a41ace9faa1d3087d9013bfe329067e4dec1d045e6a9615d20c3",
+    "simulation/pyrocast_cfbt/rule_sensor.py": "bc32f76b36cd250c6f284a9ba8c8622458fb0c8b81c610db1b023d3dca19ba7e",
+    "simulation/pyrocast_cfbt/rule_settings.py": "2f54af577bae72a3c0e4229b5a3979e544da32200b4ac70d4ae28597e1835efd",
+    "simulation/pyrocast_cfbt/spread.py": "38403453c607c4bbe4e261d2366d89a02cee0062b4cfc66acdedc9356ab9d138",
+    "simulation/pyrocast_cfbt/thermal.py": "d692c1e925549675eeb4a3e58ee461109520835e57a6878edc3b181e8be8abd1",
+    "simulation/pyrocast_cfbt/topology.py": "eae26ddb0d17f06ee4138d56e1bcb72a77ed8a9a47a03eac1dd0b7348d72a1b2"
+  },
+  "files": {
+    "../request.json": "d4d29da8ddc2326154ef8c35895accd667fccef0718df3c1e1179f085cd1d4dd",
+    "../started.json": "2a45ebc4cc973c980f54064f4e89ae05baeba8f8aeda738eb1ab2bf11c2bb9eb",
+    "../input.json": "e4ceaea33a1274c4deea1c0aedf24662e4bdf206106fb05cd3f601c7c86ab757",
+    "sample.json": "89af608bbe12bc11a4e236091cf991e95f57b425c9ea7b7a7afecff1d977c2d9",
+    "summary.json": "88a63557dead6705874b6ba56a7636d6353f04ede0aec7b61cbaf5f792cfcfc0",
+    "BDF/rule_manifest.json": "b1dbb8c3678742f22be852bdc40d59b707ca238bd97865c81b45466d939d42a4",
+    "playback.json": "c5b9b22287aedf6aa449e6f28d5e27973e2901624cf5cf4c2451e6dec813ccc0",
+    "result.json": "49e71719e13343ef618c06d10b2cabb53a67ef1d6e33f25b9cca5b5d5c46ed9e",
+    "index-summary.json": "c9fdfe604dbc16ab59783b8956228276af9d1859af2d9f75b0dc02bf44433a97"
+  },
+  "provenance": {
+    "job": "mc-1793171631584057100-c3f54953",
+    "sample": "S00",
+    "backfilled": true,
+    "engine_source": "job started.json sha256 ledger",
+    "input_source": "job input.json and sample.json scenario",
+    "rule_source": "BDF/rule_manifest.json",
+    "door_source": "applied classifications in job input.json",
+    "shared_source_hash_basis": "evidence creation time; compiled manifest verified against run log",
+    "equivalence_scope": "same saved sample under current source inputs, engine source and compiled rules; not physical accuracy"
+  }
+}

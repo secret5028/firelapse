@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 import run_lite_mc_v8_r2 as adopted
 from result_catalog import atomic_json, read
+from execution_evidence import write_mc, rule_dependency_hashes
 
 
 def run_batch(request_path, out):
@@ -14,7 +15,7 @@ def run_batch(request_path, out):
     samples=adopted.make_samples(raw,seed=seed,count=count)
     hashes=adopted.current_hashes();start=time.perf_counter();rows=[]
     atomic_json(out/'started.json',dict(**request,workers=1,budget_s_per_sample=1200,parameters=adopted.PARAMS,
-        sha256=hashes,mandatory=2,random=count-2,fallback='one Radau on numerical failure within remaining integration budget'))
+        sha256=hashes,shared_rule_sha256=rule_dependency_hashes(),mandatory=2,random=count-2,fallback='one Radau on numerical failure within remaining integration budget'))
     for sample in samples:
         sample['source_room']=room
         atomic_json(out/'progress.json',dict(state='running',completed=len(rows),total=count,current=sample['id'],wall_s=time.perf_counter()-start))
@@ -30,6 +31,7 @@ def run_batch(request_path, out):
                 if labels.get(r['original_room']):r['display_name']=labels[r['original_room']]+' (승인 용도)'
             pb['label']=f"{room.replace('CAD_','')} {sample['id']} · {sample['kind']} · {request['duration_s']//60}분"
             atomic_json(path,pb)
+            write_mc(path.parent)
     a=adopted.aggregate(rows)
     for kind,value in a['condition_sample_rates_random_only'].items():
         value.pop('median_of_sample_medians',None)

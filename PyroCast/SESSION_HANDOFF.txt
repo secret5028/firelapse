@@ -1323,3 +1323,6 @@ Server MC complete save now writes execution-evidence.json beside final playback
 
 2026-10-28 B1 temperature pattern amplitude complete; stop after one commit
 User approved minimal 5-file value wiring beyond legacy_real_view.js. Added uNoiseAmp/uNoiseScale defaults1, weak amplitude0.4,current/off preserved. No input temperature manipulation or engine/geometry/other layer logic changes. overlay rebuilt. Browser CUA fixture4 scenes defaults pixel0 at595x700/clock180000, weak37332 changed,roundtrip0. Smoke T/OD and fire/gas uniforms/HUD unchanged.54 frozen SHA matches. Production S09 1420 R2 oblique restored current. Comparison evidence results/ui_refactor_stageB1_20261028; spec 웹앱-B1-온도무늬진폭-20261028.md includes source diff counts. Do not start B2 neutral ramp or B3 flame report automatically. No push.
+
+[2026-10-28 B-2 완료]
+연기 색 현재/중성 추가. 기본 현재, 4장면 픽셀 0, S09 1420 s 현재/중성 캡처 저장. 계산 재실행 없음. 보고 specs/웹앱-B2-연기색램프-20261028.md. 운영 화면 현재로 복원. B-3 미진행, 1커밋 후 정지/push 없음.

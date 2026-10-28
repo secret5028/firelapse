@@ -240,3 +240,6 @@ Production check:2 equivalent +42 historical, solver runs0, both playback hashes
 Approved minimal wiring only: Display current/weak/off → realView.temperaturePattern → real_view wrapper → bridge noiseAmp/noiseScale → legacy renderer uNoiseAmp/uNoiseScale. Defaults1/1 preserve the old shader expression; weak sets amplitude0.4, off uses the existing temperature toggle. Density, input temperatures, grey base, fire/plume logic and geometry are unchanged. Only temperature highlight RGB blending changes; scale stays1 in UI.
 
 Browser-controlled GET-only fixture app/tests/smoke_amplitude_proxy.py pins clock180000 and compares pre-change snapshots against current assets. Four full WebGL595×700 scenes (S09/1420,1800;S06/890;all/coreON) each changed pixels0, risk included. Weak changes37332 pixels; return to current0. Actual uniforms prove temperatures/OD/fire+gas/HUD unchanged. app/tests/compare_smoke_amplitude.py and pure-store roundtrip pass. Production verified S09/1420/R2/oblique, restored current.54 frozen engine/server/render-order files unchanged. Evidence results/ui_refactor_stageB1_20261028; file diff counts in specs/웹앱-B1-온도무늬진폭-20261028.md. Stop before ramp/flame items, no push.
+
+## B-2 연기 색 램프 (2026-10-28)
+표시 탭 현재/중성, 기본 현재. uRampMode만 추가. 기본 4장면 픽셀 0, 중성 왕복 0, 엔진/서버/render_order 불변. 상세: specs/웹앱-B2-연기색램프-20261028.md. B-3 미진행.

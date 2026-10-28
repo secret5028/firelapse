@@ -38,7 +38,7 @@ export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}
   const enabled=settings.enabled&&(frame.layers.smoke||frame.layers.flame||frame.layers.plume);
   session.renderer.update({enabled,time:frame.t_s,sample,floor:frame.floor.floor_id??'all',
    smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,customRiskBoundaries:true,legacySmokeTexture:true,
-   flameDisplay:'growth',plumesEnabled:frame.layers.plume,noiseAmp:settings.temperaturePattern==='weak'?.4:1,noiseScale:1,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
+   flameDisplay:'growth',plumesEnabled:frame.layers.plume,noiseAmp:settings.temperaturePattern==='weak'?.4:1,noiseScale:1,rampMode:settings.smokeColor==='neutral'?1:0,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
   session.renderer.animate(session.lastAnimateMs);
   for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}

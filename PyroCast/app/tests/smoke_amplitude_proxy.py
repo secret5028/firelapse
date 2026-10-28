@@ -22,9 +22,9 @@ const fixtureStyle=document.createElement('style');fixtureStyle.textContent='bod
 const settle=async()=>{await document.fonts.ready;for(let i=0;i<5;i++)await new Promise(requestAnimationFrame);};
 const inspect=()=>{
  window.__ui.render();const smoke=[],other=[];window.__cad.S.traverse(o=>{const u=o.material?.uniforms;if(!u?.uTemperatureSmoke)return;
- const row={visible:o.visible,temp:u.uLayerTemp.value,amp:u.uNoiseAmp?.value??1,scale:u.uNoiseScale?.value??1,temperature:u.uTemperatureSmoke.value,od:u.uOD.value};
+ const row={visible:o.visible,temp:u.uLayerTemp.value,amp:u.uNoiseAmp?.value??1,scale:u.uNoiseScale?.value??1,ramp:u.uRampMode?.value??0,temperature:u.uTemperatureSmoke.value,od:u.uOD.value};
  (u.uFire.value===0&&u.uGas.value===0?smoke:other).push(row);});
- const state={scene:window.__testScene,clock_ms:180000,case:document.getElementById('liteCase').value,room:document.getElementById('liteRoom').value,time:window.__ui.store.get('playback').t_s,mode:document.getElementById('displayTemperature').value,smoke,other,hud:document.querySelector('.compactHUD').textContent,camera:window.__cad.C.position.toArray()};
+ const state={scene:window.__testScene,clock_ms:180000,case:document.getElementById('liteCase').value,room:document.getElementById('liteRoom').value,time:window.__ui.store.get('playback').t_s,mode:document.getElementById('displayTemperature').value,ramp:document.getElementById('displaySmokeColor')?.value??'current',smoke,other,hud:document.querySelector('.compactHUD').textContent,camera:window.__cad.C.position.toArray()};
  document.getElementById('testReport').textContent=JSON.stringify(state);document.getElementById('testPng').href=window.__cad.R.domElement.toDataURL('image/png');return state;
 };
 document.getElementById('testInspect').onclick=()=>{inspect();document.getElementById('testStatus').textContent='검사 완료';};
@@ -75,6 +75,9 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser();parser.add_argument('--output-root',type=Path,default=OUT)
+    OUT=parser.parse_args().output_root.resolve()
     servers=[ThreadingHTTPServer(('127.0.0.1',port),Handler) for port in (8794,8795)]
     for server in servers:threading.Thread(target=server.serve_forever,daemon=True).start()
     print('Before8794 / After8795; GET-only; no simulation',flush=True)

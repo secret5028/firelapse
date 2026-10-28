@@ -1,0 +1,18 @@
+[
+  {
+    "path": "simulation/viewer/legacy_real_view.js",
+    "sha256": "f83b1c59d1cff89dca122df2dd906edd078a1ca5afcb92088c748b7e20a17051"
+  },
+  {
+    "path": "simulation/viewer/legacy_real_bridge.js",
+    "sha256": "4f16dd33c1af2cd6e489cd7dc96129955751b3b00bb1f9ecdab17d77d23a5173"
+  },
+  {
+    "path": "app/web/scene/render_order.js",
+    "sha256": "b907586fb9d87c1c74e6943479b3524ffb05d20cd77f6019eb7b93546bda9cca"
+  },
+  {
+    "path": "simulation/viewer/overlay.js",
+    "sha256": "a3af415902af75a2eabd3d87413bbe48b10c50f26c63b0707c257981ac21a8cd"
+  }
+]

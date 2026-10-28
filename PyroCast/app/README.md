@@ -92,6 +92,14 @@ The host provisions `#cfMeaning` before mounting these layers and removes it and
 
 Run `npm run test:real-view`, then `python app/tests/compare_real_view.py` from the repository root. S09, 3F, R2 origin uses saved simulation time 1800 s and an independently fixed animation clock 180000 ms. All four smoke/plume ON/OFF combinations compare the direct legacy call against the wrappers. Checks cover uniform parity, reduced motion, appearance/flame toggles, unchanged geometry, raw-input identity, legend cleanup and an isolated remount with GPU counts returning to zero. Evidence is under `simulation/results/ui_refactor_stage3_real_20261027/`. This remains an isolated building+real-view fixture; live routing and the unfinished risk/selection layers are unchanged.
 
+## Stage 4 item 3 — result panel (2026-10-28)
+
+`panels/results.js` renders saved cases, four saved-index bars with current threshold markers, saved bottlenecks, per-cell selection (no room average), expandable quantities and one limits drawer. Existing result/selection actions remain in the controller; legacy panel DOM is hidden and necessary controls move into the new cards. The panel does not fetch or run simulations.
+
+The catalogue supplies random-only condition sample counts and maximum score. The explicit saved-sample read button sequentially fetches completed playback files through the unchanged API to derive maximum original-room counts, deduplicating cells and preserving unknowns as lower bounds. Counts mean rooms ever meeting index >=100 over each saved sample, not simultaneous room counts. Max-room counts include mandatory samples; the table identifies this separately from random-only rates/max indices. Refresh/dispose aborts pending reads; the active scene remains unchanged.
+
+Tests: `node app/tests/results.unit.mjs`, `node app/tests/results.test.mjs`, `python app/tests/compare_results.py`. Previous bundle 5236545 belongs at `simulation/results/ui_refactor_stage4_item3_20261028/previous-overlay.js`. Four equal-pose/clock WebGL comparisons (risk and operations OFF on both sides) are pixel-identical. Tests check score values, markers, multi/single-cell selection, zero control fetches, ten sequential saved reads, unchanged active scene and disposal. No engine/server/shader changes, no push; item 4 remains pending.
+
 ## Stage 4 item 2 — display controls and compact HUD (2026-10-28)
 
 `panels/display.js` moves existing display inputs into the Display tab and adds independent flame/risk/operations/type switches, risk thresholds and two temperature-pattern choices. The controller alone bridges operations visibility and existing camera buttons. Operations default OFF; top/oblique live in the header. The HUD reads the selected cell's existing indices and three series values without a room average. `#cfMeaning` remains the single plume-legend anchor.

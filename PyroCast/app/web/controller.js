@@ -14,6 +14,7 @@ import {createSceneHost} from './scene/host.js';
 import {createLitePanel,updateLitePanel,createMenuReview} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
 import {createDisplayPanel} from './panels/display.js';
+import {createResultsPanel,summarizeMCPlayback,resultTypes} from './panels/results.js';
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
 // No simulation, write API, cached-result key or solver imports.
@@ -26,6 +27,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length}});
  const shell=createPanelShell({panel,store});
  const display=createDisplayPanel({store,selectionLabel});
+ const results=createResultsPanel({panel,store});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
  const coreAsset=readLegacyCoreSource({building:B,groups,sourceHash:initial.building_sha256,shapeFor:shp});
@@ -64,7 +66,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   syncOperations();
   host.render();
   const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
-  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});display.hud({building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')});shell.syncStatus();lastPanel=signature;}
+  if(signature!==lastPanel){updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')};display.hud(context);results.update(context);shell.syncStatus();lastPanel=signature;}
  }finally{busy=false;}}
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
@@ -118,17 +120,19 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;select(selected.key);$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   lastPanel='';ready=true;viewer.setFloor('3F');render();fitFloor();return true;
  }
- async function catalog(){const r=await fetch('/cfbt/lite/catalog.json');if(!r.ok)return;const c=await r.json();$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;$('liteMC').textContent=c.progress_text||'';
-  $('liteMCTable').replaceChildren();$('liteMCSummary').hidden=!c.mc_summary;
-  if(c.mc_summary){const add=text=>{const p=document.createElement('div');p.textContent=text;$('liteMCTable').append(p);};
-   add(`완주 ${c.mc_summary.completed}/10 · 전체 ${c.mc_summary.wall_s.toFixed(1)}초 · 필수 2표본은 무작위 비율에서 제외`);
-   for(const x of c.mc_summary.rows)add(`${x.id}: ${x.complete?`연소 ${x.burning}실 / 연기 위험 ${x.smoke_risk}실`:'미완료 · 안전 판정 불가'}`);
-   for(const [key,name] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트'],['rollover','롤오버']]){const q=c.mc_summary.rates[key];add(`${name} 조건: 무작위 완주 ${q.numerator}/${q.denominator_completed_random}표본`);}
-   add('연기 위험은 2단계 색 규칙, 현상 조건은 공통 조건표 기준. 실제 발생확률이 아닙니다.');}}
+ let mcSummary=null,mcRun=0,mcAbort=null;
+ async function catalog(){const r=await fetch('/cfbt/lite/catalog.json');if(!r.ok)return;const c=await r.json();if(disposed)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);}
+ handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;const run=++mcRun,summary=mcSummary;mcAbort?.abort();mcAbort=new AbortController();const full=Object.fromEntries(resultTypes.map(([k])=>[k,{rooms:0,unknown:false}]));$('resultMCLoad').disabled=true;
+  try{const rows=summary.rows.filter(r=>r.complete);let done=0;
+   for(const row of rows){$('resultMCStatus').textContent=`저장 표본 읽는 중 ${done}/${rows.length}`;const response=await fetch('/cfbt/lite/result/'+encodeURIComponent(row.id),{signal:mcAbort.signal});if(!response.ok)throw Error(`${row.id} HTTP ${response.status}`);const p=await response.json();if(run!==mcRun||disposed)return;if(p.building_sha256!==initial.building_sha256||p.schema!=='pyrocast-cad-playback-1')throw Error('다른 건물 또는 형식의 표본');const record=summarizeMCPlayback(p);for(const [key] of resultTypes){full[key].rooms=Math.max(full[key].rooms,record[key].rooms);full[key].unknown ||= record[key].unknown;}done++;}
+   results.mc(summary,full);$('resultMCStatus').textContent=`집계 완료 ${done}/${summary.rows.length}표본`;
+  }catch(error){if(run===mcRun&&!disposed)$('resultMCStatus').textContent='집계 미완료 · '+error.message;}
+  finally{if(run===mcRun&&!disposed)$('resultMCLoad').disabled=false;}
+ });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
  await install(initial,chosen);await catalog();const review=await createMenuReview(panel,viewer);review.hidden=true;handler($('liteReview'),'onclick',()=>{review.hidden=false;});document.body.classList.add('cfbtReady');resize();
- function dispose(){if(disposed)return;disposed=true;loadSerial++;store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function dispose(){if(disposed)return;disposed=true;loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

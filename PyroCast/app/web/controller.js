@@ -153,7 +153,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   lastPanel='';ruleContext();ready=true;viewer.setFloor('3F');render();fitFloor();return true;
  }
  let mcSummary=null,mcRun=0,mcAbort=null;
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);
+ const reuseByCase=new Map();
+ const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
+ handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
+ async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);
   let origin=null;const saved=mcSummary?.rows?.find(row=>row.complete);if(saved){try{const p=mcSummary.rows.some(row=>row.id===chosen)?data:await (await fetch('/cfbt/lite/result/'+encodeURIComponent(saved.id),{signal:exploreAbort.signal})).json();if(p.complete&&p.building_sha256===initial.building_sha256)origin=p.rooms.find(r=>r.key===p.fire_key)?.original_room??p.fire_key;}catch{}}
   if(!disposed&&serial===catalogSerial)explore.catalog(c,origin);
  }
@@ -165,7 +168,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   finally{if(run===mcRun&&!disposed)$('resultMCLoad').disabled=false;}
  });
  let loadSerial=0;
- handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value,r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial)await install(payload,id);}});
+ handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
  await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();await refreshMC();
  try{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;
   // The modern presentation boundary moves descriptions to accessible info tips.

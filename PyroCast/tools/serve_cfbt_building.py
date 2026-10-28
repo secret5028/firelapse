@@ -126,6 +126,12 @@ def main():
     from result_catalog import ResultCatalog
     catalog_index=ResultCatalog(SIM/'results', SIM/'config/native-case-aliases.json')
     import lite_mc_service as mc_service
+    from cache_key_aliases import CacheAliases
+    from result_catalog import atomic_json
+    execution_cache=CacheAliases(SIM/'results')
+    from saved_case_reuse import describe as describe_reuse
+    def reuse_info(row,kind):
+        return describe_reuse(row,kind,sha,execution_cache,lambda kind,options,building:execution_key(options,building,engine))
     def saved_cases():
         rows=catalog_index.cases(sha, 'native')
         return {r['id']:(r['label'],Path(r['path'])) for r in rows}
@@ -146,11 +152,13 @@ def main():
         destination=SIM/'results/cad_interactive'/identity
         try:
             scenario=adapt(project,{**options,'building_path':str(source)});destination.mkdir(parents=True,exist_ok=True)
+            atomic_json(destination/'execution-request.json',{'options':options,'building_sha256':sha})
             (destination/'scenario.json').write_text(json.dumps(scenario,ensure_ascii=False,indent=2),encoding='utf-8')
             with lock:state['folder']=destination
             result=simulate(scenario,engine if engine.is_file() else SIM/'build/cfbt/cfast-cfbt.exe',destination)
             payload=package(result);output=destination/'playback.json'
             tmp=output.with_suffix('.tmp');tmp.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'),allow_nan=False),encoding='utf-8');tmp.replace(output)
+            execution_cache.seal(destination,'native',identity,sha)
             with lock:state['latest']=output
         except Exception as exc:
             with lock:state['error']=str(exc)
@@ -164,7 +172,9 @@ def main():
             from run_room_rule_r8 import run_batch
             raw=adapt(project,{**options,'building_path':str(source)})
             with lock:state['folder']=destination;r8_folder=destination
+            atomic_json(destination/'execution-request.json',{'options':{'options':options,'room_rule_r8':rule_options,'compare':compare},'building_sha256':sha})
             run_batch(raw,destination,rule_options,compare)
+            execution_cache.seal(destination,'r8',identity,sha)
             # Deliberately no state['latest'] assignment: replacement needs approval.
         except Exception as exc:
             with lock:state['error']=str(exc)
@@ -207,6 +217,14 @@ def main():
                 self.send_response(302);self.send_header('Location',prefix+'model.html');self.end_headers();return
             if path=='/cfbt/model-info':
                 return self.json({'building_sha256':sha,'floors':[{'name':f['name'],'rooms':[{'id':r['id'],'area_m2':r.get('area',0)} for r in f['rooms'] if 'outdoor' not in r.get('tags',[])]} for f in building['floors'] if f.get('rooms')]})
+            if path.startswith('/cfbt/reuse/'):
+                parts=path.split('/')
+                if len(parts)!=5 or parts[3] not in ('native','lite'):return self.json({'error':'Invalid reuse request'},400)
+                kind,key=parts[3:]
+                cfg=json.loads((SIM/'config/lite-viewer.json').read_text('utf-8')) if kind=='lite' else {}
+                row=next((r for r in catalog_index.cases(sha,kind,cfg.get('cases',[])) if r['id']==key),None)
+                if row is None:return self.json({'error':'Unknown saved case'},404)
+                return self.json(reuse_info(row,kind))
             if path=='/cfbt/cases':
                 return self.json([{'id':key,'label':label} for key,(label,file) in saved_cases().items()])
             if path.startswith('/cfbt/case/'):
@@ -294,6 +312,7 @@ def main():
                 current_summary=mc_service.summary(sha,requested_room)
                 if current_summary:cfg['mc_summary']=current_summary;cfg['progress_text']='MC 저장 결과 · '+str(current_summary['completed'])+'표본 완료'
                 if path.endswith('catalog.json'):
+                    cfg['reuse_by_case']={r['id']:reuse_info(r,'lite') for r in cfg['cases']}
                     return self.json({k:v for k,v in cfg.items() if k!='active_path'})
                 chosen=cfg.get('active_path') if path.endswith('active.json') else next((x['path'] for x in cfg.get('cases',[]) if x['id']==path.rsplit('/',1)[-1]),None)
                 if not chosen:return self.json({'error':'Unknown lite case'},404)
@@ -407,6 +426,11 @@ def main():
                         current=r8_folder/'batch-state.json'
                         external_running=current.exists() and json.loads(current.read_text('utf-8')).get('state')=='running'
                         if state['busy'] or external_running:return self.json({'error':'현재 계산이 진행 중입니다'},409)
+                        cached=execution_cache.lookup('r8',identity,sha)
+                        if cached:
+                            r8_folder,record=cached
+                            state.update(cache_hit=True,folder=r8_folder,request_id=identity)
+                            return self.json({'request_id':identity,'review_only':True,'already_attempted':True,'cache_hit':True,'legacy_key':record.get('old_key'),'solver_runs':0},200)
                         destination=SIM/'results/cad_r8_review'/identity
                         if (destination/'batch-state.json').exists():
                             r8_folder=destination
@@ -433,6 +457,12 @@ def main():
                 identity=execution_key(options,sha,engine)
                 with lock:
                     if state['busy']:return self.json({'error':'현재 계산이 진행 중입니다'},409)
+                    if base_path is None:
+                        cached=execution_cache.lookup('native',identity,sha)
+                        if cached:
+                            destination,record=cached
+                            state.update(latest=destination/'playback.json',folder=destination,request_id=identity,cache_hit=True,error=None,kind='run',started=None)
+                            return self.json({'request_id':identity,'cache_hit':True,'legacy_key':record.get('old_key'),'solver_runs':0},200)
                     state.update(busy=True,error=None,started=time.monotonic(),folder=None,request_id=identity,kind='ignition' if base_path else 'run',cache_hit=False)
                 if base_path:pool.submit(compute_comparison,base_path,options,identity)
                 else:pool.submit(compute,options,identity)

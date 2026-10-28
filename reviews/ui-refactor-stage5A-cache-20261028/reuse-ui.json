@@ -1,0 +1,57 @@
+[
+  {
+    "id": "stage4",
+    "uiActionMs": 927,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S00",
+    "uiActionMs": 504,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S01",
+    "uiActionMs": 478,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S02",
+    "uiActionMs": 473,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S03",
+    "uiActionMs": 488,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S04",
+    "uiActionMs": 503,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S05",
+    "uiActionMs": 501,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S06",
+    "uiActionMs": 504,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S07",
+    "uiActionMs": 468,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S08",
+    "uiActionMs": 471,
+    "label": "과거 결과 재사용"
+  },
+  {
+    "id": "S09",
+    "uiActionMs": 479,
+    "label": "과거 결과 재사용"
+  }
+]

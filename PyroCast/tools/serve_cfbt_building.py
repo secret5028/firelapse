@@ -236,6 +236,9 @@ def main():
             if path=='/cfbt/r8/schema':
                 from pyrocast_cfbt.rule_settings import schema
                 return self.json(schema())
+            if path=='/cfbt/lite/fire-load-table':
+                if self.client_address[0]!='127.0.0.1':return self.send_error(403)
+                return self.send_data((SIM/'pyrocast_lite/fire_load_table.json').read_bytes(),'application/json; charset=utf-8')
             if path=='/cfbt/lite/doors':
                 from pyrocast_lite.door_classification import classify_doors
                 raw=json.loads((SIM/'results/room_rule_r8_20261025/source-scenario.json').read_text('utf-8'))

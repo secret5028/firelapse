@@ -242,4 +242,8 @@ Approved minimal wiring only: Display current/weak/off → realView.temperatureP
 Browser-controlled GET-only fixture app/tests/smoke_amplitude_proxy.py pins clock180000 and compares pre-change snapshots against current assets. Four full WebGL595×700 scenes (S09/1420,1800;S06/890;all/coreON) each changed pixels0, risk included. Weak changes37332 pixels; return to current0. Actual uniforms prove temperatures/OD/fire+gas/HUD unchanged. app/tests/compare_smoke_amplitude.py and pure-store roundtrip pass. Production verified S09/1420/R2/oblique, restored current.54 frozen engine/server/render-order files unchanged. Evidence results/ui_refactor_stageB1_20261028; file diff counts in specs/웹앱-B1-온도무늬진폭-20261028.md. Stop before ramp/flame items, no push.
 
 ## B-2 연기 색 램프 (2026-10-28)
-표시 탭 현재/중성, 기본 현재. uRampMode만 추가. 기본 4장면 픽셀 0, 중성 왕복 0, 엔진/서버/render_order 불변. 상세: specs/웹앱-B2-연기색램프-20261028.md. B-3 미진행.
+표시 탭 현재/중성, 기본 현재. uRampMode만 추가. 기본 4장면 픽셀 0, 중성 왕복 0, 엔진/서버/render_order 불변. 상세: specs/웹앱-B2-연기색램프-20261028.md.
+
+## B-3 발열량 기준 불꽃 (2026-11-02)
+
+표시 탭 성장 비율(기본)/발열량 기준. HRR 모드는 Q/HRRPUA 면적(셀 상한), 기존 플룸 Heskestad 높이, ID 해시 배열, 실제 HRR 상위 3개 조명을 사용한다. HRRPUA는 선별 계산과 같은 fire_load_table.json을 GET /cfbt/lite/fire-load-table로 직접 읽는다. 사용자 승인 예외: 서버 읽기 전용 3줄, 127.0.0.1만 허용. 계산·캐시·저장 불변. 기본 4장면 및 모드 왕복 0픽셀, 요청 캡처 7장 완료. 상세: specs/웹앱-B3-발열량불꽃-20261102.md. 증거: results/ui_B3_hrr_20261028. 한 커밋, push 없이 정지.

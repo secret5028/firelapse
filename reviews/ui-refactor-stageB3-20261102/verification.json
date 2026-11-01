@@ -1,0 +1,56 @@
+{
+  "defaults": [
+    {
+      "scene": "S09-1420",
+      "changed_pixels": 0,
+      "max_channel_difference": 0
+    },
+    {
+      "scene": "S09-1800",
+      "changed_pixels": 0,
+      "max_channel_difference": 0
+    },
+    {
+      "scene": "S06-890",
+      "changed_pixels": 0,
+      "max_channel_difference": 0
+    },
+    {
+      "scene": "all-core",
+      "changed_pixels": 0,
+      "max_channel_difference": 0
+    }
+  ],
+  "roundtrip": {
+    "changed_pixels": 0,
+    "max_channel_difference": 0
+  },
+  "hrr_repeat": {
+    "changed_pixels": 0,
+    "max_channel_difference": 0
+  },
+  "top3_lights": true,
+  "diameters_match": true,
+  "smoke_hud_hrr_stage_unchanged": true,
+  "early_visible": [
+    {
+      "id": "Fuel_CAD_3F_R2",
+      "q": 1410.72247951905,
+      "hrrpua": 250,
+      "cellArea": 104.11700999999982,
+      "visible": true,
+      "scale": [
+        2.680438507088342,
+        2.680438507088342,
+        1.5647216152979744
+      ],
+      "position": [
+        56.32978074645583,
+        52.00514871209986,
+        0
+      ],
+      "phase": 1.134429693579725,
+      "stage": "초기"
+    }
+  ]
+}

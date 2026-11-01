@@ -1,0 +1,9704 @@
+[
+  {
+    "stem": "S09-1420-growth-oblique",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          9.28266294591871,
+          9.28266294591871,
+          1.7180544953461487
+        ],
+        "position": [
+          53.028668527040644,
+          48.70403649268467,
+          0
+        ],
+        "phase": 0,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": true,
+        "scale": [
+          6.2465421872933655,
+          6.2465421872933655,
+          1.2532729597709387
+        ],
+        "position": [
+          32.08672890635332,
+          44.35472890635331,
+          0
+        ],
+        "phase": 2.17,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": true,
+        "scale": [
+          6.306811391951272,
+          6.306811391951272,
+          1.1447169846866834
+        ],
+        "position": [
+          40.556594304024365,
+          44.32459430402436,
+          0
+        ],
+        "phase": 4.34,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": true,
+        "scale": [
+          5.70192231917131,
+          5.70192231917131,
+          1.0720502918383783
+        ],
+        "position": [
+          49.359038840414335,
+          59.88703884041434,
+          0
+        ],
+        "phase": 10.85,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": true,
+        "scale": [
+          4.3819054430242295,
+          4.3819054430242295,
+          0.9333403987524265
+        ],
+        "position": [
+          60.24904727848787,
+          60.61704727848789,
+          0
+        ],
+        "phase": 13.02,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": true,
+        "scale": [
+          9.169412424253231,
+          9.169412424253231,
+          1.8290490031885533
+        ],
+        "position": [
+          64.74862712120671,
+          61.69329378787339,
+          0
+        ],
+        "phase": 15.19,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": true,
+        "scale": [
+          1.3551441909628237,
+          1.3551441909628237,
+          1.3905431723074924
+        ],
+        "position": [
+          60.66242790451862,
+          53.680427904518595,
+          0
+        ],
+        "phase": 17.36,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          35.21000000000001,
+          47.477999999999994,
+          0.27
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          43.71,
+          47.477999999999994,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "growth",
+    "scene": "S09-1420",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 1420,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.98225224528403,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.861328864571192,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 118.70153852880554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 14.816673184704825,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 164.32733958656883,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -2.9458248272101173,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.21550727951592,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.930151262708819,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 187.43725310228928,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 99.54724471154628,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 146.07787961159897,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 12.367479978359938,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 189.0870952366169,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 44.009368889903044,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 158.94736501603956,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.410668474224167,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 718.3735950007336,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 63.239230608682476,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 506.34081627821513,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 125.42328666593681,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 678.0486740127603,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 75.64101131024205,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 263.67556421685856,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.04074067272842,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 206.02313686263597,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 17.433440281726632,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 278.8036107913771,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 32.30061134049822,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 92.85765882221847,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -6.436058985742363,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 78.64783604154673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 4.517047744933393,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 264.46951214731973,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -0.12317350433659158,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 304.79760855039456,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -7.293598460708608,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 260.98160344962685,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.042993917607077,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 120상층 718 ℃O₂ 6.0 %연기층 0.31 m",
+    "camera": [
+      85.3536356310695,
+      -35.110271147697716,
+      100.19090739957791
+    ]
+  },
+  {
+    "stem": "S09-1420-growth-top",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          9.28266294591871,
+          9.28266294591871,
+          1.7180544953461487
+        ],
+        "position": [
+          53.028668527040644,
+          48.70403649268467,
+          0
+        ],
+        "phase": 0,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": true,
+        "scale": [
+          6.2465421872933655,
+          6.2465421872933655,
+          1.2532729597709387
+        ],
+        "position": [
+          32.08672890635332,
+          44.35472890635331,
+          0
+        ],
+        "phase": 2.17,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": true,
+        "scale": [
+          6.306811391951272,
+          6.306811391951272,
+          1.1447169846866834
+        ],
+        "position": [
+          40.556594304024365,
+          44.32459430402436,
+          0
+        ],
+        "phase": 4.34,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": true,
+        "scale": [
+          5.70192231917131,
+          5.70192231917131,
+          1.0720502918383783
+        ],
+        "position": [
+          49.359038840414335,
+          59.88703884041434,
+          0
+        ],
+        "phase": 10.85,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": true,
+        "scale": [
+          4.3819054430242295,
+          4.3819054430242295,
+          0.9333403987524265
+        ],
+        "position": [
+          60.24904727848787,
+          60.61704727848789,
+          0
+        ],
+        "phase": 13.02,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": true,
+        "scale": [
+          9.169412424253231,
+          9.169412424253231,
+          1.8290490031885533
+        ],
+        "position": [
+          64.74862712120671,
+          61.69329378787339,
+          0
+        ],
+        "phase": 15.19,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": true,
+        "scale": [
+          1.3551441909628237,
+          1.3551441909628237,
+          1.3905431723074924
+        ],
+        "position": [
+          60.66242790451862,
+          53.680427904518595,
+          0
+        ],
+        "phase": 17.36,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          35.21000000000001,
+          47.477999999999994,
+          0.27
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          43.71,
+          47.477999999999994,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "growth",
+    "scene": "S09-1420",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 1420,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.98225224528403,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.861328864571192,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 118.70153852880554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 14.816673184704825,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 164.32733958656883,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -2.9458248272101173,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.21550727951592,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.930151262708819,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 187.43725310228928,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 99.54724471154628,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 146.07787961159897,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 12.367479978359938,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 189.0870952366169,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 44.009368889903044,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 158.94736501603956,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.410668474224167,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 718.3735950007336,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 63.239230608682476,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 506.34081627821513,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 125.42328666593681,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 678.0486740127603,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 75.64101131024205,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 263.67556421685856,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.04074067272842,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 206.02313686263597,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 17.433440281726632,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 278.8036107913771,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 32.30061134049822,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 92.85765882221847,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -6.436058985742363,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 78.64783604154673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 4.517047744933393,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 264.46951214731973,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -0.12317350433659158,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 304.79760855039456,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -7.293598460708608,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 260.98160344962685,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.042993917607077,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 120상층 718 ℃O₂ 6.0 %연기층 0.31 m",
+    "camera": [
+      42.490000057220435,
+      50.60658411623916,
+      122.90883734385628
+    ]
+  },
+  {
+    "stem": "S09-1420-growth-R2-focus",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          9.28266294591871,
+          9.28266294591871,
+          1.7180544953461487
+        ],
+        "position": [
+          53.028668527040644,
+          48.70403649268467,
+          0
+        ],
+        "phase": 0,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": true,
+        "scale": [
+          6.2465421872933655,
+          6.2465421872933655,
+          1.2532729597709387
+        ],
+        "position": [
+          32.08672890635332,
+          44.35472890635331,
+          0
+        ],
+        "phase": 2.17,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": true,
+        "scale": [
+          6.306811391951272,
+          6.306811391951272,
+          1.1447169846866834
+        ],
+        "position": [
+          40.556594304024365,
+          44.32459430402436,
+          0
+        ],
+        "phase": 4.34,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": true,
+        "scale": [
+          5.70192231917131,
+          5.70192231917131,
+          1.0720502918383783
+        ],
+        "position": [
+          49.359038840414335,
+          59.88703884041434,
+          0
+        ],
+        "phase": 10.85,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": true,
+        "scale": [
+          4.3819054430242295,
+          4.3819054430242295,
+          0.9333403987524265
+        ],
+        "position": [
+          60.24904727848787,
+          60.61704727848789,
+          0
+        ],
+        "phase": 13.02,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": true,
+        "scale": [
+          9.169412424253231,
+          9.169412424253231,
+          1.8290490031885533
+        ],
+        "position": [
+          64.74862712120671,
+          61.69329378787339,
+          0
+        ],
+        "phase": 15.19,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": true,
+        "scale": [
+          1.3551441909628237,
+          1.3551441909628237,
+          1.3905431723074924
+        ],
+        "position": [
+          60.66242790451862,
+          53.680427904518595,
+          0
+        ],
+        "phase": 17.36,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          35.21000000000001,
+          47.477999999999994,
+          0.27
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 1.1658003466459204,
+        "position": [
+          43.71,
+          47.477999999999994,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "growth",
+    "scene": "S09-1420",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 1420,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.98225224528403,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.861328864571192,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 118.70153852880554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 14.816673184704825,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 164.32733958656883,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -2.9458248272101173,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.21550727951592,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.930151262708819,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 187.43725310228928,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 99.54724471154628,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 146.07787961159897,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 12.367479978359938,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 189.0870952366169,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 44.009368889903044,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 158.94736501603956,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.410668474224167,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 718.3735950007336,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 63.239230608682476,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 506.34081627821513,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 125.42328666593681,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 678.0486740127603,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 75.64101131024205,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 263.67556421685856,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.04074067272842,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 206.02313686263597,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 17.433440281726632,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 278.8036107913771,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 32.30061134049822,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 92.85765882221847,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -6.436058985742363,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 78.64783604154673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 4.517047744933393,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 264.46951214731973,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -0.12317350433659158,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 304.79760855039456,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -7.293598460708608,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 260.98160344962685,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.042993917607077,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 120상층 718 ℃O₂ 6.0 %연기층 0.31 m",
+    "camera": [
+      72.66999999999999,
+      35.447500000000076,
+      34.09999999999993
+    ]
+  },
+  {
+    "stem": "S09-1420-hrr-oblique",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          8.30558865179875,
+          8.30558865179875,
+          2.124525964221417
+        ],
+        "position": [
+          53.51720567410062,
+          49.19257363974465,
+          0
+        ],
+        "phase": 1.134429693579725,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": true,
+        "scale": [
+          3.2761626657304674,
+          3.2761626657304674,
+          1.6093011784923728
+        ],
+        "position": [
+          33.571918667134774,
+          45.83991866713476,
+          0
+        ],
+        "phase": 4.281563027302254,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": true,
+        "scale": [
+          3.3111312733568776,
+          3.3111312733568776,
+          1.616618642255947
+        ],
+        "position": [
+          42.05443436332156,
+          45.822434363321555,
+          0
+        ],
+        "phase": 4.330651591570474,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": true,
+        "scale": [
+          1.1351881706847284,
+          1.1351881706847284,
+          0.9526782756232238
+        ],
+        "position": [
+          51.64240591465763,
+          62.170405914657636,
+          0
+        ],
+        "phase": 4.404284437972805,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": true,
+        "scale": [
+          3.363357989497361,
+          3.363357989497361,
+          1.6291642969416207
+        ],
+        "position": [
+          60.758321005251304,
+          61.12632100525132,
+          0
+        ],
+        "phase": 4.456572475759713,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": true,
+        "scale": [
+          8.30558865179875,
+          8.30558865179875,
+          2.0131620231609846
+        ],
+        "position": [
+          65.18053900743395,
+          62.12520567410063,
+          0
+        ],
+        "phase": 4.530205322162044,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": true,
+        "scale": [
+          0.3225400271586207,
+          0.3225400271586207,
+          0.46586817287047644
+        ],
+        "position": [
+          61.17872998642072,
+          54.19672998642069,
+          0
+        ],
+        "phase": 1.2080625399820557,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          69.33333333333333,
+          66.278,
+          0.27
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "intensity": 1.1658003466459204,
+        "position": [
+          62.43999999999998,
+          62.808,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "hrr",
+    "scene": "S09-1420",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 1420,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.98225224528403,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.861328864571192,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 118.70153852880554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 14.816673184704825,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 164.32733958656883,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -2.9458248272101173,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.21550727951592,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.930151262708819,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 187.43725310228928,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 99.54724471154628,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 146.07787961159897,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 12.367479978359938,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 189.0870952366169,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 44.009368889903044,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 158.94736501603956,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.410668474224167,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 718.3735950007336,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 63.239230608682476,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 506.34081627821513,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 125.42328666593681,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 678.0486740127603,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 75.64101131024205,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 263.67556421685856,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.04074067272842,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 206.02313686263597,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 17.433440281726632,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 278.8036107913771,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 32.30061134049822,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 92.85765882221847,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -6.436058985742363,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 78.64783604154673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 4.517047744933393,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 264.46951214731973,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -0.12317350433659158,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 304.79760855039456,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -7.293598460708608,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 260.98160344962685,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.042993917607077,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 120상층 718 ℃O₂ 6.0 %연기층 0.31 m",
+    "camera": [
+      85.3536356310695,
+      -35.110271147697716,
+      100.19090739957791
+    ]
+  },
+  {
+    "stem": "S09-1420-hrr-top",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          8.30558865179875,
+          8.30558865179875,
+          2.124525964221417
+        ],
+        "position": [
+          53.51720567410062,
+          49.19257363974465,
+          0
+        ],
+        "phase": 1.134429693579725,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": true,
+        "scale": [
+          3.2761626657304674,
+          3.2761626657304674,
+          1.6093011784923728
+        ],
+        "position": [
+          33.571918667134774,
+          45.83991866713476,
+          0
+        ],
+        "phase": 4.281563027302254,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": true,
+        "scale": [
+          3.3111312733568776,
+          3.3111312733568776,
+          1.616618642255947
+        ],
+        "position": [
+          42.05443436332156,
+          45.822434363321555,
+          0
+        ],
+        "phase": 4.330651591570474,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": true,
+        "scale": [
+          1.1351881706847284,
+          1.1351881706847284,
+          0.9526782756232238
+        ],
+        "position": [
+          51.64240591465763,
+          62.170405914657636,
+          0
+        ],
+        "phase": 4.404284437972805,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": true,
+        "scale": [
+          3.363357989497361,
+          3.363357989497361,
+          1.6291642969416207
+        ],
+        "position": [
+          60.758321005251304,
+          61.12632100525132,
+          0
+        ],
+        "phase": 4.456572475759713,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": true,
+        "scale": [
+          8.30558865179875,
+          8.30558865179875,
+          2.0131620231609846
+        ],
+        "position": [
+          65.18053900743395,
+          62.12520567410063,
+          0
+        ],
+        "phase": 4.530205322162044,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": true,
+        "scale": [
+          0.3225400271586207,
+          0.3225400271586207,
+          0.46586817287047644
+        ],
+        "position": [
+          61.17872998642072,
+          54.19672998642069,
+          0
+        ],
+        "phase": 1.2080625399820557,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          69.33333333333333,
+          66.278,
+          0.27
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "intensity": 1.1658003466459204,
+        "position": [
+          62.43999999999998,
+          62.808,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "hrr",
+    "scene": "S09-1420",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 1420,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.98225224528403,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.861328864571192,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 118.70153852880554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 14.816673184704825,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 164.32733958656883,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -2.9458248272101173,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.21550727951592,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.930151262708819,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 187.43725310228928,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 99.54724471154628,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 146.07787961159897,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 12.367479978359938,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 189.0870952366169,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 44.009368889903044,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 158.94736501603956,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.410668474224167,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 718.3735950007336,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 63.239230608682476,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 506.34081627821513,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 125.42328666593681,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 678.0486740127603,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 75.64101131024205,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 263.67556421685856,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.04074067272842,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 206.02313686263597,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 17.433440281726632,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 278.8036107913771,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 32.30061134049822,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 92.85765882221847,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -6.436058985742363,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 78.64783604154673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 4.517047744933393,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 264.46951214731973,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -0.12317350433659158,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 304.79760855039456,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -7.293598460708608,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 260.98160344962685,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.042993917607077,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 120상층 718 ℃O₂ 6.0 %연기층 0.31 m",
+    "camera": [
+      42.490000057220435,
+      50.60658411623916,
+      122.90883734385604
+    ]
+  },
+  {
+    "stem": "S09-1420-hrr-R2-focus",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          8.30558865179875,
+          8.30558865179875,
+          2.124525964221417
+        ],
+        "position": [
+          53.51720567410062,
+          49.19257363974465,
+          0
+        ],
+        "phase": 1.134429693579725,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": true,
+        "scale": [
+          3.2761626657304674,
+          3.2761626657304674,
+          1.6093011784923728
+        ],
+        "position": [
+          33.571918667134774,
+          45.83991866713476,
+          0
+        ],
+        "phase": 4.281563027302254,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": true,
+        "scale": [
+          3.3111312733568776,
+          3.3111312733568776,
+          1.616618642255947
+        ],
+        "position": [
+          42.05443436332156,
+          45.822434363321555,
+          0
+        ],
+        "phase": 4.330651591570474,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": true,
+        "scale": [
+          1.1351881706847284,
+          1.1351881706847284,
+          0.9526782756232238
+        ],
+        "position": [
+          51.64240591465763,
+          62.170405914657636,
+          0
+        ],
+        "phase": 4.404284437972805,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": true,
+        "scale": [
+          3.363357989497361,
+          3.363357989497361,
+          1.6291642969416207
+        ],
+        "position": [
+          60.758321005251304,
+          61.12632100525132,
+          0
+        ],
+        "phase": 4.456572475759713,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": true,
+        "scale": [
+          8.30558865179875,
+          8.30558865179875,
+          2.0131620231609846
+        ],
+        "position": [
+          65.18053900743395,
+          62.12520567410063,
+          0
+        ],
+        "phase": 4.530205322162044,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": true,
+        "scale": [
+          0.3225400271586207,
+          0.3225400271586207,
+          0.46586817287047644
+        ],
+        "position": [
+          61.17872998642072,
+          54.19672998642069,
+          0
+        ],
+        "phase": 1.2080625399820557,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          69.33333333333333,
+          66.278,
+          0.27
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "intensity": 1.1658003466459204,
+        "position": [
+          62.43999999999998,
+          62.808,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "hrr",
+    "scene": "S09-1420",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 1420,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.98225224528403,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.861328864571192,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 118.70153852880554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 14.816673184704825,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 164.32733958656883,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -2.9458248272101173,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 131.21550727951592,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 13.930151262708819,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 187.43725310228928,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 99.54724471154628,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 146.07787961159897,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 12.367479978359938,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 189.0870952366169,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 44.009368889903044,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 158.94736501603956,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.410668474224167,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 718.3735950007336,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 63.239230608682476,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 506.34081627821513,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 125.42328666593681,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 678.0486740127603,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 75.64101131024205,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 263.67556421685856,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.04074067272842,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 206.02313686263597,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 17.433440281726632,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 278.8036107913771,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 32.30061134049822,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 92.85765882221847,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -6.436058985742363,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 78.64783604154673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 4.517047744933393,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 264.46951214731973,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -0.12317350433659158,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 304.79760855039456,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": -7.293598460708608,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 260.98160344962685,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.042993917607077,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 120상층 718 ℃O₂ 6.0 %연기층 0.31 m",
+    "camera": [
+      72.66999999999999,
+      35.447500000000076,
+      34.09999999999993
+    ]
+  },
+  {
+    "stem": "S09-300-hrr-oblique",
+    "flames": [
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "q": 1410.72247951905,
+        "hrrpua": 250,
+        "cellArea": 104.11700999999982,
+        "visible": true,
+        "scale": [
+          2.680438507088342,
+          2.680438507088342,
+          1.5647216152979744
+        ],
+        "position": [
+          56.32978074645583,
+          52.00514871209986,
+          0
+        ],
+        "phase": 1.134429693579725,
+        "stage": "초기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C2",
+        "q": 2107.467101675417,
+        "hrrpua": 250,
+        "cellArea": 128.78559999999993,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          35.06000000000001,
+          47.327999999999996,
+          0
+        ],
+        "phase": 4.281563027302254,
+        "stage": "성장기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C4",
+        "q": 2152.695923311586,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          47.327999999999996,
+          0
+        ],
+        "phase": 4.330651591570474,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C5",
+        "q": 227.55588658911358,
+        "hrrpua": 250,
+        "cellArea": 128.7856000000001,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          43.56,
+          62.588,
+          0
+        ],
+        "phase": 6.51,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C6",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 71.60880000000002,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          47.327999999999996,
+          0
+        ],
+        "phase": 8.68,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R1_C7",
+        "q": 253.02626441958796,
+        "hrrpua": 250,
+        "cellArea": 127.30638999999988,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          52.059999999999995,
+          62.588,
+          0
+        ],
+        "phase": 4.404284437972805,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C1",
+        "q": 2221.1407531857435,
+        "hrrpua": 250,
+        "cellArea": 119.36478333333315,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          62.289999999999985,
+          62.658,
+          0
+        ],
+        "phase": 4.456572475759713,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R2_C2",
+        "q": 13544.741666666658,
+        "hrrpua": 250,
+        "cellArea": 101.59200666666639,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          69.18333333333332,
+          66.128,
+          0
+        ],
+        "phase": 4.530205322162044,
+        "stage": "최성기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R7",
+        "q": 20.426649005219737,
+        "hrrpua": 250,
+        "cellArea": 3.0351399999999025,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          61.19000000000003,
+          54.208000000000006,
+          0
+        ],
+        "phase": 1.2080625399820557,
+        "stage": "쇠퇴기"
+      },
+      {
+        "id": "Fuel_CAD_3F_R9",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 48.083850000000034,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          70.1,
+          50.4075,
+          0
+        ],
+        "phase": 19.53,
+        "stage": null
+      },
+      {
+        "id": "Fuel_CAD_3F_R23",
+        "q": null,
+        "hrrpua": 250,
+        "cellArea": 59.255020000000044,
+        "visible": false,
+        "scale": [
+          0.3,
+          0.3,
+          0.001
+        ],
+        "position": [
+          67.38999999999979,
+          42.568000000000005,
+          0
+        ],
+        "phase": 21.7,
+        "stage": null
+      }
+    ],
+    "lights": [
+      {
+        "id": null,
+        "intensity": 0,
+        "position": [
+          35.21000000000001,
+          47.477999999999994,
+          0.2
+        ]
+      },
+      {
+        "id": null,
+        "intensity": 0,
+        "position": [
+          43.71,
+          47.477999999999994,
+          0.2
+        ]
+      },
+      {
+        "id": "Fuel_CAD_3F_R2",
+        "intensity": 1.1658003466459204,
+        "position": [
+          57.67,
+          53.34536796564403,
+          0.27
+        ]
+      }
+    ],
+    "flameDisplay": "hrr",
+    "scene": "S09-300",
+    "clock_ms": 180000,
+    "case": "S09",
+    "room": "CAD_3F_R2_C0",
+    "time": 300,
+    "mode": "current",
+    "ramp": "current",
+    "smoke": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999999419858,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999970924543163,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999999254768852,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99997088394815,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999997597553715,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999971428677554,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99999797426989,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99997088133324,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99999502300841,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999971358051823,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999997480641014,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999970803243286,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.036112192585108,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.004069799538286,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99999732027692,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999970693980345,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 143.04703502162073,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.542298007805982,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 101.36195621967812,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 21.048165777891484,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 61.57510996052673,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 1
+      },
+      {
+        "visible": false,
+        "temp": 20.226425755733885,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.32868295720425,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.065351626203096,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.00094437295371,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.000031514940588,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.261463201363426,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.0328681638411,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999997755945458,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99999215428562,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.99999874955381,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 19.999992154505208,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.342136783025808,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.03231796004536,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.309478209694873,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.05906692165331,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.225183926766988,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20.02551818783661,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 1,
+        "od": 0
+      }
+    ],
+    "other": [
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": true,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      },
+      {
+        "visible": false,
+        "temp": 20,
+        "amp": 1,
+        "scale": 1,
+        "ramp": 0,
+        "temperature": 0,
+        "od": 0
+      }
+    ],
+    "hud": "3F R2_C0 · 공장 (승인 용도)FO 22상층 143 ℃O₂ 19.1 %연기층 2.43 m",
+    "camera": [
+      85.35363563106921,
+      -35.110271147664704,
+      100.19090739954709
+    ]
+  }
+]

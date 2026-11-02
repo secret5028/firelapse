@@ -1,0 +1,8 @@
+{
+  "first_active_sample_s": 1505.0,
+  "last_active_sample_s": 1919.99991986,
+  "absolute_mass_flow_on_min_kg_s": 3.37818168474,
+  "absolute_mass_flow_on_max_kg_s": 3.37818168474,
+  "off_mass_flow_zero": true,
+  "sample_note": "5 s samples; exact switch at 1500/1920 s is defined in native input"
+}

@@ -1,0 +1,202 @@
+{
+  "scenario": "P2",
+  "run": {
+    "status": "failed",
+    "reason": "invalid_native_output",
+    "last_native_time_s": 3600.0,
+    "requested_horizon_s": 3600,
+    "wall_seconds": 116.03199999999924,
+    "native_normal_exit": true,
+    "requested_end_s": 3600,
+    "last_csv_s": 3595.0,
+    "endpoint_sample_missing": true,
+    "rerun": false
+  },
+  "rooms": {
+    "ROOM": {
+      "temperature_peak_C": {
+        "value": 436.649549598,
+        "time_s": 1815.0
+      },
+      "source_HRR_peak_kW": {
+        "value": 0.0,
+        "time_s": 0.0
+      },
+      "door_jet_peak_kW": {
+        "value": 6461.762595390001,
+        "time_s": 1324.99999003
+      },
+      "fuel_mass_fraction_peak": {
+        "value": 0.3256615050796202,
+        "time_s": 1319.99991147
+      },
+      "minimum_O2_vol_percent": 3.5223177974500004,
+      "interface_first_below_3m_s": 1350.0,
+      "interface_first_below_1_8m_s": null,
+      "indices": {
+        "FO": {
+          "first_70_s": null,
+          "first_100_s": null,
+          "peak": {
+            "value": 0.0,
+            "time_s": 0.0
+          }
+        },
+        "FGI": {
+          "first_70_s": 1830.0,
+          "first_100_s": 2110.0,
+          "peak": {
+            "value": 114.14266966152258,
+            "time_s": 2305.0
+          }
+        },
+        "BD": {
+          "first_70_s": 1324.99999003,
+          "first_100_s": 1330.0,
+          "peak": {
+            "value": 138.15284948233332,
+            "time_s": 1570.0
+          }
+        },
+        "rollover": {
+          "first_70_s": 1905.0,
+          "first_100_s": null,
+          "peak": {
+            "value": 81.94427897423077,
+            "time_s": 2085.0
+          }
+        }
+      }
+    },
+    "CAVITY": {
+      "temperature_peak_C": {
+        "value": 1570.56859415,
+        "time_s": 2350.0
+      },
+      "source_HRR_peak_kW": {
+        "value": 2189.71074984,
+        "time_s": 1919.99991986
+      },
+      "door_jet_peak_kW": {
+        "value": 0.0,
+        "time_s": 0.0
+      },
+      "fuel_mass_fraction_peak": {
+        "value": 0.8224594192088305,
+        "time_s": 1319.99991147
+      },
+      "minimum_O2_vol_percent": 0.12729015135900001,
+      "interface_first_below_3m_s": 10.0,
+      "interface_first_below_1_8m_s": 15.0,
+      "indices": {
+        "FO": {
+          "first_70_s": 1330.0,
+          "first_100_s": 1330.0,
+          "peak": {
+            "value": 110.2665046569285,
+            "time_s": 1330.0
+          }
+        },
+        "FGI": {
+          "first_70_s": null,
+          "first_100_s": null,
+          "peak": {
+            "value": 19.648343588688785,
+            "time_s": 2635.0
+          }
+        },
+        "BD": {
+          "first_70_s": 500.0,
+          "first_100_s": 535.0,
+          "peak": {
+            "value": 347.0518500494371,
+            "time_s": 1799.99992106
+          }
+        },
+        "rollover": {
+          "first_70_s": 2490.0,
+          "first_100_s": null,
+          "peak": {
+            "value": 82.65952007076923,
+            "time_s": 2490.0
+          }
+        }
+      }
+    }
+  },
+  "unchanged": {
+    "simulation\\build\\baseline\\cfast-baseline.exe": true,
+    "specs\\Claude지시-C11-완도저온창고사례-20261102.md": true,
+    "simulation\\pyrocast_cfbt\\conditions.py": true,
+    "simulation\\pyrocast_cfbt\\deck.py": true,
+    "simulation\\pyrocast_cfbt\\model.py": true
+  },
+  "door_jet_outside_peak_kW": {
+    "value": 8957.61693256,
+    "time_s": 1395.0
+  },
+  "threshold_time_basis": "first 5 s native sample; no interpolation",
+  "input_parser_failures_before_integration": 0,
+  "integration_runs": 1,
+  "shared_evaluate_score_identity": true,
+  "cut_first_observed_half_s": 1324.99999003,
+  "cut_first_observed_full_s": 1805.0,
+  "door_jet_by_individual_opening": null,
+  "door_jet_scope": "native DJET receiving-room sum; gaps and cut not independently available",
+  "scores_scope": "unchanged conditions.py ratios; not occurrence probabilities or validation of FGI",
+  "FO_ROOM_note": "No ROOM solid source and no project bulk source: shared FO HRR factor is zero; DJET is deliberately not reassigned as solid HRR",
+  "times": {
+    "780": {
+      "sample_s": 780.0,
+      "T_upper_C": 119.005910188,
+      "O2_upper_vol_percent": 6.901937300869999,
+      "fuel_upper_mass_fraction": 0.08111551046618384,
+      "interface_m": 5.53043067291,
+      "source_HRR_kW": 0.0,
+      "door_jet_kW": 0.0,
+      "FO": 0.0,
+      "FGI": 39.668636729333336,
+      "BD": 39.668636729333336,
+      "rollover": 22.885751959230767
+    },
+    "1320": {
+      "sample_s": 1319.99991147,
+      "T_upper_C": 97.5851806575,
+      "O2_upper_vol_percent": 3.67331742694,
+      "fuel_upper_mass_fraction": 0.3256615050796202,
+      "interface_m": 4.93731904503,
+      "source_HRR_kW": 0.0,
+      "door_jet_kW": 0.0,
+      "FO": 0.0,
+      "FGI": 32.5283935525,
+      "BD": 32.5283935525,
+      "rollover": 18.766380895673077
+    },
+    "1500": {
+      "sample_s": 1499.99994431,
+      "T_upper_C": 405.548415116,
+      "O2_upper_vol_percent": 5.77468589419,
+      "fuel_upper_mass_fraction": 0.15659407491535815,
+      "interface_m": 2.54974467479,
+      "source_HRR_kW": 0.0,
+      "door_jet_kW": 929.176331821,
+      "FO": 0.0,
+      "FGI": 57.7468589419,
+      "BD": 135.18280503866666,
+      "rollover": 48.122382451583334
+    },
+    "2100": {
+      "sample_s": 2100.0,
+      "T_upper_C": 425.935898279,
+      "O2_upper_vol_percent": 9.960198582090001,
+      "fuel_upper_mass_fraction": 0.09508110646221359,
+      "interface_m": 2.37040442141,
+      "source_HRR_kW": 0.0,
+      "door_jet_kW": 624.966881251,
+      "FO": 0.0,
+      "FGI": 99.60198582090001,
+      "BD": 95.08110646221358,
+      "rollover": 81.91074966903847
+    }
+  }
+}

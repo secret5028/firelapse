@@ -103,7 +103,7 @@ def run(scenario='P1'):
         raise
 
 
-def analyze(scenario='P1'):
+def analyze(scenario='P1', fan_on=False):
     import csv
     model=json.loads((OUT/'model.json').read_text(encoding='utf-8'))
     c,_,cu=read_native_csv(OUT/'case_compartments.csv')
@@ -199,7 +199,8 @@ def analyze(scenario='P1'):
     colors={'FO':'#df2d28','FGI':'#863bad','BD':'#b72666','rollover':'#d7830b'}
     for zoom,name in ((False,f'{scenario}-timeseries.png'),(True,f'{scenario}-zoom.png')):
         fig,axs=plt.subplots(4,1,figsize=(13,10),sharex=True,layout='constrained')
-        fig.suptitle(f'Wando {scenario} | stock CFAST | fan OFF | condition indices, not event probabilities',fontsize=14)
+        fan_label='ON 1500-1920 s' if fan_on else 'OFF'
+        fig.suptitle(f'Wando {scenario} | stock CFAST | fan {fan_label} | condition indices, not event probabilities',fontsize=14)
         s=states['ROOM']
         axs[0].plot(t,s['T_upper_C'],color='#bc3c22');axs[0].set_ylabel('Upper T (C)')
         axs[1].plot(t,s['O2_upper_vol_percent'],color='#167ab5');axs[1].set_ylabel('Upper O2 (vol %)')
@@ -212,7 +213,7 @@ def analyze(scenario='P1'):
             for at in (780,1320,1500,2100):ax.axvline(at,color='#3d5666',ls='--',alpha=.6,lw=1)
             if t[-1]<3600:ax.axvspan(t[-1],3600,color='#cccccc',alpha=.7)
         cut_label='1320 cut reference (NO CUT)' if scenario=='P4' else '1320 cut'
-        for at,label in ((780,'780 entry'),(1320,cut_label),(1500,'1500 fan reference (OFF)'),(2100,'2100 incident reference')):
+        for at,label in ((780,'780 entry'),(1320,cut_label),(1500,'1500 fan ON' if fan_on else '1500 fan reference (OFF)'),(2100,'2100 incident reference')):
             if not zoom or at>=1100:axs[0].text(at+6,.97,label,rotation=90,va='top',transform=axs[0].get_xaxis_transform(),fontsize=8)
         axs[3].set_xlabel('Time after ignition (s) | CSV 0-3595 s; last 5 s not extrapolated');fig.savefig(OUT/name,dpi=155);plt.close(fig)
     print(json.dumps(summary,ensure_ascii=False,indent=2))

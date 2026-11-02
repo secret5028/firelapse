@@ -1,6 +1,6 @@
 """Viewer adapter for v8 two-state comparisons, independent of operating playback."""
 import json,time,subprocess,sys
-from lite_fixed_openings import classifications
+from lite_fixed_openings import classifications, screening_states
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
@@ -29,6 +29,7 @@ def payload(top_n=None):
     return {'manual_origins':manual,'score':scored,'comparison':None if legacy else comparison,'legacy_comparison_not_reused':legacy,
             'progress':progress,'saved_score':read(destination/'score.json'),
             'selection':selection,'playback_replaced':False,
+            'opening_mode':'fixed' if screening_states(raw,read(SIM/'config/lite-door-overrides.json',{}))==['fixed'] else 'extremes',
             'fuel_revision':__import__('lite_ai_fuel').revision(scored.get('approved_input',{}).get('fuel_overrides',{})),
             'fuel_rerun_required':read(destination/'score.json',{}).get('approved_input',{}).get('fuel_overrides',{})!=scored.get('approved_input',{}).get('fuel_overrides',{}),
             'attention':comparison_attention(None if legacy else comparison)}
@@ -50,7 +51,7 @@ def compute(top_n,rooms=None):
     selection={**read(SAVED,{}),'top_n':top_n,'result_path':str(out)}
     SAVED.write_text(json.dumps(selection,ensure_ascii=False,indent=2),'utf-8')
     out.mkdir(parents=True)
-    (out/'progress.json').write_text(json.dumps({'state':'running','completed':0,'top_n':top_n,'total':2 if rooms else 2*top_n,'current_room':'입력 준비'}),'utf-8')
+    (out/'progress.json').write_text(json.dumps({'state':'running','completed':0,'top_n':top_n,'total':(1 if payload(top_n)['opening_mode']=='fixed' else 2)*(1 if rooms else top_n),'current_room':'입력 준비'}),'utf-8')
     with (out/'console.txt').open('w',encoding='utf-8') as log:
         try:
             subprocess.run([sys.executable,'-X','utf8',str(ROOT/'tools/run_lite_screening_v8_approved.py'),'--top-n',str(top_n),'--out',str(out)]+(['--room',rooms[0]] if rooms else []),

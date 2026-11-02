@@ -1,8 +1,8 @@
-"""v8 stage2: N sources x two extreme states, strictly serial, then stop."""
+"""v8 stage2: serial sources, two extremes or one confirmed opening state."""
 import os
 for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):os.environ[key]='1'
 import argparse,json,time,hashlib
-from lite_fixed_openings import classifications, apply_fixed
+from lite_fixed_openings import classifications, apply_fixed, screening_states, compare_fixed
 from pathlib import Path
 import numpy as np
 import run_lite_l1 as base
@@ -40,7 +40,7 @@ def execute(data,folder):
     base.save(folder/'rule_manifest.json',manifest)
     if result['ok']:
         from pyrocast_lite.visualization import package
-        pb=package(m,result,data,f"{data['screening_source']['room'].replace('CAD_','')} · 2상태 {data['screening_source']['state']} · 60분")
+        pb=package(m,result,data,f"{data['screening_source']['room'].replace('CAD_','')} · {'확정 급기' if data['screening_source']['state']=='fixed' else '2상태 '+data['screening_source']['state']} · 60분")
         uses=data.get('approved_input',{}).get('room_uses',{})
         for room in pb['rooms']:
             if room['original_room'] in uses:room['display_name']=uses[room['original_room']]['label']+' (승인 용도)'
@@ -57,7 +57,7 @@ def run_batch(top_n=3,out=DEFAULT_OUT,rooms=None):
     from lite_manual_origin import validate_rooms,manual_scenario
     if rooms is not None:validate_rooms(scored,rooms)
     candidates=[r for r in scored['ranked']+scored['excluded'] if r['room'] in rooms] if rooms else scored['ranked'][:top_n]
-    total=2*len(candidates)
+    states=screening_states(raw,config);fixed=states==['fixed'];total=len(states)*len(candidates)
     base.save(out/'score.json',{k:v for k,v in scored.items() if k!='classified_model'})
     paths=[*sorted((base.ROOT/'simulation/pyrocast_lite').glob('*.py')),*sorted((base.ROOT/'simulation/pyrocast_lite').glob('*.json')),
            *sorted((base.ROOT/'simulation/pyrocast_cfbt').glob('*.py')),Path(__file__),base.inputs()['3F'],base.ROOT/'specs/Claude명세-확정상태-v8-20261025.md']
@@ -67,11 +67,16 @@ def run_batch(top_n=3,out=DEFAULT_OUT,rooms=None):
         'fallback':'one Radau on numerical failure, within remaining integration budget; no timeout retry'})
     cases=[];start=time.perf_counter()
     for candidate in candidates:
-        for state in scored['settings']['states']:
+        for state in states:
             rid=candidate['room'];folder=out/rid/state
             base.save(out/'progress.json',{'state':'running','current_room':rid,'current_state':state,'completed':len(cases),'total':total,'top_n':top_n,'rows':cases})
             print('START',len(cases)+1,'/',total,rid,state,flush=True)
-            data=manual_scenario(scored,rid,state) if rooms else scenario(scored,rid,state);data['cad']['fire_key']=rid;apply_fixed(data,config);base.save(folder/'input.json',data);t=time.perf_counter()
+            base_state='open_except_confirmed' if fixed else state
+            data=manual_scenario(scored,rid,base_state) if rooms else scenario(scored,rid,base_state);data['cad']['fire_key']=rid;apply_fixed(data,config)
+            if fixed:
+                data['screening_source']['state']='fixed'
+                data['screening_source']['opening_states']=[{'id':key,**value} for key,value in data['fixed_openings']['states'].items()]
+            base.save(folder/'input.json',data);t=time.perf_counter()
             try:summary=execute(data,folder)
             except Exception as exc:
                 summary={'complete':False,'failure':f'{type(exc).__name__}: {exc}','safe_end_s':None,
@@ -79,8 +84,9 @@ def run_batch(top_n=3,out=DEFAULT_OUT,rooms=None):
             summary.update(room=rid,name=candidate['name'],rank1=candidate.get('rank1'),score=candidate['score'],state=state)
             base.save(folder/'summary.json',summary);cases.append(summary)
             print('END',rid,state,json.dumps({k:summary.get(k) for k in ('complete','burning_room_count','smoke_risk_room_count','first_FO_s','times','failure')},ensure_ascii=False),flush=True)
-    ranked=compare_pairs(cases)
+    ranked=compare_fixed(cases) if fixed else compare_pairs(cases)
     output={'revision':'v8_approved_screening','state':'completed','top_n':len(candidates),'manual_rooms':rooms,'rows':ranked,'cases':cases,'workers':1,
+        'opening_mode':'fixed' if fixed else 'extremes','states_per_room':len(states),'label':'확정 급기' if fixed else '2극단',
         'total_wall_s':time.perf_counter()-start,'complete_count':sum(r['complete'] for r in ranked),
         'complete_scenarios':sum(r['complete'] for r in cases),'attempted_scenarios':len(cases),
         'default_mc_room':next((r['room'] for r in ranked if r['complete']),None),'MC_started':False,

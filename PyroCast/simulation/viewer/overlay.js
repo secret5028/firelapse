@@ -879,7 +879,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',smokeColor:'current',flameDisplay:'growth',fuelMarkers:true},
+ realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:true},
  openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false,route:true},
  risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
@@ -1988,9 +1988,9 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
- const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="weak">약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
+ const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current">현재</option><option value="weak" selected>약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
  const color=document.createElement('label');color.innerHTML='연기 색 <select id="displaySmokeColor"><option value="current" selected>현재</option><option value="neutral">중성</option></select>';$('displaySmokeSettings').append(color);
- const flame=document.createElement('label');flame.innerHTML='불꽃 <select id="displayFlameStyle"><option value="growth" selected>성장 비율(현재)</option><option value="hrr">발열량 기준</option></select>';$('displaySmokeSettings').append(flame);
+ const flame=document.createElement('label');flame.innerHTML='불꽃 <select id="displayFlameStyle"><option value="growth">성장 비율</option><option value="hrr" selected>발열량 기준</option></select>';$('displaySmokeSettings').append(flame);
  listen($('displayFlameStyle'),'change',()=>store.dispatch('realView/set',{flameDisplay:$('displayFlameStyle').value}));
  listen($('displaySmokeColor'),'change',()=>store.dispatch('realView/set',{smokeColor:$('displaySmokeColor').value}));
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
@@ -2116,7 +2116,7 @@ function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
  const compare=(a,b)=>{const x=key(a),y=key(b);for(let i=0;i<x.length;i++)if(x[i]!==y[i])return x[i]<y[i]?-1:1;return 0;};
  const rows=(comparison?.rows||[]).map(row=>{const pair=(row.state_results||[]).map(c=>{const identity=[c.room,c.state,c.result_folder,c.times?.total_s,c.burning_room_count,c.first_FO_s,c.safe_end_s];const found=saved.records.find(s=>s.identity.every((v,i)=>v===identity[i]));return {...c,attention_room_count:found?.attention_room_count??null,index_complete:!!(found?.complete&&!found.unknown_rooms.length)};});
-  const valid=pair.length===2&&pair.every(c=>c.index_complete&&c.complete);if(!valid)return {...row,rank2:null,attention_room_count:null,index_complete:false};
+  const expected=comparison?.opening_mode==='fixed'?1:2;const valid=pair.length===expected&&(expected!==1||pair[0]?.state==='fixed')&&pair.every(c=>c.index_complete&&c.complete);if(!valid)return {...row,rank2:null,attention_room_count:null,index_complete:false};
   const worst=[...pair].sort(compare)[0];return {...row,rank2:null,index_complete:true,attention_room_count:worst.attention_room_count,burning_room_count:worst.burning_room_count,first_FO_s:worst.first_FO_s,worst_state:worst.state};
  });
  const good=rows.filter(r=>r.index_complete).sort((a,b)=>compare(a,b)||a.room.localeCompare(b.room));let rank=0;for(let i=0;i<good.length;i++){if(i===0||compare(good[i-1],good[i]))rank=i+1;good[i].rank2=rank;}
@@ -2463,6 +2463,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC}){
  function sync(){const state=store.get('exploration');$('exploreN').value=state.top_n;if(lastSamples!==state.samples){$('exploreSamples').value=state.samples;lastSamples=state.samples;}$('exploreOrigin').value=state.origin_room_id||'';
   for(const tr of root.querySelectorAll('tr[data-room]'))tr.setAttribute('aria-selected',String(tr.dataset.room===state.origin_room_id));
   const estimate=mcEstimate(summary,state.samples);$('exploreEstimate').textContent=estimate===null?'예상 시간 미확인':`예상 약 ${Math.ceil(estimate/60)}분 · 이전 MC 기준`;
+  $('exploreOriginRun').textContent=payload?.opening_mode==='fixed'?'선택 실 확정 급기 실행':'선택 실 2상태 실행';
   const matching=Boolean(summary&&mcOrigin&&state.origin_room_id===mcOrigin);$('exploreResults').disabled=!matching;
   $('exploreResults').title=matching?'선택 화점의 저장 MC 집계 보기':`선택 화점의 저장 MC 결과 없음${mcOrigin?' · 저장 화점 '+pretty(mcOrigin):''}`;
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id;
@@ -2482,12 +2483,12 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC}){
  const off=store.subscribe('exploration',sync);
  function update(value){payload=value;const {first,second}=screeningRows(value);$('exploreN').max=first.length;$('exploreOrigin').replaceChildren();for(const row of value.manual_origins??first)$('exploreOrigin').add(new Option(originName(row.room),row.room));$('exploreOrigin').disabled=!first.length;
   $('exploreCandidates').replaceChildren();for(const row of first){const tr=document.createElement('tr');cell(tr,count(row.rank1));cell(tr,`${pretty(row.room)} · ${useName(row)}`).title=row.reason||'';cell(tr,finite(row.score)?row.score.toFixed(3):'—');$('exploreCandidates').append(tr);}
-  $('exploreRanking').replaceChildren();for(const row of second){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');tr.title=row.complete?({closed:'모두 닫힘',open_except_confirmed:'확정 방화문 제외 모두 열림'}[row.worst_state]||''):'미완료 · 부분 결과';cell(tr,count(row.rank2));cell(tr,pretty(row.room));cell(tr,count(row.rank1));cell(tr,count(row.burning_room_count));cell(tr,count(row.attention_room_count));cell(tr,finite(row.first_FO_s)?`${Math.floor(row.first_FO_s/60)}:${String(Math.floor(row.first_FO_s%60)).padStart(2,'0')}`:'—');
+  $('exploreRanking').replaceChildren();for(const row of second){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');tr.title=row.complete?({fixed:'확정 급기',closed:'모두 닫힘',open_except_confirmed:'확정 방화문 제외 모두 열림'}[row.worst_state]||''):'미완료 · 부분 결과';cell(tr,count(row.rank2));cell(tr,pretty(row.room));cell(tr,count(row.rank1));cell(tr,count(row.burning_room_count));cell(tr,count(row.attention_room_count));cell(tr,finite(row.first_FO_s)?`${Math.floor(row.first_FO_s/60)}:${String(Math.floor(row.first_FO_s%60)).padStart(2,'0')}`:'—');
    const choose=()=>{if((value.manual_origins??first).some(r=>r.room===row.room))store.dispatch('exploration/set',{origin_room_id:row.room,origin_mode:'ranked'});};tr.onclick=choose;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}};$('exploreRanking').append(tr);
   }
   if(!second.length){const tr=document.createElement('tr'),td=cell(tr,'저장된 ② 결과 없음');td.colSpan=6;$('exploreRanking').append(tr);}
   const progress=value.progress;$('exploreStatus').textContent=progress?.running?`② 계산 중 ${progress.completed??0}/${progress.total??'—'} · ${progress.current_room??''}`:progress?.error?'② 실패 · '+progress.error:`적격 ${first.length}실`;
-  const c=value.comparison;$('exploreRankBasis').textContent=c?`저장 결과 · ${c.manual_rooms?'수동 지정':'상위'} ${c.top_n} × 2상태 · ${c.complete_scenarios??'—'}/${c.attempted_scenarios??'—'} 완료`:'② 실행 대기';if(second.some(r=>!r.index_complete))$('exploreRankBasis').textContent+=' · 새 결과 지수 미집계';$('exploreRankBasis').title='저장 결과 원값의 지수 ≥70 집계. 새 결과 저장 시 지수 집계가 자동 생성됩니다. 미집계는 0 또는 기존 연기 수로 대체하지 않습니다.';
+  const c=value.comparison;$('exploreRankBasis').textContent=c?`저장 결과 · ${c.manual_rooms?'수동 지정':'상위'} ${c.top_n} × ${c.opening_mode==='fixed'?'확정 급기 1회':'2상태'} · ${c.complete_scenarios??'—'}/${c.attempted_scenarios??'—'} 완료`:'② 실행 대기';if(second.some(r=>!r.index_complete))$('exploreRankBasis').textContent+=' · 새 결과 지수 미집계';$('exploreRankBasis').title='저장 결과 원값의 지수 ≥70 집계. 새 결과 저장 시 지수 집계가 자동 생성됩니다. 미집계는 0 또는 기존 연기 수로 대체하지 않습니다.';
   if(value.saved_score?.opening_states&&JSON.stringify(value.saved_score.opening_states)!==JSON.stringify(value.score.opening_states))$('exploreRankBasis').textContent+=' · 현재 문 설정과 다름';
   if(value.fuel_rerun_required)$('exploreRankBasis').textContent+=' · 재실행 필요 (연료 변경)';
   const current=store.get('exploration');if(!(value.manual_origins??first).some(r=>r.room===current.origin_room_id)){const proposed=value.selection?.mc_room??c?.default_mc_room??first[0]?.room;store.dispatch('exploration/set',{origin_room_id:(value.manual_origins??first).some(r=>r.room===proposed)?proposed:first[0]?.room??null});}

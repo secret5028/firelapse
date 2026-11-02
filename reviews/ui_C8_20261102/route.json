@@ -1,0 +1,597 @@
+{
+  "main": "CAD_1F_D3",
+  "main_point": [
+    17.5,
+    39.803,
+    5.1
+  ],
+  "default_vehicle": [
+    17.5,
+    34.803,
+    5.1
+  ],
+  "target": "CAD_3F_R3",
+  "entry": "CAD_1F_D3",
+  "vehicle": [
+    17.5,
+    34.803,
+    5.1
+  ],
+  "segments": [
+    {
+      "a": [
+        17.5,
+        34.803,
+        5.1
+      ],
+      "b": [
+        17.5,
+        39.803,
+        5.1
+      ],
+      "floor": "1F",
+      "room": null,
+      "stair": false,
+      "length": 5,
+      "start": 0,
+      "end": 5
+    },
+    {
+      "a": [
+        17.5,
+        39.803,
+        5.1
+      ],
+      "b": [
+        17.26,
+        41.35,
+        5.1
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R29",
+      "stair": false,
+      "length": 1.5655059884906262,
+      "start": 5,
+      "end": 6.565505988490626
+    },
+    {
+      "a": [
+        17.26,
+        41.35,
+        5.1
+      ],
+      "b": [
+        17.5,
+        42.827,
+        5.1
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R29",
+      "stair": false,
+      "length": 1.4963719457407607,
+      "start": 6.565505988490626,
+      "end": 8.061877934231386
+    },
+    {
+      "a": [
+        17.5,
+        42.827,
+        5.1
+      ],
+      "b": [
+        17.25,
+        46.87,
+        5.1
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R22",
+      "stair": false,
+      "length": 4.050722034403249,
+      "start": 8.061877934231386,
+      "end": 12.112599968634635
+    },
+    {
+      "a": [
+        17.25,
+        46.87,
+        5.1
+      ],
+      "b": [
+        15.4295,
+        46.2735,
+        5.1
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R22",
+      "stair": false,
+      "length": 1.9157328884789746,
+      "start": 12.112599968634635,
+      "end": 14.02833285711361
+    },
+    {
+      "a": [
+        15.4295,
+        46.2735,
+        5.1
+      ],
+      "b": [
+        13.77,
+        43.36,
+        5.1
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R26",
+      "stair": false,
+      "length": 3.3529721889690647,
+      "start": 14.02833285711361,
+      "end": 17.381305046082673
+    },
+    {
+      "a": [
+        13.77,
+        43.36,
+        5.1
+      ],
+      "b": [
+        13.522949500000323,
+        43.08792399999993,
+        5.1
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R26",
+      "stair": false,
+      "length": 0.36750414871961407,
+      "start": 17.381305046082673,
+      "end": 17.748809194802288
+    },
+    {
+      "a": [
+        13.522949500000323,
+        43.08792399999993,
+        5.1
+      ],
+      "b": [
+        13.522949499998504,
+        43.08792399999993,
+        10.6
+      ],
+      "floor": "1F",
+      "room": "CAD_1F_R26",
+      "stair": true,
+      "length": 8.25,
+      "start": 17.748809194802288,
+      "end": 25.998809194802288
+    },
+    {
+      "a": [
+        13.522949499998504,
+        43.08792399999993,
+        10.6
+      ],
+      "b": [
+        13.77,
+        43.36,
+        10.6
+      ],
+      "floor": "2F",
+      "room": "CAD_2F_R21",
+      "stair": false,
+      "length": 0.36750414872083687,
+      "start": 25.998809194802288,
+      "end": 26.366313343523125
+    },
+    {
+      "a": [
+        13.77,
+        43.36,
+        10.6
+      ],
+      "b": [
+        13.522949499998504,
+        43.08792399999993,
+        10.6
+      ],
+      "floor": "2F",
+      "room": "CAD_2F_R21",
+      "stair": false,
+      "length": 0.36750414872083687,
+      "start": 26.366313343523125,
+      "end": 26.73381749224396
+    },
+    {
+      "a": [
+        13.522949499998504,
+        43.08792399999993,
+        10.6
+      ],
+      "b": [
+        13.523628000000826,
+        43.08730800000012,
+        16.1
+      ],
+      "floor": "2F",
+      "room": "CAD_2F_R21",
+      "stair": true,
+      "length": 8.250000000000004,
+      "start": 26.73381749224396,
+      "end": 34.983817492243965
+    },
+    {
+      "a": [
+        13.523628000000826,
+        43.08730800000012,
+        16.1
+      ],
+      "b": [
+        13.77,
+        43.35,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R21",
+      "stair": false,
+      "length": 0.36014753816669326,
+      "start": 34.983817492243965,
+      "end": 35.34396503041066
+    },
+    {
+      "a": [
+        13.77,
+        43.35,
+        16.1
+      ],
+      "b": [
+        15.2,
+        46.2725,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R21",
+      "stair": false,
+      "length": 3.253598968834358,
+      "start": 35.34396503041066,
+      "end": 38.59756399924502
+    },
+    {
+      "a": [
+        15.2,
+        46.2725,
+        16.1
+      ],
+      "b": [
+        17.24,
+        47.05,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R15",
+      "stair": false,
+      "length": 2.1831413719683828,
+      "start": 38.59756399924502,
+      "end": 40.7807053712134
+    },
+    {
+      "a": [
+        17.24,
+        47.05,
+        16.1
+      ],
+      "b": [
+        18.0005,
+        50.888,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R15",
+      "stair": false,
+      "length": 3.912621148284102,
+      "start": 40.7807053712134,
+      "end": 44.693326519497504
+    },
+    {
+      "a": [
+        18.0005,
+        50.888,
+        16.1
+      ],
+      "b": [
+        18.58,
+        56.21,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R4",
+      "stair": false,
+      "length": 5.353457224074927,
+      "start": 44.693326519497504,
+      "end": 50.04678374357243
+    },
+    {
+      "a": [
+        18.58,
+        56.21,
+        16.1
+      ],
+      "b": [
+        17.1,
+        61.428,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R4",
+      "stair": false,
+      "length": 5.423829274599262,
+      "start": 50.04678374357243,
+      "end": 55.4706130181717
+    },
+    {
+      "a": [
+        17.1,
+        61.428,
+        16.1
+      ],
+      "b": [
+        14.61,
+        61.41,
+        16.1
+      ],
+      "floor": "3F",
+      "room": "CAD_3F_R3",
+      "stair": false,
+      "length": 2.490065059391021,
+      "start": 55.4706130181717,
+      "end": 57.96067807756272
+    }
+  ],
+  "ticks": [
+    {
+      "number": 1,
+      "point": [
+        14.948588876154457,
+        45.42918872592709,
+        5.1
+      ],
+      "floor": "1F"
+    },
+    {
+      "number": 2,
+      "point": [
+        13.523218118766879,
+        43.08768012503943,
+        12.777455005170692
+      ],
+      "floor": "2F"
+    },
+    {
+      "number": 3,
+      "point": [
+        18.033696731478862,
+        51.19287144940554,
+        16.1
+      ],
+      "floor": "3F"
+    }
+  ],
+  "length": 57.96067807756272,
+  "hoses": 4,
+  "stairs": 2,
+  "edges": [
+    {
+      "id": "CAD_1F_D2",
+      "from": "CAD_1F_R29",
+      "to": "CAD_1F_R22",
+      "kind": "door",
+      "length": 5.547093980144009,
+      "rise": 0,
+      "stair_length": 0
+    },
+    {
+      "id": "CAD_1F_D13",
+      "from": "CAD_1F_R22",
+      "to": "CAD_1F_R26",
+      "kind": "door",
+      "length": 5.26870507744804,
+      "rise": 0,
+      "stair_length": 0
+    },
+    {
+      "id": "CAD_V29",
+      "from": "CAD_1F_R26",
+      "to": "CAD_2F_R21",
+      "kind": "stair",
+      "length": 8.985008297440451,
+      "rise": 5.5,
+      "stair_length": 8.25
+    },
+    {
+      "id": "CAD_V30",
+      "from": "CAD_2F_R21",
+      "to": "CAD_3F_R21",
+      "kind": "stair",
+      "length": 8.977651686887533,
+      "rise": 5.500000000000002,
+      "stair_length": 8.250000000000004
+    },
+    {
+      "id": "CAD_3F_D1",
+      "from": "CAD_3F_R21",
+      "to": "CAD_3F_R15",
+      "kind": "door",
+      "length": 5.436740340802741,
+      "rise": 0,
+      "stair_length": 0
+    },
+    {
+      "id": "CAD_3F_D0",
+      "from": "CAD_3F_R15",
+      "to": "CAD_3F_R4",
+      "kind": "door",
+      "length": 9.26607837235903,
+      "rise": 0,
+      "stair_length": 0
+    },
+    {
+      "id": "CAD_3F_D11",
+      "from": "CAD_3F_R4",
+      "to": "CAD_3F_R3",
+      "kind": "door",
+      "length": 7.913894333990283,
+      "rise": 0,
+      "stair_length": 0
+    }
+  ],
+  "graph_edges": 639,
+  "source_edges": 639,
+  "traversable_edges": 155,
+  "limits": "실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.",
+  "risk_summary": {
+    "rows": [
+      {
+        "room": null,
+        "label": "외부",
+        "index": null,
+        "type": null,
+        "source_cell": null,
+        "phenomenon": "외부",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 1,
+        "start_m": 0,
+        "end_m": 5,
+        "stairs": 0,
+        "hose_first": 1,
+        "hose_last": 1
+      },
+      {
+        "room": "CAD_1F_R29",
+        "label": "1F R29",
+        "index": null,
+        "type": null,
+        "source_cell": null,
+        "phenomenon": "미평가",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 2,
+        "start_m": 5,
+        "end_m": 8.061877934231386,
+        "stairs": 0,
+        "hose_first": 1,
+        "hose_last": 1
+      },
+      {
+        "room": "CAD_1F_R22",
+        "label": "1F R22",
+        "index": null,
+        "type": null,
+        "source_cell": null,
+        "phenomenon": "미평가",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 3,
+        "start_m": 8.061877934231386,
+        "end_m": 14.02833285711361,
+        "stairs": 0,
+        "hose_first": 1,
+        "hose_last": 1
+      },
+      {
+        "room": "CAD_1F_R26",
+        "label": "1F R26",
+        "index": null,
+        "type": null,
+        "source_cell": null,
+        "phenomenon": "미평가",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 4,
+        "start_m": 14.02833285711361,
+        "end_m": 25.998809194802288,
+        "stairs": 1,
+        "hose_first": 1,
+        "hose_last": 2
+      },
+      {
+        "room": "CAD_2F_R21",
+        "label": "2F R21",
+        "index": null,
+        "type": null,
+        "source_cell": null,
+        "phenomenon": "미평가",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 5,
+        "start_m": 25.998809194802288,
+        "end_m": 34.983817492243965,
+        "stairs": 1,
+        "hose_first": 2,
+        "hose_last": 3
+      },
+      {
+        "room": "CAD_3F_R21",
+        "label": "3F R21",
+        "index": 30.215154069703658,
+        "type": "FGI",
+        "source_cell": "CAD_3F_R21",
+        "phenomenon": "FGI",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 6,
+        "start_m": 34.983817492243965,
+        "end_m": 38.59756399924502,
+        "stairs": 0,
+        "hose_first": 3,
+        "hose_last": 3
+      },
+      {
+        "room": "CAD_3F_R15",
+        "label": "3F R15",
+        "index": 65.58107129739234,
+        "type": "FGI",
+        "source_cell": "CAD_3F_R15",
+        "phenomenon": "FGI",
+        "partial": false,
+        "color": "#38bdf8",
+        "order": 7,
+        "start_m": 38.59756399924502,
+        "end_m": 44.693326519497504,
+        "stairs": 0,
+        "hose_first": 3,
+        "hose_last": 3
+      },
+      {
+        "room": "CAD_3F_R4",
+        "label": "3F R4",
+        "index": 98.09670990963754,
+        "type": "backdraft",
+        "source_cell": "CAD_3F_R4",
+        "phenomenon": "백드래프트",
+        "partial": false,
+        "color": "#9ca3af",
+        "order": 8,
+        "start_m": 44.693326519497504,
+        "end_m": 55.4706130181717,
+        "stairs": 0,
+        "hose_first": 3,
+        "hose_last": 4
+      },
+      {
+        "room": "CAD_3F_R3",
+        "label": "3F R3",
+        "index": 143.0035473229285,
+        "type": "backdraft",
+        "source_cell": "CAD_3F_R3",
+        "phenomenon": "백드래프트",
+        "partial": false,
+        "color": "#facc15",
+        "order": 9,
+        "start_m": 55.4706130181717,
+        "end_m": 57.96067807756272,
+        "stairs": 0,
+        "hose_first": 4,
+        "hose_last": 4
+      }
+    ],
+    "sample_s": 0,
+    "history": true
+  }
+}

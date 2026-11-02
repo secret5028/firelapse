@@ -1,0 +1,8 @@
+{
+  "opening_count": 69,
+  "all_schedules_identical": true,
+  "screening_state": "fixed",
+  "metadata_ids": 69,
+  "MC": "simulation\\results\\lite_mc_jobs\\mc-1793596576284695400-55af780d",
+  "screening_input": "simulation\\results\\lite_screening_ui_1793597384213006900\\CAD_3F_R3\\fixed\\input.json"
+}

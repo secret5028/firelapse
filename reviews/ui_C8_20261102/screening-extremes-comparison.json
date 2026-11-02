@@ -1,0 +1,1072 @@
+{
+  "revision": "v8_approved_screening",
+  "state": "completed",
+  "top_n": 1,
+  "manual_rooms": [
+    "CAD_3F_R3"
+  ],
+  "rows": [
+    {
+      "room": "CAD_3F_R3",
+      "name": "계측기보관실",
+      "rank1": 2,
+      "score": 3.786674893969729,
+      "complete": true,
+      "state_results": [
+        {
+          "complete": true,
+          "safe_end_s": 3600.0,
+          "burning_room_count": 2,
+          "smoke_risk_room_count": 0,
+          "first_FO_s": 1590.0,
+          "rooms": {
+            "CAD_3F_R0": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R1": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R2": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R3": {
+              "burning": true,
+              "smoke_risk": false,
+              "first_FO_s": 1590.0,
+              "smoke_caution": true
+            },
+            "CAD_3F_R4": {
+              "burning": true,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R5": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R6": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R7": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R8": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R9": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R10": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R11": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R12": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R13": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R15": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R16": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R17": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R18": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R19": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R20": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R21": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R22": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R23": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R24": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R25": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R26": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_CE0": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_CE1": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            }
+          },
+          "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+          "smoke_caution_room_count": 11,
+          "origin_max_upper_C": 1007.6206542151748,
+          "origin_fire_basis": "fuel_based",
+          "origin_budget": {
+            "room": "CAD_3F_R3",
+            "origin_fire_basis": "fuel_based",
+            "Q_origin_peak_kW": 3622.4301235496596,
+            "area_m2": 16.710360000000012,
+            "coverage": 0.5,
+            "hrrpua_kW_m2": 500,
+            "energy_MJ": 19718.224800000015,
+            "fuel_load_MJ_m2": 1180.0,
+            "fuel_surface_peak_kW": 4177.590000000003,
+            "ventilation_cap_kW": 3622.4301235496596,
+            "external_A_sqrtH": 2.414953415699773,
+            "internal_max_A_sqrtH": 5.173421498389629,
+            "cap_basis": "external sum",
+            "external_opening_ids": [
+              "CAD_3F_W38"
+            ],
+            "internal_max_opening_ids": [
+              "CAD_3F_D11"
+            ],
+            "vent_cap_k": 1.0,
+            "growth_kW_s2": 0.047,
+            "input_peak_used": false,
+            "classification": {
+              "class": "warehouse",
+              "classification_basis": "계측기보관실→창고 추정; 사용자 승인",
+              "room": "CAD_3F_R3",
+              "name": "계측기보관실",
+              "label": "창고",
+              "area_m2": 16.710360000000012,
+              "load_MJ_m2": 1180,
+              "hrrpua_kW_m2": 500,
+              "coverage": 0.5,
+              "table_basis": null,
+              "value_basis": "fire_load_table.json mean/rhrf",
+              "passage_without_fire": false,
+              "graph_excluded": false
+            },
+            "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+          },
+          "balance": {
+            "basis": "10s output diagnostic; not accepted-step conservation certification",
+            "mass_percent": 0.05836321824948142,
+            "energy_percent": 0.0004823063136788019,
+            "limits_percent": {
+              "mass": null,
+              "energy": 0.1
+            },
+            "passed": true,
+            "mass_interpretation": "report only per section1.5; output quadrature vs model closure error not isolated"
+          },
+          "attempts": [
+            {
+              "method": "BDF",
+              "complete": true,
+              "integration_s": 35.25049169999693,
+              "preprocess_s": 0.09418150000055903,
+              "postprocess_s": 7.059962999999698,
+              "failure": null
+            }
+          ],
+          "solver_fallback": false,
+          "selected_attempt": "BDF",
+          "times": {
+            "integration_s": 35.25049169999693,
+            "preprocess_s": 0.09418150000055903,
+            "postprocess_s": 7.059962999999698,
+            "total_s": 45.310236799999984
+          },
+          "failure": null,
+          "result_folder": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793596486525636600\\CAD_3F_R3\\open_except_confirmed",
+          "room": "CAD_3F_R3",
+          "name": "계측기보관실",
+          "rank1": 2,
+          "score": 3.786674893969729,
+          "state": "open_except_confirmed"
+        },
+        {
+          "complete": true,
+          "safe_end_s": 3600.0,
+          "burning_room_count": 1,
+          "smoke_risk_room_count": 0,
+          "first_FO_s": null,
+          "rooms": {
+            "CAD_3F_R0": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R1": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R2": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R3": {
+              "burning": true,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": true
+            },
+            "CAD_3F_R4": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R5": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R6": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R7": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R8": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R9": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R10": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R11": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R12": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R13": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R15": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R16": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R17": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R18": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R19": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R20": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R21": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R22": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R23": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R24": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R25": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_R26": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_CE0": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            },
+            "CAD_3F_CE1": {
+              "burning": false,
+              "smoke_risk": false,
+              "first_FO_s": null,
+              "smoke_caution": false
+            }
+          },
+          "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+          "smoke_caution_room_count": 1,
+          "origin_max_upper_C": 349.8616919976106,
+          "origin_fire_basis": "fuel_based",
+          "origin_budget": {
+            "room": "CAD_3F_R3",
+            "origin_fire_basis": "fuel_based",
+            "Q_origin_peak_kW": 3622.4301235496596,
+            "area_m2": 16.710360000000012,
+            "coverage": 0.5,
+            "hrrpua_kW_m2": 500,
+            "energy_MJ": 19718.224800000015,
+            "fuel_load_MJ_m2": 1180.0,
+            "fuel_surface_peak_kW": 4177.590000000003,
+            "ventilation_cap_kW": 3622.4301235496596,
+            "external_A_sqrtH": 2.414953415699773,
+            "internal_max_A_sqrtH": 5.173421498389629,
+            "cap_basis": "external sum",
+            "external_opening_ids": [
+              "CAD_3F_W38"
+            ],
+            "internal_max_opening_ids": [
+              "CAD_3F_D11"
+            ],
+            "vent_cap_k": 1.0,
+            "growth_kW_s2": 0.047,
+            "input_peak_used": false,
+            "classification": {
+              "class": "warehouse",
+              "classification_basis": "계측기보관실→창고 추정; 사용자 승인",
+              "room": "CAD_3F_R3",
+              "name": "계측기보관실",
+              "label": "창고",
+              "area_m2": 16.710360000000012,
+              "load_MJ_m2": 1180,
+              "hrrpua_kW_m2": 500,
+              "coverage": 0.5,
+              "table_basis": null,
+              "value_basis": "fire_load_table.json mean/rhrf",
+              "passage_without_fire": false,
+              "graph_excluded": false
+            },
+            "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+          },
+          "balance": {
+            "basis": "10s output diagnostic; not accepted-step conservation certification",
+            "mass_percent": 0.16943316900903052,
+            "energy_percent": 0.000359702991464766,
+            "limits_percent": {
+              "mass": null,
+              "energy": 0.1
+            },
+            "passed": true,
+            "mass_interpretation": "report only per section1.5; output quadrature vs model closure error not isolated"
+          },
+          "attempts": [
+            {
+              "method": "BDF",
+              "complete": true,
+              "integration_s": 15.974685999997746,
+              "preprocess_s": 0.1366426999993564,
+              "postprocess_s": 5.872522399997251,
+              "failure": null
+            }
+          ],
+          "solver_fallback": false,
+          "selected_attempt": "BDF",
+          "times": {
+            "integration_s": 15.974685999997746,
+            "preprocess_s": 0.1366426999993564,
+            "postprocess_s": 5.872522399997251,
+            "total_s": 24.61650229999941
+          },
+          "failure": null,
+          "result_folder": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793596486525636600\\CAD_3F_R3\\closed",
+          "room": "CAD_3F_R3",
+          "name": "계측기보관실",
+          "rank1": 2,
+          "score": 3.786674893969729,
+          "state": "closed"
+        }
+      ],
+      "worst_state": "open_except_confirmed",
+      "observed_worst_state": "open_except_confirmed",
+      "tied_states": [
+        "open_except_confirmed"
+      ],
+      "burning_room_count": 2,
+      "smoke_risk_room_count": 0,
+      "smoke_caution_room_count": 11,
+      "first_FO_s": 1590.0,
+      "origin_max_upper_C": 1007.6206542151748,
+      "rank2": 1
+    }
+  ],
+  "cases": [
+    {
+      "complete": true,
+      "safe_end_s": 3600.0,
+      "burning_room_count": 2,
+      "smoke_risk_room_count": 0,
+      "first_FO_s": 1590.0,
+      "rooms": {
+        "CAD_3F_R0": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R1": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R2": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R3": {
+          "burning": true,
+          "smoke_risk": false,
+          "first_FO_s": 1590.0,
+          "smoke_caution": true
+        },
+        "CAD_3F_R4": {
+          "burning": true,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R5": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R6": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R7": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R8": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R9": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R10": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R11": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R12": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R13": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R15": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R16": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R17": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R18": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R19": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R20": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R21": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R22": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R23": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R24": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R25": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R26": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_CE0": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_CE1": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        }
+      },
+      "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+      "smoke_caution_room_count": 11,
+      "origin_max_upper_C": 1007.6206542151748,
+      "origin_fire_basis": "fuel_based",
+      "origin_budget": {
+        "room": "CAD_3F_R3",
+        "origin_fire_basis": "fuel_based",
+        "Q_origin_peak_kW": 3622.4301235496596,
+        "area_m2": 16.710360000000012,
+        "coverage": 0.5,
+        "hrrpua_kW_m2": 500,
+        "energy_MJ": 19718.224800000015,
+        "fuel_load_MJ_m2": 1180.0,
+        "fuel_surface_peak_kW": 4177.590000000003,
+        "ventilation_cap_kW": 3622.4301235496596,
+        "external_A_sqrtH": 2.414953415699773,
+        "internal_max_A_sqrtH": 5.173421498389629,
+        "cap_basis": "external sum",
+        "external_opening_ids": [
+          "CAD_3F_W38"
+        ],
+        "internal_max_opening_ids": [
+          "CAD_3F_D11"
+        ],
+        "vent_cap_k": 1.0,
+        "growth_kW_s2": 0.047,
+        "input_peak_used": false,
+        "classification": {
+          "class": "warehouse",
+          "classification_basis": "계측기보관실→창고 추정; 사용자 승인",
+          "room": "CAD_3F_R3",
+          "name": "계측기보관실",
+          "label": "창고",
+          "area_m2": 16.710360000000012,
+          "load_MJ_m2": 1180,
+          "hrrpua_kW_m2": 500,
+          "coverage": 0.5,
+          "table_basis": null,
+          "value_basis": "fire_load_table.json mean/rhrf",
+          "passage_without_fire": false,
+          "graph_excluded": false
+        },
+        "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+      },
+      "balance": {
+        "basis": "10s output diagnostic; not accepted-step conservation certification",
+        "mass_percent": 0.05836321824948142,
+        "energy_percent": 0.0004823063136788019,
+        "limits_percent": {
+          "mass": null,
+          "energy": 0.1
+        },
+        "passed": true,
+        "mass_interpretation": "report only per section1.5; output quadrature vs model closure error not isolated"
+      },
+      "attempts": [
+        {
+          "method": "BDF",
+          "complete": true,
+          "integration_s": 35.25049169999693,
+          "preprocess_s": 0.09418150000055903,
+          "postprocess_s": 7.059962999999698,
+          "failure": null
+        }
+      ],
+      "solver_fallback": false,
+      "selected_attempt": "BDF",
+      "times": {
+        "integration_s": 35.25049169999693,
+        "preprocess_s": 0.09418150000055903,
+        "postprocess_s": 7.059962999999698,
+        "total_s": 45.310236799999984
+      },
+      "failure": null,
+      "result_folder": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793596486525636600\\CAD_3F_R3\\open_except_confirmed",
+      "room": "CAD_3F_R3",
+      "name": "계측기보관실",
+      "rank1": 2,
+      "score": 3.786674893969729,
+      "state": "open_except_confirmed"
+    },
+    {
+      "complete": true,
+      "safe_end_s": 3600.0,
+      "burning_room_count": 1,
+      "smoke_risk_room_count": 0,
+      "first_FO_s": null,
+      "rooms": {
+        "CAD_3F_R0": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R1": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R2": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R3": {
+          "burning": true,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": true
+        },
+        "CAD_3F_R4": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R5": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R6": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R7": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R8": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R9": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R10": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R11": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R12": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R13": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R15": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R16": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R17": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R18": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R19": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R20": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R21": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R22": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R23": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R24": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R25": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_R26": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_CE0": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        },
+        "CAD_3F_CE1": {
+          "burning": false,
+          "smoke_risk": false,
+          "first_FO_s": null,
+          "smoke_caution": false
+        }
+      },
+      "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+      "smoke_caution_room_count": 1,
+      "origin_max_upper_C": 349.8616919976106,
+      "origin_fire_basis": "fuel_based",
+      "origin_budget": {
+        "room": "CAD_3F_R3",
+        "origin_fire_basis": "fuel_based",
+        "Q_origin_peak_kW": 3622.4301235496596,
+        "area_m2": 16.710360000000012,
+        "coverage": 0.5,
+        "hrrpua_kW_m2": 500,
+        "energy_MJ": 19718.224800000015,
+        "fuel_load_MJ_m2": 1180.0,
+        "fuel_surface_peak_kW": 4177.590000000003,
+        "ventilation_cap_kW": 3622.4301235496596,
+        "external_A_sqrtH": 2.414953415699773,
+        "internal_max_A_sqrtH": 5.173421498389629,
+        "cap_basis": "external sum",
+        "external_opening_ids": [
+          "CAD_3F_W38"
+        ],
+        "internal_max_opening_ids": [
+          "CAD_3F_D11"
+        ],
+        "vent_cap_k": 1.0,
+        "growth_kW_s2": 0.047,
+        "input_peak_used": false,
+        "classification": {
+          "class": "warehouse",
+          "classification_basis": "계측기보관실→창고 추정; 사용자 승인",
+          "room": "CAD_3F_R3",
+          "name": "계측기보관실",
+          "label": "창고",
+          "area_m2": 16.710360000000012,
+          "load_MJ_m2": 1180,
+          "hrrpua_kW_m2": 500,
+          "coverage": 0.5,
+          "table_basis": null,
+          "value_basis": "fire_load_table.json mean/rhrf",
+          "passage_without_fire": false,
+          "graph_excluded": false
+        },
+        "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+      },
+      "balance": {
+        "basis": "10s output diagnostic; not accepted-step conservation certification",
+        "mass_percent": 0.16943316900903052,
+        "energy_percent": 0.000359702991464766,
+        "limits_percent": {
+          "mass": null,
+          "energy": 0.1
+        },
+        "passed": true,
+        "mass_interpretation": "report only per section1.5; output quadrature vs model closure error not isolated"
+      },
+      "attempts": [
+        {
+          "method": "BDF",
+          "complete": true,
+          "integration_s": 15.974685999997746,
+          "preprocess_s": 0.1366426999993564,
+          "postprocess_s": 5.872522399997251,
+          "failure": null
+        }
+      ],
+      "solver_fallback": false,
+      "selected_attempt": "BDF",
+      "times": {
+        "integration_s": 15.974685999997746,
+        "preprocess_s": 0.1366426999993564,
+        "postprocess_s": 5.872522399997251,
+        "total_s": 24.61650229999941
+      },
+      "failure": null,
+      "result_folder": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793596486525636600\\CAD_3F_R3\\closed",
+      "room": "CAD_3F_R3",
+      "name": "계측기보관실",
+      "rank1": 2,
+      "score": 3.786674893969729,
+      "state": "closed"
+    }
+  ],
+  "workers": 1,
+  "opening_mode": "extremes",
+  "states_per_room": 2,
+  "label": "2극단",
+  "total_wall_s": 77.53974860000017,
+  "complete_count": 1,
+  "complete_scenarios": 2,
+  "attempted_scenarios": 2,
+  "default_mc_room": "CAD_3F_R3",
+  "MC_started": false,
+  "code_and_input_unchanged_during_batch": true,
+  "stopped_after_stage2": true
+}

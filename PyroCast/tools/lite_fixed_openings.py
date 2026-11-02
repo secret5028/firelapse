@@ -50,6 +50,32 @@ def sample_fixed_states(model):
     return {key: item['open'] for key, item in fixed['states'].items()} if fixed else None
 
 
+def screening_states(model, config):
+    """Fixed openings are one input, not two identical extreme simulations."""
+    return ['fixed'] if fixed_for(model, config) else ['open_except_confirmed', 'closed']
+
+
+def compare_fixed(cases):
+    """Same reporting metrics, one real result per source; no synthetic pair."""
+    from pyrocast_lite.screening_v8 import METRICS, worse_key
+    rows=[];seen=set()
+    for case in cases:
+        if case['state']!='fixed' or case['room'] in seen:raise ValueError('One fixed result per room required')
+        seen.add(case['room']);complete=case['complete']
+        row={k:case[k] for k in ('room','name','rank1','score')}
+        row.update(complete=complete,state_results=[case],worst_state='fixed' if complete else None,
+            observed_worst_state='fixed' if complete else None,tied_states=['fixed'] if complete else [])
+        row.update({k:case.get(k) if complete else None for k in METRICS});rows.append(row)
+    good=sorted((r for r in rows if r['complete']),key=lambda r:(worse_key(r),r['room']))
+    prev=None;rank=0
+    for i,row in enumerate(good,1):
+        if worse_key(row)!=prev:rank=i
+        row['rank2']=rank;prev=worse_key(row)
+    bad=[r for r in rows if not r['complete']]
+    for row in bad:row['rank2']=None
+    return good+bad
+
+
 def ranked_samples(folder, building_sha):
     folder = Path(folder).resolve()
     request = read(folder/'request.json', {})

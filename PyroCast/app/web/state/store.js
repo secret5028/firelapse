@@ -6,7 +6,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',smokeColor:'current',flameDisplay:'growth',fuelMarkers:true},
+ realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:true},
  openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false,route:true},
  risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},

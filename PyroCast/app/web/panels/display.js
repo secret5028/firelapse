@@ -23,9 +23,9 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
- const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="weak">약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
+ const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current">현재</option><option value="weak" selected>약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
  const color=document.createElement('label');color.innerHTML='연기 색 <select id="displaySmokeColor"><option value="current" selected>현재</option><option value="neutral">중성</option></select>';$('displaySmokeSettings').append(color);
- const flame=document.createElement('label');flame.innerHTML='불꽃 <select id="displayFlameStyle"><option value="growth" selected>성장 비율(현재)</option><option value="hrr">발열량 기준</option></select>';$('displaySmokeSettings').append(flame);
+ const flame=document.createElement('label');flame.innerHTML='불꽃 <select id="displayFlameStyle"><option value="growth">성장 비율</option><option value="hrr" selected>발열량 기준</option></select>';$('displaySmokeSettings').append(flame);
  listen($('displayFlameStyle'),'change',()=>store.dispatch('realView/set',{flameDisplay:$('displayFlameStyle').value}));
  listen($('displaySmokeColor'),'change',()=>store.dispatch('realView/set',{smokeColor:$('displaySmokeColor').value}));
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));

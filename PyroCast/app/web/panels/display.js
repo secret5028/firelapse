@@ -1,5 +1,5 @@
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
-export function createDisplayPanel({store,selectionLabel}){
+export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
  const listen=(node,event,fn)=>{node.addEventListener(event,fn);cleanups.push(()=>node.removeEventListener(event,fn));};
@@ -33,7 +33,8 @@ export function createDisplayPanel({store,selectionLabel}){
  $('liteLegend').remove();
  const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
  const toolbar=$('resetView').parentElement;move($('liteFocus'),toolbar);move($('liteFireFocus'),toolbar);$('resetView').textContent='⟲';$('resetView').title='시점 복원';$('liteFocus').textContent='실 확대';$('liteFireFocus').textContent='연소점';
- selectionLabel.replaceChildren();selectionLabel.classList.add('compactHUD');selectionLabel.innerHTML='<div class="hudTitle"><b id="hudRoom"></b><span id="hudPill"></span></div><div class="hudValues"><span>상층 <b id="hudT"></b></span><span>O₂ <b id="hudO"></b></span><span>연기층 <b id="hudH"></b></span></div>';
+ selectionLabel.replaceChildren();selectionLabel.classList.add('compactHUD');selectionLabel.innerHTML='<div class="hudTitle"><b id="hudRoom"></b><span id="hudPill"></span></div><button id="hudOrigin" type="button" disabled>이 실을 화점으로</button><div class="hudValues"><span>상층 <b id="hudT"></b></span><span>O₂ <b id="hudO"></b></span><span>연기층 <b id="hudH"></b></span></div>';
+ listen($('hudOrigin'),'click',()=>onOrigin(store.get('selection').room_id));
  const style=document.createElement('style');style.dataset.pyrocastDisplay='true';style.textContent=`
  #shellPane-display{padding:12px 16px;box-sizing:border-box}#shellPane-display h3{font-size:12px;color:#b8cbd8;margin:14px 0 8px;font-weight:500}
  .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
@@ -41,13 +42,14 @@ export function createDisplayPanel({store,selectionLabel}){
  #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:wrap;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px}
  .legendChip[hidden]{display:none}
  #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeLegend br,#displayLegend #cfPlumeNumbers{display:none}
- body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
+ body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}#hudOrigin{pointer-events:auto;margin-top:5px;background:#1d4158;color:#eaf3f8;border:1px solid #577487;border-radius:4px;padding:3px 6px;cursor:pointer}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());$('legendHistory').hidden=!store.get('risk').history;const t=store.get('risk').threshold;$('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('legendCaution').textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('displayTemperature').value=store.get('realView').temperaturePattern;$('displaySmokeColor').value=store.get('realView').smokeColor;$('displayFlameStyle').value=store.get('realView').flameDisplay;$('liteOpacity').value=store.get('realView').smokeOpacity;}
  for(const slice of ['layers','openings','realView','risk'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
+  const allowed=!!isOriginAllowed(room?.room_id);$('hudOrigin').disabled=!allowed;$('hudOrigin').title=allowed?'선택한 원래 방을 탐색 화점으로 지정합니다':'화점 지정 가능한 실을 선택하세요';
   $('hudRoom').textContent=$('liteRoom').selectedOptions[0]?.textContent||'실 선택';
   const scores=phenomena.map(([key,name,color])=>({key,name,color,value:cell?result.index_by_cell[cell]?.[key]?.[index]:null})).filter(s=>Number.isFinite(s.value)).sort((a,b)=>b.value-a.value),top=scores[0];
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';

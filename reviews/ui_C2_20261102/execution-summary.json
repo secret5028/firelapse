@@ -1,0 +1,121 @@
+{
+  "batch_wall_s": 68.4286419,
+  "workers": 1,
+  "code_and_input_unchanged_during_batch": true,
+  "cases": [
+    {
+      "state": "open_except_confirmed",
+      "complete": true,
+      "safe_end_s": 3600.0,
+      "times": {
+        "integration_s": 22.54920299999958,
+        "preprocess_s": 0.13390919999983453,
+        "postprocess_s": 5.457404800000404,
+        "total_s": 30.682393499999307
+      },
+      "burning_room_count": 1,
+      "first_FO_s": null,
+      "attention_rooms": [],
+      "origin_budget": {
+        "room": "CAD_3F_R11",
+        "origin_fire_basis": "fuel_based",
+        "Q_origin_peak_kW": 1385.0087500000022,
+        "area_m2": 11.080070000000019,
+        "coverage": 0.5,
+        "hrrpua_kW_m2": 250,
+        "energy_MJ": 443.20280000000076,
+        "fuel_load_MJ_m2": 40.0,
+        "fuel_surface_peak_kW": 1385.0087500000022,
+        "ventilation_cap_kW": 4108.305307544706,
+        "external_A_sqrtH": 0,
+        "internal_max_A_sqrtH": 5.477740410059608,
+        "cap_basis": "0.5 × internal maximum",
+        "external_opening_ids": [],
+        "internal_max_opening_ids": [
+          "CAD_3F_D12"
+        ],
+        "vent_cap_k": 1.0,
+        "growth_kW_s2": 0.047,
+        "input_peak_used": false,
+        "classification": {
+          "class": "toilet",
+          "classification_basis": "화장실(여); 사용자 가정",
+          "room": "CAD_3F_R11",
+          "name": "화장실(여)",
+          "label": "화장실",
+          "area_m2": 11.080070000000019,
+          "load_MJ_m2": 40,
+          "hrrpua_kW_m2": 250,
+          "coverage": 0.5,
+          "table_basis": "project_assumption_user_approved_2026-10-25",
+          "value_basis": "fire_load_table.json mean/rhrf",
+          "passage_without_fire": true,
+          "graph_excluded": false,
+          "excluded_reason": "fuel load < 50 MJ/m²; retain flow/temperature node, no candidate or standby fire"
+        },
+        "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+      },
+      "fire_key": "CAD_3F_R11",
+      "playback_sha256": "8f394685e4fd181e0491883001ef6974f472e215fabdf25b2c970e9a6b5d2e0c",
+      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793581362271399500\\CAD_3F_R11\\open_except_confirmed"
+    },
+    {
+      "state": "closed",
+      "complete": true,
+      "safe_end_s": 3600.0,
+      "times": {
+        "integration_s": 23.144293199999993,
+        "preprocess_s": 0.14678420000018377,
+        "postprocess_s": 5.492466900000181,
+        "total_s": 31.17255959999966
+      },
+      "burning_room_count": 1,
+      "first_FO_s": null,
+      "attention_rooms": [
+        "CAD_3F_R11"
+      ],
+      "origin_budget": {
+        "room": "CAD_3F_R11",
+        "origin_fire_basis": "fuel_based",
+        "Q_origin_peak_kW": 1385.0087500000022,
+        "area_m2": 11.080070000000019,
+        "coverage": 0.5,
+        "hrrpua_kW_m2": 250,
+        "energy_MJ": 443.20280000000076,
+        "fuel_load_MJ_m2": 40.0,
+        "fuel_surface_peak_kW": 1385.0087500000022,
+        "ventilation_cap_kW": 4108.305307544706,
+        "external_A_sqrtH": 0,
+        "internal_max_A_sqrtH": 5.477740410059608,
+        "cap_basis": "0.5 × internal maximum",
+        "external_opening_ids": [],
+        "internal_max_opening_ids": [
+          "CAD_3F_D12"
+        ],
+        "vent_cap_k": 1.0,
+        "growth_kW_s2": 0.047,
+        "input_peak_used": false,
+        "classification": {
+          "class": "toilet",
+          "classification_basis": "화장실(여); 사용자 가정",
+          "room": "CAD_3F_R11",
+          "name": "화장실(여)",
+          "label": "화장실",
+          "area_m2": 11.080070000000019,
+          "load_MJ_m2": 40,
+          "hrrpua_kW_m2": 250,
+          "coverage": 0.5,
+          "table_basis": "project_assumption_user_approved_2026-10-25",
+          "value_basis": "fire_load_table.json mean/rhrf",
+          "passage_without_fire": true,
+          "graph_excluded": false,
+          "excluded_reason": "fuel load < 50 MJ/m²; retain flow/temperature node, no candidate or standby fire"
+        },
+        "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+      },
+      "fire_key": "CAD_3F_R11",
+      "playback_sha256": "9b7e322bdce93da9f3e63c739aed3edb0ab78497688c59fcc4db7da41b7badb1",
+      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793581362271399500\\CAD_3F_R11\\closed"
+    }
+  ]
+}

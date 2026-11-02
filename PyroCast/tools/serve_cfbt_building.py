@@ -388,16 +388,16 @@ def main():
                     return self.json({'started':True,'id':destination.name,'workers':1,'budget_s_per_sample':1200},202)
                 if request_path=='/cfbt/lite/screening':
                     import lite_screening_service as screening
-                    if not isinstance(body,dict) or set(body)-{'top_n','mc_room','run'}:raise ValueError('후보 선택 요청 오류')
+                    if not isinstance(body,dict) or set(body)-{'top_n','mc_room','run','rooms'}:raise ValueError('후보 선택 요청 오류')
                     if type(body.get('run',False)) is not bool:raise ValueError('run은 참/거짓입니다')
                     with lock:
                         external=screening.payload().get('progress') or {}
                         if state['busy'] or external.get('state')=='running':return self.json({'error':'현재 계산 중입니다. 완료 후 선택하세요.'},409)
-                        data=screening.select(body.get('top_n'),body.get('mc_room'))
+                        data=screening.select(body.get('top_n'),body.get('mc_room'),body.get('rooms'))
                         if not body.get('run'):return self.json(data)
                         state.update(busy=True,kind='lite_screening',error=None,started=time.monotonic())
                     def work():
-                        try:screening.compute(body['top_n'])
+                        try:screening.compute(body['top_n'],body.get('rooms'))
                         except Exception as exc:
                             with lock:state['error']=str(exc)
                         finally:

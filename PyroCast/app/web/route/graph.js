@@ -13,7 +13,7 @@ function aperturePoint(v,z){
 }
 export function readRouteGraph(building){
  const rooms=new Map(),edges=[],entrances=[],floors=new Map(building.floors.map(f=>[f.name,f]));
- for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:[...r.c,f.z],polys:r.polys,
+ for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:building.route_targets?.[id(f.name,r.id)]??[...r.c,f.z],polys:r.polys,
   elevator:(r.tags||[]).some(t=>['elev','elev_inside'].includes(t))});}
  for(const f of building.floors)for(const source of f.simulation_graph?.connections||[]){
   const v=f.openings.find(v=>v.id===source.id),[a,b]=source.sides,edge={id:id(f.name,source.id),source,kind:'door',a:id(f.name,a),b:id(f.name,b),floor:f.name,eligible:false};
@@ -40,7 +40,7 @@ export function readRouteGraph(building){
  });
  const ground=floors.get('1F');if(!ground)throw Error('1층 지면 미확인');
  const candidates=entrances.filter(e=>e.floor==='1F').sort((a,b)=>b.area-a.area||a.id.localeCompare(b.id));
- const main=candidates[0];if(!main)throw Error('1층 외부 문 미확인');
+ const main=building.route_entry_id?candidates.find(e=>e.id===building.route_entry_id):candidates[0];if(!main)throw Error('1층 외부 문 미확인');
  const leaves=main.opening.leaves||[],p=leaves[0]?.hinge,q=leaves.length>1?leaves.at(-1).hinge:leaves[0]?.closed;
  if(!p||!q)throw Error('주출입문 법선 미확인');
  const len=Math.hypot(q[0]-p[0],q[1]-p[1]);const normal=[-(q[1]-p[1])/len,(q[0]-p[0])/len];

@@ -33,6 +33,10 @@ export function createPanelShell({panel,store}){
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"><div id="shellMarks" aria-hidden="true"></div></div><output id="shellClock"></output><span id="shellStatus"></span>';
  document.body.append(header,sidebar,timeline);move($('fbtn'),header);
+ const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
+ for(const [label,url] of [['기존 3F 건물','http://127.0.0.1:8780/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
+ buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
+ header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
  const tabs=[],panes=[];
  for(const [id,label] of [['building','건물'],['explore','탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);
@@ -44,10 +48,10 @@ export function createPanelShell({panel,store}){
  listen($('shellMobileToggle'),'click',()=>{const expanded=document.body.classList.toggle('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded',String(expanded));$('shellMobileToggle').textContent=expanded?'패널 접기':'결과 패널 펼치기';});
  listen($('shellPlay'),'click',()=>store.dispatch('playback/play',{playing:!store.get('playback').playing}));
  listen($('shellSpeed'),'change',()=>{store.dispatch('playback/speed',{speed:+$('shellSpeed').value});$('liteSpeed').value=$('shellSpeed').value;});
- listen($('shellTime'),'input',()=>{const t_s=Math.floor(+$('shellTime').value/10)*10;store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s});});
+ listen($('shellTime'),'input',()=>{const t_s=+$('shellTime').value;store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s});});
  const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
  function sync(){const p=store.get('playback');$('shellPlay').textContent=p.playing?'일시정지':'재생';$('shellPlay').setAttribute('aria-pressed',String(p.playing));$('shellSpeed').value=p.speed;$('shellTime').max=p.t_end_s;$('shellTime').value=p.t_s;$('shellClock').textContent=`${stamp(p.t_s)} / ${stamp(p.t_end_s)}`;}
- function marks(){const r=store.get('result'),host=$('shellMarks');host.replaceChildren();if(!r?.t_end_s)return;
+ function marks(){const r=store.get('result'),host=$('shellMarks');host.replaceChildren();if(!r?.t_end_s)return;$('shellTime').step=r.dt_out_s||10;
   const entries=r.events.filter(e=>e.kind==='supply_start').map(e=>({t:e.t_s,title:`${e.room_id} 연료 공급 시작`,fo:false}));
   for(const [id,frames] of Object.entries(r.conditions)){const i=r.time_s.findIndex((_,i)=>frames[i]?.FO?.met===true);if(i>=0)entries.push({t:r.time_s[i],title:`${id} FO 조건 충족`,fo:true});}
   for(const e of entries){const mark=document.createElement('i');mark.style.left=Math.min(100,e.t/r.t_end_s*100)+'%';mark.className=e.fo?'fo':'';mark.title=e.title+' '+stamp(e.t);host.append(mark);}

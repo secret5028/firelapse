@@ -1,0 +1,149 @@
+{
+  "samples": 720,
+  "end_s": 3595,
+  "adapter_errors": [],
+  "source_temperature_hrr_indices_exact": true,
+  "route": {
+    "target": "CAD_1F_R5",
+    "entry": "CAD_1F_ENTRY_R5",
+    "vehicle": [
+      49.375,
+      -5,
+      0
+    ],
+    "segments": [
+      {
+        "a": [
+          49.375,
+          -5,
+          0
+        ],
+        "b": [
+          49.375,
+          0,
+          0
+        ],
+        "floor": "1F",
+        "room": null,
+        "stair": false,
+        "length": 5,
+        "start": 0,
+        "end": 5
+      },
+      {
+        "a": [
+          49.375,
+          0,
+          0
+        ],
+        "b": [
+          46.75,
+          17.95,
+          0
+        ],
+        "floor": "1F",
+        "room": "CAD_1F_R5",
+        "stair": false,
+        "length": 18.140924039309574,
+        "start": 5,
+        "end": 23.140924039309574
+      }
+    ],
+    "ticks": [
+      {
+        "number": 1,
+        "point": [
+          47.92799542938833,
+          9.894755063801679,
+          0
+        ],
+        "floor": "1F"
+      }
+    ],
+    "length": 23.140924039309574,
+    "hoses": 2,
+    "stairs": 0,
+    "edges": [],
+    "graph_edges": 8,
+    "source_edges": 8,
+    "traversable_edges": 0,
+    "limits": "실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음."
+  },
+  "cut": {
+    "times": [
+      1315,
+      1320,
+      1795,
+      1800,
+      2100
+    ],
+    "fractions": [
+      0,
+      0.5,
+      0.5,
+      1,
+      1
+    ],
+    "geometry": [
+      {
+        "t": 1315,
+        "visible": false,
+        "fraction": 0,
+        "width_m": 0.00002
+      },
+      {
+        "t": 1320,
+        "visible": true,
+        "fraction": 0.5,
+        "width_m": 1
+      },
+      {
+        "t": 1795,
+        "visible": true,
+        "fraction": 0.5,
+        "width_m": 1
+      },
+      {
+        "t": 1800,
+        "visible": true,
+        "fraction": 1,
+        "width_m": 2
+      },
+      {
+        "t": 2100,
+        "visible": true,
+        "fraction": 1,
+        "width_m": 2
+      }
+    ],
+    "builds": 1,
+    "subscriptions_after_dispose": 0
+  },
+  "conditions": [
+    {
+      "time_s": 1320,
+      "room": "R5",
+      "FO": 0,
+      "FGI": 32.52825740816667,
+      "backdraft": 32.52825740816667,
+      "rollover": 18.766302350865384
+    },
+    {
+      "time_s": 2100,
+      "room": "R5",
+      "FO": 0,
+      "FGI": 98.84192731799999,
+      "backdraft": 96.53820831597078,
+      "rollover": 82.02669049673077
+    },
+    {
+      "time_s": 3595,
+      "room": "R5",
+      "FO": 0,
+      "FGI": 3.9796517096621895,
+      "backdraft": 2.1228794234948265,
+      "rollover": 15.677365434307692
+    }
+  ],
+  "simulation_runs": 0
+}

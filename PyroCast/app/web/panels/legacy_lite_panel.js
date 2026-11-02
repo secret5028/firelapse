@@ -29,10 +29,10 @@ export function updateLitePanel({data,index,selected,clicked,playing,floor,$,sel
   const fireCount=data.fires.filter(f=>visibleKeys.has(f.cad_key)&&f.Q_kW[index]>0).length;
   $('liteVisible').textContent=$('liteReal').getAttribute('aria-pressed')==='true'?`연기 ${smokeCount}구역 · 화염 ${fireCount}곳`:'실감 표시 꺼짐';
   $('liteClock').textContent=`${stamp(time)} / ${stamp(data.time_s.at(-1))}`;$('liteTime').value=time;$('litePlay').textContent=playing?'일시정지':'재생';
-  const s=data.solvers[selected.key],d=s.display_v8,event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
-  $('liteDetail').textContent=clicked?`${name(selected)} · ${d.phenomenon[index]} · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
+  const s=data.solvers[selected.solver_id],d=s.display_v8,event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
+  $('liteDetail').textContent=clicked?`${name(selected)} · ${d?.phenomenon?.[index]??'저장 조건 지수'} · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
   $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트'],['rollover','롤오버']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
-  $('liteStatus').textContent=`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
+  $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);
  $('liteRiskStatus').textContent=riskStatus;
@@ -67,7 +67,7 @@ export async function createMenuReview(panel,viewer){
   const source=await (await fetch('/cfbt/overlay.js')).text(),match=source.match(/panel\.innerHTML=`([\s\S]*?)`;/);
   if(match){const node=document.createElement('div');node.innerHTML=match[1];snapshot('4 · 이전 CFAST 재생·점화 비교·계산 조건 (간략 결과에 미연결)',node);}
  }catch(e){const p=document.createElement('p');p.textContent='이전 메뉴 로드 실패: '+e.message;sections.append(p);}
- const modules=[['5 · 동결 정밀 r8 설정·저장된 결과','./frozen_rule_controls.js','attachFrozenRules'],['6 · 문 자동 분류·정정 메뉴','./lite_doors.js','attachLiteDoors'],['7 · 화점 선별·상위 N·비교 결과','./screening.js','attachScreening']];
+ const modules=viewer.B.building_id==='wando-coldstore'?[]:[['5 · 동결 정밀 r8 설정·저장된 결과','./frozen_rule_controls.js','attachFrozenRules'],['6 · 문 자동 분류·정정 메뉴','./lite_doors.js','attachLiteDoors'],['7 · 화점 선별·상위 N·비교 결과','./screening.js','attachScreening']];
  for(const [title,path,method] of modules){
   const host=section(title),disabled=document.createElement('fieldset');disabled.disabled=true;host.append(disabled);
   try{const module=await import(path);const component=await module[method](disabled,method==='attachFrozenRules'?()=>{throw Error('메뉴 검토 화면에서는 계산하지 않습니다.');}:viewer);if(component?.dispose)cleanups.push(()=>component.dispose());for(const d of disabled.querySelectorAll('details'))d.open=true;}

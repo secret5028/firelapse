@@ -591,7 +591,7 @@ function aperturePoint(v,z){
 }
 function readRouteGraph(building){
  const rooms=new Map(),edges=[],entrances=[],floors=new Map(building.floors.map(f=>[f.name,f]));
- for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:[...r.c,f.z],polys:r.polys,
+ for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:building.route_targets?.[id(f.name,r.id)]??[...r.c,f.z],polys:r.polys,
   elevator:(r.tags||[]).some(t=>['elev','elev_inside'].includes(t))});}
  for(const f of building.floors)for(const source of f.simulation_graph?.connections||[]){
   const v=f.openings.find(v=>v.id===source.id),[a,b]=source.sides,edge={id:id(f.name,source.id),source,kind:'door',a:id(f.name,a),b:id(f.name,b),floor:f.name,eligible:false};
@@ -618,7 +618,7 @@ function readRouteGraph(building){
  });
  const ground=floors.get('1F');if(!ground)throw Error('1층 지면 미확인');
  const candidates=entrances.filter(e=>e.floor==='1F').sort((a,b)=>b.area-a.area||a.id.localeCompare(b.id));
- const main=candidates[0];if(!main)throw Error('1층 외부 문 미확인');
+ const main=building.route_entry_id?candidates.find(e=>e.id===building.route_entry_id):candidates[0];if(!main)throw Error('1층 외부 문 미확인');
  const leaves=main.opening.leaves||[],p=leaves[0]?.hinge,q=leaves.length>1?leaves.at(-1).hinge:leaves[0]?.closed;
  if(!p||!q)throw Error('주출입문 법선 미확인');
  const len=Math.hypot(q[0]-p[0],q[1]-p[1]);const normal=[-(q[1]-p[1])/len,(q[0]-p[0])/len];
@@ -1043,7 +1043,8 @@ function frame(s,i,cid){const d=s.display_v8;const f={smoke_stage:at(d?.smoke_st
 }
 
 async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,building,resultId,sourceRefs={}}){
- if(p.engine_kind!=='pyrocast_lite')throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
+ const native=p.engine_kind==='cfast_native'&&p.native_mapping==='wando-c11-p1-v1';
+ if(p.engine_kind!=='pyrocast_lite'&&!native)throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
  const errors=[],notes=[],n=p.time_s.length;
  if(!n||p.time_s.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=p.time_s[i-1])))throw Error('Time axis must be finite and strictly increasing');
  if(sourceResult&&JSON.stringify(sourceResult.t)!==JSON.stringify(p.time_s))throw Error('Sidecar result time axis mismatch');
@@ -1099,11 +1100,11 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
  const openingRisk=summary?.opening_risk;
  const risk=openingRisk?.status==='evaluated'?Object.fromEntries(Object.entries(openingRisk.rooms).map(([rid,intervals])=>[rid,intervals.map(v=>[v.start_sample_s,v.end_sample_s])])):null;
  const gaps=p.time_s.slice(1).map((t,i)=>t-p.time_s[i]),history=indexHistoryExtrema(indexByCell,p.time_s);
- return {schema:'pyrocast.result/1',result_id:resultId,engine:{kind:'lite',version:sourceResult?.lite_revision??sourceResult?.revision??null,sha256:p.provenance?.engine_sha256??null},
+ return {schema:'pyrocast.result/1',result_id:resultId,engine:{kind:native?'cfast':'lite',version:native?'7.7.7':sourceResult?.lite_revision??sourceResult?.revision??null,sha256:p.provenance?.engine_sha256??null},
   scenario:{building_id:building.building_id,floor_id:building.floors.length===1?building.floors[0].floor_id:null,
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
-  status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
+  status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
   limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
@@ -1301,15 +1302,21 @@ class OpeningsLayer extends EmptyLayer {
     if(face){const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(face.corners.map(p=>new T.Vector3(...p)))),windowMaterial),'openings.window');
      line.name=`exterior-window-${floor.name}-${opening.id}`;line.raycast=()=>{};
      line.userData.exteriorNormal=new T.Vector3(...face.normal);line.userData.exteriorCenter=new T.Vector3(...face.center);windows.add(line);}
-    if(opening.kind!=='door'||opening.connection_status!=='interior')continue;
+    if(opening.kind!=='door'||(opening.connection_status!=='interior'&&!opening.display_frame))continue;
     let spans=(opening.leaves||[]).map(l=>[l.hinge,l.closed]);
     if(!spans.length){let longest=0,span=null;for(const ring of opening.polys||[])for(let j=0;j<ring.length;j++){
      const a=ring[j],b=ring[(j+1)%ring.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(length>longest){longest=length;span=[a,b];}
     }if(span)spans=[span];}
     const height=opening.door_h||floor.door_h||2.1;
-    for(const [a,b] of spans){const vertices=[[...a,.035],[...b,.035],[...b,height],[...a,height]].map(p=>new T.Vector3(...p));
+    for(const [a,b] of spans){const vertices=[[...a,opening.sill_m??.035],[...b,opening.sill_m??.035],[...b,height],[...a,height]].map(p=>new T.Vector3(...p));
      const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(vertices)),doorMaterial),'openings.door');
      line.name=`interior-door-${floor.name}-${opening.id}`;line.raycast=()=>{};doors.add(line);}
+    if(opening.display_schedule){const [a,b]=spans[0],bottom=opening.sill_m??.035;
+     const material=this.own(new T.MeshBasicMaterial({color:'#62dcb0',transparent:true,opacity:.35,side:T.DoubleSide,depthTest:false,depthWrite:false}));
+     const fill=new T.Mesh(this.own(new T.PlaneGeometry(Math.hypot(b[0]-a[0],b[1]-a[1]),height-bottom)),material);
+     fill.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,(bottom+height)/2);fill.rotation.set(Math.PI/2,0,Math.atan2(b[1]-a[1],b[0]-a[0]));fill.renderOrder=34;
+     fill.name='scheduled-opening-'+opening.id;fill.userData.schedule=opening.display_schedule;fill.raycast=()=>{};doors.add(fill);
+    }
    }
   }
  }
@@ -1328,6 +1335,7 @@ class OpeningsLayer extends EmptyLayer {
    const visible=row.group.visible&&(floorId===null||row.id===floorId);
    for(const group of [windows,doors]){group.position.copy(row.group.position);group.updateWorldMatrix(true,false);}
    windows.visible=visible&&this.parts.window;doors.visible=visible&&this.parts.door;
+   for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}
    for(const line of windows.children){this.center.copy(line.userData.exteriorCenter).applyMatrix4(windows.matrixWorld);
     this.normal.copy(line.userData.exteriorNormal).transformDirection(windows.matrixWorld);
     line.visible=this.delta.copy(this.cameraPosition).sub(this.center).dot(this.normal)>0;this.windowChecks++;}
@@ -1842,10 +1850,10 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
   const fireCount=data.fires.filter(f=>visibleKeys.has(f.cad_key)&&f.Q_kW[index]>0).length;
   $('liteVisible').textContent=$('liteReal').getAttribute('aria-pressed')==='true'?`연기 ${smokeCount}구역 · 화염 ${fireCount}곳`:'실감 표시 꺼짐';
   $('liteClock').textContent=`${stamp(time)} / ${stamp(data.time_s.at(-1))}`;$('liteTime').value=time;$('litePlay').textContent=playing?'일시정지':'재생';
-  const s=data.solvers[selected.key],d=s.display_v8,event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
-  $('liteDetail').textContent=clicked?`${name(selected)} · ${d.phenomenon[index]} · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
+  const s=data.solvers[selected.solver_id],d=s.display_v8,event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
+  $('liteDetail').textContent=clicked?`${name(selected)} · ${d?.phenomenon?.[index]??'저장 조건 지수'} · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
   $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트'],['rollover','롤오버']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
-  $('liteStatus').textContent=`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
+  $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);
  $('liteRiskStatus').textContent=riskStatus;
@@ -1880,7 +1888,7 @@ async function createMenuReview(panel,viewer){
   const source=await (await fetch('/cfbt/overlay.js')).text(),match=source.match(/panel\.innerHTML=`([\s\S]*?)`;/);
   if(match){const node=document.createElement('div');node.innerHTML=match[1];snapshot('4 · 이전 CFAST 재생·점화 비교·계산 조건 (간략 결과에 미연결)',node);}
  }catch(e){const p=document.createElement('p');p.textContent='이전 메뉴 로드 실패: '+e.message;sections.append(p);}
- const modules=[['5 · 동결 정밀 r8 설정·저장된 결과','./frozen_rule_controls.js','attachFrozenRules'],['6 · 문 자동 분류·정정 메뉴','./lite_doors.js','attachLiteDoors'],['7 · 화점 선별·상위 N·비교 결과','./screening.js','attachScreening']];
+ const modules=viewer.B.building_id==='wando-coldstore'?[]:[['5 · 동결 정밀 r8 설정·저장된 결과','./frozen_rule_controls.js','attachFrozenRules'],['6 · 문 자동 분류·정정 메뉴','./lite_doors.js','attachLiteDoors'],['7 · 화점 선별·상위 N·비교 결과','./screening.js','attachScreening']];
  for(const [title,path,method] of modules){
   const host=section(title),disabled=document.createElement('fieldset');disabled.disabled=true;host.append(disabled);
   try{const module=await import(path);const component=await module[method](disabled,method==='attachFrozenRules'?()=>{throw Error('메뉴 검토 화면에서는 계산하지 않습니다.');}:viewer);if(component?.dispose)cleanups.push(()=>component.dispose());for(const d of disabled.querySelectorAll('details'))d.open=true;}
@@ -1930,6 +1938,10 @@ function createPanelShell({panel,store}){
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"><div id="shellMarks" aria-hidden="true"></div></div><output id="shellClock"></output><span id="shellStatus"></span>';
  document.body.append(header,sidebar,timeline);move($('fbtn'),header);
+ const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
+ for(const [label,url] of [['기존 3F 건물','http://127.0.0.1:8780/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
+ buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
+ header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
  const tabs=[],panes=[];
  for(const [id,label] of [['building','건물'],['explore','탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);
@@ -1941,10 +1953,10 @@ function createPanelShell({panel,store}){
  listen($('shellMobileToggle'),'click',()=>{const expanded=document.body.classList.toggle('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded',String(expanded));$('shellMobileToggle').textContent=expanded?'패널 접기':'결과 패널 펼치기';});
  listen($('shellPlay'),'click',()=>store.dispatch('playback/play',{playing:!store.get('playback').playing}));
  listen($('shellSpeed'),'change',()=>{store.dispatch('playback/speed',{speed:+$('shellSpeed').value});$('liteSpeed').value=$('shellSpeed').value;});
- listen($('shellTime'),'input',()=>{const t_s=Math.floor(+$('shellTime').value/10)*10;store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s});});
+ listen($('shellTime'),'input',()=>{const t_s=+$('shellTime').value;store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s});});
  const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
  function sync(){const p=store.get('playback');$('shellPlay').textContent=p.playing?'일시정지':'재생';$('shellPlay').setAttribute('aria-pressed',String(p.playing));$('shellSpeed').value=p.speed;$('shellTime').max=p.t_end_s;$('shellTime').value=p.t_s;$('shellClock').textContent=`${stamp(p.t_s)} / ${stamp(p.t_end_s)}`;}
- function marks(){const r=store.get('result'),host=$('shellMarks');host.replaceChildren();if(!r?.t_end_s)return;
+ function marks(){const r=store.get('result'),host=$('shellMarks');host.replaceChildren();if(!r?.t_end_s)return;$('shellTime').step=r.dt_out_s||10;
   const entries=r.events.filter(e=>e.kind==='supply_start').map(e=>({t:e.t_s,title:`${e.room_id} 연료 공급 시작`,fo:false}));
   for(const [id,frames] of Object.entries(r.conditions)){const i=r.time_s.findIndex((_,i)=>frames[i]?.FO?.met===true);if(i>=0)entries.push({t:r.time_s[i],title:`${id} FO 조건 충족`,fo:true});}
   for(const e of entries){const mark=document.createElement('i');mark.style.left=Math.min(100,e.t/r.t_end_s*100)+'%';mark.className=e.fo?'fo':'';mark.title=e.title+' '+stamp(e.t);host.append(mark);}
@@ -2551,7 +2563,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let routeGraph;try{routeGraph=readRouteGraph(B);}catch(error){routeGraph={error:error.message,ground:{z:0,slab:[]},mainEntrance:null,defaultVehicle:null};}
  const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),vehicleSource=referenceGroup?.children.find(c=>c.isGroup);
  let routeUI=null;
- const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
+ const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
  const layers=[buildingLayer,openings,core,...real,risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
@@ -2620,7 +2632,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
   if(store.get('playback').playing){fractional+=Math.min(.2,Math.max(0,(ms-last)/1000))*store.get('playback').speed;
-   if(fractional>=10){const next=Math.min(data.time_s.at(-1),store.get('playback').t_s+Math.floor(fractional/10)*10);fractional%=10;store.dispatch('playback/seek',{t_s:next});if(next===data.time_s.at(-1))store.dispatch('playback/play',{playing:false});}}
+   const step=data.output_step_s||10;if(fractional>=step){const next=Math.min(data.time_s.at(-1),store.get('playback').t_s+Math.floor(fractional/step)*step);fractional%=step;store.dispatch('playback/seek',{t_s:next});if(next===data.time_s.at(-1))store.dispatch('playback/play',{playing:false});}}
   render();last=ms;
  }
  R.render=frame;
@@ -2654,7 +2666,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  handler($('liteReal'),'onclick',()=>{const enabled=!store.get('realView').enabled;store.dispatch('realView/set',{enabled});$('liteReal').setAttribute('aria-pressed',String(enabled));render();});
  handler($('litePlay'),'onclick',()=>{store.dispatch('playback/play',{playing:!store.get('playback').playing});render();});
  handler($('liteSpeed'),'onchange',()=>store.dispatch('playback/speed',{speed:+$('liteSpeed').value}));store.dispatch('playback/speed',{speed:20});
- handler($('liteTime'),'oninput',()=>{store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s:Math.floor(+$('liteTime').value/10)*10});render();});
+ handler($('liteTime'),'oninput',()=>{store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s:+$('liteTime').value});render();});
  handler($('liteFold'),'onclick',()=>{$('liteBody').hidden=!$('liteBody').hidden;$('liteFold').textContent=$('liteBody').hidden?'펼치기':'접기';});
  async function install(payload,id){
   if(payload.schema!=='pyrocast-cad-playback-1'||!payload.complete||payload.building_sha256!==initial.building_sha256)throw Error('다른 건물 또는 미완료 계산 결과입니다. 표시하지 않습니다.');
@@ -2667,7 +2679,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   ready=false;data=payload;chosen=id;rawSource={source_hash:payload.building_sha256,result_id:id,data:payload,B,groups};store.dispatch('building/set',building);store.dispatch('result/receive',{seq,result});
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;select(selected.key);$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
-  lastPanel='';ruleContext();ready=true;viewer.setFloor('3F');render();fitFloor();return true;
+  $('liteTime').step=data.output_step_s||10;
+  lastPanel='';ruleContext();ready=true;viewer.setFloor(selected.cad_floor);render();fitFloor();return true;
  }
  let mcSummary=null,mcRun=0,mcAbort=null;
  async function saveFixed(body){
@@ -2706,7 +2719,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
  await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();await refreshMC();await aiFuel.refresh();
- try{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;
+ try{if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}
  const review=await createMenuReview(panel,viewer);results.mountReview(review);handler($('reviewClose'),'onclick',()=>{$('resultMenuReview').open=false;});handler($('liteReview'),'onclick',()=>{$('shellTab-result').click();$('resultMenuReview').open=true;});document.body.classList.add('cfbtReady');resize();
@@ -2730,7 +2743,7 @@ async function attach(viewer){
  const pending=(async()=>{
   if(new URL(location.href).searchParams.get('ui')==='legacy')return attachLegacy(viewer);
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;
-  if(data?.engine_kind!=='pyrocast_lite')return attachLegacy(viewer);
+  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&data.native_mapping==='wando-c11-p1-v1'))return attachLegacy(viewer);
   document.documentElement.dataset.pyrocastUi='modern';
   return attachModern(viewer,data);
  })();attached.set(viewer.R.domElement,pending);return pending;

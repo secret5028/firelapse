@@ -19,15 +19,21 @@ export class OpeningsLayer extends EmptyLayer {
     if(face){const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(face.corners.map(p=>new T.Vector3(...p)))),windowMaterial),'openings.window');
      line.name=`exterior-window-${floor.name}-${opening.id}`;line.raycast=()=>{};
      line.userData.exteriorNormal=new T.Vector3(...face.normal);line.userData.exteriorCenter=new T.Vector3(...face.center);windows.add(line);}
-    if(opening.kind!=='door'||opening.connection_status!=='interior')continue;
+    if(opening.kind!=='door'||(opening.connection_status!=='interior'&&!opening.display_frame))continue;
     let spans=(opening.leaves||[]).map(l=>[l.hinge,l.closed]);
     if(!spans.length){let longest=0,span=null;for(const ring of opening.polys||[])for(let j=0;j<ring.length;j++){
      const a=ring[j],b=ring[(j+1)%ring.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(length>longest){longest=length;span=[a,b];}
     }if(span)spans=[span];}
     const height=opening.door_h||floor.door_h||2.1;
-    for(const [a,b] of spans){const vertices=[[...a,.035],[...b,.035],[...b,height],[...a,height]].map(p=>new T.Vector3(...p));
+    for(const [a,b] of spans){const vertices=[[...a,opening.sill_m??.035],[...b,opening.sill_m??.035],[...b,height],[...a,height]].map(p=>new T.Vector3(...p));
      const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(vertices)),doorMaterial),'openings.door');
      line.name=`interior-door-${floor.name}-${opening.id}`;line.raycast=()=>{};doors.add(line);}
+    if(opening.display_schedule){const [a,b]=spans[0],bottom=opening.sill_m??.035;
+     const material=this.own(new T.MeshBasicMaterial({color:'#62dcb0',transparent:true,opacity:.35,side:T.DoubleSide,depthTest:false,depthWrite:false}));
+     const fill=new T.Mesh(this.own(new T.PlaneGeometry(Math.hypot(b[0]-a[0],b[1]-a[1]),height-bottom)),material);
+     fill.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,(bottom+height)/2);fill.rotation.set(Math.PI/2,0,Math.atan2(b[1]-a[1],b[0]-a[0]));fill.renderOrder=34;
+     fill.name='scheduled-opening-'+opening.id;fill.userData.schedule=opening.display_schedule;fill.raycast=()=>{};doors.add(fill);
+    }
    }
   }
  }
@@ -46,6 +52,7 @@ export class OpeningsLayer extends EmptyLayer {
    const visible=row.group.visible&&(floorId===null||row.id===floorId);
    for(const group of [windows,doors]){group.position.copy(row.group.position);group.updateWorldMatrix(true,false);}
    windows.visible=visible&&this.parts.window;doors.visible=visible&&this.parts.door;
+   for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}
    for(const line of windows.children){this.center.copy(line.userData.exteriorCenter).applyMatrix4(windows.matrixWorld);
     this.normal.copy(line.userData.exteriorNormal).transformDirection(windows.matrixWorld);
     line.visible=this.delta.copy(this.cameraPosition).sub(this.center).dot(this.normal)>0;this.windowChecks++;}

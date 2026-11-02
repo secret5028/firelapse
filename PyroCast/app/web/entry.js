@@ -6,7 +6,7 @@ export async function attach(viewer){
  const pending=(async()=>{
   if(new URL(location.href).searchParams.get('ui')==='legacy')return attachLegacy(viewer);
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;
-  if(data?.engine_kind!=='pyrocast_lite')return attachLegacy(viewer);
+  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&data.native_mapping==='wando-c11-p1-v1'))return attachLegacy(viewer);
   document.documentElement.dataset.pyrocastUi='modern';
   return attachModern(viewer,data);
  })();attached.set(viewer.R.domElement,pending);return pending;

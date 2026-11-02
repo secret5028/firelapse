@@ -1,5 +1,6 @@
 """Viewer adapter for v8 two-state comparisons, independent of operating playback."""
 import json,time,subprocess,sys
+from lite_fixed_openings import classifications
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
@@ -14,7 +15,7 @@ def payload(top_n=None):
     from pyrocast_lite.screening_v8_approved import score
     selection=read(SAVED,{})
     raw=read(SIM/'results/room_rule_r8_20261025/source-scenario.json')
-    scored=score(raw,top_n if top_n is not None else selection.get('top_n',3),door_overrides=read(SIM/'config/lite-door-overrides.json',{}))
+    scored=score(raw,top_n if top_n is not None else selection.get('top_n',3),door_overrides=classifications(read(SIM/'config/lite-door-overrides.json',{})))
     from lite_manual_origin import origins
     manual=origins(scored)
     scored.pop('classified_model')

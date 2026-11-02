@@ -16,7 +16,7 @@ export function createRoutePanel({store,graph}){
   summary.querySelector('#routeRiskBasis').textContent=r.error||`${stamp} · ${display?.history?'누적 이력':'현재 시점'}`;
   for(const row of display?.rows||[]){const tr=document.createElement('tr');tr.dataset.room=row.room||'OUTSIDE';tr.dataset.color=row.color;tr.dataset.index=row.index??'';
    const hose=row.hose_first===row.hose_last?String(row.hose_first):`${row.hose_first}–${row.hose_last}`;
-   for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,row.phenomenon,row.index===null?'—':Math.round(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+   for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,Number.isFinite(row.index)&&row.index<70?'—':row.phenomenon,row.index===null?'—':Math.round(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
    tr.children[4].style.color=row.index===null?'#b8cbd8':row.color;tr.title=row.index===null?'저장된 평가 없음':`${row.source_cell} · ${row.type} ${row.index.toFixed(2)}${row.partial?' · 일부 지수 미평가':''}`;body.append(tr);
   }
   $('routeDiagnostics').textContent=JSON.stringify({main:graph.mainEntrance?.id,main_point:graph.mainEntrance?.point,default_vehicle:graph.defaultVehicle,...r});},dispose(){cleanup.forEach(f=>f());hud.remove();container.remove();summary.remove();}};

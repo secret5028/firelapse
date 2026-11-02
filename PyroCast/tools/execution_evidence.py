@@ -92,10 +92,12 @@ def _current_matches(request, started, raw, sample, manifest):
     if started.get('parameters') != PARAMS:
         raise ValueError('Execution parameters changed')
     body = {k: request[k] for k in ('room', 'samples', 'duration_s', 'seed')}
+    if request.get('manual'):body['manual']=True
     _, current = prepare_request(body, request['building_sha256'])
     if digest(current) != digest(raw):
         raise ValueError('Current input, fuel settings or door corrections changed')
-    samples = make_samples(current, seed=request['seed'], count=request['samples'])
+    from lite_fixed_openings import sample_fixed_states
+    samples = make_samples(current, seed=request['seed'], count=request['samples'], fixed_states=sample_fixed_states(current))
     expected = next((s for s in samples if s['id'] == sample['id']), None)
     if expected is None or digest(expected['scenario']) != digest(sample['scenario']):
         raise ValueError('Sample input differs')

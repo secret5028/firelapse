@@ -1,0 +1,122 @@
+{
+  "case": "S06",
+  "doors": [
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D0",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D1",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_D2",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D3",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D4",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D5",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_D6",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_D7",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_D8",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D9",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_D10",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D11",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_D12",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D13",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_D14",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_W25",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_W26",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_W27",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_W28",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 0,
+      "id": "CAD_3F_W29",
+      "text": "닫힘 (0%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_W30",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_EV0",
+      "text": "열림 (100%)"
+    },
+    {
+      "fraction": 1,
+      "id": "CAD_3F_EV1",
+      "text": "열림 (100%)"
+    }
+  ],
+  "fixed": "확정 급기 상태: 표본 S00 적용 · 69개구부",
+  "time": "0"
+}

@@ -15,12 +15,12 @@ def validate_rooms(scored, rooms):
     if rooms[0] not in {r['room'] for r in origins(scored)}:raise ValueError('연료와 양의 화원 상한이 있는 원래 방을 선택하세요')
     return rooms
 
-def manual_scenario(scored, rid, state):
+def manual_scenario(scored, rid, state, duration=3600):
     from pyrocast_lite.screening_v8_approved import scenario
     validate_rooms(scored,[rid]);local=deepcopy(scored)
     if rid not in {r['room'] for r in local['ranked']}:
         local['ranked'].append(next(r for r in local['excluded'] if r['room']==rid))
-    data=scenario(local,rid,state);data['cad']['fire_key']=rid
+    data=scenario(local,rid,state,duration=duration);data['cad']['fire_key']=rid
     data['screening_source']['selection_mode']='user_designated'
     data['screening_source']['automatic_exclusion']=next(r for r in origins(scored) if r['room']==rid)['excluded_reason']
     return data

@@ -1,4 +1,5 @@
 """Reuse completed approved N=5, append ranks6-8 only, strictly serial."""
+from lite_fixed_openings import classifications
 import os
 for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):os.environ[key]='1'
 import time,json
@@ -15,7 +16,7 @@ def main():
     if prior['complete_scenarios']!=10:raise ValueError('Prior ten cases must be complete')
     if not all(batch.sha(ROOT/p)==h for p,h in snapshot['sha256'].items()):raise ValueError('Prior inputs/code changed; cannot reuse silently')
     raw=batch.read(batch.base.inputs()['3F']);overrides=ROOT/'simulation/config/lite-door-overrides.json'
-    s=score(raw,8,door_overrides=batch.read(overrides) if overrides.exists() else None)
+    s=score(raw,8,door_overrides=classifications(batch.read(overrides) if overrides.exists() else None))
     if {r['room'] for r in s['ranked'][:5]}!={r['room'] for r in prior['rows']}:raise ValueError('Prior candidate mismatch')
     batch.base.save(OUT/'score.json',{k:v for k,v in s.items() if k!='classified_model'})
     batch.base.save(OUT/'started.json',{'workers':1,'top_n':8,'new_scenarios':6,'reused_scenarios':10,

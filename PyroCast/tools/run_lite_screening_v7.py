@@ -1,4 +1,5 @@
 """v7 stage3: N sources x two extreme states, strictly serial, then stop."""
+from lite_fixed_openings import classifications
 import os
 for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):os.environ[key]='1'
 import argparse,json,time,hashlib
@@ -41,7 +42,7 @@ def run_batch(top_n=3,out=DEFAULT_OUT):
     if not out.is_relative_to((base.ROOT/'simulation/results').resolve()):raise ValueError('Output outside results')
     if (out/'started.json').exists():raise RuntimeError('Already attempted; no automatic rerun')
     raw=read(base.inputs()['3F']);overrides=base.ROOT/'simulation/config/lite-door-overrides.json'
-    scored=score(raw,top_n,door_overrides=read(overrides) if overrides.exists() else None)
+    scored=score(raw,top_n,door_overrides=classifications(read(overrides) if overrides.exists() else None))
     base.save(out/'score.json',{k:v for k,v in scored.items() if k!='classified_model'})
     paths=[*sorted((base.ROOT/'simulation/pyrocast_lite').glob('*.py')),*sorted((base.ROOT/'simulation/pyrocast_lite').glob('*.json')),
            *sorted((base.ROOT/'simulation/pyrocast_cfbt').glob('*.py')),base.inputs()['3F'],base.ROOT/'specs/Claude명세-확정상태-v7-20261025.md']

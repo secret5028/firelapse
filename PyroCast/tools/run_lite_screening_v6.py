@@ -1,4 +1,5 @@
 """v6 stage2 only: cheap scoring followed by N serial cases, no MC."""
+from lite_fixed_openings import classifications
 import os
 for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):os.environ[key]='1'
 import argparse,json,time,hashlib
@@ -20,7 +21,7 @@ def run_batch(top_n=3,out=DEFAULT_OUT):
     if not out.is_relative_to((base.ROOT/'simulation/results').resolve()):raise ValueError('Output outside results')
     if (out/'started.json').exists():raise RuntimeError('Batch already attempted; no automatic rerun')
     raw=read(base.inputs()['3F']);overrides=base.ROOT/'simulation/config/lite-door-overrides.json'
-    scored=score(raw,top_n,door_overrides=read(overrides) if overrides.exists() else None)
+    scored=score(raw,top_n,door_overrides=classifications(read(overrides) if overrides.exists() else None))
     public={k:v for k,v in scored.items() if k!='representative_model'}
     base.save(out/'score.json',public)
     source_code={str(p.relative_to(base.ROOT)):sha(p) for p in (base.ROOT/'simulation/pyrocast_lite').glob('*.py')}

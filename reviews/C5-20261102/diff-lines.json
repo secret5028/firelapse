@@ -1,0 +1,112 @@
+[
+  {
+    "file": "app/README.md",
+    "added": 5,
+    "removed": 0
+  },
+  {
+    "file": "app/web/controller.js",
+    "added": 21,
+    "removed": 2
+  },
+  {
+    "file": "app/web/panels/building.js",
+    "added": 5,
+    "removed": 4
+  },
+  {
+    "file": "app/web/panels/explore.js",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "app/web/panels/results.js",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "app/web/panels/route.js",
+    "added": 1,
+    "removed": 1
+  },
+  {
+    "file": "simulation/viewer/overlay.js",
+    "added": 30,
+    "removed": 9
+  },
+  {
+    "file": "tools/execution_evidence.py",
+    "added": 3,
+    "removed": 1
+  },
+  {
+    "file": "tools/extend_lite_screening_v8_n8.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/lite_manual_origin.py",
+    "added": 2,
+    "removed": 2
+  },
+  {
+    "file": "tools/lite_mc_service.py",
+    "added": 20,
+    "removed": 6
+  },
+  {
+    "file": "tools/lite_screening_service.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/report_lite_doors_v7.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/run_lite_l1e.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/run_lite_mc.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/run_lite_screening_v6.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/run_lite_screening_v7.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/run_lite_screening_v8.py",
+    "added": 2,
+    "removed": 1
+  },
+  {
+    "file": "tools/run_lite_screening_v8_approved.py",
+    "added": 4,
+    "removed": 2
+  },
+  {
+    "file": "tools/serve_cfbt_building.py",
+    "added": 18,
+    "removed": 3
+  },
+  {
+    "file": "tools/lite_fixed_openings.py",
+    "added": 122,
+    "removed": 0
+  },
+  {
+    "file": "app/tests/fixed_openings.test.py",
+    "added": 97,
+    "removed": 0
+  }
+]

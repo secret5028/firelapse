@@ -49,7 +49,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
- const buildingPanel=createBuildingPanel({store,onSave:saveDoor,onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
+ const buildingPanel=createBuildingPanel({store,onSave:saveDoor,onClearFixed:()=>saveFixed({clear:true}),onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
  async function saveDoor(id,door_class){if(store.get('buildingReview').saving||disposed)return;store.dispatch('buildingReview/set',{saving:true,status:'저장 중…'});try{const response=await fetch('/cfbt/lite/doors',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({id,door_class})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(disposed)return;store.dispatch('buildingReview/set',{doors:value,status:id+' · 저장 완료'});await refreshScreening();}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'저장 실패 · '+e.message});}finally{if(!disposed)store.dispatch('buildingReview/set',{saving:false});}}
 
@@ -64,7 +64,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  }
  async function runMC(){
   const selection=store.get('exploration');explore.mcState(mcJobState||{available:true},true);
-  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:data.time_s.at(-1),seed:20261025})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
+  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:data.time_s.at(-1),seed:20261025,manual:selection.origin_mode==='manual'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
   catch(error){if(!disposed)explore.mcState({...mcJobState,available:true,error:error.message});}
  }
  let catalogOrigin=null;
@@ -161,6 +161,25 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   lastPanel='';ruleContext();ready=true;viewer.setFloor('3F');render();fitFloor();return true;
  }
  let mcSummary=null,mcRun=0,mcAbort=null;
+ async function saveFixed(body){
+  if(disposed||store.get('buildingReview').saving)return;
+  store.dispatch('buildingReview/set',{saving:true,status:'확정 급기 저장 중…'});
+  $('resultMCApplyWorst').disabled=true;
+  try{
+   const response=await fetch('/cfbt/lite/fixed-openings',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+   const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);
+   if(disposed)return;
+   store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
+   $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
+   await refreshScreening();await catalog();
+   $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
+  }catch(error){
+   if(!disposed){store.dispatch('buildingReview/set',{status:'확정 급기 저장 실패 · '+error.message});$('resultMCStatus').textContent=error.message;}
+  }finally{
+   if(!disposed){store.dispatch('buildingReview/set',{saving:false});$('resultMCApplyWorst').disabled=!mcSummary?.worst;}
+  }
+ }
+ handler($('resultMCApplyWorst'),'onclick',()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id});});
  const reuseByCase=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});

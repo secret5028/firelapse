@@ -1,4 +1,5 @@
 """L1 section1.5 staged diagnostic runs, without native CFAST execution."""
+from lite_fixed_openings import classifications
 import os
 for k in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):os.environ[k]='1'
 import argparse,json,time,concurrent.futures
@@ -42,7 +43,7 @@ def reaggregate():
 
 def doors():
     overridepath=base.ROOT/'simulation/config/lite-door-overrides.json'
-    overrides=read(overridepath) if overridepath.exists() else {}
+    overrides=classifications(read(overridepath) if overridepath.exists() else {})
     m,d=classify_doors(read(base.inputs()['3F']),overrides)
     base.save(OUT/'classified-source.json',m);base.save(OUT/'door-classification.json',d)
     import csv

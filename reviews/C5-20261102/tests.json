@@ -1,0 +1,17 @@
+{
+  "python": {
+    "fixed_openings": 4,
+    "manual_origin": 3,
+    "server_stage5": 7,
+    "execution_evidence": 5
+  },
+  "node": [
+    "explore.unit",
+    "building_panel.unit",
+    "results.unit",
+    "route_risk"
+  ],
+  "solver_calls_in_unit_tests": 0,
+  "frozen_unchanged_count": 56,
+  "server_frozen": false
+}

@@ -1,5 +1,6 @@
 """CLI job adapter; shares the server's single-worker admission lock."""
 import os
+from lite_fixed_openings import classifications, apply_fixed, ranked_samples
 from pathlib import Path
 import subprocess
 import sys
@@ -43,7 +44,7 @@ def status(building_sha):
 
 
 def prepare_request(body, building_sha):
-    if not isinstance(body,dict) or set(body)-{'room','samples','duration_s','seed'}:raise ValueError('MC 요청 형식 오류')
+    if not isinstance(body,dict) or set(body)-{'room','samples','duration_s','seed','manual'}:raise ValueError('MC 요청 형식 오류')
     count=body.get('samples');duration=body.get('duration_s',3600);seed=body.get('seed',20261025)
     if type(count) is not int or not 2<=count<=1000:raise ValueError('MC 표본 수는 필수 2표본을 포함한 2~1000 정수입니다')
     if type(duration) is not int or duration not in (1800,3600):raise ValueError('MC 시간은 30분 또는 1시간입니다')
@@ -51,13 +52,21 @@ def prepare_request(body, building_sha):
     raw=read(RESULTS/'room_rule_r8_20261025/source-scenario.json')
     if raw['cad']['building_sha256']!=building_sha:raise ValueError('이 건물의 간략 입력이 없습니다')
     from pyrocast_lite.screening_v8_approved import score,scenario
-    scored=score(raw,1,door_overrides=read(ROOT/'simulation/config/lite-door-overrides.json',{}))
+    config=read(ROOT/'simulation/config/lite-door-overrides.json',{})
+    scored=score(raw,1,door_overrides=classifications(config))
     room=body.get('room')
-    if room not in {r['room'] for r in scored['ranked']}:raise ValueError('적격 화점실을 선택하세요')
-    model=scenario(scored,room,'open_except_confirmed',duration=duration)
+    manual=body.get('manual',False)
+    if type(manual) is not bool:raise ValueError('manual은 참/거짓입니다')
+    if manual:
+        from lite_manual_origin import manual_scenario
+        model=manual_scenario(scored,room,'open_except_confirmed',duration=duration)
+    else:
+        if room not in {r['room'] for r in scored['ranked']}:raise ValueError('적격 화점실을 선택하세요')
+        model=scenario(scored,room,'open_except_confirmed',duration=duration)
+    apply_fixed(model,config)
     # Screening replaces the initial fuel group; keep copied CAD metadata in sync too.
     model['cad']['fire_key']=room
-    return dict(room=room,samples=count,duration_s=duration,seed=seed,building_sha256=building_sha),model
+    return dict(room=room,samples=count,duration_s=duration,seed=seed,building_sha256=building_sha,manual=manual),model
 
 
 def reserve(request, model):
@@ -86,5 +95,10 @@ def summary(building_sha, room=None):
     for folder in sorted(JOBS.glob('mc-*'),reverse=True):
         if folder.is_symlink():continue
         data=read(folder/'mc-summary.json')
-        if data and data.get('building_sha256')==building_sha and (room is None or data.get('source_room')==room):return data
+        if data and data.get('building_sha256')==building_sha and (room is None or data.get('source_room')==room):
+            try:
+                ranking=ranked_samples(folder,building_sha)
+                data.update(job_id=folder.name,ranking=ranking,worst=ranking[0] if ranking else None)
+            except (OSError,ValueError,KeyError,TypeError) as exc:data.update(worst=None,worst_error=str(exc))
+            return data
     return None

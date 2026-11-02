@@ -2,6 +2,7 @@
 import os
 for key in ('OPENBLAS_NUM_THREADS','OMP_NUM_THREADS','MKL_NUM_THREADS'):os.environ[key]='1'
 import argparse,json,time,hashlib
+from lite_fixed_openings import classifications, apply_fixed
 from pathlib import Path
 import numpy as np
 import run_lite_l1 as base
@@ -51,7 +52,8 @@ def run_batch(top_n=3,out=DEFAULT_OUT,rooms=None):
     if not out.is_relative_to((base.ROOT/'simulation/results').resolve()):raise ValueError('Output outside results')
     if (out/'started.json').exists():raise RuntimeError('Already attempted; no automatic rerun')
     raw=read(base.inputs()['3F']);overrides=base.ROOT/'simulation/config/lite-door-overrides.json'
-    scored=score(raw,top_n,door_overrides=read(overrides) if overrides.exists() else None)
+    config=read(overrides) if overrides.exists() else {}
+    scored=score(raw,top_n,door_overrides=classifications(config))
     from lite_manual_origin import validate_rooms,manual_scenario
     if rooms is not None:validate_rooms(scored,rooms)
     candidates=[r for r in scored['ranked']+scored['excluded'] if r['room'] in rooms] if rooms else scored['ranked'][:top_n]
@@ -69,7 +71,7 @@ def run_batch(top_n=3,out=DEFAULT_OUT,rooms=None):
             rid=candidate['room'];folder=out/rid/state
             base.save(out/'progress.json',{'state':'running','current_room':rid,'current_state':state,'completed':len(cases),'total':total,'top_n':top_n,'rows':cases})
             print('START',len(cases)+1,'/',total,rid,state,flush=True)
-            data=manual_scenario(scored,rid,state) if rooms else scenario(scored,rid,state);data['cad']['fire_key']=rid;base.save(folder/'input.json',data);t=time.perf_counter()
+            data=manual_scenario(scored,rid,state) if rooms else scenario(scored,rid,state);data['cad']['fire_key']=rid;apply_fixed(data,config);base.save(folder/'input.json',data);t=time.perf_counter()
             try:summary=execute(data,folder)
             except Exception as exc:
                 summary={'complete':False,'failure':f'{type(exc).__name__}: {exc}','safe_end_s':None,

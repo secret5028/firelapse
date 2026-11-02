@@ -1,4 +1,5 @@
 """v7 stage 2 only: classify openings and report, no scoring or integration."""
+from lite_fixed_openings import classifications
 import json,hashlib,sys
 from pathlib import Path
 from collections import Counter
@@ -8,7 +9,7 @@ OUT=ROOT/'simulation/results/lite_v7_door_reclassification_20261025'
 def read(p):return json.loads(p.read_text('utf-8'))
 raw=read(ROOT/'simulation/results/room_rule_r8_20261025/source-scenario.json')
 saved=ROOT/'simulation/config/lite-door-overrides.json'
-overrides=read(saved) if saved.exists() else {}
+overrides=classifications(read(saved) if saved.exists() else {})
 classified,report=classify_doors(raw,overrides)
 before={r['id']:r for r in read(OUT/'before.json')['rows']}
 def label(r):return '방화(확정)' if r['door_class']=='fire' and r['confidence']=='confirmed' else '방화(추정)' if r['door_class']=='fire' and r['confidence']=='inferred' else {'ordinary':'일반문','external':'외기문'}.get(r['door_class'],r['door_class']+' 사용자정정')

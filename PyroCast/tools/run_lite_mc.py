@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 import run_lite_mc_v8_r2 as adopted
 from result_catalog import atomic_json, read
+from lite_fixed_openings import sample_fixed_states
 from execution_evidence import write_mc, rule_dependency_hashes
 
 
@@ -12,7 +13,7 @@ def run_batch(request_path, out):
     if not out.is_relative_to((adopted.ROOT/'simulation/results').resolve()):raise ValueError('Output outside results')
     if (out/'started.json').exists():raise RuntimeError('Already attempted; no automatic rerun')
     raw=read(out/'input.json');count=request['samples'];seed=request['seed'];room=request['room']
-    samples=adopted.make_samples(raw,seed=seed,count=count)
+    samples=adopted.make_samples(raw,seed=seed,count=count,fixed_states=sample_fixed_states(raw))
     hashes=adopted.current_hashes();start=time.perf_counter();rows=[]
     atomic_json(out/'started.json',dict(**request,workers=1,budget_s_per_sample=1200,parameters=adopted.PARAMS,
         sha256=hashes,shared_rule_sha256=rule_dependency_hashes(),mandatory=2,random=count-2,fallback='one Radau on numerical failure within remaining integration budget'))

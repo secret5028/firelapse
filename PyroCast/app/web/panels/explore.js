@@ -36,7 +36,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   $('exploreMC').title=mcJob.available?'직렬 실행 · 표본당 적분 예산 1,200초':'MC 서버 연결 확인 중';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
   $('exploreOriginRun').disabled=pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
-  if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)){$('exploreMC').disabled=true;$('exploreMC').title='자동 후보 제외 실 · 선택 실 2상태 실행을 사용하세요';}
+  if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)&&!(state.origin_mode==='manual'&&payload?.manual_origins?.some(r=>r.room===state.origin_room_id))){$('exploreMC').disabled=true;$('exploreMC').title='수동 화점으로 지정한 뒤 실행하세요';}
   $('exploreRun').disabled=pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
  }
  $('exploreN').onchange=()=>{if($('exploreN').checkValidity())store.dispatch('exploration/set',{top_n:Number($('exploreN').value)});};

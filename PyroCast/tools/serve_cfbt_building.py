@@ -244,7 +244,8 @@ def main():
                 raw=json.loads((SIM/'results/room_rule_r8_20261025/source-scenario.json').read_text('utf-8'))
                 saved=SIM/'config/lite-door-overrides.json'
                 overrides=json.loads(saved.read_text('utf-8')) if saved.exists() else {}
-                return self.json(classify_doors(raw,overrides)[1])
+                from lite_fixed_openings import door_report
+                return self.json(door_report(raw,overrides))
             if path=='/cfbt/lite/mc':
                 with lock:busy=state['busy']
                 return self.json({**mc_service.status(sha),'server_busy':busy,'available':True})
@@ -362,7 +363,7 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
-            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc'):return self.json({'error':'지원하지 않는 요청입니다'},405)
+            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc','/cfbt/lite/fixed-openings'):return self.json({'error':'지원하지 않는 요청입니다'},405)
             if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
             try:
                 length=int(self.headers.get('Content-Length','0'))
@@ -404,6 +405,19 @@ def main():
                             with lock:state['busy']=False
                     pool.submit(work)
                     return self.json({'started':True,'workers':1,'MC_started':False},202)
+                if request_path=='/cfbt/lite/fixed-openings':
+                    from lite_fixed_openings import apply_worst, clear, door_report
+                    import lite_screening_service as screening
+                    if not isinstance(body,dict) or set(body) not in ({'job_id'},{'clear'}):raise ValueError('확정 급기 요청 오류')
+                    with lock:
+                        if state['busy'] or (screening.payload().get('progress') or {}).get('state')=='running':return self.json({'error':'현재 계산 중입니다'},409)
+                        if 'clear' in body:
+                            if body['clear'] is not True:raise ValueError('clear는 true입니다')
+                            clear()
+                        else:apply_worst(body['job_id'],sha)
+                        raw=json.loads((SIM/'results/room_rule_r8_20261025/source-scenario.json').read_text('utf-8'))
+                        saved=SIM/'config/lite-door-overrides.json'
+                        return self.json(door_report(raw,json.loads(saved.read_text('utf-8'))))
                 if request_path=='/cfbt/lite/doors':
                     from pyrocast_lite.door_classification import classify_doors
                     if not isinstance(body,dict) or set(body)!={'id','door_class'}:raise ValueError('문 분류 요청 오류')
@@ -412,7 +426,8 @@ def main():
                     with lock:
                         overrides=json.loads(saved.read_text('utf-8')) if saved.exists() else {}
                         overrides[body['id']]=body['door_class']
-                        _,report=classify_doors(raw,overrides)
+                        from lite_fixed_openings import door_report
+                        report=door_report(raw,overrides)
                         saved.parent.mkdir(parents=True,exist_ok=True)
                         tmp=saved.with_suffix('.tmp');tmp.write_text(json.dumps(overrides,ensure_ascii=False,indent=2),'utf-8');tmp.replace(saved)
                     return self.json(report)

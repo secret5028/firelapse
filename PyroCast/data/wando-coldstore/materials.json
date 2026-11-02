@@ -1,0 +1,65 @@
+{
+  "materials": {
+    "PU_LINING": {
+      "conductivity_W_mK": 0.025,
+      "density_kg_m3": 35,
+      "specific_heat_kJ_kgK": 1.4,
+      "thickness_m": 0.1,
+      "emissivity": 0.9,
+      "assumed": true,
+      "basis": "C11 §2 PU; emissivity .9 project assumption"
+    },
+    "CONCRETE_FLOOR": {
+      "conductivity_W_mK": 1.75,
+      "density_kg_m3": 2200,
+      "specific_heat_kJ_kgK": 1.0,
+      "thickness_m": 0.15,
+      "emissivity": 0.94,
+      "assumed": true,
+      "basis": "existing S09 concrete proxy; floor thickness unreported"
+    }
+  },
+  "rooms": {
+    "R1": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R8": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R2": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R3": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R9": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R4": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R5": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    },
+    "R6": {
+      "wall": "PU_LINING",
+      "ceiling": "PU_LINING",
+      "floor": "CONCRETE_FLOOR"
+    }
+  },
+  "note": "기계실도 PU 마감으로 가정. 강판·RC 복합벽을 별도 열층으로 추가하지 않음."
+}

@@ -1,0 +1,98 @@
+{
+  "wall_material": {
+    "conductivity_W_mK": 0.025,
+    "density_kg_m3": 35,
+    "specific_heat_kJ_kgK": 1.4,
+    "thickness_m": 0.1,
+    "emissivity": 0.9,
+    "assumed": true,
+    "basis": "C11 §2 PU; emissivity .9 project assumption"
+  },
+  "surface_materials": {
+    "PU_LINING": {
+      "conductivity_W_mK": 0.025,
+      "density_kg_m3": 35,
+      "specific_heat_kJ_kgK": 1.4,
+      "thickness_m": 0.1,
+      "emissivity": 0.9,
+      "assumed": true,
+      "basis": "C11 §2 PU; emissivity .9 project assumption"
+    },
+    "CONCRETE_FLOOR": {
+      "conductivity_W_mK": 1.75,
+      "density_kg_m3": 2200,
+      "specific_heat_kJ_kgK": 1.0,
+      "thickness_m": 0.15,
+      "emissivity": 0.94,
+      "assumed": true,
+      "basis": "existing S09 concrete proxy; floor thickness unreported"
+    }
+  },
+  "rooms": [
+    {
+      "id": "R1",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R8",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R2",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R3",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R9",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R4",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R5",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    },
+    {
+      "id": "R6",
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      }
+    }
+  ],
+  "note": "입력 합성용 조각. 독립 실행 덱/시나리오 아님."
+}

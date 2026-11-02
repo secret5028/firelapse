@@ -1,0 +1,625 @@
+{
+  "schema": "pyrocast.building/1",
+  "building_id": "wando-coldstore",
+  "source_hash": "46c7f6004c1c9ba26b31624b940a9d5422a7893baad34823172a8ca7009bb0f1",
+  "units": {
+    "length": "m",
+    "origin": [
+      0,
+      0,
+      0
+    ],
+    "up": "z"
+  },
+  "floors": [
+    {
+      "floor_id": "1F",
+      "name": "1F",
+      "elevation_m": 0,
+      "height_m": 6.405,
+      "rooms": [
+        {
+          "room_id": "R1",
+          "name": "냉동실",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              9,
+              0
+            ],
+            [
+              18,
+              0
+            ],
+            [
+              18,
+              18.4
+            ],
+            [
+              0,
+              18.4
+            ],
+            [
+              0,
+              6
+            ],
+            [
+              9,
+              6
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  9,
+                  0
+                ],
+                [
+                  18,
+                  0
+                ],
+                [
+                  18,
+                  18.4
+                ],
+                [
+                  0,
+                  18.4
+                ],
+                [
+                  0,
+                  6
+                ],
+                [
+                  9,
+                  6
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R8",
+          "name": "동결실",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              0,
+              0
+            ],
+            [
+              9,
+              0
+            ],
+            [
+              9,
+              6
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  9,
+                  0
+                ],
+                [
+                  9,
+                  6
+                ],
+                [
+                  0,
+                  6
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R2",
+          "name": "저온(공실)",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              18,
+              0
+            ],
+            [
+              27,
+              0
+            ],
+            [
+              27,
+              18.4
+            ],
+            [
+              18,
+              18.4
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  18,
+                  0
+                ],
+                [
+                  27,
+                  0
+                ],
+                [
+                  27,
+                  18.4
+                ],
+                [
+                  18,
+                  18.4
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R3",
+          "name": "저온(생선)",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              27,
+              0
+            ],
+            [
+              36,
+              0
+            ],
+            [
+              36,
+              18.4
+            ],
+            [
+              27,
+              18.4
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  27,
+                  0
+                ],
+                [
+                  36,
+                  0
+                ],
+                [
+                  36,
+                  18.4
+                ],
+                [
+                  27,
+                  18.4
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R9",
+          "name": "기계실",
+          "usage": "equipment",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              27,
+              18.4
+            ],
+            [
+              36,
+              18.4
+            ],
+            [
+              36,
+              23.9
+            ],
+            [
+              27,
+              23.9
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  27,
+                  18.4
+                ],
+                [
+                  36,
+                  18.4
+                ],
+                [
+                  36,
+                  23.9
+                ],
+                [
+                  27,
+                  23.9
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R4",
+          "name": "저온(배추)",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              36,
+              0
+            ],
+            [
+              45,
+              0
+            ],
+            [
+              45,
+              18.4
+            ],
+            [
+              36,
+              18.4
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  36,
+                  0
+                ],
+                [
+                  45,
+                  0
+                ],
+                [
+                  45,
+                  18.4
+                ],
+                [
+                  36,
+                  18.4
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R5",
+          "name": "저온(공실·화점)",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              45,
+              0
+            ],
+            [
+              53.75,
+              0
+            ],
+            [
+              53.75,
+              18
+            ],
+            [
+              45,
+              18
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  45,
+                  0
+                ],
+                [
+                  53.75,
+                  0
+                ],
+                [
+                  53.75,
+                  18
+                ],
+                [
+                  45,
+                  18
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        },
+        {
+          "room_id": "R6",
+          "name": "저온(미역)",
+          "usage": "coldstore_pu_lining",
+          "core_kind": null,
+          "polygon_m": [
+            [
+              54,
+              0
+            ],
+            [
+              72,
+              0
+            ],
+            [
+              72,
+              18.4
+            ],
+            [
+              54,
+              18.4
+            ]
+          ],
+          "holes_m": [],
+          "polygons_m": [
+            {
+              "polygon_m": [
+                [
+                  54,
+                  0
+                ],
+                [
+                  72,
+                  0
+                ],
+                [
+                  72,
+                  18.4
+                ],
+                [
+                  54,
+                  18.4
+                ]
+              ],
+              "holes_m": []
+            }
+          ],
+          "floor_z_m": 0,
+          "ceiling_z_m": 6.405,
+          "cells": []
+        }
+      ],
+      "openings": [
+        {
+          "opening_id": "D_R1",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R1",
+          "b": "OUTSIDE",
+          "center_m": [
+            13.5,
+            0,
+            1.5
+          ],
+          "width_m": 2.5,
+          "sill_m": 0,
+          "soffit_m": 3.0,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        },
+        {
+          "opening_id": "D_R8",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R8",
+          "b": "OUTSIDE",
+          "center_m": [
+            4.5,
+            0,
+            1.05
+          ],
+          "width_m": 0.9,
+          "sill_m": 0,
+          "soffit_m": 2.1,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        },
+        {
+          "opening_id": "D_R2",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R2",
+          "b": "OUTSIDE",
+          "center_m": [
+            22.5,
+            0,
+            1.5
+          ],
+          "width_m": 2.5,
+          "sill_m": 0,
+          "soffit_m": 3.0,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        },
+        {
+          "opening_id": "D_R3",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R3",
+          "b": "OUTSIDE",
+          "center_m": [
+            31.5,
+            0,
+            1.5
+          ],
+          "width_m": 2.5,
+          "sill_m": 0,
+          "soffit_m": 3.0,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        },
+        {
+          "opening_id": "D_R9",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R9",
+          "b": "OUTSIDE",
+          "center_m": [
+            31.5,
+            23.9,
+            1.05
+          ],
+          "width_m": 0.9,
+          "sill_m": 0,
+          "soffit_m": 2.1,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        },
+        {
+          "opening_id": "D_R4",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R4",
+          "b": "OUTSIDE",
+          "center_m": [
+            40.5,
+            0,
+            1.5
+          ],
+          "width_m": 2.5,
+          "sill_m": 0,
+          "soffit_m": 3.0,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        },
+        {
+          "opening_id": "D_R5",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R5",
+          "b": "OUTSIDE",
+          "center_m": [
+            49.375,
+            0,
+            1.5
+          ],
+          "width_m": 2.5,
+          "sill_m": 0,
+          "soffit_m": 3.0,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_report_R5"
+        },
+        {
+          "opening_id": "D_R6",
+          "kind": "door",
+          "door_class": "ordinary",
+          "door_class_basis": "[가정] 내화 성능 미확인, 일반문 입력",
+          "user_override": false,
+          "a": "R6",
+          "b": "OUTSIDE",
+          "center_m": [
+            63.0,
+            0,
+            1.5
+          ],
+          "width_m": 2.5,
+          "sill_m": 0,
+          "soffit_m": 3.0,
+          "exterior": true,
+          "initial_fraction": 0,
+          "source_kind": "dimension_input_assumption"
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "scope": "C11 sections 1/2: geometry-only, no simulation",
+  "geometry_notes": [
+    "치수 출처는 C11 지시서. 사고조사 HWP 원본은 이번 작업에서 직접 확인하지 않음.",
+    "1층만 모델링. R5 내부 8.75×18×6.405 m는 지시서의 보고서 수치. 다른 실 높이는 6.405 m로 확장한 가정.",
+    "R1은 내부 R8을 뺀 L자형. 중복 체적 없음. R1 문은 노출 전면 x=9..18의 중앙 x=13.5로 이동한 가정.",
+    "R9 외기문은 북측 y=23.9 중앙으로 가정. R8은 남측 중앙. 실내 문은 없음.",
+    "실 내부 치수는 유지. 벽 시각화 두께 0.4 m(RC .3+PU .1) 가정. 지시서 좌표의 0.25 m 간극도 유지.",
+    "72×18.4 m와 지시서의 1층 면적 1701.3 m²는 불일치. 돌출부·미제공 공간을 임의로 늘리지 않음.",
+    "R9 돌출부 포함 실 바닥면적 합 1366.2 m². 원 보고 면적을 충족하는 완전한 준공 모델이 아님.",
+    "2층 공장 미모델. 상부는 슬래브 표시만. 초기 문은 닫힘 표시용이며 A/B/C 실행 상태는 아직 미작성.",
+    "기계실 equipment 클래스 수치 미지정: 기존 default 500 MJ/m²·250 kW/m²·t_alpha 300 s 임시값.",
+    "저온실의 생선·배추·미역 저장물은 연료에 더하지 않음. 지시서대로 PU 내장재만 바닥 등가로 환산.",
+    "벽·천장 PU 열경계는 단일 재료 근사. RC·강판·에폭시 복합층 및 강판 뒤 산소 제한은 미모델."
+  ]
+}

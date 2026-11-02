@@ -122,6 +122,28 @@
       "rhrf": 250,
       "basis": "project_assumption_user_approved_2026-10-25",
       "assumption": "사용자 지정 40 MJ/m²·250 kW/m². q80=mean은 분포 미지정 고정값, t_alpha는 기존 default 호환값. 이번 v8 화점 성장은 별도 alpha=.047이며 MC 미실행."
+    },
+    "coldstore_pu_lining": {
+      "label": "저온창고 PU 내장재",
+      "mean": 278,
+      "q80": 278,
+      "t_alpha": 150,
+      "rhrf": 400,
+      "coverage_fraction": 0.5,
+      "basis": "project_assumption_C11_2026-11-02",
+      "assumption": "내장재 화재를 바닥 가연물 등가로 환산. mean=278은 R5 반올림 참조; 각 실 실제 입력은 (벽+천장 면적)×0.10m×35kg/m³×25MJ/kg / 바닥면적. q80=mean은 분포 미지정 고정값. HRRPUA 400 및 PU 물성·발열량은 가정이며 시험 원문 검증값 아님. fast t_alpha=150s 유지.",
+      "lining_thickness_m": 0.1,
+      "lining_density_kg_m3": 35,
+      "heat_of_combustion_MJ_kg": 25
+    },
+    "equipment": {
+      "label": "기계실(임시 기본값)",
+      "mean": 500,
+      "q80": 600,
+      "t_alpha": 300,
+      "rhrf": 250,
+      "basis": "project_assumption_C11_equipment_default_pending",
+      "assumption": "C11에 equipment 수치가 없어 기존 default 값을 임시 사용. 기계실 실측 연료량 아님. 승인된 별도 값이 생기면 변경."
     }
   },
   "names": [

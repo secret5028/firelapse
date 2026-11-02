@@ -1,5 +1,6 @@
 """Explicit rectangular geometry and finite, disjoint solid-fuel budgets."""
 import math
+import re
 import numpy as np
 from .openings import window_targets
 from .mixture import primary_ratio
@@ -106,12 +107,25 @@ def make_deck(model, committed, targets, transitions=None):
                f"&MISC MAX_TIME_STEP={model['max_time_step_s']:g} OVERWRITE=.TRUE."+
                (f" LOWER_OXYGEN_LIMIT={model['gas']['native_lower_oxygen_limit_mass_fraction']}" if model['gas']['native_lower_oxygen_limit_mass_fraction']!=.15 else '')+" /",
            f"&MATL ID='WALL' CONDUCTIVITY={wall['conductivity_W_mK']} DENSITY={wall['density_kg_m3']} SPECIFIC_HEAT={wall['specific_heat_kJ_kgK']} THICKNESS={wall['thickness_m']} EMISSIVITY={wall['emissivity']} /"]
+    # Optional input materials only; legacy decks remain byte-identical when absent.
+    surface_materials = model.get('surface_materials', {})
+    for ident, material in sorted(surface_materials.items()):
+        if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,45}', ident) or ident == 'WALL':
+            raise ValueError('Invalid/reserved surface material ID')
+        keys = ('conductivity_W_mK','density_kg_m3','specific_heat_kJ_kgK','thickness_m','emissivity')
+        vals = [float(material[k]) for k in keys]
+        if not all(math.isfinite(v) for v in vals) or min(vals[:4]) <= 0 or not 0 <= vals[4] <= 1:
+            raise ValueError('Invalid surface material properties')
+        lines.append(f"&MATL ID='{ident}' CONDUCTIVITY={vals[0]} DENSITY={vals[1]} SPECIFIC_HEAT={vals[2]} THICKNESS={vals[3]} EMISSIVITY={vals[4]} /")
     for room in model["rooms"]:
         w,d,h=room["size_m"]; x,y,z=room["origin_m"]
         shaft=" SHAFT=.TRUE." if room.get('shaft') else ''
         leaks=room.get('leak_area_ratio',[.00017,.000052])
         leak_text=','.join(str(v) for v in leaks) if 'leak_area_ratio' in room else '0.00017,0.000052'
-        lines.append(f"&COMP ID='{room['id']}' WIDTH={w:.9g} DEPTH={d:.9g} HEIGHT={h:.9g} ORIGIN={x:.9g},{y:.9g},{z:.9g}{shaft} CEILING_MATL_ID='WALL' WALL_MATL_ID='WALL' FLOOR_MATL_ID='WALL' LEAK_AREA_RATIO={leak_text} /")
+        ids = {s:room.get('surface_material_ids',{}).get(s,'WALL') for s in ('ceiling','wall','floor')}
+        if any(v != 'WALL' and v not in surface_materials for v in ids.values()):
+            raise ValueError('Unknown surface material reference')
+        lines.append(f"&COMP ID='{room['id']}' WIDTH={w:.9g} DEPTH={d:.9g} HEIGHT={h:.9g} ORIGIN={x:.9g},{y:.9g},{z:.9g}{shaft} CEILING_MATL_ID='{ids['ceiling']}' WALL_MATL_ID='{ids['wall']}' FLOOR_MATL_ID='{ids['floor']}' LEAK_AREA_RATIO={leak_text} /")
     for opening in model.get("openings",[]):
         schedule=opening.get("schedule",[[0,1]])
         times=','.join(f'{v[0]:g}' for v in schedule); fractions=','.join(f'{v[1]:g}' for v in schedule)

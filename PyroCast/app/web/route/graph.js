@@ -1,4 +1,5 @@
 // Read existing CAD connectivity only. No proximity links or fire simulation.
+import {avoidObstacles} from './obstacles.js';
 export const distance=(a,b)=>Math.hypot(...a.map((x,i)=>x-b[i]));
 const id=(f,r)=>`CAD_${f}_${r}`;
 function ringContains(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){
@@ -14,6 +15,7 @@ function aperturePoint(v,z){
 export function readRouteGraph(building){
  const rooms=new Map(),edges=[],entrances=[],floors=new Map(building.floors.map(f=>[f.name,f]));
  for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:building.route_targets?.[id(f.name,r.id)]??[...r.c,f.z],polys:r.polys,
+  obstacles:(building.obstacles||[]).filter(o=>o.room_id===r.id&&o.floor===f.name),
   elevator:(r.tags||[]).some(t=>['elev','elev_inside'].includes(t))});}
  for(const f of building.floors)for(const source of f.simulation_graph?.connections||[]){
   const v=f.openings.find(v=>v.id===source.id),[a,b]=source.sides,edge={id:id(f.name,source.id),source,kind:'door',a:id(f.name,a),b:id(f.name,b),floor:f.name,eligible:false};
@@ -57,13 +59,20 @@ export function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,s
  const entry=[...graph.entrances].sort((a,b)=>distance(vehicle,a.point)-distance(vehicle,b.point)||a.id.localeCompare(b.id))[0];
  const adj=new Map([...graph.rooms.keys()].map(k=>[k,[]]));
  function segment(a,b,floor,room,stair=false,length=distance(a,b)){return {a,b,floor,room,stair,length};}
+ function detour(parts){const out=[];for(const s of parts){const room=graph.rooms.get(s.room);
+  if(s.stair||!room?.obstacles?.length){out.push(s);continue;}
+  const path=avoidObstacles(s.a,s.b,room.obstacles,p=>contains(p,room.polys));if(!path)return null;
+  for(let i=1;i<path.length;i++)out.push(segment(path[i-1],path[i],s.floor,s.room));
+ }return out;}
  for(const e of graph.edges.filter(e=>e.eligible)){
   const ra=graph.rooms.get(e.a),rb=graph.rooms.get(e.b);let parts;
   if(e.kind==='stair')parts=[segment(ra.point,e.fromPoint,ra.floor,ra.id),segment(e.fromPoint,e.toPoint,ra.floor,ra.id,true,e.rise*stair_factor),segment(e.toPoint,rb.point,rb.floor,rb.id)];
   else parts=[segment(ra.point,e.point,ra.floor,ra.id),segment(e.point,rb.point,rb.floor,rb.id)];
+  parts=detour(parts);if(!parts)continue;
   const length=parts.reduce((n,p)=>n+p.length,0);adj.get(e.a).push({to:e.b,e,parts,length});adj.get(e.b).push({to:e.a,e,parts:[...parts].reverse().map(p=>({...p,a:p.b,b:p.a})),length});
  }
- const first=graph.rooms.get(entry.room),start=[segment(vehicle,entry.point,'1F',null),segment(entry.point,first.point,'1F',entry.room)];
+ const first=graph.rooms.get(entry.room),start=detour([segment(vehicle,entry.point,'1F',null),segment(entry.point,first.point,'1F',entry.room)]);
+ if(!start)return {error:'장애물 여유 폭을 지키는 진입 경로 없음',entry:entry.id};
  const best=new Map([[entry.room,start.reduce((n,p)=>n+p.length,0)]]),previous=new Map(),queue=[[best.get(entry.room),entry.room]];
  while(queue.length){queue.sort((a,b)=>a[0]-b[0]||a[1].localeCompare(b[1]));const [cost,at]=queue.shift();if(cost!==best.get(at))continue;if(at===target)break;
   for(const step of adj.get(at)){const next=cost+step.length;if(next<(best.get(step.to)??Infinity)){best.set(step.to,next);previous.set(step.to,{from:at,...step});queue.push([next,step.to]);}}
@@ -75,5 +84,5 @@ export function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,s
  return {target,entry:entry.id,vehicle,segments,ticks,length,hoses:Math.ceil(length/hose_m),stairs:steps.filter(s=>s.e.kind==='stair').length,
   edges:steps.map(s=>({id:s.e.id,from:s.from,to:s.to,kind:s.e.kind,length:s.length,rise:s.e.rise??0,stair_length:s.e.kind==='stair'?s.e.rise*stair_factor:0})),
   graph_edges:graph.edges.length,source_edges:graph.sourceEdgeCount,traversable_edges:graph.edges.filter(e=>e.eligible).length,
-  limits:'실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.'};
+  limits:[...graph.rooms.values()].some(r=>r.obstacles?.length)?'등록 장애물 평면 외곽 0.5 m를 피하는 경로 중심선. 미등록 적재물·호스 굴곡·문 여는 시간 미반영. 실제 진입 안전을 보증하지 않음.':'실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.'};
 }

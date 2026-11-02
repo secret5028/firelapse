@@ -621,5 +621,71 @@
     "기계실 equipment 클래스 수치 미지정: 기존 default 500 MJ/m²·250 kW/m²·t_alpha 300 s 임시값.",
     "저온실의 생선·배추·미역 저장물은 연료에 더하지 않음. 지시서대로 PU 내장재만 바닥 등가로 환산.",
     "벽·천장 PU 열경계는 단일 재료 근사. RC·강판·에폭시 복합층 및 강판 뒤 산소 제한은 미모델."
-  ]
+  ],
+  "obstacles": [
+    {
+      "id": "COOLER",
+      "name": "냉각팬 유닛",
+      "floor": "1F",
+      "room_id": "R5",
+      "center_m": [
+        49.375,
+        17.4,
+        1.5
+      ],
+      "size_m": [
+        3,
+        1.2,
+        2.2
+      ],
+      "clearance_m": 0.5,
+      "basis": "[사진 추정] 안쪽 벽 중앙·3.0×1.2×2.2 m. [가정] 거치대 바닥 높이 0.4 m",
+      "color": "#8eb9cb"
+    },
+    {
+      "id": "TANK",
+      "name": "수조",
+      "floor": "1F",
+      "room_id": "R5",
+      "center_m": [
+        47.375,
+        6.93,
+        0.45
+      ],
+      "size_m": [
+        0.9,
+        0.9,
+        0.9
+      ],
+      "clearance_m": 0.5,
+      "basis": "[사실: 명세] 입구에서 안쪽 6.93 m. [사진 추정] 좌측 2 m·0.9 m 상자",
+      "color": "#6ca5bc"
+    },
+    {
+      "id": "WASHER",
+      "name": "고압세척기",
+      "floor": "1F",
+      "room_id": "R5",
+      "center_m": [
+        49.075,
+        7.843728624920988,
+        0.45
+      ],
+      "size_m": [
+        0.8,
+        0.5,
+        0.9
+      ],
+      "clearance_m": 0.5,
+      "basis": "[사실: 명세] 수조와 거리 1.93 m. [사진 추정] 우측 안쪽. [가정] 평면 벡터 (+1.7,+0.914) m·상자 0.8×0.5×0.9 m; 사진의 84×79 cm와 같은 측정치로 취급하지 않음",
+      "color": "#e0b46c"
+    }
+  ],
+  "layout_revision": "C11-r3-1.1",
+  "layout_source": {
+    "file": "specs/Claude지시-C11-완도저온창고사례-20261102.md",
+    "sha256": "cb744f850682ffbf1ba266762c7816961d5059b3ff051f22ee076c42131d12b5",
+    "section": "r3 1.1",
+    "scope": "visual obstacles and hose route only; no CFAST recalculation"
+  }
 }

@@ -18,7 +18,7 @@ def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
     original=read(DATA/'building.json'); floor=original['floors'][0]
     building={'building_id':'wando-coldstore','name':'완도 저온창고','floors':[],
-              'core_nodes':[],'vertical_connections':[],
+              'core_nodes':[],'vertical_connections':[],'obstacles':original.get('obstacles',[]),
               'route_entry_id':'CAD_1F_ENTRY_R5',
               'route_targets':{'CAD_1F_R5':[46.75,17.95,0]}}
     rooms=[]
@@ -80,7 +80,7 @@ def main():
                 '0.1 m 공동의 2존 근사. 위험 지수는 발생 확률이 아님.',
                 '문 분출 발열은 ROOM 합계이며 틈과 절단 개구별로 분리 불가.',
                 '3D 절단 표시는 입력 일정의 우측값. native CSV는 다음 5 s 표본부터 반영.',
-                '경로는 공동 앞까지 직선 근사. 장애물·호스 굴곡 미반영.'],
+                '경로는 등록 장애물 평면 외곽 0.5 m 회피. 미등록 적재물·호스 굴곡 미반영.'],
         provenance={'engine_sha256':sha(ROOT/'simulation/build/baseline/cfast-baseline.exe'),
                     'source_files':{f:sha(SRC/f) for f in ['case.in','case_zone.csv','case_compartments.csv','case_vents.csv','condition-scores.json']},
                     'mapping':{'temperature':'C','O2':'mol_frac (volume fraction)','OD':'case_zone.csv 1/m','HRR':'case_compartments W / 1000','indices':'saved condition-scores.json, unchanged'},'simulation_runs':0},

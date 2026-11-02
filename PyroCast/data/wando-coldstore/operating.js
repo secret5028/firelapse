@@ -2,6 +2,7 @@
 import * as T from '/vendor/three.module.js';
 import {OrbitControls} from '/vendor/OrbitControls.js';
 import {attach} from '/cfbt/overlay.js';
+import {createIncidentLayer} from './incident-layer.js';
 const $=id=>document.getElementById(id);
 try{
  const B=await (await fetch('./operating-building.json')).json(),S=new T.Scene(),C=new T.PerspectiveCamera(45,1,.01,1500),R=new T.WebGLRenderer({antialias:true});
@@ -20,15 +21,18 @@ try{
   }}
  }
  const ref=new T.Group(),grid=new T.GridHelper(120,60,0x456071,0x263e4e);grid.rotation.x=Math.PI/2;grid.position.set(36,8,-.04);ref.add(grid);S.add(ref);
- // Reference vehicle symbol, borrowed by the existing route layer. Its anchor
- // is the hose connection point 5 m outside ENTRY_R5, not a measured vehicle box.
- const vehicle=new T.Group();vehicle.visible=false;ref.add(vehicle);
- for(const [x,y,z,w,h,d,color] of [[0,1,0,4,2,1.8,'#b84037'],[1.2,1.1,0,1.4,1.8,1.9,'#e8dcd3']]){const part=new T.Mesh(new T.BoxGeometry(w,h,d),new T.MeshBasicMaterial({color}));part.position.set(x,y,z);vehicle.add(part);}
+ // User decision: omit vehicle symbols; retain the route origin 5 m outside.
  let floor='1F';const setFloor=id=>{floor=id;for(const g of groups)g.visible=id==='all'||g.name===id;};$('all').onclick=()=>setFloor('all');$('floor1').onclick=()=>setFloor('1F');
  $('top').onclick=()=>{C.position.set(O.target.x,O.target.y,80);O.update();};$('iso').onclick=()=>{C.position.copy(O.target).add(new T.Vector3(25,-35,28));O.update();};$('resetView').onclick=()=>{O.target.set(36,10,3);C.position.set(85,-45,60);O.update();};
  $('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
  const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor};
  const app=await attach(viewer);
+ const tactical=await(await fetch('./tactical.json')).json();
+ const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
+ app.store.dispatch('route/set',{vehicle_visible:false});
+ for(const id of ['displayVehicle','displayOperations'])$(id)?.closest('.displayToggle')?.remove();
+ const offFloor=app.store.subscribe('floor',()=>incident.setFloor(app.store.get('floor').floor_id));
+ window.addEventListener('pagehide',()=>{offFloor();incident.dispose();},{once:true});
  // A visible, time-linked label distinguishes the cut from static door frames.
  const cut=document.createElement('output');cut.className='wandoOpening';$('v').append(cut);
  const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:#ffd18a;font-size:12px';$('resultCase').prepend(endpoint);

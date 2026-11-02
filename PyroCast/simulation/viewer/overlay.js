@@ -574,9 +574,48 @@ function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings}){
 return {ROUTE_CLEAR,routeSampleIndex,routeRiskRows};
 })();
 
-// app/web/route/graph.js
+// app/web/route/obstacles.js
 const __module5=(()=>{
+// Planar, axis-aligned obstacle footprints. Only rooms with explicit obstacles
+// use this visibility graph; existing CAD routes without obstacles are untouched.
+function expandedObstacle(o){
+ const [x,y]=o.center_m,[w,d]=o.size_m,c=o.clearance_m??.5;
+ return {id:o.id,min:[x-w/2-c,y-d/2-c],max:[x+w/2+c,y+d/2+c]};
+}
+function crossesObstacle(a,b,r){
+ let lo=0,hi=1;
+ for(let i=0;i<2;i++){
+  const d=b[i]-a[i],min=r.min[i]+1e-8,max=r.max[i]-1e-8;
+  if(Math.abs(d)<1e-12){if(a[i]<=min||a[i]>=max)return false;continue;}
+  const u=(min-a[i])/d,v=(max-a[i])/d;lo=Math.max(lo,Math.min(u,v));hi=Math.min(hi,Math.max(u,v));
+  if(lo>=hi)return false;
+ }
+ return hi>0&&lo<1;
+}
+function avoidObstacles(a,b,obstacles,inside){
+ if(!obstacles?.length)return [a,b];
+ const boxes=obstacles.map(expandedObstacle),nodes=[a,b];
+ for(const r of boxes)for(const x of [r.min[0]-.0001,r.max[0]+.0001])for(const y of [r.min[1]-.0001,r.max[1]+.0001]){
+  const p=[x,y,a[2]];if(inside(p)&&!boxes.some(q=>crossesObstacle(p,p,q)))nodes.push(p);
+ }
+ const clear=(p,q)=>!boxes.some(r=>crossesObstacle(p,q,r))&&Array.from({length:19},(_,i)=>(i+1)/20).every(t=>inside(p.map((v,i)=>v+(q[i]-v)*t)));
+ const costs=nodes.map(()=>Infinity),prev=[],done=new Set();costs[0]=0;
+ while(done.size<nodes.length){let at=-1;for(let i=0;i<nodes.length;i++)if(!done.has(i)&&(at<0||costs[i]<costs[at]))at=i;
+  if(at<0||!Number.isFinite(costs[at]))break;if(at===1){const path=[];for(let i=1;i!==undefined;i=prev[i])path.push(nodes[i]);return path.reverse();}
+  done.add(at);for(let j=0;j<nodes.length;j++)if(!done.has(j)&&clear(nodes[at],nodes[j])){
+   const cost=costs[at]+Math.hypot(...nodes[at].map((v,i)=>v-nodes[j][i]));if(cost<costs[j]){costs[j]=cost;prev[j]=at;}
+  }
+ }
+ return null;
+}
+
+return {expandedObstacle,crossesObstacle,avoidObstacles};
+})();
+
+// app/web/route/graph.js
+const __module6=(()=>{
 // Read existing CAD connectivity only. No proximity links or fire simulation.
+const {avoidObstacles}=__module5;
 const distance=(a,b)=>Math.hypot(...a.map((x,i)=>x-b[i]));
 const id=(f,r)=>`CAD_${f}_${r}`;
 function ringContains(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){
@@ -592,6 +631,7 @@ function aperturePoint(v,z){
 function readRouteGraph(building){
  const rooms=new Map(),edges=[],entrances=[],floors=new Map(building.floors.map(f=>[f.name,f]));
  for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:building.route_targets?.[id(f.name,r.id)]??[...r.c,f.z],polys:r.polys,
+  obstacles:(building.obstacles||[]).filter(o=>o.room_id===r.id&&o.floor===f.name),
   elevator:(r.tags||[]).some(t=>['elev','elev_inside'].includes(t))});}
  for(const f of building.floors)for(const source of f.simulation_graph?.connections||[]){
   const v=f.openings.find(v=>v.id===source.id),[a,b]=source.sides,edge={id:id(f.name,source.id),source,kind:'door',a:id(f.name,a),b:id(f.name,b),floor:f.name,eligible:false};
@@ -635,13 +675,20 @@ function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,stair_fa
  const entry=[...graph.entrances].sort((a,b)=>distance(vehicle,a.point)-distance(vehicle,b.point)||a.id.localeCompare(b.id))[0];
  const adj=new Map([...graph.rooms.keys()].map(k=>[k,[]]));
  function segment(a,b,floor,room,stair=false,length=distance(a,b)){return {a,b,floor,room,stair,length};}
+ function detour(parts){const out=[];for(const s of parts){const room=graph.rooms.get(s.room);
+  if(s.stair||!room?.obstacles?.length){out.push(s);continue;}
+  const path=avoidObstacles(s.a,s.b,room.obstacles,p=>contains(p,room.polys));if(!path)return null;
+  for(let i=1;i<path.length;i++)out.push(segment(path[i-1],path[i],s.floor,s.room));
+ }return out;}
  for(const e of graph.edges.filter(e=>e.eligible)){
   const ra=graph.rooms.get(e.a),rb=graph.rooms.get(e.b);let parts;
   if(e.kind==='stair')parts=[segment(ra.point,e.fromPoint,ra.floor,ra.id),segment(e.fromPoint,e.toPoint,ra.floor,ra.id,true,e.rise*stair_factor),segment(e.toPoint,rb.point,rb.floor,rb.id)];
   else parts=[segment(ra.point,e.point,ra.floor,ra.id),segment(e.point,rb.point,rb.floor,rb.id)];
+  parts=detour(parts);if(!parts)continue;
   const length=parts.reduce((n,p)=>n+p.length,0);adj.get(e.a).push({to:e.b,e,parts,length});adj.get(e.b).push({to:e.a,e,parts:[...parts].reverse().map(p=>({...p,a:p.b,b:p.a})),length});
  }
- const first=graph.rooms.get(entry.room),start=[segment(vehicle,entry.point,'1F',null),segment(entry.point,first.point,'1F',entry.room)];
+ const first=graph.rooms.get(entry.room),start=detour([segment(vehicle,entry.point,'1F',null),segment(entry.point,first.point,'1F',entry.room)]);
+ if(!start)return {error:'장애물 여유 폭을 지키는 진입 경로 없음',entry:entry.id};
  const best=new Map([[entry.room,start.reduce((n,p)=>n+p.length,0)]]),previous=new Map(),queue=[[best.get(entry.room),entry.room]];
  while(queue.length){queue.sort((a,b)=>a[0]-b[0]||a[1].localeCompare(b[1]));const [cost,at]=queue.shift();if(cost!==best.get(at))continue;if(at===target)break;
   for(const step of adj.get(at)){const next=cost+step.length;if(next<(best.get(step.to)??Infinity)){best.set(step.to,next);previous.set(step.to,{from:at,...step});queue.push([next,step.to]);}}
@@ -653,14 +700,14 @@ function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,stair_fa
  return {target,entry:entry.id,vehicle,segments,ticks,length,hoses:Math.ceil(length/hose_m),stairs:steps.filter(s=>s.e.kind==='stair').length,
   edges:steps.map(s=>({id:s.e.id,from:s.from,to:s.to,kind:s.e.kind,length:s.length,rise:s.e.rise??0,stair_length:s.e.kind==='stair'?s.e.rise*stair_factor:0})),
   graph_edges:graph.edges.length,source_edges:graph.sourceEdgeCount,traversable_edges:graph.edges.filter(e=>e.eligible).length,
-  limits:'실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.'};
+  limits:[...graph.rooms.values()].some(r=>r.obstacles?.length)?'등록 장애물 평면 외곽 0.5 m를 피하는 경로 중심선. 미등록 적재물·호스 굴곡·문 여는 시간 미반영. 실제 진입 안전을 보증하지 않음.':'실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.'};
 }
 
 return {distance,contains,readRouteGraph,findRoute};
 })();
 
 // app/web/layers/empty.js
-const __module6=(()=>{
+const __module7=(()=>{
 // Stage 2 creates containers only. Existing shaders remain untouched.
 class EmptyLayer {
  static id='empty';
@@ -690,9 +737,9 @@ return {EmptyLayer,LAYER_IDS,LAYER_TYPES,createEmptyLayers};
 })();
 
 // app/web/layers/route.js
-const __module7=(()=>{
-const {EmptyLayer}=__module6;
-const {findRoute}=__module5;
+const __module8=(()=>{
+const {EmptyLayer}=__module7;
+const {findRoute}=__module6;
 const {routeRiskRows,routeSampleIndex,ROUTE_CLEAR}=__module4;
 class RouteLayer extends EmptyLayer {
  static id='route';
@@ -742,7 +789,7 @@ return {RouteLayer};
 })();
 
 // app/web/panels/route.js
-const __module8=(()=>{
+const __module9=(()=>{
 function createRoutePanel({store,graph}){
  const container=document.createElement('details');container.id='routeSettings';container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace">차량 위치 지정</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중심–문/계단 연결점 직선 거리 근사. 적재물·장애물·호스 굴곡은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
@@ -771,7 +818,7 @@ return {createRoutePanel};
 })();
 
 // app/web/panels/explanations.js
-const __module9=(()=>{
+const __module10=(()=>{
 // Presentation-only migration. Legacy modules and their request handlers stay intact.
 const explanatoryText = text => /(?:입니다|합니다|않습니다|없습니다|아닙니다|뜻하지|표시용|계산 아님|예측 아님|확률 아님|확률이 아님|별개|별도|검토용|자동으로|전파 계산|기준이며|서로 다른|표시 효과|미연결|보는 쪽 외부 창만|도면 문틀 ·|위험 테두리:|임계값은 사용자 가정|가스 화염 표현 끔)/.test(text);
 function infoTip(text){
@@ -824,8 +871,8 @@ return {explanatoryText,infoTip,attachExplanations};
 })();
 
 // app/web/panels/building.js
-const __module10=(()=>{
-const {infoTip}=__module9;
+const __module11=(()=>{
+const {infoTip}=__module10;
 const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
 const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
 function doorCategory(row){return row.door_class==='fire'?(row.confidence==='inferred'?'inferred':['confirmed','user'].includes(row.confidence)?'confirmed':'unknown'):['ordinary','external'].includes(row.door_class)?'ordinary':'unknown';}
@@ -857,7 +904,7 @@ return {doorCategory,buildingTable,openingCounts,createBuildingPanel};
 })();
 
 // app/web/state/series_cache.js
-const __module11=(()=>{
+const __module12=(()=>{
 // One active immutable series payload, outside the observable metadata store.
 function frozenCopy(value){const data=structuredClone(value);const visit=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(visit);Object.freeze(x);}};visit(data);return data;}
 function createSeriesCache(){
@@ -870,9 +917,9 @@ return {createSeriesCache};
 })();
 
 // app/web/state/store.js
-const __module12=(()=>{
+const __module13=(()=>{
 // Pure state transitions. I/O belongs to a future boundary controller.
-const {createSeriesCache}=__module11;
+const {createSeriesCache}=__module12;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
@@ -957,7 +1004,7 @@ return {createStore,seriesCache,store,legacyDispatchBridge};
 })();
 
 // app/web/adapters/read.js
-const __module13=(()=>{
+const __module14=(()=>{
 // Pure read adapters: no DOM, fetch, engine imports, defaults, or simulation.
 const copy=x=>structuredClone(x);
 const issue=(errors,code,ref,msg)=>errors.push({code,ref:String(ref),msg});
@@ -1131,7 +1178,7 @@ return {snapshotHash,adaptBuilding,SERIES_MAP,indexHistoryExtrema,anyKnown,adapt
 })();
 
 // app/web/adapters/legacy_building.js
-const __module14=(()=>{
+const __module15=(()=>{
 // References are borrowed from the CAD loader, never from another display layer.
 // The three install() branches, in their original order. A colour-bearing
 // material alone is not enough: only objects touched by a branch are selected.
@@ -1160,7 +1207,7 @@ return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
 // app/web/adapters/legacy_openings.js
-const __module15=(()=>{
+const __module16=(()=>{
 // Read-only CAD-loader capability. No classification or opening-state inference.
 function readLegacyOpeningsSource({building,groups,sourceHash}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
@@ -1174,7 +1221,7 @@ return {readLegacyOpeningsSource};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module16=(()=>{
+const __module17=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; filtering remains in the display layer.
 function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
@@ -1189,8 +1236,8 @@ return {readLegacyCoreSource};
 })();
 
 // app/web/layers/building.js
-const __module17=(()=>{
-const {EmptyLayer,createEmptyLayers}=__module6;
+const __module18=(()=>{
+const {EmptyLayer,createEmptyLayers}=__module7;
 const {applyRenderPolicy}=__module3;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
@@ -1238,7 +1285,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module18=(()=>{
+const __module19=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -1280,10 +1327,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module19=(()=>{
-const {EmptyLayer}=__module6;
+const __module20=(()=>{
+const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module3;
-const {exteriorWindowFace}=__module18;
+const {exteriorWindowFace}=__module19;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -1350,8 +1397,8 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module20=(()=>{
-const {EmptyLayer}=__module6;
+const __module21=(()=>{
+const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module3;
 
 class CoreLayer extends EmptyLayer {
@@ -1402,7 +1449,7 @@ return {CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module21=(()=>{
+const __module22=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1476,7 +1523,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module22=(()=>{
+const __module23=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1484,7 +1531,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module23=(()=>{
+const __module24=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1492,7 +1539,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module24=(()=>{
+const __module25=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1500,11 +1547,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module25=(()=>{
-const {createRealViewSession}=__module21;
-const {createSmokeLayer}=__module22;
-const {createFlameLayer}=__module23;
-const {createPlumeLayer}=__module24;
+const __module26=(()=>{
+const {createRealViewSession}=__module22;
+const {createSmokeLayer}=__module23;
+const {createFlameLayer}=__module24;
+const {createPlumeLayer}=__module25;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1514,7 +1561,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module26=(()=>{
+const __module27=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1591,10 +1638,10 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module27=(()=>{
-const {EmptyLayer}=__module6;
+const __module28=(()=>{
+const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module3;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module26;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module27;
 
 const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
@@ -1687,7 +1734,7 @@ return {RiskLayer};
 })();
 
 // app/web/scene/picking.js
-const __module28=(()=>{
+const __module29=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -1695,11 +1742,11 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/selection.js
-const __module29=(()=>{
-const {EmptyLayer}=__module6;
+const __module30=(()=>{
+const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module3;
-const {joinedSelectionRibbons}=__module26;
-const {ROOM_PICK_LAYER}=__module28;
+const {joinedSelectionRibbons}=__module27;
+const {ROOM_PICK_LAYER}=__module29;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1745,9 +1792,9 @@ return {SelectionLayer};
 })();
 
 // app/web/scene/host.js
-const __module30=(()=>{
-const {createEmptyLayers}=__module6;
-const {ROOM_PICK_LAYER}=__module28;
+const __module31=(()=>{
+const {createEmptyLayers}=__module7;
+const {ROOM_PICK_LAYER}=__module29;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1818,7 +1865,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module31=(()=>{
+const __module32=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1902,7 +1949,7 @@ return {createLitePanel,updateLitePanel,createMenuReview};
 })();
 
 // app/web/panels/shell.js
-const __module32=(()=>{
+const __module33=(()=>{
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1974,7 +2021,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display.js
-const __module33=(()=>{
+const __module34=(()=>{
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
@@ -2042,8 +2089,8 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module34=(()=>{
-const {infoTip}=__module9;
+const __module35=(()=>{
+const {infoTip}=__module10;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 const finite=Number.isFinite;
 const number=(v,d=0)=>finite(v)?v.toFixed(d):'미평가';
@@ -2122,7 +2169,7 @@ return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createR
 })();
 
 // app/web/adapters/attention.js
-const __module35=(()=>{
+const __module36=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2139,7 +2186,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module36=(()=>{
+const __module37=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2442,9 +2489,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module37=(()=>{
-const {attentionRanking}=__module35;
-const {savedAttention}=__module36;
+const __module38=(()=>{
+const {attentionRanking}=__module36;
+const {savedAttention}=__module37;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2513,33 +2560,33 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module38=(()=>{
+const __module39=(()=>{
 const {createAIFuelPanel}=__module1;
 const {attachExport}=__module2;
 const {routeSampleIndex}=__module4;
-const {readRouteGraph,contains}=__module5;
-const {RouteLayer}=__module7;
-const {createRoutePanel}=__module8;
-const {createBuildingPanel,buildingTable}=__module10;
-const {attachExplanations}=__module9;
-const {createStore}=__module12;
-const {createSeriesCache}=__module11;
-const {adaptBuilding,adaptResult,adaptScreening}=__module13;
-const {readLegacyBuildingSource}=__module14;
-const {readLegacyOpeningsSource}=__module15;
-const {readLegacyCoreSource}=__module16;
-const {BuildingLayer}=__module17;
-const {OpeningsLayer}=__module19;
-const {CoreLayer}=__module20;
-const {createRealViewLayers}=__module25;
-const {RiskLayer}=__module27;
-const {SelectionLayer}=__module29;
-const {createSceneHost}=__module30;
-const {createLitePanel,updateLitePanel,createMenuReview}=__module31;
-const {createPanelShell}=__module32;
-const {createDisplayPanel}=__module33;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module34;
-const {createExplorePanel}=__module37;
+const {readRouteGraph,contains}=__module6;
+const {RouteLayer}=__module8;
+const {createRoutePanel}=__module9;
+const {createBuildingPanel,buildingTable}=__module11;
+const {attachExplanations}=__module10;
+const {createStore}=__module13;
+const {createSeriesCache}=__module12;
+const {adaptBuilding,adaptResult,adaptScreening}=__module14;
+const {readLegacyBuildingSource}=__module15;
+const {readLegacyOpeningsSource}=__module16;
+const {readLegacyCoreSource}=__module17;
+const {BuildingLayer}=__module18;
+const {OpeningsLayer}=__module20;
+const {CoreLayer}=__module21;
+const {createRealViewLayers}=__module26;
+const {RiskLayer}=__module28;
+const {SelectionLayer}=__module30;
+const {createSceneHost}=__module31;
+const {createLitePanel,updateLitePanel,createMenuReview}=__module32;
+const {createPanelShell}=__module33;
+const {createDisplayPanel}=__module34;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module35;
+const {createExplorePanel}=__module38;
 const {attachFrozenRules}=__external4;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2734,9 +2781,9 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module39=(()=>{
+const __module40=(()=>{
 const {attach:attachLegacy}=__module0;
-const {attachModern}=__module38;
+const {attachModern}=__module39;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2752,4 +2799,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module39.attach;
+export const attach=__module40.attach;

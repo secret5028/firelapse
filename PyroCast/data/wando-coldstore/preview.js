@@ -4,6 +4,7 @@ import * as T from '/vendor/three.module.js';
 import {createSceneHost} from '/app/web/scene/host.js';
 import {createStore} from '/app/web/state/store.js';
 import {BuildingLayer} from '/app/web/layers/building.js';
+import {createExteriorLayer} from './exterior-layer.js';
 
 const $=id=>document.getElementById(id);
 try {
@@ -46,6 +47,7 @@ try {
  dl('summary',[['범위','1층 · 8실'],['창 / 실내 문','0 / 0'],['외기 출입문','8개'],['모델 면적',F.rooms.reduce((s,r)=>s+r.area_m2,0).toFixed(1)+' m²'],['상부 높이','6.405 m']]);
  const r=F.rooms.find(r=>r.room_id==='R5');dl('fuel',[['내부 치수','8.75 × 18.0 m'],['출입문','2.5 × 3.0 m'],['PU 등가 하중',r.fire_load_MJ_m2.toFixed(1)+' MJ/m²'],['총 에너지',(r.energy_MJ/1000).toFixed(2)+' GJ'],['HRRPUA','400 kW/m²'],['피복률','0.5'],['벽·천장 / 바닥','PU / 콘크리트']]);
  for(const n of B.geometry_notes){const li=document.createElement('li');li.textContent=n;$('notes').append(li);}
- render();$('status').textContent='building/1 로드 완료 · 계산 0회';
- window.addEventListener('beforeunload',()=>{host.dispose();resources.forEach(r=>r.dispose());});
+ const exterior=createExteriorLayer(T,scene,await(await fetch('./exterior.json')).json(),document.querySelector('aside'),render);
+ render();$('status').textContent='building/1 로드 완료 · 외형 표시 전용 · 계산 0회';
+ window.addEventListener('beforeunload',()=>{exterior.dispose();host.dispose();resources.forEach(r=>r.dispose());});
 }catch(e){$('error').textContent=e.stack;$('status').textContent='표시 실패';throw e;}

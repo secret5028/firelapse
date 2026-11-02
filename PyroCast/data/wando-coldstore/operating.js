@@ -3,6 +3,7 @@ import * as T from '/vendor/three.module.js';
 import {OrbitControls} from '/vendor/OrbitControls.js';
 import {attach} from '/cfbt/overlay.js';
 import {createIncidentLayer} from './incident-layer.js';
+import {createExteriorLayer} from './exterior-layer.js';
 const $=id=>document.getElementById(id);
 try{
  const B=await (await fetch('./operating-building.json')).json(),S=new T.Scene(),C=new T.PerspectiveCamera(45,1,.01,1500),R=new T.WebGLRenderer({antialias:true});
@@ -29,10 +30,11 @@ try{
  const app=await attach(viewer);
  const tactical=await(await fetch('./tactical.json')).json();
  const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
+ const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));
  app.store.dispatch('route/set',{vehicle_visible:false});
  for(const id of ['displayVehicle','displayOperations'])$(id)?.closest('.displayToggle')?.remove();
  const offFloor=app.store.subscribe('floor',()=>incident.setFloor(app.store.get('floor').floor_id));
- window.addEventListener('pagehide',()=>{offFloor();incident.dispose();},{once:true});
+ window.addEventListener('pagehide',()=>{offFloor();incident.dispose();exterior.dispose();},{once:true});
  // A visible, time-linked label distinguishes the cut from static door frames.
  const cut=document.createElement('output');cut.className='wandoOpening';$('v').append(cut);
  const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:#ffd18a;font-size:12px';$('resultCase').prepend(endpoint);

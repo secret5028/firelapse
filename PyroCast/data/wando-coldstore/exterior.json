@@ -1,0 +1,16 @@
+{
+  "schema": "wando-exterior-visual/1",
+  "source": "specs/wando/aerial.png",
+  "scope": "3D appearance only; not a simulation compartment or opening",
+  "main_roof": {"x0": 0, "x1": 72, "y0": 0, "y1": 18.4, "eave_z": 6.405, "ridge_rise": 1.2, "color": "#369dba"},
+  "canopy": {"x0": 9, "x1": 72, "depth": 3, "wall_z": 3.6, "front_z": 3.3, "color": "#d7dddf"},
+  "upper_left": {"x0": 0, "x1": 27, "y0": 0, "y1": 6, "base_z": 6.405, "height": 3},
+  "basis": [
+    "[사진 확인] 긴 파란색 지붕, 흰색 외벽, 전면 출입구 위 연속 처마, 왼쪽 앞 2층 외형.",
+    "[사실: 명세] 주 평면 72×18.4 m, R5 실 높이 6.405 m. 내부 계산 치수는 그대로 유지.",
+    "[가정] 지붕을 낮은 맞배로 근사, 용마루 높이 증가 1.2 m. 정확한 지붕 경사·처마 구조 도면 없음.",
+    "[사진 추정·가정] 전면 처마 x=9~72 m, 돌출 3 m, 벽측 높이 3.6 m·끝 높이 3.3 m.",
+    "[사진 추정·가정] 왼쪽 2층 외형 x=0~27 m·y=0~6 m, 추가 높이 3 m. 창·외장 줄눈은 외형 표현이며 치수 추출 결과가 아님.",
+    "지붕·처마·2층 외형은 표시 전용. P1 계산 체적·개구부·연료·경로 그래프에 추가하지 않음. 외부 연기·FGI 효과 없음."
+  ]
+}

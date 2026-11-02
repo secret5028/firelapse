@@ -62,11 +62,17 @@ const axis=x=>({temperature:'T',fuel:'F',oxygen:'O'}[x]??null);
 function criterion(rec,i){const sc=rec?.scores;return {met:at(sc?.all_met??rec?.all_met,i),degree:at(sc?.degree,i),
  r_T:at(sc?.factors?.temperature,i),r_F:at(sc?.factors?.fuel,i),r_O:at(sc?.factors?.oxygen,i),
  bottleneck:axis(at(sc?.weakest,i)),dominant:axis(at(sc?.strongest,i)),status:rec?.status??null};}
-// Prefix maxima of saved indices only. Unknown samples add no new evidence.
-export function cumulativeIndexHistory(indices){
- return Object.fromEntries(Object.entries(indices).map(([id,types])=>[id,Object.fromEntries(Object.entries(types).map(([type,values])=>{
-  let maximum=null;return [type,values.map(value=>{if(Number.isFinite(value))maximum=maximum===null?value:Math.max(maximum,value);return maximum;})];
- }))]));
+// Whole saved interval, one maximum and its earliest sample time per phenomenon.
+// Unknown-only series remain null. No integration or scalar room averages.
+export function indexHistoryExtrema(indices,times=[]){
+ const maximum={},peak_time_s={};
+ for(const [id,types] of Object.entries(indices)){maximum[id]={};peak_time_s[id]={};
+  for(const [type,values] of Object.entries(types)){let peak=null,time=null;
+   values.forEach((value,i)=>{if(Number.isFinite(value)&&(peak===null||value>peak)){peak=value;time=times[i]??null;}});
+   maximum[id][type]=peak;peak_time_s[id][type]=time;
+  }
+ }
+ return {maximum,peak_time_s};
 }
 export function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
 function frame(s,i,cid){const d=s.display_v8;const f={smoke_stage:at(d?.smoke_stage,i),smoke_factors:[],source_cells:[cid],aggregation:'single'};
@@ -132,13 +138,13 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
  const settings={scenario:copy(scenario),rule_settings:copy(sourceResult?.rule_settings??null),physical_parameters:copy(sourceResult?.physical_parameters??null)};
  const openingRisk=summary?.opening_risk;
  const risk=openingRisk?.status==='evaluated'?Object.fromEntries(Object.entries(openingRisk.rooms).map(([rid,intervals])=>[rid,intervals.map(v=>[v.start_sample_s,v.end_sample_s])])):null;
- const gaps=p.time_s.slice(1).map((t,i)=>t-p.time_s[i]);
+ const gaps=p.time_s.slice(1).map((t,i)=>t-p.time_s[i]),history=indexHistoryExtrema(indexByCell,p.time_s);
  return {schema:'pyrocast.result/1',result_id:resultId,engine:{kind:'lite',version:sourceResult?.lite_revision??sourceResult?.revision??null,sha256:p.provenance?.engine_sha256??null},
   scenario:{building_id:building.building_id,floor_id:building.floors.length===1?building.floors[0].floor_id:null,
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:cumulativeIndexHistory(indexByCell),events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }

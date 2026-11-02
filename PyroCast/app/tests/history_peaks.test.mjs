@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {indexHistoryExtrema} from '../web/adapters/read.js';
+import {worstIndexEntries} from '../web/panels/results.js';
+const h=indexHistoryExtrema({C0:{FO:[null,143,143,20],FGI:[null,null,null,null]},C1:{FO:[143,143,140,0]}},[0,10,20,30]);
+assert.equal(h.maximum.C0.FO,143);assert.equal(h.peak_time_s.C0.FO,10);
+assert.equal(h.maximum.C0.FGI,null);assert.equal(h.peak_time_s.C0.FGI,null);
+const result={index_history_max:h.maximum,index_history_peak_s:h.peak_time_s};
+assert.deepEqual(worstIndexEntries(result,['C0'])[0],{type:'FO',name:'FO',value:143,time:10,source:'C0'});
+assert.equal(worstIndexEntries(result,['C0','C1'])[0].time,0);
+assert.equal(worstIndexEntries(result,['C0','C1'])[0].source,'C1');
+assert.equal(worstIndexEntries(result,['missing'])[0].value,null);
+console.log('PASS whole-period scalar maxima, earliest ties, unknowns, selected cell and room member maxima');

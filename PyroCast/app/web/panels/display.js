@@ -20,7 +20,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  toggle($('displayLayers'),'displayVehicle','경로 차량','#d33',()=>store.get('route').vehicle_visible,vehicle_visible=>store.dispatch('route/set',{vehicle_visible}));
  toggle($('displayLayers'),'displayOperations','작전 기호 (차량·인원)','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
- toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'현재 시각까지 저장된 지수의 최대값입니다. 이력만 해당하는 테두리는 점선입니다.');
+ toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
  const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="weak">약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);

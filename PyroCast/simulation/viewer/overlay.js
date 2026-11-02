@@ -524,7 +524,7 @@ function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings}){
   if(cache.has(id))return cache.get(id);
   let maximum=null,type=null,source_cell=null,missing=false;
   const cells=rooms.get(id)?.cells||[];
-  for(const c of cells)for(const key of types){const value=i<0?null:indices?.[c.cell_id]?.[key]?.[i];
+  for(const c of cells)for(const key of types){const value=history?indices?.[c.cell_id]?.[key]:i<0?null:indices?.[c.cell_id]?.[key]?.[i];
    if(!Number.isFinite(value)){missing=true;continue;}
    // Stable ties: first member and FO/FGI/backdraft/rollover order.
    if(maximum===null||value>maximum){maximum=value;type=key;source_cell=c.cell_id;}
@@ -717,7 +717,7 @@ const __module7=(()=>{
 function createRoutePanel({store,graph}){
  const container=document.createElement('details');container.id='routeSettings';container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace">차량 위치 지정</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중심–문/계단 연결점 직선 거리 근사. 적재물·장애물·호스 굴곡은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
- const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 4현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 현재 시각까지의 누적 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="exploreCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
+ const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 4현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 시간바와 무관한 전 구간 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="exploreCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
  document.getElementById('exploreRules').before(summary);
  const style=document.createElement('style');style.textContent='#routeRiskSummary table{table-layout:fixed;font-size:10px}#routeRiskSummary th,#routeRiskSummary td{padding:6px 2px;white-space:normal;overflow-wrap:anywhere}#routeRiskSummary th:nth-child(1){width:8%}#routeRiskSummary th:nth-child(2){width:24%}#routeRiskSummary th:nth-child(3){width:17%}#routeRiskSummary th:nth-child(4){width:17%}#routeRiskSummary th:nth-child(5){width:21%}#routeRiskSummary th:nth-child(6){width:13%}#routeRiskSummary td:nth-child(2){min-width:0}#routeRiskSummary thead{position:sticky;top:0;background:#163345}#routeRiskBasis{font-size:11px;color:#b8cbd8;margin-bottom:6px}';summary.append(style);
  const hud=document.createElement('div');hud.id='routeHUD';hud.style.cssText='padding-top:5px;font-size:12px;color:#9cdcff';document.querySelector('.compactHUD').append(hud);
@@ -729,7 +729,7 @@ function createRoutePanel({store,graph}){
  return {update(r){hud.textContent=r.error?'경로 · '+r.error:`경로 ${r.length.toFixed(1)} m · 호스 ${r.hoses}본(+1 권장) · 계단 ${r.stairs}회`;hud.title=r.limits||r.error;$('routeSummary').textContent=hud.textContent;
   const display=r.risk_summary,body=summary.querySelector('#routeRiskRows');body.replaceChildren();
   const t=display?.sample_s,stamp=Number.isFinite(t)?`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`:'미평가';
-  summary.querySelector('#routeRiskBasis').textContent=r.error||`${stamp} · ${display?.history?'누적 이력':'현재 시점'}`;
+  summary.querySelector('#routeRiskBasis').textContent=r.error||`${stamp} · ${display?.history?'전 구간 최대':'현재 시점'}`;
   for(const row of display?.rows||[]){const tr=document.createElement('tr');tr.dataset.room=row.room||'OUTSIDE';tr.dataset.color=row.color;tr.dataset.index=row.index??'';
    const hose=row.hose_first===row.hose_last?String(row.hose_first):`${row.hose_first}–${row.hose_last}`;
    for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,Number.isFinite(row.index)&&row.index<70?'—':row.phenomenon,row.index===null?'—':Math.round(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
@@ -993,11 +993,17 @@ const axis=x=>({temperature:'T',fuel:'F',oxygen:'O'}[x]??null);
 function criterion(rec,i){const sc=rec?.scores;return {met:at(sc?.all_met??rec?.all_met,i),degree:at(sc?.degree,i),
  r_T:at(sc?.factors?.temperature,i),r_F:at(sc?.factors?.fuel,i),r_O:at(sc?.factors?.oxygen,i),
  bottleneck:axis(at(sc?.weakest,i)),dominant:axis(at(sc?.strongest,i)),status:rec?.status??null};}
-// Prefix maxima of saved indices only. Unknown samples add no new evidence.
-function cumulativeIndexHistory(indices){
- return Object.fromEntries(Object.entries(indices).map(([id,types])=>[id,Object.fromEntries(Object.entries(types).map(([type,values])=>{
-  let maximum=null;return [type,values.map(value=>{if(Number.isFinite(value))maximum=maximum===null?value:Math.max(maximum,value);return maximum;})];
- }))]));
+// Whole saved interval, one maximum and its earliest sample time per phenomenon.
+// Unknown-only series remain null. No integration or scalar room averages.
+function indexHistoryExtrema(indices,times=[]){
+ const maximum={},peak_time_s={};
+ for(const [id,types] of Object.entries(indices)){maximum[id]={};peak_time_s[id]={};
+  for(const [type,values] of Object.entries(types)){let peak=null,time=null;
+   values.forEach((value,i)=>{if(Number.isFinite(value)&&(peak===null||value>peak)){peak=value;time=times[i]??null;}});
+   maximum[id][type]=peak;peak_time_s[id][type]=time;
+  }
+ }
+ return {maximum,peak_time_s};
 }
 function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
 function frame(s,i,cid){const d=s.display_v8;const f={smoke_stage:at(d?.smoke_stage,i),smoke_factors:[],source_cells:[cid],aggregation:'single'};
@@ -1063,13 +1069,13 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
  const settings={scenario:copy(scenario),rule_settings:copy(sourceResult?.rule_settings??null),physical_parameters:copy(sourceResult?.physical_parameters??null)};
  const openingRisk=summary?.opening_risk;
  const risk=openingRisk?.status==='evaluated'?Object.fromEntries(Object.entries(openingRisk.rooms).map(([rid,intervals])=>[rid,intervals.map(v=>[v.start_sample_s,v.end_sample_s])])):null;
- const gaps=p.time_s.slice(1).map((t,i)=>t-p.time_s[i]);
+ const gaps=p.time_s.slice(1).map((t,i)=>t-p.time_s[i]),history=indexHistoryExtrema(indexByCell,p.time_s);
  return {schema:'pyrocast.result/1',result_id:resultId,engine:{kind:'lite',version:sourceResult?.lite_revision??sourceResult?.revision??null,sha256:p.provenance?.engine_sha256??null},
   scenario:{building_id:building.building_id,floor_id:building.floors.length===1?building.floors[0].floor_id:null,
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:cumulativeIndexHistory(indexByCell),events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -1091,7 +1097,7 @@ function validateContract(payload,validate){
  return payload;
 }
 
-return {snapshotHash,adaptBuilding,SERIES_MAP,cumulativeIndexHistory,anyKnown,adaptResult,adaptScreening,validateContract};
+return {snapshotHash,adaptBuilding,SERIES_MAP,indexHistoryExtrema,anyKnown,adaptResult,adaptScreening,validateContract};
 })();
 
 // app/web/adapters/legacy_building.js
@@ -1584,8 +1590,11 @@ class RiskLayer extends EmptyLayer {
    const historyVerts=dashedRibbonVertices(original.flatMap(p=>joinedSelectionRibbons({o:p.o,h:[]},.055,.04)));
    const createMeshes=vertices=>colors.map(color=>{const geo=this.own(new T.BufferGeometry());geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));
     const mesh=applyRenderPolicy(new T.Mesh(geo,this.own(new T.MeshBasicMaterial({color,side:T.DoubleSide,transparent:true,opacity:1,depthTest:false,depthWrite:false}))),'risk');mesh.raycast=()=>{};this.group.add(mesh);return mesh;});
-   const meshes=createMeshes(verts),historyMeshes=createMeshes(historyVerts);
-   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes});
+   // Transparent objects share r35; create dashed ribbons before their solid overlay.
+   const historyMeshes=createMeshes(historyVerts),meshes=createMeshes(verts);
+   const cautionMesh=applyRenderPolicy(new T.Mesh(historyMeshes[0].geometry,this.own(historyMeshes[0].material.clone())),'risk');
+   cautionMesh.material.color.set('#9ca3af');cautionMesh.raycast=()=>{};this.group.add(cautionMesh);
+   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes,cautionMesh});
   }
  }
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
@@ -1593,26 +1602,29 @@ class RiskLayer extends EmptyLayer {
   if(frame.resultMeta!==this.resultMeta)this.resultMeta=frame.resultMeta;
   this.updateVisibility();
  }
- tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes].forEach(m=>m.visible=false);return;}
+ tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes,row.cautionMesh].forEach(m=>m.visible=false);return;}
   const series=f.series?.cells;if(!series)throw Error('Risk layer requires adapted cell series; raw playback is not supported');
   if(!r.index_by_cell)throw Error('Risk layer requires adapted saved indices');
   const {ribbon,caution}=f.risk.threshold;
   let i=0,hi=r.time_s.length-1;while(i<hi){const mid=Math.ceil((i+hi)/2);if(r.time_s[mid]<=f.t_s)i=mid;else hi=mid-1;}
   const history=f.risk.history===true;
-  if(history&&!r.index_history_max)throw Error('Risk history requires adapted prefix maxima');
-  const indices=history?r.index_history_max:r.index_by_cell;
+  if(history&&!r.index_history_max)throw Error('Risk history requires whole-period maxima');
   const meetsIn=(data,id,type,threshold)=>f.risk.show[type]!==false&&Number.isFinite(data[id]?.[type]?.[i])&&data[id][type][i]>=threshold;
-  const meets=(id,type,threshold)=>meetsIn(indices,id,type,threshold);
+  const meets=(id,type,threshold)=>history?f.risk.show[type]!==false&&Number.isFinite(r.index_history_max[id]?.[type])&&r.index_history_max[id][type]>=threshold:meetsIn(r.index_by_cell,id,type,threshold);
   const roomRisk=new Set(),cautionRooms=new Set();this.counts=Object.fromEntries(types.map(k=>[k,0]));this.activeRooms=[];
   for(const row of this.rooms){const active=new Map(),current=new Set();
-   for(const v of row.members){const s=series[v.id],h=s?.interface_m[i];if(!s||!Number.isFinite(h))continue;
+   for(const v of row.members){const s=series[v.id],h=Number.isFinite(s?.interface_m[i])?s.interface_m[i]:history?v.meta.height_m:null;if(!s||h===null)continue;
     for(const type of types){if(meets(v.id,type,ribbon))active.set(type,Math.min(active.get(type)??Infinity,h));if(meetsIn(r.index_by_cell,v.id,type,ribbon))current.add(type);}
    }
    const onFloor=f.floor.floor_id===null||f.floor.floor_id===row.floorId;
    if(active.size)roomRisk.add(row.id);
    const {height_m:height,z_m}=row.members[0].meta,base=Math.max(.16,Math.min(height-.5,...active.values()));
    row.meshes.forEach((m,j)=>{const visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false,dashed=history&&!current.has(types[j]),hm=row.historyMeshes[j];
-    m.visible=visible&&!dashed;hm.visible=visible&&dashed;hm.position.z=m.position.z=z_m+Math.min(height-.04,base+j*.14);if(visible)this.counts[types[j]]++;});
+    m.visible=visible&&!dashed;hm.visible=visible&&history;hm.position.z=m.position.z=z_m+Math.min(height-.04,base+j*.14);if(visible)this.counts[types[j]]++;});
+   const attention=history&&onFloor&&!active.size&&f.risk.show.smoke!==false&&row.members.some(v=>types.some(type=>meets(v.id,type,caution)));
+   row.cautionMesh.visible=attention;
+   row.cautionMesh.position.z=z_m+Math.min(height-.04,Math.max(.16,Math.min(height-.5,...row.members.map(v=>series[v.id]?.interface_m[i]).filter(Number.isFinite))));
+   if(attention)cautionRooms.add(row.id);
    if(onFloor&&active.size)this.activeRooms.push({room_id:row.id,types:[...active.keys()],historyOnly:[...active.keys()].filter(type=>history&&!current.has(type)),heights:row.meshes.map(m=>m.position.z)});
   }
   for(const v of this.views){const s=series[v.id];v.group.visible=(f.floor.floor_id===null||f.floor.floor_id===v.floorId)&&!!s;if(!s)continue;
@@ -1624,12 +1636,12 @@ class RiskLayer extends EmptyLayer {
    const hasInterface=f.layers.smoke&&!v.meta.single_zone&&s.legacy_optical.ODu[i]>0&&h!==null&&h>.05&&h<height-.05;
    v.interfaceLine.visible=hasInterface&&!color&&!roomRisk.has(v.roomId);v.interfaceLine.position.z=v.meta.z_m+(h??0);
    v.interfacePlane.visible=hasInterface&&selected&&!v.isCell;v.interfacePlane.position.z=v.meta.z_m+(h??0);
-   v.line.position.z=v.meta.z_m+(h??0);v.line.visible=h!==null&&!!color&&!roomRisk.has(v.roomId);v.line.material.color.set(color||'#9ca3af');v.line.material.gapSize=r.boundary_by_cell[v.id]?.[i] ? .25 : 0;
+   v.line.position.z=v.meta.z_m+(h??0);v.line.visible=h!==null&&!!color&&!roomRisk.has(v.roomId)&&!(history&&isCaution);v.line.material.color.set(color||'#9ca3af');v.line.material.gapSize=r.boundary_by_cell[v.id]?.[i] ? .25 : 0;
    v.tint.material.color.set(color||'#fff');v.tint.material.opacity=color?.startsWith('#9c') ? .025 : color?.length ? .1 : 0;
   }
   this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
- summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (${this.frame?.risk.history?'현재 층/누적 이력':'현재 층/시점'}, 저장된 판정)`;}
+ summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
  diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],cautionRooms:this.cautionRooms||[]};}
  dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }
@@ -1944,7 +1956,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  toggle($('displayLayers'),'displayVehicle','경로 차량','#d33',()=>store.get('route').vehicle_visible,vehicle_visible=>store.dispatch('route/set',{vehicle_visible}));
  toggle($('displayLayers'),'displayOperations','작전 기호 (차량·인원)','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
- toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'현재 시각까지 저장된 지수의 최대값입니다. 이력만 해당하는 테두리는 점선입니다.');
+ toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
  const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="weak">약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
@@ -1999,6 +2011,13 @@ function selectedScores(result,cell,index){return resultTypes.map(([type,name,co
  const c=result.cell_conditions[cell]?.[index]?.[type],axis=c?.bottleneck;
  return {type,name,color,value:result.index_by_cell[cell]?.[type]?.[index]??null,bottleneck:({T:'온도',F:'연료',O:'산소'})[axis]??null,factor:finite(c?.['r_'+axis])?c['r_'+axis]*100:null};
 });}
+function worstIndexEntries(result,cells){return resultTypes.map(([type,name])=>{
+ let value=null,time=null,source=null;
+ for(const id of cells){const v=result.index_history_max?.[id]?.[type],t=result.index_history_peak_s?.[id]?.[type];
+  if(finite(v)&&(value===null||v>value||(v===value&&finite(t)&&(!finite(time)||t<time)))){value=v;time=t;source=id;}
+ }
+ return {type,name,value,time,source};
+});}
 // Presentation aggregation only: read saved degrees, deduplicate cells by original room.
 // No time integration, factor recomputation or room-average series.
 function summarizeMCPlayback(playback){
@@ -2018,6 +2037,7 @@ function createResultsPanel({panel,store}){
  root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase">사례</label><div id="resultCaseControls"></div><div id="resultMetadata"></div><div id="resultReuse" role="status"></div><button id="resultReplay" type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><label for="liteRoom">실·셀</label><div id="resultRoomControl"></div><div id="resultRoomTitle"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><div id="resultBottleneck"></div><details><summary>계산값</summary><div id="resultQuantities"></div></details></div><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div><details id="resultLimits"><summary>가정과 한계</summary><ul></ul></details>';
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';move($('liteRoom'),$('resultRoomControl'));
  $('resultTools').remove();
+ const worst=document.createElement('div');worst.id='resultWorstTime';worst.style.cssText='font-size:11px;white-space:nowrap;overflow-x:auto;margin:8px 0;color:#b8cbd8';$('resultRoomTitle').after(worst);
  const reviewDetails=document.createElement('details');reviewDetails.id='resultMenuReview';reviewDetails.innerHTML='<summary>전체 메뉴 검토</summary><div id="resultReviewMount"></div>';root.append(reviewDetails);
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
@@ -2031,6 +2051,9 @@ function createResultsPanel({panel,store}){
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   $('resultRoomTitle').textContent=`${room?.room_id?.replace('CAD_','')||'실 선택'} · ${stamp(result.time_s[index])}`;
+  const peaks=worstIndexEntries(result,cell?[cell]:(room?.cells||[]).map(c=>c.cell_id));
+  worst.textContent='최악 시각 · '+peaks.map(p=>`${p.name} ${number(p.value)}${finite(p.time)?' @ '+stamp(p.time):''}`).join(' · ');
+  worst.title=(cell?'선택 셀':'실 내 멤버 셀 최대')+' · 전 구간, 동률은 최초 시각. '+peaks.map(p=>`${p.name}: ${p.source??'미평가'}`).join(' / ');
   if(roomKey!==room?.room_id||previous!==result){$('resultCellList').replaceChildren();for(const c of room?.cells||[]){const b=append($('resultCellList'),'button',c.cell_id.split('_').at(-1));b.dataset.cell=c.cell_id;b.onclick=()=>store.dispatch('selection/set',{room_id:room.room_id,cell_id:c.cell_id,source:'list'});}roomKey=room?.room_id;}
   $('resultCells').hidden=!(room?.cells.length>1);$('resultCells').open=room?.cells.length>1;for(const b of $('resultCellList').children)b.setAttribute('aria-pressed',String(b.dataset.cell===cell));
   const scores=cell?selectedScores(result,cell,index):resultTypes.map(([type,name,color])=>({type,name,color,value:null})),threshold=store.get('risk').threshold,scale=Math.max(200,threshold.ribbon,threshold.caution,...scores.map(s=>s.value??0));
@@ -2054,7 +2077,7 @@ function createResultsPanel({panel,store}){
  return {update,mc,mountReview(review){$('resultReviewMount').append(review);review.hidden=false;},dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
 }
 
-return {resultTypes,selectedScores,summarizeMCPlayback,createResultsPanel};
+return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createResultsPanel};
 })();
 
 // app/web/adapters/attention.js

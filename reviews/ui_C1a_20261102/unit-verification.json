@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "expected": {
+    "FO": [
+      "CAD_3F_R2"
+    ],
+    "FGI": [],
+    "backdraft": [
+      "CAD_3F_R2"
+    ],
+    "rollover": []
+  },
+  "history_on": {
+    "buildCount": 1,
+    "rooms": 28,
+    "cells": 38,
+    "resources": 780,
+    "counts": {
+      "FO": 1,
+      "FGI": 0,
+      "backdraft": 1,
+      "rollover": 0,
+      "caution": 5
+    },
+    "activeRooms": [
+      {
+        "room_id": "CAD_3F_R2",
+        "types": [
+          "FO",
+          "backdraft"
+        ],
+        "historyOnly": [],
+        "heights": [
+          16.27749030841414,
+          16.41749030841414,
+          16.557490308414142,
+          16.69749030841414
+        ]
+      }
+    ],
+    "cautionRooms": [
+      "CAD_3F_R7",
+      "CAD_3F_R9",
+      "CAD_3F_R12",
+      "CAD_3F_R17",
+      "CAD_3F_R23"
+    ]
+  },
+  "history_off": {
+    "buildCount": 1,
+    "rooms": 28,
+    "cells": 38,
+    "resources": 780,
+    "counts": {
+      "FO": 1,
+      "FGI": 0,
+      "backdraft": 1,
+      "rollover": 0,
+      "caution": 5
+    },
+    "activeRooms": [
+      {
+        "room_id": "CAD_3F_R2",
+        "types": [
+          "FO",
+          "backdraft"
+        ],
+        "historyOnly": [],
+        "heights": [
+          16.27749030841414,
+          16.41749030841414,
+          16.557490308414142,
+          16.69749030841414
+        ]
+      }
+    ],
+    "cautionRooms": [
+      "CAD_3F_R7",
+      "CAD_3F_R9",
+      "CAD_3F_R12",
+      "CAD_3F_R17",
+      "CAD_3F_R23"
+    ]
+  },
+  "checks": "scalar full-period maxima/earliest tie/null, time0 FO+BD dashed,1420 FO solid overlay, room cell OR, threshold/toggle, no rebuild, dispose0",
+  "simulation_runs": 0
+}

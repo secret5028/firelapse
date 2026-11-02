@@ -1,0 +1,38 @@
+[
+  {
+    "scene": "S09-1420",
+    "changed_pixels": 0,
+    "max_channel_difference": 0,
+    "size": [
+      595,
+      700
+    ]
+  },
+  {
+    "scene": "S09-1800",
+    "changed_pixels": 0,
+    "max_channel_difference": 0,
+    "size": [
+      595,
+      700
+    ]
+  },
+  {
+    "scene": "S06-890",
+    "changed_pixels": 0,
+    "max_channel_difference": 0,
+    "size": [
+      595,
+      700
+    ]
+  },
+  {
+    "scene": "all-core",
+    "changed_pixels": 0,
+    "max_channel_difference": 0,
+    "size": [
+      595,
+      700
+    ]
+  }
+]

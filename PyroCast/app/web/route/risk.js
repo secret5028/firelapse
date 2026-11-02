@@ -17,7 +17,7 @@ export function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings
   if(cache.has(id))return cache.get(id);
   let maximum=null,type=null,source_cell=null,missing=false;
   const cells=rooms.get(id)?.cells||[];
-  for(const c of cells)for(const key of types){const value=i<0?null:indices?.[c.cell_id]?.[key]?.[i];
+  for(const c of cells)for(const key of types){const value=history?indices?.[c.cell_id]?.[key]:i<0?null:indices?.[c.cell_id]?.[key]?.[i];
    if(!Number.isFinite(value)){missing=true;continue;}
    // Stable ties: first member and FO/FGI/backdraft/rollover order.
    if(maximum===null||value>maximum){maximum=value;type=key;source_cell=c.cell_id;}

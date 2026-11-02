@@ -7,6 +7,13 @@ export function selectedScores(result,cell,index){return resultTypes.map(([type,
  const c=result.cell_conditions[cell]?.[index]?.[type],axis=c?.bottleneck;
  return {type,name,color,value:result.index_by_cell[cell]?.[type]?.[index]??null,bottleneck:({T:'온도',F:'연료',O:'산소'})[axis]??null,factor:finite(c?.['r_'+axis])?c['r_'+axis]*100:null};
 });}
+export function worstIndexEntries(result,cells){return resultTypes.map(([type,name])=>{
+ let value=null,time=null,source=null;
+ for(const id of cells){const v=result.index_history_max?.[id]?.[type],t=result.index_history_peak_s?.[id]?.[type];
+  if(finite(v)&&(value===null||v>value||(v===value&&finite(t)&&(!finite(time)||t<time)))){value=v;time=t;source=id;}
+ }
+ return {type,name,value,time,source};
+});}
 // Presentation aggregation only: read saved degrees, deduplicate cells by original room.
 // No time integration, factor recomputation or room-average series.
 export function summarizeMCPlayback(playback){
@@ -26,6 +33,7 @@ export function createResultsPanel({panel,store}){
  root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase">사례</label><div id="resultCaseControls"></div><div id="resultMetadata"></div><div id="resultReuse" role="status"></div><button id="resultReplay" type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><label for="liteRoom">실·셀</label><div id="resultRoomControl"></div><div id="resultRoomTitle"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><div id="resultBottleneck"></div><details><summary>계산값</summary><div id="resultQuantities"></div></details></div><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div><details id="resultLimits"><summary>가정과 한계</summary><ul></ul></details>';
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';move($('liteRoom'),$('resultRoomControl'));
  $('resultTools').remove();
+ const worst=document.createElement('div');worst.id='resultWorstTime';worst.style.cssText='font-size:11px;white-space:nowrap;overflow-x:auto;margin:8px 0;color:#b8cbd8';$('resultRoomTitle').after(worst);
  const reviewDetails=document.createElement('details');reviewDetails.id='resultMenuReview';reviewDetails.innerHTML='<summary>전체 메뉴 검토</summary><div id="resultReviewMount"></div>';root.append(reviewDetails);
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
@@ -39,6 +47,9 @@ export function createResultsPanel({panel,store}){
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   $('resultRoomTitle').textContent=`${room?.room_id?.replace('CAD_','')||'실 선택'} · ${stamp(result.time_s[index])}`;
+  const peaks=worstIndexEntries(result,cell?[cell]:(room?.cells||[]).map(c=>c.cell_id));
+  worst.textContent='최악 시각 · '+peaks.map(p=>`${p.name} ${number(p.value)}${finite(p.time)?' @ '+stamp(p.time):''}`).join(' · ');
+  worst.title=(cell?'선택 셀':'실 내 멤버 셀 최대')+' · 전 구간, 동률은 최초 시각. '+peaks.map(p=>`${p.name}: ${p.source??'미평가'}`).join(' / ');
   if(roomKey!==room?.room_id||previous!==result){$('resultCellList').replaceChildren();for(const c of room?.cells||[]){const b=append($('resultCellList'),'button',c.cell_id.split('_').at(-1));b.dataset.cell=c.cell_id;b.onclick=()=>store.dispatch('selection/set',{room_id:room.room_id,cell_id:c.cell_id,source:'list'});}roomKey=room?.room_id;}
   $('resultCells').hidden=!(room?.cells.length>1);$('resultCells').open=room?.cells.length>1;for(const b of $('resultCellList').children)b.setAttribute('aria-pressed',String(b.dataset.cell===cell));
   const scores=cell?selectedScores(result,cell,index):resultTypes.map(([type,name,color])=>({type,name,color,value:null})),threshold=store.get('risk').threshold,scale=Math.max(200,threshold.ribbon,threshold.caution,...scores.map(s=>s.value??0));

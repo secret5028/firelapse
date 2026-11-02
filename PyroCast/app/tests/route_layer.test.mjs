@@ -20,7 +20,7 @@ for(let i=0;i<50;i++){
 }
 layer.setData({...frame,route:{...frame.route,vehicle_visible:false}});assert.ok(layer.items.filter(x=>!x.route).every(x=>!x.object.visible));
 const building={floors:[{rooms:[{room_id:'CAD_3F_R2',cells:[{cell_id:'R2_C0'}]}]}]};
-const resultMeta={time_s:[1420,3600],index_by_cell:{R2_C0:{FO:[120,0],FGI:[0,0],backdraft:[0,0],rollover:[0,0]}},index_history_max:{R2_C0:{FO:[120,120],FGI:[0,0],backdraft:[0,0],rollover:[0,0]}}};
+const resultMeta={time_s:[1420,3600],index_by_cell:{R2_C0:{FO:[120,0],FGI:[0,0],backdraft:[0,0],rollover:[0,0]}},index_history_max:{R2_C0:{FO:120,FGI:0,backdraft:0,rollover:0}}};
 const riskResources=[...layer.resources];
 for(const [t_s,history,color] of [[1420,false,'ef4444'],[3600,true,'ef4444'],[3600,false,'38bdf8']]){
  layer.setData({...frame,building,resultMeta,t_s,risk:{history}});

@@ -247,3 +247,7 @@ Browser-controlled GET-only fixture app/tests/smoke_amplitude_proxy.py pins cloc
 ## B-3 발열량 기준 불꽃 (2026-11-02)
 
 표시 탭 성장 비율(기본)/발열량 기준. HRR 모드는 Q/HRRPUA 면적(셀 상한), 기존 플룸 Heskestad 높이, ID 해시 배열, 실제 HRR 상위 3개 조명을 사용한다. HRRPUA는 선별 계산과 같은 fire_load_table.json을 GET /cfbt/lite/fire-load-table로 직접 읽는다. 사용자 승인 예외: 서버 읽기 전용 3줄, 127.0.0.1만 허용. 계산·캐시·저장 불변. 기본 4장면 및 모드 왕복 0픽셀, 요청 캡처 7장 완료. 상세: specs/웹앱-B3-발열량불꽃-20261102.md. 증거: results/ui_B3_hrr_20261028. 한 커밋, push 없이 정지.
+
+
+## C-0 HRR 불꽃 수정 (2026-11-02)
+절대 혀 간격·cluster clamp·셀 마스크 내부 면적 4회 이분법·고정 0.3 m 감쇠. 성장 기본 4장면 픽셀 0. Q/HRRPUA 등가 지름과 마스크 보정 표시 원 지름을 구분한다. 상세: specs/웹앱-C0-HRR불꽃수정-20261102.md.

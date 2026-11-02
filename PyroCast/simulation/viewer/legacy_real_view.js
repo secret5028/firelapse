@@ -79,6 +79,28 @@ export function flameHrrDimensions(q,hrrpua,cellArea,maxHeight){
 }
 export function flameIdPhase(id){let h=2166136261;for(const c of String(id)){h^=c.codePointAt(0);h=Math.imul(h,16777619);}return (h>>>0)/4294967296*6.2831853;}
 
+// Display-only area query, built once from the same CAD mask used by the shader.
+export function flameMaskAreaProfile(bounds,origin,image,step=2){
+ const radii=[];for(let y=0;y<image.height;y+=step)for(let x=0;x<image.width;x+=step){
+  if(image.data[(y*image.width+x)*4]<=254)continue;
+  radii.push(Math.hypot(bounds.x+(x+.5)*bounds.w/image.width-origin[0],bounds.y+(y+.5)*bounds.d/image.height-origin[1]));
+ }
+ radii.sort((a,b)=>a-b);
+ const pixelArea=bounds.w*bounds.d*step*step/(image.width*image.height),maxRadius=Math.max(0,...bounds.ps.flatMap(p=>p.o.map(v=>Math.hypot(v[0]-origin[0],v[1]-origin[1]))));
+ return {radii,pixelArea,maxRadius,availableArea:radii.length*pixelArea};
+}
+export function flameMaskedFootprint(profile,requestedArea,cellArea){
+ const target=Math.min(Math.max(0,requestedArea),cellArea,profile.availableArea);
+ const areaAt=r=>{let lo=0,hi=profile.radii.length;while(lo<hi){const m=(lo+hi)>>>1;if(profile.radii[m]<=r)lo=m+1;else hi=m;}return lo*profile.pixelArea;};
+ if(!(target>0))return {diameter:0,targetArea:target,insideArea:0,iterations:0,fullCell:false};
+ if(requestedArea>=cellArea||target>=profile.availableArea)return {diameter:2*(profile.maxRadius+.3),targetArea:target,insideArea:profile.availableArea,iterations:0,fullCell:true};
+ let lo=Math.sqrt(target/Math.PI),hi=Math.min(profile.maxRadius,lo*2);
+ while(areaAt(hi)<target&&hi<profile.maxRadius)hi=Math.min(profile.maxRadius,hi*2);
+ for(let i=0;i<4;i++){const mid=(lo+hi)/2;if(areaAt(mid)<target)lo=mid;else hi=mid;}
+ const a=areaAt(lo),b=areaAt(hi),radius=b>a?lo+(hi-lo)*Math.max(0,Math.min(1,(target-a)/(b-a))):hi;
+ return {diameter:2*radius,targetArea:target,insideArea:areaAt(radius),iterations:4,fullCell:false};
+}
+
 export function createLegacyRealistic(viewer, configuration){
  const {THREE,C,groups}=viewer;
 
@@ -154,7 +176,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
  `;
  const vertex=`varying vec3 vLocal;void main(){vLocal=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
  const fragment=`precision highp float;
- varying vec3 vLocal;uniform vec3 uCamera,uSize;uniform sampler2D uMask;uniform vec2 uMaskOffset,uMaskScale;
+ varying vec3 vLocal;uniform vec3 uCamera,uSize;uniform sampler2D uMask;uniform vec2 uMaskOffset,uMaskScale;uniform float uJitterSeed;
  uniform float uTime,uOD,uFire,uGas,uPower,uStyle,uPhase,uOpacity,uRiskMix,uGrowth,uDarkSmoke,uCluster,uTemperatureSmoke,uLayerTemp,uNoiseAmp,uNoiseScale,uRampMode;uniform vec3 uRiskColor,uStageColor;${noise}
  void main(){
  vec3 ray=normalize(vLocal-uCamera),safeRay=vec3(ray.x<0.?-max(-ray.x,.00001):max(ray.x,.00001),ray.y<0.?-max(-ray.y,.00001):max(ray.y,.00001),ray.z<0.?-max(-ray.z,.00001):max(ray.z,.00001));
@@ -180,7 +202,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
  // Three variations of the original compact flame; no detached ribbons.
  float variant=mod(floor(uPhase/2.17+.1),mix(3.,5.,uGrowth));
  float speed=mix(2.8,2.3+variant*.55,uStyle);
- float z=p.z;vec2 noiseXY=mix(p.xy*(5.+uStyle*variant*.6),(p.xy-.5)*uSize.xy*2.8,uCluster);
+ float z=p.z;vec2 noiseXY=mix(p.xy*(5.+uStyle*variant*.6),(p.xy-.5)*uSize.xy*2.8,clamp(uCluster,0.,1.));
  vec3 npos=vec3(noiseXY,z*5.-uTime*speed+uPhase);float n=billow(npos);
  vec2 drift=vec2(sin(z*8.-uTime*(2.+variant*.15)+uPhase),cos(z*9.-uTime*2.3+uPhase))*.07*z;
  float radius=length((p.xy-.5+drift)*2.);float width=pow(max(.001,1.-z),1.+uStyle*(variant-1.)*.06);
@@ -190,15 +212,15 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
   // One noise sample and one volume draw remain; CAD clipping is applied above.
   vec2 local=(p.xy-.5)*uSize.xy;
   float spacing=min(1.35,max(.45,uSize.x*.7));
-   if(uCluster>1.5)spacing=uSize.x*mix(.5,1.1,fract(uPhase/6.2831853));
   vec2 tile=floor(local/spacing+.5),within=local-tile*spacing;
   float seed=hash(vec3(tile,uPhase));
   vec2 jitter=vec2(sin(seed*37.),cos(seed*53.))*spacing*.10;
-   if(uCluster>1.5)jitter=vec2(sin(seed*37.),cos(seed*53.))*spacing*.4;
+   if(uCluster>1.5){float jitterSeed=hash(vec3(tile,uJitterSeed));jitter=vec2(sin(jitterSeed*37.),cos(jitterSeed*53.))*spacing*.4;}
   float zz=z/(.65+.35*seed),ww=pow(max(.001,1.-zz),1.05);
   vec2 sway=vec2(sin(uTime*(2.+seed)+seed*9.),cos(uTime*2.3+seed*7.))*.08*z;
   float rr=length(within-jitter+sway)/(spacing*.42);
   float envelope=1.-smoothstep(.72,1.,length((p.xy-.5)*2.));
+   if(uCluster>1.5)envelope=1.-smoothstep(max(0.,uSize.x*.5-.3),uSize.x*.5,length(local));
   body=zz<1.?(1.-rr/max(.01,ww)+(n-.5)*1.2)*envelope:-1.;
   if(envelope<=0.)body=-1.;
  }
@@ -300,7 +322,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
   ring=new THREE.Mesh(new THREE.RingGeometry(.62,.76,32),new THREE.MeshBasicMaterial({color:0xff9c32,transparent:true,opacity:.85,side:THREE.DoubleSide,depthWrite:false}));ring.position.set(f.position[0],f.position[1],(f.base_height||0)+.025);ring.raycast=()=>{};ring.visible=false;root.add(ring);
   ring.scale.setScalar(Math.min(1,flameBoundaryClearance(f.position,bounds.ps)/.76));
   flame.material.uniforms.uPhase.value=flames.length*2.17;
-  flame.material.uniforms.uGrowth={value:0};flame.material.uniforms.uCluster={value:0};flame.material.uniforms.uStageColor={value:new THREE.Color(1,.66,.14)};
+  flame.material.uniforms.uGrowth={value:0};flame.material.uniforms.uCluster={value:0};flame.material.uniforms.uStageColor={value:new THREE.Color(1,.66,.14)};flame.material.uniforms.uJitterSeed={value:flameIdPhase(f.id)};
   const peak=Math.max(0,...(f.hrr||[])),peakIndex=(f.hrr||[]).indexOf(peak);
   flames.push({f,flame,light,fuel,ring,bounds,q:0,peak,peakIndex,legacyPhase:flames.length*2.17,idPhase:flameIdPhase(f.id),maximumFootprint:flameFootprint(bounds.ps,1)});
  }
@@ -311,10 +333,15 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires}
   // Native mean height and equivalent source diameter. Small flicker is visual;
   // tiny flames retain their location ring instead of camera-dependent enlargement.
   const hrr=state?.flameDisplay==='hrr';
-   const phase=hrr?e.idPhase:e.legacyPhase;flame.material.uniforms.uPhase.value=phase;
+   const phase=e.legacyPhase;flame.material.uniforms.uPhase.value=phase;
    const pulse=state?.realView?1+.04*Math.sin(now*.003+phase)+.02*Math.sin(now*.007+phase*2):1;
    const growth=state?.flameDisplay==='growth',style=flameGrowthStyle(e.q,e.peak,state?.time||0,e.peakIndex*(state?.step||1));
    const dimensions=hrr?flameHrrDimensions(e.q,f.hrrpua_kW_m2,f.cell_area_m2,e.maxHeight):growth?{height:style.height*pulse,diameter:style.diameter}:flameDisplayDimensions(Math.min(e.maxHeight,e.physicalHeight*pulse),Math.sqrt(4*(f.plume_inputs?.area||f.area||.64)/Math.PI),state?.flameDisplay);
+   if(hrr){
+    if(!e.maskProfile){const canvas=flame.material.uniforms.uMask.value.image;e.maskProfile=flameMaskAreaProfile(e.bounds,f.position,canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height));}
+    if(e.maskArea!==dimensions.area){e.maskArea=dimensions.area;e.maskFootprint=flameMaskedFootprint(e.maskProfile,dimensions.area,f.cell_area_m2);}
+    flame.userData.maskFootprint=e.maskFootprint;dimensions.diameter=e.maskFootprint.diameter;
+   }
    flame.material.uniforms.uGrowth.value=growth||hrr?1:0;flame.material.uniforms.uCluster.value=hrr?2:growth?1:0;flame.material.uniforms.uStageColor.value.setRGB(...style.tint);e.stage=growth||hrr?style.stage:null;
    const h=Math.min(e.maxHeight,Math.max(hrr?.1:0,dimensions.height*(hrr?pulse:1))),width=growth ? .6+(e.maximumFootprint-.6)*Math.sqrt(style.ratio) : dimensions.diameter;
   flame.userData.q=e.q;flame.userData.stage=e.stage;

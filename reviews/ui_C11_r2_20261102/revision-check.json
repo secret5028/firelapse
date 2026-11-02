@@ -1,0 +1,14 @@
+{
+  "revision": "C11_r2",
+  "spec_bytes": 8516,
+  "checks": {
+    "fuel-inputs.json": true,
+    "materials.json": true,
+    "thermal-input.json": true,
+    "materials.cfast.inc": true,
+    "floor_geometry_unchanged": true
+  },
+  "spec_sha256": "f6f2cfc24df866dc376e59291bb93b3cc43560a2337436f63ef0a8b5add4f8b1",
+  "simulation_runs": 0,
+  "P1_started": false
+}

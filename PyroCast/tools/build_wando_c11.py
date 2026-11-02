@@ -62,7 +62,7 @@ def build():
         '실 내부 치수는 유지. 벽 시각화 두께 0.4 m(RC .3+PU .1) 가정. 지시서 좌표의 0.25 m 간극도 유지.',
         '72×18.4 m와 지시서의 1층 면적 1701.3 m²는 불일치. 돌출부·미제공 공간을 임의로 늘리지 않음.',
         f'R9 돌출부 포함 실 바닥면적 합 {sum(Polygon(r["polygon_m"]).area for r in rooms):.1f} m². 원 보고 면적을 충족하는 완전한 준공 모델이 아님.',
-        '2층 공장 미모델. 상부는 슬래브 표시만. 초기 문은 닫힘 표시용이며 A/B/C 실행 상태는 아직 미작성.',
+        '2층 공장 미모델. 상부는 슬래브 표시만. 초기 문은 계산 전 닫힘 표시용이며 r2 P1의 t=0 개방 조건을 뜻하지 않음. P1~P4는 승인 대기.',
         '기계실 equipment 클래스 수치 미지정: 기존 default 500 MJ/m²·250 kW/m²·t_alpha 300 s 임시값.',
         '저온실의 생선·배추·미역 저장물은 연료에 더하지 않음. 지시서대로 PU 내장재만 바닥 등가로 환산.',
         '벽·천장 PU 열경계는 단일 재료 근사. RC·강판·에폭시 복합층 및 강판 뒤 산소 제한은 미모델.'
@@ -85,7 +85,7 @@ def build():
     write('thermal-input.json', dict(wall_material=pu,surface_materials={'PU_LINING':pu,'CONCRETE_FLOOR':concrete},
                                     rooms=[dict(id=r['room_id'],surface_material_ids=dict(wall='PU_LINING',ceiling='PU_LINING',floor='CONCRETE_FLOOR')) for r in rooms],
                                     note='입력 합성용 조각. 독립 실행 덱/시나리오 아님.'))
-    write('provenance.json', dict(spec_sha256=building['source_hash'],source='C11 specification, not independently verified HWP',
+    write('provenance.json', dict(spec_sha256=building['source_hash'],spec_revision='C11_r2',source='C11 r2 specification, not independently verified HWP',
                                  assumptions=notes,reported_first_floor_m2=1701.3,modeled_floor_m2=sum(Polygon(r['polygon_m']).area for r in rooms),
                                  section3_executed=False,section4_building_switcher_implemented=False))
     return building

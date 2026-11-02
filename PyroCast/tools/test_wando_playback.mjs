@@ -15,8 +15,14 @@ const src=read('simulation/results/wando_C11_P1_20261102/timeseries.json');
 for(const [native,id] of [['ROOM','CAD_1F_R5'],['CAVITY','CAD_1F_CAVITY']]){
  assert.deepEqual(result.cells[id].T_upper_C,src[native].T_upper_C);
  assert.deepEqual(result.cells[id].HRR_actual_kW,src[native].source_HRR_kW);
- for(const [old,key] of [['FO','FO'],['FGI','FGI'],['BD','backdraft'],['rollover','rollover']])assert.deepEqual(result.index_by_cell[id][key],src[native][old]);
+ for(const [old,key] of [['FGI','FGI'],['BD','backdraft'],['rollover','rollover']])assert.deepEqual(result.index_by_cell[id][key],src[native][old]);
+ assert.deepEqual(result.index_by_cell[id].FO,src[native].T_upper_C.map(t=>(t/600)*100));
+ assert.deepEqual(p.solvers[native].conditions.FO.legacy_combustion_support_scores.degree.map(v=>v*100),src[native].FO);
+ assert.equal(p.solvers[native].conditions.FO.scores.floor_flux_status,'not_evaluated');
 }
+assert.ok(Math.abs(result.index_history_max.CAD_1F_R5.FO-72.70000093233333)<1e-8);
+assert.equal(result.index_history_peak_s.CAD_1F_R5.FO,1815);
+assert.equal(result.cell_conditions.CAD_1F_R5[p.time_s.indexOf(2100)].FO.bottleneck,'T');
 const graph=readRouteGraph(b),route=findRoute(graph,p.route_target_room_id);
 assert.equal(route.entry,'CAD_1F_ENTRY_R5');assert.deepEqual(route.vehicle,[49.375,-5,0]);
 assert.deepEqual(route.segments.at(-1).b,[46.75,17.95,0]);assert.equal(route.hoses,2);assert.equal(route.stairs,0);
@@ -29,7 +35,7 @@ const layer=new OpeningsLayer(T,{camera,geometryFor:()=>asset});layer.mount(scen
 const geometry=[];for(const t of [1315,1320,1795,1800,2100]){layer.setData({building,resultMeta:result,t_s:t,floor:{floor_id:'1F'}});layer.tick();const cut=layer.group.getObjectByName('scheduled-opening-CUT');geometry.push({t,visible:cut.visible,fraction:cut.userData.displayFraction,width_m:cut.geometry.parameters.width*cut.scale.x});}
 assert.equal(geometry[0].visible,false);assert.equal(geometry[1].width_m,1);assert.equal(geometry[3].width_m,2);assert.equal(layer.buildCount,1);layer.dispose();assert.equal(store.diagnostics().subscriptions,0);
 const evidence={samples:p.time_s.length,end_s:result.t_end_s,adapter_errors:result.errors,
- source_temperature_hrr_indices_exact:true,route,cut:{times:[1315,1320,1795,1800,2100],fractions,geometry,builds:1,subscriptions_after_dispose:0},
+ source_temperature_hrr_other_indices_exact:true,FO_temperature_ratio_exact:true,legacy_FO_preserved:true,route,cut:{times:[1315,1320,1795,1800,2100],fractions,geometry,builds:1,subscriptions_after_dispose:0},
  conditions:[1320,2100,3595].map(t=>({time_s:t,room:'R5',...Object.fromEntries(Object.entries(result.index_by_cell.CAD_1F_R5).map(([k,a])=>[k,a[p.time_s.indexOf(t)]]))})),
  simulation_runs:0};
-mkdirSync('simulation/results/wando_C11_UI_20261102',{recursive:true});writeFileSync('simulation/results/wando_C11_UI_20261102/verification.json',JSON.stringify(evidence,null,2));console.log(JSON.stringify(evidence,null,2));
+mkdirSync('simulation/results/wando_FO_thermal_20261102',{recursive:true});writeFileSync('simulation/results/wando_FO_thermal_20261102/verification.json',JSON.stringify(evidence,null,2));console.log(JSON.stringify(evidence,null,2));

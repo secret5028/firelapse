@@ -1,0 +1,88 @@
+{
+  "simulation/pyrocast_cfbt/conditions.py": {
+    "unchanged": true,
+    "sha256": "c7e15c19c6bf1c1ddaa4651a654197fb7f956310cea870b7a767df92e97cefec"
+  },
+  "simulation/viewer/legacy_real_view.js": {
+    "unchanged": true,
+    "sha256": "f4014b5697ba934f8d96e929533cd16c2b4508d7987cfbacdba110785d65282a"
+  },
+  "app/web/scene/render_order.js": {
+    "unchanged": true,
+    "sha256": "b907586fb9d87c1c74e6943479b3524ffb05d20cd77f6019eb7b93546bda9cca"
+  },
+  "tools/serve_wando_c11.py": {
+    "unchanged": true,
+    "sha256": "05fd2dfd4f69b4e04a2424be3f88ddae44689e842d480d55608c4ec71b22a261"
+  },
+  "data/wando-coldstore/operating-building.json": {
+    "unchanged": true,
+    "sha256": "c13ece4f4bbc4627894b219d05604a7efa4b8989183cb75acc3c348c544fcbf4"
+  },
+  "wando_C11_P1_20261102/model.json": {
+    "unchanged": true,
+    "sha256": "a4db84dc6cc6da8d18baad63fda6bb633c8094089ed9865c2dd6289aa6c083ad"
+  },
+  "wando_C11_P1_20261102/case.in": {
+    "unchanged": true,
+    "sha256": "6bf7a52a99cf956ba64ed702fce321c6f15e7672564944efdef56e204b016b26"
+  },
+  "wando_C11_P1_20261102/case_compartments.csv": {
+    "unchanged": true,
+    "sha256": "425c33e115484a51263a04ddda75a0abd572fa5bc541d5599ba36fc09603293a"
+  },
+  "wando_C11_P1_20261102/timeseries.json": {
+    "unchanged": true,
+    "sha256": "6efa9fa9f03b0234dfe3cdd4ade96a2ba7567528b385b7b375208e5fdcc00b21"
+  },
+  "wando_C11_P1_20261102/condition-scores.json": {
+    "unchanged": true,
+    "sha256": "17982e8177a90da53c17ad61cc80ad988d1adeda2a7afe324f31cb0201db9a5b"
+  },
+  "wando_C11_P2_20261102/model.json": {
+    "unchanged": true,
+    "sha256": "f2bc47fb2d81a21bb36a691e90bd1f76ebda732ab423b63743fa6c7fbaf20736"
+  },
+  "wando_C11_P2_20261102/case.in": {
+    "unchanged": true,
+    "sha256": "d257e027721c78e632ab3d24e465ff724ae009f71a8c5472f56781dc8be1f6f9"
+  },
+  "wando_C11_P2_20261102/case_compartments.csv": {
+    "unchanged": true,
+    "sha256": "4da7f8ffeb45cb391801f748cd34bdf18a6baddb0c5dd9f3fb4ffb388d4d0ebe"
+  },
+  "wando_C11_P2_20261102/timeseries.json": {
+    "unchanged": true,
+    "sha256": "01d18a0d93332bf3b03fa2a9143cb77bdca87e4bd5ba08b8a80741fba7061ef4"
+  },
+  "wando_C11_P2_20261102/condition-scores.json": {
+    "unchanged": true,
+    "sha256": "f5164dfab9d157c3e796dc9e4073d6c9d4fc27c2756b84310c012433aee0a77a"
+  },
+  "wando_C11_P4_20261102/model.json": {
+    "unchanged": true,
+    "sha256": "d13cdf433e24f6f9b95d0c67a2b7aa7e070778f1e68ad7999efe7c45efd52e26"
+  },
+  "wando_C11_P4_20261102/case.in": {
+    "unchanged": true,
+    "sha256": "1e2ca9e0c695ee08e25e262cfd06fb3672835cf4eaf81e62b897d2a92c7addd0"
+  },
+  "wando_C11_P4_20261102/case_compartments.csv": {
+    "unchanged": true,
+    "sha256": "73aac2b35e32f7173302352fc856479efa339b92f42b075534ac601e9d061365"
+  },
+  "wando_C11_P4_20261102/timeseries.json": {
+    "unchanged": true,
+    "sha256": "a4a89291ef296c8290aa9fc94630f62090b8632bf69cbc3d112ac73fd1b83d98"
+  },
+  "wando_C11_P4_20261102/condition-scores.json": {
+    "unchanged": true,
+    "sha256": "5a98f12dba4e1164466f5fb1187b9fdf1f9d67c340506b796758938df087fde3"
+  },
+  "playback": {
+    "physical_arrays_unchanged": true,
+    "other_three_conditions_unchanged": true,
+    "browser_console_errors": 0,
+    "simulation_reruns": 0
+  }
+}

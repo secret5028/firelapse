@@ -1,0 +1,742 @@
+{
+  "sample_id": "C9A_S09_RADIAL_AREA",
+  "kind": "random",
+  "complete": true,
+  "safe_end_s": 3600.0,
+  "phenomena": {
+    "FO": {
+      "status": "evaluated",
+      "basis": "shared conditions.py",
+      "ever_room_count": 1,
+      "rooms": {
+        "CAD_3F_R2": 980.0
+      },
+      "first_s": 980.0,
+      "max_simultaneous_room_count": 1,
+      "score_max": 1.08674006882953,
+      "score_basis": "maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median",
+      "met_time_fraction_by_room": {
+        "CAD_3F_R0": 0.0,
+        "CAD_3F_R1": 0.0,
+        "CAD_3F_R3": 0.0,
+        "CAD_3F_R4": 0.0,
+        "CAD_3F_R5": 0.0,
+        "CAD_3F_R6": 0.0,
+        "CAD_3F_R7": 0.0,
+        "CAD_3F_R8": 0.0,
+        "CAD_3F_R9": 0.0,
+        "CAD_3F_R10": 0.0,
+        "CAD_3F_R11": 0.0,
+        "CAD_3F_R12": 0.0,
+        "CAD_3F_R13": 0.0,
+        "CAD_3F_R15": 0.0,
+        "CAD_3F_R16": 0.0,
+        "CAD_3F_R17": 0.0,
+        "CAD_3F_R18": 0.0,
+        "CAD_3F_R19": 0.0,
+        "CAD_3F_R20": 0.0,
+        "CAD_3F_R21": 0.0,
+        "CAD_3F_R22": 0.0,
+        "CAD_3F_R23": 0.0,
+        "CAD_3F_R24": 0.0,
+        "CAD_3F_R25": 0.0,
+        "CAD_3F_R26": 0.0,
+        "CAD_3F_CE0": 0.0,
+        "CAD_3F_CE1": 0.0,
+        "CAD_3F_R2": 0.08611111111111111
+      },
+      "met_room_time_fraction": 0.0030753968253968253
+    },
+    "FGI": {
+      "status": "evaluated",
+      "basis": "shared conditions.py",
+      "ever_room_count": 2,
+      "rooms": {
+        "CAD_3F_R1": 2880.0,
+        "CAD_3F_R2": 1730.0
+      },
+      "first_s": 1730.0,
+      "max_simultaneous_room_count": 2,
+      "score_max": 1.1972724799595396,
+      "score_basis": "maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median",
+      "met_time_fraction_by_room": {
+        "CAD_3F_R0": 0.0,
+        "CAD_3F_R1": 0.002777777777777778,
+        "CAD_3F_R3": 0.0,
+        "CAD_3F_R4": 0.0,
+        "CAD_3F_R5": 0.0,
+        "CAD_3F_R6": 0.0,
+        "CAD_3F_R7": 0.0,
+        "CAD_3F_R8": 0.0,
+        "CAD_3F_R9": 0.0,
+        "CAD_3F_R10": 0.0,
+        "CAD_3F_R11": 0.0,
+        "CAD_3F_R12": 0.0,
+        "CAD_3F_R13": 0.0,
+        "CAD_3F_R15": 0.0,
+        "CAD_3F_R16": 0.0,
+        "CAD_3F_R17": 0.0,
+        "CAD_3F_R18": 0.0,
+        "CAD_3F_R19": 0.0,
+        "CAD_3F_R20": 0.0,
+        "CAD_3F_R21": 0.0,
+        "CAD_3F_R22": 0.0,
+        "CAD_3F_R23": 0.0,
+        "CAD_3F_R24": 0.0,
+        "CAD_3F_R25": 0.0,
+        "CAD_3F_R26": 0.0,
+        "CAD_3F_CE0": 0.0,
+        "CAD_3F_CE1": 0.0,
+        "CAD_3F_R2": 0.5194444444444445
+      },
+      "met_room_time_fraction": 0.01865079365079365
+    },
+    "backdraft": {
+      "status": "evaluated",
+      "basis": "shared conditions.py",
+      "ever_room_count": 1,
+      "rooms": {
+        "CAD_3F_R2": 1460.0
+      },
+      "first_s": 1460.0,
+      "max_simultaneous_room_count": 1,
+      "score_max": 1.0855857515664906,
+      "score_basis": "maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median",
+      "met_time_fraction_by_room": {
+        "CAD_3F_R0": 0.0,
+        "CAD_3F_R1": 0.0,
+        "CAD_3F_R3": 0.0,
+        "CAD_3F_R4": 0.0,
+        "CAD_3F_R5": 0.0,
+        "CAD_3F_R6": 0.0,
+        "CAD_3F_R7": 0.0,
+        "CAD_3F_R8": 0.0,
+        "CAD_3F_R9": 0.0,
+        "CAD_3F_R10": 0.0,
+        "CAD_3F_R11": 0.0,
+        "CAD_3F_R12": 0.0,
+        "CAD_3F_R13": 0.0,
+        "CAD_3F_R15": 0.0,
+        "CAD_3F_R16": 0.0,
+        "CAD_3F_R17": 0.0,
+        "CAD_3F_R18": 0.0,
+        "CAD_3F_R19": 0.0,
+        "CAD_3F_R20": 0.0,
+        "CAD_3F_R21": 0.0,
+        "CAD_3F_R22": 0.0,
+        "CAD_3F_R23": 0.0,
+        "CAD_3F_R24": 0.0,
+        "CAD_3F_R25": 0.0,
+        "CAD_3F_R26": 0.0,
+        "CAD_3F_CE0": 0.0,
+        "CAD_3F_CE1": 0.0,
+        "CAD_3F_R2": 0.025
+      },
+      "met_room_time_fraction": 0.0008928571428571429
+    },
+    "untenable": {
+      "status": "evaluated",
+      "basis": "shared conditions.py",
+      "ever_room_count": 9,
+      "rooms": {
+        "CAD_3F_R1": 1530.0,
+        "CAD_3F_R10": 1460.0,
+        "CAD_3F_R12": 860.0,
+        "CAD_3F_R17": 710.0,
+        "CAD_3F_R2": 810.0,
+        "CAD_3F_R23": 900.0,
+        "CAD_3F_R7": 750.0,
+        "CAD_3F_R8": 970.0,
+        "CAD_3F_R9": 930.0
+      },
+      "first_s": 710.0,
+      "max_simultaneous_room_count": 9,
+      "score_max": null,
+      "score_basis": "maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median",
+      "met_time_fraction_by_room": {
+        "CAD_3F_R0": 0.0,
+        "CAD_3F_R1": 0.575,
+        "CAD_3F_R3": 0.0,
+        "CAD_3F_R4": 0.0,
+        "CAD_3F_R5": 0.0,
+        "CAD_3F_R6": 0.0,
+        "CAD_3F_R7": 0.7916666666666666,
+        "CAD_3F_R8": 0.7305555555555555,
+        "CAD_3F_R9": 0.7416666666666667,
+        "CAD_3F_R10": 0.2777777777777778,
+        "CAD_3F_R11": 0.0,
+        "CAD_3F_R12": 0.7611111111111111,
+        "CAD_3F_R13": 0.0,
+        "CAD_3F_R15": 0.0,
+        "CAD_3F_R16": 0.0,
+        "CAD_3F_R17": 0.8027777777777778,
+        "CAD_3F_R18": 0.0,
+        "CAD_3F_R19": 0.0,
+        "CAD_3F_R20": 0.0,
+        "CAD_3F_R21": 0.0,
+        "CAD_3F_R22": 0.0,
+        "CAD_3F_R23": 0.75,
+        "CAD_3F_R24": 0.0,
+        "CAD_3F_R25": 0.0,
+        "CAD_3F_R26": 0.0,
+        "CAD_3F_CE0": 0.0,
+        "CAD_3F_CE1": 0.0,
+        "CAD_3F_R2": 0.775
+      },
+      "met_room_time_fraction": 0.22162698412698414
+    },
+    "rollover": {
+      "status": "evaluated",
+      "basis": "shared conditions.py",
+      "ever_room_count": 1,
+      "rooms": {
+        "CAD_3F_R1": 1710.0
+      },
+      "first_s": 1710.0,
+      "max_simultaneous_room_count": 1,
+      "score_max": 1.0548464213518622,
+      "score_basis": "maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median",
+      "met_time_fraction_by_room": {
+        "CAD_3F_R0": 0.0,
+        "CAD_3F_R1": 0.07777777777777778,
+        "CAD_3F_R3": 0.0,
+        "CAD_3F_R4": 0.0,
+        "CAD_3F_R5": 0.0,
+        "CAD_3F_R6": 0.0,
+        "CAD_3F_R7": 0.0,
+        "CAD_3F_R8": 0.0,
+        "CAD_3F_R9": 0.0,
+        "CAD_3F_R10": 0.0,
+        "CAD_3F_R11": 0.0,
+        "CAD_3F_R12": 0.0,
+        "CAD_3F_R13": 0.0,
+        "CAD_3F_R15": 0.0,
+        "CAD_3F_R16": 0.0,
+        "CAD_3F_R17": 0.0,
+        "CAD_3F_R18": 0.0,
+        "CAD_3F_R19": 0.0,
+        "CAD_3F_R20": 0.0,
+        "CAD_3F_R21": 0.0,
+        "CAD_3F_R22": 0.0,
+        "CAD_3F_R23": 0.0,
+        "CAD_3F_R24": 0.0,
+        "CAD_3F_R25": 0.0,
+        "CAD_3F_R26": 0.0,
+        "CAD_3F_CE0": 0.0,
+        "CAD_3F_CE1": 0.0,
+        "CAD_3F_R2": 0.0
+      },
+      "met_room_time_fraction": 0.002777777777777778
+    }
+  },
+  "room_boundaries": [
+    {
+      "room": "CAD_3F_CE0",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_CE1",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R0",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R1",
+      "upper_max_C": 1517.7901198895051,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R10",
+      "upper_max_C": 167.91097072368035,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R11",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R12",
+      "upper_max_C": 281.2733138659006,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R13",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R15",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R16",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R17",
+      "upper_max_C": 325.0661230960029,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R18",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R19",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R2",
+      "upper_max_C": 652.044041297718,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R20",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R21",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R22",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R23",
+      "upper_max_C": 284.2103774033984,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R24",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R25",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R26",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R3",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R4",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R5",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R6",
+      "upper_max_C": 20.0,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R7",
+      "upper_max_C": 292.14258659009613,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R8",
+      "upper_max_C": 216.62454139507662,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    },
+    {
+      "room": "CAD_3F_R9",
+      "upper_max_C": 442.19650595195765,
+      "boundary": false,
+      "inter_room_threshold_C": 600.0,
+      "boundary_halfwidth_C": 30
+    }
+  ],
+  "cell_boundaries": [
+    {
+      "cell": "CAD_3F_R0",
+      "original_room": "CAD_3F_R0",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C0",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 153.19697179590946,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C1",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 137.03651596345594,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C2",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 194.92052356967355,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C3",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 164.90354623750738,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C4",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 296.54548622331185,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C5",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 224.76406958282138,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C6",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 1517.7901198895051,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R1_C7",
+      "original_room": "CAD_3F_R1",
+      "upper_max_C": 323.7777184194533,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R3",
+      "original_room": "CAD_3F_R3",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R4",
+      "original_room": "CAD_3F_R4",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R5",
+      "original_room": "CAD_3F_R5",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R6",
+      "original_room": "CAD_3F_R6",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R7",
+      "original_room": "CAD_3F_R7",
+      "upper_max_C": 292.14258659009613,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R8",
+      "original_room": "CAD_3F_R8",
+      "upper_max_C": 216.62454139507662,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R9",
+      "original_room": "CAD_3F_R9",
+      "upper_max_C": 442.19650595195765,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R10_C0",
+      "original_room": "CAD_3F_R10",
+      "upper_max_C": 167.91097072368035,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R10_C1",
+      "original_room": "CAD_3F_R10",
+      "upper_max_C": 138.2489099346613,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R11",
+      "original_room": "CAD_3F_R11",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R12",
+      "original_room": "CAD_3F_R12",
+      "upper_max_C": 281.2733138659006,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R13",
+      "original_room": "CAD_3F_R13",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R15",
+      "original_room": "CAD_3F_R15",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R16",
+      "original_room": "CAD_3F_R16",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R17",
+      "original_room": "CAD_3F_R17",
+      "upper_max_C": 325.0661230960029,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R18",
+      "original_room": "CAD_3F_R18",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R19",
+      "original_room": "CAD_3F_R19",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R20",
+      "original_room": "CAD_3F_R20",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R21",
+      "original_room": "CAD_3F_R21",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R22",
+      "original_room": "CAD_3F_R22",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R23",
+      "original_room": "CAD_3F_R23",
+      "upper_max_C": 284.2103774033984,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R24",
+      "original_room": "CAD_3F_R24",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R25",
+      "original_room": "CAD_3F_R25",
+      "upper_max_C": 20.0,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R26",
+      "original_room": "CAD_3F_R26",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_CE0",
+      "original_room": "CAD_3F_CE0",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_CE1",
+      "original_room": "CAD_3F_CE1",
+      "upper_max_C": 20.000000000000057,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R2_RAD0",
+      "original_room": "CAD_3F_R2",
+      "upper_max_C": 652.044041297718,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R2_RAD1",
+      "original_room": "CAD_3F_R2",
+      "upper_max_C": 517.386736748655,
+      "boundary": false
+    },
+    {
+      "cell": "CAD_3F_R2_RAD2",
+      "original_room": "CAD_3F_R2",
+      "upper_max_C": 530.8451810292601,
+      "boundary": false
+    }
+  ],
+  "boundary_room_count": 2,
+  "original_room_count": 28,
+  "boundary_cell_count": 0,
+  "opening_risk": null,
+  "burning_original_rooms": [
+    "CAD_3F_R1",
+    "CAD_3F_R10",
+    "CAD_3F_R2",
+    "CAD_3F_R7"
+  ],
+  "known_bias": "간략 엔진은 CFAST보다 후반 상층 온도가 낮고(단독 화원 −14~−20 %), 전이는 CFAST 표준보다 공격적이고 CFAST 공격 프리셋보다 늦다. 탐색용이며 최종 확인은 CFAST(r8)로 한다.",
+  "bias_scope": "위 편차 방향과 수치는 검토한 기준 사례의 결과이며 모든 개폐 조합에 대한 보증이 아니다.",
+  "smoke_caution_rooms": [
+    "CAD_3F_R1",
+    "CAD_3F_R10",
+    "CAD_3F_R12",
+    "CAD_3F_R17",
+    "CAD_3F_R2",
+    "CAD_3F_R23",
+    "CAD_3F_R7",
+    "CAD_3F_R8",
+    "CAD_3F_R9"
+  ],
+  "smoke_risk_rooms": [
+    "CAD_3F_R2"
+  ],
+  "boundary_basis": "any saved time within transition threshold ±30C, original-room union",
+  "door_jet_heat_MJ": 6238.267831400304,
+  "times": {
+    "preprocess_s": 0.11411469999802648,
+    "integration_s": 456.3761534000005,
+    "postprocess_s": 3.971536000000924,
+    "total_s": 462.1691673999994
+  },
+  "gate": {
+    "horizon_s": 2850,
+    "native_standard": {
+      "CAD_3F_R2": 5.0
+    },
+    "native_aggressive_partial": {
+      "CAD_3F_R2": 5.0,
+      "CAD_3F_R1": 960.0,
+      "CAD_3F_R6": 960.0,
+      "CAD_3F_R7": 960.0,
+      "CAD_3F_R8": 960.0,
+      "CAD_3F_R9": 960.0,
+      "CAD_3F_R11": 960.0,
+      "CAD_3F_R23": 960.0
+    },
+    "lite": {
+      "CAD_3F_R1": 1470.0,
+      "CAD_3F_R7": 1040.0,
+      "CAD_3F_R10": 1430.0,
+      "CAD_3F_R2": 10.0
+    },
+    "lite_full_3600": {
+      "CAD_3F_R1": 1470.0,
+      "CAD_3F_R7": 1040.0,
+      "CAD_3F_R10": 1430.0,
+      "CAD_3F_R2": 10.0
+    },
+    "subset_pass": false,
+    "order_pass": false,
+    "order_differences": [
+      {
+        "a": "CAD_3F_R1",
+        "b": "CAD_3F_R7",
+        "native_times": [
+          960.0,
+          960.0
+        ],
+        "lite_times": [
+          1470.0,
+          1040.0
+        ]
+      }
+    ],
+    "passed": false,
+    "native_aggressive_complete": false,
+    "time_grid_note": "native5s/lite10s; simultaneous samples compared as cohorts"
+  },
+  "execution_key": "d0823e09182809af2721b138fca1f85f4cdcb79285157a0e832d4d60ddbff5d6"
+}

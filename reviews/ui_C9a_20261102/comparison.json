@@ -1,0 +1,602 @@
+{
+  "rows": [
+    {
+      "mode": "legacy",
+      "times": {
+        "integration_s": 557.1973113999993,
+        "total_s": 564.0702423999974,
+        "basis": "sum of recorded integration, final result postprocess, recovery; original preparation/error-report overhead unavailable"
+      },
+      "burning_rooms": [
+        "CAD_3F_R1",
+        "CAD_3F_R2",
+        "CAD_3F_R23",
+        "CAD_3F_R7",
+        "CAD_3F_R9"
+      ],
+      "cells": [
+        {
+          "id": "CAD_3F_R2_C0",
+          "area_m2": 104.11700999999982,
+          "max_upper_C": 855.8727102366255,
+          "max_at_s": 1250.0,
+          "upper_1420_C": 718.3735950007336,
+          "peak_HRR_kW": 13544.741666666658
+        },
+        {
+          "id": "CAD_3F_R2_C1",
+          "area_m2": 119.36478333333315,
+          "max_upper_C": 713.5174401469964,
+          "max_at_s": 1240.0,
+          "upper_1420_C": 506.34081627821513,
+          "peak_HRR_kW": 13544.741666666658
+        },
+        {
+          "id": "CAD_3F_R2_C2",
+          "area_m2": 101.59200666666639,
+          "max_upper_C": 788.0426983197923,
+          "max_at_s": 1240.0,
+          "upper_1420_C": 678.0486740127603,
+          "peak_HRR_kW": 13544.741666666658
+        }
+      ],
+      "events": [
+        {
+          "room": "CAD_3F_R2_C1",
+          "parent": "CAD_3F_R2_C0",
+          "condition_time_s": 632.7514197379257,
+          "delay_s": 174.6666666666664,
+          "supply_start_s": 807.4180864045921,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R2_C2",
+          "parent": "CAD_3F_R2_C1",
+          "condition_time_s": 777.4717034625138,
+          "delay_s": 174.66666666666697,
+          "supply_start_s": 952.1383701291808,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R1_C6",
+          "parent": "CAD_3F_R2_C1",
+          "condition_time_s": 1000.3629629162004,
+          "delay_s": 60.0,
+          "supply_start_s": 1060.3629629162006,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        },
+        {
+          "room": "CAD_3F_R23",
+          "parent": "CAD_3F_R2_C1",
+          "condition_time_s": 1000.3629629162004,
+          "delay_s": 60.0,
+          "supply_start_s": 1060.3629629162006,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        },
+        {
+          "room": "CAD_3F_R7",
+          "parent": "CAD_3F_R2_C1",
+          "condition_time_s": 1000.3629629162004,
+          "delay_s": 60.0,
+          "supply_start_s": 1060.3629629162006,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        },
+        {
+          "room": "CAD_3F_R9",
+          "parent": "CAD_3F_R2_C1",
+          "condition_time_s": 1000.3629629162004,
+          "delay_s": 60.0,
+          "supply_start_s": 1060.3629629162006,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        },
+        {
+          "room": "CAD_3F_R1_C4",
+          "parent": "CAD_3F_R1_C6",
+          "condition_time_s": 1008.4387879754817,
+          "delay_s": 164.16408086304813,
+          "supply_start_s": 1172.6028688385297,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R1_C7",
+          "parent": "CAD_3F_R1_C6",
+          "condition_time_s": 1008.4387879754817,
+          "delay_s": 294.72280870236665,
+          "supply_start_s": 1303.1615966778484,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R1_C2",
+          "parent": "CAD_3F_R1_C4",
+          "condition_time_s": 1235.6042349608679,
+          "delay_s": 164.16408086304813,
+          "supply_start_s": 1399.768315823916,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R1_C5",
+          "parent": "CAD_3F_R1_C4",
+          "condition_time_s": 1235.6042349608679,
+          "delay_s": 294.72280870236665,
+          "supply_start_s": 1530.3270436632345,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        }
+      ]
+    },
+    {
+      "mode": "radial",
+      "times": {
+        "preprocess_s": 0.08414519999860204,
+        "integration_s": 10.76468979999845,
+        "postprocess_s": 3.85785770000075,
+        "total_s": 16.170738299999357
+      },
+      "burning_rooms": [
+        "CAD_3F_R2"
+      ],
+      "cells": [
+        {
+          "id": "CAD_3F_R2_RAD0",
+          "area_m2": 34.738731733400236,
+          "max_upper_C": 294.22521248329826,
+          "max_at_s": 940.0,
+          "upper_1420_C": 208.90224210076883,
+          "peak_HRR_kW": 4342.341466675029
+        },
+        {
+          "id": "CAD_3F_R2_RAD1",
+          "area_m2": 116.47650620161988,
+          "max_upper_C": 243.81551756971214,
+          "max_at_s": 950.0,
+          "upper_1420_C": 182.86856746026461,
+          "peak_HRR_kW": 0.0
+        },
+        {
+          "id": "CAD_3F_R2_RAD2",
+          "area_m2": 173.85856206497985,
+          "max_upper_C": 188.88319067543694,
+          "max_at_s": 960.0,
+          "upper_1420_C": 151.8965685831289,
+          "peak_HRR_kW": 0.0
+        }
+      ],
+      "events": []
+    },
+    {
+      "mode": "radial_area",
+      "times": {
+        "preprocess_s": 0.11411469999802648,
+        "integration_s": 456.3761534000005,
+        "postprocess_s": 3.971536000000924,
+        "total_s": 462.1691673999994
+      },
+      "burning_rooms": [
+        "CAD_3F_R1",
+        "CAD_3F_R10",
+        "CAD_3F_R2",
+        "CAD_3F_R7"
+      ],
+      "cells": [
+        {
+          "id": "CAD_3F_R2_RAD0",
+          "area_m2": 104.11700999999987,
+          "max_upper_C": 652.044041297718,
+          "max_at_s": 1270.0,
+          "upper_1420_C": 386.8584682249351,
+          "peak_HRR_kW": 13014.626249999981
+        },
+        {
+          "id": "CAD_3F_R2_RAD1",
+          "area_m2": 104.11700999999972,
+          "max_upper_C": 517.386736748655,
+          "max_at_s": 1600.0,
+          "upper_1420_C": 508.8080860094435,
+          "peak_HRR_kW": 13014.626249999956
+        },
+        {
+          "id": "CAD_3F_R2_RAD2",
+          "area_m2": 116.83978000000039,
+          "max_upper_C": 530.8451810292601,
+          "max_at_s": 1600.0,
+          "upper_1420_C": 519.9395684925626,
+          "peak_HRR_kW": 14604.972500000053
+        }
+      ],
+      "events": [
+        {
+          "room": "CAD_3F_R2_RAD1",
+          "parent": "CAD_3F_R2_RAD0",
+          "condition_time_s": 680.6670966167736,
+          "delay_s": 233.05245240378147,
+          "supply_start_s": 913.7195490205551,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R2_RAD2",
+          "parent": "CAD_3F_R2_RAD1",
+          "condition_time_s": 772.1119404817772,
+          "delay_s": 498.37714436339826,
+          "supply_start_s": 1270.4890848451755,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R7",
+          "parent": "CAD_3F_R2_RAD0",
+          "condition_time_s": 977.9529025090309,
+          "delay_s": 60.0,
+          "supply_start_s": 1037.952902509031,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        },
+        {
+          "room": "CAD_3F_R1_C4",
+          "parent": "CAD_3F_R1_C6",
+          "condition_time_s": 1299.6588482872519,
+          "delay_s": 164.16408086304813,
+          "supply_start_s": 1463.8229291503,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R1_C7",
+          "parent": "CAD_3F_R1_C6",
+          "condition_time_s": 1299.6588482872519,
+          "delay_s": 294.72280870236665,
+          "supply_start_s": 1594.3816569896185,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R10_C0",
+          "parent": "CAD_3F_R1_C6",
+          "condition_time_s": 1366.8040900091817,
+          "delay_s": 60.0,
+          "supply_start_s": 1426.8040900091817,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        },
+        {
+          "room": "CAD_3F_R1_C2",
+          "parent": "CAD_3F_R1_C4",
+          "condition_time_s": 1661.924803135423,
+          "delay_s": 164.16408086304813,
+          "supply_start_s": 1826.0888839984711,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        },
+        {
+          "room": "CAD_3F_R1_C5",
+          "parent": "CAD_3F_R1_C4",
+          "condition_time_s": 1661.924803135423,
+          "delay_s": 294.72280870236665,
+          "supply_start_s": 1956.6476118377896,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 300.0
+        }
+      ]
+    }
+  ],
+  "geometry": {
+    "cell_mode": "radial_area",
+    "radial_area_basis": "legacy_initial_cad_polygon",
+    "radial_target_area_m2": 104.11700999999982,
+    "legacy_initial_cell": "CAD_3F_R2_C0",
+    "legacy_solver_area_m2": 108.35793333333328,
+    "radial_r1_m": 10.150159032330555,
+    "radial_r2_m": 14.082501292877685,
+    "bisection_iterations": 60,
+    "area_before_small_zone_merge": true,
+    "applied": true,
+    "room": "CAD_3F_R2",
+    "fire_position_m": [
+      57.67,
+      53.34536796564403
+    ],
+    "circle_vertices": 24,
+    "cells": [
+      {
+        "id": "CAD_3F_R2_RAD0",
+        "zone": "fire",
+        "area_m2": 104.11700999999987,
+        "perimeter_m": 73.10467478656696,
+        "center_m": [
+          57.67,
+          53.34536796564403
+        ]
+      },
+      {
+        "id": "CAD_3F_R2_RAD1",
+        "zone": "middle",
+        "area_m2": 104.11700999999965,
+        "perimeter_m": 71.32564197045369,
+        "center_m": [
+          57.519999999999996,
+          41.69371083334984
+        ]
+      },
+      {
+        "id": "CAD_3F_R2_RAD2",
+        "zone": "outer",
+        "area_m2": 116.83978000000043,
+        "perimeter_m": 75.07990741795474,
+        "center_m": [
+          70.28356464563609,
+          63.09560006295308
+        ]
+      }
+    ],
+    "openings": [
+      {
+        "opening": "CAD_3F_D3",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          59.72,
+          45.718,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D7",
+        "cell": "CAD_3F_R2_RAD1",
+        "centre": [
+          62.2,
+          43.0775,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D8",
+        "cell": "CAD_3F_R2_RAD1",
+        "centre": [
+          52.82,
+          43.088,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D10",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          65.19,
+          55.458,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D12",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          57.57,
+          53.927499999999995,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D13",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          56.55,
+          56.927499999999995,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D14",
+        "cell": "CAD_3F_R2_RAD1",
+        "centre": [
+          69.89,
+          55.458,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W0_P0",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          56.5,
+          35.198,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W0_P1",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          56.5,
+          35.198,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W0_P2",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          56.5,
+          35.198,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W4",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          60.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W5",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          57.0,
+          70.497,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W7",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          70.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W8",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          67.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W9",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          64.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W21",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          57.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W22",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          60.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W23",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          64.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W24",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          68.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W26",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          61.32,
+          55.608000000000004,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W27",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          59.58,
+          55.608000000000004,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_AUDIT_PASS_R2_R17",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          56.46,
+          46.3523082253,
+          16.1
+        ]
+      }
+    ],
+    "virtual_openings": [
+      "VR_CAD_3F_R2_RAD0_RAD1",
+      "VR_CAD_3F_R2_RAD1_RAD2"
+    ],
+    "limits": [
+      "centroid if inside; otherwise interior representative point; fire cell centre is fire position",
+      "physical openings assigned by CAD centre, whole aperture kept; crossing-aperture distribution is unresolved",
+      "disconnected pieces in one annulus share one zone state",
+      "full polygon perimeter uses existing wall/leakage model, including virtual interfaces; no new wall-loss model"
+    ]
+  },
+  "gate": {
+    "horizon_s": 2850,
+    "native_standard": {
+      "CAD_3F_R2": 5.0
+    },
+    "native_aggressive_partial": {
+      "CAD_3F_R2": 5.0,
+      "CAD_3F_R1": 960.0,
+      "CAD_3F_R6": 960.0,
+      "CAD_3F_R7": 960.0,
+      "CAD_3F_R8": 960.0,
+      "CAD_3F_R9": 960.0,
+      "CAD_3F_R11": 960.0,
+      "CAD_3F_R23": 960.0
+    },
+    "lite": {
+      "CAD_3F_R1": 1470.0,
+      "CAD_3F_R7": 1040.0,
+      "CAD_3F_R10": 1430.0,
+      "CAD_3F_R2": 10.0
+    },
+    "lite_full_3600": {
+      "CAD_3F_R1": 1470.0,
+      "CAD_3F_R7": 1040.0,
+      "CAD_3F_R10": 1430.0,
+      "CAD_3F_R2": 10.0
+    },
+    "subset_pass": false,
+    "order_pass": false,
+    "order_differences": [
+      {
+        "a": "CAD_3F_R1",
+        "b": "CAD_3F_R7",
+        "native_times": [
+          960.0,
+          960.0
+        ],
+        "lite_times": [
+          1470.0,
+          1040.0
+        ]
+      }
+    ],
+    "passed": false,
+    "native_aggressive_complete": false,
+    "time_grid_note": "native5s/lite10s; simultaneous samples compared as cohorts"
+  },
+  "limits": [
+    "legacy/radial are archived runtimes, not rerun controls",
+    "CFAST aggressive reference ends at 2850s and differs from S09 opening inputs"
+  ]
+}

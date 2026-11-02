@@ -85,8 +85,9 @@ def package(model,result,raw,label):
         fire_key=next((f['cad_key'] for f in fires if f['kind']=='initial'),rows[0]['key']),
         rooms=rows,solvers=solvers,fires=fires,fuel_symbols=units,fuel_units=[],events=result['events'],
         original_room_count=len(originals),door_jet=result['door_jet'],integration=result['integration'],
-        cell_settings={k:raw.get(k,v) for k,v in [('cell_mode','legacy'),('radial_r1_m',6.),('radial_r2_m',12.)]},
-        scene_geometry_basis=('initial room radial polygon cells; other rooms legacy affine cells' if raw.get('cell_mode')=='radial' else
+        cell_settings=(model.manifest['cells']['radial'] if raw.get('cell_mode')=='radial_area' else
+            {k:raw.get(k,v) for k,v in [('cell_mode','legacy'),('radial_r1_m',6.),('radial_r2_m',12.)]}),
+        scene_geometry_basis=('initial room radial polygon cells; other rooms legacy affine cells' if raw.get('cell_mode') in ('radial','radial_area') else
             'solver rectangular cells affinely mapped to original CAD bounds, then clipped to actual polygons; display approximation'),
         smoke_basis='calculated upper-layer extent; constant gray opacity for display only; no soot or optical-density calculation',
         limits=['조건 충족 단계이며 발생 예측 아님','회색 연기: 계산된 상층 범위의 표시용 농도. 실제 광학밀도·연기 전면은 미계산.',

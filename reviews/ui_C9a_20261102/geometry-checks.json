@@ -1,0 +1,269 @@
+{
+  "legacy_identical": true,
+  "fixed_radial_manifest_identical": true,
+  "area_targets_met": true,
+  "polygons_cover_without_overlap": true,
+  "hole_bisection": true,
+  "volume_energy_apertures_preserved": true,
+  "cache_mode_resolved_radius_separated": true,
+  "geometry": {
+    "cell_mode": "radial_area",
+    "radial_area_basis": "legacy_initial_cad_polygon",
+    "radial_target_area_m2": 104.11700999999982,
+    "legacy_initial_cell": "CAD_3F_R2_C0",
+    "legacy_solver_area_m2": 108.35793333333328,
+    "radial_r1_m": 10.150159032330555,
+    "radial_r2_m": 14.082501292877685,
+    "bisection_iterations": 60,
+    "area_before_small_zone_merge": true,
+    "applied": true,
+    "room": "CAD_3F_R2",
+    "fire_position_m": [
+      57.67,
+      53.34536796564403
+    ],
+    "circle_vertices": 24,
+    "cells": [
+      {
+        "id": "CAD_3F_R2_RAD0",
+        "zone": "fire",
+        "area_m2": 104.11700999999987,
+        "perimeter_m": 73.10467478656696,
+        "center_m": [
+          57.67,
+          53.34536796564403
+        ]
+      },
+      {
+        "id": "CAD_3F_R2_RAD1",
+        "zone": "middle",
+        "area_m2": 104.11700999999965,
+        "perimeter_m": 71.32564197045369,
+        "center_m": [
+          57.519999999999996,
+          41.69371083334984
+        ]
+      },
+      {
+        "id": "CAD_3F_R2_RAD2",
+        "zone": "outer",
+        "area_m2": 116.83978000000043,
+        "perimeter_m": 75.07990741795474,
+        "center_m": [
+          70.28356464563609,
+          63.09560006295308
+        ]
+      }
+    ],
+    "openings": [
+      {
+        "opening": "CAD_3F_D3",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          59.72,
+          45.718,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D7",
+        "cell": "CAD_3F_R2_RAD1",
+        "centre": [
+          62.2,
+          43.0775,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D8",
+        "cell": "CAD_3F_R2_RAD1",
+        "centre": [
+          52.82,
+          43.088,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D10",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          65.19,
+          55.458,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D12",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          57.57,
+          53.927499999999995,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D13",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          56.55,
+          56.927499999999995,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_D14",
+        "cell": "CAD_3F_R2_RAD1",
+        "centre": [
+          69.89,
+          55.458,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W0_P0",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          56.5,
+          35.198,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W0_P1",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          56.5,
+          35.198,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W0_P2",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          56.5,
+          35.198,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W4",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          60.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W5",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          57.0,
+          70.497,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W7",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          70.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W8",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          67.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W9",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          64.0,
+          70.5575,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W21",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          57.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W22",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          60.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W23",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          64.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W24",
+        "cell": "CAD_3F_R2_RAD2",
+        "centre": [
+          72.94999999999999,
+          68.627,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W26",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          61.32,
+          55.608000000000004,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_W27",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          59.58,
+          55.608000000000004,
+          16.1
+        ]
+      },
+      {
+        "opening": "CAD_3F_AUDIT_PASS_R2_R17",
+        "cell": "CAD_3F_R2_RAD0",
+        "centre": [
+          56.46,
+          46.3523082253,
+          16.1
+        ]
+      }
+    ],
+    "virtual_openings": [
+      "VR_CAD_3F_R2_RAD0_RAD1",
+      "VR_CAD_3F_R2_RAD1_RAD2"
+    ],
+    "limits": [
+      "centroid if inside; otherwise interior representative point; fire cell centre is fire position",
+      "physical openings assigned by CAD centre, whole aperture kept; crossing-aperture distribution is unresolved",
+      "disconnected pieces in one annulus share one zone state",
+      "full polygon perimeter uses existing wall/leakage model, including virtual interfaces; no new wall-loss model"
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "pyrocast.result-index/1",
+  "threshold": 70,
+  "kinds": [
+    "FO",
+    "FGI",
+    "backdraft",
+    "rollover"
+  ],
+  "attention_rooms": [
+    "CAD_3F_R1",
+    "CAD_3F_R17",
+    "CAD_3F_R2",
+    "CAD_3F_R23",
+    "CAD_3F_R7",
+    "CAD_3F_R8",
+    "CAD_3F_R9"
+  ],
+  "attention_room_count": 7,
+  "unknown_rooms": [],
+  "complete": true,
+  "source_stamp": [
+    1793600915607859900,
+    53626659
+  ],
+  "source_sha256": "702af4232edb49f795b02e94010136f24ac140df591a1d52c17f252a15adb7f4"
+}

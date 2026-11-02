@@ -4,7 +4,7 @@ from functools import partial
 import hashlib
 import json
 import math
-from shapely.geometry import Polygon, Point
+from shapely.geometry import Polygon, Point, box
 from shapely.ops import unary_union
 from pyrocast_cfbt.rule_cells import partition as legacy_partition
 from pyrocast_cfbt.deck import fire_curve
@@ -14,19 +14,23 @@ def settings(raw):
     value = {'cell_mode': raw.get('cell_mode', 'legacy'),
              'radial_r1_m': raw.get('radial_r1_m', 6.),
              'radial_r2_m': raw.get('radial_r2_m', 12.)}
-    if value['cell_mode'] not in ('legacy', 'radial'):
-        raise ValueError('cell_mode must be legacy or radial')
+    if value['cell_mode'] not in ('legacy', 'radial', 'radial_area'):
+        raise ValueError('cell_mode must be legacy, radial or radial_area')
+    if value['cell_mode']=='radial_area':
+        return dict(cell_mode='radial_area',radial_area_basis='legacy_initial_cad_polygon')
     a, b = value['radial_r1_m'], value['radial_r2_m']
     if any(isinstance(x, bool) or not isinstance(x, (int, float)) or not math.isfinite(x) for x in (a,b)) or not 0 < a < b:
         raise ValueError('Expected 0 < radial_r1_m < radial_r2_m')
     return value
 
 
-def cache_key(raw, parameters, engine_sha256):
+def cache_key(raw, parameters, engine_sha256, resolved_geometry=None):
     """Canonical settings are explicit even when defaults were omitted."""
     data = deepcopy(raw)
     data.update(settings(raw))
-    return hashlib.sha256(json.dumps([data, parameters, engine_sha256], sort_keys=True,
+    identity=[data, parameters, engine_sha256]
+    if resolved_geometry is not None:identity.append(resolved_geometry)
+    return hashlib.sha256(json.dumps(identity, sort_keys=True,
                                    ensure_ascii=False, allow_nan=False).encode()).hexdigest()
 
 
@@ -36,10 +40,32 @@ def polygons(shape):
             for p in parts if p.geom_type == 'Polygon' and p.area > 1e-9]
 
 
+def circle(xy, radius):
+    return Polygon([(xy[0]+radius*math.cos(i*math.tau/24), xy[1]+radius*math.sin(i*math.tau/24)) for i in range(24)])
+
+
+def radius_for_area(shape, xy, target):
+    """Deterministic geometric bisection only; no thermal/result feedback."""
+    if not 0 < target <= shape.area+1e-8:raise ValueError('Invalid radial target area')
+    xmin,ymin,xmax,ymax=shape.bounds
+    hi=max(math.hypot(x-xy[0],y-xy[1]) for x in (xmin,xmax) for y in (ymin,ymax))/math.cos(math.pi/24)+1e-6
+    lo=0.
+    for _ in range(60):
+        mid=(lo+hi)/2
+        if shape.intersection(circle(xy,mid)).area < target:lo=mid
+        else:hi=mid
+    return hi
+
+
+def legacy_cad_area(shape, original, cell):
+    bounds=shape.bounds
+    project=lambda xy:[bounds[k]+(xy[k]-original['origin_m'][k])/original['size_m'][k]*(bounds[k+2]-bounds[k]) for k in (0,1)]
+    lo=project(cell['origin_m']);hi=project([cell['origin_m'][k]+cell['size_m'][k] for k in (0,1)])
+    return shape.intersection(box(*lo,*hi)).area
+
+
 def split_shape(shape, xy, r1, r2):
-    def circle(r):
-        return Polygon([(xy[0]+r*math.cos(i*math.tau/24), xy[1]+r*math.sin(i*math.tau/24)) for i in range(24)])
-    c1, c2 = circle(r1), circle(r2)
+    c1, c2 = circle(xy,r1), circle(xy,r2)
     inner, middle, outer = shape.intersection(c1), shape.intersection(c2).difference(c1), shape.difference(c2)
     if outer.area < 20:
         middle = middle.union(outer); outer = Polygon()
@@ -67,6 +93,16 @@ def partition(model, split_initial=False, *, config):
     xy = source['position_m'][:2]
     if not shape.covers(Point(xy)):
         raise ValueError('Initial CAD fire position is outside room polygon')
+    config=deepcopy(config)
+    if config['cell_mode']=='radial_area':
+        initial_cell=next(g['room'] for g in m['fuel_groups'] if 'initial_time_s' in g)
+        old_cell=next(r for r in m['rooms'] if r['id']==initial_cell)
+        target=legacy_cad_area(shape,room,old_cell)
+        config.update(radial_target_area_m2=target,legacy_initial_cell=initial_cell,
+                      legacy_solver_area_m2=math.prod(old_cell['size_m'][:2]),
+                      radial_r1_m=radius_for_area(shape,xy,target),
+                      radial_r2_m=radius_for_area(shape,xy,min(2*target,shape.area)),
+                      bisection_iterations=60,area_before_small_zone_merge=True)
     pieces = split_shape(shape,xy,config['radial_r1_m'],config['radial_r2_m'])
     old = {r['id'] for r in m['rooms'] if r.get('parent_room') == rid}
     cells=[]; shapes={}; groups=[]
@@ -116,6 +152,15 @@ def partition(model, split_initial=False, *, config):
         if key in remapped:remapped[key]['width_m']+=nv['width_m']
         else:remapped[key]=nv
         assignments.append(dict(opening=v['id'],cell=new,centre=original['cad_geometry']['center_m']))
+    if config['cell_mode']=='radial_area':
+        by_id={c['id']:c for c in cells}
+        for v in remapped.values():
+            if v['a'] in by_id:
+                # Only the compiler's rectangular proxy target coordinate.
+                # CAD aperture position/width and lite flow geometry stay intact.
+                c=by_id[v['a']];axis=0 if v['face'] in ('FRONT','REAR') else 1
+                v['offset_m']=(c['size_m'][axis]-v['width_m'])/2
+                v['proxy_position_basis']='centred on area-equivalent box; actual CAD centre retained'
     openings.extend(remapped.values());virtual=[]
     for i,a in enumerate(cells):
         for b in cells[i+1:]:
@@ -131,7 +176,7 @@ def partition(model, split_initial=False, *, config):
     m['fuel_groups']=[g for g in m['fuel_groups'] if g['room'] not in old]+groups
     m['openings']=sorted(openings,key=lambda v:v.get('type')=='FLOOR')
     manifest['partitions']=[p for p in manifest['partitions'] if p['room']!=rid]+[
-        dict(room=rid,mode='radial',cells=[c['id'] for c in cells],native_volume_preserved=True)]
+        dict(room=rid,mode=config['cell_mode'],cells=[c['id'] for c in cells],native_volume_preserved=True)]
     manifest['virtual_openings']=[v['id'] for v in openings if v.get('virtual_cell_boundary')]
     manifest['opening_map']=[dict(opening=v['id'],parts=[x['id'] for x in openings if x.get('parent_opening',x['id'])==v['id']],area_preserved=True) for v in model['openings']]
     manifest['initial_budget_policy']=[dict(group=source['id'],assigned_cell=cells[0]['id'],
@@ -150,4 +195,4 @@ def partition(model, split_initial=False, *, config):
 
 def partitioner(raw):
     config=settings(raw)
-    return partial(partition,config=config) if config['cell_mode']=='radial' else None
+    return partial(partition,config=config) if config['cell_mode']!='legacy' else None

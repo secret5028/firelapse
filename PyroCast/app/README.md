@@ -289,6 +289,8 @@ C-1의 prefix 최대 정의를 대체합니다. index_history_max는 셀·현상
 ②는 급기 미확정이면 화점별 2극단, 확정 상태가 있으면 화점별 **확정 급기 1회**만 직렬 실행한다. 자동 상위 N과 사용자 지정 단일 화점에 같은 분기를 적용한다. 비교 결과의 opening_mode, states_per_room, label에 실제 실행 상태를 기록하며, 단일 결과를 두 개로 복제하지 않는다. 주의 지수 순위도 고정 상태 1건의 완료/집계 증거로 판정한다. 입력·시간·엔진·캐시 정책은 유지한다. 실제 AI API는 이번 회귀에서 제외(미검증). 상세 회귀 결과는 specs/웹앱-C8-제출회귀-20261102.md. C-9 미착수, push 승인 대기.
 # C-9: radial initial-room cells (opt-in)
 
+C-9a adds `cell_mode: "radial_area"` (default still `legacy`). It clips the legacy initial cell to the original CAD polygon to obtain the target area, then bisects the same 24-vertex circles for cumulative areas A and 2A. S09 target A=104.11701 m²; its old solver-box area is 108.35793 m² and is deliberately not substituted for the CAD area. Resolved radii/target geometry are recorded in the manifest and C9a cache identity. `tools/run_lite_radial_area_c9a.py` performs one S09 3600 s attempt with no retry; `tools/test_radial_area_c9a.py` checks geometry and legacy/fixed-radial identity without integration. See `specs/웹앱-C9a-radial-area-20261102.md` for the single-run comparison.
+
 - Lite scenario settings: `cell_mode: "legacy" | "radial"` (default `legacy`), `radial_r1_m: 6`, `radial_r2_m: 12`, with `0 < r1 < r2`. No default/UI mode switch.
 - Only the initial large room is partitioned into 24-vertex circle/annulus polygon cells; other rooms retain legacy cells. Shared r8 input preparation accepts an optional partitioner; native/default path is unchanged.
 - `tools/run_lite_radial_c9.py`: archived S09, R2, 3600 s, one BDF attempt, 1200 s budget. Its cache key includes canonical mode/radii, complete scenario, parameters and calculation source hashes; completed hits reuse, failed/interrupted attempts do not automatically rerun.

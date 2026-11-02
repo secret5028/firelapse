@@ -56,6 +56,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   const progress=value.progress;$('exploreStatus').textContent=progress?.running?`② 계산 중 ${progress.completed??0}/${progress.total??'—'} · ${progress.current_room??''}`:progress?.error?'② 실패 · '+progress.error:`적격 ${first.length}실`;
   const c=value.comparison;$('exploreRankBasis').textContent=c?`저장 결과 · ${c.manual_rooms?'수동 지정':'상위'} ${c.top_n} × 2상태 · ${c.complete_scenarios??'—'}/${c.attempted_scenarios??'—'} 완료`:'② 실행 대기';if(second.some(r=>!r.index_complete))$('exploreRankBasis').textContent+=' · 새 결과 지수 미집계';$('exploreRankBasis').title='저장 결과 원값의 지수 ≥70 집계. 새 결과 저장 시 지수 집계가 자동 생성됩니다. 미집계는 0 또는 기존 연기 수로 대체하지 않습니다.';
   if(value.saved_score?.opening_states&&JSON.stringify(value.saved_score.opening_states)!==JSON.stringify(value.score.opening_states))$('exploreRankBasis').textContent+=' · 현재 문 설정과 다름';
+  if(value.fuel_rerun_required)$('exploreRankBasis').textContent+=' · 재실행 필요 (연료 변경)';
   const current=store.get('exploration');if(!(value.manual_origins??first).some(r=>r.room===current.origin_room_id)){const proposed=value.selection?.mc_room??c?.default_mc_room??first[0]?.room;store.dispatch('exploration/set',{origin_room_id:(value.manual_origins??first).some(r=>r.room===proposed)?proposed:first[0]?.room??null});}
   sync();
  }

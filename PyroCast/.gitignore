@@ -7,3 +7,5 @@ simulation/build/
 simulation/deps/
 simulation/plot_deps/
 simulation/tools/w64devkit/
+simulation/tools/*.7z.exe
+/config/ai.json

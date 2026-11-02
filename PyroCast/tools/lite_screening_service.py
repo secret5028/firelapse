@@ -29,6 +29,8 @@ def payload(top_n=None):
     return {'manual_origins':manual,'score':scored,'comparison':None if legacy else comparison,'legacy_comparison_not_reused':legacy,
             'progress':progress,'saved_score':read(destination/'score.json'),
             'selection':selection,'playback_replaced':False,
+            'fuel_revision':__import__('lite_ai_fuel').revision(scored.get('approved_input',{}).get('fuel_overrides',{})),
+            'fuel_rerun_required':read(destination/'score.json',{}).get('approved_input',{}).get('fuel_overrides',{})!=scored.get('approved_input',{}).get('fuel_overrides',{}),
             'attention':comparison_attention(None if legacy else comparison)}
 
 def select(top_n,mc_room=None,rooms=None):

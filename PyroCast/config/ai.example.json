@@ -1,0 +1,11 @@
+{
+  "base_url": "https://api.anthropic.com/v1",
+  "model": "claude-sonnet-5-5",
+  "api_key_env": "PYROCAST_AI_KEY",
+  "_comment": "config/ai.json으로 복사. 키 값은 서버 환경변수에만 지정. vLLM은 아래 예시 3개 필드로 교체.",
+  "_vllm_example": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "model": "your-served-model-name",
+    "api_key_env": "PYROCAST_AI_KEY"
+  }
+}

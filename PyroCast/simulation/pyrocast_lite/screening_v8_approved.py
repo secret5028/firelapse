@@ -15,6 +15,16 @@ REVISION='v8_approved_screening'
 def prepare_inputs(raw):
     cfg=json.loads((HERE/'approved_uses_v8.json').read_text('utf-8'))
     table=json.loads((HERE/'fire_load_table.json').read_text('utf-8'))
+    # User-selected table classes override approved defaults; no thermal equation changes.
+    override_path=HERE.parent/'config/fuel-overrides.json'
+    overrides=json.loads(override_path.read_text('utf-8')) if override_path.exists() else {}
+    if overrides and overrides.get('building_sha256')!=cfg['building_sha256']:
+        raise ValueError('Fuel overrides belong to a different building')
+    for rid,row in overrides.get('rooms',{}).items():
+        if row.get('usage_class') not in table['classes']:raise ValueError('Invalid fuel override class')
+        if rid in cfg['rooms']:
+            cfg['rooms'][rid]={'class':row['usage_class'],'classification_basis':'사용자 적용 AI 제안 · '+row['reason']}
+
     if raw.get('cad',{}).get('building_sha256')!=cfg['building_sha256']:
         raise ValueError('Approved room classification belongs to a different building')
     m=deepcopy(raw);rooms={r['id']:r for r in m['rooms']};records={};exclusions=[]
@@ -52,9 +62,10 @@ def prepare_inputs(raw):
         m['explicit_candidates']=[t for t in m['explicit_candidates'] if t.get('room') not in removed and t.get('group') not in removed_groups]
     m['approved_input']={'revision':REVISION,'room_uses':records,'graph_exclusions':exclusions,
         'source_building_sha256':cfg['building_sha256'],'coverage':cfg['coverage'],
+        'fuel_overrides':overrides,
         'assumptions':['toilet 40MJ/m² and250kW/m² are user assumptions, not standard values',
          'approved use mapping is specific to this building; unresolved names use default',
-         'R2 1800MJ/m² explicit override; other loads use table mean',
+         ('R2 user-selected AI table class supersedes 1800MJ/m²' if 'CAD_3F_R2' in overrides.get('rooms',{}) else 'R2 1800MJ/m² explicit override; other loads use table mean'),
          'thermal/flow nodes retained for toilets; no fuel fire below50MJ/m²']}
     return m
 

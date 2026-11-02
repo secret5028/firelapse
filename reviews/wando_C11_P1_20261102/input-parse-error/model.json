@@ -1,0 +1,444 @@
+{
+  "duration_s": 3600.0,
+  "output_step_s": 5.0,
+  "max_time_step_s": 1.0,
+  "ambient_C": 15.0,
+  "engine_optimization": {
+    "radiation_cache": false,
+    "wall_cache": false,
+    "adaptive_radiation": false,
+    "adaptive_min_age_s": 120.0,
+    "adaptive_stable_s": 30.0,
+    "adaptive_refresh_s": 10.0
+  },
+  "window_breakage": {
+    "enabled": false,
+    "criterion": "TEMPERATURE",
+    "threshold": 450.0,
+    "post_fraction": 1.0,
+    "material": {
+      "conductivity_W_mK": 0.95,
+      "density_kg_m3": 2500.0,
+      "specific_heat_kJ_kgK": 0.82,
+      "thickness_m": 0.006,
+      "emissivity": 0.9
+    },
+    "preset_id": "ordinary_float_6mm_proxy_v1"
+  },
+  "wall_material": {
+    "conductivity_W_mK": 0.12,
+    "density_kg_m3": 800.0,
+    "specific_heat_kJ_kgK": 1.0,
+    "thickness_m": 0.02,
+    "emissivity": 0.94,
+    "assumed": true,
+    "basis": "declared_project_boundary_assumption"
+  },
+  "gas": {
+    "mixture_enabled": false,
+    "jet_enabled": false,
+    "mixture_smooth_enabled": false,
+    "mixture_o2_width_vol": 0.01,
+    "mixture_temperature_width_C": 10.0,
+    "mixture_fuel_width": 0.0001,
+    "mixture_mixing_time_s": 10.0,
+    "energy_basis": "total_potential_assumption",
+    "enabled": false,
+    "bulk_enabled": false,
+    "vent_gate_enabled": false,
+    "gas_ignition_C": 520.0,
+    "hot_C": 300.0,
+    "oxygen_min_vol_percent": 12.0,
+    "fuel_min_mass_fraction": 0.001,
+    "rate_ref_s_inv": 0.1,
+    "reference_K": 800.0,
+    "activation_J_mol": 170000.0,
+    "vent_ignition_C": 520.0,
+    "pilot_assumed": false,
+    "native_lower_oxygen_limit_mass_fraction": 0.15,
+    "pilot_start_s": 0.0,
+    "pilot_end_s": 1000000000.0,
+    "profile_id": "project_arrhenius_exploration_v1",
+    "basis": "project_assumption_not_a_validated_Kudo_fit"
+  },
+  "spread": {
+    "enabled": false,
+    "max_added_ignitions": 3,
+    "max_runs": 4,
+    "iteration_mode": "earliest_single",
+    "max_passes": 5,
+    "converge_abs_s": null,
+    "converge_rel": 0.01,
+    "wall_time_budget_s": 900.0,
+    "run_timeout_s": 300.0,
+    "event_tolerance_s": 1e-05,
+    "exposure_case": "local",
+    "quadrature_n": 12,
+    "djet_radiative_fraction": 0.3,
+    "djet_r_min_m": 0.5,
+    "near_flame_m": 1.0,
+    "candidate_offsets_m": [
+      0.5,
+      1.5
+    ],
+    "candidate_heights_m": [
+      0.75,
+      1.5
+    ],
+    "plate_dt_s": 0.05,
+    "plate_nodes": 49,
+    "causality_abs": {
+      "ULT": 0.2,
+      "LLT": 0.2,
+      "HGT": 0.002,
+      "HRR": 20.0,
+      "DJET": 20.0
+    },
+    "causality_rel": 0.0001
+  },
+  "criteria": {
+    "oxygen_deficient_vol_percent": 10.0,
+    "hot_C": 300.0,
+    "fuel_rich_mass_fraction": 0.1,
+    "rapid_C_s": 5.0,
+    "window_s": 30.0,
+    "fo_temperature_C": 600.0,
+    "fo_flux_kW_m2": 20.0,
+    "fgi_fuel_mass_fraction": 0.005,
+    "fgi_oxygen_vol_percent": 10.0
+  },
+  "flashover": {
+    "enabled": false,
+    "criterion": "temperature",
+    "transition_s": 30.0,
+    "hrrpua_kW_m2": null,
+    "decay_fraction": 0.3,
+    "area_basis": "floor",
+    "occupancy_fraction": 0.31,
+    "radiation_points": 1,
+    "basis": "user_threshold_and_prescribed_finite_room_supply_not_NIST_default"
+  },
+  "material": {
+    "id": "paper_proxy",
+    "conductivity_W_mK": 0.04184,
+    "density_kg_m3": 500.0,
+    "specific_heat_kJ_kgK": 2.092,
+    "thickness_m": 0.025,
+    "absorptivity": 0.9,
+    "emissivity": 0.9,
+    "ignition_C": 369.0,
+    "proxy": true,
+    "pilot": "assumed"
+  },
+  "surface_materials": {
+    "PU_LINING": {
+      "conductivity_W_mK": 0.025,
+      "density_kg_m3": 35,
+      "specific_heat_kJ_kgK": 1.4,
+      "thickness_m": 0.1,
+      "emissivity": 0.9,
+      "assumed": true,
+      "basis": "C11 §2 PU; emissivity .9 project assumption"
+    },
+    "CONCRETE_FLOOR": {
+      "conductivity_W_mK": 1.75,
+      "density_kg_m3": 2200,
+      "specific_heat_kJ_kgK": 1.0,
+      "thickness_m": 0.15,
+      "emissivity": 0.94,
+      "assumed": true,
+      "basis": "existing S09 concrete proxy; floor thickness unreported"
+    }
+  },
+  "rooms": [
+    {
+      "id": "ROOM",
+      "origin_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "size_m": [
+        8.75,
+        18.0,
+        6.405
+      ],
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      },
+      "leak_area_ratio": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "id": "CAVITY",
+      "origin_m": [
+        0.0,
+        18.0,
+        0.0
+      ],
+      "size_m": [
+        8.75,
+        0.1,
+        6.405
+      ],
+      "surface_material_ids": {
+        "wall": "PU_LINING",
+        "ceiling": "PU_LINING",
+        "floor": "CONCRETE_FLOOR"
+      },
+      "leak_area_ratio": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "openings": [
+    {
+      "id": "ENTRY",
+      "a": "ROOM",
+      "b": "OUTSIDE",
+      "type": "WALL",
+      "width_m": 2.5,
+      "bottom_m": 0.0,
+      "top_m": 3.0,
+      "face": "FRONT",
+      "offset_m": 3.125,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "BOTTOM_GAP",
+      "a": "CAVITY",
+      "b": "ROOM",
+      "type": "WALL",
+      "width_m": 8.75,
+      "bottom_m": 0.0,
+      "top_m": 0.01,
+      "face": "FRONT",
+      "offset_m": 0.0,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "TOP_GAP",
+      "a": "CAVITY",
+      "b": "ROOM",
+      "type": "WALL",
+      "width_m": 8.75,
+      "bottom_m": 6.4,
+      "top_m": 6.405,
+      "face": "FRONT",
+      "offset_m": 0.0,
+      "schedule": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "CUT",
+      "a": "CAVITY",
+      "b": "ROOM",
+      "type": "WALL",
+      "width_m": 2.0,
+      "bottom_m": 0.5,
+      "top_m": 2.5,
+      "face": "FRONT",
+      "offset_m": 0.75,
+      "schedule": [
+        [
+          0,
+          0
+        ],
+        [
+          1320,
+          0
+        ],
+        [
+          1320,
+          0.5
+        ],
+        [
+          1800,
+          0.5
+        ],
+        [
+          1800,
+          1
+        ]
+      ]
+    }
+  ],
+  "fuel_groups": [
+    {
+      "id": "PU",
+      "room": "CAVITY",
+      "initial_time_s": 0.0,
+      "position_m": [
+        1.75,
+        18.05,
+        0.0
+      ],
+      "energy_MJ": 9807.656250000002,
+      "peak_kW": 44835.0,
+      "growth_kW_s2": 0.00293,
+      "hrrpua_kW_m2": 400.0,
+      "fuel_area_m2": 112.0875,
+      "heat_of_combustion_kJ_kg": 25000.0,
+      "formula": {
+        "c": 1.0,
+        "h": 1.8,
+        "o": 0.3,
+        "n": 0.1
+      },
+      "co_yield": 0.05,
+      "room_rule_curve": {
+        "t": [
+          0.0,
+          47.88510162583373,
+          95.77020325166745,
+          143.6553048775012,
+          191.5404065033349,
+          239.42550812916863,
+          287.3106097550024,
+          335.19571138083614,
+          383.0808130066698,
+          430.96591463250354,
+          478.85101625833727,
+          526.736117884171,
+          574.6212195100048,
+          622.5063211358384,
+          670.3914227616723,
+          718.2765243875059,
+          766.1616260133396,
+          814.0467276391735,
+          861.9318292650071,
+          909.8169308908409,
+          957.7020325166745,
+          1005.5871341425083,
+          1053.472235768342,
+          1101.3573373941758,
+          1149.2424390200097,
+          1197.127540645843,
+          1245.012642271677,
+          1292.8977438975107,
+          1340.7828455233446,
+          1388.6679471491782,
+          1436.5530487750118,
+          1484.4381504008456,
+          1532.3232520266793,
+          1580.208353652513,
+          1628.093455278347,
+          1675.9785569041806,
+          1723.8636585300142,
+          1771.748760155848,
+          1819.6338617816818,
+          1867.5189634075155,
+          1915.404065033349,
+          2462.833387548685
+        ],
+        "q": [
+          0.0,
+          6.718440066109122,
+          26.873760264436488,
+          60.465960594982114,
+          107.49504105774595,
+          167.96100165272804,
+          241.86384237992846,
+          329.20356323934703,
+          429.9801642309838,
+          544.1936453548388,
+          671.8440066109122,
+          812.931247999204,
+          967.4553695197138,
+          1135.4163711724416,
+          1316.8142529573881,
+          1511.6490148745524,
+          1719.9206569239352,
+          1941.6291791055367,
+          2176.7745814193554,
+          2425.3568638653933,
+          2687.3760264436487,
+          2962.832069154123,
+          3251.724991996816,
+          3554.054794971726,
+          3869.8214780788553,
+          4199.025041318201,
+          4541.665484689766,
+          4897.74280819355,
+          5267.2570118295525,
+          5650.208095597773,
+          6046.59605949821,
+          6456.420903530866,
+          6879.682627695741,
+          7316.381231992835,
+          7766.516716422147,
+          8230.089080983675,
+          8707.098325677422,
+          9197.544450503388,
+          9701.427455461573,
+          10218.747340551976,
+          10749.504105774595,
+          0.0
+        ],
+        "area": [
+          0.1,
+          0.1,
+          0.1,
+          0.1511649014874553,
+          0.26873760264436486,
+          0.4199025041318201,
+          0.6046596059498212,
+          0.8230089080983676,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.875,
+          0.1
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "engine": "317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9",
+  "input": "6bf7a52a99cf956ba64ed702fce321c6f15e7672564944efdef56e204b016b26",
+  "sidecar": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "flags": [
+    "-V"
+  ],
+  "required_horizon_s": 3600,
+  "validator_version": 2
+}

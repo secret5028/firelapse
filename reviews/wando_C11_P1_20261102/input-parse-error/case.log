@@ -1,0 +1,10 @@
+
+CFAST
+
+Revision         : unknown
+Revision Date    : unknown
+Compiler         : GCC version 16.2.0
+Compilation Date : unknown
+
+Error on line 15 of the input file: &CHEM ID='F_PU' C=1 H=1.8 O=0.3 N=0.1 HEAT_OF_COMBUSTION=25000.0 RADIATIVE_FRACT
+***Error exit from CFAST, error 1 from routine read_chem

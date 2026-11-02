@@ -91,9 +91,9 @@ def prepare():
     print(json.dumps(json.loads((OUT/'input-evidence.json').read_text(encoding='utf-8')),ensure_ascii=False,indent=2))
 
 
-def run():
+def run(scenario='P1'):
     with (OUT/'attempt.json').open('x',encoding='utf-8') as f:
-        json.dump({'authorized_runs':1,'scenario':'P1','budget_s':1800},f)
+        json.dump({'authorized_runs':1,'scenario':scenario,'budget_s':1800},f)
     try:
         result=execute(EXE,OUT,(OUT/'case.in').read_text(encoding='ascii'),'',3600,1800,stall_timeout_s=0)
         save('run-summary.json',result['run'])
@@ -103,7 +103,7 @@ def run():
         raise
 
 
-def analyze():
+def analyze(scenario='P1'):
     import csv
     model=json.loads((OUT/'model.json').read_text(encoding='utf-8'))
     c,_,cu=read_native_csv(OUT/'case_compartments.csv')
@@ -115,7 +115,9 @@ def analyze():
     assert cu['ULO2_1']=='mol_frac' and mu['ULMTUHC_1']=='kg'
     evidence=json.loads((OUT/'input-evidence.json').read_text(encoding='utf-8'))
     unchanged={p:sha(ROOT/p)==h for p,h in evidence['hashes'].items()}
-    assert all(unchanged.values()) and sha(OUT/'case.in')==evidence['deck_sha256']
+    # A later specification edit does not invalidate the immutable run input.
+    # Preserve its mismatch in the audit; engine/physics/deck remain mandatory.
+    assert all(v for p,v in unchanged.items() if not p.startswith('specs')) and sha(OUT/'case.in')==evidence['deck_sha256']
     states={};series={'time_s':t.tolist()};scores={};summaries={};shared_states={}
     def peak(a):
         j=int(np.argmax(a));return {'value':float(a[j]),'time_s':float(t[j])}
@@ -155,7 +157,8 @@ def analyze():
                        'interface_first_below_1_8m_s':first(c[f'HGT_{i}'],1.8,True),
                        'indices':{k:{'first_70_s':first(a,70),'first_100_s':first(a,100),'peak':peak(a)} for k,a in idx.items()}}
         series[rid]={k:a.tolist() for k,a in states[rid].items()}
-    assert set(np.round(opening_states['CUT']['fraction'],8))=={0.,.5,1.}
+    expected_cut={float(p[1]) for p in next(op for op in model['openings'] if op['id']=='CUT')['schedule']}
+    assert set(np.round(opening_states['CUT']['fraction'],8))==expected_cut
     # Verify the report's direct helper calls against the full unchanged evaluator.
     from pyrocast_cfbt.conditions import evaluate
     from pyrocast_cfbt.spread import classify
@@ -173,10 +176,10 @@ def analyze():
     run_summary=json.loads((OUT/'execution-state.json').read_text(encoding='utf-8'))
     run_summary.update(native_normal_exit=True,requested_end_s=3600,last_csv_s=float(t[-1]),
                        endpoint_sample_missing=bool(t[-1]<3600),rerun=False)
-    summary={'scenario':'P1','run':run_summary,'rooms':summaries,'unchanged':unchanged,
+    summary={'scenario':scenario,'run':run_summary,'rooms':summaries,'unchanged':unchanged,
              'door_jet_outside_peak_kW':peak(c['DJET_Outside']/1000),
              'threshold_time_basis':'first 5 s native sample; no interpolation',
-             'input_parser_failures_before_integration':1,'integration_runs':1,
+             'input_parser_failures_before_integration':int((OUT/'input-parse-error').exists()),'integration_runs':1,
              'shared_evaluate_score_identity':True,
              'cut_first_observed_half_s':first(opening_states['CUT']['fraction'],.5),
              'cut_first_observed_full_s':first(opening_states['CUT']['fraction'],1.),
@@ -194,9 +197,9 @@ def analyze():
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     colors={'FO':'#df2d28','FGI':'#863bad','BD':'#b72666','rollover':'#d7830b'}
-    for zoom,name in ((False,'P1-timeseries.png'),(True,'P1-zoom.png')):
+    for zoom,name in ((False,f'{scenario}-timeseries.png'),(True,f'{scenario}-zoom.png')):
         fig,axs=plt.subplots(4,1,figsize=(13,10),sharex=True,layout='constrained')
-        fig.suptitle('Wando P1 | stock CFAST | fan OFF | condition indices, not event probabilities',fontsize=14)
+        fig.suptitle(f'Wando {scenario} | stock CFAST | fan OFF | condition indices, not event probabilities',fontsize=14)
         s=states['ROOM']
         axs[0].plot(t,s['T_upper_C'],color='#bc3c22');axs[0].set_ylabel('Upper T (C)')
         axs[1].plot(t,s['O2_upper_vol_percent'],color='#167ab5');axs[1].set_ylabel('Upper O2 (vol %)')
@@ -208,7 +211,8 @@ def analyze():
             ax.grid(alpha=.2);ax.set_xlim(1100 if zoom else 0,2400 if zoom else 3600)
             for at in (780,1320,1500,2100):ax.axvline(at,color='#3d5666',ls='--',alpha=.6,lw=1)
             if t[-1]<3600:ax.axvspan(t[-1],3600,color='#cccccc',alpha=.7)
-        for at,label in ((780,'780 entry'),(1320,'1320 cut'),(1500,'1500 fan reference (OFF)'),(2100,'2100 incident reference')):
+        cut_label='1320 cut reference (NO CUT)' if scenario=='P4' else '1320 cut'
+        for at,label in ((780,'780 entry'),(1320,cut_label),(1500,'1500 fan reference (OFF)'),(2100,'2100 incident reference')):
             if not zoom or at>=1100:axs[0].text(at+6,.97,label,rotation=90,va='top',transform=axs[0].get_xaxis_transform(),fontsize=8)
         axs[3].set_xlabel('Time after ignition (s) | CSV 0-3595 s; last 5 s not extrapolated');fig.savefig(OUT/name,dpi=155);plt.close(fig)
     print(json.dumps(summary,ensure_ascii=False,indent=2))

@@ -1,6 +1,9 @@
 export function createRoutePanel({store,graph}){
  const container=document.createElement('details');container.id='routeSettings';container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace">차량 위치 지정</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중심–문/계단 연결점 직선 거리 근사. 적재물·장애물·호스 굴곡은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
+ const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 4현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 현재 시각까지의 누적 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="exploreCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
+ document.getElementById('exploreRules').before(summary);
+ const style=document.createElement('style');style.textContent='#routeRiskSummary table{table-layout:fixed;font-size:10px}#routeRiskSummary th,#routeRiskSummary td{padding:6px 2px;white-space:normal;overflow-wrap:anywhere}#routeRiskSummary th:nth-child(1){width:8%}#routeRiskSummary th:nth-child(2){width:24%}#routeRiskSummary th:nth-child(3){width:17%}#routeRiskSummary th:nth-child(4){width:17%}#routeRiskSummary th:nth-child(5){width:21%}#routeRiskSummary th:nth-child(6){width:13%}#routeRiskSummary td:nth-child(2){min-width:0}#routeRiskSummary thead{position:sticky;top:0;background:#163345}#routeRiskBasis{font-size:11px;color:#b8cbd8;margin-bottom:6px}';summary.append(style);
  const hud=document.createElement('div');hud.id='routeHUD';hud.style.cssText='padding-top:5px;font-size:12px;color:#9cdcff';document.querySelector('.compactHUD').append(hud);
  const $=id=>container.querySelector('#'+id);const cleanup=[];const on=(id,event,fn)=>{$(id).addEventListener(event,fn);cleanup.push(()=>$(id).removeEventListener(event,fn));};
  for(const [id,key] of [['routeHose','hose_m'],['routeStair','stair_factor']])on(id,'change',()=>{try{store.dispatch('route/set',{[key]:+$(id).value});$('routeStatus').textContent='';}catch(e){$('routeStatus').textContent=e.message;$(id).value=store.get('route')[key];}});
@@ -8,5 +11,13 @@ export function createRoutePanel({store,graph}){
  cleanup.push(store.subscribe('route',s=>{$('routePlace').textContent=s.placing?'차량 지정 취소':'차량 위치 지정';$('routeStatus').textContent=s.placing?'건물 밖 지면을 클릭하세요.':s.message;}));
  if(graph.error)for(const id of ['routePlace','routeReset','routeHose','routeStair'])$(id).disabled=true;
  return {update(r){hud.textContent=r.error?'경로 · '+r.error:`경로 ${r.length.toFixed(1)} m · 호스 ${r.hoses}본(+1 권장) · 계단 ${r.stairs}회`;hud.title=r.limits||r.error;$('routeSummary').textContent=hud.textContent;
-  $('routeDiagnostics').textContent=JSON.stringify({main:graph.mainEntrance?.id,main_point:graph.mainEntrance?.point,default_vehicle:graph.defaultVehicle,...r});},dispose(){cleanup.forEach(f=>f());hud.remove();container.remove();}};
+  const display=r.risk_summary,body=summary.querySelector('#routeRiskRows');body.replaceChildren();
+  const t=display?.sample_s,stamp=Number.isFinite(t)?`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`:'미평가';
+  summary.querySelector('#routeRiskBasis').textContent=r.error||`${stamp} · ${display?.history?'누적 이력':'현재 시점'}`;
+  for(const row of display?.rows||[]){const tr=document.createElement('tr');tr.dataset.room=row.room||'OUTSIDE';tr.dataset.color=row.color;tr.dataset.index=row.index??'';
+   const hose=row.hose_first===row.hose_last?String(row.hose_first):`${row.hose_first}–${row.hose_last}`;
+   for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,row.phenomenon,row.index===null?'—':Math.round(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+   tr.children[4].style.color=row.index===null?'#b8cbd8':row.color;tr.title=row.index===null?'저장된 평가 없음':`${row.source_cell} · ${row.type} ${row.index.toFixed(2)}${row.partial?' · 일부 지수 미평가':''}`;body.append(tr);
+  }
+  $('routeDiagnostics').textContent=JSON.stringify({main:graph.mainEntrance?.id,main_point:graph.mainEntrance?.point,default_vehicle:graph.defaultVehicle,...r});},dispose(){cleanup.forEach(f=>f());hud.remove();container.remove();summary.remove();}};
 }

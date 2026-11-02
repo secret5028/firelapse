@@ -19,5 +19,17 @@ for(let i=0;i<50;i++){
  assert.equal(disposed,old.length,'replacement disposes owned geometry, labels and materials');
 }
 layer.setData({...frame,route:{...frame.route,vehicle_visible:false}});assert.ok(layer.items.filter(x=>!x.route).every(x=>!x.object.visible));
+const building={floors:[{rooms:[{room_id:'CAD_3F_R2',cells:[{cell_id:'R2_C0'}]}]}]};
+const resultMeta={time_s:[1420,3600],index_by_cell:{R2_C0:{FO:[120,0],FGI:[0,0],backdraft:[0,0],rollover:[0,0]}},index_history_max:{R2_C0:{FO:[120,120],FGI:[0,0],backdraft:[0,0],rollover:[0,0]}}};
+const riskResources=[...layer.resources];
+for(const [t_s,history,color] of [[1420,false,'ef4444'],[3600,true,'ef4444'],[3600,false,'38bdf8']]){
+ layer.setData({...frame,building,resultMeta,t_s,risk:{history}});
+ assert.equal(layer.roomMaterials.get('CAD_3F_R2').color.getHexString(),color);
+ assert.deepEqual([...layer.resources],riskResources,'time/history changes only materials, never geometry');
+}
+for(const order of [37,38]){const mesh=layer.items.find(x=>x.object.isMesh&&x.object.renderOrder===order).object;
+ const p=mesh.geometry.getAttribute('position'),a=new T.Vector3().fromBufferAttribute(p,0),b=new T.Vector3().fromBufferAttribute(p,5);
+ assert.ok(Math.abs(a.distanceTo(b)-(order===38?.4:.56))<1e-5);assert.equal(mesh.material.depthTest,false);
+}
 layer.dispose();assert.equal(layer.resources.size,0);assert.equal(scene.children.length,0);assert.equal(borrowedDisposed,0);
 geometry.dispose();material.dispose();console.log('route layer: 50 rebuilds, owned resources released, borrowed vehicle preserved, floor filter and data identity pass');

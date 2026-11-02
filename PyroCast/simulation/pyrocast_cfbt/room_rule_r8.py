@@ -3,7 +3,7 @@ from copy import deepcopy
 from .rule_settings import resolve
 from .room_rule_r7 import prepare as prepare_r7
 
-def prepare(raw):
+def prepare(raw, *, cell_partitioner=None):
  settings=resolve(raw.get('room_rule_r8',{}));m=deepcopy(raw)
  opened_fire_doors=[]
  for vent in m.get('openings',[]):
@@ -13,7 +13,7 @@ def prepare(raw):
    opened_fire_doors.append(vent['id']);vent['original_fire_door']=True
    for key in ('fire_door','door_type','fire_rating_minutes'):vent.pop(key,None)
  m['room_rule_r7']={**settings['values'],'room_supply':settings['room_supply']}
- model,targets,manifest=prepare_r7(m,supply_coverage_fraction=settings['values']['coverage_default'] if settings['room_supply']=='room_involvement' else None)
+ model,targets,manifest=prepare_r7(m,supply_coverage_fraction=settings['values']['coverage_default'] if settings['room_supply']=='room_involvement' else None,cell_partitioner=cell_partitioner)
  model['room_rule_r8']=deepcopy(raw.get('room_rule_r8',{}));model['rule_settings']=settings
  manifest.update(revision='room_rule_r8_frozen',frozen_structure='r7',rule_settings=settings,
                  initially_open_fire_doors=opened_fire_doors)

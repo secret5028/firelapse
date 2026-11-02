@@ -1,0 +1,52 @@
+[
+  {
+    "file": "app/README.md",
+    "added": 7,
+    "deleted": 0
+  },
+  {
+    "file": "simulation/pyrocast_cfbt/room_rule_r7.py",
+    "added": 2,
+    "deleted": 2
+  },
+  {
+    "file": "simulation/pyrocast_cfbt/room_rule_r8.py",
+    "added": 2,
+    "deleted": 2
+  },
+  {
+    "file": "simulation/pyrocast_lite/adapter.py",
+    "added": 4,
+    "deleted": 2
+  },
+  {
+    "file": "simulation/pyrocast_lite/shared_inputs.py",
+    "added": 2,
+    "deleted": 1
+  },
+  {
+    "file": "simulation/pyrocast_lite/visualization.py",
+    "added": 8,
+    "deleted": 3
+  },
+  {
+    "file": "simulation/pyrocast_lite/radial_cells.py",
+    "added": 153,
+    "deleted": 0
+  },
+  {
+    "file": "tools/test_radial_cells.py",
+    "added": 57,
+    "deleted": 0
+  },
+  {
+    "file": "tools/run_lite_radial_c9.py",
+    "added": 61,
+    "deleted": 0
+  },
+  {
+    "file": "specs/웹앱-C9-radial-20261102.md",
+    "added": 71,
+    "deleted": 0
+  }
+]

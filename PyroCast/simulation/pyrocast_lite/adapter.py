@@ -18,7 +18,8 @@ def prepare(raw, parameters=None):
     # Preserve the r8 manifest and curves exactly, including future vent caps.
     # Window breakage is disabled in the lite dynamics, NOT silently in the
     # native supply compiler. Its cap may therefore overestimate available air.
-    model, _, manifest = prepare_r8(deepcopy(raw))
+    from .radial_cells import partitioner
+    model, _, manifest = prepare_r8(deepcopy(raw), cell_partitioner=partitioner(raw))
     if parameters and parameters.get('oxygen_inventory_mode'):
         if parameters.get('remove_cumulative_state'):
             raise ValueError('Cumulative-state trial uses layer oxygen, not oxygen inventory mode')
@@ -72,7 +73,8 @@ class LiteModel(Model):
             w, d, h = r['size_m']
             self.nodes.append(dict(id=r['id'], name=r.get('name', r['id']),
                                    kind=r.get('core_kind') or 'room',
-                                   zf=r['origin_m'][2], H=h, A=w*d, per=2*(w+d)))
+                                   zf=r['origin_m'][2], H=h, A=r.get('radial_area_m2',w*d),
+                                   per=r.get('radial_perimeter_m',2*(w+d))))
         self.N = len(self.nodes)
         self.rmap = {n['id']: i for i, n in enumerate(self.nodes)}
         self.zfa = np.array([n['zf'] for n in self.nodes])

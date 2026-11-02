@@ -39,7 +39,9 @@ def package(model,result,raw,label):
         shape=unary_union([Polygon(p['o'],p.get('h',[])) for p in polys]);bounds=shape.bounds
         def project(xy):return [bounds[k]+(xy[k]-original['origin_m'][k])/original['size_m'][k]*(bounds[k+2]-bounds[k]) for k in (0,1)]
         lo=project(c['origin_m']);hi=project([c['origin_m'][k]+c['size_m'][k] for k in (0,1)])
-        cut=shape.intersection(box(*lo,*hi));parts=list(cut.geoms) if hasattr(cut,'geoms') else [cut]
+        cut=(unary_union([Polygon(p['o'],p.get('h',[])) for p in c['radial_polys']])
+             if c.get('radial_polys') else shape.intersection(box(*lo,*hi)))
+        parts=list(cut.geoms) if hasattr(cut,'geoms') else [cut]
         parts=[p for p in parts if p.geom_type=='Polygon' and p.area>1e-8]
         if not parts:continue
         clipped=unary_union(parts);center=clipped.representative_point();rid=c['id'];geometries[rid]=(clipped,original,bounds)
@@ -61,7 +63,8 @@ def package(model,result,raw,label):
         rid=g['room']
         if rid not in geometries:continue
         shp,original,bounds=geometries[rid];c=cellmap[rid];pt=g['position_m']
-        xy=[bounds[k]+(pt[k]-original['origin_m'][k])/original['size_m'][k]*(bounds[k+2]-bounds[k]) for k in (0,1)]
+        xy=(g['radial_position_m'][:2] if 'radial_position_m' in g else
+            [bounds[k]+(pt[k]-original['origin_m'][k])/original['size_m'][k]*(bounds[k+2]-bounds[k]) for k in (0,1)])
         if not shp.contains(Point(xy)):p=shp.representative_point();xy=[p.x,p.y]
         # Small symbols uniformly cover the CAD cell. These do not add fires or fuel.
         xmin,ymin,xmax,ymax=shp.bounds;step=max(2.,np.sqrt(shp.area/12.))
@@ -82,7 +85,9 @@ def package(model,result,raw,label):
         fire_key=next((f['cad_key'] for f in fires if f['kind']=='initial'),rows[0]['key']),
         rooms=rows,solvers=solvers,fires=fires,fuel_symbols=units,fuel_units=[],events=result['events'],
         original_room_count=len(originals),door_jet=result['door_jet'],integration=result['integration'],
-        scene_geometry_basis='solver rectangular cells affinely mapped to original CAD bounds, then clipped to actual polygons; display approximation',
+        cell_settings={k:raw.get(k,v) for k,v in [('cell_mode','legacy'),('radial_r1_m',6.),('radial_r2_m',12.)]},
+        scene_geometry_basis=('initial room radial polygon cells; other rooms legacy affine cells' if raw.get('cell_mode')=='radial' else
+            'solver rectangular cells affinely mapped to original CAD bounds, then clipped to actual polygons; display approximation'),
         smoke_basis='calculated upper-layer extent; constant gray opacity for display only; no soot or optical-density calculation',
         limits=['조건 충족 단계이며 발생 예측 아님','회색 연기: 계산된 상층 범위의 표시용 농도. 실제 광학밀도·연기 전면은 미계산.',
             '문 분출 연소는 받는 실 하층 산소를 소비하는 근사이며 롤오버와 별도.',

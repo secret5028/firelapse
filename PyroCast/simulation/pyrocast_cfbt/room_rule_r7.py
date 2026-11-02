@@ -11,7 +11,7 @@ DEFAULTS={'temperature_C':600.,'ramp_s':60.,'open_delay_s':60.,'closed_delay_s':
           'cell_temperature_C':300.,'v_spread_m_s':.05,'vertical_delay_s':60.,'passage_load_MJ_m2':50.,'vent_cap_k':1.,'room_supply':'room_involvement','coverage_default':.5}
 
 
-def prepare(raw, *, supply_coverage_fraction=None):
+def prepare(raw, *, supply_coverage_fraction=None, cell_partitioner=None):
     m=deepcopy(raw);settings={**DEFAULTS,**m.get('room_rule_r7',{})}
     if set(settings)!=set(DEFAULTS):raise ValueError('Unknown r7 setting')
     if any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or v<=0 for k,v in settings.items() if k!='room_supply'):raise ValueError('Invalid r7 setting')
@@ -30,7 +30,7 @@ def prepare(raw, *, supply_coverage_fraction=None):
         if not math.isfinite(coverage) or not 0<coverage<=1:raise ValueError('Invalid fuel coverage')
         g['coverage_basis']='explicit coverage_fraction' if 'coverage_fraction' in g else 'existing fuel_area_m2/floor' if 'fuel_area_m2' in g else 'r7 default 0.5 (user preset)'
         g['fuel_area_m2']=floor*coverage
-    m,cells=partition(m,split_initial=True);rooms={r['id']:r for r in m['rooms']}
+    m,cells=(cell_partitioner or partition)(m,split_initial=True);rooms={r['id']:r for r in m['rooms']}
     warnings=[];supplies={}
 
     initial=[g for g in m['fuel_groups'] if 'initial_time_s' in g]

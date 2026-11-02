@@ -1,0 +1,19 @@
+{
+  "schema": "pyrocast.result-index/1",
+  "threshold": 70,
+  "kinds": [
+    "FO",
+    "FGI",
+    "backdraft",
+    "rollover"
+  ],
+  "attention_rooms": [],
+  "attention_room_count": 0,
+  "unknown_rooms": [],
+  "complete": true,
+  "source_stamp": [
+    1793599141249395100,
+    52460211
+  ],
+  "source_sha256": "46758cc8c9b40b8e3e2b8e8bcfda5f97168efd81210713d4dce355e21809d9ae"
+}

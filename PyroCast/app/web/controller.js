@@ -1,3 +1,6 @@
+import {readRouteGraph,contains} from './route/graph.js';
+import {RouteLayer} from './layers/route.js';
+import {createRoutePanel} from './panels/route.js';
 import {createBuildingPanel,buildingTable} from './panels/building.js';
 import {attachExplanations} from './panels/explanations.js';
 import {createStore} from './state/store.js';
@@ -38,7 +41,11 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const buildingLayer=new BuildingLayer(T,{geometryFor:()=>buildingAsset}),openings=new OpeningsLayer(T,{geometryFor:()=>openingsAsset,camera:C}),core=new CoreLayer(T,{geometryFor:()=>coreAsset});
  let rawSource=null,data=null,selected=null,clicked=false,autoFit=false,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
- const layers=[buildingLayer,openings,core,...real,risk,selection];
+ let routeGraph;try{routeGraph=readRouteGraph(B);}catch(error){routeGraph={error:error.message,ground:{z:0,slab:[]},mainEntrance:null,defaultVehicle:null};}
+ const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),vehicleSource=referenceGroup?.children.find(c=>c.isGroup);
+ let routeUI=null;
+ const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
+ const layers=[buildingLayer,openings,core,...real,risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
@@ -47,6 +54,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  async function saveDoor(id,door_class){if(store.get('buildingReview').saving||disposed)return;store.dispatch('buildingReview/set',{saving:true,status:'저장 중…'});try{const response=await fetch('/cfbt/lite/doors',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({id,door_class})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(disposed)return;store.dispatch('buildingReview/set',{doors:value,status:id+' · 저장 완료'});await refreshScreening();}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'저장 실패 · '+e.message});}finally{if(!disposed)store.dispatch('buildingReview/set',{saving:false});}}
 
  const explore=createExplorePanel({store,onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
   try{const response=await fetch('/cfbt/lite/mc',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(disposed)return;const previous=mcJobState;mcJobState=value;explore.mcState(value);
@@ -86,7 +94,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   }
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}
  }};
- const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),seriesAt:()=>cache.get(store.get('result')?.result_id)});
+ const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>!routeGraph.error&&store.get('route').placing,place:p=>{if(contains(p,routeGraph.ground.slab))store.dispatch('route/set',{message:'건물 밖 지면을 선택하세요'});else store.dispatch('route/set',{vehicle:p,placing:false,message:''});}},seriesAt:()=>cache.get(store.get('result')?.result_id)});
  const on=(node,event,fn)=>{node.addEventListener(event,fn);cleanup.push(()=>node.removeEventListener(event,fn));};
  const handler=(node,event,fn)=>{const old=node[event];node[event]=fn;cleanup.push(()=>{node[event]=old;});};
  const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||'용도 미확인'}`;

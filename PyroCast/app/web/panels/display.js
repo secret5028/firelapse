@@ -16,6 +16,8 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#ffc342',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
+ toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
+ toggle($('displayLayers'),'displayVehicle','경로 차량','#d33',()=>store.get('route').vehicle_visible,vehicle_visible=>store.dispatch('route/set',{vehicle_visible}));
  toggle($('displayLayers'),'displayOperations','작전 기호 (차량·인원)','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
  toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'현재 시각까지 저장된 지수의 최대값입니다. 이력만 해당하는 테두리는 점선입니다.');
@@ -46,7 +48,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());$('legendHistory').hidden=!store.get('risk').history;const t=store.get('risk').threshold;$('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('legendCaution').textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('displayTemperature').value=store.get('realView').temperaturePattern;$('displaySmokeColor').value=store.get('realView').smokeColor;$('displayFlameStyle').value=store.get('realView').flameDisplay;$('liteOpacity').value=store.get('realView').smokeOpacity;}
- for(const slice of ['layers','openings','realView','risk'])cleanups.push(store.subscribe(slice,sync));sync();
+ for(const slice of ['layers','openings','realView','risk','route'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
   const allowed=!!isOriginAllowed(room?.room_id);$('hudOrigin').disabled=!allowed;$('hudOrigin').title=allowed?'선택한 원래 방을 탐색 화점으로 지정합니다':'화점 지정 가능한 실을 선택하세요';

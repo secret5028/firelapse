@@ -5,7 +5,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
  scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000),
  rendererFactory=()=>new THREE.WebGLRenderer({antialias:true,alpha:true}),layers=createEmptyLayers(THREE),seriesAt=()=>null,
- adoptedRenderer=null,legendContainer=null}){
+ adoptedRenderer=null,legendContainer=null,groundPick=null}){
  if(!container||mounted.has(container)||(container.querySelector('canvas')&&container.querySelector('canvas')!==adoptedRenderer?.domElement))throw Error('Container already owns a canvas/host');
  const ids=layers.map(l=>l.constructor.id);if(new Set(ids).size!==ids.length)throw Error('Duplicate layer IDs');
  let disposed=false,running=false,raf=null,lastTime=null,renderer=null,legendAnchor=null;const cleanups=[];
@@ -31,6 +31,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
    if(!start||start.id!==e.pointerId||pointers.size||Math.hypot(e.clientX-start.x,e.clientY-start.y)>start.tolerance)return;
    const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return;
    mouse.set((e.clientX-b.x)/b.width*2-1,-(e.clientY-b.y)/b.height*2+1);scene.updateMatrixWorld(true);camera.updateMatrixWorld();ray.setFromCamera(mouse,camera);
+   if(groundPick?.active()){const hit=ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,0,1),-groundPick.z),new THREE.Vector3());if(hit)groundPick.place(hit.toArray());return;}
    const floorId=store.get('floor').floor_id,planes=(layers.find(l=>l.constructor.id==='selection')?.getPickPlanes?.()||[]).filter(p=>{
     if(floorId!==null&&p.userData.floorId!==floorId)return false;for(let node=p;node;node=node.parent)if(!node.visible)return false;return true;
    });
@@ -41,7 +42,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
  function render(){alive();const now=clock.now();if(!Number.isFinite(now))throw Error('Clock must return finite milliseconds');
   const dt=lastTime===null?0:Math.max(0,(now-lastTime)/1000);lastTime=now;
   const playback=store.get('playback');if(running&&playback.playing){store.dispatch('playback/seek',{t_s:playback.t_s+dt*playback.speed});if(store.get('playback').t_s>=playback.t_end_s)store.dispatch('playback/play',{playing:false});}
-  const t=store.get('playback').t_s,frame={building:store.get('building'),resultMeta:store.get('result'),series:seriesAt(t),t_s:t,selection:store.get('selection'),floor:store.get('floor'),risk:store.get('risk'),layers:store.get('layers'),realView:store.get('realView'),reducedMotion:windowTarget.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false};
+  const t=store.get('playback').t_s,frame={building:store.get('building'),resultMeta:store.get('result'),series:seriesAt(t),t_s:t,selection:store.get('selection'),floor:store.get('floor'),route:store.get('route'),risk:store.get('risk'),layers:store.get('layers'),realView:store.get('realView'),reducedMotion:windowTarget.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false};
   const visible=store.get('layers');for(const layer of layers){layer.setData(frame);layer.setVisible(visible[layer.constructor.id]!==false);layer.tick?.(dt,now/1000);}
   renderer.render(scene,camera);
  }

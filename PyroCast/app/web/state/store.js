@@ -3,11 +3,12 @@ import {createSeriesCache} from './series_cache.js';
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
+ route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
  realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',smokeColor:'current',flameDisplay:'growth',fuelMarkers:true},
  openings:{exterior:true,interior:true},
- layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false},
+ layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false,route:true},
  risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
@@ -27,6 +28,13 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
      for(const k of ['top_n','samples'])if(p[k]!==undefined&&(!Number.isSafeInteger(p[k])||p[k]<1))throw Error('Positive integer required');
      if(p.origin_room_id!==undefined&&p.origin_room_id!==null&&typeof p.origin_room_id!=='string')throw Error('Invalid origin');
      put('exploration',{...state.exploration,...p});return true;
+    }
+    case 'route/set':{
+     if(Object.keys(p).some(k=>!Object.hasOwn(state.route,k)))throw Error('Unknown route setting');
+     for(const k of ['hose_m','stair_factor'])if(p[k]!==undefined&&(!Number.isFinite(p[k])||p[k]<1))throw Error('호스 길이·계단 계수는 1 이상이어야 합니다');
+     if(p.vehicle!==undefined&&p.vehicle!==null&&(!Array.isArray(p.vehicle)||p.vehicle.length!==3||!p.vehicle.every(Number.isFinite)))throw Error('Invalid vehicle point');
+     for(const k of ['placing','vehicle_visible'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid route flag');
+     put('route',{...state.route,...p});return true;
     }
     case 'floor/set':if(p.floor_id!==null&&typeof p.floor_id!=='string')throw Error('Invalid floor');put('floor',{floor_id:p.floor_id});return true;
     case 'camera/fit':if(!['floor','all','top','room','fire'].includes(p.mode))throw Error('Invalid camera mode');put('camera',{mode:p.mode,target:p.target??null,pose:p.pose??null});return true;

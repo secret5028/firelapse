@@ -1,0 +1,14 @@
+{
+  "receiving_sum_cases": 24,
+  "receiving_sum_max_error_kW": 9.094947017729282e-13,
+  "frozen_hashes": {
+    "simulation/build/baseline/cfast-baseline.exe": "317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9",
+    "simulation/viewer/legacy_real_view.js": "f4014b5697ba934f8d96e929533cd16c2b4508d7987cfbacdba110785d65282a",
+    "app/web/scene/render_order.js": "b907586fb9d87c1c74e6943479b3524ffb05d20cd77f6019eb7b93546bda9cca",
+    "tools/serve_wando_c11.py": "05fd2dfd4f69b4e04a2424be3f88ddae44689e842d480d55608c4ec71b22a261",
+    "simulation/pyrocast_lite/core.py": "d8742588af0bf470aae2709211411ba96e2b0b83de5eb7d3e51801e617eab0e9",
+    "simulation/pyrocast_lite/door_jet.py": "3f3222cfaecf7ae446e04678ac3a0632149c5108a06edabf04eb9d24be35e1d4"
+  },
+  "browser_console_errors": 0,
+  "simulation_runs": 0
+}

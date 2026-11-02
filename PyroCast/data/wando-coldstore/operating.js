@@ -28,10 +28,6 @@ try{
  $('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
  const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor};
  const app=await attach(viewer);
- // Wando's FO score is thermal proximity, including its own wall-cavity fire.
- const foHelp=document.querySelector('#resultContent .resultInfo');
- if(foHelp){foHelp.title='FO: 상층 온도/600℃ ×100. 자체 벽 공동의 연소도 R5 화재이며 자체 화원 유무로 점수를 차단하지 않습니다. 바닥 복사열은 미평가. FGI·백드래프트·롤오버는 기존 세 요인 지수. 발생 확률이 아닙니다.';foHelp.setAttribute('data-tip',foHelp.title);foHelp.setAttribute('aria-label',foHelp.title);}
- const foBasis=document.createElement('div');foBasis.textContent='FO · 상층 온도 기준 ⓘ';foBasis.title='R5 자체 벽의 우레탄 화재를 CAVITY로 분리 계산했습니다. FO는 실내 열적 조건 충족도이며 바닥 복사열은 미평가입니다.';foBasis.style.cssText='font-size:11px;color:#b8cbd8;margin:6px 0';$('resultScores').before(foBasis);
  const tactical=await(await fetch('./tactical.json')).json();
  const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));

@@ -7,7 +7,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'simulation'), str(ROOT/'simulation/deps')]
 from pyrocast_cfbt.native import read_native_csv
-from pyrocast_cfbt.thermal_fo import temperature_scores
+from pyrocast_cfbt.conditions import fo_required_hrr
+from pyrocast_cfbt.fo_hrr import apply_fo_hrr, REVISION
+from copy import deepcopy
 
 DATA = ROOT/'data/wando-coldstore'
 SRC = ROOT/'simulation/results/wando_C11_P1_20261102'
@@ -68,10 +70,13 @@ def main():
                  Qvent_kW=saved[native]['door_jet_kW'],Qbulk_kW=[0]*len(grid))
         s['conditions']={key:{'scores':scores[native][old],'status':'evaluated'} for old,key in [('FO','FO'),('FGI','FGI'),('BD','backdraft'),('rollover','rollover')]}
         s['conditions']['FO']={
-            'scores':temperature_scores(s['Tu'],model['criteria']['fo_temperature_C']),
+            'scores':deepcopy(scores[native]['FO']),
             'status':'evaluated',
             'legacy_combustion_support_scores':scores[native]['FO'],
-            'scope':'temperature only; floor radiation not evaluated; no actual FO transition inferred'}
+            'scope':'shared three-factor FO; own HRR plus receiving door jet; no ignition feedback'}
+        openings={op['id']:{'fraction':v[next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])]} for op in model['openings']}
+        required=fo_required_hrr(model,{'time_s':c['Time'],'opening_states':openings},model['rooms'][i-1],c['Time'])
+        apply_fo_hrr(s['conditions']['FO'],s['Qsolid_kW'],s['Qvent_kW'],required)
         solvers[native]=s
     p=dict(schema='pyrocast-cad-playback-1',engine_kind='cfast_native',case_id='wando-P1',
         native_mapping='wando-c11-p1-v1',building_sha256=bsha,label='완도 P1 · 순정 CFAST · 마지막 5 s 미출력',
@@ -85,16 +90,16 @@ def main():
                 '순정 CFAST P1 저장 CSV 재생. R5·공동만 계산; 나머지 실은 미평가.',
                 '0.1 m 공동의 2존 근사. 위험 지수는 발생 확률이 아님.',
                 'CAVITY는 R5 자체 벽의 강판 뒤 우레탄 연소 공간을 분리한 계산 구획이며 외부 화재가 아님.',
-                'FO 표시는 상층 온도/설정 600℃ ×100인 열적 조건 충족도. 자체 화원 HRR로 차단하지 않음. 바닥 복사열 미평가·실제 전실 연소 확대 예측 아님.',
-                '공동의 FO 온도 점수는 얇은 벽체 공간의 온도 진단이며 R5 전체 플래시오버를 뜻하지 않음.',
+                'FO는 온도·연료·산소 세 요인의 최솟값. 연료 항 = (자체 HRR + 수신 문 분출 HRR)/Thomas 필요 발열량. 발생 확률·실제 FO 확정 아님.',
+                '공동의 FO 지수는 얇은 벽체 공간의 온도 진단이며 R5 전체 플래시오버를 뜻하지 않음.',
                 '문 분출 발열은 ROOM 합계이며 틈과 절단 개구별로 분리 불가.',
                 '3D 절단 표시는 입력 일정의 우측값. native CSV는 다음 5 s 표본부터 반영.',
                 '경로는 등록 장애물 평면 외곽 0.5 m 회피. 미등록 적재물·호스 굴곡 미반영.'],
         provenance={'engine_sha256':sha(ROOT/'simulation/build/baseline/cfast-baseline.exe'),
                     'source_files':{f:sha(SRC/f) for f in ['case.in','case_zone.csv','case_compartments.csv','case_vents.csv','condition-scores.json']},
-                    'mapping':{'temperature':'C','O2':'mol_frac (volume fraction)','OD':'case_zone.csv 1/m','HRR':'case_compartments W / 1000','indices':'FO: upper_layer_temperature_only_v1; FGI/BD/rollover: saved condition-scores.json unchanged'},
-                    'fo_display':{'revision':'upper_layer_temperature_only_v1','threshold_C':model['criteria']['fo_temperature_C'],
-                        'module_sha256':sha(ROOT/'simulation/pyrocast_cfbt/thermal_fo.py'),
+                    'mapping':{'temperature':'C','O2':'mol_frac (volume fraction)','OD':'case_zone.csv 1/m','HRR':'case_compartments W / 1000','indices':'FO: fo_own_plus_received_door_jet_v1; FGI/BD/rollover: saved condition-scores.json unchanged'},
+                    'fo_display':{'revision':REVISION,'threshold_C':model['criteria']['fo_temperature_C'],
+                        'module_sha256':sha(ROOT/'simulation/pyrocast_cfbt/fo_hrr.py'),
                         'old_score_preserved':'solvers.*.conditions.FO.legacy_combustion_support_scores','floor_flux':'not_evaluated'},'simulation_runs':0},
         opening_states={op['id']:{'schedule':op['schedule'],
             'fraction':v[next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])].tolist()} for op in model['openings']})

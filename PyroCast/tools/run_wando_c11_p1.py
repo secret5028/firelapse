@@ -1,7 +1,7 @@
 """C11 r2 P1 only: stock CFAST input, one process, read-only diagnostics.
 
 prepare/run/analyze are separate so postprocessing never repeats a simulation.
-No engine, condition formula, or production application changes.
+Condition diagnostics use the current shared formula; raw engine output stays immutable.
 """
 import argparse
 import hashlib
@@ -16,6 +16,7 @@ from pyrocast_cfbt.model import DEFAULTS, merge
 from pyrocast_cfbt.deck import fire_curve, make_deck
 from pyrocast_cfbt.native import execute, read_native_csv
 from pyrocast_cfbt.conditions import screening_scores, screening_lfl, fo_required_hrr
+from pyrocast_cfbt.fo_hrr import apply_fo_hrr
 
 OUT = ROOT / 'simulation/results/wando_C11_P1_20261102'
 EXE = ROOT / 'simulation/build/baseline/cfast-baseline.exe'
@@ -117,7 +118,8 @@ def analyze(scenario='P1', fan_on=False):
     unchanged={p:sha(ROOT/p)==h for p,h in evidence['hashes'].items()}
     # A later specification edit does not invalidate the immutable run input.
     # Preserve its mismatch in the audit; engine/physics/deck remain mandatory.
-    assert all(v for p,v in unchanged.items() if not p.startswith('specs')) and sha(OUT/'case.in')==evidence['deck_sha256']
+    diagnostic_files={'simulation/pyrocast_cfbt/conditions.py'}
+    assert all(v for p,v in unchanged.items() if not p.startswith('specs') and p not in diagnostic_files) and sha(OUT/'case.in')==evidence['deck_sha256']
     states={};series={'time_s':t.tolist()};scores={};summaries={};shared_states={}
     def peak(a):
         j=int(np.argmax(a));return {'value':float(a[j]),'time_s':float(t[j])}
@@ -142,6 +144,9 @@ def analyze(scenario='P1', fan_on=False):
             'FGI':screening_scores((T,g['hot_C'],False),(yf,screening_lfl(model,T),False),(O,cr['fgi_oxygen_vol_percent'],False),n),
             'BD':screening_scores((T,cr['hot_C'],False),(yf,cr['fuel_rich_mass_fraction'],False),(O,cr['oxygen_deficient_vol_percent'],True),n),
             'rollover':screening_scores((T,g['gas_ignition_C'],False),(yf,g['fuel_min_mass_fraction'],False),(O,g['oxygen_min_vol_percent'],False),n)}
+        fo_record={'scores':records['FO']}
+        apply_fo_hrr(fo_record,q,c[f'DJET_{i}']/1000,required)
+        records['FO']=fo_record['scores']
         scores[rid]=records
         idx={k:100*np.asarray(r['degree'],dtype=float) for k,r in records.items()}
         assert all(np.isfinite(a).all() for a in idx.values())
@@ -149,7 +154,7 @@ def analyze(scenario='P1', fan_on=False):
                      'interface_m':c[f'HGT_{i}'],'source_HRR_kW':q,'door_jet_kW':c[f'DJET_{i}']/1000,**idx}
         shared_states[rid]={'T_upper_C':T,'o2_upper_vol':O/100,'o2_lower_vol':Ol/100,
             'upper_mass_kg':total,'fuel_upper_kg':m[f'ULMTUHC_{i}'],
-            'fuel_upper_J':m[f'ULMTUHC_{i}']*25e6,'bulk_HRR_W':np.zeros(n)}
+            'fuel_upper_J':m[f'ULMTUHC_{i}']*25e6,'bulk_HRR_W':np.zeros(n),'received_door_jet_HRR_W':c[f'DJET_{i}']}
         summaries[rid]={'temperature_peak_C':peak(T),'source_HRR_peak_kW':peak(q),
                        'door_jet_peak_kW':peak(c[f'DJET_{i}']/1000),
                        'fuel_mass_fraction_peak':peak(yf),'minimum_O2_vol_percent':float(O.min()),
@@ -159,7 +164,7 @@ def analyze(scenario='P1', fan_on=False):
         series[rid]={k:a.tolist() for k,a in states[rid].items()}
     expected_cut={float(p[1]) for p in next(op for op in model['openings'] if op['id']=='CUT')['schedule']}
     assert set(np.round(opening_states['CUT']['fraction'],8))==expected_cut
-    # Verify the report's direct helper calls against the full unchanged evaluator.
+    # Verify direct helper calls against the full shared diagnostic evaluator.
     from pyrocast_cfbt.conditions import evaluate
     from pyrocast_cfbt.spread import classify
     native={'zone':{'Time':t,'HRR_1':c['HRR_1']},'slabs':[],'vents':[]}
@@ -185,8 +190,8 @@ def analyze(scenario='P1', fan_on=False):
              'cut_first_observed_full_s':first(opening_states['CUT']['fraction'],1.),
              'door_jet_by_individual_opening':None,
              'door_jet_scope':'native DJET receiving-room sum; gaps and cut not independently available',
-             'scores_scope':'unchanged conditions.py ratios; not occurrence probabilities or validation of FGI',
-             'FO_ROOM_note':'No ROOM solid source and no project bulk source: shared FO HRR factor is zero; DJET is deliberately not reassigned as solid HRR',
+             'scores_scope':'shared FO own plus received door jet revision; T/O2 and other indices unchanged; not occurrence probabilities',
+             'FO_ROOM_note':'Shared FO fuel factor includes own HRR plus receiving-compartment DJET once; temperature and oxygen factors unchanged',
              'times':{str(at):{'sample_s':float(t[np.argmin(abs(t-at))]),**{k:float(a[np.argmin(abs(t-at))]) for k,a in states['ROOM'].items()}} for at in (780,1320,1500,2100)}}
     save('summary.json',summary)
     with (OUT/'room-timeseries.csv').open('w',encoding='utf-8-sig',newline='') as f:

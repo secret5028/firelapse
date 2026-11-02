@@ -180,6 +180,14 @@ def evaluate(model,result):
             'assumption':True,'internal_area':'bounding surfaces minus effective open area',
             'oxygen_source':'lower layer, gas.oxygen_min_vol_percent',
             'limits':'local solver-cell geometry; virtual vents excluded; not a validated FO prediction'}
+        from .fo_hrr import apply_fo_hrr
+        # Prefer the explicitly mapped receiving-room total. Stock DJET is
+        # already a receiving-compartment sum; do not add directional rows again.
+        received=s.get('received_door_jet_HRR_W')
+        if received is None:
+            received=result.get('zone',{}).get('DJET_'+str(model['rooms'].index(room)+1))
+        if received is None:received=p['vent_HRR_W']
+        apply_fo_hrr(fo,qa+bulk,np.asarray(received)/1000,required)
         lfl=screening_lfl(model,temp)
         fgi['scores']=screening_scores((temp,g['hot_C'],False),(yf,lfl,False),
             (o2,c['fgi_oxygen_vol_percent'],False),n,fgi['all_met'])

@@ -60,7 +60,8 @@ def shared_conditions(model,result):
         states[node['id']]={'T_upper_C':temp-273.15,'o2_upper_vol':indicator[i] if room_oxygen else y[4*n+i]*29/32,
             'o2_lower_vol':indicator[i] if room_oxygen else y[5*n+i]*29/32,
             'upper_mass_kg':mass,'fuel_upper_kg':fuel,'fuel_upper_J':fuel*model.P['dHc'],
-            'bulk_HRR_W':np.asarray(result['rooms'][i].get('upper_HRR_kW',np.zeros(size)))*1000}
+            'bulk_HRR_W':np.asarray(result['rooms'][i].get('upper_HRR_kW',np.zeros(size)))*1000,
+            'received_door_jet_HRR_W':np.asarray(result['rooms'][i].get('door_jet_HRR_kW',np.zeros(size)))*1000}
     classified=classify(source,{'zone':zone,'slabs':[],'vents':[]},states,ignitions,[])
     payload={'time_s':t,'zone':zone,'rooms':states,'solid_fuel_inventory':inventory,'phenomena':classified,
         'opening_states':{v['id']:{'fraction':[v['schedule'][0][1]]*size} for v in source['openings']},

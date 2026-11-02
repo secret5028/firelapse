@@ -8,7 +8,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',smokeColor:'current',flameDisplay:'growth',fuelMarkers:true},
  openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false},
- risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
+ risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 export function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -41,6 +41,7 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(p.flameDisplay!==undefined&&!['growth','hrr'].includes(p.flameDisplay))throw Error('Invalid flame display');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
+    case 'risk/history':if(typeof p.enabled!=='boolean')throw Error('Invalid history flag');put('risk',{...state.risk,history:p.enabled});return true;
     case 'risk/threshold':{
      const threshold={...state.risk.threshold,...p};
      if(Object.keys(p).some(k=>!['ribbon','caution'].includes(k))||Object.values(threshold).some(v=>!Number.isFinite(v)||v<0)||threshold.caution>threshold.ribbon)throw Error('Invalid risk thresholds');

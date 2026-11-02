@@ -251,3 +251,7 @@ Browser-controlled GET-only fixture app/tests/smoke_amplitude_proxy.py pins cloc
 
 ## C-0 HRR 불꽃 수정 (2026-11-02)
 절대 혀 간격·cluster clamp·셀 마스크 내부 면적 4회 이분법·고정 0.3 m 감쇠. 성장 기본 4장면 픽셀 0. Q/HRRPUA 등가 지름과 마스크 보정 표시 원 지름을 구분한다. 상세: specs/웹앱-C0-HRR불꽃수정-20261102.md.
+
+
+## C-1 이력 표시 (2026-11-02)
+저장 지수 prefix 최대, 기본 이력 ON. 현재 미충족/과거 충족은 점선 리본, 현재 멤버 셀 충족 시 실선 우선. 셰이더·엔진 불변. S09 60분 FO 원본/화면 1실 일치; 이력 OFF 4장면 픽셀 0. 상세: specs/웹앱-C1-이력표시-20261102.md. C-2 미착수.

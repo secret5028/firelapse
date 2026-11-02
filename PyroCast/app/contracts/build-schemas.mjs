@@ -45,6 +45,7 @@ const schemas={
   status:en('complete','partial','failed'),t_end_s:nullable(num),dt_out_s:nullable(num),limits_text:arr(str),time_s:arr(num),
   rooms:dict(ref('series')),cells:dict(ref('series')),conditions:dict(ref('timeline')),cell_conditions:dict(ref('timeline')),
   index_by_cell:dict(obj(Object.fromEntries(['FO','FGI','backdraft','rollover'].map(k=>[k,arr(nullable(num))])))),
+  index_history_max:dict(obj(Object.fromEntries(['FO','FGI','backdraft','rollover'].map(k=>[k,arr(nullable(num))])))),
   events:arr(obj({t_s:num,kind:en('ignition','supply_start','window_break','rule_trigger'),room_id:str,
    cell_id:nullable(str),parent_room_id:nullable(str),basis:str})),
   opening_risk:nullable(dict(arr(point(2)))),opening_risk_status:en('evaluated','not_evaluated','not_provided'),

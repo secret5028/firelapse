@@ -62,6 +62,12 @@ const axis=x=>({temperature:'T',fuel:'F',oxygen:'O'}[x]??null);
 function criterion(rec,i){const sc=rec?.scores;return {met:at(sc?.all_met??rec?.all_met,i),degree:at(sc?.degree,i),
  r_T:at(sc?.factors?.temperature,i),r_F:at(sc?.factors?.fuel,i),r_O:at(sc?.factors?.oxygen,i),
  bottleneck:axis(at(sc?.weakest,i)),dominant:axis(at(sc?.strongest,i)),status:rec?.status??null};}
+// Prefix maxima of saved indices only. Unknown samples add no new evidence.
+export function cumulativeIndexHistory(indices){
+ return Object.fromEntries(Object.entries(indices).map(([id,types])=>[id,Object.fromEntries(Object.entries(types).map(([type,values])=>{
+  let maximum=null;return [type,values.map(value=>{if(Number.isFinite(value))maximum=maximum===null?value:Math.max(maximum,value);return maximum;})];
+ }))]));
+}
 export function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
 function frame(s,i,cid){const d=s.display_v8;const f={smoke_stage:at(d?.smoke_stage,i),smoke_factors:[],source_cells:[cid],aggregation:'single'};
  for(const [old,key] of [['hot','hot'],['fuel','fuel'],['accumulated','deep']])if(d?.factors?.[old]?.[i]===true)f.smoke_factors.push(key);
@@ -132,7 +138,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:cumulativeIndexHistory(indexByCell),events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }

@@ -243,6 +243,73 @@
         "additionalProperties": false
       }
     },
+    "index_history_max": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "FO": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "FGI": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "backdraft": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "rollover": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "FO",
+          "FGI",
+          "backdraft",
+          "rollover"
+        ],
+        "additionalProperties": false
+      }
+    },
     "events": {
       "type": "array",
       "items": {
@@ -457,6 +524,7 @@
     "conditions",
     "cell_conditions",
     "index_by_cell",
+    "index_history_max",
     "events",
     "opening_risk",
     "opening_risk_status",

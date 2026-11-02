@@ -532,7 +532,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'current',smokeColor:'current',flameDisplay:'growth',fuelMarkers:true},
  openings:{exterior:true,interior:true},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false},
- risk:{show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
+ risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -565,6 +565,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(p.flameDisplay!==undefined&&!['growth','hrr'].includes(p.flameDisplay))throw Error('Invalid flame display');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
+    case 'risk/history':if(typeof p.enabled!=='boolean')throw Error('Invalid history flag');put('risk',{...state.risk,history:p.enabled});return true;
     case 'risk/threshold':{
      const threshold={...state.risk.threshold,...p};
      if(Object.keys(p).some(k=>!['ribbon','caution'].includes(k))||Object.values(threshold).some(v=>!Number.isFinite(v)||v<0)||threshold.caution>threshold.ribbon)throw Error('Invalid risk thresholds');
@@ -663,6 +664,12 @@ const axis=x=>({temperature:'T',fuel:'F',oxygen:'O'}[x]??null);
 function criterion(rec,i){const sc=rec?.scores;return {met:at(sc?.all_met??rec?.all_met,i),degree:at(sc?.degree,i),
  r_T:at(sc?.factors?.temperature,i),r_F:at(sc?.factors?.fuel,i),r_O:at(sc?.factors?.oxygen,i),
  bottleneck:axis(at(sc?.weakest,i)),dominant:axis(at(sc?.strongest,i)),status:rec?.status??null};}
+// Prefix maxima of saved indices only. Unknown samples add no new evidence.
+function cumulativeIndexHistory(indices){
+ return Object.fromEntries(Object.entries(indices).map(([id,types])=>[id,Object.fromEntries(Object.entries(types).map(([type,values])=>{
+  let maximum=null;return [type,values.map(value=>{if(Number.isFinite(value))maximum=maximum===null?value:Math.max(maximum,value);return maximum;})];
+ }))]));
+}
 function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
 function frame(s,i,cid){const d=s.display_v8;const f={smoke_stage:at(d?.smoke_stage,i),smoke_factors:[],source_cells:[cid],aggregation:'single'};
  for(const [old,key] of [['hot','hot'],['fuel','fuel'],['accumulated','deep']])if(d?.factors?.[old]?.[i]===true)f.smoke_factors.push(key);
@@ -733,7 +740,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:cumulativeIndexHistory(indexByCell),events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -755,7 +762,7 @@ function validateContract(payload,validate){
  return payload;
 }
 
-return {snapshotHash,adaptBuilding,SERIES_MAP,anyKnown,adaptResult,adaptScreening,validateContract};
+return {snapshotHash,adaptBuilding,SERIES_MAP,cumulativeIndexHistory,anyKnown,adaptResult,adaptScreening,validateContract};
 })();
 
 // app/web/adapters/legacy_building.js
@@ -1248,14 +1255,37 @@ function joinedSelectionRibbons(polygon,inset=.24,halfWidth=.035){
  return result;
 }
 
-return {boundarySegments,joinedSelectionRibbons};
+// Cut the existing ribbon into fixed-length dashes; no shader or line-width change.
+function dashedRibbonVertices(ribbons,dash=.4,gap=.2){
+ const vertices=[],period=dash+gap;
+ if(!(dash>0&&gap>0))throw Error('Positive dash and gap required');
+ for(const {outer,inner} of ribbons){let distance=0;
+  for(let i=0;i<outer.length;i++){
+   const j=(i+1)%outer.length,a=outer[i],b=outer[j],c=inner[i],d=inner[j];
+   const length=Math.hypot((b[0]+d[0]-a[0]-c[0])/2,(b[1]+d[1]-a[1]-c[1])/2);
+   if(length<1e-8)continue;
+   const point=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
+   for(let k=Math.floor(distance/period);k*period<distance+length;k++){
+    const lo=Math.max(distance,k*period),hi=Math.min(distance+length,k*period+dash);
+    if(hi<=lo)continue;
+    const u=(lo-distance)/length,v=(hi-distance)/length;
+    const quad=[point(a,b,u),point(a,b,v),point(c,d,v),point(c,d,u)];
+    for(const index of [0,1,2,0,2,3])vertices.push(...quad[index],0);
+   }
+   distance+=length;
+  }
+ }
+ return vertices;
+}
+
+return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
 const __module21=(()=>{
 const {EmptyLayer}=__module9;
 const {applyRenderPolicy}=__module10;
-const {boundarySegments,joinedSelectionRibbons}=__module20;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module20;
 
 const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
@@ -1285,9 +1315,11 @@ class RiskLayer extends EmptyLayer {
     const j=(i+1)%ribbon.outer.length,q=[ribbon.outer[i],ribbon.outer[j],ribbon.inner[j],ribbon.inner[i]];
     for(const k of [0,1,2,0,2,3])verts.push(q[k][0],q[k][1],0);
    }
-   const meshes=colors.map(color=>{const geo=this.own(new T.BufferGeometry());geo.setAttribute('position',new T.Float32BufferAttribute(verts,3));
+   const historyVerts=dashedRibbonVertices(original.flatMap(p=>joinedSelectionRibbons({o:p.o,h:[]},.055,.04)));
+   const createMeshes=vertices=>colors.map(color=>{const geo=this.own(new T.BufferGeometry());geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));
     const mesh=applyRenderPolicy(new T.Mesh(geo,this.own(new T.MeshBasicMaterial({color,side:T.DoubleSide,transparent:true,opacity:1,depthTest:false,depthWrite:false}))),'risk');mesh.raycast=()=>{};this.group.add(mesh);return mesh;});
-   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes});
+   const meshes=createMeshes(verts),historyMeshes=createMeshes(historyVerts);
+   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes});
   }
  }
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
@@ -1295,22 +1327,27 @@ class RiskLayer extends EmptyLayer {
   if(frame.resultMeta!==this.resultMeta)this.resultMeta=frame.resultMeta;
   this.updateVisibility();
  }
- tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)row.meshes.forEach(m=>m.visible=false);return;}
+ tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes].forEach(m=>m.visible=false);return;}
   const series=f.series?.cells;if(!series)throw Error('Risk layer requires adapted cell series; raw playback is not supported');
   if(!r.index_by_cell)throw Error('Risk layer requires adapted saved indices');
   const {ribbon,caution}=f.risk.threshold;
   let i=0,hi=r.time_s.length-1;while(i<hi){const mid=Math.ceil((i+hi)/2);if(r.time_s[mid]<=f.t_s)i=mid;else hi=mid-1;}
-  const meets=(id,type,threshold)=>f.risk.show[type]!==false&&Number.isFinite(r.index_by_cell[id]?.[type]?.[i])&&r.index_by_cell[id][type][i]>=threshold;
+  const history=f.risk.history===true;
+  if(history&&!r.index_history_max)throw Error('Risk history requires adapted prefix maxima');
+  const indices=history?r.index_history_max:r.index_by_cell;
+  const meetsIn=(data,id,type,threshold)=>f.risk.show[type]!==false&&Number.isFinite(data[id]?.[type]?.[i])&&data[id][type][i]>=threshold;
+  const meets=(id,type,threshold)=>meetsIn(indices,id,type,threshold);
   const roomRisk=new Set(),cautionRooms=new Set();this.counts=Object.fromEntries(types.map(k=>[k,0]));this.activeRooms=[];
-  for(const row of this.rooms){const active=new Map();
+  for(const row of this.rooms){const active=new Map(),current=new Set();
    for(const v of row.members){const s=series[v.id],h=s?.interface_m[i];if(!s||!Number.isFinite(h))continue;
-    for(const type of types)if(meets(v.id,type,ribbon))active.set(type,Math.min(active.get(type)??Infinity,h));
+    for(const type of types){if(meets(v.id,type,ribbon))active.set(type,Math.min(active.get(type)??Infinity,h));if(meetsIn(r.index_by_cell,v.id,type,ribbon))current.add(type);}
    }
    const onFloor=f.floor.floor_id===null||f.floor.floor_id===row.floorId;
    if(active.size)roomRisk.add(row.id);
    const {height_m:height,z_m}=row.members[0].meta,base=Math.max(.16,Math.min(height-.5,...active.values()));
-   row.meshes.forEach((m,j)=>{m.visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false;m.position.z=z_m+Math.min(height-.04,base+j*.14);if(m.visible)this.counts[types[j]]++;});
-   if(onFloor&&active.size)this.activeRooms.push({room_id:row.id,types:[...active.keys()],heights:row.meshes.map(m=>m.position.z)});
+   row.meshes.forEach((m,j)=>{const visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false,dashed=history&&!current.has(types[j]),hm=row.historyMeshes[j];
+    m.visible=visible&&!dashed;hm.visible=visible&&dashed;hm.position.z=m.position.z=z_m+Math.min(height-.04,base+j*.14);if(visible)this.counts[types[j]]++;});
+   if(onFloor&&active.size)this.activeRooms.push({room_id:row.id,types:[...active.keys()],historyOnly:[...active.keys()].filter(type=>history&&!current.has(type)),heights:row.meshes.map(m=>m.position.z)});
   }
   for(const v of this.views){const s=series[v.id];v.group.visible=(f.floor.floor_id===null||f.floor.floor_id===v.floorId)&&!!s;if(!s)continue;
    const height=v.meta.height_m,value=s.interface_m[i],h=Number.isFinite(value)?Math.max(0,Math.min(height,value)):null;
@@ -1326,7 +1363,7 @@ class RiskLayer extends EmptyLayer {
   }
   this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
- summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (현재 층/시점, 저장된 판정)`;}
+ summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (${this.frame?.risk.history?'현재 층/누적 이력':'현재 층/시점'}, 저장된 판정)`;}
  diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],cautionRooms:this.cautionRooms||[]};}
  dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }
@@ -1638,6 +1675,7 @@ function createDisplayPanel({store,selectionLabel}){
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayOperations','작전 기호 (차량·인원)','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
+ toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'현재 시각까지 저장된 지수의 최대값입니다. 이력만 해당하는 테두리는 점선입니다.');
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
  const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current" selected>현재</option><option value="weak">약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
@@ -1648,7 +1686,7 @@ function createDisplayPanel({store,selectionLabel}){
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
- meaning.innerHTML=phenomena.map(([k,n,c])=>`<span class="legendChip"><i style="background:${c}"></i>${n}</span>`).join('')+'<span class="legendChip"><i style="background:#9ca3af"></i><span id="legendCaution"></span></span><span class="legendChip">┄ 경계 ±30℃</span><span class="legendChip"><i style="background:#42e8ff"></i>선택</span>';
+ meaning.innerHTML=phenomena.map(([k,n,c])=>`<span class="legendChip"><i style="background:${c}"></i>${n}</span>`).join('')+'<span class="legendChip"><i style="background:#9ca3af"></i><span id="legendCaution"></span></span><span class="legendChip" id="legendHistory">┄ 이력(점선)</span><span class="legendChip">┄ 경계 ±30℃</span><span class="legendChip"><i style="background:#42e8ff"></i>선택</span>';
  $('liteLegend').remove();
  const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
  const toolbar=$('resetView').parentElement;move($('liteFocus'),toolbar);move($('liteFireFocus'),toolbar);$('resetView').textContent='⟲';$('resetView').title='시점 복원';$('liteFocus').textContent='실 확대';$('liteFireFocus').textContent='연소점';
@@ -1658,11 +1696,12 @@ function createDisplayPanel({store,selectionLabel}){
  .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
  .displayInfo{font-size:12px;color:#b6cedb;cursor:help}.displaySettings{padding:10px;border:1px solid #496273;border-radius:7px;display:grid;gap:9px}.displaySettings label{display:flex;justify-content:space-between;gap:10px;align-items:center}.displaySettings input{width:68px}.displaySettings input,.displaySettings select{background:#1d4158;color:#eef5fa;border:1px solid #6a8d9f;border-radius:4px;padding:5px}#displayError{color:#ffc1b0;font-size:11px}#displayError:empty{display:none}
  #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:wrap;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px}
+ .legendChip[hidden]{display:none}
  #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeLegend br,#displayLegend #cfPlumeNumbers{display:none}
  body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
- function sync(){bindings.forEach(f=>f());const t=store.get('risk').threshold;$('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('legendCaution').textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('displayTemperature').value=store.get('realView').temperaturePattern;$('displaySmokeColor').value=store.get('realView').smokeColor;$('displayFlameStyle').value=store.get('realView').flameDisplay;$('liteOpacity').value=store.get('realView').smokeOpacity;}
+ function sync(){bindings.forEach(f=>f());$('legendHistory').hidden=!store.get('risk').history;const t=store.get('risk').threshold;$('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('legendCaution').textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('displayTemperature').value=store.get('realView').temperaturePattern;$('displaySmokeColor').value=store.get('realView').smokeColor;$('displayFlameStyle').value=store.get('realView').flameDisplay;$('liteOpacity').value=store.get('realView').smokeOpacity;}
  for(const slice of ['layers','openings','realView','risk'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;

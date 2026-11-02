@@ -10,6 +10,7 @@ const read=p=>JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));
 const dir='simulation/results/lite_v8_mc_R2_10_20261026/S09',playback=read(dir+'/playback.json'),scenario=read(dir+'/sample.json').scenario;
 const building=adaptBuilding({scenario,playback,sourceHash:playback.building_sha256});
 const result=await adaptResult({playback,scenario,building,resultId:'S09'}),store=createStore(),layer=new RiskLayer(THREE),scene=new THREE.Scene();
+store.dispatch('risk/history',{enabled:false});
 const types=['FO','FGI','backdraft','rollover'],i=result.time_s.indexOf(1420);
 layer.mount(scene,store);const protectedResult=new Proxy(result,{get(o,k){if(['legacy_color','cell_conditions','conditions'].includes(k))throw Error('Legacy/condition gate access: '+k);return o[k];}});
 const frame=()=>({building,resultMeta:protectedResult,series:{cells:result.cells},t_s:1420,floor:{floor_id:'3F'},risk:store.get('risk'),layers:store.get('layers'),selection:store.get('selection')});

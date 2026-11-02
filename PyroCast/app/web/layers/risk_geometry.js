@@ -46,3 +46,26 @@ export function joinedSelectionRibbons(polygon,inset=.24,halfWidth=.035){
  }
  return result;
 }
+
+// Cut the existing ribbon into fixed-length dashes; no shader or line-width change.
+export function dashedRibbonVertices(ribbons,dash=.4,gap=.2){
+ const vertices=[],period=dash+gap;
+ if(!(dash>0&&gap>0))throw Error('Positive dash and gap required');
+ for(const {outer,inner} of ribbons){let distance=0;
+  for(let i=0;i<outer.length;i++){
+   const j=(i+1)%outer.length,a=outer[i],b=outer[j],c=inner[i],d=inner[j];
+   const length=Math.hypot((b[0]+d[0]-a[0]-c[0])/2,(b[1]+d[1]-a[1]-c[1])/2);
+   if(length<1e-8)continue;
+   const point=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
+   for(let k=Math.floor(distance/period);k*period<distance+length;k++){
+    const lo=Math.max(distance,k*period),hi=Math.min(distance+length,k*period+dash);
+    if(hi<=lo)continue;
+    const u=(lo-distance)/length,v=(hi-distance)/length;
+    const quad=[point(a,b,u),point(a,b,v),point(c,d,v),point(c,d,u)];
+    for(const index of [0,1,2,0,2,3])vertices.push(...quad[index],0);
+   }
+   distance+=length;
+  }
+ }
+ return vertices;
+}

@@ -1,0 +1,54 @@
+{
+  "scope": "Original server stopped; standalone HTML served by static HTTP. file:// blocked by browser tool policy.",
+  "case": "S09",
+  "disabled": [
+    {
+      "disabled": true,
+      "id": "exploreRun",
+      "title": "보기 전용"
+    },
+    {
+      "disabled": true,
+      "id": "exploreOriginRun",
+      "title": "보기 전용"
+    },
+    {
+      "disabled": true,
+      "id": "exploreMC",
+      "title": "보기 전용"
+    },
+    {
+      "disabled": true,
+      "id": "resultMCApplyWorst",
+      "title": "보기 전용"
+    },
+    {
+      "disabled": true,
+      "id": "buildingClearFixed",
+      "title": "보기 전용"
+    }
+  ],
+  "errors": 0,
+  "messages": "[]",
+  "route": {
+    "history": true,
+    "hoses": 7,
+    "length": 94.35988669169632,
+    "sample": 1420,
+    "stairs": 2,
+    "vehicle": [
+      17.5,
+      34.803,
+      5.1
+    ]
+  },
+  "playback": {
+    "start": 1420,
+    "observed": 1590
+  },
+  "routeChange": {
+    "hose_m": 16,
+    "hoses": 6
+  },
+  "consoleErrors": []
+}

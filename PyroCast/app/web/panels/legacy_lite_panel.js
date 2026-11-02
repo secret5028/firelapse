@@ -1,5 +1,5 @@
 export function createLitePanel(){
- const style=document.createElement('link');style.rel='stylesheet';style.href='/cfbt/overlay.css';document.head.append(style);
+ const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
  panel.innerHTML=`<div class="row"><strong>PyroCast · 간략 엔진 v8</strong><output id="liteClock"></output><span id="liteVisible"></span><span class="grow"></span><button id="liteBuilding">건물 전체 맞춤</button><label><input id="liteCores" type="checkbox" checked>수직 공간 투시</label><button id="liteReal" aria-pressed="true">실감 보기</button><button id="liteFireFocus">연소점 확대</button><button id="litePlay">재생</button><button id="liteFold">접기</button><button id="liteReview">전체 메뉴 검토</button></div>
  <div class="row"><label><input id="liteExterior" type="checkbox" checked><span style="color:#62dcb0">외부 창 강조</span></label><small>보는 쪽 외부 창만 · 뒤편 투시 없음 · 큰 창·난간 제외 · 표시 전용</small></div>

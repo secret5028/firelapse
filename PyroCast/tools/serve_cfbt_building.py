@@ -236,6 +236,15 @@ def main():
             if path=='/cfbt/r8/schema':
                 from pyrocast_cfbt.rule_settings import schema
                 return self.json(schema())
+            if path.startswith('/cfbt/lite/export/'):
+                if self.client_address[0]!='127.0.0.1':return self.send_error(403)
+                try:
+                    from lite_export import build_export
+                    params=parse_qs(urlsplit(self.path).query)
+                    view_state=json.loads(params.get('state',['{}'])[0])
+                    output,info=build_export('http://127.0.0.1:'+str(self.server.server_port),path.rsplit('/',1)[-1],view_state,int(params.get('interval',['10'])[0]))
+                    return self.send_data(output,'text/html; charset=utf-8')
+                except Exception as exc:return self.json({'error':str(exc)},400)
             if path=='/cfbt/lite/fire-load-table':
                 if self.client_address[0]!='127.0.0.1':return self.send_error(403)
                 return self.send_data((SIM/'pyrocast_lite/fire_load_table.json').read_bytes(),'application/json; charset=utf-8')

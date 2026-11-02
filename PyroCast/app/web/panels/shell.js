@@ -57,6 +57,6 @@ export function createPanelShell({panel,store}){
  cleanups.push(()=>{for(const [b,value] of oldFloorAttributes)if(value===null)b.removeAttribute('aria-pressed');else b.setAttribute('aria-pressed',value);});
  cleanups.push(store.subscribe('playback',sync),store.subscribe('result',marks),store.subscribe('floor',floors));sync();marks();floors();
  const sizes=()=>{document.body.style.setProperty('--shell-top',header.getBoundingClientRect().height+'px');document.body.style.setProperty('--shell-bottom',timeline.getBoundingClientRect().height+'px');};
- const ro=new ResizeObserver(sizes);ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>ro.disconnect());
+ let sizeFrame=null;const ro=new ResizeObserver(()=>{if(sizeFrame===null)sizeFrame=requestAnimationFrame(()=>{sizeFrame=null;sizes();});});ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>{ro.disconnect();if(sizeFrame!==null)cancelAnimationFrame(sizeFrame);});
  return {syncStatus:()=>$('shellStatus').textContent=$('liteVisible').textContent,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
 }

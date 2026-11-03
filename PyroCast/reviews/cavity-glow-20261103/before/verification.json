@@ -1,0 +1,261 @@
+{
+  "errors": [],
+  "samples": [
+    {
+      "time": 1325,
+      "walls": [
+        {
+          "name": "cavity-wall-glow:PU",
+          "visible": true,
+          "opacity": 0.30281759336402064,
+          "alphaMap": false,
+          "renderOrder": 19,
+          "vertices": 24
+        }
+      ],
+      "jets": [
+        {
+          "id": "jet:TOP_GAP:CAVITY:ROOM",
+          "renderOrder": 20,
+          "q_kW": 765.4293424851131,
+          "hrrpua": 500,
+          "width": 1.3961195561646433,
+          "height": 1.3961195561646433,
+          "length": 2.028868778161481,
+          "normal": [
+            0,
+            -1
+          ],
+          "receiver": "CAD_1F_R5",
+          "vent": "TOP_GAP",
+          "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+          "combustion": {
+            "supply_kW": null,
+            "oxygen_fraction": 0.205579336223,
+            "oxygen_basis": "receiving lower layer",
+            "Tu": 253.459362074,
+            "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+            "q_kW": 765.4293424851131,
+            "peak_kW": 765.4293424851131,
+            "ratio": 1,
+            "supply_ratio": null,
+            "oxygen_vol_percent": 20.557933622300002,
+            "ventilationLimited": false,
+            "oxygenLimited": false,
+            "starved": false,
+            "stage": 2,
+            "label": "③ 최성기",
+            "cap": 0,
+            "partial": true
+          }
+        },
+        {
+          "id": "jet:CUT:CAVITY:ROOM",
+          "renderOrder": 20,
+          "q_kW": 5696.337792314887,
+          "hrrpua": 500,
+          "width": 2,
+          "height": 3.808622464184317,
+          "length": 3.5712160330565785,
+          "normal": [
+            0,
+            -1
+          ],
+          "receiver": "CAD_1F_R5",
+          "vent": "CUT",
+          "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+          "combustion": {
+            "supply_kW": null,
+            "oxygen_fraction": 0.205579336223,
+            "oxygen_basis": "receiving lower layer",
+            "Tu": 253.459362074,
+            "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+            "q_kW": 5696.337792314887,
+            "peak_kW": 5696.337792314887,
+            "ratio": 1,
+            "supply_ratio": null,
+            "oxygen_vol_percent": 20.557933622300002,
+            "ventilationLimited": false,
+            "oxygenLimited": false,
+            "starved": false,
+            "stage": 2,
+            "label": "③ 최성기",
+            "cap": 0,
+            "partial": true
+          }
+        }
+      ]
+    },
+    {
+      "time": 1400,
+      "walls": [
+        {
+          "name": "cavity-wall-glow:PU",
+          "visible": true,
+          "opacity": 0.600005123208662,
+          "alphaMap": false,
+          "renderOrder": 19,
+          "vertices": 24
+        }
+      ],
+      "jets": [
+        {
+          "id": "jet:TOP_GAP:CAVITY:ROOM",
+          "renderOrder": 20,
+          "q_kW": 102.53788008095877,
+          "hrrpua": 500,
+          "width": 0.5109897919770778,
+          "height": 0.5109897919770778,
+          "length": 1.0303673581610373,
+          "normal": [
+            0,
+            -1
+          ],
+          "receiver": "CAD_1F_R5",
+          "vent": "TOP_GAP",
+          "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+          "combustion": {
+            "supply_kW": null,
+            "oxygen_fraction": 0.205579222916,
+            "oxygen_basis": "receiving lower layer",
+            "Tu": 393.616127479,
+            "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+            "q_kW": 102.53788008095877,
+            "peak_kW": 765.4293424851131,
+            "ratio": 0.13396126120283014,
+            "supply_ratio": null,
+            "oxygen_vol_percent": 20.5579222916,
+            "ventilationLimited": false,
+            "oxygenLimited": false,
+            "starved": false,
+            "stage": 0,
+            "label": "① 초기",
+            "cap": 0,
+            "partial": true
+          }
+        },
+        {
+          "id": "jet:CUT:CAVITY:ROOM",
+          "renderOrder": 20,
+          "q_kW": 799.9950284220413,
+          "hrrpua": 500,
+          "width": 1.427294857959261,
+          "height": 1.427294857959261,
+          "length": 1.9431387869909438,
+          "normal": [
+            0,
+            -1
+          ],
+          "receiver": "CAD_1F_R5",
+          "vent": "CUT",
+          "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+          "combustion": {
+            "supply_kW": null,
+            "oxygen_fraction": 0.205579222916,
+            "oxygen_basis": "receiving lower layer",
+            "Tu": 393.616127479,
+            "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+            "q_kW": 799.9950284220413,
+            "peak_kW": 5696.337792314887,
+            "ratio": 0.1404402367958832,
+            "supply_ratio": null,
+            "oxygen_vol_percent": 20.5579222916,
+            "ventilationLimited": false,
+            "oxygenLimited": false,
+            "starved": false,
+            "stage": 0,
+            "label": "① 초기",
+            "cap": 0,
+            "partial": true
+          }
+        }
+      ]
+    },
+    {
+      "time": 2100,
+      "walls": [
+        {
+          "name": "cavity-wall-glow:PU",
+          "visible": true,
+          "opacity": 0.6480785028415119,
+          "alphaMap": false,
+          "renderOrder": 19,
+          "vertices": 24
+        }
+      ],
+      "jets": [
+        {
+          "id": "jet:TOP_GAP:CAVITY:ROOM",
+          "renderOrder": 20,
+          "q_kW": 52.21722710035999,
+          "hrrpua": 500,
+          "width": 0.3646506230917341,
+          "height": 0.3646506230917341,
+          "length": 0.8140167010496611,
+          "normal": [
+            0,
+            -1
+          ],
+          "receiver": "CAD_1F_R5",
+          "vent": "TOP_GAP",
+          "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+          "combustion": {
+            "supply_kW": null,
+            "oxygen_fraction": 0.205579336222,
+            "oxygen_basis": "receiving lower layer",
+            "Tu": 426.538790583,
+            "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+            "q_kW": 52.21722710035999,
+            "peak_kW": 765.4293424851131,
+            "ratio": 0.06821952622148865,
+            "supply_ratio": null,
+            "oxygen_vol_percent": 20.5579336222,
+            "ventilationLimited": false,
+            "oxygenLimited": false,
+            "starved": false,
+            "stage": 0,
+            "label": "① 초기",
+            "cap": 0,
+            "partial": true
+          }
+        },
+        {
+          "id": "jet:CUT:CAVITY:ROOM",
+          "renderOrder": 20,
+          "q_kW": 576.82560509864,
+          "hrrpua": 500,
+          "width": 1.2119712627182024,
+          "height": 1.2119712627182024,
+          "length": 1.7457952600124702,
+          "normal": [
+            0,
+            -1
+          ],
+          "receiver": "CAD_1F_R5",
+          "vent": "CUT",
+          "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+          "combustion": {
+            "supply_kW": null,
+            "oxygen_fraction": 0.205579336222,
+            "oxygen_basis": "receiving lower layer",
+            "Tu": 426.538790583,
+            "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+            "q_kW": 576.82560509864,
+            "peak_kW": 5696.337792314887,
+            "ratio": 0.10126253500571086,
+            "supply_ratio": null,
+            "oxygen_vol_percent": 20.5579336222,
+            "ventilationLimited": false,
+            "oxygenLimited": false,
+            "starved": false,
+            "stage": 0,
+            "label": "① 초기",
+            "cap": 0,
+            "partial": true
+          }
+        }
+      ]
+    }
+  ],
+  "subscriptionsAfterDispose": 0
+}

@@ -8,7 +8,8 @@
       "q80": 948,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "hospital_room": {
       "label": "병실",
@@ -16,7 +17,8 @@
       "q80": 280,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "hotel_room": {
       "label": "호텔 객실",
@@ -24,7 +26,8 @@
       "q80": 377,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "library": {
       "label": "도서관",
@@ -32,7 +35,8 @@
       "q80": 1824,
       "t_alpha": 150,
       "rhrf": 500,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "office": {
       "label": "사무실",
@@ -40,7 +44,8 @@
       "q80": 511,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "classroom": {
       "label": "교실",
@@ -48,7 +53,8 @@
       "q80": 347,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "shopping": {
       "label": "판매시설",
@@ -56,7 +62,8 @@
       "q80": 730,
       "t_alpha": 150,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "theatre": {
       "label": "극장·영화관",
@@ -64,7 +71,8 @@
       "q80": 365,
       "t_alpha": 150,
       "rhrf": 500,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "transport": {
       "label": "교통 공용공간(복도·로비)",
@@ -72,7 +80,8 @@
       "q80": 122,
       "t_alpha": 600,
       "rhrf": 250,
-      "basis": "EN1991-1-2 E.4/E.5"
+      "basis": "EN1991-1-2 E.4/E.5",
+      "lining_ignition_C": null
     },
     "shaft_room": {
       "label": "설비 샤프트(PS·EPS 등)",
@@ -80,7 +89,8 @@
       "q80": 122,
       "t_alpha": 600,
       "rhrf": 250,
-      "basis": null
+      "basis": null,
+      "lining_ignition_C": null
     },
     "parking": {
       "label": "주차장",
@@ -88,7 +98,8 @@
       "q80": 340,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": null
+      "basis": null,
+      "lining_ignition_C": null
     },
     "warehouse": {
       "label": "창고",
@@ -96,7 +107,8 @@
       "q80": 1430,
       "t_alpha": 75,
       "rhrf": 500,
-      "basis": null
+      "basis": null,
+      "lining_ignition_C": null
     },
     "factory": {
       "label": "공장",
@@ -104,7 +116,8 @@
       "q80": 730,
       "t_alpha": 150,
       "rhrf": 250,
-      "basis": null
+      "basis": null,
+      "lining_ignition_C": null
     },
     "default": {
       "label": "기타(미분류)",
@@ -112,7 +125,8 @@
       "q80": 600,
       "t_alpha": 300,
       "rhrf": 250,
-      "basis": null
+      "basis": null,
+      "lining_ignition_C": null
     },
     "toilet": {
       "label": "화장실",
@@ -121,7 +135,8 @@
       "t_alpha": 300,
       "rhrf": 250,
       "basis": "project_assumption_user_approved_2026-10-25",
-      "assumption": "사용자 지정 40 MJ/m²·250 kW/m². q80=mean은 분포 미지정 고정값, t_alpha는 기존 default 호환값. 이번 v8 화점 성장은 별도 alpha=.047이며 MC 미실행."
+      "assumption": "사용자 지정 40 MJ/m²·250 kW/m². q80=mean은 분포 미지정 고정값, t_alpha는 기존 default 호환값. 이번 v8 화점 성장은 별도 alpha=.047이며 MC 미실행.",
+      "lining_ignition_C": null
     },
     "coldstore_pu_lining": {
       "label": "저온창고 PU 내장재",
@@ -134,7 +149,8 @@
       "assumption": "내장재 화재를 바닥 가연물 등가로 환산. mean=278은 R5 반올림 참조; 각 실 실제 입력은 (벽+천장 면적)×0.10m×35kg/m³×25MJ/kg / 바닥면적. q80=mean은 분포 미지정 고정값. HRRPUA 400 및 PU 물성·발열량은 가정이며 시험 원문 검증값 아님. fast t_alpha=150s 유지.",
       "lining_thickness_m": 0.1,
       "lining_density_kg_m3": 35,
-      "heat_of_combustion_MJ_kg": 25
+      "heat_of_combustion_MJ_kg": 25,
+      "lining_ignition_C": 450
     },
     "equipment": {
       "label": "기계실(임시 기본값)",
@@ -143,7 +159,8 @@
       "t_alpha": 300,
       "rhrf": 250,
       "basis": "project_assumption_C11_equipment_default_pending",
-      "assumption": "C11에 equipment 수치가 없어 기존 default 값을 임시 사용. 기계실 실측 연료량 아님. 승인된 별도 값이 생기면 변경."
+      "assumption": "C11에 equipment 수치가 없어 기존 default 값을 임시 사용. 기계실 실측 연료량 아님. 승인된 별도 값이 생기면 변경.",
+      "lining_ignition_C": null
     }
   },
   "names": [
@@ -204,5 +221,6 @@
     "factory": "factory",
     "penthouse": "default",
     "default": "default"
-  }
+  },
+  "_lining_ignition_C": "기본 null: 기존 규칙 유지. coldstore_pu_lining 450℃ 및 민감도 400/500℃는 C11 P5 사용자 가정. 순정 CFAST에서는 T4b 판 표면 온도로 판정하며 상층 온도나 10~15 kW/m²와의 등가성은 미검증."
 }

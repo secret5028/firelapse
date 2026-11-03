@@ -1,0 +1,50 @@
+{
+  "protected": {
+    "simulation\\build\\baseline\\cfast-baseline.exe": true,
+    "simulation\\pyrocast_cfbt\\conditions.py": true,
+    "simulation\\pyrocast_cfbt\\deck.py": true,
+    "simulation\\pyrocast_lite\\core.py": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case_compartments.csv": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case_devices.csv": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case_masses.csv": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case_vents.csv": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case_walls.csv": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case_zone.csv": true,
+    "simulation\\results\\wando_C11_P1_20261102\\case.in": true
+  },
+  "cases": {
+    "400": {
+      "engine_sha_match": true,
+      "prepared_deck_sha_match": false,
+      "line_endings_only_normalized": true,
+      "executed_deck_sha256": "60cd1b1899b64bb09fc40aa2d7d8c24105cc0bce6f5c53feceaa8f7befe55ea9",
+      "P1_deck_prefix_text_identical": true,
+      "common_compartment_columns": 69,
+      "P1_exact_columns": 14,
+      "steps": 207316,
+      "integration_runs": 1
+    },
+    "450": {
+      "engine_sha_match": true,
+      "prepared_deck_sha_match": true,
+      "line_endings_only_normalized": false,
+      "executed_deck_sha256": "9aac31e747c90d827e4ff8b75193dc355d1f02c374cf073e375967cd553ab920",
+      "P1_deck_prefix_text_identical": true,
+      "common_compartment_columns": 69,
+      "P1_exact_columns": 69,
+      "steps": 70783,
+      "integration_runs": 1
+    },
+    "500": {
+      "engine_sha_match": true,
+      "prepared_deck_sha_match": true,
+      "line_endings_only_normalized": false,
+      "executed_deck_sha256": "1d41fb1a93d0a6f7b77b7773ceea6019d127720890a7a633e1b0b187917a7918",
+      "P1_deck_prefix_text_identical": true,
+      "common_compartment_columns": 69,
+      "P1_exact_columns": 69,
+      "steps": 70783,
+      "integration_runs": 1
+    }
+  }
+}

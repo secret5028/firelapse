@@ -37,7 +37,7 @@ export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}
   const sample=a=>a?.[lo]??0;
   const enabled=settings.enabled&&(frame.layers.smoke||frame.layers.flame||frame.layers.plume);
   session.renderer.update({enabled,time:frame.t_s,sample,floor:frame.floor.floor_id??'all',
-   smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,customRiskBoundaries:true,legacySmokeTexture:true,
+   smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,smokeGain:settings.smokeGain,flameGain:settings.flameGain,customRiskBoundaries:true,legacySmokeTexture:true,
    flameDisplay:'hrr',plumesEnabled:frame.layers.plume,noiseAmp:settings.temperaturePattern==='weak'?.4:1,noiseScale:1,rampMode:0,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
   session.renderer.animate(session.lastAnimateMs);

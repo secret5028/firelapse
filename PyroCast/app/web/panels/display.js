@@ -32,6 +32,17 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
  const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current">현재</option><option value="weak" selected>약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
+ const gainControls=document.createElement('div');gainControls.id='sceneGainControls';gainControls.setAttribute('aria-label','연기·화염 표시 배율');$('v').append(gainControls);
+ const gains=[];
+ for(const [key,label,min,max] of [['smokeGain','연기 농도',30,150],['flameGain','화염 밝기',50,200]]){
+  for(const [host,prefix] of [[gainControls,'scene'],[$('displaySmokeSettings'),'display']]){
+   const row=document.createElement('label');row.className='gainControl';row.htmlFor=prefix+key;row.append(label);
+   const input=document.createElement('input');input.type='range';input.id=prefix+key;input.min=min;input.max=max;input.step=1;input.value=100;input.setAttribute('aria-label',label);row.append(input);
+   const output=document.createElement('output');output.htmlFor=input.id;row.append(output);host.append(row);gains.push({key,input,output});
+   listen(input,'input',()=>store.dispatch('realView/set',{[key]:input.valueAsNumber/100}));
+  }
+ }
+ for(const event of ['pointerdown','pointermove','pointerup','click','wheel'])listen(gainControls,event,e=>e.stopPropagation());
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
@@ -51,6 +62,8 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  #hudHistory{pointer-events:auto;background:#17384d;border:1px solid #577487;border-radius:12px;color:#eaf3f8;padding:3px 7px;cursor:pointer}#hudHistory[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}.hudPhenomenon{margin:5px 0}.viewHint[hidden]{display:none!important}
  #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px;flex-shrink:0;white-space:nowrap}
  .legendChip[hidden]{display:none}
+ #sceneGainControls{position:absolute;right:12px;bottom:58px;z-index:8;pointer-events:auto;background:#142b3be8;border:1px solid #577487;border-radius:7px;padding:7px 9px;width:235px;max-width:calc(100% - 42px);color:#eaf3f8;font-size:11px}#sceneGainControls[hidden]{display:none}
+ .gainControl{display:flex;align-items:center;gap:7px;white-space:nowrap}.gainControl+.gainControl{margin-top:5px}.gainControl input[type=range]{width:105px;min-width:40px;flex:1;padding:0;accent-color:#42c4e8}.gainControl output{width:36px;text-align:right;font-variant-numeric:tabular-nums}#v:has(#sceneGainControls:not([hidden])) .viewHint{visibility:hidden}
  #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeNumbers{display:none}
  body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}#hudOrigin{pointer-events:auto;margin-top:5px;background:#1d4158;color:#eaf3f8;border:1px solid #577487;border-radius:4px;padding:3px 6px;cursor:pointer}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
@@ -60,6 +73,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smoke').lastElementChild.textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('hudHistory').setAttribute('aria-pressed',String(r.history));
   $('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('displayTemperature').value=rv.temperaturePattern;$('liteOpacity').value=rv.smokeOpacity;syncPlumeLegend();
+  for(const {key,input,output} of gains){const value=Math.round(rv[key]*100);input.value=value;output.textContent=value+'%';input.setAttribute('aria-valuetext',value+'%');}
  }
  for(const slice of ['layers','openings','realView','risk','route','displayDetails','floor'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
@@ -76,5 +90,5 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   const {route,camera}=context,point=route.result?.vehicle,floor=store.get('floor').floor_id;
   vehicleMarker.hidden=!!route.vehicleSource||!point||!store.get('layers').route||!store.get('route').vehicle_visible||(floor!==null&&floor!=='1F');
   if(!vehicleMarker.hidden){const p=new route.THREE.Vector3(...point).project(camera);vehicleMarker.hidden=p.z< -1||p.z>1;vehicleMarker.style.left=(p.x+1)*$('v').clientWidth/2+'px';vehicleMarker.style.top=(1-p.y)*$('v').clientHeight/2+'px';}
- },dispose(){policy.dispose();vehicleMarker.remove();plumeLegend?.remove();for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
+ },dispose(){policy.dispose();gainControls.remove();vehicleMarker.remove();plumeLegend?.remove();for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
 }

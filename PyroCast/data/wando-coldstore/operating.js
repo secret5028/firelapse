@@ -22,7 +22,7 @@ try{
   }}
  }
  const ref=new T.Group(),grid=new T.GridHelper(120,60,0x456071,0x263e4e);grid.rotation.x=Math.PI/2;grid.position.set(36,8,-.04);ref.add(grid);S.add(ref);
- // User decision: omit vehicle symbols; retain the route origin 5 m outside.
+ // No reference vehicle mesh: the panel marks the existing route origin.
  let floor='1F';const setFloor=id=>{floor=id;for(const g of groups)g.visible=id==='all'||g.name===id;};$('all').onclick=()=>setFloor('all');$('floor1').onclick=()=>setFloor('1F');
  $('top').onclick=()=>{C.position.set(O.target.x,O.target.y,80);O.update();};$('iso').onclick=()=>{C.position.copy(O.target).add(new T.Vector3(25,-35,28));O.update();};$('resetView').onclick=()=>{O.target.set(36,10,3);C.position.set(85,-45,60);O.update();};
  $('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
@@ -31,10 +31,12 @@ try{
  const tactical=await(await fetch('./tactical.json')).json();
  const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));
- app.store.dispatch('route/set',{vehicle_visible:false});
- for(const id of ['displayVehicle','displayOperations'])$(id)?.closest('.displayToggle')?.remove();
+ const people=$('wandoInvestigation'),showPeople=people.onchange;
+ const syncPeople=()=>{people.checked=app.store.get('layers').operations;showPeople();};
+ people.onchange=()=>app.store.dispatch('layers/toggle',{id:'operations',visible:people.checked});
+ const offPeople=app.store.subscribe('layers',syncPeople);syncPeople();
  const offFloor=app.store.subscribe('floor',()=>incident.setFloor(app.store.get('floor').floor_id));
- window.addEventListener('pagehide',()=>{offFloor();incident.dispose();exterior.dispose();},{once:true});
+ window.addEventListener('pagehide',()=>{offFloor();offPeople();incident.dispose();exterior.dispose();},{once:true});
  // A visible, time-linked label distinguishes the cut from static door frames.
  const cut=document.createElement('output');cut.className='wandoOpening';$('v').append(cut);
  const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:#ffd18a;font-size:12px';$('resultCase').prepend(endpoint);
@@ -42,6 +44,6 @@ try{
  for(const el of document.querySelectorAll('#buildingDoors button')){el.disabled=true;el.title='P1 입력 고정';}
  function loop(){requestAnimationFrame(loop);O.update();R.render(S,C);
   const t=app.store.get('playback').t_s,f=t>=1800?1:t>=1320?.5:0,point=new T.Vector3(46.75,18,2.7).project(C),v=$('v');
-  cut.textContent=`CUT · ${f===0?'닫힘':f===.5?'열림 1 × 2 m':'열림 2 × 2 m'}`;cut.style.left=(point.x+1)*v.clientWidth/2+'px';cut.style.top=(1-point.y)*v.clientHeight/2+'px';cut.hidden=point.z>1;
+  cut.textContent=`CUT · ${f===0?'닫힘':f===.5?'열림 1 × 2 m':'열림 2 × 2 m'}`;cut.style.left=(point.x+1)*v.clientWidth/2+'px';cut.style.top=(1-point.y)*v.clientHeight/2+'px';cut.hidden=point.z>1||(app.store.get('floor').floor_id!==null&&app.store.get('selection').room_id!=='CAD_1F_CAVITY');
  }loop();window.addEventListener('pagehide',()=>O.dispose());
 }catch(e){$('error').textContent=e.stack;throw e;}

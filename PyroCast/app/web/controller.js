@@ -97,6 +97,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   for(const row of buildingAsset.floors){const clone=buildingLayer.floorGroups.get(row.id);if(clone)clone.visible=row.group.visible;row.objects.forEach(source=>{
     hidden.push([source,source.visible]);source.visible=false;});
   }
+  display.applyScene({risk,scene,camera,route});
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}
  }};
  const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>!routeGraph.error&&store.get('route').placing,place:p=>{if(contains(p,routeGraph.ground.slab))store.dispatch('route/set',{message:'건물 밖 지면을 선택하세요'});else store.dispatch('route/set',{vehicle:p,placing:false,message:''});}},seriesAt:()=>cache.get(store.get('result')?.result_id)});

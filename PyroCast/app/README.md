@@ -296,3 +296,10 @@ C-9a adds `cell_mode: "radial_area"` (default still `legacy`). It clips the lega
 - `tools/run_lite_radial_c9.py`: archived S09, R2, 3600 s, one BDF attempt, 1200 s budget. Its cache key includes canonical mode/radii, complete scenario, parameters and calculation source hashes; completed hits reuse, failed/interrupted attempts do not automatically rerun.
 - `tools/test_radial_cells.py`: legacy preparation identity, polygon/holes, volume/energy/aperture conservation and cache-key separation. No simulation.
 - C9 result: reference-set inclusion passes through 2850 s, but radial burns only R2 versus legacy five rooms. CFAST aggressive reference is incomplete and has different opening inputs. Keep legacy; do not interpret runtime reduction as equal-result acceleration. Report: `specs/웹앱-C9-radial-20261102.md`.
+
+
+## D-1 표시 다이어트 (2026-11-03, 현재 기본값)
+
+C-8 기본값·기준 캡처를 대체한다. 건물·연기(70%, 약한 온도 무늬)·화염·현재 지수 ≥100 위험선·선택·경로/차량 ON. 이력·주의·플룸·셀선·바닥 틴트·연기 경계·문창 강조·코어·연료/작전 기호 OFF. HUD 옆 이력 버튼과 표시 탭은 동기화된다. 상세 표시 마스크는 패널 경계에서 적용하며 레이어/엔진/셰이더는 변경하지 않는다.
+
+새 4장면 기준: reviews/ui_D1_20261103/baseline-*.png (작업 폴더 simulation/results/ui_D1_20261103). S09 1420/1800초, S06 890초, 전체 보기 1800초, 고정 clock 180000 ms. 전체 보기 역시 코어 OFF이며 예전 전체 보기/코어 ON 기준과 구분한다. 기본값 변경으로 픽셀 0 비교는 하지 않는다. 전후 캡처·토글 검증·농도 변환 확인은 specs/웹앱-D1-표시다이어트-20261103.md 참조.

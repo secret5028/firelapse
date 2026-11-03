@@ -6,10 +6,11 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:true},
- openings:{exterior:true,interior:true},
- layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false,route:true},
- risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
+ realView:{enabled:true,smokeOpacity:.7,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:false},
+ openings:{exterior:false,interior:false},
+ displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
+ layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,operations:false,route:true},
+ risk:{history:false,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 export function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -39,6 +40,7 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
     case 'floor/set':if(p.floor_id!==null&&typeof p.floor_id!=='string')throw Error('Invalid floor');put('floor',{floor_id:p.floor_id});return true;
     case 'camera/fit':if(!['floor','all','top','room','fire'].includes(p.mode))throw Error('Invalid camera mode');put('camera',{mode:p.mode,target:p.target??null,pose:p.pose??null});return true;
     case 'openings/set':if(Object.keys(p).some(k=>!Object.hasOwn(state.openings,k)||typeof p[k]!=='boolean'))throw Error('Invalid opening display');put('openings',{...state.openings,...p});return true;
+    case 'displayDetails/set':if(Object.keys(p).some(k=>!Object.hasOwn(state.displayDetails,k)||typeof p[k]!=='boolean'))throw Error('Invalid display detail');put('displayDetails',{...state.displayDetails,...p});return true;
     case 'selection/set':if(!['list','click','touch'].includes(p.source)||![p.room_id,p.cell_id].every(v=>v===null||typeof v==='string'))throw Error('Invalid selection');put('selection',p);return true;
     case 'layers/toggle':if(!Object.hasOwn(state.layers,p.id))throw Error('Unknown layer');if(p.visible!==undefined&&typeof p.visible!=='boolean')throw Error('Invalid visibility');put('layers',{...state.layers,[p.id]:p.visible??!state.layers[p.id]});return true;
     case 'realView/set':

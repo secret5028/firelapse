@@ -926,10 +926,11 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:true},
- openings:{exterior:true,interior:true},
- layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:true,risk:true,selection:true,operations:false,route:true},
- risk:{history:true,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:true},threshold:{ribbon:100,caution:70}},
+ realView:{enabled:true,smokeOpacity:.7,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:false},
+ openings:{exterior:false,interior:false},
+ displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
+ layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,operations:false,route:true},
+ risk:{history:false,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -959,6 +960,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
     case 'floor/set':if(p.floor_id!==null&&typeof p.floor_id!=='string')throw Error('Invalid floor');put('floor',{floor_id:p.floor_id});return true;
     case 'camera/fit':if(!['floor','all','top','room','fire'].includes(p.mode))throw Error('Invalid camera mode');put('camera',{mode:p.mode,target:p.target??null,pose:p.pose??null});return true;
     case 'openings/set':if(Object.keys(p).some(k=>!Object.hasOwn(state.openings,k)||typeof p[k]!=='boolean'))throw Error('Invalid opening display');put('openings',{...state.openings,...p});return true;
+    case 'displayDetails/set':if(Object.keys(p).some(k=>!Object.hasOwn(state.displayDetails,k)||typeof p[k]!=='boolean'))throw Error('Invalid display detail');put('displayDetails',{...state.displayDetails,...p});return true;
     case 'selection/set':if(!['list','click','touch'].includes(p.source)||![p.room_id,p.cell_id].every(v=>v===null||typeof v==='string'))throw Error('Invalid selection');put('selection',p);return true;
     case 'layers/toggle':if(!Object.hasOwn(state.layers,p.id))throw Error('Unknown layer');if(p.visible!==undefined&&typeof p.visible!=='boolean')throw Error('Invalid visibility');put('layers',{...state.layers,[p.id]:p.visible??!state.layers[p.id]});return true;
     case 'realView/set':
@@ -2020,15 +2022,54 @@ function createPanelShell({panel,store}){
 return {createPanelShell};
 })();
 
-// app/web/panels/display.js
+// app/web/panels/display_policy.js
 const __module34=(()=>{
+// Presentation-only switches, applied by the panel boundary after layer.tick().
+// Layer geometry, saved values, materials and risk gates remain unchanged.
+function createDisplayPolicy(store){
+ const masks=new WeakMap(),labels=new Map();let currentViews=[],labelObjects=[],labelScene=null,labelKey=null;
+ const mask=(object,on)=>{if(!masks.has(object))masks.set(object,object.layers.mask);object.layers.mask=on?masks.get(object):0;};
+ const inside=(p,ring)=>{let yes=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])yes=!yes;}return yes;};
+ function apply({risk,scene}){
+  const detail=store.get('displayDetails');currentViews=risk.views;
+  for(const v of currentViews){
+   mask(v.tint,detail.floorTint);mask(v.interfaceLine,detail.smokeInterface);mask(v.interfacePlane,detail.smokeInterface);
+   const caution=store.get('risk').show.smoke&&v.line.material.color.getHexString()==='9ca3af';
+   mask(v.line,caution||(v.line.material.gapSize>0?detail.boundaryDots:detail.cellOutline));
+  }
+  const all=store.get('floor').floor_id===null,selected=store.get('selection').room_id,building=store.get('building');
+  const key=[all,selected,building];if(labelScene===scene&&labelKey&&key.every((v,i)=>v===labelKey[i]))return;labelKey=key;
+  if(labelScene!==scene){labelScene=scene;labelObjects=[];scene.traverse(o=>{if(o.element&&/(계단|승강기)/.test(o.element.textContent)&&o.element.classList.contains('lb'))labelObjects.push(o);});}
+  const room=building?.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selected);
+  for(const o of labelObjects){const el=o.element;
+   if(!labels.has(el))labels.set(el,[el.style.getPropertyValue('visibility'),el.style.getPropertyPriority('visibility')]);
+   const p=o.getWorldPosition(o.position.clone()),inRoom=room?.polygons_m.some(poly=>inside([p.x,p.y],poly.polygon_m)&&!(poly.holes_m||[]).some(h=>inside([p.x,p.y],h)));
+   // !important survives the retained CAD label loop's display updates.
+   el.style.setProperty('visibility',all||inRoom?'visible':'hidden','important');
+  }
+  for(const hint of document.querySelectorAll('.viewHint'))hint.hidden=!all;
+ }
+ return {apply,dispose(){for(const v of currentViews)for(const o of [v.tint,v.line,v.interfaceLine,v.interfacePlane])if(masks.has(o))o.layers.mask=masks.get(o);for(const [el,[value,priority]] of labels)el.style.setProperty('visibility',value,priority);for(const hint of document.querySelectorAll('.viewHint'))hint.hidden=false;labels.clear();currentViews=[];labelObjects=[];labelScene=null;labelKey=null;}};
+}
+
+return {createDisplayPolicy};
+})();
+
+// app/web/panels/display.js
+const __module35=(()=>{
+const {createDisplayPolicy}=__module34;
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
  const listen=(node,event,fn)=>{node.addEventListener(event,fn);cleanups.push(()=>node.removeEventListener(event,fn));};
  pane.innerHTML='<h3>보기</h3><div id="displayViewSettings"></div><h3>레이어</h3><div id="displayLayers"></div><h3>위험 유형</h3><div id="displayRisks"></div><h3>임계값</h3><div class="displaySettings"><label>테두리 <input id="displayRibbon" type="number" min="0" step="5" value="100"></label><label>주의 <input id="displayCaution" type="number" min="0" step="5" value="70"></label><span id="displayError" role="alert"></span></div><h3>연기</h3><div id="displaySmokeSettings" class="displaySettings"></div>';
- const bindings=[];
+ const bindings=[],policy=createDisplayPolicy(store);let plumeLegend=null,plumeNumbers=null;
+ // The unchanged legacy renderer writes cfPlumeNumbers even while disabled.
+ // Keep that hidden write target mounted; only attach the visible legend on demand.
+ const plumeSink=document.createElement('div');plumeSink.hidden=true;pane.append(plumeSink);
+ function syncPlumeLegend(){const found=$('cfPlumeLegend');if(found&&found!==plumeLegend){plumeNumbers?.remove();plumeLegend=found;plumeNumbers=found.querySelector('#cfPlumeNumbers');}if(!plumeLegend)return;const on=store.get('layers').plume&&store.get('realView').enabled;if(on){if(plumeNumbers)plumeLegend.append(plumeNumbers);if(!plumeLegend.isConnected)$('cfMeaning').after(plumeLegend);plumeLegend.hidden=false;}else{if(plumeNumbers)plumeSink.append(plumeNumbers);plumeLegend.remove();}}
+
  function toggle(host,id,label,color,read,write,existing=false,tip=''){
   const row=document.createElement('div');row.className='displayToggle';const text=document.createElement('label');text.htmlFor=id;text.innerHTML=`<i style="background:${color}"></i>`;text.append(label);row.append(text);
   if(tip){const info=document.createElement('span');info.className='displayInfo';info.tabIndex=0;info.textContent='ⓘ';info.title=tip;info.dataset.tip=tip;row.append(info);}
@@ -2036,15 +2077,17 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   input.setAttribute('role','switch');host.append(row);bindings.push(()=>input.checked=read());return input;
  }
  toggle($('displayViewSettings'),'displayReal','실감 보기','#62dcb0',()=>store.get('realView').enabled,enabled=>store.dispatch('realView/set',{enabled}));
- for(const [id,label,color,layer] of [['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
+ for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#42e8ff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#ffc342',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
+ for(const [key,id,label] of [['cellOutline','displayCellOutline','셀 점선'],['floorTint','displayFloorTint','바닥 틴트'],['smokeInterface','displaySmokeInterface','연기 경계면'],['boundaryDots','displayBoundaryDots','경계 ±30 ℃ 점선']])toggle($('displayLayers'),id,label,'#9ca3af',()=>store.get('displayDetails')[key],visible=>store.dispatch('displayDetails/set',{[key]:visible}));
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
  toggle($('displayLayers'),'displayVehicle','경로 차량','#d33',()=>store.get('route').vehicle_visible,vehicle_visible=>store.dispatch('route/set',{vehicle_visible}));
- toggle($('displayLayers'),'displayOperations','작전 기호 (차량·인원)','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
+ toggle($('displayLayers'),'displayOperations','작전 기호·대원 표식','#d33',()=>store.get('layers').operations,visible=>store.dispatch('layers/toggle',{id:'operations',visible}),false,'수동 작전·크기 기준 기호입니다. 계산 결과와 별개입니다.');
  for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
- toggle($('displayRisks'),'displayHistory','이력 표시','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
+ toggle($('displayRisks'),'displayHistory','이력 보기','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
+ const opacity=$('liteOpacity');opacity.innerHTML='<option value="1">100%</option><option value="0.7">70% · 기본</option><option value="0.4">40%</option><option value="0.15">15%</option>';
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
  const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current">현재</option><option value="weak" selected>약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
@@ -2055,41 +2098,56 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
- meaning.innerHTML=phenomena.map(([k,n,c])=>`<span class="legendChip"><i style="background:${c}"></i>${n}</span>`).join('')+'<span class="legendChip"><i style="background:#9ca3af"></i><span id="legendCaution"></span></span><span class="legendChip" id="legendHistory">┄ 이력(점선)</span><span class="legendChip">┄ 경계 ±30℃</span><span class="legendChip"><i style="background:#42e8ff"></i>선택</span>';
+ const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['operations','작전','#d33'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
+ meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
  $('liteLegend').remove();
+ const vehicleMarker=document.createElement('span');vehicleMarker.className='displayVehicleMarker';vehicleMarker.textContent='차량';vehicleMarker.title='경로 차량 위치 · 표시 기호';vehicleMarker.hidden=true;$('v').append(vehicleMarker);
  const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
  const toolbar=$('resetView').parentElement;move($('liteFocus'),toolbar);move($('liteFireFocus'),toolbar);$('resetView').textContent='⟲';$('resetView').title='시점 복원';$('liteFocus').textContent='실 확대';$('liteFireFocus').textContent='연소점';
- selectionLabel.replaceChildren();selectionLabel.classList.add('compactHUD');selectionLabel.innerHTML='<div class="hudTitle"><b id="hudRoom"></b><span id="hudPill"></span></div><button id="hudOrigin" type="button" disabled>이 실을 화점으로</button><div class="hudValues"><span>상층 <b id="hudT"></b></span><span>O₂ <b id="hudO"></b></span><span>연기층 <b id="hudH"></b></span></div>';
+ selectionLabel.replaceChildren();selectionLabel.classList.add('compactHUD');selectionLabel.innerHTML='<div class="hudTitle"><b id="hudRoom"></b><button id="hudHistory" type="button" aria-pressed="false">이력 보기</button></div><div class="hudPhenomenon"><span id="hudPill"></span></div><div class="hudValues">상층 <b id="hudT"></b></div><button id="hudOrigin" type="button" disabled>이 실을 화점으로</button>';
  listen($('hudOrigin'),'click',()=>onOrigin(store.get('selection').room_id));
+ listen($('hudHistory'),'click',()=>store.dispatch('risk/history',{enabled:!store.get('risk').history}));
  const style=document.createElement('style');style.dataset.pyrocastDisplay='true';style.textContent=`
  #shellPane-display{padding:12px 16px;box-sizing:border-box}#shellPane-display h3{font-size:12px;color:#b8cbd8;margin:14px 0 8px;font-weight:500}
  .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
  .displayInfo{font-size:12px;color:#b6cedb;cursor:help}.displaySettings{padding:10px;border:1px solid #496273;border-radius:7px;display:grid;gap:9px}.displaySettings label{display:flex;justify-content:space-between;gap:10px;align-items:center}.displaySettings input{width:68px}.displaySettings input,.displaySettings select{background:#1d4158;color:#eef5fa;border:1px solid #6a8d9f;border-radius:4px;padding:5px}#displayError{color:#ffc1b0;font-size:11px}#displayError:empty{display:none}
- #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:wrap;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px}
+ .displayVehicleMarker{position:absolute;z-index:6;transform:translate(-50%,-50%);background:#17384d;border:2px solid #38bdf8;border-radius:5px;padding:3px 6px;color:#fff;font-size:11px;pointer-events:none}.displayVehicleMarker[hidden]{display:none}
+ #hudHistory{pointer-events:auto;background:#17384d;border:1px solid #577487;border-radius:12px;color:#eaf3f8;padding:3px 7px;cursor:pointer}#hudHistory[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}.hudPhenomenon{margin:5px 0}.viewHint[hidden]{display:none!important}
+ #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px;flex-shrink:0;white-space:nowrap}
  .legendChip[hidden]{display:none}
- #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeLegend br,#displayLegend #cfPlumeNumbers{display:none}
+ #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeNumbers{display:none}
  body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}#hudOrigin{pointer-events:auto;margin-top:5px;background:#1d4158;color:#eaf3f8;border:1px solid #577487;border-radius:4px;padding:3px 6px;cursor:pointer}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
- function sync(){bindings.forEach(f=>f());$('legendHistory').hidden=!store.get('risk').history;const t=store.get('risk').threshold;$('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('legendCaution').textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('displayTemperature').value=store.get('realView').temperaturePattern;$('displaySmokeColor').value=store.get('realView').smokeColor;$('displayFlameStyle').value=store.get('realView').flameDisplay;$('liteOpacity').value=store.get('realView').smokeOpacity;}
- for(const slice of ['layers','openings','realView','risk','route'])cleanups.push(store.subscribe(slice,sync));sync();
+ function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
+  const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core&&store.get('floor').floor_id===null,fuel:rv.fuelMarkers,operations:l.operations,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
+  for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
+  $('legend-smoke').lastElementChild.textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('hudHistory').setAttribute('aria-pressed',String(r.history));
+  $('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('displayTemperature').value=rv.temperaturePattern;$('displaySmokeColor').value=rv.smokeColor;$('displayFlameStyle').value=rv.flameDisplay;$('liteOpacity').value=rv.smokeOpacity;syncPlumeLegend();
+ }
+ for(const slice of ['layers','openings','realView','risk','route','displayDetails','floor'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
   const allowed=!!isOriginAllowed(room?.room_id);$('hudOrigin').disabled=!allowed;$('hudOrigin').title=allowed?'선택한 원래 방을 탐색 화점으로 지정합니다':'화점 지정 가능한 실을 선택하세요';
   $('hudRoom').textContent=$('liteRoom').selectedOptions[0]?.textContent||'실 선택';
   const scores=phenomena.map(([key,name,color])=>({key,name,color,value:cell?result.index_by_cell[cell]?.[key]?.[index]:null})).filter(s=>Number.isFinite(s.value)).sort((a,b)=>b.value-a.value),top=scores[0];
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
-  const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);$('hudO').textContent=format(s?.O2_upper_volfrac[index]==null?null:s.O2_upper_volfrac[index]*100,' %',1);$('hudH').textContent=format(s?.interface_m[index],' m',2);
-  selectionLabel.title=cell?'상층 산소 · 바닥에서 연기층 경계까지의 높이':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
+  const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);
+  selectionLabel.title=cell?'선택 셀 · 현재 시각':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
  }
- return {hud,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
+ return {hud,applyScene(context){policy.apply(context);syncPlumeLegend();
+  // Buildings without a reference vehicle mesh still show the existing route origin.
+  const {route,camera}=context,point=route.result?.vehicle,floor=store.get('floor').floor_id;
+  vehicleMarker.hidden=!!route.vehicleSource||!point||!store.get('layers').route||!store.get('route').vehicle_visible||(floor!==null&&floor!=='1F');
+  if(!vehicleMarker.hidden){const p=new route.THREE.Vector3(...point).project(camera);vehicleMarker.hidden=p.z< -1||p.z>1;vehicleMarker.style.left=(p.x+1)*$('v').clientWidth/2+'px';vehicleMarker.style.top=(1-p.y)*$('v').clientHeight/2+'px';}
+ },dispose(){policy.dispose();vehicleMarker.remove();plumeLegend?.remove();for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
 }
 
 return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module35=(()=>{
+const __module36=(()=>{
 const {infoTip}=__module10;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
 const finite=Number.isFinite;
@@ -2122,8 +2180,9 @@ function summarizeMCPlayback(playback){
 function createResultsPanel({panel,store}){
  const $=id=>document.getElementById(id),root=document.createElement('div'),moves=[];root.id='resultContent';$('shellPane-result').append(root);panel.hidden=true;
  const move=(node,parent)=>{const mark=document.createComment('result restore');node.before(mark);moves.push(()=>mark.replaceWith(node));parent.append(node);};
- root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase">사례</label><div id="resultCaseControls"></div><div id="resultMetadata"></div><div id="resultReuse" role="status"></div><button id="resultReplay" type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><label for="liteRoom">실·셀</label><div id="resultRoomControl"></div><div id="resultRoomTitle"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><div id="resultBottleneck"></div><details><summary>계산값</summary><div id="resultQuantities"></div></details></div><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div><details id="resultLimits"><summary>가정과 한계</summary><ul></ul></details>';
+ root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase">사례</label><div id="resultCaseControls"></div><div id="resultMetadata"></div><div id="resultReuse" role="status"></div><button id="resultReplay" type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><label for="liteRoom">실·셀</label><div id="resultRoomControl"></div><div id="resultRoomTitle"></div><div id="resultAtmosphere"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><div id="resultBottleneck"></div><details><summary>계산값</summary><div id="resultQuantities"></div></details></div><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div><details id="resultLimits"><summary>가정과 한계</summary><ul></ul></details>';
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';move($('liteRoom'),$('resultRoomControl'));
+ $('resultRoomControl').append($('hudOrigin'));
  $('resultTools').remove();
  const worst=document.createElement('div');worst.id='resultWorstTime';worst.style.cssText='font-size:11px;white-space:nowrap;overflow-x:auto;margin:8px 0;color:#b8cbd8';$('resultRoomTitle').after(worst);
  const reviewDetails=document.createElement('details');reviewDetails.id='resultMenuReview';reviewDetails.innerHTML='<summary>전체 메뉴 검토</summary><div id="resultReviewMount"></div>';root.append(reviewDetails);
@@ -2139,6 +2198,7 @@ function createResultsPanel({panel,store}){
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   $('resultRoomTitle').textContent=`${room?.room_id?.replace('CAD_','')||'실 선택'} · ${stamp(result.time_s[index])}`;
+  $('resultAtmosphere').textContent=`O₂ ${finite(values?.O2_upper_volfrac?.[index])?number(values.O2_upper_volfrac[index]*100,1)+' %':'—'} · 연기층 ${finite(values?.interface_m?.[index])?number(values.interface_m[index],2)+' m':'—'}`;
   const peaks=worstIndexEntries(result,cell?[cell]:(room?.cells||[]).map(c=>c.cell_id));
   worst.textContent='최악 시각 · '+peaks.map(p=>`${p.name} ${number(p.value)}${finite(p.time)?' @ '+stamp(p.time):''}`).join(' · ');
   worst.title=(cell?'선택 셀':'실 내 멤버 셀 최대')+' · 전 구간, 동률은 최초 시각. '+peaks.map(p=>`${p.name}: ${p.source??'미평가'}`).join(' / ');
@@ -2169,7 +2229,7 @@ return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createR
 })();
 
 // app/web/adapters/attention.js
-const __module36=(()=>{
+const __module37=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2186,7 +2246,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module37=(()=>{
+const __module38=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2489,9 +2549,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module38=(()=>{
-const {attentionRanking}=__module36;
-const {savedAttention}=__module37;
+const __module39=(()=>{
+const {attentionRanking}=__module37;
+const {savedAttention}=__module38;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2560,7 +2620,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module39=(()=>{
+const __module40=(()=>{
 const {createAIFuelPanel}=__module1;
 const {attachExport}=__module2;
 const {routeSampleIndex}=__module4;
@@ -2584,9 +2644,9 @@ const {SelectionLayer}=__module30;
 const {createSceneHost}=__module31;
 const {createLitePanel,updateLitePanel,createMenuReview}=__module32;
 const {createPanelShell}=__module33;
-const {createDisplayPanel}=__module34;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module35;
-const {createExplorePanel}=__module38;
+const {createDisplayPanel}=__module35;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module36;
+const {createExplorePanel}=__module39;
 const {attachFrozenRules}=__external4;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2660,6 +2720,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   for(const row of buildingAsset.floors){const clone=buildingLayer.floorGroups.get(row.id);if(clone)clone.visible=row.group.visible;row.objects.forEach(source=>{
     hidden.push([source,source.visible]);source.visible=false;});
   }
+  display.applyScene({risk,scene,camera,route});
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}
  }};
  const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>!routeGraph.error&&store.get('route').placing,place:p=>{if(contains(p,routeGraph.ground.slab))store.dispatch('route/set',{message:'건물 밖 지면을 선택하세요'});else store.dispatch('route/set',{vehicle:p,placing:false,message:''});}},seriesAt:()=>cache.get(store.get('result')?.result_id)});
@@ -2781,9 +2842,9 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module40=(()=>{
+const __module41=(()=>{
 const {attach:attachLegacy}=__module0;
-const {attachModern}=__module39;
+const {attachModern}=__module40;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2799,4 +2860,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module40.attach;
+export const attach=__module41.attach;

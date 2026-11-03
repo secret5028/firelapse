@@ -11,7 +11,10 @@ const dir='simulation/results/lite_v8_mc_R2_10_20261026/S09',playback=read(dir+'
 const building=adaptBuilding({scenario,playback,sourceHash:playback.building_sha256});
 const result=await adaptResult({playback,scenario,building,resultId:'S09'}),store=createStore(),layer=new RiskLayer(THREE),scene=new THREE.Scene();
 
-assert.equal(store.get('risk').history,true);
+assert.equal(store.get('risk').history,false);
+assert.equal(store.get('risk').show.smoke,false);
+store.dispatch('risk/history',{enabled:true});
+store.dispatch('risk/set',{type:'smoke',visible:true});
 assert.deepEqual(indexHistoryExtrema({c:{FO:[null,40,120,null,70,150,150],FGI:[null,null]}},[0,10,20,30,40,50,60]),{maximum:{c:{FO:150,FGI:null}},peak_time_s:{c:{FO:50,FGI:null}}});
 const types=['FO','FGI','backdraft','rollover'];let time=3600;
 layer.mount(scene,store);

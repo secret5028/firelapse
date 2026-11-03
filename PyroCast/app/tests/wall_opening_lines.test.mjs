@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 import fs from 'node:fs';
-import {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,trimWallLineGeometry} from '../web/layers/wall_opening_lines.js';
+import {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,trimWallLineGeometry,trimWallJambFaces} from '../web/layers/wall_opening_lines.js';
 import {BuildingLayer} from '../web/layers/building.js';
 import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
 const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
@@ -27,6 +27,11 @@ assert.equal(outsideOpeningIntervals([2.1,0,0],[2.1,0,3],wallOpeningVolumes(sche
 const group=new T.Group();group.name='2F';group.position.set(3,4,9);group.rotation.z=.4;
 const source=new T.LineSegments(new T.BufferGeometry().setFromPoints([new T.Vector3(0,0,1),new T.Vector3(6,0,1)]),new T.LineBasicMaterial({transparent:true,opacity:.42}));source.name='2F_edge';group.add(source);
 const original=Array.from(source.geometry.attributes.position.array),result=trimWallLineGeometry(T,source,group,cuts);assert.equal(result.attributes.position.count,4);assert.deepEqual(Array.from(source.geometry.attributes.position.array),original);result.dispose();
+const capGeo=new T.BufferGeometry().setFromPoints([new T.Vector3(2,-.05,0),new T.Vector3(2,.05,0),new T.Vector3(2,.05,4.2)]),cap=new T.Mesh(capGeo,new T.MeshBasicMaterial());cap.name='2F_wall';group.add(cap);
+const capOriginal=Array.from(capGeo.attributes.position.array),capResult=trimWallJambFaces(T,cap,group,cuts);assert(capResult);assert.equal(capResult.attributes.position.count,6);
+for(let i=0;i<capResult.attributes.position.count;i++)assert(capResult.attributes.position.getZ(i)<=2.100001);
+assert.deepEqual(Array.from(capGeo.attributes.position.array),capOriginal);capResult.dispose();
+cap.name='2F_beam';assert.equal(trimWallJambFaces(T,cap,group,cuts),null);group.remove(cap);cap.geometry.dispose();cap.material.dispose();
 const asset=readLegacyBuildingSource({building:{floors:[scheduled]},groups:[group],sourceHash:'a'.repeat(64)});let disposed=0;
 const layer=new BuildingLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});
 const frame={building:{source_hash:asset.source_hash},floor:{floor_id:'2F'},resultMeta:null,t_s:0};layer.setData(frame);assert.equal(layer.resources.size,0);

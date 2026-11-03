@@ -1,6 +1,6 @@
 import {EmptyLayer,createEmptyLayers} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
-import {wallOpeningVolumes,trimWallLineGeometry} from './wall_opening_lines.js';
+import {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces} from './wall_opening_lines.js';
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 export class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -30,8 +30,8 @@ export class BuildingLayer extends EmptyLayer {
   if(signature===this.openingSignature)return;this.openingSignature=signature;this.trimmedLines=0;
   const volumes=floors.map(f=>wallOpeningVolumes(f.floor||{},time));
   for(const resource of this.resources)resource.dispose();this.resources.clear();
-  floors.forEach((floor,i)=>{for(const source of floor.objects){const object=this.sourceObjects.get(source);if(!object?.isLineSegments)continue;
-   const clipped=trimWallLineGeometry(this.THREE,source,floor.group,volumes[i]);object.geometry=clipped?this.own(clipped):source.geometry;if(clipped)this.trimmedLines++;
+  floors.forEach((floor,i)=>{for(const source of floor.objects){const object=this.sourceObjects.get(source);if(!object)continue;
+   const clipped=source.isMesh?trimWallJambFaces(this.THREE,source,floor.group,volumes[i]):trimWallLineGeometry(this.THREE,source,floor.group,volumes[i]);object.geometry=clipped?this.own(clipped):source.geometry;if(clipped&&source.isLineSegments)this.trimmedLines++;
   }});
  }
  // Newly included stairs/glass may sit inside transformed or hidden groups.

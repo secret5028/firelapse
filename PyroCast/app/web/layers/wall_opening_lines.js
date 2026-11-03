@@ -19,7 +19,11 @@ export function wallOpeningVolumes(floor,time=0){
    let lo=along(a),hi=along(b);if(o.kind==='window'&&points.length){lo=Math.min(...points.map(along));hi=Math.max(...points.map(along));}
    const center=(lo+hi)/2,half=(hi-lo)*fraction/2;
    const normal=across(a),near=points.length?Math.min(normal,...points.map(across)):normal-.075,far=points.length?Math.max(normal,...points.map(across)):normal+.075;
-   cuts.push({id:o.id,u,v,jambs:[center-half,center+half],bottom,top,min:[center-half+.005,near-.015,bottom===0?-.015:bottom+.005],max:[center+half-.005,far+.015,top-.005]});
+   const jambs=[center-half,center+half];
+   // CAD jamb footprints can be wider/bevelled relative to the swing-leaf line.
+   // Their extrusion corners must stop at the opening head as well.
+   const seams=fraction===1?[...jambs,...points.map(along)]:jambs;
+   cuts.push({id:o.id,u,v,jambs,seams,bottom,top,min:[center-half+.005,near-.015,bottom===0?-.015:bottom+.005],max:[center+half-.005,far+.015,top-.005]});
   }
  }
  return cuts;
@@ -47,7 +51,7 @@ export function outsideWallOpeningIntervals(a,b,cuts){
  const extensions=[];
  for(const c of cuts){
   const along=a[0]*c.u[0]+a[1]*c.u[1],normal=a[0]*c.v[0]+a[1]*c.v[1];
-  if(normal<c.min[1]||normal>c.max[1]||!c.jambs?.some(x=>Math.abs(along-x)<=.02))continue;
+  if(normal<c.min[1]||normal>c.max[1]||!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=.02))continue;
   for(const [low,high] of [[-1e6,c.bottom],[c.top,1e6]])extensions.push({...c,min:[along-.025,c.min[1],low],max:[along+.025,c.max[1],high]});
  }
  return outsideOpeningIntervals(a,b,[...cuts,...extensions]);
@@ -65,6 +69,31 @@ export function trimWallLineGeometry(T,source,floorGroup,cuts){
   for(const [lo,hi] of intervals)for(const t of [lo,hi])for(const [name,attr] of Object.entries(g.attributes))for(let k=0;k<attr.itemSize;k++){
    const x=attr.getComponent(ia,k),y=attr.getComponent(ib,k);arrays[name].push(x+(y-x)*t);
   }
+ }
+ if(!changed)return null;
+ const result=new T.BufferGeometry();for(const [name,values] of Object.entries(arrays))result.setAttribute(name,new T.Float32BufferAttribute(values,g.attributes[name].itemSize));
+ result.computeBoundingSphere();return result;
+}
+// Transparent extruded wall bands also expose their internal end caps as dark
+// stripes above/below a jamb. Trim only those vertical caps, not wall fronts.
+export function trimWallJambFaces(T,source,floorGroup,cuts){
+ if(!source.isMesh||!/(?:_wall|_door_head|_win_low|_win_head)$/.test(source.name||'')||!cuts.length)return null;
+ const g=source.geometry,pos=g?.attributes.position;if(!pos)return null;
+ source.updateWorldMatrix(true,false);floorGroup.updateWorldMatrix(true,false);
+ const matrix=new T.Matrix4().copy(floorGroup.matrixWorld).invert().multiply(source.matrixWorld),p=new T.Vector3(),arrays={};
+ for(const name of Object.keys(g.attributes))arrays[name]=[];
+ const vertex=i=>{p.fromBufferAttribute(pos,i).applyMatrix4(matrix);return {world:p.toArray(),attrs:Object.fromEntries(Object.entries(g.attributes).map(([name,a])=>[name,Array.from({length:a.itemSize},(_,k)=>a.getComponent(i,k))]))};};
+ const blend=(a,b,t)=>({world:a.world.map((x,k)=>x+(b.world[k]-x)*t),attrs:Object.fromEntries(Object.keys(a.attrs).map(name=>[name,a.attrs[name].map((x,k)=>x+(b.attrs[name][k]-x)*t)]))});
+ const clip=(poly,z,above)=>{const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],ia=above?a.world[2]>=z:a.world[2]<=z,ib=above?b.world[2]>=z:b.world[2]<=z;if(ia)out.push(a);if(ia!==ib)out.push(blend(a,b,(z-a.world[2])/(b.world[2]-a.world[2])));}return out;};
+ let changed=false;const count=g.index?.count??pos.count,start=g.drawRange.start||0,end=Math.min(count,start+g.drawRange.count);
+ for(let i=start;i+2<end;i+=3){let poly=[0,1,2].map(k=>vertex(g.index?g.index.getX(i+k):i+k));
+  for(const c of cuts){if(poly.length<3)break;
+   const xyz=poly.map(v=>v.world),us=xyz.map(v=>v[0]*c.u[0]+v[1]*c.u[1]),vs=xyz.map(v=>v[0]*c.v[0]+v[1]*c.v[1]),zs=xyz.map(v=>v[2]);
+   if(Math.max(...zs)-Math.min(...zs)<1e-6||Math.max(...us)-Math.min(...us)>.025||!(c.seams||c.jambs).some(j=>us.every(u=>Math.abs(j-u)<=.025))||vs.some(v=>v<c.min[1]||v>c.max[1]))continue;
+   if(Math.min(...zs)>=c.bottom-1e-6&&Math.max(...zs)<=c.top+1e-6)continue;
+   poly=clip(clip(poly,c.bottom,true),c.top,false);changed=true;
+  }
+  for(let k=1;k+1<poly.length;k++)for(const v of [poly[0],poly[k],poly[k+1]])for(const name of Object.keys(arrays))arrays[name].push(...v.attrs[name]);
  }
  if(!changed)return null;
  const result=new T.BufferGeometry();for(const [name,values] of Object.entries(arrays))result.setAttribute(name,new T.Float32BufferAttribute(values,g.attributes[name].itemSize));

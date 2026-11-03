@@ -1,5 +1,6 @@
 import {createEmptyLayers} from '../layers/empty.js';
 import {ROOM_PICK_LAYER} from './picking.js';
+import {fixedOpeningsFor} from '../state/fixed_openings.js';
 const mounted=new WeakMap();
 export function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -43,6 +44,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
   const dt=lastTime===null?0:Math.max(0,(now-lastTime)/1000);lastTime=now;
   const playback=store.get('playback');if(running&&playback.playing){store.dispatch('playback/seek',{t_s:playback.t_s+dt*playback.speed});if(store.get('playback').t_s>=playback.t_end_s)store.dispatch('playback/play',{playing:false});}
   const t=store.get('playback').t_s,frame={building:store.get('building'),resultMeta:store.get('result'),series:seriesAt(t),t_s:t,selection:store.get('selection'),floor:store.get('floor'),route:store.get('route'),risk:store.get('risk'),layers:store.get('layers'),realView:store.get('realView'),reducedMotion:windowTarget.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false};
+  frame.fixedOpenings=store.get('openings').fixed?fixedOpeningsFor(frame.building,store.get('buildingReview')):null;
   const visible=store.get('layers');for(const layer of layers){layer.setData(frame);layer.setVisible(visible[layer.constructor.id]!==false);layer.tick?.(dt,now/1000);}
   renderer.render(scene,camera);
  }

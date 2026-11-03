@@ -576,7 +576,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
  realView:{enabled:true,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
- openings:{exterior:false,interior:false},
+ openings:{exterior:false,interior:false,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
  risk:{history:false,show:{FO:true,FGI:true,backdraft:true,smoke:false},threshold:{ribbon:100,caution:70}},
@@ -1118,13 +1118,23 @@ class OpeningsLayer extends EmptyLayer {
  clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.views=[];this.asset=null;}
  build(asset){this.clearGeometry();this.asset=asset;this.buildCount++;const T=this.THREE;
   const windowMaterial=this.own(new T.LineBasicMaterial({color:'#62dcb0',linewidth:1})),doorMaterial=this.own(new T.LineBasicMaterial({color:'#e6bd68'}));
+  const fixedMaterials={};
+  const annotate=(line,vertices,floor,opening,policy,normalVisible=true)=>{
+   if(!fixedMaterials[policy]){const open=this.own(line.material.clone()),closed=this.own(line.material.clone());open.color.set('#62dcb0');closed.color.set('#c0cbd3');fixedMaterials[policy]={open,closed};}
+   const {open:fixedOpen,closed:fixedClosed}=fixedMaterials[policy];
+   const cross=applyRenderPolicy(new T.LineSegments(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[2],vertices[1],vertices[3]])),fixedClosed),policy);
+   cross.name='closed-opening-mark';cross.raycast=()=>{};cross.visible=false;line.add(cross);
+   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,fixedOpen,fixedClosed,cross});
+  };
   for(const row of asset.floors){const {floor}=row,windows=new T.Group(),doors=new T.Group();windows.name=floor.name+'-windows';doors.name=floor.name+'-doors';this.group.add(windows,doors);this.views.push({row,windows,doors});
    for(const opening of floor.openings||[]){
     const face=exteriorWindowFace(floor,opening);
     if(face){const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(face.corners.map(p=>new T.Vector3(...p)))),windowMaterial),'openings.window');
      line.name=`exterior-window-${floor.name}-${opening.id}`;line.raycast=()=>{};
-     line.userData.exteriorNormal=new T.Vector3(...face.normal);line.userData.exteriorCenter=new T.Vector3(...face.center);windows.add(line);}
-    if(opening.kind!=='door'||(opening.connection_status!=='interior'&&!opening.display_frame))continue;
+     line.userData.exteriorNormal=new T.Vector3(...face.normal);line.userData.exteriorCenter=new T.Vector3(...face.center);
+     annotate(line,face.corners.map(p=>new T.Vector3(...p)),floor,opening,'openings.window');windows.add(line);}
+    if(opening.kind!=='door')continue;
+    const normalVisible=opening.connection_status==='interior'||!!opening.display_frame;
     let spans=(opening.leaves||[]).map(l=>[l.hinge,l.closed]);
     if(!spans.length){let longest=0,span=null;for(const ring of opening.polys||[])for(let j=0;j<ring.length;j++){
      const a=ring[j],b=ring[(j+1)%ring.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(length>longest){longest=length;span=[a,b];}
@@ -1132,7 +1142,8 @@ class OpeningsLayer extends EmptyLayer {
     const height=opening.door_h||floor.door_h||2.1;
     for(const [a,b] of spans){const vertices=[[...a,opening.sill_m??.035],[...b,opening.sill_m??.035],[...b,height],[...a,height]].map(p=>new T.Vector3(...p));
      const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(vertices)),doorMaterial),'openings.door');
-     line.name=`interior-door-${floor.name}-${opening.id}`;line.raycast=()=>{};doors.add(line);}
+     line.name=`interior-door-${floor.name}-${opening.id}`;line.raycast=()=>{};
+     annotate(line,vertices,floor,opening,'openings.door',normalVisible);doors.add(line);}
     if(opening.display_schedule){const [a,b]=spans[0],bottom=opening.sill_m??.035;
      const material=this.own(new T.MeshBasicMaterial({color:'#62dcb0',transparent:true,opacity:.35,side:T.DoubleSide,depthTest:false,depthWrite:false}));
      const fill=new T.Mesh(this.own(new T.PlaneGeometry(Math.hypot(b[0]-a[0],b[1]-a[1]),height-bottom)),material);
@@ -1156,11 +1167,16 @@ class OpeningsLayer extends EmptyLayer {
   for(const {row,windows,doors} of this.views){
    const visible=row.group.visible&&(floorId===null||row.id===floorId);
    for(const group of [windows,doors]){group.position.copy(row.group.position);group.updateWorldMatrix(true,false);}
-   windows.visible=visible&&this.parts.window;doors.visible=visible&&this.parts.door;
-   for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}
+   const fixed=this.frame.fixedOpenings;
+   windows.visible=visible&&(this.parts.window||!!fixed);doors.visible=visible&&(this.parts.door||!!fixed);
+   const applyState=(line,normal)=>{const d=line.userData,s=fixed?.states[d.openingId];
+    line.visible=!!s||(normal&&d.normalVisible);line.material=s?(s.open?d.fixedOpen:d.fixedClosed):d.normalMaterial;
+    d.cross.visible=!!s&&!s.open;d.confirmedState=s??null;
+   };
+   for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=this.parts.door&&!fixed&&f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}else applyState(o,this.parts.door);
    for(const line of windows.children){this.center.copy(line.userData.exteriorCenter).applyMatrix4(windows.matrixWorld);
     this.normal.copy(line.userData.exteriorNormal).transformDirection(windows.matrixWorld);
-    line.visible=this.delta.copy(this.cameraPosition).sub(this.center).dot(this.normal)>0;this.windowChecks++;}
+    applyState(line,this.parts.window);line.visible&&=this.delta.copy(this.cameraPosition).sub(this.center).dot(this.normal)>0;this.windowChecks++;}
   }
  }
  diagnostics(){return {buildCount:this.buildCount,ticks:this.tickCount,windowChecks:this.windowChecks,resources:this.resources.size,
@@ -1581,10 +1597,22 @@ class SelectionLayer extends EmptyLayer {
 return {SelectionLayer};
 })();
 
-// app/web/scene/host.js
+// app/web/state/fixed_openings.js
 const __module33=(()=>{
+// Confirmed next-run inputs are separate from the currently playing result.
+function fixedOpeningsFor(building,review){
+ const fixed=review?.doors?.fixed_state;
+ return fixed?.building_sha256===building?.source_hash&&fixed?.states?fixed:null;
+}
+
+return {fixedOpeningsFor};
+})();
+
+// app/web/scene/host.js
+const __module34=(()=>{
 const {createEmptyLayers}=__module8;
 const {ROOM_PICK_LAYER}=__module31;
+const {fixedOpeningsFor}=__module33;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1628,6 +1656,7 @@ function createSceneHost({container,THREE,store,clock={now:()=>performance.now()
   const dt=lastTime===null?0:Math.max(0,(now-lastTime)/1000);lastTime=now;
   const playback=store.get('playback');if(running&&playback.playing){store.dispatch('playback/seek',{t_s:playback.t_s+dt*playback.speed});if(store.get('playback').t_s>=playback.t_end_s)store.dispatch('playback/play',{playing:false});}
   const t=store.get('playback').t_s,frame={building:store.get('building'),resultMeta:store.get('result'),series:seriesAt(t),t_s:t,selection:store.get('selection'),floor:store.get('floor'),route:store.get('route'),risk:store.get('risk'),layers:store.get('layers'),realView:store.get('realView'),reducedMotion:windowTarget.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false};
+  frame.fixedOpenings=store.get('openings').fixed?fixedOpeningsFor(frame.building,store.get('buildingReview')):null;
   const visible=store.get('layers');for(const layer of layers){layer.setData(frame);layer.setVisible(visible[layer.constructor.id]!==false);layer.tick?.(dt,now/1000);}
   renderer.render(scene,camera);
  }
@@ -1655,7 +1684,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module34=(()=>{
+const __module35=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1700,7 +1729,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/shell.js
-const __module35=(()=>{
+const __module36=(()=>{
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1772,7 +1801,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module36=(()=>{
+const __module37=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -1805,9 +1834,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module37=(()=>{
-const {createDisplayPolicy}=__module36;
+const __module38=(()=>{
+const {createDisplayPolicy}=__module37;
 const {roomFgiRollover}=__module4;
+const {fixedOpeningsFor}=__module33;
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
@@ -1830,6 +1860,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#42e8ff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#ffc342',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
+ toggle($('displayLayers'),'displayFixedOpenings','확정 급기 보기','#62dcb0',()=>store.get('openings').fixed,fixed=>store.dispatch('openings/set',{fixed}),false,'다음 계산에 적용할 확정 입력입니다. 현재 재생 사례의 개폐 상태와 다를 수 있습니다. 사각형은 열림, ×는 닫힘(누설 포함). 외부 창은 기존 강조 필터와 카메라 방향을 따릅니다.');
  for(const [key,id,label] of [['cellOutline','displayCellOutline','셀 점선'],['floorTint','displayFloorTint','바닥 틴트'],['smokeInterface','displaySmokeInterface','연기 경계면'],['boundaryDots','displayBoundaryDots','경계 ±30 ℃ 점선']])toggle($('displayLayers'),id,label,'#9ca3af',()=>store.get('displayDetails')[key],visible=>store.dispatch('displayDetails/set',{[key]:visible}));
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
@@ -1860,6 +1891,8 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ const fixedLegend=document.createElement('span');fixedLegend.className='legendChip';fixedLegend.id='legend-fixedOpenings';fixedLegend.hidden=true;
+ fixedLegend.title='확정된 다음 실행 입력 · 현재 재생 결과의 개폐 상태가 아닙니다. 닫힘에는 누설 면적이 남을 수 있습니다.';meaning.prepend(fixedLegend);
  for(const [i,name,color] of [[0,'① 초기','#c41f05'],[1,'② 성장','#ffae23'],[2,'③ 최성','#fffad9'],[3,'④ 산소 부족','#8c0800']]){
   const chip=document.createElement('span');chip.className='legendChip';chip.id='legend-stage'+i;chip.hidden=true;chip.innerHTML=`<i style="background:${color}"></i><span>${name}</span>`;meaning.append(chip);
  }
@@ -1886,6 +1919,10 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
+   const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
+   $('displayFixedOpenings').disabled=!fixed;
+   fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);
+   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`확정 급기 · ${fixed.sample_id||'사용자 지정'} · 다음 실행 입력 `);for(const [text,color] of [['□ 열림','#62dcb0'],['⊠ 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core&&store.get('floor').floor_id===null,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';
@@ -1896,7 +1933,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   $('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('displayTemperature').value=rv.temperaturePattern;$('liteOpacity').value=rv.smokeOpacity;syncPlumeLegend();
   for(const {key,input,output} of gains){const value=Math.round(rv[key]*100);input.value=value;output.textContent=value+'%';input.setAttribute('aria-valuetext',value+'%');}
  }
- for(const slice of ['layers','openings','realView','risk','route','displayDetails','floor'])cleanups.push(store.subscribe(slice,sync));sync();
+ for(const slice of ['layers','openings','realView','risk','route','displayDetails','floor','building','buildingReview'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
   const allowed=!!isOriginAllowed(room?.room_id);$('hudOrigin').disabled=!allowed;$('hudOrigin').title=allowed?'선택한 원래 방을 탐색 화점으로 지정합니다':'화점 지정 가능한 실을 선택하세요';
@@ -1922,7 +1959,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module38=(()=>{
+const __module39=(()=>{
 const {infoTip}=__module11;
 const {roomFgiRollover}=__module4;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
@@ -2005,7 +2042,7 @@ return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createR
 })();
 
 // app/web/adapters/attention.js
-const __module39=(()=>{
+const __module40=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2022,7 +2059,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module40=(()=>{
+const __module41=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2074,9 +2111,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module41=(()=>{
-const {attentionRanking}=__module39;
-const {savedAttention}=__module40;
+const __module42=(()=>{
+const {attentionRanking}=__module40;
+const {savedAttention}=__module41;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2145,7 +2182,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module42=(()=>{
+const __module43=(()=>{
 const {createAIFuelPanel}=__module0;
 const {createAssistantPanel}=__module1;
 const {attachExport}=__module2;
@@ -2167,12 +2204,12 @@ const {CoreLayer}=__module23;
 const {createRealViewLayers}=__module28;
 const {RiskLayer}=__module30;
 const {SelectionLayer}=__module32;
-const {createSceneHost}=__module33;
-const {createLitePanel,updateLitePanel}=__module34;
-const {createPanelShell}=__module35;
-const {createDisplayPanel}=__module37;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module38;
-const {createExplorePanel}=__module41;
+const {createSceneHost}=__module34;
+const {createLitePanel,updateLitePanel}=__module35;
+const {createPanelShell}=__module36;
+const {createDisplayPanel}=__module38;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module39;
+const {createExplorePanel}=__module42;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2263,6 +2300,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  // Display controls must update the GPU on input, including paused/throttled
  // animation loops in embedded or background viewers. Dispose owns this listener.
  cleanup.push(store.subscribe('realView',render));
+ cleanup.push(store.subscribe('openings',render));
+ cleanup.push(store.subscribe('buildingReview',render));
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
   if(store.get('playback').playing){fractional+=Math.min(.2,Math.max(0,(ms-last)/1000))*store.get('playback').speed;
@@ -2368,8 +2407,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module43=(()=>{
-const {attachModern}=__module42;
+const __module44=(()=>{
+const {attachModern}=__module43;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2384,4 +2423,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module43.attach;
+export const attach=__module44.attach;

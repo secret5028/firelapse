@@ -1,0 +1,23 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+const {chromium}=createRequire(import.meta.url)(process.env.PYROCAST_PLAYWRIGHT||'playwright'),out=path.resolve('reviews/fixed-openings-display-20261104');fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const report={errors:[],posts:[]};
+try{
+ const p=await browser.newPage({viewport:{width:1440,height:1000}});p.setDefaultTimeout(45000);p.on('pageerror',e=>report.errors.push(e.message));p.on('request',r=>{if(r.method()==='POST')report.posts.push(r.url());});
+ await p.addInitScript(()=>{performance.now=()=>180000;const raf=requestAnimationFrame;window.requestAnimationFrame=cb=>raf(()=>{if(!window.__holdFrames)cb(180000);});});
+ await p.route('**/cad-result/*/model.html',async route=>{const r=await route.fetch();let h=await r.text(),hook='await (await import("/cfbt/overlay.js")).attach({',i=h.indexOf(hook),j=h.indexOf('\n</script>',i);assert(i>=0);const old=h.slice(i,j),arg=old.slice(hook.length-1,old.lastIndexOf(');'));h=h.slice(0,i)+'window.__cad='+arg+';window.__ui=await (await import("/cfbt/overlay.js")).attach(window.__cad);window.__ready=true;'+h.slice(j);await route.fulfill({response:r,body:h});});
+ await p.goto('http://127.0.0.1:8780/cad-result/90d3c325f238a3c4/model.html');await p.waitForFunction(()=>window.__ready&&window.__ui.store.get('buildingReview').doors?.fixed_state);
+ await p.selectOption('#liteCase','S09');await p.waitForFunction(()=>window.__ui.store.get('result')?.result_id==='S09');await p.locator('#fbtn button').filter({hasText:/^3F$/}).click();
+ await p.evaluate(()=>{window.__holdFrames=true;document.getElementById('liteTime').value=1420;document.getElementById('liteTime').oninput();window.__ui.render();});
+ const inspect=()=>p.evaluate(()=>{const ui=window.__ui,l=ui.layers.find(l=>l.constructor.id==='openings'),fixed=ui.store.get('buildingReview').doors.fixed_state,rows=[];for(const v of l.views)for(const o of [...v.windows.children,...v.doors.children]){const d=o.userData;if(d.confirmedState)rows.push({id:d.openingId,open:d.confirmedState.open,fraction:d.confirmedState.effective_fraction,cross:d.cross.visible,color:o.material.color.getHexString(),visible:o.visible});}return {rows,states:fixed.states,builds:l.buildCount,resources:l.resources.size,time:ui.store.get('playback').t_s,case:ui.store.get('result').result_id};});
+ report.on=await inspect();assert(report.on.rows.length>0);for(const row of report.on.rows){assert.equal(row.cross,!row.open);assert.equal(row.color,row.open?'62dcb0':'c0cbd3');assert.equal(row.open,report.on.states[row.id].open);}
+ report.mappedIds=[...new Set(report.on.rows.map(r=>r.id))];report.notDrawn=Object.keys(report.on.states).filter(id=>!report.mappedIds.includes(id));
+ await p.screenshot({path:path.join(out,'S09-1420-fixed.png')});await p.locator('#shellTab-display').click();await p.locator('#displayFixedOpenings').uncheck();
+ report.off=await inspect();assert.equal(report.off.rows.length,0);assert.equal(report.off.builds,report.on.builds);assert.equal(report.off.resources,report.on.resources);assert.equal(report.off.case,report.on.case);assert.equal(report.off.time,report.on.time);
+ await p.screenshot({path:path.join(out,'S09-1420-off.png')});await p.locator('#displayFixedOpenings').check();report.restored=await inspect();assert.deepEqual(report.restored,report.on);
+ // Unrelated building evidence must never be drawn.
+ report.mismatch=await p.evaluate(()=>{const ui=window.__ui,review=ui.store.get('buildingReview'),doors=structuredClone(review.doors);doors.fixed_state.building_sha256='other';ui.store.dispatch('buildingReview/set',{doors});ui.render();const l=ui.layers.find(l=>l.constructor.id==='openings'),active=l.frame.fixedOpenings;ui.store.dispatch('buildingReview/set',{doors:review.doors});ui.render();return active;});assert.equal(report.mismatch,null);
+ await p.locator('#shellTab-result').click();await p.screenshot({path:path.join(out,'S09-1420-restored.png')});
+ await p.locator('#shellBuilding').selectOption({label:'완도 저온창고'});await p.waitForFunction(()=>document.getElementById('wandoExterior'));await p.locator('#shellTab-display').click();await p.waitForFunction(()=>document.getElementById('displayFixedOpenings')?.disabled);report.wandoUnavailable=true;
+ assert.deepEqual(report.errors,[]);assert(report.posts.every(url=>url.endsWith('/cfbt/lite/ai/reports/list')));
+}finally{fs.writeFileSync(path.join(out,'verification.json'),JSON.stringify(report,null,2));await browser.close();}

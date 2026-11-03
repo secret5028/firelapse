@@ -115,6 +115,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  // Display controls must update the GPU on input, including paused/throttled
  // animation loops in embedded or background viewers. Dispose owns this listener.
  cleanup.push(store.subscribe('realView',render));
+ cleanup.push(store.subscribe('openings',render));
+ cleanup.push(store.subscribe('buildingReview',render));
  function frame(){if(!ready||disposed)return;const ms=clock.now();
   if(document.hidden){last=ms;return;}
   if(store.get('playback').playing){fractional+=Math.min(.2,Math.max(0,(ms-last)/1000))*store.get('playback').speed;

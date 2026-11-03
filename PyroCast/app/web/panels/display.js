@@ -1,5 +1,6 @@
 import {createDisplayPolicy} from './display_policy.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
+import {fixedOpeningsFor} from '../state/fixed_openings.js';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
@@ -22,6 +23,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#42e8ff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#ffc342',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
+ toggle($('displayLayers'),'displayFixedOpenings','확정 급기 보기','#62dcb0',()=>store.get('openings').fixed,fixed=>store.dispatch('openings/set',{fixed}),false,'다음 계산에 적용할 확정 입력입니다. 현재 재생 사례의 개폐 상태와 다를 수 있습니다. 사각형은 열림, ×는 닫힘(누설 포함). 외부 창은 기존 강조 필터와 카메라 방향을 따릅니다.');
  for(const [key,id,label] of [['cellOutline','displayCellOutline','셀 점선'],['floorTint','displayFloorTint','바닥 틴트'],['smokeInterface','displaySmokeInterface','연기 경계면'],['boundaryDots','displayBoundaryDots','경계 ±30 ℃ 점선']])toggle($('displayLayers'),id,label,'#9ca3af',()=>store.get('displayDetails')[key],visible=>store.dispatch('displayDetails/set',{[key]:visible}));
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
@@ -52,6 +54,8 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ const fixedLegend=document.createElement('span');fixedLegend.className='legendChip';fixedLegend.id='legend-fixedOpenings';fixedLegend.hidden=true;
+ fixedLegend.title='확정된 다음 실행 입력 · 현재 재생 결과의 개폐 상태가 아닙니다. 닫힘에는 누설 면적이 남을 수 있습니다.';meaning.prepend(fixedLegend);
  for(const [i,name,color] of [[0,'① 초기','#c41f05'],[1,'② 성장','#ffae23'],[2,'③ 최성','#fffad9'],[3,'④ 산소 부족','#8c0800']]){
   const chip=document.createElement('span');chip.className='legendChip';chip.id='legend-stage'+i;chip.hidden=true;chip.innerHTML=`<i style="background:${color}"></i><span>${name}</span>`;meaning.append(chip);
  }
@@ -78,6 +82,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
+   const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
+   $('displayFixedOpenings').disabled=!fixed;
+   fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);
+   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`확정 급기 · ${fixed.sample_id||'사용자 지정'} · 다음 실행 입력 `);for(const [text,color] of [['□ 열림','#62dcb0'],['⊠ 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core&&store.get('floor').floor_id===null,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';
@@ -88,7 +96,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   $('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('displayTemperature').value=rv.temperaturePattern;$('liteOpacity').value=rv.smokeOpacity;syncPlumeLegend();
   for(const {key,input,output} of gains){const value=Math.round(rv[key]*100);input.value=value;output.textContent=value+'%';input.setAttribute('aria-valuetext',value+'%');}
  }
- for(const slice of ['layers','openings','realView','risk','route','displayDetails','floor'])cleanups.push(store.subscribe(slice,sync));sync();
+ for(const slice of ['layers','openings','realView','risk','route','displayDetails','floor','building','buildingReview'])cleanups.push(store.subscribe(slice,sync));sync();
  function hud({building,result,series,index,selection}){
   const rooms=building.floors.flatMap(f=>f.rooms),room=rooms.find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),s=cell?series.cells[cell]:null;
   const allowed=!!isOriginAllowed(room?.room_id);$('hudOrigin').disabled=!allowed;$('hudOrigin').title=allowed?'선택한 원래 방을 탐색 화점으로 지정합니다':'화점 지정 가능한 실을 선택하세요';

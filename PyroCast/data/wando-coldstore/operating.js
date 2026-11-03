@@ -1,7 +1,7 @@
 // Dimension-only CAD bootstrap; all panels, playback and layers are production.
 import * as T from '/vendor/three.module.js';
 import {OrbitControls} from '/vendor/OrbitControls.js';
-import {attach} from '/cfbt/overlay.js?v=hose-depth-1';
+import {attach} from '/cfbt/overlay.js?v=wall-lines-1';
 import {createIncidentLayer} from './incident-layer.js';
 import {createExteriorLayer} from './exterior-layer.js';
 import {createScaleReference} from './scale-reference.js';

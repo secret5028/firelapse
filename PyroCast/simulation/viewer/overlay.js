@@ -856,7 +856,7 @@ function readLegacyBuildingSource({building,groups,sourceHash}){
    if(!object.isMesh&&!object.isLine)throw Error('Unsupported install-coloured CAD object: '+object.type);
    objects.push(object);styles.push(Object.freeze(style));
   });
-  return Object.freeze({id:f.name,group,objects:Object.freeze(objects),styles:Object.freeze(styles)});
+  return Object.freeze({id:f.name,floor:f,group,objects:Object.freeze(objects),styles:Object.freeze(styles)});
  });return Object.freeze({source_hash:sourceHash,floors:Object.freeze(floors)});
 }
 
@@ -892,10 +892,74 @@ function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
 return {readLegacyCoreSource};
 })();
 
-// app/web/layers/building.js
+// app/web/layers/wall_opening_lines.js
 const __module19=(()=>{
+// Display-only subtraction of opening interiors from CAD wall line segments.
+// Coordinates are floor-local; opening frames and wall meshes are never edited.
+function wallOpeningVolumes(floor,time=0){
+ const cuts=[];
+ for(const o of floor.openings||[]){
+  if(!['door','window'].includes(o.kind))continue;
+  let fraction=1;if(o.display_schedule){fraction=0;for(const [t,f] of o.display_schedule)if(t<=time)fraction=f;}
+  if(!(fraction>0))continue;
+  const rings=o.polys?.length?o.polys:(o.geometry_polys||[]).map(p=>p.o),points=rings.flat();
+  let spans=(o.leaves||[]).filter(l=>l.hinge&&l.closed).map(l=>[l.hinge,l.closed]);
+  if(!spans.length){let longest=0,span=null;for(const ring of rings)for(let i=0;i<ring.length;i++){
+   const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;span=[a,b];}
+  }if(span)spans=[span];}
+  const bottom=o.kind==='door'?(o.sill_m??0):(o.sill_m??o.sill??floor.sill??.9),top=o.kind==='door'?(o.door_h??floor.door_h??2.1):(o.head??floor.head??2.4);
+  if(!(top>bottom))continue;
+  for(const [a,b] of spans){const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!(length>.02))continue;
+   const u=[(b[0]-a[0])/length,(b[1]-a[1])/length],v=[-u[1],u[0]],along=p=>p[0]*u[0]+p[1]*u[1],across=p=>p[0]*v[0]+p[1]*v[1];
+   // Window footprint may have several fragments: use its entire projected span.
+   let lo=along(a),hi=along(b);if(o.kind==='window'&&points.length){lo=Math.min(...points.map(along));hi=Math.max(...points.map(along));}
+   const center=(lo+hi)/2,half=(hi-lo)*fraction/2;
+   const normal=across(a),near=points.length?Math.min(normal,...points.map(across)):normal-.075,far=points.length?Math.max(normal,...points.map(across)):normal+.075;
+   cuts.push({id:o.id,u,v,min:[center-half+.005,near-.015,bottom===0?-.015:bottom+.005],max:[center+half-.005,far+.015,top-.005]});
+  }
+ }
+ return cuts;
+}
+function outsideOpeningIntervals(a,b,cuts){
+ let kept=[[0,1]];
+ for(const c of cuts){
+  const project=p=>[p[0]*c.u[0]+p[1]*c.u[1],p[0]*c.v[0]+p[1]*c.v[1],p[2]],p=project(a),q=project(b);
+  let lo=0,hi=1,hit=true;
+  for(let k=0;k<3;k++){const d=q[k]-p[k];if(Math.abs(d)<1e-10){if(p[k]<c.min[k]||p[k]>c.max[k]){hit=false;break;}}
+   else {let x=(c.min[k]-p[k])/d,y=(c.max[k]-p[k])/d;if(x>y)[x,y]=[y,x];lo=Math.max(lo,x);hi=Math.min(hi,y);if(hi<=lo){hit=false;break;}}}
+  if(!hit||hi<=lo)continue;
+  kept=kept.flatMap(([x,y])=>hi<=x||lo>=y?[[x,y]]:[[x,Math.min(y,lo)],[Math.max(x,hi),y]].filter(([i,j])=>j-i>1e-8));
+  if(!kept.length)break;
+ }
+ return kept;
+}
+function trimWallLineGeometry(T,source,floorGroup,cuts){
+ if(!source.isLineSegments||!(source.userData.cadOutline||/_(edge|wall)(_|$)/i.test(source.name||''))||!cuts.length)return null;
+ const g=source.geometry,pos=g?.attributes.position;if(!pos)return null;
+ source.updateWorldMatrix(true,false);floorGroup.updateWorldMatrix(true,false);
+ const transform=new T.Matrix4().copy(floorGroup.matrixWorld).invert().multiply(source.matrixWorld),a=new T.Vector3(),b=new T.Vector3(),arrays={};
+ for(const name of Object.keys(g.attributes))arrays[name]=[];
+ let changed=false;const count=g.index?.count??pos.count,start=g.drawRange.start||0,end=Math.min(count,start+g.drawRange.count);
+ for(let i=start;i+1<end;i+=2){const ia=g.index?g.index.getX(i):i,ib=g.index?g.index.getX(i+1):i+1;
+  a.fromBufferAttribute(pos,ia).applyMatrix4(transform);b.fromBufferAttribute(pos,ib).applyMatrix4(transform);
+  const intervals=outsideOpeningIntervals(a.toArray(),b.toArray(),cuts);if(intervals.length!==1||intervals[0][0]!==0||intervals[0][1]!==1)changed=true;
+  for(const [lo,hi] of intervals)for(const t of [lo,hi])for(const [name,attr] of Object.entries(g.attributes))for(let k=0;k<attr.itemSize;k++){
+   const x=attr.getComponent(ia,k),y=attr.getComponent(ib,k);arrays[name].push(x+(y-x)*t);
+  }
+ }
+ if(!changed)return null;
+ const result=new T.BufferGeometry();for(const [name,values] of Object.entries(arrays))result.setAttribute(name,new T.Float32BufferAttribute(values,g.attributes[name].itemSize));
+ result.computeBoundingSphere();return result;
+}
+
+return {wallOpeningVolumes,outsideOpeningIntervals,trimWallLineGeometry};
+})();
+
+// app/web/layers/building.js
+const __module20=(()=>{
 const {EmptyLayer,createEmptyLayers}=__module8;
 const {applyRenderPolicy}=__module3;
+const {wallOpeningVolumes,trimWallLineGeometry}=__module19;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -903,7 +967,7 @@ class BuildingLayer extends EmptyLayer {
   this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;}
  clearGeometry(){for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
-  this.materialState.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;}
+  this.materialState.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.openingSignature=null;this.trimmedLines=0;}
  build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
   for(const floor of asset.floors){const g=new T.Group();g.name=floor.id;g.position.copy(floor.group.position);g.quaternion.copy(floor.group.quaternion);g.scale.copy(floor.group.scale);this.group.add(g);this.floorGroups.set(floor.id,g);
    const parents=new Map([[floor.group,g]]);
@@ -920,6 +984,15 @@ class BuildingLayer extends EmptyLayer {
    }
   }
  }
+ trimOpenings(time){
+  const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
+  if(signature===this.openingSignature)return;this.openingSignature=signature;this.trimmedLines=0;
+  const volumes=floors.map(f=>wallOpeningVolumes(f.floor||{},time));
+  for(const resource of this.resources)resource.dispose();this.resources.clear();
+  floors.forEach((floor,i)=>{for(const source of floor.objects){const object=this.sourceObjects.get(source);if(!object?.isLineSegments)continue;
+   const clipped=trimWallLineGeometry(this.THREE,source,floor.group,volumes[i]);object.geometry=clipped?this.own(clipped):source.geometry;if(clipped)this.trimmedLines++;
+  }});
+ }
  // Newly included stairs/glass may sit inside transformed or hidden groups.
  // Preserve that hierarchy instead of flattening their local coordinates.
  syncSource(){for(const {source,object} of this.bindings){object.visible=source.visible;object.position.copy(source.position);object.quaternion.copy(source.quaternion);object.scale.copy(source.scale);}
@@ -930,10 +1003,11 @@ class BuildingLayer extends EmptyLayer {
    if(frame.building&&(!asset||asset.source_hash!==frame.building.source_hash))throw Error('Missing/mismatched CAD geometry; no room-box fallback');
    if(asset!==this.asset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
+  this.trimOpenings(frame.t_s??0);
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
- diagnostics(){return {buildCount:this.buildCount,ownedMaterials:0,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size};}
+ diagnostics(){return {buildCount:this.buildCount,ownedMaterials:0,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines};}
  dispose(){this.clearGeometry();this.lastBuilding=null;this.lastResult=null;this.geometryFor=null;super.dispose();}
 }
 function createBuildingLayers(THREE,options){return [new BuildingLayer(THREE,options),...createEmptyLayers(THREE).filter(layer=>layer.constructor.id!=='building')];}
@@ -942,7 +1016,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module20=(()=>{
+const __module21=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -984,10 +1058,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module21=(()=>{
+const __module22=(()=>{
 const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
-const {exteriorWindowFace}=__module20;
+const {exteriorWindowFace}=__module21;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -1054,7 +1128,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module22=(()=>{
+const __module23=(()=>{
 const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
 
@@ -1106,7 +1180,7 @@ return {CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module23=(()=>{
+const __module24=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1180,7 +1254,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module24=(()=>{
+const __module25=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1188,7 +1262,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module25=(()=>{
+const __module26=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1196,7 +1270,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module26=(()=>{
+const __module27=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1204,11 +1278,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module27=(()=>{
-const {createRealViewSession}=__module23;
-const {createSmokeLayer}=__module24;
-const {createFlameLayer}=__module25;
-const {createPlumeLayer}=__module26;
+const __module28=(()=>{
+const {createRealViewSession}=__module24;
+const {createSmokeLayer}=__module25;
+const {createFlameLayer}=__module26;
+const {createPlumeLayer}=__module27;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1218,7 +1292,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module28=(()=>{
+const __module29=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1295,10 +1369,10 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module29=(()=>{
+const __module30=(()=>{
 const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module28;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module29;
 const {roomFgiRollover}=__module4;
 
 const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
@@ -1406,7 +1480,7 @@ return {RiskLayer};
 })();
 
 // app/web/scene/picking.js
-const __module30=(()=>{
+const __module31=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -1414,11 +1488,11 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/selection.js
-const __module31=(()=>{
+const __module32=(()=>{
 const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
-const {joinedSelectionRibbons}=__module28;
-const {ROOM_PICK_LAYER}=__module30;
+const {joinedSelectionRibbons}=__module29;
+const {ROOM_PICK_LAYER}=__module31;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1464,9 +1538,9 @@ return {SelectionLayer};
 })();
 
 // app/web/scene/host.js
-const __module32=(()=>{
+const __module33=(()=>{
 const {createEmptyLayers}=__module8;
-const {ROOM_PICK_LAYER}=__module30;
+const {ROOM_PICK_LAYER}=__module31;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1537,7 +1611,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module33=(()=>{
+const __module34=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1582,7 +1656,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/shell.js
-const __module34=(()=>{
+const __module35=(()=>{
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1654,7 +1728,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module35=(()=>{
+const __module36=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -1687,8 +1761,8 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module36=(()=>{
-const {createDisplayPolicy}=__module35;
+const __module37=(()=>{
+const {createDisplayPolicy}=__module36;
 const {roomFgiRollover}=__module4;
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -1804,7 +1878,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module37=(()=>{
+const __module38=(()=>{
 const {infoTip}=__module11;
 const {roomFgiRollover}=__module4;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
@@ -1887,7 +1961,7 @@ return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createR
 })();
 
 // app/web/adapters/attention.js
-const __module38=(()=>{
+const __module39=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -1904,7 +1978,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module39=(()=>{
+const __module40=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -1956,9 +2030,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module40=(()=>{
-const {attentionRanking}=__module38;
-const {savedAttention}=__module39;
+const __module41=(()=>{
+const {attentionRanking}=__module39;
+const {savedAttention}=__module40;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2027,7 +2101,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module41=(()=>{
+const __module42=(()=>{
 const {createAIFuelPanel}=__module0;
 const {createAssistantPanel}=__module1;
 const {attachExport}=__module2;
@@ -2043,18 +2117,18 @@ const {adaptBuilding,adaptResult,adaptScreening}=__module15;
 const {readLegacyBuildingSource}=__module16;
 const {readLegacyOpeningsSource}=__module17;
 const {readLegacyCoreSource}=__module18;
-const {BuildingLayer}=__module19;
-const {OpeningsLayer}=__module21;
-const {CoreLayer}=__module22;
-const {createRealViewLayers}=__module27;
-const {RiskLayer}=__module29;
-const {SelectionLayer}=__module31;
-const {createSceneHost}=__module32;
-const {createLitePanel,updateLitePanel}=__module33;
-const {createPanelShell}=__module34;
-const {createDisplayPanel}=__module36;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module37;
-const {createExplorePanel}=__module40;
+const {BuildingLayer}=__module20;
+const {OpeningsLayer}=__module22;
+const {CoreLayer}=__module23;
+const {createRealViewLayers}=__module28;
+const {RiskLayer}=__module30;
+const {SelectionLayer}=__module32;
+const {createSceneHost}=__module33;
+const {createLitePanel,updateLitePanel}=__module34;
+const {createPanelShell}=__module35;
+const {createDisplayPanel}=__module37;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module38;
+const {createExplorePanel}=__module41;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2250,8 +2324,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module42=(()=>{
-const {attachModern}=__module41;
+const __module43=(()=>{
+const {attachModern}=__module42;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2266,4 +2340,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module42.attach;
+export const attach=__module43.attach;

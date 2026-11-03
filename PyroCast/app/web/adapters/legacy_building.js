@@ -18,6 +18,6 @@ export function readLegacyBuildingSource({building,groups,sourceHash}){
    if(!object.isMesh&&!object.isLine)throw Error('Unsupported install-coloured CAD object: '+object.type);
    objects.push(object);styles.push(Object.freeze(style));
   });
-  return Object.freeze({id:f.name,group,objects:Object.freeze(objects),styles:Object.freeze(styles)});
+  return Object.freeze({id:f.name,floor:f,group,objects:Object.freeze(objects),styles:Object.freeze(styles)});
  });return Object.freeze({source_hash:sourceHash,floors:Object.freeze(floors)});
 }

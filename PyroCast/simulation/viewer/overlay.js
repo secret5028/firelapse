@@ -1737,7 +1737,7 @@ function createPanelShell({panel,store}){
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"><div id="shellMarks" aria-hidden="true"></div></div><output id="shellClock"></output><span id="shellStatus"></span>';
  document.body.append(header,sidebar,timeline);move($('fbtn'),header);
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
- for(const [label,url] of [['기존 3F 건물','http://127.0.0.1:8780/cad-result/d018b4bb75da4475b1fd75447603c1a0/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
+ for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
  const tabs=[],panes=[];

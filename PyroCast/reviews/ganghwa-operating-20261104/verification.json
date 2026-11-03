@@ -1,0 +1,45 @@
+{
+  "errors": [],
+  "posts": [
+    "http://127.0.0.1:8832/cfbt/lite/ai/reports/list",
+    "http://127.0.0.1:8780/cfbt/lite/ai/reports/list",
+    "http://127.0.0.1:8780/cfbt/lite/ai/reports/list",
+    "http://127.0.0.1:8780/cfbt/lite/ai/reports/list",
+    "http://127.0.0.1:8832/cfbt/lite/ai/reports/list"
+  ],
+  "captures": [
+    "S09-1420-operating.png",
+    "D1-operating.png",
+    "W2-operating.png"
+  ],
+  "url": "http://127.0.0.1:8780/cad-result/90d3c325f238a3c4/model.html",
+  "scene": {
+    "building": "강화 공장",
+    "case": "S09",
+    "time": 1420,
+    "diagnostics": {
+      "buildCount": 1,
+      "ownedMaterials": 0,
+      "borrowedMaterials": 701,
+      "floors": 9,
+      "drawObjects": 1222,
+      "trimmedLines": 39
+    }
+  },
+  "D1": {
+    "id": "D1",
+    "kind": "door",
+    "top": 2.1,
+    "clippedLines": 39,
+    "clippedMeshes": 39
+  },
+  "W2": {
+    "id": "W2",
+    "kind": "window",
+    "top": 3,
+    "clippedLines": 39,
+    "clippedMeshes": 39
+  },
+  "returnToWando": true,
+  "simulationRequests": 0
+}

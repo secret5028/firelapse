@@ -212,9 +212,14 @@ def main():
         def json(self,value,code=200):return self.send_data(json.dumps(value,ensure_ascii=False).encode(),'application/json; charset=utf-8',code)
         def do_GET(self):
             path=unquote(urlsplit(self.path).path);prefix='/cad-result/'+job+'/'
+            # A server instance owns one building. Keep its entry URL stable
+            # when an extracted model moves or its content-derived ID changes.
+            old_model=re.fullmatch(r'/cad-result/[a-f0-9]{16,64}/model\.html',path)
+            if path in ('/','/model.html') or (old_model and path!=prefix+'model.html'):
+                query=urlsplit(self.path).query
+                self.send_response(302);self.send_header('Location',prefix+'model.html'+('?' + query if query else ''))
+                self.send_header('Cache-Control','no-store');self.end_headers();return
             if path==prefix+'building.json':return self.json(building)
-            if path=='/':
-                self.send_response(302);self.send_header('Location',prefix+'model.html');self.end_headers();return
             if path=='/cfbt/model-info':
                 return self.json({'building_sha256':sha,'floors':[{'name':f['name'],'rooms':[{'id':r['id'],'area_m2':r.get('area',0)} for r in f['rooms'] if 'outdoor' not in r.get('tags',[])]} for f in building['floors'] if f.get('rooms')]})
             if path.startswith('/cfbt/reuse/'):

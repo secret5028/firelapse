@@ -13,6 +13,17 @@ IMPORT=re.compile(r"^import\s+\{([^}]+)\}\s+from\s+['\"]([^'\"]+)['\"];",re.M)
 EXPORT=re.compile(r'\bexport\s+(?:async\s+)?(?:function|class|const|let)\s+(\w+)')
 
 def build(output):
+    # Generated value-transfer module: display constants have one editable source.
+    import json
+    config=json.loads((ROOT/'config/display.json').read_text('utf-8'))
+    if not (0 <= config['soot_default'] <= 1 and config['glow_full_C'] > config['glow_start_C']):
+        raise ValueError('Invalid display configuration')
+    renderer=ROOT/'simulation/viewer/legacy_real_view.js'
+    text=renderer.read_text('utf-8')
+    block='// BEGIN generated display config\nexport const displayConfig = '+json.dumps(config,ensure_ascii=False,indent=2)+';\n// END generated display config'
+    text,count=re.subn(r'// BEGIN generated display config[\s\S]*?// END generated display config',lambda m:block,text)
+    if count!=1:raise ValueError('Missing display config marker')
+    renderer.write_text(text,encoding='utf-8',newline='\n')
     modules={};ordered=[];externals={};visiting=set()
     def visit(file):
         file=file.resolve()

@@ -1,0 +1,14 @@
+Added	Deleted	File
+21	0	PyroCast/app/tests/b5_classification.mjs
+39	0	PyroCast/app/tests/b5_display.mjs
+1	1	PyroCast/app/web/layers/real_view.js
+11	0	PyroCast/app/web/panels/display.js
+3	1	PyroCast/app/web/state/store.js
+11	0	PyroCast/config/display.json
+1	1	PyroCast/data/wando-coldstore/P1-playback.json
+21	3	PyroCast/simulation/viewer/legacy_real_bridge.js
+70	7	PyroCast/simulation/viewer/legacy_real_view.js
+15	2	PyroCast/simulation/viewer/overlay.js
+11	0	PyroCast/tools/build_ui_bundle.py
+72	0	PyroCast/tools/enrich_b5_playback.py
+59	0	PyroCast/tools/report_b5.py

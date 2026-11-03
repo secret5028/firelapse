@@ -33,6 +33,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const oldTemperature=$('liteHeatSmoke').closest('label');oldTemperature.remove();
  const pattern=document.createElement('label');pattern.innerHTML='온도 무늬 <select id="displayTemperature"><option value="current">현재</option><option value="weak" selected>약하게</option><option value="off">끔</option></select><span class="displayInfo" tabindex="0" title="계산된 온도 그대로 무늬를 표시하거나 끕니다. 온도 입력은 변경하지 않습니다.">ⓘ</span>';$('displaySmokeSettings').append(pattern);
  listen($('displayTemperature'),'change',()=>store.dispatch('realView/set',{temperaturePattern:$('displayTemperature').value}));
+ for(const [key,id,label,option,text] of [['smokeMode','displaySmokeMode','연기 표현','soot','그을음·온도'],['flameStyle','displayFlameStyle','화염 표현','four_stage','4단계']]){
+  const row=document.createElement('label');row.innerHTML=`${label} <select id="${id}"><option value="current">현재</option><option value="${option}">${text}</option></select>`;$('displaySmokeSettings').append(row);
+  listen($(id),'change',()=>store.dispatch('realView/set',{[key]:$(id).value}));
+ }
  const gainControls=document.createElement('div');gainControls.id='sceneGainControls';gainControls.setAttribute('aria-label','연기·화염 표시 배율');$('v').append(gainControls);
  const gains=[];
  for(const [key,label,min,max] of [['smokeGain','연기 농도',30,150],['flameGain','화염 밝기',50,200]]){
@@ -48,6 +52,9 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ for(const [i,name,color] of [[0,'① 초기','#c41f05'],[1,'② 성장','#ffae23'],[2,'③ 최성','#fffad9'],[3,'④ 산소 부족','#8c0800']]){
+  const chip=document.createElement('span');chip.className='legendChip';chip.id='legend-stage'+i;chip.hidden=true;chip.innerHTML=`<i style="background:${color}"></i><span>${name}</span>`;meaning.append(chip);
+ }
  const rolloverBadge=document.createElement('b');rolloverBadge.id='fgiRolloverBadge';rolloverBadge.hidden=true;rolloverBadge.style.color='#f97316';rolloverBadge.title='FGI 부속 상태 · 보라 리본의 주황 점. 독립 지수 아님.';$('legend-FGI').append(rolloverBadge);
  $('liteLegend').remove();
  const vehicleMarker=document.createElement('span');vehicleMarker.className='displayVehicleMarker';vehicleMarker.textContent='차량';vehicleMarker.title='경로 차량 위치 · 표시 기호';vehicleMarker.hidden=true;$('v').append(vehicleMarker);
@@ -73,6 +80,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core&&store.get('floor').floor_id===null,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
+  $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';
+  $('legend-smokeLayer').title=rv.smokeMode==='soot'?'색상은 표시 규칙입니다. 450~800 ℃에서 암적→빨강 발광. 실제 빛의 방출 계산 아님.':'';
+  for(let i=0;i<4;i++)$('legend-stage'+i).hidden=!(visible.flame&&rv.flameStyle==='four_stage');
+  $('displaySmokeMode').value=rv.smokeMode;$('displayFlameStyle').value=rv.flameStyle;
   $('legend-smoke').lastElementChild.textContent=`주의 ${t.caution}~${t.ribbon-1}`;$('hudHistory').setAttribute('aria-pressed',String(r.history));
   $('displayRibbon').value=t.ribbon;$('displayCaution').value=t.caution;$('displayTemperature').value=rv.temperaturePattern;$('liteOpacity').value=rv.smokeOpacity;syncPlumeLegend();
   for(const {key,input,output} of gains){const value=Math.round(rv[key]*100);input.value=value;output.textContent=value+'%';input.setAttribute('aria-valuetext',value+'%');}

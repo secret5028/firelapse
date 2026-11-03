@@ -1,4 +1,4 @@
-import {createLegacyRealistic} from './legacy_real_view.js';
+import {createLegacyRealistic,displayConfig} from './legacy_real_view.js';
 import {riskFor} from './risk.js';
 
 import {gasVisualState} from './gas_visual.js';
@@ -51,8 +51,25 @@ export function createRealView(viewer,data,parent){
   if(note)note.textContent='보라·청록은 고온 가스 구분색이며 불꽃이 아닙니다. 간략 엔진 결과에 CFAST 계열 상관식을 적용한 보조 표시로, 순정 CFAST 출력·실제 속도장과 동일하지 않습니다. 흐르는 무늬는 표시 효과입니다.';
  }
  let active=false;
+ // A separate display-input clock also survives 20 s standalone exports.
+ const inputs=data.display_inputs??{},inputTimes=inputs.time_s??data.time_s;
+ const inputAt=(array,t)=>{if(!array?.length)return null;let lo=0,hi=inputTimes.length-1;while(lo<hi){const m=Math.ceil((lo+hi)/2);if(inputTimes[m]<=t)lo=m;else hi=m-1;}const a=array[lo],b=array[Math.min(lo+1,array.length-1)];if(!Number.isFinite(a))return null;const dt=(inputTimes[lo+1]??inputTimes[lo])-inputTimes[lo];return dt>0&&Number.isFinite(b)?a+(b-a)*Math.max(0,Math.min(1,(t-inputTimes[lo])/dt)):a;};
+ const solverFor=key=>rowMap.get(key)?.solver;
+ function combustionInputs(sample,time){
+  for(const f of fires){const s=solverFor(f.room_key),saved=inputs.fires?.[f.id]??{},upper=(f.base_height??0)>sample(s.h),o=upper?s.Ou:s.Ol;
+   f.combustion={supply_kW:inputAt(saved.Q_fuel_kW,time),oxygen_fraction:o?.length?sample(o):null,oxygen_basis:upper?'source upper layer':'source lower layer',Tu:sample(s.Tu),basis:saved.basis??'supply unavailable'};
+  }
+  for(const jet of jetDisplay.jets){const s=solverFor(jet.room_key),donor=data.rooms.find(r=>r.solver_id===jet.from),f=fires.find(f=>f.room_key===donor?.key),hoc=inputs.fires?.[f?.id]?.heat_of_combustion_kJ_kg;
+   jet.combustion={supply_kW:jet.fuel_in_kg_s?.length&&hoc>0?sample(jet.fuel_in_kg_s)*hoc:null,oxygen_fraction:s.Ol?.length?sample(s.Ol):null,oxygen_basis:'receiving lower layer',Tu:sample(s.Tu),basis:'receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply'};
+  }
+  const byQ=(a,b)=>sample(b.hrr)-sample(a.hrr)||a.id.localeCompare(b.id),active=fires.filter(f=>sample(f.hrr)>0).sort(byQ);
+  for(const row of rows){const local=active.filter(f=>f.room_key===row.key),incoming=jetDisplay.jets.filter(j=>j.room_key===row.key&&j.q>0).sort((a,b)=>b.q-a.q||a.id.localeCompare(b.id));
+   const donor=data.rooms.find(r=>r.solver_id===incoming[0]?.from),source=local[0]??active.find(f=>f.room_key===donor?.key)??active[0],saved=inputs.fires?.[source?.id],valid=Number.isFinite(saved?.soot_yield);
+   row.soot={value:valid?saved.soot_yield:displayConfig.soot_default,source:source?.id??null,basis:!valid?'configured default':local.length?'dominant local HRR':donor?'receiving-jet donor':'building dominant HRR proxy (no species source tracing)'};
+  }
+ }
  return {
-  update({enabled,time,sample,floor,smokeEnabled,smokeOpacity=1,smokeGain=1,flameGain=1,flameDisplay='compact',riskMode=false,phenomenon='all',customRiskBoundaries=false,legacySmokeTexture=false,plumesEnabled=true,temperatureSmoke=false,noiseAmp=1,noiseScale=1,rampMode=0}){
+  update({enabled,time,sample,floor,smokeEnabled,smokeOpacity=1,smokeGain=1,flameGain=1,flameDisplay='compact',smokeMode='current',flameStyle='current',riskMode=false,phenomenon='all',customRiskBoundaries=false,legacySmokeTexture=false,plumesEnabled=true,temperatureSmoke=false,noiseAmp=1,noiseScale=1,rampMode=0}){
    active=enabled;layer.visible=enabled;
    const legend=document.getElementById('cfPlumeLegend');if(legend)legend.hidden=!enabled;
    if(!enabled)return;
@@ -61,8 +78,9 @@ export function createRealView(viewer,data,parent){
       r.solver.single_zone?0:sample(r.solver.h),displaySmokeDensity(sample(r.solver.ODu),legacySmokeTexture),r.solver.single_zone?0:displaySmokeDensity(sample(r.solver.ODl),legacySmokeTexture)]]));
    for(const fire of fires){fire.area=Math.max(.001,sample(fire.area_series));fire.plume_inputs.area=fire.area;}
    for(const jet of jetDisplay.jets)jet.q=Math.max(0,sample(jet.HRR_kW));
+   combustionInputs(sample,time);
    renderer.setState({enabled:true,realView:true,time,step:data.time_s[1]-data.time_s[0],cached,
-      smokeEnabled,smokeOpacity,smokeGain,flameGain,flameDisplay,plumesEnabled,temperatureSmoke,noiseAmp,noiseScale,rampMode,darkSmoke:legacySmokeTexture,flamesEnabled:true,gasFlamesEnabled:false,q:0,h:0,
+      smokeEnabled,smokeOpacity,smokeGain,flameGain,flameDisplay,smokeMode,flameStyle,plumesEnabled,temperatureSmoke,noiseAmp,noiseScale,rampMode,darkSmoke:legacySmokeTexture,flamesEnabled:true,gasFlamesEnabled:false,q:0,h:0,
       gasStates:new Map(rows.map(r=>[r.key,gasVisualState({time,times:data.time_s,
          power:r.solver.Qbulk_kW,assumption:data.ignition_assumption,room:data.rooms.find(x=>x.key===r.key).solver_id})])),
       positiveHrrOnly:data.engine_kind==='pyrocast_lite',

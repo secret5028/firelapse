@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {flameFourStage} from '../../simulation/viewer/legacy_real_view.js';
+import {createStore} from '../web/state/store.js';
+const normal={supply_kW:1000,oxygen_fraction:.206};
+assert.equal(flameFourStage(800,1000,normal).stage,2);
+assert.equal(flameFourStage(799,1000,normal).stage,3);
+assert.equal(flameFourStage(800,1000,{...normal,oxygen_fraction:.15}).stage,2);
+assert.equal(flameFourStage(800,1000,{...normal,oxygen_fraction:.1499}).stage,3);
+assert.equal(flameFourStage(100,1000,{oxygen_fraction:.206}).stage,0);
+assert.equal(flameFourStage(250,1000,{oxygen_fraction:.206}).stage,1);
+assert.equal(flameFourStage(900,1000,{oxygen_fraction:.206}).partial,true);
+assert.equal(flameFourStage(0,1000,{oxygen_fraction:0}).stage,null);
+// Source fuel starvation must not leak into a receiving jet's independent inputs.
+assert.equal(flameFourStage(172,2500,{supply_kW:2930,oxygen_fraction:.2056}).stage,3);
+assert.equal(flameFourStage(902,1000,{supply_kW:null,oxygen_fraction:.2056}).stage,2);
+assert.equal(flameFourStage(902,1000,{supply_kW:null,oxygen_fraction:null}).supply_ratio,null);
+const store=createStore();assert.equal(store.get('realView').smokeMode,'current');
+assert.equal(store.get('realView').flameStyle,'current');
+for(const s of [{smokeMode:'soot',flameStyle:'four_stage'},{smokeMode:'current',flameStyle:'current'}])store.dispatch('realView/set',s);
+assert.throws(()=>store.dispatch('realView/set',{smokeMode:'invalid'}));
+console.log('B5 classification, boundaries, missing-data and option roundtrip: PASS');

@@ -24,8 +24,8 @@ export class RouteLayer extends EmptyLayer {
    const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:false,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }
   if(this.vehicleSource){const vehicle=new T.Group();vehicle.rotation.x=Math.PI/2;
-   // Borrow the established reference vehicle's geometry/materials; omit human/label.
-   for(const source of this.vehicleSource.children)if(!source.isSprite&&source.position.x<=4.7)vehicle.add(source.clone());
+   // Borrow existing geometry/materials; include scale person only when requested.
+   for(const source of this.vehicleSource.children)if(!source.isSprite&&(this.vehicleSource.userData.includeScalePerson||source.position.x<=4.7))vehicle.add(source.clone());
    vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);add(vehicle,'1F',false);
   }
  }

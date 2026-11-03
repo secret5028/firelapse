@@ -4,6 +4,7 @@ import {OrbitControls} from '/vendor/OrbitControls.js';
 import {attach} from '/cfbt/overlay.js';
 import {createIncidentLayer} from './incident-layer.js';
 import {createExteriorLayer} from './exterior-layer.js';
+import {createScaleReference} from './scale-reference.js';
 const $=id=>document.getElementById(id);
 try{
  const B=await (await fetch('./operating-building.json')).json(),S=new T.Scene(),C=new T.PerspectiveCamera(45,1,.01,1500),R=new T.WebGLRenderer({antialias:true});
@@ -22,7 +23,8 @@ try{
   }}
  }
  const ref=new T.Group(),grid=new T.GridHelper(120,60,0x456071,0x263e4e);grid.rotation.x=Math.PI/2;grid.position.set(36,8,-.04);ref.add(grid);S.add(ref);
- // No reference vehicle mesh: the panel marks the existing route origin.
+ const scaleReference=createScaleReference(T);ref.add(scaleReference);
+ window.addEventListener('pagehide',()=>scaleReference.userData.dispose(),{once:true});
  let floor='1F';const setFloor=id=>{floor=id;for(const g of groups)g.visible=id==='all'||g.name===id;};$('all').onclick=()=>setFloor('all');$('floor1').onclick=()=>setFloor('1F');
  $('top').onclick=()=>{C.position.set(O.target.x,O.target.y,80);O.update();};$('iso').onclick=()=>{C.position.copy(O.target).add(new T.Vector3(25,-35,28));O.update();};$('resetView').onclick=()=>{O.target.set(36,10,3);C.position.set(85,-45,60);O.update();};
  $('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};

@@ -12,7 +12,7 @@ try{
  for(const time of [1325,1400,2100]){
   await p.evaluate(t=>{const el=document.getElementById('liteTime');el.value=t;el.oninput();window.__ui.render();},time);
   const sample=await p.evaluate(()=>{const walls=[],jets=[];window.__ui.host.scene.traverse(o=>{if(o.name.startsWith('cavity-wall-glow:'))walls.push({name:o.name,visible:o.visible,opacity:o.material.opacity,alphaMap:!!o.material.alphaMap,renderOrder:o.renderOrder,vertices:o.geometry.attributes.position.count});if(o.visible&&o.userData.doorJet)jets.push({id:o.userData.doorJet,renderOrder:o.renderOrder,...o.userData.values});});return {walls,jets};});
-  report.samples.push({time,...sample});assert(sample.jets.length>0);if(phase==='after')assert(sample.walls.every(w=>w.alphaMap&&w.opacity<=.18&&w.renderOrder<20));
+  report.samples.push({time,...sample});assert(sample.jets.length>0);if(phase==='after')assert.equal(sample.walls.length,0);
   await p.locator('#v canvas').screenshot({path:path.join(out,`${time}.png`)});
  }
  await p.evaluate(()=>{window.__ui.dispose();window.dispatchEvent(new PageTransitionEvent('pagehide'));});report.subscriptionsAfterDispose=await p.evaluate(()=>window.__ui.store.diagnostics().subscriptions);assert.equal(report.subscriptionsAfterDispose,0);assert.deepEqual(report.errors,[]);

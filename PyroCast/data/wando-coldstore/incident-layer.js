@@ -5,13 +5,13 @@ export function createIncidentLayer(T,scene,building,tactical,pane){
  const own=o=>(resources.push(o),o);
  function label(text,position,group,{width=2.5,height=.55,color='#eaf4ff',background='#132c3e',square=false}={}){
   const c=document.createElement('canvas');c.width=square?128:512;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle=background;ctx.fillRect(0,0,c.width,128);ctx.fillStyle=color;ctx.font=`bold ${square?100:58}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,c.width/2,65);
-  const s=new T.Sprite(own(new T.SpriteMaterial({map:own(new T.CanvasTexture(c)),transparent:true,depthTest:false,depthWrite:false})));
+  const s=new T.Sprite(own(new T.SpriteMaterial({map:own(new T.CanvasTexture(c)),transparent:true,depthTest:true,depthWrite:false})));
   s.position.fromArray(position);s.scale.set(width,height,1);s.renderOrder=81;s.raycast=()=>{};group.add(s);return s;
  }
  for(const o of building.obstacles||[]){
-  const mesh=new T.Mesh(own(new T.BoxGeometry(...o.size_m)),own(new T.MeshBasicMaterial({color:o.color,transparent:true,opacity:.85,depthTest:false,depthWrite:false})));
+  const mesh=new T.Mesh(own(new T.BoxGeometry(...o.size_m)),own(new T.MeshBasicMaterial({color:o.color,transparent:false,opacity:1,depthTest:true,depthWrite:true})));
   mesh.name=o.id;mesh.position.fromArray(o.center_m);mesh.renderOrder=74;mesh.userData.basis=o.basis;mesh.raycast=()=>{};obstacles.add(mesh);
-  const edge=new T.LineSegments(own(new T.EdgesGeometry(mesh.geometry)),own(new T.LineBasicMaterial({color:'#e6f5ff',transparent:true,opacity:.95,depthTest:false,depthWrite:false})));
+  const edge=new T.LineSegments(own(new T.EdgesGeometry(mesh.geometry)),own(new T.LineBasicMaterial({color:'#e6f5ff',transparent:true,opacity:.95,depthTest:true,depthWrite:false})));
   edge.position.copy(mesh.position);edge.renderOrder=75;edge.raycast=()=>{};obstacles.add(edge);
   label(o.name,[o.center_m[0],o.center_m[1],o.center_m[2]+o.size_m[2]/2+.35],obstacles,{width:o.id==='COOLER'?2.8:2});
  }

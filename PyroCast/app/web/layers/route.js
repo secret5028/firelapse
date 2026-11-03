@@ -6,27 +6,27 @@ export class RouteLayer extends EmptyLayer {
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
  clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.roomMaterials=new Map();this.riskKey=null;}
  build(result){this.clear();const T=this.THREE;
-  const makeMaterial=color=>this.own(new T.MeshBasicMaterial({color,transparent:true,opacity:1,depthTest:false,depthWrite:false,side:T.DoubleSide}));
+  // Physical ground ribbons render with solid objects, before translucent walls
+  // and smoke. Vehicles/equipment occlude them; x-ray walls remain translucent.
+  const makeMaterial=color=>this.own(new T.MeshBasicMaterial({color,transparent:false,opacity:1,depthTest:true,depthWrite:true,side:T.DoubleSide}));
   const outline=makeMaterial('#07131d');
-  const exteriorOutline=makeMaterial('#07131d');exteriorOutline.depthTest=true;
   const add=(object,floor,route=true,order=38)=>{object.renderOrder=order;object.raycast=()=>{};this.group.add(object);this.items.push({object,floor,route});};
   for(const s of result.segments||[]){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
-   if(!this.roomMaterials.has(s.room))this.roomMaterials.set(s.room,makeMaterial(ROUTE_CLEAR));
-   // Exterior hose lies on the ground and must be occluded by the solid truck.
-   // Interior risk paths keep their existing through-smoke presentation.
-   const exterior=s.room===null;
-   this.roomMaterials.get(s.room).depthTest=exterior;
+   if(!this.roomMaterials.has(s.room)){
+    const material=makeMaterial(ROUTE_CLEAR);material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
+    this.roomMaterials.set(s.room,material);
+   }
    const d=new T.Vector3().subVectors(b,a),normal=new T.Vector3(-d.y,d.x,0).normalize();
    if(Math.hypot(d.x,d.y)<.01)normal.set(1,0,0);
    // 0.40m coloured centre + 0.08m dark border on either side. No shader changes.
-   for(const [width,material,order] of [[.56,exterior?exteriorOutline:outline,37],[.4,this.roomMaterials.get(s.room),38]]){
+   for(const [width,material,order] of [[.56,outline,37],[.4,this.roomMaterials.get(s.room),38]]){
     const n=normal.clone().multiplyScalar(width/2),p=[a.clone().add(n),b.clone().add(n),b.clone().sub(n),a.clone().sub(n)],positions=[];
     for(const i of [0,1,2,0,2,3])positions.push(...p[i].toArray());
     const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(positions,3));add(new T.Mesh(g,material),s.floor,true,order);
    }
   }
   for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#38bdf8';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
-   const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:false,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
+   const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }
   if(this.vehicleSource){const vehicle=new T.Group();vehicle.rotation.x=Math.PI/2;
    // Borrow existing geometry/materials; include scale person only when requested.

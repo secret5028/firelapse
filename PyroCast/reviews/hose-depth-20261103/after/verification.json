@@ -5,42 +5,78 @@
     {
       "name": "",
       "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 37
     },
     {
       "name": "",
       "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 38
     },
     {
       "name": "",
-      "depthTest": false,
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 37
     },
     {
       "name": "",
-      "depthTest": false,
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 38
     },
     {
       "name": "",
-      "depthTest": false,
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 37
     },
     {
       "name": "",
-      "depthTest": false,
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 38
     },
     {
       "name": "",
-      "depthTest": false,
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 37
     },
     {
       "name": "",
-      "depthTest": false,
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false,
       "order": 38
+    }
+  ],
+  "obstacles": [
+    {
+      "name": "COOLER",
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false
+    },
+    {
+      "name": "TANK",
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false
+    },
+    {
+      "name": "WASHER",
+      "depthTest": true,
+      "depthWrite": true,
+      "transparent": false
     }
   ],
   "subscriptionsAfterDispose": 0

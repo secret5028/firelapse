@@ -11,7 +11,8 @@ try{
  await p.locator('#v canvas').screenshot({path:path.join(out,'initial.png')});
  await p.evaluate(()=>{window.__holdFrames=true;document.getElementById('top').click();window.__ui.render();});
  await p.locator('#v canvas').screenshot({path:path.join(out,'top.png')});
- report.materials=await p.evaluate(()=>{const a=window.__ui,root=a.host.scene.getObjectByName('route');return root.children.filter(o=>o.isMesh).map(o=>({name:o.name,depthTest:o.material.depthTest,order:o.renderOrder}));});
- if(phase==='after'){assert(report.materials.some(m=>m.depthTest));assert(report.materials.some(m=>!m.depthTest));}
+ report.materials=await p.evaluate(()=>{const a=window.__ui,root=a.host.scene.getObjectByName('route');return root.children.filter(o=>o.isMesh).map(o=>({name:o.name,depthTest:o.material.depthTest,depthWrite:o.material.depthWrite,transparent:o.material.transparent,order:o.renderOrder}));});
+ report.obstacles=await p.evaluate(()=>window.__ui.host.scene.getObjectByName('wando-obstacles').children.filter(o=>o.isMesh).map(o=>({name:o.name,depthTest:o.material.depthTest,depthWrite:o.material.depthWrite,transparent:o.material.transparent})));
+ if(phase==='after'){assert(report.materials.length>0);assert(report.materials.every(m=>m.depthTest&&m.depthWrite&&!m.transparent));assert.equal(report.obstacles.length,3);assert(report.obstacles.every(m=>m.depthTest&&m.depthWrite&&!m.transparent));}
  await p.evaluate(()=>{window.__ui.dispose();window.dispatchEvent(new PageTransitionEvent('pagehide'));});report.subscriptionsAfterDispose=await p.evaluate(()=>window.__ui.store.diagnostics().subscriptions);assert.equal(report.subscriptionsAfterDispose,0);assert.deepEqual(report.errors,[]);
 }finally{fs.writeFileSync(path.join(out,'verification.json'),JSON.stringify(report,null,2));await browser.close();}

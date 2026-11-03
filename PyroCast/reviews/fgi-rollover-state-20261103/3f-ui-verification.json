@@ -1,0 +1,30 @@
+{
+  "stage": "fgi-state",
+  "errors": [],
+  "scenes": [],
+  "cases": [],
+  "bars": [
+    "FO",
+    "FGI",
+    "backdraft"
+  ],
+  "origin": [
+    {
+      "cell": "CAD_3F_R2_C0",
+      "excluded": true
+    },
+    {
+      "cell": "CAD_3F_R2_C1",
+      "excluded": true
+    },
+    {
+      "cell": "CAD_3F_R2_C2",
+      "excluded": true
+    }
+  ],
+  "offline": {
+    "bytes": 7329510,
+    "http": 0,
+    "errors": []
+  }
+}

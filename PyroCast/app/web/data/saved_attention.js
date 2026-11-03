@@ -5,8 +5,7 @@ export const savedAttention = {
   "kinds": [
     "FO",
     "FGI",
-    "backdraft",
-    "rollover"
+    "backdraft"
   ],
   "records": [
     {
@@ -15,8 +14,7 @@ export const savedAttention = {
       "kinds": [
         "FO",
         "FGI",
-        "backdraft",
-        "rollover"
+        "backdraft"
       ],
       "attention_rooms": [
         "CAD_3F_R1",
@@ -29,10 +27,10 @@ export const savedAttention = {
       "unknown_rooms": [],
       "complete": true,
       "source_stamp": [
-        1793682877236535400,
-        52844694
+        1793684276144254000,
+        16291983
       ],
-      "source_sha256": "d6231216ffbb5043af7a2d839df5960a69f1f9d349aee77060212b1d2a418216",
+      "source_sha256": "64636ef629158a47b826d3de60b0d795fa97fe665275bb2b9e370a66ae5a0aa8",
       "identity": [
         "CAD_3F_R3",
         "fixed",

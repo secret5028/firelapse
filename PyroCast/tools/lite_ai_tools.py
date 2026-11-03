@@ -5,8 +5,8 @@ from functools import lru_cache
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
 sys.path.insert(0,str(SIM))
-TYPES=('FO','FGI','backdraft','rollover')
-LABELS={'FO':'FO','FGI':'FGI','backdraft':'백드래프트','rollover':'롤오버'}
+TYPES=('FO','FGI','backdraft')
+LABELS={'FO':'FO','FGI':'FGI','backdraft':'백드래프트'}
 PENDING={}
 PENDING_LOCK=threading.RLock()
 
@@ -23,6 +23,15 @@ def display_label(identity,name=None):
 
 def finite(x):return type(x) in (int,float) and math.isfinite(x)
 def at(a,i):return a[i] if isinstance(a,list) and i<len(a) and finite(a[i]) else None
+
+def rollover_at(s,i,threshold=100):
+    f=s.get('conditions',{}).get('FGI',{});r=f.get('rollover',{})
+    if r.get('excluded_origin') is True:return False
+    if r.get('excluded_origin') is not False or i is None:return None
+    ignition=r.get('ignition',[]);value=at(f.get('scores',{}).get('degree'),i)
+    if i>=len(ignition):return None
+    if ignition[i] is False:return False
+    return value*100>=threshold if ignition[i] is True and value is not None else None
 
 def node(a):
     exe=shutil.which('node') or 'E:/hermes/node/node.exe'
@@ -112,10 +121,11 @@ class Tools:
         if kind not in TYPES or not finite(threshold) or threshold<0:raise ValueError('현상/기준 오류')
         rows={}
         for c in self.cells(p):
-            rid=c.get('original_room') or c['key'];rec=rows.setdefault(rid,{'room':rid,'name':c.get('display_name'),'phenomenon':kind,'threshold':threshold,'first_s':None,'peak':None,'peak_s':None,'source_cell':None,'partial':False})
-            s=p['solvers'][c['solver_id']].get('conditions',{}).get(kind,{})
+            rid=c.get('original_room') or c['key'];rec=rows.setdefault(rid,{'room':rid,'name':c.get('display_name'),'phenomenon':kind,'threshold':threshold,'first_s':None,'peak':None,'peak_s':None,'source_cell':None,'partial':False,'rollover_first_s':None})
+            solver=p['solvers'][c['solver_id']];s=solver.get('conditions',{}).get(kind,{})
             degrees=s.get('scores',{}).get('degree',s.get('degree',[]))
             for i,t in enumerate(p['time_s']):
+                if kind=='FGI' and rollover_at(solver,i,threshold) is True and (rec['rollover_first_s'] is None or t<rec['rollover_first_s']):rec['rollover_first_s']=t
                 v=at(degrees,i)
                 if v is None:rec['partial']=True;continue
                 v*=100 # Same presentation scaling as read.js; not a new condition.
@@ -137,6 +147,7 @@ class Tools:
                     scores=s.get('conditions',{}).get(key,{}).get('scores',{});v=at(scores.get('degree'),i) if i is not None else None
                     r['indices'][key]=v*100 if v is not None else None
                     weak=scores.get('weakest',[]);r['bottleneck'][key]=weak[i] if i is not None and i<len(weak) else None
+                r['rollover_active']=rollover_at(s,i)
                 frames.append(r)
             out.append({'cell':c['key'],'rows':frames})
         return {'room':a['room'],'aggregation':'single' if len(cells)==1 else 'none','cells':out,'sampling':'10 s exact saved samples; absent samples null; no interpolation','source_end_s':p['time_s'][-1]}
@@ -179,6 +190,7 @@ class Tools:
                     from lite_fixed_openings import ranked_samples
                     try:ranking=ranked_samples(root,meta['sha'])
                     except (ValueError,KeyError,OSError):ranking=[]
+                    d={**d,'rates':{k:v for k,v in d.get('rates',{}).items() if k in TYPES}}
                     return {**d,'ranking':ranking,'worst':ranking[0] if ranking else None,'ratio_basis':'표본 분포 내 조건 충족 비율; 발생 확률 아님'}
         return {'status':'미평가','reason':'해당 건물과 연결된 MC 요약 없음'}
     def propose_fuel(self,a):

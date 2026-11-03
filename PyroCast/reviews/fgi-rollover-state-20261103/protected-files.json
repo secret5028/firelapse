@@ -1,0 +1,51 @@
+[
+  {
+    "file": "simulation/pyrocast_lite/core.py",
+    "working_sha256": "06ded2a611e7e0f28a579f1c46f59eaf8d67b4e33d4ff036dcea95e6fc6d6d8a",
+    "HEAD_mirror_sha256": "b31990e0eeb8cd6131b029bd064ef4ef98e940bd969680995d175127eed73cbe",
+    "LF_normalized_sha256": "06ded2a611e7e0f28a579f1c46f59eaf8d67b4e33d4ff036dcea95e6fc6d6d8a",
+    "content_unchanged": true
+  },
+  {
+    "file": "simulation/pyrocast_lite/adapter.py",
+    "working_sha256": "1f073d65c182b11bc357ae0179c21a89718c7677beae229b045efc812bd53fa0",
+    "HEAD_mirror_sha256": "1f073d65c182b11bc357ae0179c21a89718c7677beae229b045efc812bd53fa0",
+    "LF_normalized_sha256": "1f073d65c182b11bc357ae0179c21a89718c7677beae229b045efc812bd53fa0",
+    "content_unchanged": true
+  },
+  {
+    "file": "simulation/viewer/legacy_real_view.js",
+    "working_sha256": "8c230d56a2f3f74fa29d9fe97b831c57414ef33679b72dc7a6060d9b7595fb11",
+    "HEAD_mirror_sha256": "772495640ecf31f438c28d038164b6117e35226ec49533d317c6200d8bea3e93",
+    "LF_normalized_sha256": "bb6182eb64283706f81e28b3b80730be63661c6a892c5c9af9fefdf7994a3547",
+    "content_unchanged": true
+  },
+  {
+    "file": "simulation/viewer/legacy_real_bridge.js",
+    "working_sha256": "5ae10ca3859354f0ae850f3cd1bd19e20bfe0be71d50f45307fefbc9f3f47c81",
+    "HEAD_mirror_sha256": "52a090012b763fe71156d2d1a8f228b8cc2c2afe5315fd8f1bd34e9515646906",
+    "LF_normalized_sha256": "92cac67a072d48871309dc41c0d7becd215c7dbe52fa598a3b8fb87e1457af9c",
+    "content_unchanged": true
+  },
+  {
+    "file": "app/web/layers/real_view.js",
+    "working_sha256": "0f2cc2060c726442887b1655a17400457c0cc71554c292d2abfa7acc53009f07",
+    "HEAD_mirror_sha256": "0f2cc2060c726442887b1655a17400457c0cc71554c292d2abfa7acc53009f07",
+    "LF_normalized_sha256": "0f2cc2060c726442887b1655a17400457c0cc71554c292d2abfa7acc53009f07",
+    "content_unchanged": true
+  },
+  {
+    "file": "tools/serve_cfbt_building.py",
+    "working_sha256": "a4ddeee4b639fd28bfcad7fe97a583015f8b0e224406ec453fd7e4737c61c7c5",
+    "HEAD_mirror_sha256": "b8690ac5eb782a48cc071659a4d364c7d4d2125d550051c3bb80466a6e2e0268",
+    "LF_normalized_sha256": "a4ddeee4b639fd28bfcad7fe97a583015f8b0e224406ec453fd7e4737c61c7c5",
+    "content_unchanged": true
+  },
+  {
+    "file": "tools/serve_wando_c11.py",
+    "working_sha256": "bdda1e3afb4ec0c026227f8c50e79236a87137a8e408f5658df46d15919326f9",
+    "HEAD_mirror_sha256": "bdda1e3afb4ec0c026227f8c50e79236a87137a8e408f5658df46d15919326f9",
+    "LF_normalized_sha256": "bdda1e3afb4ec0c026227f8c50e79236a87137a8e408f5658df46d15919326f9",
+    "content_unchanged": true
+  }
+]

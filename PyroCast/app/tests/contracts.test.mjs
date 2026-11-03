@@ -42,7 +42,9 @@ for(const id of ['S06','S09','stage4']){
   assert.deepEqual(geom.polygons_m,c.cad_polys.map(x=>({polygon_m:x.o,holes_m:x.h||[]})));
   assert.deepEqual(geom.legacy_display,{z_m:c.z_m,height_m:c.height_m,single_zone:!!s.single_zone});
   if(geom.polygons_m.length>1)multipolygons++;
-  for(const key of ['FO','FGI','backdraft','rollover','untenable'])for(let i=0;i<p.time_s.length;i++){
+  assert.deepEqual(Object.keys(result.index_by_cell[c.key]),['FO','FGI','backdraft']);
+  assert.deepEqual(result.fgi_rollover_by_cell[c.key].ignition,s.conditions.FGI.rollover.ignition);
+  for(const key of ['FO','FGI','backdraft','untenable'])for(let i=0;i<p.time_s.length;i++){
    const src=s.conditions?.[key],dest=result.cell_conditions[c.key][i][key];
    assert.equal(dest.met,(src?.scores?.all_met??src?.all_met)?.[i]??null);assert.equal(dest.degree,src?.scores?.degree?.[i]??null);conditions+=2;
    if(key!=='untenable')assert.equal(result.index_by_cell[c.key][key][i],Number.isFinite(dest.degree)?dest.degree*100:null);
@@ -56,7 +58,7 @@ for(const id of ['S06','S09','stage4']){
   if(r.source_cells.length===1){assert.deepEqual(r,result.cells[r.source_cells[0]]);continue;}
   assert.equal(r.aggregation,'none');
   for(const key of [...Object.keys(SERIES_MAP),'HRR_supply_kW'])assert(r[key].every(v=>v===null));
-  for(let i=0;i<p.time_s.length;i++)for(const k of ['FO','FGI','backdraft','rollover','untenable'])
+  for(let i=0;i<p.time_s.length;i++)for(const k of ['FO','FGI','backdraft','untenable'])
    assert.equal(result.conditions[r.room_id][i][k].met,anyKnown(r.source_cells.map(cid=>result.cell_conditions[cid][i][k].met)));
  }
  // Exercise failure paths without another engine run or copying large input blobs.

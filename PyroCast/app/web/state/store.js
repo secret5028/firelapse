@@ -10,7 +10,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  openings:{exterior:false,interior:false},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
- risk:{history:false,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:false},threshold:{ribbon:100,caution:70}},
+ risk:{history:false,show:{FO:true,FGI:true,backdraft:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 export function createStore({validators={},seriesCache=createSeriesCache()}={}){

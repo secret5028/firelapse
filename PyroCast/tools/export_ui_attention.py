@@ -6,7 +6,7 @@ from pathlib import Path
 from result_catalog import atomic_json, read
 
 ROOT = Path(__file__).resolve().parents[1]
-KINDS = ('FO', 'FGI', 'backdraft', 'rollover')
+KINDS = ('FO', 'FGI', 'backdraft')
 
 
 def summarize(result):
@@ -31,7 +31,7 @@ def result_index(source):
     """Persist an index beside each result, invalidated by the source file stamp."""
     source=Path(source).resolve();stat=source.stat();stamp=[stat.st_mtime_ns,stat.st_size]
     target=source.with_name('index-summary.json');cached=read(target,{})
-    if cached.get('schema')=='pyrocast.result-index/1' and cached.get('source_stamp')==stamp:return cached
+    if cached.get('schema')=='pyrocast.result-index/1' and cached.get('source_stamp')==stamp and cached.get('kinds')==list(KINDS):return cached
     raw=source.read_bytes();result=json.loads(raw)
     value={'schema':'pyrocast.result-index/1','threshold':70,'kinds':list(KINDS),
         **summarize(result),'complete':bool(result['ok']),

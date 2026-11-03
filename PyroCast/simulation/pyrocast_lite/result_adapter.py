@@ -73,10 +73,10 @@ def shared_conditions(model,result):
         unten=phenomenon(t,[term('height','연기층 경계 높이',z,model.P['z_ten'],'<','m','legacy z_ten',size),
             term('Tu','통행 높이 고온층',y[2*n+i]-273.15,model.P['T_ten']-273.15,'>','℃','legacy T_ten',size)],{})
         records={'FO':s['fo'],'FGI':s['fgi'],'backdraft':s['backdraft'],
-                 'rollover':s['rollover'],'untenable':unten}
+                 'untenable':unten}
         for name,rec in records.items():
             rec['status']='evaluated'
-            if name in ('FGI','backdraft','rollover') and not enabled:
+            if name in ('FGI','backdraft') and not enabled:
                 rec['status']='not_evaluated';rec['all_met']=[None]*size;rec['first_met_s']=None
                 rec['reason']='upper unburned-fuel reaction absent; historical inventory not qualified'
             if 'scores' not in rec:rec['scores']=factor_scores(rec)
@@ -89,8 +89,9 @@ def shared_conditions(model,result):
             if rec['status']=='not_evaluated':
                 rec['scores']={'factors':{k:[None]*size for k in ('temperature','fuel','oxygen')},
                     'degree':[None]*size,'weakest':[None]*size,'strongest':[None]*size}
-        records['rollover']['label']='FGI·경로·점화원 기반 롤오버 가능 조건'
-        records['rollover']['actual_upper_reaction_kg_s']=result['rooms'][i].get('upper_reaction_kg_s',[0.]*size)
+        if records['FGI']['status']=='not_evaluated':
+            records['FGI']['rollover']['active']=[None]*size
+            records['FGI']['rollover']['status']='not_evaluated'
         records['opening_combustion']={'label':'개구부 분출 연소(간략 계산)',
             'status':'evaluated' if model.P.get('door_jet_enabled',False) else 'not_evaluated',
             'HRR_kW':result['rooms'][i].get('door_jet_HRR_kW',[0.]*size),
@@ -104,6 +105,6 @@ def shared_conditions(model,result):
                  'HRR':'primary source and upper reaction separate, W for shared evaluator'},
         'limits':['FO display adds Thomas HRR and configured lower O2 factors; transition rules unchanged',
                   'FGI display adds configured hot_C temperature factor; probability not estimated',
-                  'rollover = FGI score × exterior shortest path × ignition condition; not flame propagation prediction',
+                  'rollover is an FGI subsidiary state, not an index; initial origin excluded',
                   'door-jet surrogate is reported separately when enabled; detailed oxygen-inflow causality remains unassessed',
                   'tenability uses existing lite temperature/interface rule; no PPE/FED/visibility evaluation']})

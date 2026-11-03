@@ -174,11 +174,10 @@ def analyze(scenario='P1', fan_on=False):
             'prescribed_pyrolysis_kW':np.interp(t,curve['t'],curve['q'])}},
         opening_states=opening_states,ignitions=[],candidates=[],directional_vent_reactions=[]))
     for rid in states:
-        scores[rid]['rollover']=common[rid]['rollover']['scores']
-        values=100*np.asarray(scores[rid]['rollover']['degree'],dtype=float)
-        states[rid]['rollover']=values;series[rid]['rollover']=values.tolist()
-        summaries[rid]['indices']['rollover']={'first_70_s':first(values,70),'first_100_s':first(values,100),'peak':peak(values)}
-        for label,key in {'FO':'fo','FGI':'fgi','BD':'backdraft','rollover':'rollover'}.items():
+        scores[rid]['FGI_rollover']=common[rid]['fgi']['rollover']
+        series[rid]['rollover_active']=common[rid]['fgi']['rollover']['active']
+        summaries[rid]['rollover_first_active_s']=common[rid]['fgi']['rollover']['first_active_s']
+        for label,key in {'FO':'fo','FGI':'fgi','BD':'backdraft'}.items():
             assert np.array_equal(scores[rid][label]['degree'],common[rid][key]['scores']['degree'])
     save('timeseries.json',series);save('condition-scores.json',scores)
     run_summary=json.loads((OUT/'execution-state.json').read_text(encoding='utf-8'))
@@ -204,7 +203,7 @@ def analyze(scenario='P1', fan_on=False):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
-    colors={'FO':'#df2d28','FGI':'#863bad','BD':'#b72666','rollover':'#d7830b'}
+    colors={'FO':'#df2d28','FGI':'#863bad','BD':'#b72666'}
     for zoom,name in ((False,f'{scenario}-timeseries.png'),(True,f'{scenario}-zoom.png')):
         fig,axs=plt.subplots(4,1,figsize=(13,10),sharex=True,layout='constrained')
         fan_label='ON 1500-1920 s' if fan_on else 'OFF'

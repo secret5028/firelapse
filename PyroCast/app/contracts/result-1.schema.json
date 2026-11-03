@@ -219,26 +219,63 @@
                 }
               ]
             }
-          },
-          "rollover": {
+          }
+        },
+        "required": [
+          "FO",
+          "FGI",
+          "backdraft"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "fgi_rollover_by_cell": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "ignition": {
             "type": "array",
             "items": {
               "anyOf": [
                 {
-                  "type": "number"
+                  "type": "boolean"
                 },
                 {
                   "type": "null"
                 }
               ]
             }
+          },
+          "excluded_origin": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "eligible_peak_index": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string"
           }
         },
         "required": [
-          "FO",
-          "FGI",
-          "backdraft",
-          "rollover"
+          "ignition",
+          "excluded_origin",
+          "eligible_peak_index",
+          "status"
         ],
         "additionalProperties": false
       }
@@ -277,23 +314,12 @@
                 "type": "null"
               }
             ]
-          },
-          "rollover": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "required": [
           "FO",
           "FGI",
-          "backdraft",
-          "rollover"
+          "backdraft"
         ],
         "additionalProperties": false
       }
@@ -332,23 +358,12 @@
                 "type": "null"
               }
             ]
-          },
-          "rollover": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "required": [
           "FO",
           "FGI",
-          "backdraft",
-          "rollover"
+          "backdraft"
         ],
         "additionalProperties": false
       }
@@ -481,19 +496,6 @@
               "type": "string"
             }
           },
-          "rollover_band": {
-            "type": "array",
-            "items": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            }
-          },
           "LOC_vol_fraction": {
             "anyOf": [
               {
@@ -507,7 +509,6 @@
         },
         "required": [
           "color",
-          "rollover_band",
           "LOC_vol_fraction"
         ],
         "additionalProperties": false
@@ -567,6 +568,7 @@
     "conditions",
     "cell_conditions",
     "index_by_cell",
+    "fgi_rollover_by_cell",
     "index_history_max",
     "index_history_peak_s",
     "events",
@@ -889,15 +891,46 @@
             }
           ]
         },
-        "burning_upper": {
-          "anyOf": [
-            {
-              "type": "boolean"
+        "rollover": {
+          "type": "object",
+          "properties": {
+            "active": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
-            {
-              "type": "null"
+            "ignition": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "excluded_origin": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
-          ]
+          },
+          "required": [
+            "active",
+            "ignition",
+            "excluded_origin"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -942,9 +975,6 @@
         "backdraft": {
           "$ref": "#/$defs/criterion"
         },
-        "rollover": {
-          "$ref": "#/$defs/criterion"
-        },
         "untenable": {
           "$ref": "#/$defs/criterion"
         },
@@ -967,7 +997,6 @@
         "FO",
         "FGI",
         "backdraft",
-        "rollover",
         "untenable",
         "source_cells",
         "aggregation"

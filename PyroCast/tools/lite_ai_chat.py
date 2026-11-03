@@ -41,7 +41,7 @@ def chat(service,body,completion=transport):
     # Explicit IDs available to the planner; no unrestricted filesystem/tool access.
     rooms=[{'id':r['key'],'room':r.get('original_room') or r['key']} for r in service.case(ctx)['rooms']]
     names={name:__import__('inspect').signature(getattr(service,name)).__str__() for name in service.names}
-    signatures={'get_building':{},'get_ranking':{'floor':'층 ID'},'get_case_summary':{},'get_room_timeline':{'room':'실/셀 ID','t0':0,'t1':'끝 초'},'get_peak_events':{'phenomenon':'FO|FGI|backdraft|rollover','threshold':100},'get_route':{'origin':'화점 실 ID'},'get_mc_summary':{'job':'저장 작업 ID'},'propose_fuel':{'message':'사용자 요청 원문'},'propose_openings':{'openings':[{'id':'실제 개구부 ID','open':True}]},'propose_run':{'kind':'screening|mc','origin':'실 ID','N':8,'samples':2}}
+    signatures={'get_building':{},'get_ranking':{'floor':'층 ID'},'get_case_summary':{},'get_room_timeline':{'room':'실/셀 ID','t0':0,'t1':'끝 초'},'get_peak_events':{'phenomenon':'FO|FGI|backdraft','threshold':100},'get_route':{'origin':'화점 실 ID'},'get_mc_summary':{'job':'저장 작업 ID'},'propose_fuel':{'message':'사용자 요청 원문'},'propose_openings':{'openings':[{'id':'실제 개구부 ID','open':True}]},'propose_run':{'kind':'screening|mc','origin':'실 ID','N':8,'samples':2}}
     source=service.call('get_case_summary',ctx)
     messages=[{'role':'system','content':SYSTEM+'\n도구 '+json.dumps(list(names))+'\n입력 '+json.dumps(signatures,ensure_ascii=False)+'\n화면 '+json.dumps(ctx,ensure_ascii=False)+'\n실 '+json.dumps(rooms,ensure_ascii=False)+'\n저장 사례의 실제 화점 '+json.dumps(source['data']['origin'],ensure_ascii=False)},*history,{'role':'user','content':message}]
     calls=[source];missing=False

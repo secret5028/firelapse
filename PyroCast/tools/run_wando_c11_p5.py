@@ -22,7 +22,7 @@ OUT = ROOT/'simulation/results/wando_C11_P5_20261103'
 TABLE = ROOT/'simulation/pyrocast_lite/fire_load_table.json'
 EXE = ROOT/'simulation/build/baseline/cfast-baseline.exe'
 THRESHOLDS = (400, 450, 500)
-LABELS = {'FO':'fo', 'FGI':'fgi', 'BD':'backdraft', 'rollover':'rollover'}
+LABELS = {'FO':'fo', 'FGI':'fgi', 'BD':'backdraft'}
 
 
 def sha(p):
@@ -167,6 +167,7 @@ def analyze_case(path, threshold=None):
             **{label:100*np.asarray(common[rid][key]['scores']['degree']) for label,key in LABELS.items()})
         assert all(np.isfinite(a).all() for a in vals.values())
         series[rid]={key:a.tolist() for key,a in vals.items()}
+        series[rid]['rollover_active']=common[rid]['fgi']['rollover']['active']
         summary[rid]=dict(temperature_peak_C=peak(vals['T_upper_C']),source_HRR_peak_kW=peak(own),
             door_jet_peak_kW=peak(vals['door_jet_kW']),
             indices={k:dict(peak=peak(vals[k]),first_70_s=first(vals[k],70),first_100_s=first(vals[k],100)) for k in LABELS})

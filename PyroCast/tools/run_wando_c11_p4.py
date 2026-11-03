@@ -57,7 +57,7 @@ def analyze():
     def pk(record,unit):return f"{record['value']:,.3f} {unit} @ {at(record['time_s'])}"
     def hits(s):
         return ''.join(f"| {label} | {at(s['indices'][key]['first_70_s'])} | {at(s['indices'][key]['first_100_s'])} | {s['indices'][key]['peak']['value']:.2f} @ {at(s['indices'][key]['peak']['time_s'])} |\n"
-            for key,label in [('FO','FO'),('FGI','FGI'),('BD','백드래프트'),('rollover','롤오버 조건')])
+            for key,label in [('FO','FO'),('FGI','FGI'),('BD','백드래프트')])
     a=before['rooms'];b=after['rooms']
     delta=dict(runtime_seconds=after['run']['wall_seconds']-before['run']['wall_seconds'],
         room_temperature_peak_C=b['ROOM']['temperature_peak_C']['value']-a['ROOM']['temperature_peak_C']['value'],
@@ -81,7 +81,7 @@ def analyze():
         f"| 시간 | 외부 {after['run']['wall_seconds']:.3f}초 / native {native_s:.0f}초 / {steps:,} 단계 |",
         f"| 종료·출력 | native 정상 종료, 요청 3,600초. CSV 마지막 {after['run']['last_csv_s']:g}초. 마지막 5초를 외삽하지 않음 |",
         '| 로더 | P1과 동일하게 마지막 3,600초 표본이 없어 엄격한 horizon 검사는 실패. 재계산하지 않음 |',
-        '| 검증 | CUT WF 전 구간 0, 조건표 전체 evaluate와 4지수 동일, 엔진·조건표·물리 입력 생성 코드 SHA 불변 |',
+        '| 검증 | CUT WF 전 구간 0, 조건표 전체 evaluate와 3지수 동일, 엔진·조건표·물리 입력 생성 코드 SHA 불변 |',
         '', '## 그래프', '',
         '세로선 780/1,320/1,500/2,100초를 유지했다. P4의 1,320초는 **절단을 실행하지 않은 비교선**, 1,500초 역시 배풍기를 켜지 않은 비교선이다.',
         '', '![P4 전체](../simulation/results/wando_C11_P4_20261102/P4-timeseries.png)',
@@ -102,7 +102,7 @@ def analyze():
         '', '## 2,100초 비교', '', '| 값 | P1 | P4 |', '|---|---:|---:|']
     for key,label in [('T_upper_C','상층 T(℃)'),('O2_upper_vol_percent','상층 O₂(vol%)'),
                       ('fuel_upper_mass_fraction','미연 연료(kg/kg)'),('interface_m','연기 경계(m)'),
-                      ('FO','FO'),('FGI','FGI'),('BD','백드래프트'),('rollover','롤오버 조건')]:
+                      ('FO','FO'),('FGI','FGI'),('BD','백드래프트')]:
         lines.append(f"| {label} | {before['times']['2100'][key]:.4f} | {after['times']['2100'][key]:.4f} |")
     lines += ['', '## CAVITY 지수 참고', '', '| 지수 | ≥70 | ≥100 | 최고 지수·시각 |', '|---|---:|---:|---:|',hits(b['CAVITY']),
         '## 해석 범위', '',

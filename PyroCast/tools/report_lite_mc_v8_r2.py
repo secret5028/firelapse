@@ -18,7 +18,7 @@ def main():
         '추정 방화문 열림확률 0.35, 확정 0.2, 일반문 0.5, 개폐창 0.3, 고정창 0. 열린 창 유효면적 0.5.',
         '집계 코드가 피난한계 all_met 위치를 잘못 읽은 오류는 저장 상태로 후처리만 복원했다. 계산 재실행 0회. 원래 오류 요약과 수정 전 집계를 별도 보존했다.',
         '표본별 합산 시간은 기록된 적분+결과 후처리+복원 시간이며, 최초 전처리/오류 기록 부대 시간은 누락된다. 직렬 전체 소요는 최초 배치의 실제 벽시계 시간이다.',
-        '', '표본 | 완주 | 연소 실 | 연기 위험 실 | 연기 주의 실 | FO/FGI/BD/롤오버 충족 실 | 적분초 | 합산초 | 안전 출력 끝초 | 에너지% | 질량%',
+        '', '표본 | 완주 | 연소 실 | 연기 위험 실 | 연기 주의 실 | FO/FGI/BD 충족 실 | 적분초 | 합산초 | 안전 출력 끝초 | 에너지% | 질량%',
         '---|---|---|---|---|---|---|---|---|---|---']
     for s in rows:
         if not s.get('complete'):
@@ -26,7 +26,7 @@ def main():
             lines.append('실패 이유: '+str(s.get('failure')))
             continue
         p=s['phenomena'];b=s['balance_diagnostic']
-        lines.append(f"{s['sample_id']} | 완료 | {len(s['burning_original_rooms'])} | {len(s['smoke_risk_rooms'])} | {len(s['smoke_caution_rooms'])} | "+'/'.join(str(p[k]['ever_room_count']) for k in ('FO','FGI','backdraft','rollover'))+f" | {s['times']['integration_s']:.3f} | {s['times']['total_s']:.3f} | {s['safe_end_s']:.0f} | {b['energy_percent']:.6f} | {b['mass_percent']:.6f}")
+        lines.append(f"{s['sample_id']} | 완료 | {len(s['burning_original_rooms'])} | {len(s['smoke_risk_rooms'])} | {len(s['smoke_caution_rooms'])} | "+'/'.join(str(p[k]['ever_room_count']) for k in ('FO','FGI','backdraft'))+f" | {s['times']['integration_s']:.3f} | {s['times']['total_s']:.3f} | {s['safe_end_s']:.0f} | {b['energy_percent']:.6f} | {b['mass_percent']:.6f}")
     lines+=['','주의/위험 실은 기간 중 한 번이라도 해당한 원래 실의 합집합으로, 두 열은 서로 배타적이지 않다. 셀 수를 실 수로 세지 않는다.',
         '현상별 표본비율은 공통 조건표를 사용한다. 색 표시는 v8 4.2절 2단계 규칙이며 조건표 지수와 판정 구성이 다르므로 혼동하지 않는다.',
         '', '현상 | 충족 무작위 표본/완주 무작위 표본 | 최고 지수 | 표본별 최고 지수의 중앙값 | 최악 표본(필수 포함)',

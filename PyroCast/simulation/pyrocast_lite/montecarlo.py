@@ -99,10 +99,8 @@ def condition_summary(model,result,sample):
         affected={room:float(t[np.flatnonzero(mask)[0]]) for room,mask in flags_by_room.items() if mask.any()}
         phenomena[title]={'status':'evaluated','ever_room_count':len(affected),'first_s':min(affected.values(),default=None),
             'rooms':affected,'max_simultaneous_room_count':int(np.stack(list(flags_by_room.values())).sum(axis=0).max())}
-    phenomena['rollover']={'status':'not_evaluated','ever_room_count':None,'first_s':None,
-                          'reason':'L1 source has no rollover criterion or bulk gas reaction; not zero risk'}
     if 'shared_conditions' in result:
-        for name in ('FO','FGI','backdraft','rollover','untenable'):
+        for name in ('FO','FGI','backdraft','untenable'):
             records=result['shared_conditions']['rooms']
             if any(records[r['cell']][name]['status']=='not_evaluated' for r in result['room_summary']):
                 phenomena[name]={'status':'not_evaluated','ever_room_count':None,'first_s':None,'score_median':None,'score_max':None}
@@ -173,7 +171,7 @@ def aggregate(summaries):
     complete=[s for s in summaries if s.get('complete')]
     random=[s for s in complete if s['kind']=='random']
     rates={};worst={};room_rates={}
-    for name in ('FO','FGI','backdraft','untenable','rollover'):
+    for name in ('FO','FGI','backdraft'):
         if any(name not in s['phenomena'] or s['phenomena'][name].get('status','evaluated')=='not_evaluated' for s in complete):
             rates[name]={'status':'not_evaluated','fraction':None};worst[name]=None;room_rates[name]=None;continue
         rates[name]={'numerator':sum(s['phenomena'][name]['ever_room_count']>0 for s in random),

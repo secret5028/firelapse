@@ -16,7 +16,7 @@ assert.equal(store.get('risk').show.smoke,false);
 store.dispatch('risk/history',{enabled:true});
 store.dispatch('risk/set',{type:'smoke',visible:true});
 assert.deepEqual(indexHistoryExtrema({c:{FO:[null,40,120,null,70,150,150],FGI:[null,null]}},[0,10,20,30,40,50,60]),{maximum:{c:{FO:150,FGI:null}},peak_time_s:{c:{FO:50,FGI:null}}});
-const types=['FO','FGI','backdraft','rollover'];let time=3600;
+const types=['FO','FGI','backdraft'];let time=3600;
 layer.mount(scene,store);
 const update=()=>{layer.setData({building,resultMeta:result,series:{cells:result.cells},t_s:time,floor:{floor_id:'3F'},risk:store.get('risk'),layers:store.get('layers'),selection:store.get('selection')});layer.tick();};
 update();const expected={};

@@ -1,5 +1,6 @@
 import {createDisplayPolicy} from './display_policy.js';
-const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
+import {roomFgiRollover} from '../adapters/fgi_rollover.js';
+const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
@@ -47,6 +48,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ const rolloverBadge=document.createElement('b');rolloverBadge.id='fgiRolloverBadge';rolloverBadge.hidden=true;rolloverBadge.style.color='#f97316';rolloverBadge.title='FGI 부속 상태 · 보라 리본의 주황 점. 독립 지수 아님.';$('legend-FGI').append(rolloverBadge);
  $('liteLegend').remove();
  const vehicleMarker=document.createElement('span');vehicleMarker.className='displayVehicleMarker';vehicleMarker.textContent='차량';vehicleMarker.title='경로 차량 위치 · 표시 기호';vehicleMarker.hidden=true;$('v').append(vehicleMarker);
  const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
@@ -82,6 +84,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   $('hudRoom').textContent=$('liteRoom').selectedOptions[0]?.textContent||'실 선택';
   const scores=phenomena.map(([key,name,color])=>({key,name,color,value:cell?result.index_by_cell[cell]?.[key]?.[index]:null})).filter(s=>Number.isFinite(s.value)).sort((a,b)=>b.value-a.value),top=scores[0];
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
+  const risk=store.get('risk'),floor=store.get('floor').floor_id,ids=building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms.flatMap(r=>r.cells));
+  const rolling=roomFgiRollover(result,ids,index,risk.threshold.ribbon,risk.history)===true,now=roomFgiRollover(result,ids,index,risk.threshold.ribbon,false)===true;
+  rolloverBadge.hidden=!rolling;rolloverBadge.textContent=now?' · 롤오버 진행':' · 롤오버 진행 이력';
+  if(top?.key==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,risk.threshold.ribbon,false)===true)$('hudPill').textContent+=' · 롤오버 진행';
   const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);
   selectionLabel.title=cell?'선택 셀 · 현재 시각':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
  }

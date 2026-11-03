@@ -1,6 +1,6 @@
 """Server-only rule matching and fixed briefing; no tactical text from an LLM."""
 import json,time,uuid,datetime,threading
-from lite_ai_tools import ROOT,SIM,TYPES,LABELS,read,finite,at,display_label,display_text
+from lite_ai_tools import ROOT,SIM,TYPES,LABELS,read,finite,at,display_label,display_text,rollover_at
 from result_catalog import atomic_json
 REPORTS={}
 LOCK=threading.RLock()
@@ -30,6 +30,7 @@ def match_case(service,a,route,rules):
         for i,t in enumerate(p['time_s']):
             values={k:(v*100 if (v:=at(s.get('conditions',{}).get(k,{}).get('scores',{}).get('degree'),i)) is not None else None) for k in TYPES}
             temp=at(s.get('Tu'),i);prev=at(s.get('Tu'),i-1) if i else None
+            values['rollover_active']=rollover_at(s,i)
             values.update(Tu=temp,h=at(s.get('h'),i),door_closed=closed,on_route=rid in on_route,entry_count=len(doors) if doors else None,temperature_rising=temp>prev if temp is not None and prev is not None else None,external_water=None,inside_personnel=None)
             for rule in rules['rules']:
                 key=(rid,rule['code'])
@@ -39,7 +40,8 @@ def match_case(service,a,route,rules):
 
 def event_fact(e,tool_index):
     label=display_label(e['room'],e.get('name'))
-    return {'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],'text':f"{label} · {LABELS[e['phenomenon']]} 최고 {number(e['peak'])} @ {stamp(e['peak_s'])} · 최초 기준 도달 {stamp(e['first_s'])}",'evidence':{'call':tool_index,'row':e},'numbers':[v for v in [e['peak'],e['peak_s'],e['first_s']] if v is not None]}
+    suffix=f" · 롤오버 진행 최초 {stamp(e['rollover_first_s'])}" if e['phenomenon']=='FGI' and e.get('rollover_first_s') is not None else ''
+    return {'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],'text':f"{label} · {LABELS[e['phenomenon']]} 최고 {number(e['peak'])} @ {stamp(e['peak_s'])} · 최초 기준 도달 {stamp(e['first_s'])}{suffix}",'evidence':{'call':tool_index,'row':e},'numbers':[v for v in [e['peak'],e['peak_s'],e['first_s']] if v is not None]}
 
 def facts_for(call,i):
     name=call['tool'];d=call['data'];facts=[]
@@ -86,7 +88,7 @@ def briefing(service,a):
     used=[]
     for m in rules['matched']:
         if m['room'] not in route_rooms:continue
-        used.append(m['code']);f={'room':m['room'],'cell':m['cell'],'time_s':m['time_s'],'text':f"{m['label']} @ {stamp(m['time_s'])} [{m['code']}] {m['text']} · {m['notice']}",'evidence':{'call':7,'row':m}};facts.append(f);lines.append('   '+f['text'])
+        used.append(m['code']);f={'room':m['room'],'cell':m['cell'],'time_s':m['time_s'],'text':f"{m['label']} @ {stamp(m['time_s'])} [{m['code']}] {m['text']} · {m['notice']}",'evidence':{'call':len(calls)-1,'row':m}};facts.append(f);lines.append('   '+f['text'])
     if not used:lines.append('   규칙 없음 또는 판정자료 미평가')
     lines.append('5. 한계: 조건 충족 지수이며 발생 예측 아님. 다중 셀 방 평균 없음. 전술 규칙은 사용자 제공 초안이며 현장 지휘관 판단 우선.')
     lines.extend('   '+display_text(v) for v in summary['limits'])

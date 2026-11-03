@@ -82,20 +82,6 @@
         "fraction": 0.875,
         "maximum_score": 1.9302972168230141,
         "median_of_sample_maxima": 1.2730605904685226
-      },
-      "untenable": {
-        "numerator": 8,
-        "denominator_completed_random": 8,
-        "fraction": 1.0,
-        "maximum_score": null,
-        "median_of_sample_maxima": null
-      },
-      "rollover": {
-        "numerator": 0,
-        "denominator_completed_random": 8,
-        "fraction": 0.0,
-        "median_of_sample_medians": null,
-        "maximum_score": 0.9459274558385024
       }
     },
     "rows": [

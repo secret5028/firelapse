@@ -19,10 +19,10 @@ const series=obj({...Object.fromEntries(seriesNames.map(k=>[k,arr(nullable(num))
  aggregation_status:en('direct','not_defined'),source_cells:arr(str),room_id:str,
  field_sources:dict(str),legacy_optical:obj({ODu:arr(nullable(num)),ODl:arr(nullable(num))})});
 const criterion=obj({met:nullable(bool),degree:nullable(num),r_T:nullable(num),r_F:nullable(num),r_O:nullable(num),
- bottleneck:en('T','F','O',null),dominant:en('T','F','O',null),status:nullable(str),burning_upper:nullable(bool)},
+ bottleneck:en('T','F','O',null),dominant:en('T','F','O',null),status:nullable(str),rollover:obj({active:nullable(bool),ignition:nullable(bool),excluded_origin:nullable(bool)})},
  ['met','degree','r_T','r_F','r_O','bottleneck','dominant','status']);
 const frame=obj({smoke_stage:en(0,1,2,null),smoke_factors:arr(en('hot','fuel','deep')),
- FO:ref('criterion'),FGI:ref('criterion'),backdraft:ref('criterion'),rollover:ref('criterion'),untenable:ref('criterion'),
+ FO:ref('criterion'),FGI:ref('criterion'),backdraft:ref('criterion'),untenable:ref('criterion'),
  source_cells:arr(str),aggregation:en('single','cell_any')});
 const timeline={type:'object',patternProperties:{'^(0|[1-9][0-9]*)$':ref('conditionFrame')},additionalProperties:false};
 const cell=obj({cell_id:str,polygon_m:ring,holes_m:arr(ring),polygons_m:arr(poly),
@@ -44,14 +44,15 @@ const schemas={
    settings_hash:sha,seed:nullable({type:'integer'}),opening_state:dict(nullable(num))}),
   status:en('complete','partial','failed'),t_end_s:nullable(num),dt_out_s:nullable(num),limits_text:arr(str),time_s:arr(num),
   rooms:dict(ref('series')),cells:dict(ref('series')),conditions:dict(ref('timeline')),cell_conditions:dict(ref('timeline')),
-  index_by_cell:dict(obj(Object.fromEntries(['FO','FGI','backdraft','rollover'].map(k=>[k,arr(nullable(num))])))),
-  index_history_max:dict(obj(Object.fromEntries(['FO','FGI','backdraft','rollover'].map(k=>[k,nullable(num)])))),
-  index_history_peak_s:dict(obj(Object.fromEntries(['FO','FGI','backdraft','rollover'].map(k=>[k,nullable(num)])))),
+  index_by_cell:dict(obj(Object.fromEntries(['FO','FGI','backdraft'].map(k=>[k,arr(nullable(num))])))),
+  fgi_rollover_by_cell:dict(obj({ignition:arr(nullable(bool)),excluded_origin:nullable(bool),eligible_peak_index:nullable(num),status:str})),
+  index_history_max:dict(obj(Object.fromEntries(['FO','FGI','backdraft'].map(k=>[k,nullable(num)])))),
+  index_history_peak_s:dict(obj(Object.fromEntries(['FO','FGI','backdraft'].map(k=>[k,nullable(num)])))),
   events:arr(obj({t_s:num,kind:en('ignition','supply_start','window_break','rule_trigger'),room_id:str,
    cell_id:nullable(str),parent_room_id:nullable(str),basis:str})),
   opening_risk:nullable(dict(arr(point(2)))),opening_risk_status:en('evaluated','not_evaluated','not_provided'),
   boundary_rooms:arr(str),boundary_by_cell:dict(arr(nullable(bool))),fallback_sensors:nullable(arr(str)),
-  legacy_color:dict(obj({color:arr(str),rollover_band:arr(nullable(bool)),LOC_vol_fraction:nullable(num)})),
+  legacy_color:dict(obj({color:arr(str),LOC_vol_fraction:nullable(num)})),
   errors:arr(issue),notes:arr(str),source_refs:dict(str),aggregation_policy:str}),
  screening:obj({schema:{const:'pyrocast.screening/1'},building_id:str,floor_id:str,
   stage1:arr(obj({room_id:str,rank:{type:'integer',minimum:1},score:num,factors:dict(obj({raw:nullable(num),norm:nullable(num)}))})),

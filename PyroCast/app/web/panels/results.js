@@ -1,5 +1,6 @@
 import {infoTip} from './explanations.js';
-export const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
+import {roomFgiRollover} from '../adapters/fgi_rollover.js';
+export const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 const finite=Number.isFinite;
 const number=(v,d=0)=>finite(v)?v.toFixed(d):'미평가';
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -58,6 +59,7 @@ export function createResultsPanel({panel,store}){
   for(const s of scores){const row=append($('resultScores'),'div',undefined,'resultScore');row.dataset.type=s.type;append(row,'span',s.name);const bar=append(row,'div',undefined,'resultBar');bar.setAttribute('role','meter');bar.setAttribute('aria-label',s.name+' 지수');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(scale));if(finite(s.value))bar.setAttribute('aria-valuenow',String(s.value));bar.setAttribute('aria-valuetext',number(s.value));const fill=append(bar,'i',undefined,'resultFill');fill.style.width=(finite(s.value)?Math.max(0,s.value)/scale*100:0)+'%';fill.style.background=s.color;
    for(const [value,cls] of [[threshold.caution,''],[threshold.ribbon,' main']]){const mark=append(bar,'i',undefined,'resultMark'+cls);mark.style.left=value/scale*100+'%';mark.title=String(value);}
    const value=append(row,'span',number(s.value),'resultValue');value.style.color=finite(s.value)&&s.value>=threshold.ribbon?s.color:'';
+   if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 진행':'롤오버 진행 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
   }
   append($('resultScores'),'div',`주의 ${threshold.caution} · 테두리 ${threshold.ribbon} · 축 0–${Math.ceil(scale)}`,'resultScale');
   $('resultBottleneck').textContent='병목 · '+scores.map(s=>`${s.name} ${s.bottleneck?`${s.bottleneck} ${number(s.factor)}`:'미평가'}`).join(' · ');

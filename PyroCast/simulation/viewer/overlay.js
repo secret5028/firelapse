@@ -135,15 +135,9 @@ const RENDER_POLICY=Object.freeze({building:policy(0,null,null),
  band:policy(26,false,false,true),interfacePlane:policy(27,false,false,true),interfaceLine:policy(28,false,false,true),
  'openings.window':policy(30,true,false,true,.65),risk:policy(35,false,false,true,1),selection:policy(40,false,false,true,.95),
  'openings.door':policy(46,false,false,true,.9),core:policy(70,false,false,true,.10),'core.tread':policy(72,false,false,true,.86),'core.edge':policy(73,false,false,true,.95)});
-const RISK_TYPES=Object.freeze(['FO','FGI','backdraft','rollover','smoke']);
-const RISK_COLORS=Object.freeze({FO:'#ef4444',FGI:'#a855f7',backdraft:'#facc15',rollover:'#f97316',smoke:'#9ca3af'});
-const riskHeight=(floorZ,height,activeHeights,type)=>{const i=['FO','FGI','backdraft','rollover'].indexOf(type);if(i<0||!activeHeights.length)throw Error('Active ribbon type/heights required');const base=Math.max(.16,Math.min(height-.5,...activeHeights));return floorZ+Math.min(height-.04,base+i*.14);};
-// Display compatibility only. Shared conditions.*.met remains panel data.
-function displayV8Gates({color,smoke_stage,oxygen,loc,rollover_band}){
- const gas=smoke_stage===2&&Number.isFinite(loc)&&Number.isFinite(oxygen);
- return {FO:color==='#ef4444',FGI:gas&&oxygen>=loc,
-  backdraft:gas&&oxygen<loc,rollover:rollover_band===true};
-}
+const RISK_TYPES=Object.freeze(['FO','FGI','backdraft','smoke']);
+const RISK_COLORS=Object.freeze({FO:'#ef4444',FGI:'#a855f7',backdraft:'#facc15',smoke:'#9ca3af'});
+const riskHeight=(floorZ,height,activeHeights,type)=>{const i=['FO','FGI','backdraft'].indexOf(type);if(i<0||!activeHeights.length)throw Error('Active ribbon type/heights required');const base=Math.max(.16,Math.min(height-.5,...activeHeights));return floorZ+Math.min(height-.04,base+i*.14);};
 const LABELS=Object.freeze({building:'건물',openings:'문·창',core:'계단·승강기',smoke:'연기',flame:'화염',plume:'상승 플룸',risk:'위험 테두리',selection:'선택 실',upperCombustion:'상층 연소'});
 function applyRenderPolicy(object,key){const p=RENDER_POLICY[key];if(!p)throw Error('Unknown render policy');
  if(!object.isMesh&&!object.isLine)throw Error('Render policy requires a Mesh/Line, not a Group');
@@ -155,14 +149,36 @@ function applyRenderPolicy(object,key){const p=RENDER_POLICY[key];if(!p)throw Er
  }return object;
 }
 
-return {RENDER_POLICY,RISK_TYPES,RISK_COLORS,riskHeight,displayV8Gates,LABELS,applyRenderPolicy};
+return {RENDER_POLICY,RISK_TYPES,RISK_COLORS,riskHeight,LABELS,applyRenderPolicy};
+})();
+
+// app/web/adapters/fgi_rollover.js
+const __module4=(()=>{
+// The border threshold is display state: never bake it into a separate index.
+function fgiRollover(result,cell,index,threshold=100,history=false){
+ const r=result?.fgi_rollover_by_cell?.[cell];
+ if(!r)return null;
+ if(r.excluded_origin===true)return false;
+ if(r.excluded_origin!==false)return null;
+ if(history)return Number.isFinite(r.eligible_peak_index)?r.eligible_peak_index>=threshold:r.status==='evaluated'?false:null;
+ const ignition=r.ignition[index],score=result.index_by_cell?.[cell]?.FGI?.[index];
+ if(ignition===false)return false;
+ return ignition===true&&Number.isFinite(score)?score>=threshold:null;
+}
+function roomFgiRollover(result,cells,index,threshold=100,history=false){
+ const values=cells.map(c=>fgiRollover(result,typeof c==='string'?c:c.cell_id,index,threshold,history));
+ return values.includes(true)?true:values.includes(null)?null:false;
+}
+
+return {fgiRollover,roomFgiRollover};
 })();
 
 // app/web/route/risk.js
-const __module4=(()=>{
+const __module5=(()=>{
 const {RISK_COLORS}=__module3;
-const types=['FO','FGI','backdraft','rollover'];
-const labels={FO:'FO',FGI:'FGI',backdraft:'백드래프트',rollover:'롤오버'};
+const {roomFgiRollover}=__module4;
+const types=['FO','FGI','backdraft'];
+const labels={FO:'FO',FGI:'FGI',backdraft:'백드래프트'};
 const ROUTE_CLEAR='#38bdf8';
 function routeSampleIndex(result,t){
  const times=result?.time_s;if(!times?.length||t<times[0])return -1;
@@ -181,12 +197,14 @@ function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings}){
   const cells=rooms.get(id)?.cells||[];
   for(const c of cells)for(const key of types){const value=history?indices?.[c.cell_id]?.[key]:i<0?null:indices?.[c.cell_id]?.[key]?.[i];
    if(!Number.isFinite(value)){missing=true;continue;}
-   // Stable ties: first member and FO/FGI/backdraft/rollover order.
+   // Stable ties: first member and FO/FGI/backdraft order.
    if(maximum===null||value>maximum){maximum=value;type=key;source_cell=c.cell_id;}
   }
   const row={room:id,label:id?id.replace(/^CAD_/,'').replaceAll('_',' '):'외부',index:maximum,type,source_cell,
    phenomenon:maximum===null?(id?'미평가':'외부'):labels[type],partial:missing&&maximum!==null,
    color:maximum>=100?RISK_COLORS[type]:maximum>=70?RISK_COLORS.smoke:ROUTE_CLEAR};
+  row.rollover_active=roomFgiRollover(resultMeta,cells,i,100,history);
+  if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 진행'+(history?' 이력':'');
   cache.set(id,row);return row;
  }
  for(const s of route.segments||[]){const last=rows.at(-1);
@@ -201,7 +219,7 @@ return {ROUTE_CLEAR,routeSampleIndex,routeRiskRows};
 })();
 
 // app/web/route/obstacles.js
-const __module5=(()=>{
+const __module6=(()=>{
 // Planar, axis-aligned obstacle footprints. Only rooms with explicit obstacles
 // use this visibility graph; existing CAD routes without obstacles are untouched.
 function expandedObstacle(o){
@@ -239,9 +257,9 @@ return {expandedObstacle,crossesObstacle,avoidObstacles};
 })();
 
 // app/web/route/graph.js
-const __module6=(()=>{
+const __module7=(()=>{
 // Read existing CAD connectivity only. No proximity links or fire simulation.
-const {avoidObstacles}=__module5;
+const {avoidObstacles}=__module6;
 const distance=(a,b)=>Math.hypot(...a.map((x,i)=>x-b[i]));
 const id=(f,r)=>`CAD_${f}_${r}`;
 function ringContains(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){
@@ -333,7 +351,7 @@ return {distance,contains,readRouteGraph,findRoute};
 })();
 
 // app/web/layers/empty.js
-const __module7=(()=>{
+const __module8=(()=>{
 // Stage 2 creates containers only. Existing shaders remain untouched.
 class EmptyLayer {
  static id='empty';
@@ -363,10 +381,10 @@ return {EmptyLayer,LAYER_IDS,LAYER_TYPES,createEmptyLayers};
 })();
 
 // app/web/layers/route.js
-const __module8=(()=>{
-const {EmptyLayer}=__module7;
-const {findRoute}=__module6;
-const {routeRiskRows,routeSampleIndex,ROUTE_CLEAR}=__module4;
+const __module9=(()=>{
+const {EmptyLayer}=__module8;
+const {findRoute}=__module7;
+const {routeRiskRows,routeSampleIndex,ROUTE_CLEAR}=__module5;
 class RouteLayer extends EmptyLayer {
  static id='route';
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
@@ -415,11 +433,11 @@ return {RouteLayer};
 })();
 
 // app/web/panels/route.js
-const __module9=(()=>{
+const __module10=(()=>{
 function createRoutePanel({store,graph}){
  const container=document.createElement('details');container.id='routeSettings';container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace">차량 위치 지정</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중심–문/계단 연결점 직선 거리 근사. 적재물·장애물·호스 굴곡은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
- const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 4현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 시간바와 무관한 전 구간 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="exploreCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
+ const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 3현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 시간바와 무관한 전 구간 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="exploreCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
  document.getElementById('exploreRules').before(summary);
  const style=document.createElement('style');style.textContent='#routeRiskSummary table{table-layout:fixed;font-size:10px}#routeRiskSummary th,#routeRiskSummary td{padding:6px 2px;white-space:normal;overflow-wrap:anywhere}#routeRiskSummary th:nth-child(1){width:8%}#routeRiskSummary th:nth-child(2){width:24%}#routeRiskSummary th:nth-child(3){width:17%}#routeRiskSummary th:nth-child(4){width:17%}#routeRiskSummary th:nth-child(5){width:21%}#routeRiskSummary th:nth-child(6){width:13%}#routeRiskSummary td:nth-child(2){min-width:0}#routeRiskSummary thead{position:sticky;top:0;background:#163345}#routeRiskBasis{font-size:11px;color:#b8cbd8;margin-bottom:6px}';summary.append(style);
  const hud=document.createElement('div');hud.id='routeHUD';hud.style.cssText='padding-top:5px;font-size:12px;color:#9cdcff';document.querySelector('.compactHUD').append(hud);
@@ -444,7 +462,7 @@ return {createRoutePanel};
 })();
 
 // app/web/panels/explanations.js
-const __module10=(()=>{
+const __module11=(()=>{
 // Presentation-only migration. Legacy modules and their request handlers stay intact.
 const explanatoryText = text => /(?:입니다|합니다|않습니다|없습니다|아닙니다|뜻하지|표시용|계산 아님|예측 아님|확률 아님|확률이 아님|별개|별도|검토용|자동으로|전파 계산|기준이며|서로 다른|표시 효과|미연결|보는 쪽 외부 창만|도면 문틀 ·|위험 테두리:|임계값은 사용자 가정|가스 화염 표현 끔)/.test(text);
 function infoTip(text){
@@ -497,8 +515,8 @@ return {explanatoryText,infoTip,attachExplanations};
 })();
 
 // app/web/panels/building.js
-const __module11=(()=>{
-const {infoTip}=__module10;
+const __module12=(()=>{
+const {infoTip}=__module11;
 const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
 const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
 function doorCategory(row){return row.door_class==='fire'?(row.confidence==='inferred'?'inferred':['confirmed','user'].includes(row.confidence)?'confirmed':'unknown'):['ordinary','external'].includes(row.door_class)?'ordinary':'unknown';}
@@ -530,7 +548,7 @@ return {doorCategory,buildingTable,openingCounts,createBuildingPanel};
 })();
 
 // app/web/state/series_cache.js
-const __module12=(()=>{
+const __module13=(()=>{
 // One active immutable series payload, outside the observable metadata store.
 function frozenCopy(value){const data=structuredClone(value);const visit=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(visit);Object.freeze(x);}};visit(data);return data;}
 function createSeriesCache(){
@@ -543,9 +561,9 @@ return {createSeriesCache};
 })();
 
 // app/web/state/store.js
-const __module13=(()=>{
+const __module14=(()=>{
 // Pure state transitions. I/O belongs to a future boundary controller.
-const {createSeriesCache}=__module12;
+const {createSeriesCache}=__module13;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
@@ -556,7 +574,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  openings:{exterior:false,interior:false},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
- risk:{history:false,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:false},threshold:{ribbon:100,caution:70}},
+ risk:{history:false,show:{FO:true,FGI:true,backdraft:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
 function createStore({validators={},seriesCache=createSeriesCache()}={}){
@@ -633,7 +651,7 @@ return {createStore,seriesCache,store,legacyDispatchBridge};
 })();
 
 // app/web/adapters/read.js
-const __module14=(()=>{
+const __module15=(()=>{
 // Pure read adapters: no DOM, fetch, engine imports, defaults, or simulation.
 const copy=x=>structuredClone(x);
 const issue=(errors,code,ref,msg)=>errors.push({code,ref:String(ref),msg});
@@ -712,8 +730,8 @@ function indexHistoryExtrema(indices,times=[]){
 }
 function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
 function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:[cid],aggregation:'single'};
- for(const key of ['FO','FGI','backdraft','rollover','untenable'])f[key]=criterion(s.conditions?.[key],i);
- const heat=at(s.Qbulk_kW,i);f.rollover.burning_upper=heat===null?null:heat>0;
+ for(const key of ['FO','FGI','backdraft','untenable'])f[key]=criterion(s.conditions?.[key],i);
+ const r=s.conditions?.FGI?.rollover;f.FGI.rollover={active:at(r?.active,i),ignition:at(r?.ignition,i),excluded_origin:r?.excluded_origin??null};
  return f;
 }
 
@@ -729,7 +747,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
  for(const f of building.floors)for(const r of f.rooms){roomCells.set(r.room_id,r.cells.map(c=>c.cell_id));for(const c of r.cells)cellRoom.set(c.cell_id,r.room_id);}
  const meta=new Map(unique(p.rooms,'key',errors).map(c=>[c.key,c]));
  const originalResult=new Map((sourceResult?.rooms||[]).map(r=>[r.id,r]));
- const cells={},cellConditions={},indexByCell={},legacyColor={},boundaryByCell={},boundaries=new Set();
+ const cells={},cellConditions={},indexByCell={},fgiRollover={},legacyColor={},boundaryByCell={},boundaries=new Set();
  const oxygenProxy=sourceResult?.physical_parameters?.oxygen_inventory_mode===true;
  for(const [cid,rid] of cellRoom){
   const c=meta.get(cid),s=c&&p.solvers[c.solver_id];
@@ -740,10 +758,13 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
   row.HRR_supply_kW=series(supply,n,cid+'.supply');row.field_sources.HRR_supply_kW=supply?'saved result.rooms.supply_HRR_kW':'unavailable';cells[cid]=row;
   cellConditions[cid]=Object.fromEntries(p.time_s.map((_,i)=>[String(i),frame(s,i,cid)]));
   // Presentation scale only: retain saved degree and unknowns, without re-scoring factors.
-  indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft','rollover'].map(key=>[key,p.time_s.map((_,i)=>{
+  indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft'].map(key=>[key,p.time_s.map((_,i)=>{
    const degree=cellConditions[cid][i][key].degree;return Number.isFinite(degree)?degree*100:null;
   })]));
-  legacyColor[cid]={color:Array(n).fill(''),rollover_band:unknown(n),LOC_vol_fraction:null};
+  const state=s.conditions?.FGI?.rollover,ignition=state?.ignition??unknown(n),eligible=indexByCell[cid].FGI.filter((value,j)=>ignition[j]===true&&Number.isFinite(value));
+  fgiRollover[cid]={ignition:copy(ignition),excluded_origin:state?.excluded_origin??null,
+   eligible_peak_index:state?.excluded_origin===false&&eligible.length?Math.max(...eligible):null,status:state?.status??'not_evaluated'};
+  legacyColor[cid]={color:Array(n).fill(''),LOC_vol_fraction:null};
   // Read-only archive compatibility: old results keep their saved boundary geometry.
   const boundary=s.boundary??s.display_v8?.boundary;boundaryByCell[cid]=copy(boundary??unknown(n));if(boundary?.some(v=>v===true))boundaries.add(rid);
  }
@@ -758,10 +779,10 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
   conditions[rid]={};for(let i=0;i<n;i++){
    const frames=present.map(id=>cellConditions[id][i]),stages=frames.map(f=>f.smoke_stage);
    const f={smoke_stage:stages.some(v=>v===null)?null:Math.max(...stages),smoke_factors:[...new Set(frames.flatMap(f=>f.smoke_factors))],source_cells:present,aggregation:'cell_any'};
-   for(const key of ['FO','FGI','backdraft','rollover','untenable']){
+   for(const key of ['FO','FGI','backdraft','untenable']){
     f[key]={...criterion(null,i),met:anyKnown(frames.map(f=>f[key].met)),status:'cell_union_no_scalar_score'};
    }
-   f.rollover.burning_upper=anyKnown(frames.map(f=>f.rollover.burning_upper));conditions[rid][i]=f;
+   f.FGI.rollover={active:anyKnown(frames.map(f=>f.FGI.rollover.active)),ignition:anyKnown(frames.map(f=>f.FGI.rollover.ignition)),excluded_origin:anyKnown(frames.map(f=>f.FGI.rollover.excluded_origin))};conditions[rid][i]=f;
   }
  }
  notes.push('Multi-cell room continuous series and scalar scores have no legacy aggregate: null, not a newly invented average/max. Cell series remain exact.');
@@ -781,7 +802,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -807,7 +828,7 @@ return {snapshotHash,adaptBuilding,SERIES_MAP,indexHistoryExtrema,anyKnown,adapt
 })();
 
 // app/web/adapters/legacy_building.js
-const __module15=(()=>{
+const __module16=(()=>{
 // References are borrowed from the CAD loader, never from another display layer.
 // The three install() branches, in their original order. A colour-bearing
 // material alone is not enough: only objects touched by a branch are selected.
@@ -836,7 +857,7 @@ return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
 // app/web/adapters/legacy_openings.js
-const __module16=(()=>{
+const __module17=(()=>{
 // Read-only CAD-loader capability. No classification or opening-state inference.
 function readLegacyOpeningsSource({building,groups,sourceHash}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
@@ -850,7 +871,7 @@ return {readLegacyOpeningsSource};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module17=(()=>{
+const __module18=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; filtering remains in the display layer.
 function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
@@ -865,8 +886,8 @@ return {readLegacyCoreSource};
 })();
 
 // app/web/layers/building.js
-const __module18=(()=>{
-const {EmptyLayer,createEmptyLayers}=__module7;
+const __module19=(()=>{
+const {EmptyLayer,createEmptyLayers}=__module8;
 const {applyRenderPolicy}=__module3;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
@@ -914,7 +935,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module19=(()=>{
+const __module20=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -956,10 +977,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module20=(()=>{
-const {EmptyLayer}=__module7;
+const __module21=(()=>{
+const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
-const {exteriorWindowFace}=__module19;
+const {exteriorWindowFace}=__module20;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -1026,8 +1047,8 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module21=(()=>{
-const {EmptyLayer}=__module7;
+const __module22=(()=>{
+const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
 
 class CoreLayer extends EmptyLayer {
@@ -1078,7 +1099,7 @@ return {CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module22=(()=>{
+const __module23=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1152,7 +1173,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module23=(()=>{
+const __module24=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1160,7 +1181,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module24=(()=>{
+const __module25=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1168,7 +1189,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module25=(()=>{
+const __module26=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1176,11 +1197,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module26=(()=>{
-const {createRealViewSession}=__module22;
-const {createSmokeLayer}=__module23;
-const {createFlameLayer}=__module24;
-const {createPlumeLayer}=__module25;
+const __module27=(()=>{
+const {createRealViewSession}=__module23;
+const {createSmokeLayer}=__module24;
+const {createFlameLayer}=__module25;
+const {createPlumeLayer}=__module26;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1190,7 +1211,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module27=(()=>{
+const __module28=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1267,12 +1288,13 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module28=(()=>{
-const {EmptyLayer}=__module7;
+const __module29=(()=>{
+const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module27;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module28;
+const {roomFgiRollover}=__module4;
 
-const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
+const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class RiskLayer extends EmptyLayer {
  static id='risk';
@@ -1307,7 +1329,17 @@ class RiskLayer extends EmptyLayer {
    const historyMeshes=createMeshes(historyVerts),meshes=createMeshes(verts);
    const cautionMesh=applyRenderPolicy(new T.Mesh(historyMeshes[0].geometry,this.own(historyMeshes[0].material.clone())),'risk');
    cautionMesh.material.color.set('#9ca3af');cautionMesh.raycast=()=>{};this.group.add(cautionMesh);
-   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes,cautionMesh});
+   const dots=[];
+   for(const p of original)for(let i=0;i<p.o.length;i++){
+    const a=p.o[i],b=p.o[(i+1)%p.o.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    for(let d=0;d<length;d+=2){const x=a[0]+(b[0]-a[0])*d/length,y=a[1]+(b[1]-a[1])*d/length;
+     for(let k=0;k<8;k++){const u=k*Math.PI/4,v=(k+1)*Math.PI/4;dots.push(x,y,0,x+.10*Math.cos(u),y+.10*Math.sin(u),0,x+.10*Math.cos(v),y+.10*Math.sin(v),0);}
+    }
+   }
+   const dotGeometry=this.own(new T.BufferGeometry());dotGeometry.setAttribute('position',new T.Float32BufferAttribute(dots,3));
+   const rolloverDots=applyRenderPolicy(new T.Mesh(dotGeometry,this.own(new T.MeshBasicMaterial({color:'#f97316',side:T.DoubleSide,transparent:true,opacity:1,depthTest:false,depthWrite:false}))),'risk');
+   rolloverDots.renderOrder=36;rolloverDots.name='FGI rollover dots';rolloverDots.raycast=()=>{};this.group.add(rolloverDots);
+   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes,cautionMesh,rolloverDots});
   }
  }
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
@@ -1315,7 +1347,7 @@ class RiskLayer extends EmptyLayer {
   if(frame.resultMeta!==this.resultMeta)this.resultMeta=frame.resultMeta;
   this.updateVisibility();
  }
- tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes,row.cautionMesh].forEach(m=>m.visible=false);return;}
+ tick(){this.rolloverRooms=[];const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes,row.cautionMesh,row.rolloverDots].forEach(m=>m.visible=false);return;}
   const series=f.series?.cells;if(!series)throw Error('Risk layer requires adapted cell series; raw playback is not supported');
   if(!r.index_by_cell)throw Error('Risk layer requires adapted saved indices');
   const {ribbon,caution}=f.risk.threshold;
@@ -1334,6 +1366,10 @@ class RiskLayer extends EmptyLayer {
    const {height_m:height,z_m}=row.members[0].meta,base=Math.max(.16,Math.min(height-.5,...active.values()));
    row.meshes.forEach((m,j)=>{const visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false,dashed=history&&!current.has(types[j]),hm=row.historyMeshes[j];
     m.visible=visible&&!dashed;hm.visible=visible&&history;hm.position.z=m.position.z=z_m+Math.min(height-.04,base+j*.14);if(visible)this.counts[types[j]]++;});
+   const ids=row.members.map(v=>v.id),rollover=roomFgiRollover(r,ids,i,ribbon,history)===true,now=roomFgiRollover(r,ids,i,ribbon,false)===true;
+   row.rolloverDots.visible=onFloor&&active.has('FGI')&&f.risk.show.FGI!==false&&rollover;
+   row.rolloverDots.position.z=row.meshes[1].position.z+.015;row.rolloverDots.material.opacity=now?1:.55;
+   if(row.rolloverDots.visible)this.rolloverRooms.push({room_id:row.id,current:now,historyOnly:!now});
    const attention=history&&onFloor&&!active.size&&f.risk.show.smoke!==false&&row.members.some(v=>types.some(type=>meets(v.id,type,caution)));
    row.cautionMesh.visible=attention;
    row.cautionMesh.position.z=z_m+Math.min(height-.04,Math.max(.16,Math.min(height-.5,...row.members.map(v=>series[v.id]?.interface_m[i]).filter(Number.isFinite))));
@@ -1354,8 +1390,8 @@ class RiskLayer extends EmptyLayer {
   }
   this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
- summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
- diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],cautionRooms:this.cautionRooms||[]};}
+ summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실(롤오버 상태 ${this.rolloverRooms?.length||0}실) · 백드래프트 ${n.backdraft||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
+ diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],rolloverRooms:this.rolloverRooms||[],cautionRooms:this.cautionRooms||[]};}
  dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }
 
@@ -1363,7 +1399,7 @@ return {RiskLayer};
 })();
 
 // app/web/scene/picking.js
-const __module29=(()=>{
+const __module30=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -1371,11 +1407,11 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/selection.js
-const __module30=(()=>{
-const {EmptyLayer}=__module7;
+const __module31=(()=>{
+const {EmptyLayer}=__module8;
 const {applyRenderPolicy}=__module3;
-const {joinedSelectionRibbons}=__module27;
-const {ROOM_PICK_LAYER}=__module29;
+const {joinedSelectionRibbons}=__module28;
+const {ROOM_PICK_LAYER}=__module30;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1421,9 +1457,9 @@ return {SelectionLayer};
 })();
 
 // app/web/scene/host.js
-const __module31=(()=>{
-const {createEmptyLayers}=__module7;
-const {ROOM_PICK_LAYER}=__module29;
+const __module32=(()=>{
+const {createEmptyLayers}=__module8;
+const {ROOM_PICK_LAYER}=__module30;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1494,7 +1530,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module32=(()=>{
+const __module33=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1528,7 +1564,7 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
   $('liteClock').textContent=`${stamp(time)} / ${stamp(data.time_s.at(-1))}`;$('liteTime').value=time;$('litePlay').textContent=playing?'일시정지':'재생';
   const s=data.solvers[selected.solver_id],event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
   $('liteDetail').textContent=clicked?`${name(selected)} · 저장 조건 지수 · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
-  $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트'],['rollover','롤오버']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
+  $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
   $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);
@@ -1539,7 +1575,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/shell.js
-const __module33=(()=>{
+const __module34=(()=>{
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1611,7 +1647,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module34=(()=>{
+const __module35=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -1644,9 +1680,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module35=(()=>{
-const {createDisplayPolicy}=__module34;
-const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
+const __module36=(()=>{
+const {createDisplayPolicy}=__module35;
+const {roomFgiRollover}=__module4;
+const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
@@ -1694,6 +1731,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ const rolloverBadge=document.createElement('b');rolloverBadge.id='fgiRolloverBadge';rolloverBadge.hidden=true;rolloverBadge.style.color='#f97316';rolloverBadge.title='FGI 부속 상태 · 보라 리본의 주황 점. 독립 지수 아님.';$('legend-FGI').append(rolloverBadge);
  $('liteLegend').remove();
  const vehicleMarker=document.createElement('span');vehicleMarker.className='displayVehicleMarker';vehicleMarker.textContent='차량';vehicleMarker.title='경로 차량 위치 · 표시 기호';vehicleMarker.hidden=true;$('v').append(vehicleMarker);
  const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
@@ -1729,6 +1767,10 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   $('hudRoom').textContent=$('liteRoom').selectedOptions[0]?.textContent||'실 선택';
   const scores=phenomena.map(([key,name,color])=>({key,name,color,value:cell?result.index_by_cell[cell]?.[key]?.[index]:null})).filter(s=>Number.isFinite(s.value)).sort((a,b)=>b.value-a.value),top=scores[0];
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
+  const risk=store.get('risk'),floor=store.get('floor').floor_id,ids=building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms.flatMap(r=>r.cells));
+  const rolling=roomFgiRollover(result,ids,index,risk.threshold.ribbon,risk.history)===true,now=roomFgiRollover(result,ids,index,risk.threshold.ribbon,false)===true;
+  rolloverBadge.hidden=!rolling;rolloverBadge.textContent=now?' · 롤오버 진행':' · 롤오버 진행 이력';
+  if(top?.key==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,risk.threshold.ribbon,false)===true)$('hudPill').textContent+=' · 롤오버 진행';
   const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);
   selectionLabel.title=cell?'선택 셀 · 현재 시각':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
  }
@@ -1744,9 +1786,10 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module36=(()=>{
-const {infoTip}=__module10;
-const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15'],['rollover','롤오버','#f97316']];
+const __module37=(()=>{
+const {infoTip}=__module11;
+const {roomFgiRollover}=__module4;
+const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
 const finite=Number.isFinite;
 const number=(v,d=0)=>finite(v)?v.toFixed(d):'미평가';
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -1805,6 +1848,7 @@ function createResultsPanel({panel,store}){
   for(const s of scores){const row=append($('resultScores'),'div',undefined,'resultScore');row.dataset.type=s.type;append(row,'span',s.name);const bar=append(row,'div',undefined,'resultBar');bar.setAttribute('role','meter');bar.setAttribute('aria-label',s.name+' 지수');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(scale));if(finite(s.value))bar.setAttribute('aria-valuenow',String(s.value));bar.setAttribute('aria-valuetext',number(s.value));const fill=append(bar,'i',undefined,'resultFill');fill.style.width=(finite(s.value)?Math.max(0,s.value)/scale*100:0)+'%';fill.style.background=s.color;
    for(const [value,cls] of [[threshold.caution,''],[threshold.ribbon,' main']]){const mark=append(bar,'i',undefined,'resultMark'+cls);mark.style.left=value/scale*100+'%';mark.title=String(value);}
    const value=append(row,'span',number(s.value),'resultValue');value.style.color=finite(s.value)&&s.value>=threshold.ribbon?s.color:'';
+   if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 진행':'롤오버 진행 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
   }
   append($('resultScores'),'div',`주의 ${threshold.caution} · 테두리 ${threshold.ribbon} · 축 0–${Math.ceil(scale)}`,'resultScale');
   $('resultBottleneck').textContent='병목 · '+scores.map(s=>`${s.name} ${s.bottleneck?`${s.bottleneck} ${number(s.factor)}`:'미평가'}`).join(' · ');
@@ -1825,7 +1869,7 @@ return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createR
 })();
 
 // app/web/adapters/attention.js
-const __module37=(()=>{
+const __module38=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -1842,7 +1886,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module38=(()=>{
+const __module39=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -1850,8 +1894,7 @@ const savedAttention = {
   "kinds": [
     "FO",
     "FGI",
-    "backdraft",
-    "rollover"
+    "backdraft"
   ],
   "records": [
     {
@@ -1860,8 +1903,7 @@ const savedAttention = {
       "kinds": [
         "FO",
         "FGI",
-        "backdraft",
-        "rollover"
+        "backdraft"
       ],
       "attention_rooms": [
         "CAD_3F_R1",
@@ -1874,10 +1916,10 @@ const savedAttention = {
       "unknown_rooms": [],
       "complete": true,
       "source_stamp": [
-        1793682877236535400,
-        52844694
+        1793684276144254000,
+        16291983
       ],
-      "source_sha256": "d6231216ffbb5043af7a2d839df5960a69f1f9d349aee77060212b1d2a418216",
+      "source_sha256": "64636ef629158a47b826d3de60b0d795fa97fe665275bb2b9e370a66ae5a0aa8",
       "identity": [
         "CAD_3F_R3",
         "fixed",
@@ -1896,9 +1938,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module39=(()=>{
-const {attentionRanking}=__module37;
-const {savedAttention}=__module38;
+const __module40=(()=>{
+const {attentionRanking}=__module38;
+const {savedAttention}=__module39;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -1914,8 +1956,8 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC}){
  const $=id=>document.getElementById(id),root=document.createElement('div');root.id='exploreContent';$('shellPane-explore').append(root);
  root.innerHTML=`<h3>① 후보 순위 <span tabindex="0" title="기존 서버가 계산한 상대 순위입니다. 위험도 예측값이 아닙니다.">ⓘ</span></h3>
  <div class="exploreCard"><form id="exploreRunForm"><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
- <h3>② 시뮬레이션 순위 <span tabindex="0" title="표시 순위: 연소 실 수 → 주의 이상 실 수 → 최초 FO가 빠른 순. 주의 이상은 4현상 중 최대 지수 ≥70인 원래 방 수입니다. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
- <div class="exploreCard"><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th title="4현상 최대 지수 ≥70인 실 수">주의 ≥70</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
+ <h3>② 시뮬레이션 순위 <span tabindex="0" title="표시 순위: 연소 실 수 → 주의 이상 실 수 → 최초 FO가 빠른 순. 주의 이상은 3현상 중 최대 지수 ≥70인 원래 방 수입니다. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
+ <div class="exploreCard"><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th title="3현상 최대 지수 ≥70인 실 수">주의 ≥70</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
  <h3>③ 몬테카를로</h3><div class="exploreCard"><label>화점 <select id="exploreOrigin" disabled></select></label><label>표본 수 <input id="exploreSamples" type="number" min="2" max="1000" step="1" value="10" required></label><div id="exploreEstimate" title="저장된 MC 전체 경과시간 ÷ 완료 표본 수 × 요청 표본 수. 다른 화점과 개폐 조건의 소요시간은 달라질 수 있습니다.">예상 시간 —</div><div class="exploreButtons"><button id="exploreOriginRun" disabled>선택 실 2상태 실행</button><button id="exploreMC" disabled title="MC 서버 연결 확인 중">MC 실행</button><button id="exploreResults" disabled>결과 보기</button></div><div id="exploreMCStatus" role="status">MC 서버 연결 확인 중</div></div>
  <details id="exploreRules"><summary>규칙 설정</summary><div id="exploreRuleContext"></div><div id="exploreRuleMount"></div></details>`;
  const style=document.createElement('style');style.dataset.pyrocastExplore='true';style.textContent=`
@@ -1967,34 +2009,34 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module40=(()=>{
+const __module41=(()=>{
 const {createAIFuelPanel}=__module0;
 const {createAssistantPanel}=__module1;
 const {attachExport}=__module2;
-const {routeSampleIndex}=__module4;
-const {readRouteGraph,contains}=__module6;
-const {RouteLayer}=__module8;
-const {createRoutePanel}=__module9;
-const {createBuildingPanel,buildingTable}=__module11;
-const {attachExplanations}=__module10;
-const {createStore}=__module13;
-const {createSeriesCache}=__module12;
-const {adaptBuilding,adaptResult,adaptScreening}=__module14;
-const {readLegacyBuildingSource}=__module15;
-const {readLegacyOpeningsSource}=__module16;
-const {readLegacyCoreSource}=__module17;
-const {BuildingLayer}=__module18;
-const {OpeningsLayer}=__module20;
-const {CoreLayer}=__module21;
-const {createRealViewLayers}=__module26;
-const {RiskLayer}=__module28;
-const {SelectionLayer}=__module30;
-const {createSceneHost}=__module31;
-const {createLitePanel,updateLitePanel}=__module32;
-const {createPanelShell}=__module33;
-const {createDisplayPanel}=__module35;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module36;
-const {createExplorePanel}=__module39;
+const {routeSampleIndex}=__module5;
+const {readRouteGraph,contains}=__module7;
+const {RouteLayer}=__module9;
+const {createRoutePanel}=__module10;
+const {createBuildingPanel,buildingTable}=__module12;
+const {attachExplanations}=__module11;
+const {createStore}=__module14;
+const {createSeriesCache}=__module13;
+const {adaptBuilding,adaptResult,adaptScreening}=__module15;
+const {readLegacyBuildingSource}=__module16;
+const {readLegacyOpeningsSource}=__module17;
+const {readLegacyCoreSource}=__module18;
+const {BuildingLayer}=__module19;
+const {OpeningsLayer}=__module21;
+const {CoreLayer}=__module22;
+const {createRealViewLayers}=__module27;
+const {RiskLayer}=__module29;
+const {SelectionLayer}=__module31;
+const {createSceneHost}=__module32;
+const {createLitePanel,updateLitePanel}=__module33;
+const {createPanelShell}=__module34;
+const {createDisplayPanel}=__module36;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module37;
+const {createExplorePanel}=__module40;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2187,8 +2229,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module41=(()=>{
-const {attachModern}=__module40;
+const __module42=(()=>{
+const {attachModern}=__module41;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2203,4 +2245,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module41.attach;
+export const attach=__module42.attach;

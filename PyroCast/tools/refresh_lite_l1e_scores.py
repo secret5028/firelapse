@@ -15,9 +15,8 @@ def refresh(folder,raw,params,statepath,sample=None):
     state=np.load(statepath);m.sol=SimpleNamespace(t=state['t'],y=state['y'],success=r['ok'])
     r['shared_conditions']=shared_conditions(m,r)
     r['lite_revision']='L1e_section1.5'
-    r['rollover']={'status':'evaluated' if r['gas_conditions_evaluable'] else 'not_evaluated',
-        'source':'shared_conditions.rooms.<cell>.rollover',
-        'meaning':'condition degree separate from actual upper_reaction_kg_s; not proof of rollover'}
+    r.pop('rollover',None)
+    r['rollover_state_source']='shared_conditions.rooms.<cell>.FGI.rollover'
     r['score_revision']='1.5.5_20261025_final_three_factor_AND'
     runmod.base.save(folder/'result.json',r)
     if sample:

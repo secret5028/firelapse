@@ -52,7 +52,7 @@ class Acceptance(unittest.TestCase):
         self.assertTrue(v['proposals'][0]['rows']);self.assertTrue(all(r['room_id'].startswith('CAD_2F_') for r in v['proposals'][0]['rows']))
     def test_5_briefing(self):
         b=briefing(self.s,self.ctx)
-        self.assertEqual([c['tool'] for c in b['calls']],['get_ranking','get_case_summary','get_route',*['get_peak_events']*4,'get_tactic_rules'])
+        self.assertEqual([c['tool'] for c in b['calls']],['get_ranking','get_case_summary','get_route',*['get_peak_events']*3,'get_tactic_rules'])
         for f in b['facts']:
             row=f['evidence']['row'];encoded=json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True)
             self.assertIn(json.dumps(row,sort_keys=True),encoded)

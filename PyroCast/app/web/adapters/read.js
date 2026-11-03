@@ -76,8 +76,8 @@ export function indexHistoryExtrema(indices,times=[]){
 }
 export function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
 function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:[cid],aggregation:'single'};
- for(const key of ['FO','FGI','backdraft','rollover','untenable'])f[key]=criterion(s.conditions?.[key],i);
- const heat=at(s.Qbulk_kW,i);f.rollover.burning_upper=heat===null?null:heat>0;
+ for(const key of ['FO','FGI','backdraft','untenable'])f[key]=criterion(s.conditions?.[key],i);
+ const r=s.conditions?.FGI?.rollover;f.FGI.rollover={active:at(r?.active,i),ignition:at(r?.ignition,i),excluded_origin:r?.excluded_origin??null};
  return f;
 }
 
@@ -93,7 +93,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
  for(const f of building.floors)for(const r of f.rooms){roomCells.set(r.room_id,r.cells.map(c=>c.cell_id));for(const c of r.cells)cellRoom.set(c.cell_id,r.room_id);}
  const meta=new Map(unique(p.rooms,'key',errors).map(c=>[c.key,c]));
  const originalResult=new Map((sourceResult?.rooms||[]).map(r=>[r.id,r]));
- const cells={},cellConditions={},indexByCell={},legacyColor={},boundaryByCell={},boundaries=new Set();
+ const cells={},cellConditions={},indexByCell={},fgiRollover={},legacyColor={},boundaryByCell={},boundaries=new Set();
  const oxygenProxy=sourceResult?.physical_parameters?.oxygen_inventory_mode===true;
  for(const [cid,rid] of cellRoom){
   const c=meta.get(cid),s=c&&p.solvers[c.solver_id];
@@ -104,10 +104,13 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   row.HRR_supply_kW=series(supply,n,cid+'.supply');row.field_sources.HRR_supply_kW=supply?'saved result.rooms.supply_HRR_kW':'unavailable';cells[cid]=row;
   cellConditions[cid]=Object.fromEntries(p.time_s.map((_,i)=>[String(i),frame(s,i,cid)]));
   // Presentation scale only: retain saved degree and unknowns, without re-scoring factors.
-  indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft','rollover'].map(key=>[key,p.time_s.map((_,i)=>{
+  indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft'].map(key=>[key,p.time_s.map((_,i)=>{
    const degree=cellConditions[cid][i][key].degree;return Number.isFinite(degree)?degree*100:null;
   })]));
-  legacyColor[cid]={color:Array(n).fill(''),rollover_band:unknown(n),LOC_vol_fraction:null};
+  const state=s.conditions?.FGI?.rollover,ignition=state?.ignition??unknown(n),eligible=indexByCell[cid].FGI.filter((value,j)=>ignition[j]===true&&Number.isFinite(value));
+  fgiRollover[cid]={ignition:copy(ignition),excluded_origin:state?.excluded_origin??null,
+   eligible_peak_index:state?.excluded_origin===false&&eligible.length?Math.max(...eligible):null,status:state?.status??'not_evaluated'};
+  legacyColor[cid]={color:Array(n).fill(''),LOC_vol_fraction:null};
   // Read-only archive compatibility: old results keep their saved boundary geometry.
   const boundary=s.boundary??s.display_v8?.boundary;boundaryByCell[cid]=copy(boundary??unknown(n));if(boundary?.some(v=>v===true))boundaries.add(rid);
  }
@@ -122,10 +125,10 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   conditions[rid]={};for(let i=0;i<n;i++){
    const frames=present.map(id=>cellConditions[id][i]),stages=frames.map(f=>f.smoke_stage);
    const f={smoke_stage:stages.some(v=>v===null)?null:Math.max(...stages),smoke_factors:[...new Set(frames.flatMap(f=>f.smoke_factors))],source_cells:present,aggregation:'cell_any'};
-   for(const key of ['FO','FGI','backdraft','rollover','untenable']){
+   for(const key of ['FO','FGI','backdraft','untenable']){
     f[key]={...criterion(null,i),met:anyKnown(frames.map(f=>f[key].met)),status:'cell_union_no_scalar_score'};
    }
-   f.rollover.burning_upper=anyKnown(frames.map(f=>f.rollover.burning_upper));conditions[rid][i]=f;
+   f.FGI.rollover={active:anyKnown(frames.map(f=>f.FGI.rollover.active)),ignition:anyKnown(frames.map(f=>f.FGI.rollover.ignition)),excluded_origin:anyKnown(frames.map(f=>f.FGI.rollover.excluded_origin))};conditions[rid][i]=f;
   }
  }
  notes.push('Multi-cell room continuous series and scalar scores have no legacy aggregate: null, not a newly invented average/max. Cell series remain exact.');
@@ -145,7 +148,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }

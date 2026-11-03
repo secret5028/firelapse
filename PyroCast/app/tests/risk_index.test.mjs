@@ -11,7 +11,8 @@ const dir='simulation/results/lite_v8_mc_R2_10_20261026/S09',playback=read(dir+'
 const building=adaptBuilding({scenario,playback,sourceHash:playback.building_sha256});
 const result=await adaptResult({playback,scenario,building,resultId:'S09'}),store=createStore(),layer=new RiskLayer(THREE),scene=new THREE.Scene();
 store.dispatch('risk/history',{enabled:false});
-const types=['FO','FGI','backdraft','rollover'],i=result.time_s.indexOf(1420);
+store.dispatch('risk/set',{type:'smoke',visible:true});
+const types=['FO','FGI','backdraft'],i=result.time_s.indexOf(1420);
 layer.mount(scene,store);const protectedResult=new Proxy(result,{get(o,k){if(['legacy_color','cell_conditions','conditions'].includes(k))throw Error('Legacy/condition gate access: '+k);return o[k];}});
 const frame=()=>({building,resultMeta:protectedResult,series:{cells:result.cells},t_s:1420,floor:{floor_id:'3F'},risk:store.get('risk'),layers:store.get('layers'),selection:store.get('selection')});
 const update=()=>{layer.setData(frame());layer.tick();};update();
@@ -21,11 +22,11 @@ for(const indices of Object.values(result.index_by_cell))for(const type of types
 update();assert.equal(layer.activeRooms.length,0);assert.equal(layer.cautionRooms.length,0);
 const room=layer.rooms.find(r=>r.members.length>1),[a,b]=room.members;
 result.index_by_cell[a.id].FO[i]=100;result.index_by_cell[a.id].FGI[i]=99;
-result.index_by_cell[b.id].backdraft[i]=100;result.index_by_cell[b.id].rollover[i]=100;
-update();assert.deepEqual(layer.activeRooms[0].types.sort(),['FO','backdraft','rollover']);
-assert.equal(room.meshes.filter(m=>m.visible).length,3);
-room.meshes.forEach((m,j)=>{assert.equal(m.renderOrder,35);assert.equal(m.material.opacity,1);assert.equal(m.material.depthTest,false);assert.equal(m.material.transparent,true);assert.equal(m.material.color.getHexString(),['ef4444','a855f7','facc15','f97316'][j]);});
-store.dispatch('risk/threshold',{ribbon:99});update();assert.equal(room.meshes.filter(m=>m.visible).length,4);
+result.index_by_cell[b.id].backdraft[i]=100;result.fgi_rollover_by_cell[a.id]={ignition:Array(result.time_s.length).fill(true),excluded_origin:false,status:'evaluated',eligible_peak_index:99};
+update();assert.deepEqual(layer.activeRooms[0].types.sort(),['FO','backdraft']);
+assert.equal(room.meshes.filter(m=>m.visible).length,2);
+room.meshes.forEach((m,j)=>{assert.equal(m.renderOrder,35);assert.equal(m.material.opacity,1);assert.equal(m.material.depthTest,false);assert.equal(m.material.transparent,true);assert.equal(m.material.color.getHexString(),['ef4444','a855f7','facc15'][j]);});
+store.dispatch('risk/threshold',{ribbon:99});update();assert.equal(room.meshes.filter(m=>m.visible).length,3);assert.equal(room.rolloverDots.visible,true);
 store.dispatch('risk/set',{type:'FO',visible:false});assert.equal(store.get('risk').threshold.ribbon,99);update();assert.equal(room.meshes[0].visible,false);
 store.dispatch('risk/set',{type:'FO',visible:true});store.dispatch('risk/threshold',{ribbon:101});update();assert.equal(layer.activeRooms.length,0);assert.deepEqual(layer.cautionRooms,[room.id]);
 for(const indices of Object.values(result.index_by_cell))for(const type of types)indices[type][i]=null;
@@ -34,4 +35,4 @@ result.index_by_cell[a.id].FO[i]=69.99;update();assert.equal(layer.cautionRooms.
 result.index_by_cell[a.id].FO[i]=null;store.dispatch('risk/threshold',{ribbon:0,caution:0});update();assert.equal(layer.activeRooms.length,0,'null must never coerce to zero');
 assert.throws(()=>store.dispatch('risk/threshold',{ribbon:60,caution:70}));assert.throws(()=>store.dispatch('risk/threshold',{ribbon:NaN}));
 assert.equal(layer.buildCount,buildCount,'threshold updates must not rebuild geometry');layer.dispose();assert.equal(layer.resources.size,0);assert.equal(store.diagnostics().subscriptions,0);
-console.log(JSON.stringify({passed:true,realCounts,checks:'saved indices, no legacy reads, independent cell OR, four ribbons, inclusive thresholds, caution, nulls, reuse, disposal'}));
+console.log(JSON.stringify({passed:true,realCounts,checks:'saved indices, no legacy reads, independent cell OR, three ribbons plus FGI subsidiary dots, inclusive thresholds, caution, nulls, reuse, disposal'}));

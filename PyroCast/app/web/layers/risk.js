@@ -1,8 +1,9 @@
 import {EmptyLayer} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
 import {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices} from './risk_geometry.js';
+import {roomFgiRollover} from '../adapters/fgi_rollover.js';
 
-const types=['FO','FGI','backdraft','rollover'],colors=['#ef4444','#a855f7','#facc15','#f97316'];
+const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 export class RiskLayer extends EmptyLayer {
  static id='risk';
@@ -37,7 +38,17 @@ export class RiskLayer extends EmptyLayer {
    const historyMeshes=createMeshes(historyVerts),meshes=createMeshes(verts);
    const cautionMesh=applyRenderPolicy(new T.Mesh(historyMeshes[0].geometry,this.own(historyMeshes[0].material.clone())),'risk');
    cautionMesh.material.color.set('#9ca3af');cautionMesh.raycast=()=>{};this.group.add(cautionMesh);
-   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes,cautionMesh});
+   const dots=[];
+   for(const p of original)for(let i=0;i<p.o.length;i++){
+    const a=p.o[i],b=p.o[(i+1)%p.o.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    for(let d=0;d<length;d+=2){const x=a[0]+(b[0]-a[0])*d/length,y=a[1]+(b[1]-a[1])*d/length;
+     for(let k=0;k<8;k++){const u=k*Math.PI/4,v=(k+1)*Math.PI/4;dots.push(x,y,0,x+.10*Math.cos(u),y+.10*Math.sin(u),0,x+.10*Math.cos(v),y+.10*Math.sin(v),0);}
+    }
+   }
+   const dotGeometry=this.own(new T.BufferGeometry());dotGeometry.setAttribute('position',new T.Float32BufferAttribute(dots,3));
+   const rolloverDots=applyRenderPolicy(new T.Mesh(dotGeometry,this.own(new T.MeshBasicMaterial({color:'#f97316',side:T.DoubleSide,transparent:true,opacity:1,depthTest:false,depthWrite:false}))),'risk');
+   rolloverDots.renderOrder=36;rolloverDots.name='FGI rollover dots';rolloverDots.raycast=()=>{};this.group.add(rolloverDots);
+   this.rooms.push({id:room.room_id,floorId:floor.floor_id,members,meshes,historyMeshes,cautionMesh,rolloverDots});
   }
  }
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
@@ -45,7 +56,7 @@ export class RiskLayer extends EmptyLayer {
   if(frame.resultMeta!==this.resultMeta)this.resultMeta=frame.resultMeta;
   this.updateVisibility();
  }
- tick(){const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes,row.cautionMesh].forEach(m=>m.visible=false);return;}
+ tick(){this.rolloverRooms=[];const f=this.frame,r=f?.resultMeta;if(!r){this.counts={};this.activeRooms=[];this.cautionRooms=[];for(const v of this.views)v.group.visible=false;for(const row of this.rooms)[...row.meshes,...row.historyMeshes,row.cautionMesh,row.rolloverDots].forEach(m=>m.visible=false);return;}
   const series=f.series?.cells;if(!series)throw Error('Risk layer requires adapted cell series; raw playback is not supported');
   if(!r.index_by_cell)throw Error('Risk layer requires adapted saved indices');
   const {ribbon,caution}=f.risk.threshold;
@@ -64,6 +75,10 @@ export class RiskLayer extends EmptyLayer {
    const {height_m:height,z_m}=row.members[0].meta,base=Math.max(.16,Math.min(height-.5,...active.values()));
    row.meshes.forEach((m,j)=>{const visible=onFloor&&active.has(types[j])&&f.risk.show[types[j]]!==false,dashed=history&&!current.has(types[j]),hm=row.historyMeshes[j];
     m.visible=visible&&!dashed;hm.visible=visible&&history;hm.position.z=m.position.z=z_m+Math.min(height-.04,base+j*.14);if(visible)this.counts[types[j]]++;});
+   const ids=row.members.map(v=>v.id),rollover=roomFgiRollover(r,ids,i,ribbon,history)===true,now=roomFgiRollover(r,ids,i,ribbon,false)===true;
+   row.rolloverDots.visible=onFloor&&active.has('FGI')&&f.risk.show.FGI!==false&&rollover;
+   row.rolloverDots.position.z=row.meshes[1].position.z+.015;row.rolloverDots.material.opacity=now?1:.55;
+   if(row.rolloverDots.visible)this.rolloverRooms.push({room_id:row.id,current:now,historyOnly:!now});
    const attention=history&&onFloor&&!active.size&&f.risk.show.smoke!==false&&row.members.some(v=>types.some(type=>meets(v.id,type,caution)));
    row.cautionMesh.visible=attention;
    row.cautionMesh.position.z=z_m+Math.min(height-.04,Math.max(.16,Math.min(height-.5,...row.members.map(v=>series[v.id]?.interface_m[i]).filter(Number.isFinite))));
@@ -84,7 +99,7 @@ export class RiskLayer extends EmptyLayer {
   }
   this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
- summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실 · 백드래프트 ${n.backdraft||0}실 · 롤오버 ${n.rollover||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
- diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],cautionRooms:this.cautionRooms||[]};}
+ summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실(롤오버 상태 ${this.rolloverRooms?.length||0}실) · 백드래프트 ${n.backdraft||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
+ diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],rolloverRooms:this.rolloverRooms||[],cautionRooms:this.cautionRooms||[]};}
  dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }

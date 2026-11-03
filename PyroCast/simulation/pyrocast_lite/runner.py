@@ -115,7 +115,6 @@ def results(model, post_started=None):
         inactive_settings=[],seed=None,events=model.events_log,
         integration=model.integration,room_summary=room_rows,
         balance_audit={'status':'not_evaluated','passed':None},
-        rollover={'status':'not_evaluated','reason':'source fire_zone has no rollover criterion or bulk reaction'},
         limits=['condition indicators, not event probabilities or accurate ignition times',
                 'upper temperature replaces plate temperature for both room and cell triggers',
                 'cell threshold may be reached by incoming heat before its parent cell itself burns',
@@ -169,9 +168,7 @@ def results(model, post_started=None):
             'plume lower oxygen withdrawal is reserved before jets; advected upper fuel is reserved before local bulk reaction',
             'jet heat enters receiving upper layer; no additional entrained mass, separate species-resolved products, exterior jet or virtual-cell jet',
             'door-jet heat is separate from solid-source HRR and upper-layer reaction; does not itself count as a new burning room'])
-    result['rollover']={'status':'evaluated' if enabled else 'not_evaluated',
-        'source':'shared_conditions.rooms.<cell>.rollover',
-        'meaning':'condition degree separate from actual upper_reaction_kg_s; not proof of rollover'}
+    result['rollover_state_source']='shared_conditions.rooms.<cell>.FGI.rollover'
     result['numerical_bounds']={'softplus':model.P.get('smooth_state_bounds',False),'width':'10 times state atol; not a physical parameter'}
     if model.P.get('remove_cumulative_state'):
         # Reporting only: these sums never feed back into prescribed curves.

@@ -1,0 +1,93 @@
+{
+  "created": "2026-11-03T05:42:20.670Z",
+  "simulation_runs": 0,
+  "cases": [
+    {
+      "id": "S06",
+      "status": "complete",
+      "rooms": 28,
+      "cells": 38,
+      "openings": 69,
+      "samples": 361,
+      "exact_series_values": 137180,
+      "exact_condition_values": 274360,
+      "series_max_difference": 0,
+      "multi_component_cells": 1,
+      "unaggregated_rooms": [
+        "CAD_3F_R1",
+        "CAD_3F_R2",
+        "CAD_3F_R10"
+      ],
+      "errors": []
+    },
+    {
+      "id": "S09",
+      "status": "complete",
+      "rooms": 28,
+      "cells": 38,
+      "openings": 69,
+      "samples": 361,
+      "exact_series_values": 137180,
+      "exact_condition_values": 274360,
+      "series_max_difference": 0,
+      "multi_component_cells": 1,
+      "unaggregated_rooms": [
+        "CAD_3F_R1",
+        "CAD_3F_R2",
+        "CAD_3F_R10"
+      ],
+      "errors": []
+    },
+    {
+      "id": "stage4",
+      "status": "complete",
+      "rooms": 28,
+      "cells": 38,
+      "openings": 69,
+      "samples": 361,
+      "exact_series_values": 137180,
+      "exact_condition_values": 274360,
+      "series_max_difference": 0,
+      "multi_component_cells": 1,
+      "unaggregated_rooms": [
+        "CAD_3F_R1",
+        "CAD_3F_R2",
+        "CAD_3F_R10"
+      ],
+      "errors": []
+    }
+  ],
+  "checks": [
+    "all 3 schemas valid",
+    "3 building/result snapshots valid",
+    "exact cell series and saved condition flags",
+    "geometry components/holes preserved",
+    "no source mutation",
+    "unknown/missing values stay null",
+    "room proxy basis explicit",
+    "duplicate IDs excluded with error",
+    "unknown engines and mismatched sidecars rejected",
+    "saved screening ranks preserved",
+    "extra schema fields rejected",
+    "source file hashes unchanged"
+  ],
+  "sources": {
+    "app/contracts/building-1.schema.json": "87e3f494d3214dccbf93bc469fca0653e2fcbb3c679a1647c76b9612ffc64b71",
+    "app/contracts/result-1.schema.json": "b3206743a0f51dbfe33b111f1b2bac44ef45e2d46cc2c1b5d831736cc4df96fb",
+    "app/contracts/screening-1.schema.json": "789fe137874cf2f753595d157db9bf13f522cf37361b7b678c3c83ae698e96b6",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S06/playback.json": "8efa56f5227949637435113053807c536f73c80ed6035a945903600cf6462eaa",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S06/result.json": "a2d0cfb2ffc9618bb13ce14ce360ed6a485789147bfefc6fda5dea365527c374",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S06/sample.json": "ae9dab244ea84b4aeba3c936eeeed284469c83bb49cdf82bf66f831228225438",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S06/summary.json": "05521973fa99f3b3dc84c7041bc7e14ceda8fa0cf0cc4a925b3ab47f96e00f89",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S09/playback.json": "0ae315c0bee073e903f5558d2e4845e3274fd1db142835fcd15b345d2c7933a7",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S09/result.json": "5e29317a8682d0ef644de096d175cdd98aa522bc68e68969adbd3cda396ececb",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S09/sample.json": "e4bec99f96016f8fd5c8907993414ada9ee766b84749460113a274509f009643",
+    "simulation/results/lite_v8_mc_R2_10_20261026/S09/summary.json": "1a756e1747475c3c895ca987e6424fa8897f38a2c58f3e6947c31f5969e7faad",
+    "simulation/results/lite_v8_stage4_R2_20261026/playback.json": "c4d37474eef248f6853b30c95b947933f4384cf486a0b6a5fb75e197fa5b8ea0",
+    "simulation/results/lite_v8_stage4_R2_20261026/result.json": "c21ccf64896b9448150b5cc125c14af6f2a430c7f6de5835d4d9d0b3431817d6",
+    "simulation/results/lite_v8_stage4_R2_20261026/input.json": "68e697565b2c6b9ab522b73dc3633db73f55c3c8bee435a10667d6aba2d6440b",
+    "simulation/results/lite_v8_approved_n8_20261025/score.json": "58ee4f8d5024c9563b14feac0a49b7fccacf8bdea1071f85f773eaaa3be8ce88",
+    "simulation/results/lite_v8_approved_n8_20261025/comparison.json": "03e147002ab80f5b7eb4f232d21c61d299b8b0c78f5176ff41d0cd1244ff7427",
+    "simulation/config/lite-screening-selection.json": "89d5260fd0ac1f86b4048847c578bbf2ba615001de23d158812aed0973a8b1b1"
+  }
+}

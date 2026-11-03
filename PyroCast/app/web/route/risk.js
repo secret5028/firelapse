@@ -1,6 +1,7 @@
 import {RISK_COLORS} from '../scene/render_order.js';
-const types=['FO','FGI','backdraft','rollover'];
-const labels={FO:'FO',FGI:'FGI',backdraft:'백드래프트',rollover:'롤오버'};
+import {roomFgiRollover} from '../adapters/fgi_rollover.js';
+const types=['FO','FGI','backdraft'];
+const labels={FO:'FO',FGI:'FGI',backdraft:'백드래프트'};
 export const ROUTE_CLEAR='#38bdf8';
 export function routeSampleIndex(result,t){
  const times=result?.time_s;if(!times?.length||t<times[0])return -1;
@@ -19,12 +20,14 @@ export function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings
   const cells=rooms.get(id)?.cells||[];
   for(const c of cells)for(const key of types){const value=history?indices?.[c.cell_id]?.[key]:i<0?null:indices?.[c.cell_id]?.[key]?.[i];
    if(!Number.isFinite(value)){missing=true;continue;}
-   // Stable ties: first member and FO/FGI/backdraft/rollover order.
+   // Stable ties: first member and FO/FGI/backdraft order.
    if(maximum===null||value>maximum){maximum=value;type=key;source_cell=c.cell_id;}
   }
   const row={room:id,label:id?id.replace(/^CAD_/,'').replaceAll('_',' '):'외부',index:maximum,type,source_cell,
    phenomenon:maximum===null?(id?'미평가':'외부'):labels[type],partial:missing&&maximum!==null,
    color:maximum>=100?RISK_COLORS[type]:maximum>=70?RISK_COLORS.smoke:ROUTE_CLEAR};
+  row.rollover_active=roomFgiRollover(resultMeta,cells,i,100,history);
+  if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 진행'+(history?' 이력':'');
   cache.set(id,row);return row;
  }
  for(const s of route.segments||[]){const last=rows.at(-1);

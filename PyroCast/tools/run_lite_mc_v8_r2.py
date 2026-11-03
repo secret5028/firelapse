@@ -35,7 +35,7 @@ def summarize(m,r,sample):
         p['met_room_time_fraction']=float(np.mean([x for x in fractions.values() if x is not None])) if duration else None
         p['score_basis']='maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median'
     for threshold,key in [(70,'smoke_caution_rooms'),(100,'smoke_risk_rooms')]:
-        s[key]=sorted(rid for rid,cells in mapping.items() if any(any(v is not None and v*100>=threshold for v in r['shared_conditions']['rooms'][c][kind]['scores']['degree']) for c in cells for kind in ('FO','FGI','backdraft','rollover')))
+        s[key]=sorted(rid for rid,cells in mapping.items() if any(any(v is not None and v*100>=threshold for v in r['shared_conditions']['rooms'][c][kind]['scores']['degree']) for c in cells for kind in ('FO','FGI','backdraft')))
     s['boundary_room_count']=sum(any(np.any(np.abs(m.sol.y[2*m.N+m.rmap[c]]-273.15-m.manifest['rule_settings']['values']['temperature_C'])<=30) for c in cells) for cells in mapping.values())
     s['boundary_basis']='any saved time within transition threshold ±30C, original-room union'
     s['door_jet_heat_MJ']=r['door_jet']['cumulative_heat_MJ']

@@ -95,7 +95,7 @@ def report():
         if v is None:return '미도달'
         v=round(v);return f'{v:,} s ({v//60:02d}:{v%60:02d})'
     def pk(v,unit=''):return f"{v['value']:,.3f} {unit} @ {at(v['time_s'])}"
-    labels={'FO':'FO','FGI':'FGI','BD':'백드래프트','rollover':'롤오버 조건'}
+    labels={'FO':'FO','FGI':'FGI','BD':'백드래프트'}
     lines=['# C11 P2 — 배풍기 ON, 독립 CFAST 1회 및 P1·P4 비교','',
         'P2를 별도 폴더에 입력·실행·결과로 보존했다. P1(OFF), P4(OFF·절단 없음)는 저장 결과만 읽었으며 재계산·덮어쓰기하지 않았다. P3·간략 근사는 실행하지 않고 이 보고 후 정지한다.','',
         '## 실행 조건','', '| 항목 | P1 | P2 | P4 |','|---|---|---|---|',
@@ -111,7 +111,7 @@ def report():
         '급기구 양끝 면적 1 m², 수직 면, 중심 높이 1.5 m를 적용했다. 면적은 명세에 없어 [가정]이며, 층별 유입 배분에 영향을 줄 수 있다. 팬 압력 차단은 순정 기본 200/300 Pa를 유지했다. PPV의 공간 제트·문 주변 공기 유인은 계산하지 않는다.','',
         f"실제 CSV 급기 확인: 최초 ON 표본 {at(fan_check['first_active_sample_s'])}, 마지막 ON 표본 {at(fan_check['last_active_sample_s'])}, ON 질량유량 절댓값 {fan_check['absolute_mass_flow_on_min_kg_s']:.4f}~{fan_check['absolute_mass_flow_on_max_kg_s']:.4f} kg/s, OFF 구간 0.",
         '', '## 그래프','',
-        '기존과 같은 4패널: ROOM 상층 T·O₂·미연 연료 질량분율·4지수. 기준선 780/1320/1500/2100 s. 회색 끝 구간은 미출력이며 외삽하지 않았다.','',
+        '기존과 같은 4패널: ROOM 상층 T·O₂·미연 연료 질량분율·3지수. 기준선 780/1320/1500/2100 s. 회색 끝 구간은 미출력이며 외삽하지 않았다.','',
         '![P2 전체](../simulation/results/wando_C11_P2_20261102/P2-timeseries.png)','',
         '![P2 확대](../simulation/results/wando_C11_P2_20261102/P2-zoom.png)','',
         '![P1 P2 P4 비교](../simulation/results/wando_C11_P2_20261102/P1-P2-P4-comparison.png)','',
@@ -136,7 +136,7 @@ def report():
     for key,label in [('interface_first_below_3m_s','ROOM 경계 ≤3 m'),('interface_first_below_1_8m_s','ROOM 경계 ≤1.8 m')]:
         lines.append('| '+label+' | '+' | '.join(at(summaries[s]['rooms']['ROOM'][key]) for s in roots)+' |')
     lines+=['','## 2100초 비교','', '| 값 | P1 | P2 | P4 |','|---|---:|---:|---:|']
-    for key in ('T_upper_C','O2_upper_vol_percent','fuel_upper_mass_fraction','interface_m','FO','FGI','BD','rollover'):
+    for key in ('T_upper_C','O2_upper_vol_percent','fuel_upper_mass_fraction','interface_m','FO','FGI','BD'):
         lines.append('| '+key+' | '+' | '.join(f"{summaries[s]['times']['2100'][key]:.4f}" for s in roots)+' |')
     a=summaries['P1']['rooms']['ROOM'];b=summaries['P2']['rooms']['ROOM'];d=summaries['P4']['rooms']['ROOM']
     lines+=['','## 차이·한계','',
@@ -155,7 +155,7 @@ def report():
     import matplotlib.pyplot as plt
     fig,axs=plt.subplots(7,1,figsize=(13,17),sharex=True,layout='constrained')
     fig.suptitle('Independent Wando scenarios | P1 fan OFF / P2 fan ON / P4 no cut',fontsize=14)
-    keys=['T_upper_C','O2_upper_vol_percent','fuel_upper_mass_fraction','FO','FGI','BD','rollover']
+    keys=['T_upper_C','O2_upper_vol_percent','fuel_upper_mass_fraction','FO','FGI','BD']
     labs=['Upper T (C)','Upper O2 (vol %)','Unburned fuel (kg/kg)','FO index','FGI index','Backdraft index','Rollover index']
     for ax,key,label in zip(axs,keys,labs):
         for s,col in zip(roots,['#526987','#d95624','#329277']):

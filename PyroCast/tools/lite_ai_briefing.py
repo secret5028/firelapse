@@ -38,13 +38,14 @@ def match_case(service,a,route,rules):
     return output
 
 def event_fact(e,tool_index):
-    return {'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],'text':f"{e['room']} · {LABELS[e['phenomenon']]} 최고 {number(e['peak'])} @ {stamp(e['peak_s'])} · 최초 기준 도달 {stamp(e['first_s'])}",'evidence':{'call':tool_index,'row':e},'numbers':[v for v in [e['peak'],e['peak_s'],e['first_s']] if v is not None]}
+    label=e['room']+(' · '+e['name'] if e.get('name') else '')
+    return {'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],'text':f"{label} · {LABELS[e['phenomenon']]} 최고 {number(e['peak'])} @ {stamp(e['peak_s'])} · 최초 기준 도달 {stamp(e['first_s'])}",'evidence':{'call':tool_index,'row':e},'numbers':[v for v in [e['peak'],e['peak_s'],e['first_s']] if v is not None]}
 
 def facts_for(call,i):
     name=call['tool'];d=call['data'];facts=[]
     if name=='get_peak_events':return [event_fact(e,i) for e in d if e['peak'] is not None]
     if name=='get_case_summary':
-        return [event_fact(e,i) for k in TYPES for e in d['events'][k][:1]]
+        return [{'room':d['origin'],'cell':d['origin'],'text':f"현재 저장 사례 화점: {d['origin']} · {d['engine']} · 종료 {stamp(d['end_s'])}",'evidence':{'call':i,'row':d}}]+[event_fact(e,i) for k in TYPES for e in d['events'][k][:1]]
     if name=='get_ranking':
         for r in d['second'][:3]:
             facts.append({'room':r['room'],'time_s':r.get('first_FO_s'),'text':f"{r['room']} · ② {r.get('rank2') or '미평가'}위 · 연소 {number(r.get('burning_room_count'))} · 주의 {number(r.get('attention_room_count'))} · 최초 FO {stamp(r.get('first_FO_s'))}",'evidence':{'call':i,'row':r}})

@@ -104,7 +104,7 @@ class Tools:
         if kind not in TYPES or not finite(threshold) or threshold<0:raise ValueError('현상/기준 오류')
         rows={}
         for c in self.cells(p):
-            rid=c.get('original_room') or c['key'];rec=rows.setdefault(rid,{'room':rid,'phenomenon':kind,'threshold':threshold,'first_s':None,'peak':None,'peak_s':None,'source_cell':None,'partial':False})
+            rid=c.get('original_room') or c['key'];rec=rows.setdefault(rid,{'room':rid,'name':c.get('display_name'),'phenomenon':kind,'threshold':threshold,'first_s':None,'peak':None,'peak_s':None,'source_cell':None,'partial':False})
             s=p['solvers'][c['solver_id']].get('conditions',{}).get(kind,{})
             degrees=s.get('scores',{}).get('degree',s.get('degree',[]))
             for i,t in enumerate(p['time_s']):
@@ -138,9 +138,16 @@ class Tools:
             if any(finite(v) and v>0 for v in f.get('Q_kW',[])):
                 c=next((c for c in p['rooms'] if c['key']==f.get('cad_key')),None)
                 if c:burning.add(c.get('original_room') or c['key'])
-        return {'origin':p.get('fire_key'),'engine':p.get('engine_kind'),'end_s':p['time_s'][-1],'complete':p.get('complete'),'opening_state':p.get('opening_states'),'burning_rooms':sorted(burning),'events':{k:self.get_peak_events({**a,'phenomenon':k,'threshold':100}) for k in TYPES},'limits':p.get('limits',[])}
+        events={k:self.get_peak_events({**a,'phenomenon':k,'threshold':100}) for k in TYPES}
+        path=self.cases(a['building'])[a['case']];sample=read(path.with_name('sample.json'),{})
+        return {'origin':p.get('fire_key'),'engine':p.get('engine_kind'),'end_s':p['time_s'][-1],'complete':p.get('complete'),'opening_state':p.get('opening_states') or sample.get('openings'),'burning_rooms':sorted(burning),'burning_basis':'저장된 실제 화원 HRR > 0 표본이 있는 원래 방','events':events,
+            'first_100':{k:min((e for e in rows if e['first_s'] is not None),key=lambda e:e['first_s'],default=None) for k,rows in events.items()},
+            'worst':{k:next((e for e in rows if e['peak'] is not None),None) for k,rows in events.items()},'limits':p.get('limits',[])}
     def get_route(self,a):
         _,b=self.building(a['building']);p=self.case(a)
+        if not finite(a.get('time_s',0)) or not 0<=a.get('time_s',0)<=p['time_s'][-1] or type(a.get('history',False)) is not bool:raise ValueError('경로 시간/이력 오류')
+        settings=a.get('route_settings',{})
+        if not isinstance(settings,dict) or set(settings)-{'hose_m','stair_factor'} or any(not finite(v) or v<1 for v in settings.values()):raise ValueError('호스/계단 설정 오류')
         origin=a.get('origin') or p.get('route_target_room_id') or p.get('fire_key')
         c=next((r for r in p['rooms'] if r['key']==origin),None)
         if c:origin=c.get('original_room') or c['key']

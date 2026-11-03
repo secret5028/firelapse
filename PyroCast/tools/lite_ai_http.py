@@ -7,7 +7,8 @@ def handle(handler,path):
     def send(value,code=200):
         data=json.dumps(value,ensure_ascii=False,allow_nan=False).encode()
         handler.send_response(code);handler.send_header('Content-Type','application/json; charset=utf-8');handler.send_header('Cache-Control','no-store');handler.send_header('Content-Length',str(len(data)));handler.end_headers();handler.wfile.write(data)
-    if handler.client_address[0]!='127.0.0.1' or handler.headers.get('Origin') not in (None,'http://'+handler.headers.get('Host','')):return send({'error':'외부 요청 차단'},403)
+    host=handler.headers.get('Host','')
+    if handler.client_address[0]!='127.0.0.1' or host not in ('127.0.0.1:'+str(handler.server.server_port),'localhost:'+str(handler.server.server_port)) or handler.headers.get('Origin') not in (None,'http://'+host):return send({'error':'외부 요청 차단'},403)
     try:
         size=int(handler.headers.get('Content-Length','0'))
         if not 0<size<=100000:raise ValueError('요청 크기 오류')

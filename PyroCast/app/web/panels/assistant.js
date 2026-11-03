@@ -15,8 +15,10 @@ export function createAssistantPanel({store,getContext,onNavigate,onProposal,onS
  async function api(path,body){const r=await fetch('/cfbt/lite/ai/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:abort.signal});const v=await r.json();if(!r.ok)throw Error(v.error||'요청 실패');return v;}
  function buttons(){for(const id of ['aiSend','aiBrief'])$(id).disabled=busy||offline;}
  function answer(value){
-  const box=document.createElement('div');box.className='aiAnswer';const text=document.createElement('div');text.textContent=value.text||'';box.append(text);
-  for(const fact of value.facts||[]){const b=document.createElement('button');b.type='button';b.className='aiFact';b.textContent=fact.text;b.disabled=!fact.room;b.onclick=()=>onNavigate({...fact,case:value.case});box.append(b);}
+  const box=document.createElement('div');box.className='aiAnswer';const used=new Set();
+  function factButton(fact){const b=document.createElement('button');b.type='button';b.className='aiFact';b.textContent=fact.text;b.disabled=!fact.room;b.onclick=()=>{try{onNavigate({...fact,case:value.case});}catch(e){status(e.message);}};box.append(b);}
+  for(const line of (value.text||'').split('\n')){const fact=(value.facts||[]).find(f=>f.text===line.trim());if(fact){used.add(fact);factButton(fact);}else{const text=document.createElement('div');text.textContent=line;box.append(text);}}
+  for(const fact of value.facts||[])if(!used.has(fact))factButton(fact);
   const basis=document.createElement('div');basis.className='aiEvidence';basis.textContent=`근거: 도구 호출 ${value.calls?.length??0}회 · 사례 ${value.case??'미선택'} · 규칙 ${(value.rules||[]).join(', ')||'없음'}`;box.append(basis);
   if(value.briefing_id){const save=document.createElement('button');save.textContent='보고서로 저장';save.disabled=offline;save.onclick=async()=>{save.disabled=true;try{const r=await api('reports/save',{briefing_id:value.briefing_id});await onSaved(r);status('사례 보고서 저장 완료');}catch(e){status(e.message);save.disabled=false;}};box.append(save);}
   $('aiConversation').append(box);box.scrollIntoView({block:'nearest'});lastAnswer=value;

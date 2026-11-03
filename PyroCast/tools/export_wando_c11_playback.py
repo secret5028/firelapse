@@ -107,6 +107,8 @@ def main():
                         'old_score_preserved':'solvers.*.conditions.FO.legacy_combustion_support_scores','floor_flux':'not_evaluated'},'simulation_runs':0},
         opening_states={op['id']:{'schedule':op['schedule'],
             'fraction':v[next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])].tolist()} for op in model['openings']})
+    from wando_jet_visual import add_jet_visuals
+    add_jet_visuals(p,model,v)
     write(DATA/'P1-playback.json',p)
     write(DATA/'playback-evidence.json',dict(building_sha256=bsha,playback_sha256=sha(DATA/'P1-playback.json'),
         samples=len(grid),last_sample_s=grid[-1],native_time_snap_max_s=max(abs(a-b) for a,b in zip(times,grid)),

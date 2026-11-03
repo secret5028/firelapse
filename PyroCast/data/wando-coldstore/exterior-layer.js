@@ -3,10 +3,10 @@ export function createExteriorLayer(T,scene,config,pane,redraw=()=>{}){
  const root=new T.Group(),resources=[];root.name='wando-photo-exterior';scene.add(root);
  const own=o=>(resources.push(o),o),mat=color=>own(new T.MeshBasicMaterial({color,side:T.DoubleSide,transparent:true,opacity:.28,depthWrite:false}));
  const white=mat('#d1d8dc'),side=mat('#aebdc6'),blue=mat(config.main_roof.color),darkBlue=mat('#3187a1'),cap=mat('#e8eceb'),glass=mat('#546b74');
- function mesh(geometry,material){const o=new T.Mesh(own(geometry),material);o.renderOrder=11;o.raycast=()=>{};root.add(o);return o;}
+ function mesh(geometry,material){const o=new T.Mesh(own(geometry),material);o.renderOrder=8;o.raycast=()=>{};root.add(o);return o;}
  function box(x,y,z,w,d,h,material){const o=mesh(new T.BoxGeometry(w,d,h),material);o.position.set(x,y,z);return o;}
  function face(points,material){const g=new T.BufferGeometry(),pos=[];for(let i=1;i<points.length-1;i++)for(const p of [points[0],points[i],points[i+1]])pos.push(...p);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();return mesh(g,material);}
- function lines(points,color='#dbe7eb'){const o=new T.Line(own(new T.BufferGeometry().setFromPoints(points.map(p=>new T.Vector3(...p)))),own(new T.LineBasicMaterial({color,transparent:true,opacity:.3,depthWrite:false})));o.renderOrder=12;o.raycast=()=>{};root.add(o);return o;}
+ function lines(points,color='#dbe7eb'){const o=new T.Line(own(new T.BufferGeometry().setFromPoints(points.map(p=>new T.Vector3(...p)))),own(new T.LineBasicMaterial({color,transparent:true,opacity:.3,depthWrite:false})));o.renderOrder=9;o.raycast=()=>{};root.add(o);return o;}
  const r=config.main_roof,mid=(r.y0+r.y1)/2,peak=r.eave_z+r.ridge_rise;
  face([[r.x0,r.y0,r.eave_z],[r.x1,r.y0,r.eave_z],[r.x1,mid,peak],[r.x0,mid,peak]],blue);
  face([[r.x0,mid,peak],[r.x1,mid,peak],[r.x1,r.y1,r.eave_z],[r.x0,r.y1,r.eave_z]],darkBlue);

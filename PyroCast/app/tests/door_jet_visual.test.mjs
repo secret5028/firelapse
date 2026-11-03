@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {doorJetDefinitions} from '../../simulation/viewer/legacy_real_bridge.js';
+import {flameHrrDimensions} from '../../simulation/viewer/legacy_real_view.js';
+const room=(key,y)=>({key,solver_id:key,cad_floor:'1F',cad_center_m:[1,y]});
+const data={rooms:[room('A',-2),room('B',2)],door_jet:{directions:[{vent:'D',from:'A',to:'B',HRR_kW:[0,500]}]}};
+const building={floors:[{name:'1F',door_h:2.1,openings:[{id:'D',leaves:[{hinge:[0,0],closed:[2,0]}]}]}]};
+let {jets,unmapped}=doorJetDefinitions(building,data);assert.equal(jets.length,1);assert.equal(unmapped.length,0);assert(jets[0].normal[1]>0);assert.deepEqual(jets[0].HRR_kW,[0,500]);
+data.door_jet.directions[0].from='B';data.door_jet.directions[0].to='A';assert(doorJetDefinitions(building,data).jets[0].normal[1]<0);
+data.door_jet.directions[0].vent='missing';assert.deepEqual(doorJetDefinitions(building,data).unmapped,['missing']);
+data.door_jet.directions[0].HRR_kW=[0,0];assert.equal(doorJetDefinitions(building,data).jets.length,0);
+const d=flameHrrDimensions(500,500,25,10);assert.equal(d.area,1);assert(d.height>1&&d.height<2);
+console.log('Receiving direction, no duplicated HRR, missing opening, zero source, shared Heskestad: PASS');

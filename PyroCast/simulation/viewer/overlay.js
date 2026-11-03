@@ -1116,7 +1116,7 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
   for(const m of Array.isArray(o.material)?o.material:o.material?[o.material]:[]){session.resources.add(m);
    for(const value of Object.values(m))if(value?.isTexture)session.resources.add(value);
    for(const u of Object.values(m.uniforms||{}))if(u.value?.isTexture)session.resources.add(u.value);
-   if(m.uniforms?.uFire?.value===1)session.flames.push(o);
+   if(m.uniforms?.uFire?.value===1||o.userData.flameEffect)session.flames.push(o);
   }
   if(o.isPointLight)session.lights.push(o);
  });}

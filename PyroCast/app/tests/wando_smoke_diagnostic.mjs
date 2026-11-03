@@ -1,0 +1,14 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),{chromium}=require(process.env.PYROCAST_PLAYWRIGHT||'playwright');
+const out=path.resolve('reviews/smoke-doorjet-20261103');fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
+const prefix=process.argv[2]||'before';const report={errors:[]};try{
+const p=await browser.newPage({viewport:{width:1280,height:720}});p.setDefaultTimeout(120000);p.on('pageerror',e=>report.errors.push(e.message));
+await p.addInitScript(()=>{performance.now=()=>180000;const raf=requestAnimationFrame;window.requestAnimationFrame=cb=>raf(()=>cb(180000));});
+await p.route('**/operating.js',async route=>{const r=await route.fetch();await route.fulfill({response:r,body:(await r.text()).replace('const app=await attach(viewer);','const app=await attach(viewer);window.__ui=app;window.__viewer=viewer;window.__ready=true;')});});
+if(prefix==='shell-before')await p.route('**/exterior-layer.js',route=>route.fulfill({contentType:'text/javascript',body:fs.readFileSync(path.join(out,'before-exterior-layer.js'),'utf8')}));
+await p.goto('http://127.0.0.1:8832/data/wando-coldstore/model.html');await p.waitForFunction(()=>window.__ready);
+
+async function inspect(time,gain){return p.evaluate(async({time,gain})=>{const u=window.__ui,v=window.__viewer;u.store.dispatch('realView/set',{smokeGain:gain});const t=document.getElementById('liteTime');t.value=time;t.oninput();const e=document.getElementById('liteRoom');e.value=[...e.options].find(o=>o.textContent.includes('R5')).value;e.onchange();u.render();for(let k=0;k<3;k++)await new Promise(requestAnimationFrame);const meshes=[];v.S.traverse(o=>{const q=o.material?.uniforms;if(q?.uOD&&q.uFire.value===0&&q.uGas.value===0){const chain=[];for(let n=o;n;n=n.parent)chain.push({name:n.name,visible:n.visible});meshes.push({position:o.position.toArray(),scale:o.scale.toArray(),visible:o.visible,chain,side:o.material.side,uniform:Object.fromEntries(['uOD','uOpacity','uLayerTemp','uDarkSmoke','uNoiseAmp','uTime','uSize','uCamera'].map(k=>[k,q[k].value.toArray?.()??q[k].value]))});}});return {time,gain,meshes,settings:u.store.get('realView'),camera:{position:v.C.position.toArray(),target:v.O.target.toArray()}};},{time,gain});}
+report.at1325=await inspect(1325,1);await p.screenshot({path:path.join(out,prefix+'-1325.png')});report.slider150=await inspect(1325,1.5);report.at2100=await inspect(2100,1);await p.screenshot({path:path.join(out,prefix+'-2100.png')});
+}finally{fs.writeFileSync(path.join(out,prefix==='before'?'diagnostic.json':prefix+'-diagnostic.json'),JSON.stringify(report,null,2));await browser.close();}

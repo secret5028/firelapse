@@ -1,5 +1,6 @@
 import {createLegacyRealistic} from './legacy_real_view.js';
 import {riskFor} from './risk.js';
+
 import {gasVisualState} from './gas_visual.js';
 
 // Read the same source JSON used by screening; never duplicate its class values.
@@ -36,13 +37,15 @@ export function createRealView(viewer,data,parent){
   series:data.time_s.map((t,i)=>[t,s.Tu[i],s.single_zone?s.Tu[i]:s.Tl[i],s.single_zone?0:s.h[i],s.ODu[i],s.single_zone?0:s.ODl[i]])};});
  const rowMap=new Map(rows.map(r=>[r.key,r]));
  const fires=data.fires.map(f=>{const r=rowMap.get(f.cad_key),v=f.visuals;if(!v)throw Error('실감 보기의 native 화원 자료가 없습니다.');return {
-  ...flameFuelForRoom(data.rooms.find(room=>room.key===f.cad_key)??{}),cell_area_m2:r.area,
+  visual_mode:f.visual_mode,...flameFuelForRoom(data.rooms.find(room=>room.key===f.cad_key)??{}),cell_area_m2:r.area,
   id:f.id,room_key:f.cad_key,floor:f.cad_floor,position:f.position_m.slice(0,2),base_height:v.base_height_m,
   ignition_time:f.time_s,hrr:f.Q_kW,flame_height:v.flame_height_m,area:v.area_m2[0],area_series:v.area_m2,
   fuel_units:data.fuel_units?.length?[]:(f.fuel_units||[]),plume_inputs:{area:v.area_m2[0],base:v.base_height_m,chi:v.radiative_fraction,
     height:r.height,corner_factor:1,hall:false},source:f};});
+ const jetDisplay=doorJetDefinitions(viewer.B,data);
+ for(const jet of jetDisplay.jets)Object.assign(jet,flameFuelForRoom(data.rooms.find(r=>r.key===jet.room_key)??{}));
  const renderer=createLegacyRealistic({THREE,C,groups},{rows,roots,geometry:r=>r.polys,
-   fire:rowMap.get(data.fire_key),centre:r=>r.c,floorIndex,fires});
+   fire:rowMap.get(data.fire_key),centre:r=>r.c,floorIndex,fires,jets:jetDisplay.jets,unmappedJets:jetDisplay.unmapped});
  if(data.engine_kind==='pyrocast_lite'){
   const note=document.querySelector('#cfPlumeLegend small');
   if(note)note.textContent='보라·청록은 고온 가스 구분색이며 불꽃이 아닙니다. 간략 엔진 결과에 CFAST 계열 상관식을 적용한 보조 표시로, 순정 CFAST 출력·실제 속도장과 동일하지 않습니다. 흐르는 무늬는 표시 효과입니다.';
@@ -57,6 +60,7 @@ export function createRealView(viewer,data,parent){
    const cached=new Map(rows.map(r=>[r.key,[time,sample(r.solver.Tu),sample(r.solver.Tl),
       r.solver.single_zone?0:sample(r.solver.h),displaySmokeDensity(sample(r.solver.ODu),legacySmokeTexture),r.solver.single_zone?0:displaySmokeDensity(sample(r.solver.ODl),legacySmokeTexture)]]));
    for(const fire of fires){fire.area=Math.max(.001,sample(fire.area_series));fire.plume_inputs.area=fire.area;}
+   for(const jet of jetDisplay.jets)jet.q=Math.max(0,sample(jet.HRR_kW));
    renderer.setState({enabled:true,realView:true,time,step:data.time_s[1]-data.time_s[0],cached,
       smokeEnabled,smokeOpacity,smokeGain,flameGain,flameDisplay,plumesEnabled,temperatureSmoke,noiseAmp,noiseScale,rampMode,darkSmoke:legacySmokeTexture,flamesEnabled:true,gasFlamesEnabled:false,q:0,h:0,
       gasStates:new Map(rows.map(r=>[r.key,gasVisualState({time,times:data.time_s,
@@ -68,4 +72,28 @@ export function createRealView(viewer,data,parent){
   stats(){return active?renderer.stats():null;},
   detach(){document.getElementById('cfPlumeLegend')?.remove();layer.removeFromParent();}
  };
+}
+
+// Geometry association only. Never invent or duplicate receiving-room heat.
+export function doorJetDefinitions(building,data){
+ const bySolver=new Map(data.rooms.map(r=>[r.solver_id,r])),out=[],unmapped=[];
+ for(const d of data.door_jet?.directions||[]){
+  if(!d.HRR_kW?.some(q=>q>0))continue;
+  const r=bySolver.get(d.to),source=bySolver.get(d.from);if(!r||!source){unmapped.push(d.vent);continue;}
+  const floor=building.floors.find(f=>f.name===r.cad_floor);
+  const opening=floor?.openings?.find(o=>o.id===d.vent||`CAD_${floor.name}_${o.id}`===d.vent);
+  let g=d.visual_opening;
+  if(!g&&opening){
+   let span=opening.leaves?.length?[opening.leaves[0].hinge,opening.leaves[0].closed]:null;
+   if(!span){let length=0;for(const ring of opening.polys||[])for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],n=Math.hypot(b[0]-a[0],b[1]-a[1]);if(n>length){length=n;span=[a,b];}}}
+   if(span){const [a,b]=span,w=Math.hypot(b[0]-a[0],b[1]-a[1]),bottom=opening.sill_m??0,top=opening.door_h??floor.door_h??2.1;
+    if(w>0)g={center_m:[(a[0]+b[0])/2,(a[1]+b[1])/2,(bottom+top)/2],span_direction:[(b[0]-a[0])/w,(b[1]-a[1])/w],width_m:w,bottom_m:bottom,top_m:top};
+   }
+  }
+  if(!g){unmapped.push(d.vent);continue;}
+  const [tx,ty]=g.span_direction,normal=[-ty,tx],delta=[r.cad_center_m[0]-g.center_m[0],r.cad_center_m[1]-g.center_m[1]];
+  if(normal[0]*delta[0]+normal[1]*delta[1]<0){normal[0]*=-1;normal[1]*=-1;}
+  out.push({...d,id:`jet:${d.vent}:${d.from}:${d.to}`,room_key:r.key,floor:r.cad_floor,normal,geometry:g});
+ }
+ return {jets:out,unmapped};
 }

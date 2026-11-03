@@ -1,0 +1,72 @@
+﻿floor,room,labels,tags,reported_area_m2,polygon_area_m2,category,raw_opening_references,nearest_door,distance_m,nearest_door_sides,nearest_door_status,max_overlap_room,max_overlap_m2,max_overlap_fraction,utility_label
+B3,R2,[],[],1.1,1.0559999999999938,no_opening_side_assignment_other,[],D0,0.020000000000003123,"['R0', 'R3']",interior,,0.0,0.0,False
+B3,R5,[],[],0.73,0.6953999999999982,no_opening_side_assignment_other,[],D1,2.20780433915689,"['R4', 'R0']",interior,,0.0,0.0,False
+B3,R7,['PIT'],[],5.7,5.557200000000012,utility_space_label_without_aperture,[],D1,2.641968962724576,"['R4', 'R0']",interior,,0.0,0.0,True
+B3,R8,['DA'],[],2.71,2.643800000000005,utility_space_label_without_aperture,[],EV0,3.5999999999999943,"['R1', 'R4']",interior,,0.0,0.0,True
+B3,R9,['DA'],[],3.27,3.1872000000000016,utility_space_label_without_aperture,[],EV0,5.939999999999999,"['R1', 'R4']",interior,,0.0,0.0,True
+B2,R3,['PIT'],[],4.16,4.081600000000016,utility_space_label_without_aperture,[],D11,0.37999999999999545,"['R4', 'R7']",interior,,0.0,0.0,True
+B2,R6,[],[],1.1,1.0559999999999938,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R4', 'R8']",interior,,0.0,0.0,False
+B2,R11,['DA'],[],4.0,3.912799999999994,utility_space_label_without_aperture,[],D9,1.3200000000000003,"['R9', 'R9']",internal_leaf,,0.0,0.0,True
+B2,R12,[],[],0.57,0.5376000000000016,no_opening_side_assignment_other,[],D15,2.1203773249117717,"['R10', 'R4']",interior,,0.0,0.0,False
+B2,R13,['창고'],[],15.02,14.866599999999991,no_opening_side_assignment_other,[],D0,0.000799360766977257,"['R14', 'R4']",interior,,0.0,0.0,False
+B2,R16,"['비드법 보온판 2종1호', 'PIT']",[],5.7,5.557200000000012,utility_space_label_without_aperture,[],D15,2.6439364591457153,"['R10', 'R4']",interior,,0.0,0.0,True
+B2,R17,['DA'],[],2.71,2.643800000000005,utility_space_label_without_aperture,[],D9,1.1322543883774494,"['R9', 'R9']",internal_leaf,,0.0,0.0,True
+B2,R18,"['주차 14대', 'OPEN-후타설 구간', '페놀폼', '기계식주차장', '승강로', '기계식 주차장(14대)', '평면왕복식 7대X2단', '직원휴게실 평면변경', '점검구 신설', '비드법 + 방화보드']",[],252.1,251.32500000000002,utility_space_label_without_aperture,[],D0,0.0019900743804195887,"['R14', 'R4']",interior,,0.0,0.0,True
+B2,R19,['DA'],['elev_inside'],3.27,3.1872000000000016,utility_space_label_without_aperture,[],D9,3.13789738519283,"['R9', 'R9']",internal_leaf,,0.0,0.0,True
+B2,R20,['창고'],[],15.86,15.703999999999978,no_opening_side_assignment_other,[],D0,0.0,"['R14', 'R4']",interior,,0.0,0.0,False
+B2,R21,[],[],1.9,1.8423999999999932,no_opening_side_assignment_other,[],D0,0.404969134626334,"['R14', 'R4']",interior,,0.0,0.0,False
+B2,R22,"['gearless', '장애인용', 'SL-700', '105m/s', '기어리스', '11인승', '11인승 ELEV.']",[],4.13,4.037599999999988,utility_space_label_without_aperture,[],D0,1.3423591109112425,"['R14', 'R4']",interior,,0.0,0.0,True
+B1,R5,['전실'],[],1.1,1.0559999999999938,no_opening_side_assignment_other,[],D0,0.020000000000003123,"['R3', 'R7']",interior,,0.0,0.0,False
+B1,R6,"['장비는 천정형', '난간설치?']",[],5.5,5.401799999999991,no_opening_side_assignment_other,[],D3,0.0018107149208506541,"['R12', 'R1']",interior,,0.0,0.0,False
+B1,R13,[],[],0.73,0.6953999999999982,overlapping_room_polygons,[],D6,0.4200000000000017,"['R3', None]",unresolved,R3,0.6953999999999982,1.0,False
+B1,R15,['PIT'],[],5.7,5.557200000000012,overlapping_room_polygons,[],D6,0.008944271909997697,"['R3', None]",unresolved,R3,5.557200000000012,1.0,True
+B1,R16,['DA'],[],2.66,2.599800000000002,utility_space_label_without_aperture,[],EV0,3.6069377593742824,"['R4', 'R11']",interior,,0.0,0.0,True
+B1,R17,"['기계식주차장', '승강로']",['elev'],20.89,20.69760000000001,overlapping_room_polygons,[],D6,0.12649110640673586,"['R3', None]",unresolved,R3,20.69760000000001,1.0,True
+B1,R18,['DA'],['elev_inside'],3.27,3.1872000000000016,utility_space_label_without_aperture,[],EV0,5.9000338982077025,"['R4', 'R11']",interior,,0.0,0.0,True
+B1,R21,[],[],0.96,0.9255999999999995,no_opening_side_assignment_other,[],D7,10.214597397841974,"['R20', 'R3']",interior,,0.0,0.0,False
+1F,R8,[],[],0.72,0.6915999999999995,no_opening_side_assignment_other,[],D7,4.679999999999999,"['R9', 'R1']",interior,,0.0,0.0,False
+1F,R10,[],['elev_inside'],1.59,1.5389999999999935,no_opening_side_assignment_other,[],EV13,3.6799999999999997,"['R3', 'R1']",interior,,0.0,0.0,False
+1F,R12,['위생기구 1개로 변경'],['elev_inside'],1.23,1.1911999999999985,no_opening_side_assignment_other,[],D3,4.159326868617083,"['R16', 'out']",exterior,,0.0,0.0,False
+1F,R15,['PS'],[],1.08,1.0336000000000092,utility_space_label_without_aperture,[],D3,3.580055865485896,"['R16', 'out']",exterior,,0.0,0.0,True
+2F,R2,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D0,0.020000000000003123,"['R0', 'R3']",interior,,0.0,0.0,False
+2F,R5,['AD'],[],0.81,0.7739999999999982,utility_space_label_without_aperture,[],D8,3.5,"['R4', 'R4']",same_space,,0.0,0.0,True
+2F,R7,['C3'],[],0.73,0.6953999999999982,overlapping_room_polygons,[],D4,4.679999999999999,"['R0', 'R8']",interior,R0,0.6953999999999982,1.0,False
+2F,R9,"['밸브설치공간', '급탕관(근생용)', '환탕관(근생용)', '급탕관(호텔용)', '급수관(전층용)', '주통기관', '주오수관', 'PS']",[],1.28,1.2324000000000033,utility_space_label_without_aperture,[],D7,2.020890892651058,"['R6', 'R6']",same_space,,0.0,0.0,True
+3F,R2,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D0,0.020000000000003123,"['R0', 'R3']",interior,,0.0,0.0,False
+3F,R5,['AD'],[],0.81,0.7739999999999982,utility_space_label_without_aperture,[],D8,3.5,"['R4', 'R4']",same_space,,0.0,0.0,True
+3F,R7,[],[],0.72,0.6915999999999987,overlapping_room_polygons,[],D4,4.661544808322666,"['R0', 'R8']",interior,R0,0.6915999999999987,1.0,False
+4F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R2', 'R5']",interior,,0.0,0.0,False
+4F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D3,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+4F,R12,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D0,0.3006659275674553,"['R13', 'R2']",interior,R2,1.8816000000000024,1.0,True
+5F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R1', 'R5']",interior,,0.0,0.0,False
+5F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D3,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+5F,R12,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D0,0.3006659275674553,"['R1', 'R1']",same_space,R1,1.8816000000000024,1.0,True
+5F,R13,"['105m/s', '기어리스', '11인승', '11인승 ELEV.']",[],4.12,4.037600000000003,overlapping_room_polygons,[],D0,1.159482643250858,"['R1', 'R1']",same_space,R1,4.037600000000003,1.0,True
+5F,R14,"['AV/PS', 'AV/PS']",[],2.34,2.2736000000000014,overlapping_room_polygons,[],D15,1.879999999999999,"['R1', 'R11']",interior,R1,2.2736000000000014,1.0,True
+5F,R17,['ELEV홀-B'],[],7.97,7.851000000000007,overlapping_room_polygons,[],D0,0.0015339299776944088,"['R1', 'R1']",same_space,R1,7.851000000000006,0.9999999999999999,True
+6F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R1', 'R5']",interior,,0.0,0.0,False
+6F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D3,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+6F,R12,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D0,0.3006659275674553,"['R1', 'R1']",same_space,R1,1.8816000000000024,1.0,True
+6F,R13,"['105m/s', '기어리스', '11인승', '11인승 ELEV.']",[],4.12,4.037600000000003,overlapping_room_polygons,[],D0,1.159482643250858,"['R1', 'R1']",same_space,R1,4.037600000000003,1.0,True
+6F,R14,"['AV/PS', 'AV/PS']",[],2.34,2.2736000000000014,overlapping_room_polygons,[],D14,1.815158395292266,"['R1', 'R11']",interior,R1,2.2736000000000014,1.0,True
+6F,R17,['ELEV홀-B'],[],7.97,7.851000000000007,overlapping_room_polygons,[],D0,0.0015339299776944088,"['R1', 'R1']",same_space,R1,7.851000000000006,0.9999999999999999,True
+7F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R1', 'R5']",interior,,0.0,0.0,False
+7F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D3,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+7F,R12,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D0,0.3006659275674553,"['R1', 'R1']",same_space,R1,1.8816000000000024,1.0,True
+7F,R13,"['105m/s', '기어리스', '11인승', '11인승 ELEV.']",[],4.12,4.037600000000003,overlapping_room_polygons,[],D0,1.159482643250858,"['R1', 'R1']",same_space,R1,4.037600000000003,1.0,True
+7F,R14,"['AV/PS', 'AV/PS']",[],2.34,2.2736000000000014,overlapping_room_polygons,[],D15,1.815158395292266,"['R1', 'R11']",interior,R1,2.2736000000000014,1.0,True
+7F,R17,['ELEV홀-B'],[],7.97,7.851000000000007,overlapping_room_polygons,[],D0,0.0015339299776944088,"['R1', 'R1']",same_space,R1,7.851000000000006,0.9999999999999999,True
+8F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R2', 'R5']",interior,,0.0,0.0,False
+8F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D3,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+8F,R12,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D0,0.3006659275674553,"['R2', 'R2']",same_space,R2,1.8816000000000024,1.0,True
+8F,R13,"['105m/s', '기어리스', '11인승', '11인승 ELEV.']",[],4.12,4.037600000000003,overlapping_room_polygons,[],D0,1.159482643250858,"['R2', 'R2']",same_space,R2,4.037600000000003,1.0,True
+8F,R14,"['AV/PS', 'AV/PS']",[],2.34,2.2736000000000014,overlapping_room_polygons,[],D14,1.815158395292266,"['R2', 'R11']",interior,R2,2.2736000000000014,1.0,True
+8F,R17,['ELEV홀-B'],[],7.97,7.851000000000007,overlapping_room_polygons,[],D0,0.0015339299776944088,"['R2', 'R2']",same_space,R2,7.851000000000006,0.9999999999999999,True
+9F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D3,0.020000000000003123,"['R1', 'R5']",interior,,0.0,0.0,False
+9F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D4,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+9F,R11,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D1,0.3006659275674553,"['R12', 'R1']",interior,R1,1.8816000000000024,1.0,True
+10F,R4,[],[],1.09,1.0439999999999965,no_opening_side_assignment_other,[],D2,0.020000000000003123,"['R1', 'R5']",interior,,0.0,0.0,False
+10F,R8,['AD'],[],0.83,0.7912000000000009,utility_space_label_without_aperture,[],D3,3.8985638381332164,"['R5', 'R3']",interior,,0.0,0.0,True
+10F,R11,"['EPS/TPS', 'EPS/TPS']",[],1.94,1.8816000000000024,overlapping_room_polygons,[],D0,0.3006659275674553,"['R12', 'R1']",interior,R1,1.8816000000000024,1.0,True
+PH,R2,[],[],0.73,0.6992000000000012,no_opening_side_assignment_other,[],D10,0.7999999999999972,"['out', 'R0']",exterior,,0.0,0.0,False
+PH,R6,[],[],1.1,1.0560000000000025,no_opening_side_assignment_other,[],D0,0.03999999999999914,"['R0', 'R4']",interior,,0.0,0.0,False

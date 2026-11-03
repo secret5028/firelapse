@@ -1,0 +1,1331 @@
+[
+  {
+    "complete": true,
+    "safe_end_s": 3600.0,
+    "burning_room_count": 2,
+    "smoke_risk_room_count": 0,
+    "first_FO_s": 260.0,
+    "rooms": {
+      "CAD_5F_R0": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R1": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R2": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R3": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R4": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R5": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R6": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R7": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R8": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R9": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R10": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R11": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R12": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R13": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R14": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R15": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R16": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": 260.0,
+        "smoke_caution": true
+      },
+      "CAD_5F_R17": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R18": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R19": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R20": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R21": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R22": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      }
+    },
+    "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+    "smoke_caution_room_count": 16,
+    "origin_max_upper_C": 698.6929950195299,
+    "origin_fire_basis": "fuel_based",
+    "origin_budget": {
+      "room": "CAD_5F_R16",
+      "origin_fire_basis": "fuel_based",
+      "Q_origin_peak_kW": 3308.175000000004,
+      "area_m2": 26.46540000000003,
+      "coverage": 0.5,
+      "hrrpua_kW_m2": 250,
+      "energy_MJ": 8204.27400000001,
+      "fuel_load_MJ_m2": 310.00000000000006,
+      "fuel_surface_peak_kW": 3308.175000000004,
+      "ventilation_cap_kW": 3913.082058940243,
+      "external_A_sqrtH": 2.6087213726268286,
+      "internal_max_A_sqrtH": 2.738870205029804,
+      "cap_basis": "external sum",
+      "external_opening_ids": [
+        "CAD_5F_W21",
+        "CAD_5F_W22"
+      ],
+      "internal_max_opening_ids": [
+        "CAD_5F_D16"
+      ],
+      "vent_cap_k": 1.0,
+      "growth_kW_s2": 0.047,
+      "input_peak_used": false,
+      "classification": {
+        "room": "CAD_5F_R16",
+        "label": "호텔 객실",
+        "usage_class": "hotel_room",
+        "classification_basis": {
+          "basis": "label",
+          "pattern": "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+        },
+        "labels": [
+          "객실-10"
+        ],
+        "area_m2": 26.46540000000003,
+        "load_MJ_m2": 310,
+        "hrrpua_kW_m2": 250,
+        "coverage": 0.5,
+        "core_preserved": false,
+        "automatic": true,
+        "value_basis": "D3 automatic class / fire_load_table mean,rhrf; existing core exception"
+      },
+      "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+    },
+    "attention_rooms": [
+      "CAD_5F_R16"
+    ],
+    "attention_room_count": 1,
+    "unknown_rooms": [],
+    "burning_rooms": [
+      "CAD_5F_R1",
+      "CAD_5F_R16"
+    ],
+    "preprocess_s": 0.04447329999948124,
+    "integration_s": 13.56174480000027,
+    "postprocess_s": 2.615856299999905,
+    "failure": null,
+    "cell_count": 23,
+    "events": [
+      {
+        "room": "CAD_5F_R1",
+        "parent": "CAD_5F_R16",
+        "condition_time_s": 256.53750968443467,
+        "delay_s": 60.0,
+        "supply_start_s": 316.53750968443467,
+        "trigger_basis": "upper_layer_temperature",
+        "threshold_C": 600.0
+      }
+    ],
+    "room": "CAD_5F_R16",
+    "name": "객실-10",
+    "rank1": 1,
+    "score": 4.832949859549992,
+    "state": "open_except_confirmed",
+    "total_s": 16.93402909999986
+  },
+  {
+    "complete": true,
+    "safe_end_s": 3600.0,
+    "burning_room_count": 1,
+    "smoke_risk_room_count": 0,
+    "first_FO_s": null,
+    "rooms": {
+      "CAD_5F_R0": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R1": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R2": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R3": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R4": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R5": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R6": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R7": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R8": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R9": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R10": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R11": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R12": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R13": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R14": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R15": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R16": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R17": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R18": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R19": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R20": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R21": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R22": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      }
+    },
+    "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+    "smoke_caution_room_count": 1,
+    "origin_max_upper_C": 342.09656893531655,
+    "origin_fire_basis": "fuel_based",
+    "origin_budget": {
+      "room": "CAD_5F_R16",
+      "origin_fire_basis": "fuel_based",
+      "Q_origin_peak_kW": 3308.175000000004,
+      "area_m2": 26.46540000000003,
+      "coverage": 0.5,
+      "hrrpua_kW_m2": 250,
+      "energy_MJ": 8204.27400000001,
+      "fuel_load_MJ_m2": 310.00000000000006,
+      "fuel_surface_peak_kW": 3308.175000000004,
+      "ventilation_cap_kW": 3913.082058940243,
+      "external_A_sqrtH": 2.6087213726268286,
+      "internal_max_A_sqrtH": 2.738870205029804,
+      "cap_basis": "external sum",
+      "external_opening_ids": [
+        "CAD_5F_W21",
+        "CAD_5F_W22"
+      ],
+      "internal_max_opening_ids": [
+        "CAD_5F_D16"
+      ],
+      "vent_cap_k": 1.0,
+      "growth_kW_s2": 0.047,
+      "input_peak_used": false,
+      "classification": {
+        "room": "CAD_5F_R16",
+        "label": "호텔 객실",
+        "usage_class": "hotel_room",
+        "classification_basis": {
+          "basis": "label",
+          "pattern": "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+        },
+        "labels": [
+          "객실-10"
+        ],
+        "area_m2": 26.46540000000003,
+        "load_MJ_m2": 310,
+        "hrrpua_kW_m2": 250,
+        "coverage": 0.5,
+        "core_preserved": false,
+        "automatic": true,
+        "value_basis": "D3 automatic class / fire_load_table mean,rhrf; existing core exception"
+      },
+      "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+    },
+    "attention_rooms": [
+      "CAD_5F_R16"
+    ],
+    "attention_room_count": 1,
+    "unknown_rooms": [],
+    "burning_rooms": [
+      "CAD_5F_R16"
+    ],
+    "preprocess_s": 0.06920700000046054,
+    "integration_s": 12.964462599999933,
+    "postprocess_s": 2.515432000000146,
+    "failure": null,
+    "cell_count": 23,
+    "events": [],
+    "room": "CAD_5F_R16",
+    "name": "객실-10",
+    "rank1": 1,
+    "score": 4.832949859549992,
+    "state": "closed",
+    "total_s": 16.233991900000547
+  },
+  {
+    "complete": true,
+    "safe_end_s": 3600.0,
+    "burning_room_count": 2,
+    "smoke_risk_room_count": 0,
+    "first_FO_s": 260.0,
+    "rooms": {
+      "CAD_5F_R0": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R1": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R2": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R3": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R4": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R5": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R6": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R7": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R8": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R9": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R10": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R11": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": 260.0,
+        "smoke_caution": true
+      },
+      "CAD_5F_R12": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R13": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R14": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R15": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R16": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R17": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R18": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R19": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R20": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R21": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R22": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      }
+    },
+    "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+    "smoke_caution_room_count": 16,
+    "origin_max_upper_C": 698.6791798098238,
+    "origin_fire_basis": "fuel_based",
+    "origin_budget": {
+      "room": "CAD_5F_R11",
+      "origin_fire_basis": "fuel_based",
+      "Q_origin_peak_kW": 3308.174999999996,
+      "area_m2": 26.46539999999997,
+      "coverage": 0.5,
+      "hrrpua_kW_m2": 250,
+      "energy_MJ": 8204.27399999999,
+      "fuel_load_MJ_m2": 310.0,
+      "fuel_surface_peak_kW": 3308.174999999996,
+      "ventilation_cap_kW": 3913.082058940243,
+      "external_A_sqrtH": 2.6087213726268286,
+      "internal_max_A_sqrtH": 2.738870205029804,
+      "cap_basis": "external sum",
+      "external_opening_ids": [
+        "CAD_5F_W25",
+        "CAD_5F_W26"
+      ],
+      "internal_max_opening_ids": [
+        "CAD_5F_D15"
+      ],
+      "vent_cap_k": 1.0,
+      "growth_kW_s2": 0.047,
+      "input_peak_used": false,
+      "classification": {
+        "room": "CAD_5F_R11",
+        "label": "호텔 객실",
+        "usage_class": "hotel_room",
+        "classification_basis": {
+          "basis": "label",
+          "pattern": "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+        },
+        "labels": [
+          "객실-11"
+        ],
+        "area_m2": 26.46539999999997,
+        "load_MJ_m2": 310,
+        "hrrpua_kW_m2": 250,
+        "coverage": 0.5,
+        "core_preserved": false,
+        "automatic": true,
+        "value_basis": "D3 automatic class / fire_load_table mean,rhrf; existing core exception"
+      },
+      "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+    },
+    "attention_rooms": [
+      "CAD_5F_R11"
+    ],
+    "attention_room_count": 1,
+    "unknown_rooms": [],
+    "burning_rooms": [
+      "CAD_5F_R1",
+      "CAD_5F_R11"
+    ],
+    "preprocess_s": 0.0434824000003573,
+    "integration_s": 12.211697200000344,
+    "postprocess_s": 2.5641075000003184,
+    "failure": null,
+    "cell_count": 23,
+    "events": [
+      {
+        "room": "CAD_5F_R1",
+        "parent": "CAD_5F_R11",
+        "condition_time_s": 256.5372431420785,
+        "delay_s": 60.0,
+        "supply_start_s": 316.5372431420785,
+        "trigger_basis": "upper_layer_temperature",
+        "threshold_C": 600.0
+      }
+    ],
+    "room": "CAD_5F_R11",
+    "name": "객실-11",
+    "rank1": 2,
+    "score": 4.83294985954999,
+    "state": "open_except_confirmed",
+    "total_s": 15.56122300000061
+  },
+  {
+    "complete": true,
+    "safe_end_s": 3600.0,
+    "burning_room_count": 1,
+    "smoke_risk_room_count": 0,
+    "first_FO_s": null,
+    "rooms": {
+      "CAD_5F_R0": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R1": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R2": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R3": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R4": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R5": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R6": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R7": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R8": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R9": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R10": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R11": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R12": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R13": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R14": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R15": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R16": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R17": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R18": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R19": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R20": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R21": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R22": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      }
+    },
+    "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+    "smoke_caution_room_count": 1,
+    "origin_max_upper_C": 342.0965689358086,
+    "origin_fire_basis": "fuel_based",
+    "origin_budget": {
+      "room": "CAD_5F_R11",
+      "origin_fire_basis": "fuel_based",
+      "Q_origin_peak_kW": 3308.174999999996,
+      "area_m2": 26.46539999999997,
+      "coverage": 0.5,
+      "hrrpua_kW_m2": 250,
+      "energy_MJ": 8204.27399999999,
+      "fuel_load_MJ_m2": 310.0,
+      "fuel_surface_peak_kW": 3308.174999999996,
+      "ventilation_cap_kW": 3913.082058940243,
+      "external_A_sqrtH": 2.6087213726268286,
+      "internal_max_A_sqrtH": 2.738870205029804,
+      "cap_basis": "external sum",
+      "external_opening_ids": [
+        "CAD_5F_W25",
+        "CAD_5F_W26"
+      ],
+      "internal_max_opening_ids": [
+        "CAD_5F_D15"
+      ],
+      "vent_cap_k": 1.0,
+      "growth_kW_s2": 0.047,
+      "input_peak_used": false,
+      "classification": {
+        "room": "CAD_5F_R11",
+        "label": "호텔 객실",
+        "usage_class": "hotel_room",
+        "classification_basis": {
+          "basis": "label",
+          "pattern": "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+        },
+        "labels": [
+          "객실-11"
+        ],
+        "area_m2": 26.46539999999997,
+        "load_MJ_m2": 310,
+        "hrrpua_kW_m2": 250,
+        "coverage": 0.5,
+        "core_preserved": false,
+        "automatic": true,
+        "value_basis": "D3 automatic class / fire_load_table mean,rhrf; existing core exception"
+      },
+      "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+    },
+    "attention_rooms": [
+      "CAD_5F_R11"
+    ],
+    "attention_room_count": 1,
+    "unknown_rooms": [],
+    "burning_rooms": [
+      "CAD_5F_R11"
+    ],
+    "preprocess_s": 0.0434121000007508,
+    "integration_s": 12.806059199999254,
+    "postprocess_s": 2.5981854000001476,
+    "failure": null,
+    "cell_count": 23,
+    "events": [],
+    "room": "CAD_5F_R11",
+    "name": "객실-11",
+    "rank1": 2,
+    "score": 4.83294985954999,
+    "state": "closed",
+    "total_s": 16.14626589999989
+  },
+  {
+    "complete": true,
+    "safe_end_s": 3600.0,
+    "burning_room_count": 2,
+    "smoke_risk_room_count": 0,
+    "first_FO_s": 260.0,
+    "rooms": {
+      "CAD_5F_R0": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R1": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R2": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R3": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R4": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R5": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R6": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R7": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R8": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R9": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R10": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R11": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R12": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R13": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R14": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R15": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R16": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R17": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R18": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R19": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R20": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": 260.0,
+        "smoke_caution": true
+      },
+      "CAD_5F_R21": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R22": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      }
+    },
+    "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+    "smoke_caution_room_count": 16,
+    "origin_max_upper_C": 704.7738184013317,
+    "origin_fire_basis": "fuel_based",
+    "origin_budget": {
+      "room": "CAD_5F_R20",
+      "origin_fire_basis": "fuel_based",
+      "Q_origin_peak_kW": 3438.8749999999977,
+      "area_m2": 27.51099999999998,
+      "coverage": 0.5,
+      "hrrpua_kW_m2": 250,
+      "energy_MJ": 8528.409999999994,
+      "fuel_load_MJ_m2": 310.0,
+      "fuel_surface_peak_kW": 3438.8749999999977,
+      "ventilation_cap_kW": 4446.68415788664,
+      "external_A_sqrtH": 2.9644561052577596,
+      "internal_max_A_sqrtH": 2.738870205029804,
+      "cap_basis": "external sum",
+      "external_opening_ids": [
+        "CAD_5F_W1",
+        "CAD_5F_W7"
+      ],
+      "internal_max_opening_ids": [
+        "CAD_5F_D14"
+      ],
+      "vent_cap_k": 1.0,
+      "growth_kW_s2": 0.047,
+      "input_peak_used": false,
+      "classification": {
+        "room": "CAD_5F_R20",
+        "label": "호텔 객실",
+        "usage_class": "hotel_room",
+        "classification_basis": {
+          "basis": "label",
+          "pattern": "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+        },
+        "labels": [
+          "객실-7"
+        ],
+        "area_m2": 27.51099999999998,
+        "load_MJ_m2": 310,
+        "hrrpua_kW_m2": 250,
+        "coverage": 0.5,
+        "core_preserved": false,
+        "automatic": true,
+        "value_basis": "D3 automatic class / fire_load_table mean,rhrf; existing core exception"
+      },
+      "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+    },
+    "attention_rooms": [
+      "CAD_5F_R20"
+    ],
+    "attention_room_count": 1,
+    "unknown_rooms": [],
+    "burning_rooms": [
+      "CAD_5F_R1",
+      "CAD_5F_R20"
+    ],
+    "preprocess_s": 0.04450009999982285,
+    "integration_s": 11.863115500000276,
+    "postprocess_s": 2.591302199999518,
+    "failure": null,
+    "cell_count": 23,
+    "events": [
+      {
+        "room": "CAD_5F_R1",
+        "parent": "CAD_5F_R20",
+        "condition_time_s": 259.8437964325404,
+        "delay_s": 60.0,
+        "supply_start_s": 319.8437964325404,
+        "trigger_basis": "upper_layer_temperature",
+        "threshold_C": 600.0
+      }
+    ],
+    "room": "CAD_5F_R20",
+    "name": "객실-7",
+    "rank1": 3,
+    "score": 4.813025911863641,
+    "state": "open_except_confirmed",
+    "total_s": 15.255270599999676
+  },
+  {
+    "complete": true,
+    "safe_end_s": 3600.0,
+    "burning_room_count": 1,
+    "smoke_risk_room_count": 0,
+    "first_FO_s": null,
+    "rooms": {
+      "CAD_5F_R0": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R1": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R2": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R3": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R4": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R5": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R6": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R7": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R8": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R9": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R10": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R11": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R12": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R13": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R14": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R15": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R16": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R17": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R18": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R19": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R20": {
+        "burning": true,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": true
+      },
+      "CAD_5F_R21": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      },
+      "CAD_5F_R22": {
+        "burning": false,
+        "smoke_risk": false,
+        "first_FO_s": null,
+        "smoke_caution": false
+      }
+    },
+    "metric_basis": "original rooms; union across cells/time, actual HRR>0; smoke3factor per4.2; FO shared three-factor all_met",
+    "smoke_caution_room_count": 1,
+    "origin_max_upper_C": 339.01579348040207,
+    "origin_fire_basis": "fuel_based",
+    "origin_budget": {
+      "room": "CAD_5F_R20",
+      "origin_fire_basis": "fuel_based",
+      "Q_origin_peak_kW": 3438.8749999999977,
+      "area_m2": 27.51099999999998,
+      "coverage": 0.5,
+      "hrrpua_kW_m2": 250,
+      "energy_MJ": 8528.409999999994,
+      "fuel_load_MJ_m2": 310.0,
+      "fuel_surface_peak_kW": 3438.8749999999977,
+      "ventilation_cap_kW": 4446.68415788664,
+      "external_A_sqrtH": 2.9644561052577596,
+      "internal_max_A_sqrtH": 2.738870205029804,
+      "cap_basis": "external sum",
+      "external_opening_ids": [
+        "CAD_5F_W1",
+        "CAD_5F_W7"
+      ],
+      "internal_max_opening_ids": [
+        "CAD_5F_D14"
+      ],
+      "vent_cap_k": 1.0,
+      "growth_kW_s2": 0.047,
+      "input_peak_used": false,
+      "classification": {
+        "room": "CAD_5F_R20",
+        "label": "호텔 객실",
+        "usage_class": "hotel_room",
+        "classification_basis": {
+          "basis": "label",
+          "pattern": "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+        },
+        "labels": [
+          "객실-7"
+        ],
+        "area_m2": 27.51099999999998,
+        "load_MJ_m2": 310,
+        "hrrpua_kW_m2": 250,
+        "coverage": 0.5,
+        "core_preserved": false,
+        "automatic": true,
+        "value_basis": "D3 automatic class / fire_load_table mean,rhrf; existing core exception"
+      },
+      "opening_basis": "gross geometric aperture, same source curve across both states; actual oxygen limitation preserved"
+    },
+    "attention_rooms": [
+      "CAD_5F_R20"
+    ],
+    "attention_room_count": 1,
+    "unknown_rooms": [],
+    "burning_rooms": [
+      "CAD_5F_R20"
+    ],
+    "preprocess_s": 0.04437010000037844,
+    "integration_s": 13.233752600000116,
+    "postprocess_s": 2.661520499999824,
+    "failure": null,
+    "cell_count": 23,
+    "events": [],
+    "room": "CAD_5F_R20",
+    "name": "객실-7",
+    "rank1": 3,
+    "score": 4.813025911863641,
+    "state": "closed",
+    "total_s": 16.66303549999975
+  }
+]

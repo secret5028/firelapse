@@ -1,0 +1,281 @@
+{
+  "complete_scenarios": 6,
+  "serial": true,
+  "workers": 1,
+  "method": "BDF",
+  "retry": false,
+  "code_and_input_unchanged": true,
+  "source_hashes": {
+    "config/building-rules.json": "fe21d6622b41e19003b4d45cfa49786c97999eaeecec8022f3c1e82dcef4d22b",
+    "data/parkmarine-hotel/building.json": "351ff6aba1ed8eac02e116bc500ccb351308f3cd5455ed9610a9bc03d81045d7",
+    "data/parkmarine-hotel/graph-report.json": "defba6b336e70e3c9c4429314014aaf8a4e05a8392d08e094569a6272418f176",
+    "simulation/pyrocast_cfbt/__init__.py": "0631feb5793e1046ce677d430b4e3f7f84008bc3438a1ff7451b68e8a5dfb0be",
+    "simulation/pyrocast_cfbt/__main__.py": "d497995d76d3f7eb2d9a095221f38fce34006d1ef2ac56092d09ba3d65140ec7",
+    "simulation/pyrocast_cfbt/cad.py": "3075569c9bdd1e5071f46689d6303079225f77a4c32968046e6b1ce05ad49adf",
+    "simulation/pyrocast_cfbt/ceiling.py": "960e07db0acf080205dbea04a7ff4078ff0c0a203be6319c898ae9c5eeb44890",
+    "simulation/pyrocast_cfbt/combustion_display.py": "d95bbd69d02f66d186a5aad3a14f8c0e1039973864a6d493e31c9c983d4f3f35",
+    "simulation/pyrocast_cfbt/comparison.py": "ffb6256b046bc66064a0436a28d53b2e2e01c3d9c4281d748a3f351991b6426e",
+    "simulation/pyrocast_cfbt/conditions.py": "5fb4a0a5af96d3b7253448dc6dd47d60b6d2f083d2a69796f64a33dde1801ba5",
+    "simulation/pyrocast_cfbt/deck.py": "12d0a2d05ced9cb0f30e28cab657abe023007d59c34b94e894d7406bc0045207",
+    "simulation/pyrocast_cfbt/diagnostics.py": "c19f698adaec0373a502bf4077c168236cd434dc4ebf2e5e077e5483ced8a1a8",
+    "simulation/pyrocast_cfbt/exposure.py": "b3f68da83dbb0e6d371909e2c3d8c16b8943f9e9ad1e714311a747a2e7b91f88",
+    "simulation/pyrocast_cfbt/flashover.py": "f65e4aa5233ebe4bc1af9d6aee3f99fa021099e1d5d86430a2b65dbc84e30954",
+    "simulation/pyrocast_cfbt/fo_hrr.py": "3198d98f81d85d43083d25a5db95689cb016529dc12b5b49eac9d97443eacf5e",
+    "simulation/pyrocast_cfbt/fuel_layout.py": "18412d2c11f40b0c751f1dbbb13e8a1749a215a7c2fd4c0f920c49733ee2f435",
+    "simulation/pyrocast_cfbt/iteration.py": "5729099df2ed7c3f5d474bfcabeca72ccd9e6eded72e8e98a4b4761e28da9d57",
+    "simulation/pyrocast_cfbt/mixture.py": "34c31f0067b883fe2a4ae9fb316c18173e87da7c43ef4f3034d22904c8166e66",
+    "simulation/pyrocast_cfbt/model.py": "6aae8e5f91764222ce07a38290675846616d91b6e961e80cb699bd6bfc8abe0f",
+    "simulation/pyrocast_cfbt/native.py": "f9ae3f192aa9e3dc8485019f53605897d084de9d6eb5c7289cc23ac4ddba4f84",
+    "simulation/pyrocast_cfbt/openings.py": "33b73db5a8ed736f052b3be41bd209fe7828b4d3ac0524642ba01900ff88c6ef",
+    "simulation/pyrocast_cfbt/outdoor.py": "8a38b17dce48c23ed7f36d4f687b0830ea12f39dc96234cbb9df2eba3c7c265e",
+    "simulation/pyrocast_cfbt/parent_rule.py": "7f0701341c5bfab77d0af73c495faff77518984ab7bd4372666af4831911dddb",
+    "simulation/pyrocast_cfbt/playback.py": "9b4e89e7557d1bf32c1adbd8d8f4eef65ceed6c60c869f03fea2afcc604bc3b1",
+    "simulation/pyrocast_cfbt/practical.py": "fa275004bdb4054e510ff950c9ee19f4735d7344e791246ff7533bd7cd01b829",
+    "simulation/pyrocast_cfbt/reuse.py": "4f674dc5a3fb4c88c220fc87504cffbe14366841395ac000213235bcb367bda3",
+    "simulation/pyrocast_cfbt/room_rule.py": "da50d412e5dc53ffa18e6a97c449b36de1597a021d658cb037b6bd536cbd8c95",
+    "simulation/pyrocast_cfbt/room_rule_r6.py": "2c9613db82132324cf7db7f8c5fe0f97d001e32f8640060292c3e459753fcfab",
+    "simulation/pyrocast_cfbt/room_rule_r7.py": "31ae4a262a24de171f29a8046be115e44f07095c6c65a99b20feb58569350510",
+    "simulation/pyrocast_cfbt/room_rule_r8.py": "3fdc26922ed92411b9fce4cd80baad7d515a63ee9afa351961d08fd1d8e721d0",
+    "simulation/pyrocast_cfbt/rule_cells.py": "614b05a9aa258dda66e9f3b5ece55765feadaa0d5a03470dced0e6f9f6544922",
+    "simulation/pyrocast_cfbt/rule_graph.py": "87032ad49958c613eca24ace2d3384262fca8fddff2f1734e9ea99e0e05bd275",
+    "simulation/pyrocast_cfbt/rule_graph_r7.py": "02d66c590e51a41ace9faa1d3087d9013bfe329067e4dec1d045e6a9615d20c3",
+    "simulation/pyrocast_cfbt/rule_sensor.py": "bc32f76b36cd250c6f284a9ba8c8622458fb0c8b81c610db1b023d3dca19ba7e",
+    "simulation/pyrocast_cfbt/rule_settings.py": "2f54af577bae72a3c0e4229b5a3979e544da32200b4ac70d4ae28597e1835efd",
+    "simulation/pyrocast_cfbt/spread.py": "38403453c607c4bbe4e261d2366d89a02cee0062b4cfc66acdedc9356ab9d138",
+    "simulation/pyrocast_cfbt/thermal.py": "d692c1e925549675eeb4a3e58ee461109520835e57a6878edc3b181e8be8abd1",
+    "simulation/pyrocast_cfbt/topology.py": "eae26ddb0d17f06ee4138d56e1bcb72a77ed8a9a47a03eac1dd0b7348d72a1b2",
+    "simulation/pyrocast_lite/__init__.py": "5783271862caae08fad6ffbee60bfa0d5e13b9b4e09c939b6e4883729a5a4b01",
+    "simulation/pyrocast_lite/adapter.py": "1f073d65c182b11bc357ae0179c21a89718c7677beae229b045efc812bd53fa0",
+    "simulation/pyrocast_lite/approved_uses_v8.json": "dd424fa3fd9174555aff381521a741a983cbb1381436a6fba270e9f5eda5ba01",
+    "simulation/pyrocast_lite/core.py": "06ded2a611e7e0f28a579f1c46f59eaf8d67b4e33d4ff036dcea95e6fc6d6d8a",
+    "simulation/pyrocast_lite/door_classification.py": "20134f6d1a484eff9c18126c68e6e2ae3932d0c899d1408334713a492a9d4f54",
+    "simulation/pyrocast_lite/door_jet.py": "3f3222cfaecf7ae446e04678ac3a0632149c5108a06edabf04eb9d24be35e1d4",
+    "simulation/pyrocast_lite/failure_state.py": "038f7c736cf7838e70caa37fe85efab968ad0e10d8b3395c32f4b1a2df538165",
+    "simulation/pyrocast_lite/fire_load_table.json": "f39c752bc0a1fea1ae887d79ba8822727c61633d3426b41c64b6d5dfc3f5f8dc",
+    "simulation/pyrocast_lite/montecarlo.py": "dbace2ca90ac827bc18c46bed68a3be53134a0e927e88896fccd4f3c94c6695c",
+    "simulation/pyrocast_lite/numerics.py": "8bc072d817e2a237c04594317ef59361858d70007102179896042a4570de4297",
+    "simulation/pyrocast_lite/radiation.py": "d46c6aa7894840412fd8b192365d0c7ebc549b867460343a6b12da9a256133e4",
+    "simulation/pyrocast_lite/result_adapter.py": "2ff91882d900f07bdde49f2f330c2f93061efe2fac814399f850645d8510f0ef",
+    "simulation/pyrocast_lite/runner.py": "69f2ccf3b4997e433c0e380932e176d92e2af5d2aca4ed62e982f8644827a1bc",
+    "simulation/pyrocast_lite/screening.py": "601df77c773d95f14611692fe50dc6dc6638a9e60287dd10e953c235ed36c4d3",
+    "simulation/pyrocast_lite/screening_settings.json": "e238f5d837b0e26b7636c899bb0f85bd5cd625b93939fc5d5a093f510b53e8cf",
+    "simulation/pyrocast_lite/screening_v7.py": "ceb2097c7b3d2cabe454b14eba392dc9f12eac168c1fa87183c56fc1398696e1",
+    "simulation/pyrocast_lite/screening_v7_settings.json": "bb3628523f3f696c612a274d2a2cd0aec5813f2915983e5be01414d7af348ba3",
+    "simulation/pyrocast_lite/screening_v8.py": "3e30fd9dacb2398836c344daa9403a6c6eb160bca9ec3fb2a5acd6125231cfb9",
+    "simulation/pyrocast_lite/screening_v8_approved.py": "10abcd6b1a54f7116207e972a879c9c2534213f63c8b03c0067fb0e8ea305290",
+    "simulation/pyrocast_lite/shared_inputs.py": "452a30b10844e33b9b9ceed335beddd22eac40337e2e8540a8909f8febb70320",
+    "simulation/pyrocast_lite/visualization.py": "f44c5d54e8e0e862e82ca83400bea901d5417b66ec39fe2b54fb509be75a9565"
+  },
+  "isolated_audit_count": 71,
+  "loader_failures": 4,
+  "new_native_runs": 0,
+  "cases": [
+    {
+      "room": "CAD_5F_R16",
+      "state": "open_except_confirmed",
+      "samples": 361,
+      "end_s": 3600.0,
+      "burning": [
+        {
+          "cell": "CAD_5F_R1",
+          "original_room": "CAD_5F_R1",
+          "first_actual_positive_HRR_s": 320.0,
+          "actual_peak_kW": 968.1179999999993,
+          "longest_positive_HRR_s": 3280.0,
+          "upper_max_C": 243.57587817554452,
+          "upper_oxygen_min_vol_percent": 10.290183702328902
+        },
+        {
+          "cell": "CAD_5F_R16",
+          "original_room": "CAD_5F_R16",
+          "first_actual_positive_HRR_s": 10.0,
+          "actual_peak_kW": 3308.175000000004,
+          "longest_positive_HRR_s": 3390.0,
+          "upper_max_C": 698.6929950195299,
+          "upper_oxygen_min_vol_percent": 8.623146318117167
+        }
+      ],
+      "events": [
+        {
+          "room": "CAD_5F_R1",
+          "parent": "CAD_5F_R16",
+          "condition_time_s": 256.53750968443467,
+          "delay_s": 60.0,
+          "supply_start_s": 316.53750968443467,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        }
+      ],
+      "hashes": {
+        "input.json": "59a5acbd4d4fde0588f4900ba58399e527de1104fb34fecac095c328eb5f7bfc",
+        "rule_manifest.json": "edd6d173f9e82ff2fdb607a3488974a30ba7974896436ed4b0fa3bc8f42a38e4",
+        "result.json": "d168e0ae6a7a7833b14876d9404299d13e39541fc0f3aaed19f51f8625c60ebe",
+        "state.npz": "87af835c660b8c2e90d7926f327a9282703e3cca4ec6638bbeee1ae28105a760"
+      },
+      "geometry_repairs": []
+    },
+    {
+      "room": "CAD_5F_R16",
+      "state": "closed",
+      "samples": 361,
+      "end_s": 3600.0,
+      "burning": [
+        {
+          "cell": "CAD_5F_R16",
+          "original_room": "CAD_5F_R16",
+          "first_actual_positive_HRR_s": 10.0,
+          "actual_peak_kW": 794.7961895884375,
+          "longest_positive_HRR_s": 3390.0,
+          "upper_max_C": 342.09656893531655,
+          "upper_oxygen_min_vol_percent": 0.0050693175740560235
+        }
+      ],
+      "events": [],
+      "hashes": {
+        "input.json": "58e57bae0ed2812372bf448bda01c1b05e020a8b7b8adce3552f6cc7c4461e7a",
+        "rule_manifest.json": "d310514e63a1e0dd41d76167cdd6bf46012a2e3019ead13c2ce2548b923b9a58",
+        "result.json": "7de13a61b2283388fa4bf4acdf4a6f26936e80c24de57a54685c2afba0df859e",
+        "state.npz": "7d9ff39e4306405b5f51a9d71a0ee3d1a3273058681cf8aaad97389a6713dfd1"
+      },
+      "geometry_repairs": []
+    },
+    {
+      "room": "CAD_5F_R11",
+      "state": "open_except_confirmed",
+      "samples": 361,
+      "end_s": 3600.0,
+      "burning": [
+        {
+          "cell": "CAD_5F_R1",
+          "original_room": "CAD_5F_R1",
+          "first_actual_positive_HRR_s": 320.0,
+          "actual_peak_kW": 968.1179999999993,
+          "longest_positive_HRR_s": 3280.0,
+          "upper_max_C": 243.51595234586375,
+          "upper_oxygen_min_vol_percent": 10.290570412998443
+        },
+        {
+          "cell": "CAD_5F_R11",
+          "original_room": "CAD_5F_R11",
+          "first_actual_positive_HRR_s": 10.0,
+          "actual_peak_kW": 3308.174999999996,
+          "longest_positive_HRR_s": 3390.0,
+          "upper_max_C": 698.6791798098238,
+          "upper_oxygen_min_vol_percent": 8.623149673773842
+        }
+      ],
+      "events": [
+        {
+          "room": "CAD_5F_R1",
+          "parent": "CAD_5F_R11",
+          "condition_time_s": 256.5372431420785,
+          "delay_s": 60.0,
+          "supply_start_s": 316.5372431420785,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        }
+      ],
+      "hashes": {
+        "input.json": "6a4b2596fc82dfdb90e61d56280db22431793bf521c391fceaf4f87bdd9448c3",
+        "rule_manifest.json": "84799bfda65a51bc868f12913c30db71c209bbb8bd372c436e9db010143d1a45",
+        "result.json": "ebbcbce5304950f03f712ae1c9f1db7eed5cee5c6d959bb5a4c21e7be04ffa1f",
+        "state.npz": "126802567885ea1fe432d809887c4d9d2d1c2f4b412302b3e2a05f2f20631918"
+      },
+      "geometry_repairs": []
+    },
+    {
+      "room": "CAD_5F_R11",
+      "state": "closed",
+      "samples": 361,
+      "end_s": 3600.0,
+      "burning": [
+        {
+          "cell": "CAD_5F_R11",
+          "original_room": "CAD_5F_R11",
+          "first_actual_positive_HRR_s": 10.0,
+          "actual_peak_kW": 794.7961895884374,
+          "longest_positive_HRR_s": 3390.0,
+          "upper_max_C": 342.0965689358086,
+          "upper_oxygen_min_vol_percent": 0.0050693175814322455
+        }
+      ],
+      "events": [],
+      "hashes": {
+        "input.json": "b22c7d39028d30efd9b2ba186eeb11df52f0aa6f52cd100442577847865d4e42",
+        "rule_manifest.json": "3c066e173f7cde5636cdd3403952d24c47d1bf23dbba15b74232661c91cdb3c3",
+        "result.json": "1dedf79dd5dbb142cbac83ee7b3801f6a6763e9de1a86f2c57d7421ca1644fc2",
+        "state.npz": "aba42184a4ef7c4cce486bf0c3cc4c6ddeb65f970752c8a39715f07342dda91d"
+      },
+      "geometry_repairs": []
+    },
+    {
+      "room": "CAD_5F_R20",
+      "state": "open_except_confirmed",
+      "samples": 361,
+      "end_s": 3600.0,
+      "burning": [
+        {
+          "cell": "CAD_5F_R1",
+          "original_room": "CAD_5F_R1",
+          "first_actual_positive_HRR_s": 320.0,
+          "actual_peak_kW": 968.1179999999993,
+          "longest_positive_HRR_s": 3280.0,
+          "upper_max_C": 242.4080586227567,
+          "upper_oxygen_min_vol_percent": 10.264885060115708
+        },
+        {
+          "cell": "CAD_5F_R20",
+          "original_room": "CAD_5F_R20",
+          "first_actual_positive_HRR_s": 10.0,
+          "actual_peak_kW": 3438.8749999999977,
+          "longest_positive_HRR_s": 3390.0,
+          "upper_max_C": 704.7738184013317,
+          "upper_oxygen_min_vol_percent": 8.76101561178076
+        }
+      ],
+      "events": [
+        {
+          "room": "CAD_5F_R1",
+          "parent": "CAD_5F_R20",
+          "condition_time_s": 259.8437964325404,
+          "delay_s": 60.0,
+          "supply_start_s": 319.8437964325404,
+          "trigger_basis": "upper_layer_temperature",
+          "threshold_C": 600.0
+        }
+      ],
+      "hashes": {
+        "input.json": "29e430a09f0516be22c6bc211a75d16d59799ce424fb7ece70b07c932b2e27dd",
+        "rule_manifest.json": "76e2b95bf9ff2038b40468dfd49d26d81977733336ccc7dd433b5a38650ecd7e",
+        "result.json": "a8ccf358a67c3fd4efed550a8857f0794662a9a3f9d27aab857ec1395e1801b3",
+        "state.npz": "5f944a34e8ac10dc2c2c6172a95c906bc99aef4715f6474741dc6d0348cba693"
+      },
+      "geometry_repairs": []
+    },
+    {
+      "room": "CAD_5F_R20",
+      "state": "closed",
+      "samples": 361,
+      "end_s": 3600.0,
+      "burning": [
+        {
+          "cell": "CAD_5F_R20",
+          "original_room": "CAD_5F_R20",
+          "first_actual_positive_HRR_s": 10.0,
+          "actual_peak_kW": 921.6489418112831,
+          "longest_positive_HRR_s": 3390.0,
+          "upper_max_C": 339.01579348040207,
+          "upper_oxygen_min_vol_percent": 0.00443811084537553
+        }
+      ],
+      "events": [],
+      "hashes": {
+        "input.json": "9c2f97836e42c5018112047803c4ca2606f74b3e71e9807515276e7f0912bf63",
+        "rule_manifest.json": "d42f8590482d4ad742f78336eec38f7ca50b465ce49ed856dd766d6b81c8f512",
+        "result.json": "9f7fa4606684fea51660f5f5ef0c961f66913ce3f1f8f048b07e5b7819edd06b",
+        "state.npz": "31d5d63b431fc8fd3c60d3d1d8f5de1aa2de5f8530711dc23a5a3a42537bfdb4"
+      },
+      "geometry_repairs": []
+    }
+  ]
+}

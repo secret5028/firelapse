@@ -35,7 +35,6 @@ export function createResultsPanel({panel,store}){
  $('resultRoomControl').append($('hudOrigin'));
  $('resultTools').remove();
  const worst=document.createElement('div');worst.id='resultWorstTime';worst.style.cssText='font-size:11px;white-space:nowrap;overflow-x:auto;margin:8px 0;color:#b8cbd8';$('resultRoomTitle').after(worst);
- const reviewDetails=document.createElement('details');reviewDetails.id='resultMenuReview';reviewDetails.innerHTML='<summary>전체 메뉴 검토</summary><div id="resultReviewMount"></div>';root.append(reviewDetails);
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
  #resultContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#resultContent h3{font-size:12px;font-weight:500;color:#b8cbd8;margin:14px 0 8px}.resultCard{border:1px solid #496273;border-radius:7px;padding:10px;margin-bottom:12px;background:#163345}.resultCard>label{display:block;margin-bottom:5px;color:#b8cbd8}
@@ -72,5 +71,5 @@ export function createResultsPanel({panel,store}){
   $('resultMCStatus').textContent=summary?`저장 ${summary.completed}/${summary.rows.length}표본`:'저장 MC 집계 없음';$('resultMCLoad').disabled=!summary;
  }
  mc(null);
- return {update,mc,mountReview(review){$('resultReviewMount').append(review);review.hidden=false;},dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
+ return {update,mc,dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
 }

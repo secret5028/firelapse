@@ -1,7 +1,7 @@
 export function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
- panel.innerHTML=`<div class="row"><strong>PyroCast · 간략 엔진 v8</strong><output id="liteClock"></output><span id="liteVisible"></span><span class="grow"></span><button id="liteBuilding">건물 전체 맞춤</button><label><input id="liteCores" type="checkbox" checked>수직 공간 투시</label><button id="liteReal" aria-pressed="true">실감 보기</button><button id="liteFireFocus">연소점 확대</button><button id="litePlay">재생</button><button id="liteFold">접기</button><button id="liteReview">전체 메뉴 검토</button></div>
+ panel.innerHTML=`<div class="row"><strong>PyroCast · 간략 엔진 v8</strong><output id="liteClock"></output><span id="liteVisible"></span><span class="grow"></span><button id="liteBuilding">건물 전체 맞춤</button><label><input id="liteCores" type="checkbox" checked>수직 공간 투시</label><button id="liteReal" aria-pressed="true">실감 보기</button><button id="liteFireFocus">연소점 확대</button><button id="litePlay">재생</button><button id="liteFold">접기</button></div>
  <div class="row"><label><input id="liteExterior" type="checkbox" checked><span style="color:#62dcb0">외부 창 강조</span></label><small>보는 쪽 외부 창만 · 뒤편 투시 없음 · 큰 창·난간 제외 · 표시 전용</small></div>
  <div class="row"><label><input id="liteDoors" type="checkbox" checked><span style="color:#e6bd68">실내 문 위치</span></label><small>도면 문틀 · 연기 속 위치 표시 · 개폐 상태와 별도</small></div>
  <div id="liteCoreLegend" hidden><span style="color:#ffc342">■ 계단실·계단</span> · <span style="color:#55baff">■ 승강로</span> — 도면 수직 공간을 벽·슬래브 너머로 표시 (연기 전파 계산 아님)</div>
@@ -29,50 +29,11 @@ export function updateLitePanel({data,index,selected,clicked,playing,floor,$,sel
   const fireCount=data.fires.filter(f=>visibleKeys.has(f.cad_key)&&f.Q_kW[index]>0).length;
   $('liteVisible').textContent=$('liteReal').getAttribute('aria-pressed')==='true'?`연기 ${smokeCount}구역 · 화염 ${fireCount}곳`:'실감 표시 꺼짐';
   $('liteClock').textContent=`${stamp(time)} / ${stamp(data.time_s.at(-1))}`;$('liteTime').value=time;$('litePlay').textContent=playing?'일시정지':'재생';
-  const s=data.solvers[selected.solver_id],d=s.display_v8,event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
-  $('liteDetail').textContent=clicked?`${name(selected)} · ${d?.phenomenon?.[index]??'저장 조건 지수'} · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
+  const s=data.solvers[selected.solver_id],event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
+  $('liteDetail').textContent=clicked?`${name(selected)} · 저장 조건 지수 · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
   $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트'],['rollover','롤오버']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
   $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);
  $('liteRiskStatus').textContent=riskStatus;
-}
-export async function createMenuReview(panel,viewer){
- const cleanups=[];let disposed=false;
- const drawer=document.createElement('aside');drawer.id='pyroMenuReview';drawer.setAttribute('aria-label','전체 메뉴 검토');
- drawer.innerHTML='<header><strong>전체 메뉴·표시 검토</strong><button type="button" id="reviewClose">3D로 돌아가기</button></header><p>삭제 전 검토용입니다. 아래는 현재·이전 메뉴를 모두 펼친 읽기 전용 목록입니다. 숨겨졌던 기능도 나열하며, 표시 효과를 한꺼번에 켜거나 계산·저장을 실행하지 않습니다.</p><nav id="reviewNav"></nav><div id="reviewSections"></div>';
- document.body.append(drawer);drawer.querySelector('#reviewClose').onclick=()=>{drawer.hidden=true;};
- const sections=drawer.querySelector('#reviewSections'),nav=drawer.querySelector('#reviewNav');let serial=0;
- const section=title=>{const host=document.createElement('section');host.className='reviewSection';host.id='reviewSection'+(++serial);const h=document.createElement('h3');h.textContent=title;host.append(h);sections.append(host);const button=document.createElement('button');button.textContent=title;button.onclick=()=>host.scrollIntoView({block:'start'});nav.append(button);return host;};
- const reveal=root=>{
-  for(const node of [root,...root.querySelectorAll('*')]){
-   if(node.id)node.id='reviewCopy'+serial+'_'+node.id;
-   node.removeAttribute('hidden');node.removeAttribute('onclick');
-   if(node.style){node.style.removeProperty('display');node.style.removeProperty('visibility');node.style.removeProperty('position');node.style.removeProperty('inset');node.style.removeProperty('width');node.style.removeProperty('max-height');node.style.removeProperty('height');}
-   if(node.tagName==='DETAILS')node.open=true;
-   if(node.matches('button,input,select,textarea'))node.disabled=true;
-   if(node.tagName==='A'){node.removeAttribute('href');node.setAttribute('aria-disabled','true');}
-  }
-  for(const script of root.querySelectorAll('script'))script.remove();
- };
- const snapshot=(title,node)=>{if(!node)return;const host=section(title),copy=node.cloneNode(true);
-  const sourceControls=node.querySelectorAll('input,select,textarea'),copies=copy.querySelectorAll('input,select,textarea');
-  sourceControls.forEach((source,i)=>{copies[i].value=source.value;if('checked' in source)copies[i].checked=source.checked;});
-  reveal(copy);host.append(copy);
- };
- snapshot('1 · 현재 간략 재생 / 표시 / MC 결과',panel);
- snapshot('2 · 건물·층·문·창·계단·승강기 설정',document.getElementById('p'));
- snapshot('3 · 기존 작전 표시 / 차량·인원·화점·소방시설',document.getElementById('legacyTools'));
- try{
-  const source=await (await fetch('/cfbt/overlay.js')).text(),match=source.match(/panel\.innerHTML=`([\s\S]*?)`;/);
-  if(match){const node=document.createElement('div');node.innerHTML=match[1];snapshot('4 · 이전 CFAST 재생·점화 비교·계산 조건 (간략 결과에 미연결)',node);}
- }catch(e){const p=document.createElement('p');p.textContent='이전 메뉴 로드 실패: '+e.message;sections.append(p);}
- const modules=viewer.B.building_id==='wando-coldstore'?[]:[['5 · 동결 정밀 r8 설정·저장된 결과','./frozen_rule_controls.js','attachFrozenRules'],['6 · 문 자동 분류·정정 메뉴','./lite_doors.js','attachLiteDoors'],['7 · 화점 선별·상위 N·비교 결과','./screening.js','attachScreening']];
- for(const [title,path,method] of modules){
-  const host=section(title),disabled=document.createElement('fieldset');disabled.disabled=true;host.append(disabled);
-  try{const module=await import(path);const component=await module[method](disabled,method==='attachFrozenRules'?()=>{throw Error('메뉴 검토 화면에서는 계산하지 않습니다.');}:viewer);if(component?.dispose)cleanups.push(()=>component.dispose());for(const d of disabled.querySelectorAll('details'))d.open=true;}
-  catch(e){const p=document.createElement('p');p.textContent='메뉴 로드 실패: '+e.message;host.append(p);}
- }
- const note=document.createElement('p');note.textContent='입력란이 회색인 것은 검토용이기 때문입니다. 유지·삭제할 항목을 지정하면 실제 메뉴에 반영합니다. 기존 작전 표시는 계산된 화재·연기와 별개의 수동 기호입니다.';sections.append(note);
- drawer.dispose=()=>{if(disposed)return;disposed=true;for(const off of cleanups.reverse())off();drawer.remove();};return drawer;
 }

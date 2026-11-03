@@ -19,16 +19,3 @@ body:not(.cfbtMenus) #v{left:0!important;right:0!important}
 @media(max-width:750px){#cfbtPanel{left:0;right:0;padding:8px 10px;max-height:58vh}body:not(.cfbtMenus) #p,body:not(.cfbtMenus) #legacyTools{display:none!important}body:not(.cfbtMenus) #v{left:0!important;right:0!important}#cfbtMenuToggle{display:block}#cfbtPanel .row{gap:5px}#cfbtPanel button,#cfbtPanel select{padding:5px 6px;font-size:12px}#cfbtDetail{font-size:11px}#cfbtChart{height:58px}}
 
 /* A stable review inventory, separate from operational playback controls. */
-#pyroMenuReview{position:fixed;z-index:180;right:0;top:0;bottom:0;width:min(780px,76vw);overflow:auto;box-sizing:border-box;background:#142b3b;color:#ecf3f7;border-left:2px solid #698b9d;padding:14px;font:13px/1.5 system-ui,'Malgun Gothic',sans-serif;box-shadow:-8px 0 25px #0008}
-#pyroMenuReview[hidden]{display:none!important}
-#pyroMenuReview header{position:sticky;top:-14px;background:#142b3b;padding:12px 0;z-index:2;display:flex;gap:12px;justify-content:space-between}
-#pyroMenuReview button,#pyroMenuReview input,#pyroMenuReview select{background:#254657;color:#e5eff4;border:1px solid #6c8997;border-radius:4px;padding:4px;max-width:100%}
-#pyroMenuReview button:disabled,#pyroMenuReview input:disabled,#pyroMenuReview select:disabled{opacity:.8;color:#c7d7df}
-#pyroMenuReview nav{display:flex;flex-wrap:wrap;gap:5px}#pyroMenuReview nav button{cursor:pointer}
-#pyroMenuReview .reviewSection{border-top:2px solid #6d8796;margin-top:18px;padding-top:10px;scroll-margin-top:70px;overflow:auto}
-#pyroMenuReview h3{color:#ffd779}#pyroMenuReview fieldset{border:0;min-width:0;padding:0}
-#pyroMenuReview .row{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
-#pyroMenuReview label{display:inline-flex;align-items:center;gap:5px;margin:4px}
-#pyroMenuReview details{border-top:1px solid #466370;margin:8px 0;padding:7px 0}
-#pyroMenuReview table{border-collapse:collapse;font-size:12px}#pyroMenuReview td,#pyroMenuReview th{border:1px solid #496471;padding:5px;text-align:left}
-#pyroMenuReview canvas{max-width:100%;height:65px}#pyroMenuReview input[type=range]{width:160px}

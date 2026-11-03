@@ -287,7 +287,7 @@ C-1의 prefix 최대 정의를 대체합니다. index_history_max는 셀·현상
 기본값은 온도 무늬 약하게 / 연기 색 현재 / 불꽃 hrr / 이력 ON / 경로 차량 ON / 작전 기호 OFF / 경로 ON이다. 고정 clock 180000 ms의 새 4장면 기준은 reviews/ui_C8_20261102/baseline-*.png(작업 폴더에서는 simulation/results/ui_C8_20261102)에 보관한다.
 
 ②는 급기 미확정이면 화점별 2극단, 확정 상태가 있으면 화점별 **확정 급기 1회**만 직렬 실행한다. 자동 상위 N과 사용자 지정 단일 화점에 같은 분기를 적용한다. 비교 결과의 opening_mode, states_per_room, label에 실제 실행 상태를 기록하며, 단일 결과를 두 개로 복제하지 않는다. 주의 지수 순위도 고정 상태 1건의 완료/집계 증거로 판정한다. 입력·시간·엔진·캐시 정책은 유지한다. 실제 AI API는 이번 회귀에서 제외(미검증). 상세 회귀 결과는 specs/웹앱-C8-제출회귀-20261102.md. C-9 미착수, push 승인 대기.
-# C-9: radial initial-room cells (opt-in)
+# C-9 기록 (D-2에서 실행 기능 제거, 저장 결과 보존)
 
 C-9a adds `cell_mode: "radial_area"` (default still `legacy`). It clips the legacy initial cell to the original CAD polygon to obtain the target area, then bisects the same 24-vertex circles for cumulative areas A and 2A. S09 target A=104.11701 m²; its old solver-box area is 108.35793 m² and is deliberately not substituted for the CAD area. Resolved radii/target geometry are recorded in the manifest and C9a cache identity. `tools/run_lite_radial_area_c9a.py` performs one S09 3600 s attempt with no retry; `tools/test_radial_area_c9a.py` checks geometry and legacy/fixed-radial identity without integration. See `specs/웹앱-C9a-radial-area-20261102.md` for the single-run comparison.
 
@@ -303,3 +303,11 @@ C-9a adds `cell_mode: "radial_area"` (default still `legacy`). It clips the lega
 C-8 기본값·기준 캡처를 대체한다. 건물·연기(70%, 약한 온도 무늬)·화염·현재 지수 ≥100 위험선·선택·경로/차량 ON. 이력·주의·플룸·셀선·바닥 틴트·연기 경계·문창 강조·코어·연료/작전 기호 OFF. HUD 옆 이력 버튼과 표시 탭은 동기화된다. 상세 표시 마스크는 패널 경계에서 적용하며 레이어/엔진/셰이더는 변경하지 않는다.
 
 새 4장면 기준: reviews/ui_D1_20261103/baseline-*.png (작업 폴더 simulation/results/ui_D1_20261103). S09 1420/1800초, S06 890초, 전체 보기 1800초, 고정 clock 180000 ms. 전체 보기 역시 코어 OFF이며 예전 전체 보기/코어 ON 기준과 구분한다. 기본값 변경으로 픽셀 0 비교는 하지 않는다. 전후 캡처·토글 검증·농도 변환 확인은 specs/웹앱-D1-표시다이어트-20261103.md 참조.
+
+## D-2 현재 지원 범위 (2026-11-03)
+
+위의 과거 기능 기록보다 이 절이 우선한다. 새 호스트만 사용하며 `?ui=legacy`는 무시한다. 불꽃은 HRR, 연기 램프는 현재로 고정. 인원 기호·메뉴 검토 서랍은 제거했다. 새 간략 계산은 legacy 셀·층별 산소만 지원하며 radial/radial_area·실 단위 산소 재고 모드는 지원하지 않는다. 실감 셰이더는 그대로 보존했다.
+
+캐시 이행 생성기는 제거했다. 기존 별칭은 `tools/execution_cache.py`가 읽기만 한다. 옛 저장 사례의 경계 데이터 읽기 호환은 유지한다. 건물·사례·결과 폴더 삭제 없음.
+
+현재 UI 회귀: `npm run test:cleanup` (`D2_STAGE=after`, 두 로컬 서버 필요). 캐시 조회: `python -B app/tests/execution_cache.test.py` (프로젝트 루트). 최종 4장면 픽셀 0, UI 목록 25건 재열기 오류 0. 상세: `specs/웹앱-D2-코드정리-20261103.md`.

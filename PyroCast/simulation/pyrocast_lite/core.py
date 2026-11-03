@@ -256,7 +256,6 @@ class Model:
 
     def rhs(self, t, y, diag=False):
         P = self.P; N = self.N
-        room_oxygen=P.get('oxygen_inventory_mode',False)
         Pf, Vu, Tu, Tl, Mou, Mol, Mfu, Mfl, E = self.unpack(y)
         extra=8*N+(0 if P.get('remove_cumulative_state') else 1)
         bk = np.clip(y[extra:extra + self.nb], 0, 1)
@@ -267,7 +266,7 @@ class Model:
         smooth=P.get('smooth_state_bounds',False)
         if smooth:
             from .numerics import lower,bounded
-            atol=self.evaluation_atol() if room_oxygen else self.integration_atol()
+            atol=self.integration_atol()
             Vu=bounded(Vu,self.Vmin,self.Va-self.Vmin,10*atol[N:2*N])
             Tu=lower(Tu,200.,10*atol[2*N:3*N]);Tl=lower(Tl,200.,10*atol[3*N:4*N])
         else:
@@ -281,10 +280,6 @@ class Model:
         if smooth:
             Yo=lower(np.stack([Mou,Mol]),0.,10*atol[4*N:6*N].reshape(2,N))
             Yf=lower(np.stack([Mfu,Mfl]),0.,10*atol[6*N:8*N].reshape(2,N))
-        if room_oxygen:
-            oxygen_stock=np.maximum(Mou,0.)
-            room_fraction=oxygen_stock/(mu+ml)
-            Yo=np.stack([room_fraction,room_fraction])
         su = np.clip((Vu - self.Vmin) / (2 * self.Vmin), 0, 1)     # 층이 최소 체적이면 그 층에서 못 빠짐
         sl = np.clip((Vl - self.Vmin) / (2 * self.Vmin), 0, 1)
 
@@ -305,7 +300,7 @@ class Model:
             if isout is not False:
                 o = isout[:, None]
                 p = np.where(o, -self.rho_out * G * Z, p); rho = np.where(o, self.rho_out, rho)
-                T = np.where(o, P['T_out'], T); yo = np.where(o, P.get('fresh_air_oxygen_mass_fraction',Y_O2_AIR) if room_oxygen else Y_O2_AIR, yo); yf = np.where(o, 0.0, yf)
+                T = np.where(o, P['T_out'], T); yo = np.where(o, Y_O2_AIR, yo); yf = np.where(o, 0.0, yf)
                 up = np.where(o, 0.0, up)
             return p, rho, T, yo, yf, up
         pi_, ri, Ti, yoi, yfi, upi = side(vi, False)
@@ -320,7 +315,6 @@ class Model:
         dmu = np.zeros(N); dml = np.zeros(N); hu = np.zeros(N); hlw = np.zeros(N)
         inu = np.zeros(N); inl = np.zeros(N)                    # 유입 질량
         sou = np.zeros(N); sol_ = np.zeros(N); sfu = np.zeros(N); sfl = np.zeros(N)   # 유입 화학종
-        oxygen_net=np.zeros(N)
         door_jet=P.get('door_jet_enabled',False)
         nv=len(vi);jet_fuel_u=np.zeros(2*nv);jet_fuel_l=np.zeros(2*nv)
         outgoing_upper_fuel=np.zeros(N)
@@ -329,7 +323,6 @@ class Model:
                 fr = np.where(from_room, frm, 0); mm = mass * from_room[:, None]
                 np.add.at(dmu, fr, -(mm * src_up).sum(1)); np.add.at(dml, fr, -(mm * (1 - src_up)).sum(1))
                 np.add.at(hu, fr, -CP * (mm * src_up * Ts).sum(1)); np.add.at(hlw, fr, -CP * (mm * (1 - src_up) * Ts).sum(1))
-                if room_oxygen:np.add.at(oxygen_net,fr,-(mm*yo).sum(1))
             k = np.where(to_room, to, 0); mm = mass * to_room[:, None]
             Tm = 0.5 * (Tl[k] + Tu[k])[:, None]; wd = np.maximum(2.0, 0.1 * (Tu[k] - Tl[k]))[:, None]
             du = 0.5 * (1 + np.tanh((Ts - Tm) / wd))               # 두 층 중간보다 뜨거우면(가벼우면) 상부층으로
@@ -339,7 +332,6 @@ class Model:
             np.add.at(hu, k, CP * (a_ * Ts).sum(1)); np.add.at(hlw, k, CP * (b_ * Ts).sum(1))
             np.add.at(sou, k, (a_ * yo).sum(1)); np.add.at(sol_, k, (b_ * yo).sum(1))
             np.add.at(sfu, k, (a_ * yf).sum(1)); np.add.at(sfl, k, (b_ * yf).sum(1))
-            if room_oxygen:np.add.at(oxygen_net,k,(mm*yo).sum(1))
             if door_jet:
                 fr=np.where(from_room,frm,0)
                 upper_fuel=mass*src_up*np.maximum(Mfu[fr],0.)[:,None]*from_room[:,None]
@@ -357,10 +349,7 @@ class Model:
         room_Q = np.zeros(N); room_Qf = np.zeros(N); room_Qp = np.zeros(N)
         room_radiation = np.zeros(N)
         upper_primary_oxygen=np.zeros(N)
-        primary_room_oxygen=np.zeros(N)
         lower_plume_oxygen=np.zeros(N)
-        incoming_fuel_u=sfu.copy();incoming_fuel_l=sfl.copy()
-        incoming_fuel_burn=np.zeros(N)
         for i, Qf, heat_comb, chi_r, plume_k, fire_height in self.fire_sources(t, E):
             D = max(math.sqrt(4 * (Qf / 500e3) / math.pi), 0.3)
             k_ = plume_k                                  # legacy mirror plume
@@ -377,22 +366,10 @@ class Model:
             meu = max(entr(Hf) - me, 0.0)                                   # 연기층 내부 재순환 유입
             lolf = lambda Y: oxygen_factor(Y,P)
             O2in = me * Yo[1][i] + meu * Yo[0][i]
-            Q = 0. if room_oxygen else min(Qf, H_O2 * (me * Yo[1][i] * lolf(Yo[1][i]) + meu * Yo[0][i] * lolf(Yo[0][i])))
-            if room_oxygen:
-                supply=Qf/heat_comb;incoming=incoming_fuel_u[i]+incoming_fuel_l[i]
-                stoich=heat_comb/H_O2
-                xi=min(supply+incoming,oxygen_stock[i]/(stoich*P['oxygen_inventory_tau_s']))
-                supply_burn=min(supply,xi);in_burn=max(xi-supply_burn,0.)
-                Q=heat_comb*xi
-                primary_room_oxygen[i]=stoich*xi
-                oxygen_net[i]-=stoich*xi
-                incoming_fuel_burn[i]=in_burn
-                if incoming>0:
-                    sfu[i]-=in_burn*incoming_fuel_u[i]/incoming
-                    sfl[i]-=in_burn*incoming_fuel_l[i]/incoming
+            Q = min(Qf, H_O2 * (me * Yo[1][i] * lolf(Yo[1][i]) + meu * Yo[0][i] * lolf(Yo[0][i])))
             # 열분해: 연소분 + 미연분(상부층 열 되먹임 비례 — 식으면 훈소·정지)
             fb = min(max((Tu[i] - P['T_pyro0']) / P['T_pyro_span'], 0), 1) if P['pyro_feedback'] else 1.0
-            Qp = Qf if room_oxygen else Q + (Qf - Q) * fb
+            Qp = Q + (Qf - Q) * fb
             mp = Qp / heat_comb
             pyro_mass_total += mp
             dml[i] -= me; dmu[i] += me + mp
@@ -402,7 +379,7 @@ class Model:
             inu[i] += me + mp
             sou[i] += me * Yo[1][i] - min(Q / H_O2, O2in)
             upper_primary_oxygen[i]+=max(min(Q/H_O2,O2in)-me*Yo[1][i],0.)
-            sfu[i] += me * Yf[1][i] + (supply-supply_burn if room_oxygen else (Qp - Q) / heat_comb)
+            sfu[i] += me * Yf[1][i] + ((Qp - Q) / heat_comb)
             room_Q[i] += Q; room_Qf[i] += Qf; room_Qp[i] += Qp
             room_radiation[i] += chi_r*Q
             Q_total += Q; Qf_total += Qf; Qp_total += Qp; me_total += me
@@ -411,14 +388,9 @@ class Model:
 
         upper_xi=np.zeros(N);upper_o2=np.zeros(N);upper_heat=np.zeros(N)
         if P.get('upper_combustion_enabled',False):
-            if room_oxygen:
-                from .room_oxygen import upper_inventory_reaction
-                upper_xi,upper_o2,upper_heat=upper_inventory_reaction(mu,Mfu,oxygen_stock,Tu,primary_room_oxygen,P)
-                oxygen_net-=upper_o2
-            else:
-                from .numerics import upper_reaction
-                upper_xi,upper_o2,upper_heat=upper_reaction(mu,Mfu,Mou,Tu,upper_primary_oxygen,P,
-                    outgoing_upper_fuel if door_jet else None)
+            from .numerics import upper_reaction
+            upper_xi,upper_o2,upper_heat=upper_reaction(mu,Mfu,Mou,Tu,upper_primary_oxygen,P,
+                outgoing_upper_fuel if door_jet else None)
             sfu-=upper_xi;sou-=upper_o2;hu+=upper_heat
             Q_total+=float(upper_heat.sum())
             # Products remain in the layer. No extra total mass, solid fuel
@@ -468,7 +440,6 @@ class Model:
         dTu = (hu - CP * Tu * dmu + Vu * dP) / (CP * mu)
         dTl = (hlw - CP * Tl * dml + Vl * dP) / (CP * ml)
         dou = (sou - Yo[0] * inu) / mu; dol = (sol_ - Yo[1] * inl) / ml
-        if room_oxygen:dou=oxygen_net;dol=np.zeros(N)
         dfu = (sfu - Yf[0] * inu) / mu; dfl = (sfl - Yf[1] * inl) / ml
         if diag:
             return dict(Q=Q_total, Qf=Qf_total, me=me_total, Qp=Qp_total,
@@ -476,9 +447,6 @@ class Model:
                         room_Qp=room_Qp, upper_reaction_kg_s=upper_xi,
                         upper_oxygen_consumption_kg_s=upper_o2,upper_HRR_W=upper_heat,
                         upper_primary_oxygen_kg_s=upper_primary_oxygen,
-                        room_oxygen_rate_kg_s=oxygen_net,
-                        primary_room_oxygen_kg_s=primary_room_oxygen,
-                        incoming_fuel_burn_kg_s=incoming_fuel_burn,
                         door_jet_reaction_kg_s=jet_xi,door_jet_HRR_W=jet_heat,
                         door_jet_oxygen_kg_s=jet_o2,door_jet_room_HRR_W=jet_room_heat,
                         door_jet_room_oxygen_kg_s=jet_room_o2,

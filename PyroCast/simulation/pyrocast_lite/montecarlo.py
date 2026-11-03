@@ -151,7 +151,6 @@ def condition_summary(model,result,sample):
 def output_balance_diagnostic(model):
     from .core import P0,RG,CP
     t=model.sol.t;ys=model.sol.y;n=model.N
-    if model.P.get('oxygen_inventory_mode'):ys=model.expand(ys)
     mass=[];energy=[];mr=[];er=[];mi=[];ei=[]
     for j,ts in enumerate(t):
         y=ys[:,j];d=model.rhs(float(ts),model.sol.y[:,j],diag=True)

@@ -20,7 +20,7 @@ import {createRealViewLayers} from './layers/real_view_layers.js';
 import {RiskLayer} from './layers/risk.js';
 import {SelectionLayer} from './layers/selection.js';
 import {createSceneHost} from './scene/host.js';
-import {createLitePanel,updateLitePanel,createMenuReview} from './panels/legacy_lite_panel.js';
+import {createLitePanel,updateLitePanel} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
 import {createDisplayPanel} from './panels/display.js';
 import {createResultsPanel,summarizeMCPlayback,resultTypes} from './panels/results.js';
@@ -86,14 +86,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  async function refreshScreening(){const wasRunning=screeningPayload?.progress?.running;const seq=++screeningRequest;try{const response=await fetch('/cfbt/lite/screening',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&seq===screeningRequest){acceptScreening(value);if(wasRunning&&!value.progress?.running)await catalog();}}catch(error){if(!disposed)explore.status('탐색 목록 읽기 실패 · '+error.message);}}
  async function runScreening(manual=false){if(screeningBusy||disposed)return;const state=store.get('exploration');if(manual?!screeningPayload?.manual_origins?.some(r=>r.room===state.origin_room_id):state.top_n>screeningPayload.score.ranked.length){explore.status('적격 실 범위의 N과 화점을 선택하세요.');return;}
   screeningBusy=true;explore.busy(true);let message='';try{const response=await fetch('/cfbt/lite/screening',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:state.top_n,mc_room:manual?state.origin_room_id:(screeningPayload.score.ranked.some(r=>r.room===state.origin_room_id)?state.origin_room_id:null),run:true,...(manual?{rooms:[state.origin_room_id]}:{})})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);message='② 실행 요청 완료 · 직렬 계산';await refreshScreening();if(!disposed&&!screeningPoll)screeningPoll=setTimeout(refreshScreening,1000);}catch(error){message='② 실행 요청 실패 · '+error.message;}finally{screeningBusy=false;if(!disposed){explore.busy(false);if(!screeningPayload?.progress?.running)explore.status(message);}}}
- const referenceToggle=$('layer_reference'),referenceVisible=referenceToggle?.checked;
- const legacyChildren=legacyRoot.children.map(o=>[o,o.visible]),people=legacyRoot.children.at(-1);
- let operationsVisible=null;
- function syncOperations(){const visible=store.get('layers').operations;if(visible===operationsVisible)return;operationsVisible=visible;
-  if(referenceToggle){referenceToggle.checked=visible;referenceToggle.onchange?.();}
-  legacyRoot.visible=visible;for(const [object] of legacyChildren)object.visible=visible&&(object.name==='operation-overlays'||object===people);
- }
- cleanup.push(()=>{for(const [object,visible] of legacyChildren)object.visible=visible;if(referenceToggle){referenceToggle.checked=referenceVisible;referenceToggle.onchange?.();}});
+ // Imported CAD operation/person objects are not part of the supported UI.
+ const referenceToggle=$('layer_reference');if(referenceToggle){referenceToggle.checked=false;referenceToggle.onchange?.();referenceToggle.disabled=true;referenceToggle.closest('label').hidden=true;}
  // Keep the CAD controls/labels and its single canvas. The CAD animation loop
  // calls this host instead of drawing a second scene/starting a second loop.
  const renderer={domElement:R.domElement,setSize:(w,h)=>R.setSize(w,h),render:(scene,camera)=>{
@@ -114,7 +108,6 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  function render(){if(!ready||busy||disposed)return;busy=true;try{
   const f=viewer.getFloor();if(f!==lastFloor){lastFloor=f;store.dispatch('floor/set',{floor_id:f==='all'?null:f});}
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
-  syncOperations();
   host.render();
   const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
   if(signature!==lastPanel){$('liteReal').setAttribute('aria-pressed',String(store.get('realView').enabled));updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')};display.hud(context);results.update(context);shell.syncStatus();lastPanel=signature;}
@@ -212,10 +205,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  try{if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}
- const review=await createMenuReview(panel,viewer);results.mountReview(review);handler($('reviewClose'),'onclick',()=>{$('resultMenuReview').open=false;});handler($('liteReview'),'onclick',()=>{$('shellTab-result').click();$('resultMenuReview').open=true;});document.body.classList.add('cfbtReady');resize();
+ document.body.classList.add('cfbtReady');resize();
  cleanup.push(attachExport({store,viewer,getCase:()=>chosen,getRoute:()=>({...route.result,risk_summary:route.riskDisplay}),render}));
  const explanations=attachExplanations();
- function dispose(){if(disposed)return;disposed=true;catalogSerial++;if(mcPoll)clearTimeout(mcPoll);explanations.dispose();screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();review.dispose();host.dispose();aiFuel.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function dispose(){if(disposed)return;disposed=true;catalogSerial++;if(mcPoll)clearTimeout(mcPoll);explanations.dispose();screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();host.dispose();aiFuel.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

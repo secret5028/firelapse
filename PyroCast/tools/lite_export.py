@@ -104,8 +104,6 @@ def build_export(origin, case, state, interval=10):
     html = re.sub(r'<script type="module">(.*?)</script>', module_tag, html, flags=re.S)
     html = html.replace('<link rel="stylesheet" href="/cfbt/overlay.css">',
                         '<style>'+read('/cfbt/overlay.css').decode('utf-8')+'</style>')
-    # Review menu reads this source as text; no network access in the exported file.
-    routes['/cfbt/overlay.js'] = read('/cfbt/overlay.js').decode('utf-8')
     envelope = {'schema': 'pyrocast.offline/1', 'case_id': case, 'interval_s': interval,
         'base_path': directory, 'state': state, 'door_overrides': corrections,
         'fixed_openings': corrections.get('fixed_state'), 'route_result': state.get('route_result'),

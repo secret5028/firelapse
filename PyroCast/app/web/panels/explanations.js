@@ -17,7 +17,7 @@ export function attachExplanations(){
   for(const root of roots){
    for(const info of root.querySelectorAll('span[title]'))if(info.textContent.trim()==='ⓘ'&&!info.dataset.tip){info.dataset.tip=info.title;info.setAttribute('aria-label',info.title);}
    // Imported read-only menus and frozen-rule reports can refresh their DOM.
-   for(const scope of root.querySelectorAll('#pyroMenuReview,#exploreRuleMount')){
+   for(const scope of root.querySelectorAll('#exploreRuleMount')){
     for(const status of scope.querySelectorAll('#liteScreening [role="status"]')){
      const marker=' N 변경은 저장된 결과를 재계산하지 않습니다.',text=status.textContent,index=text.indexOf(marker);
      if(index>=0&&!status.querySelector('[data-tip]'))status.replaceChildren(text.slice(0,index),infoTip(text.slice(index).trim()));

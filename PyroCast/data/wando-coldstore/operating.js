@@ -31,12 +31,8 @@ try{
  const tactical=await(await fetch('./tactical.json')).json();
  const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));
- const people=$('wandoInvestigation'),showPeople=people.onchange;
- const syncPeople=()=>{people.checked=app.store.get('layers').operations;showPeople();};
- people.onchange=()=>app.store.dispatch('layers/toggle',{id:'operations',visible:people.checked});
- const offPeople=app.store.subscribe('layers',syncPeople);syncPeople();
  const offFloor=app.store.subscribe('floor',()=>incident.setFloor(app.store.get('floor').floor_id));
- window.addEventListener('pagehide',()=>{offFloor();offPeople();incident.dispose();exterior.dispose();},{once:true});
+ window.addEventListener('pagehide',()=>{offFloor();incident.dispose();exterior.dispose();},{once:true});
  // A visible, time-linked label distinguishes the cut from static door frames.
  const cut=document.createElement('output');cut.className='wandoOpening';$('v').append(cut);
  const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:#ffd18a;font-size:12px';$('resultCase').prepend(endpoint);

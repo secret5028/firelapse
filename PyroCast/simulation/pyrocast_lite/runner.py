@@ -100,9 +100,6 @@ def results(model, post_started=None):
             'actual_peak_kW':float(hrr[i].max()),'longest_positive_HRR_s':longest,
             'upper_max_C':float(sol.y[2*n+i].max()-273.15),
             'upper_oxygen_min_vol_percent':float(sol.y[4*n+i].min()*29/32*100)})
-        if model.P.get('oxygen_inventory_mode'):
-            room_rows[-1].pop('upper_oxygen_min_vol_percent')
-            room_rows[-1]['room_oxygen_indicator_min_percent']=float(model.oxygen_indicator(sol.y)[i].min()*100)
         result['rooms'][i].update(actual_HRR_kW=hrr[i].tolist(),supply_HRR_kW=supply[i].tolist())
         result['rooms'][i]['upper_reaction_kg_s']=[float(d['upper_reaction_kg_s'][i]) for d in diagnostics]
         result['rooms'][i]['upper_HRR_kW']=[float(d['upper_HRR_W'][i])/1000 for d in diagnostics]
@@ -189,18 +186,5 @@ def results(model, post_started=None):
         result['lite_revision']='v5_cumulative_removed_trial'
     from .result_adapter import shared_conditions
     result['shared_conditions']=shared_conditions(model,result)
-    if model.P.get('oxygen_inventory_mode'):
-        result['lite_revision']='confirmed_spec_3.0_stage1'
-        result['revision']='L1_room_oxygen_experimental'
-        result['engine_use']='stage1 validation only; not adopted for MC or operational 3D'
-        result['known_bias']='[Previous two-layer oxygen model reference only] '+KNOWN_BIAS
-        result['bias_scope']='The previous bias has not been established for the room oxygen inventory model; read the stage1 comparison.'
-        result['limits']=[v for v in result['limits'] if 'native oxygen mass-fraction tanhsmooth' not in v and 'legacy plume/oxygen/heat-loss' not in v]
-        result['limits'].extend(['one oxygen stock per solver room/cell; no layer-specific oxygen concentration',
-            'display oxygen=mO2/m_room is a mass-ratio proxy substituted into existing criteria; not physical vol%',
-            'internal inflow transports donor oxygen; .23 fresh-air fraction used only at exterior boundary',
-            'incoming fuel burns only at already active sources; door-jet combustion is not implemented in stage1'])
-        result['upper_combustion']['oxygen_gate']='remaining room inventory linear cap; no LOL gate'
-        result['upper_combustion']['oxygen_reservation']='primary + upper consumption <= mO2 / tau_O2(10s)'
     result['postprocess_wall_seconds']=time.perf_counter()-start
     return result

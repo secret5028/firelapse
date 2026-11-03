@@ -75,8 +75,7 @@ export function indexHistoryExtrema(indices,times=[]){
  return {maximum,peak_time_s};
 }
 export function anyKnown(values){return values.includes(true)?true:values.includes(null)?null:false;}
-function frame(s,i,cid){const d=s.display_v8;const f={smoke_stage:at(d?.smoke_stage,i),smoke_factors:[],source_cells:[cid],aggregation:'single'};
- for(const [old,key] of [['hot','hot'],['fuel','fuel'],['accumulated','deep']])if(d?.factors?.[old]?.[i]===true)f.smoke_factors.push(key);
+function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:[cid],aggregation:'single'};
  for(const key of ['FO','FGI','backdraft','rollover','untenable'])f[key]=criterion(s.conditions?.[key],i);
  const heat=at(s.Qbulk_kW,i);f.rollover.burning_upper=heat===null?null:heat>0;
  return f;
@@ -108,8 +107,9 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   indexByCell[cid]=Object.fromEntries(['FO','FGI','backdraft','rollover'].map(key=>[key,p.time_s.map((_,i)=>{
    const degree=cellConditions[cid][i][key].degree;return Number.isFinite(degree)?degree*100:null;
   })]));
-  const d=s.display_v8;legacyColor[cid]={color:copy(d?.color??Array(n).fill('')),rollover_band:copy(d?.rollover_band??unknown(n)),LOC_vol_fraction:d?.LOC_vol_fraction??null};
-  boundaryByCell[cid]=copy(d?.boundary??unknown(n));if(d?.boundary?.some(v=>v===true))boundaries.add(rid);
+  legacyColor[cid]={color:Array(n).fill(''),rollover_band:unknown(n),LOC_vol_fraction:null};
+  // Read-only archive compatibility: old results keep their saved boundary geometry.
+  const boundary=s.boundary??s.display_v8?.boundary;boundaryByCell[cid]=copy(boundary??unknown(n));if(boundary?.some(v=>v===true))boundaries.add(rid);
  }
  for(const c of p.rooms)if(!cellRoom.has(c.key))issue(errors,'UNMAPPED_CELL',c.key,'Result cell excluded because it has no building mapping');
  const rooms={},conditions={};
@@ -129,7 +129,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   }
  }
  notes.push('Multi-cell room continuous series and scalar scores have no legacy aggregate: null, not a newly invented average/max. Cell series remain exact.');
- notes.push('conditions are stored shared-condition flags, NOT legacy screen colour gates; legacy_color and cell smoke_stage preserve the separate display compatibility inputs.');
+ notes.push('conditions and indices use stored shared-condition values; removed display gates are empty schema compatibility fields.');
  const events=[];
  for(const e of p.events||[]){const rid=cellRoom.get(e.room),parent=cellRoom.get(e.parent)??null;
   if(!rid){issue(errors,'UNMAPPED_EVENT',e.room,'Event cell not mapped');continue;}

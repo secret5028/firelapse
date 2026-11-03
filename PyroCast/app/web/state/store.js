@@ -9,7 +9,7 @@ const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:fal
  realView:{enabled:true,smokeOpacity:.7,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',flameDisplay:'hrr',fuelMarkers:false},
  openings:{exterior:false,interior:false},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
- layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,operations:false,route:true},
+ layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
  risk:{history:false,show:{FO:true,FGI:true,backdraft:true,rollover:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}
@@ -48,8 +48,8 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
      if(p.temperaturePattern!==undefined&&!['current','weak','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
-     if(p.smokeColor!==undefined&&!['current','neutral'].includes(p.smokeColor))throw Error('Invalid smoke color');
-     if(p.flameDisplay!==undefined&&!['growth','hrr'].includes(p.flameDisplay))throw Error('Invalid flame display');
+     if(p.smokeColor!==undefined&&p.smokeColor!=='current')throw Error('Invalid smoke color');
+     if(p.flameDisplay!==undefined&&p.flameDisplay!=='hrr')throw Error('Invalid flame display');
      put('realView',{...state.realView,...p});return true;
     case 'risk/set':if(!Object.hasOwn(state.risk.show,p.type)||typeof p.visible!=='boolean')throw Error('Invalid risk type');put('risk',{...state.risk,show:{...state.risk.show,[p.type]:p.visible}});return true;
     case 'risk/history':if(typeof p.enabled!=='boolean')throw Error('Invalid history flag');put('risk',{...state.risk,history:p.enabled});return true;

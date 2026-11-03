@@ -38,9 +38,6 @@ def factor_scores(record):
 
 def shared_conditions(model,result):
     t=model.sol.t;y=model.sol.y;n=model.N;size=len(t)
-    room_oxygen=model.P.get('oxygen_inventory_mode',False)
-    if room_oxygen:
-        indicator=model.oxygen_indicator(y);y=model.expand(y)
     source=deepcopy(model.input_model);enabled=model.P.get('upper_combustion_enabled',False)
     source['condition_scoring']={'LFL0_hrr':model.P['LFL0_hrr']}
     source['gas'].update(enabled=enabled,bulk_enabled=enabled,mixture_enabled=False,mixture_smooth_enabled=False)
@@ -57,8 +54,8 @@ def shared_conditions(model,result):
     for i,node in enumerate(model.nodes):
         vu=np.clip(y[n+i],model.Vmin[i],model.Va[i]-model.Vmin[i]);temp=np.maximum(y[2*n+i],200)
         mass=P0/(RG*temp)*vu;fuel=mass*np.maximum(y[6*n+i],0)
-        states[node['id']]={'T_upper_C':temp-273.15,'o2_upper_vol':indicator[i] if room_oxygen else y[4*n+i]*29/32,
-            'o2_lower_vol':indicator[i] if room_oxygen else y[5*n+i]*29/32,
+        states[node['id']]={'T_upper_C':temp-273.15,'o2_upper_vol':y[4*n+i]*29/32,
+            'o2_lower_vol':y[5*n+i]*29/32,
             'upper_mass_kg':mass,'fuel_upper_kg':fuel,'fuel_upper_J':fuel*model.P['dHc'],
             'bulk_HRR_W':np.asarray(result['rooms'][i].get('upper_HRR_kW',np.zeros(size)))*1000,
             'received_door_jet_HRR_W':np.asarray(result['rooms'][i].get('door_jet_HRR_kW',np.zeros(size)))*1000}
@@ -83,12 +80,6 @@ def shared_conditions(model,result):
                 rec['status']='not_evaluated';rec['all_met']=[None]*size;rec['first_met_s']=None
                 rec['reason']='upper unburned-fuel reaction absent; historical inventory not qualified'
             if 'scores' not in rec:rec['scores']=factor_scores(rec)
-            if room_oxygen:
-                rec['oxygen_basis']='single room mass-ratio proxy mO2/m_room; layer fields are internal aliases only'
-                for tr in rec['terms']:
-                    if tr['key']=='O2':
-                        tr['label']='실평균 산소 대용 지표';tr['unit']='질량비%';tr['source']+='; section3.0 room mass-ratio proxy'
-                if name=='FO':rec['score_basis']['oxygen_source']='single room mass-ratio proxy; no lower-layer O2 state'
             if name!='untenable' and rec['status']=='evaluated':
                 known=sum(v is not None for v in rec['scores']['degree'])
                 rec['score_coverage']={'known_samples':known,'total_samples':size}
@@ -108,7 +99,7 @@ def shared_conditions(model,result):
         out[rid]=records
     return _finite({'engine':'shared pyrocast_cfbt.conditions.evaluate','rooms':out,
         'units':{'temperature':'upper-layer average Celsius, not plate or local ceiling jet',
-                 'oxygen':'mO2/m_room mass-ratio proxy, same value for all conditions; not physical vol%' if room_oxygen else 'stored mass fraction *29/32 -> volume fraction, shared table uses vol%',
+                 'oxygen':'stored mass fraction *29/32 -> volume fraction, shared table uses vol%',
                  'fuel':'upper unburned mass/upper total mass, no separately resolved CO',
                  'HRR':'primary source and upper reaction separate, W for shared evaluator'},
         'limits':['FO display adds Thomas HRR and configured lower O2 factors; transition rules unchanged',

@@ -1,0 +1,203 @@
+{
+  "stage": "after",
+  "errors": [],
+  "scenes": [
+    {
+      "name": "S09-1420-3F",
+      "case": "S09",
+      "calls": 410
+    },
+    {
+      "name": "S09-1800-3F",
+      "case": "S09",
+      "calls": 407
+    },
+    {
+      "name": "S06-890-3F",
+      "case": "S06",
+      "calls": 383
+    },
+    {
+      "name": "S09-1800-전체",
+      "case": "S09",
+      "calls": 2501
+    }
+  ],
+  "cases": [
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "stage4",
+      "actual": "stage4",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S00",
+      "actual": "S00",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S01",
+      "actual": "S01",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S02",
+      "actual": "S02",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S03",
+      "actual": "S03",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S04",
+      "actual": "S04",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S05",
+      "actual": "S05",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S06",
+      "actual": "S06",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S07",
+      "actual": "S07",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S08",
+      "actual": "S08",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "S09",
+      "actual": "S09",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-11622170a083e43e1855",
+      "actual": "case-11622170a083e43e1855",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-1d6423df10fa074da3d4",
+      "actual": "case-1d6423df10fa074da3d4",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-22274ec109200e853e53",
+      "actual": "case-22274ec109200e853e53",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-2d584e8311c7ff60c9c6",
+      "actual": "case-2d584e8311c7ff60c9c6",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-2f22eacb07e6e588bdd2",
+      "actual": "case-2f22eacb07e6e588bdd2",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-32278d8ca64dc5954c11",
+      "actual": "case-32278d8ca64dc5954c11",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-4f1aaf47fcd5424d9d4f",
+      "actual": "case-4f1aaf47fcd5424d9d4f",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-8337f7c9efa9b8cf8706",
+      "actual": "case-8337f7c9efa9b8cf8706",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-9cd211f98d9f13577051",
+      "actual": "case-9cd211f98d9f13577051",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-a046447451c75a34be07",
+      "actual": "case-a046447451c75a34be07",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-d51b948a8e78fb4b56a7",
+      "actual": "case-d51b948a8e78fb4b56a7",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-eab35a998f80217839d3",
+      "actual": "case-eab35a998f80217839d3",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8780",
+      "id": "case-f8d3adeb35836c143685",
+      "actual": "case-f8d3adeb35836c143685",
+      "rooms": 38,
+      "errors": []
+    },
+    {
+      "base": "http://127.0.0.1:8832",
+      "id": "wando-P1",
+      "actual": "wando-P1",
+      "rooms": 2,
+      "errors": []
+    }
+  ]
+}

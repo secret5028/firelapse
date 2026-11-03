@@ -54,7 +54,7 @@ def read_shared(model):
         if len(ratios)!=2 or min(ratios)<0:raise ValueError('Invalid leakage ratios')
         # Source: initialize_leakage, CFAST 7.7.7 initialization.f90:218-283.
         wall_area=room.get('radial_perimeter_m',2*(w+d))*h*ratios[0]
-        floor_area=room.get('radial_area_m2',w*d)*ratios[1]
+        floor_area=w*d*ratios[1]
         if wall_area>0:leaks.append({'room':room['id'],'kind':'wall','width':wall_area/(.9*h),'bottom':.05*h,'top':.95*h,'area':wall_area})
         if floor_area>0:
             width=.9*(w+d)/2

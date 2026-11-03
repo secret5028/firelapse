@@ -8,7 +8,7 @@ import run_lite_l1 as base
 from pyrocast_lite.adapter import prepare
 from pyrocast_lite.runner import run,results
 from pyrocast_lite.montecarlo import make_samples,condition_summary,output_balance_diagnostic,aggregate
-from pyrocast_lite.visualization import package,states
+from pyrocast_lite.visualization import package
 
 ROOT=base.ROOT;OUT=ROOT/'simulation/results/lite_v8_mc_R2_10_20261026'
 PARAMS=dict(smooth_state_bounds=True,upper_combustion_enabled=True,door_jet_enabled=True,
@@ -17,7 +17,7 @@ def read(p):return json.loads(p.read_text('utf-8'))
 def current_hashes():return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/'simulation/pyrocast_lite').glob('*.py'))}
 
 def summarize(m,r,sample):
-    s=condition_summary(m,r,sample);visual=states(m,r);dt=np.diff(m.sol.t);duration=float(m.sol.t[-1]-m.sol.t[0]);mapping={}
+    s=condition_summary(m,r,sample);dt=np.diff(m.sol.t);duration=float(m.sol.t[-1]-m.sol.t[0]);mapping={}
     for row in r['room_summary']:mapping.setdefault(row['original_room'],[]).append(row['cell'])
     for kind,p in s['phenomena'].items():
         p.pop('score_median',None)
@@ -32,9 +32,9 @@ def summarize(m,r,sample):
         p['met_time_fraction_by_room']=fractions
         p['met_room_time_fraction']=float(np.mean([x for x in fractions.values() if x is not None])) if duration else None
         p['score_basis']='maximum cell-time degree; duration ratio uses original-room union over cells, left10s intervals; no time median'
-    for level,key in [(1,'smoke_caution_rooms'),(2,'smoke_risk_rooms')]:
-        s[key]=sorted(rid for rid,cells in mapping.items() if any(any(x==level for x in visual[c]['smoke_stage']) for c in cells))
-    s['boundary_room_count']=sum(any(any(visual[c]['boundary']) for c in cells) for cells in mapping.values())
+    for threshold,key in [(70,'smoke_caution_rooms'),(100,'smoke_risk_rooms')]:
+        s[key]=sorted(rid for rid,cells in mapping.items() if any(any(v is not None and v*100>=threshold for v in r['shared_conditions']['rooms'][c][kind]['scores']['degree']) for c in cells for kind in ('FO','FGI','backdraft','rollover')))
+    s['boundary_room_count']=sum(any(np.any(np.abs(m.sol.y[2*m.N+m.rmap[c]]-273.15-m.manifest['rule_settings']['values']['temperature_C'])<=30) for c in cells) for cells in mapping.values())
     s['boundary_basis']='any saved time within transition threshold ±30C, original-room union'
     s['door_jet_heat_MJ']=r['door_jet']['cumulative_heat_MJ']
     return s

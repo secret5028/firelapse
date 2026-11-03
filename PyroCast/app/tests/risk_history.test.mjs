@@ -41,4 +41,4 @@ store.dispatch('risk/set',{type:'FO',visible:false});update();assert.equal(layer
 store.dispatch('risk/set',{type:'FO',visible:true});store.dispatch('risk/threshold',{ribbon:140});update();assert.equal(layer.counts.FO,0);
 assert.equal(layer.buildCount,builds);layer.dispose();assert.equal(layer.resources.size,0);assert.equal(store.diagnostics().subscriptions,0);
 const report={passed:true,expected,history_on:actual,history_off:off,checks:'scalar full-period maxima/earliest tie/null, time0 FO+BD dashed,1420 FO solid overlay, room cell OR, threshold/toggle, no rebuild, dispose0',simulation_runs:0};
-fs.writeFileSync('simulation/results/ui_C1a_20261102/unit-verification.json',JSON.stringify(report,null,2));console.log(JSON.stringify({passed:true,expected,counts:actual.counts,current:off.counts}));
+console.log(JSON.stringify({passed:true,expected,counts:actual.counts,current:off.counts}));

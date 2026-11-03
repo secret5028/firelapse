@@ -2,6 +2,12 @@
   "name": "pyrocast-ui-contracts",
   "private": true,
   "type": "module",
-  "scripts": {"test": "node tests/contracts.test.mjs", "test:stage2": "node tests/stage2.test.mjs", "test:building": "node tests/building.test.mjs", "test:openings": "node tests/openings.test.mjs", "test:core": "node tests/core.test.mjs", "test:real-view": "node tests/real_view.test.mjs", "test:risk": "node tests/risk.test.mjs", "test:selection": "node tests/selection.test.mjs"},
-  "devDependencies": {"ajv": "8.20.0"}
+  "scripts": {
+    "test": "node tests/contracts.test.mjs",
+    "test:stage2": "node tests/stage2.test.mjs",
+    "test:cleanup": "node tests/d2_cleanup.mjs"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0"
+  }
 }

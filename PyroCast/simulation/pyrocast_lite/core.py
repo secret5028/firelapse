@@ -50,7 +50,9 @@ def oxygen_factor(mass_fraction, parameters):
 # 실별 화재하중·성장: EN 1991-1-2 부록 E 표 E.4/E.5 (fire_load_table.json — 데이터로 분리)
 import os
 FLT = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fire_load_table.json'), encoding='utf-8'))
-_FLT_RE = [(c, re.compile(p, re.I)) for c, p in FLT['names']]
+from building_rules import load_rules
+_USAGE_RULES = load_rules()['usage']
+_FLT_RE = [(c, re.compile(p, re.I)) for c, p in _USAGE_RULES['names']]
 
 
 def fire_class(names, floor_use):
@@ -59,7 +61,7 @@ def fire_class(names, floor_use):
         if any(rx.search(n or '') for n in names or []):
             by = 'name'; break
     else:
-        c = FLT['floor_use'].get(floor_use or 'default', 'default'); by = 'floor_use'
+        c = _USAGE_RULES['floor_use'].get(floor_use or 'default', 'default'); by = 'floor_use'
     d = dict(FLT['classes'][c]); d.update(cls=c, by=by, alpha=1000.0 / d['t_alpha'] ** 2)
     return d
 

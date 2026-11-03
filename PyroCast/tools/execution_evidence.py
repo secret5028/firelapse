@@ -34,7 +34,8 @@ def file_hash(path):
 
 def engine_hashes():
     return {p.relative_to(ROOT).as_posix(): file_hash(p)
-            for p in sorted((ROOT/'simulation/pyrocast_lite').glob('*.py'))}
+            for p in sorted([*(ROOT/'simulation/pyrocast_lite').glob('*.py'),
+                             ROOT/'simulation/building_rules.py', ROOT/'config/building-rules.json'])}
 
 
 def rule_dependency_hashes():

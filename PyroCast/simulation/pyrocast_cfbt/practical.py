@@ -1,5 +1,6 @@
 """Bounded-cost exploration preset. These are project assumptions, not NIST defaults."""
 from .model import merge
+from building_rules import load_rules
 
 
 LIMITATIONS = [
@@ -67,13 +68,14 @@ def apply_profile(raw, profile='practical'):
 def room_defaults(room, building):
     """Use recognized text conservatively; mixed labels fall back to ordinary fuel."""
     text = str([room.get('usage', ''), room.get('names', []), room.get('name', '')]).lower()
-    process = any(w in text for w in ('assembly', '우레탄', '공장', '작업', '창고', 'storage'))
-    passage = any(w in text for w in ('corridor', 'hall', '복도', '통로', '로비', '홀', '계단'))
+    rules = load_rules()['native_usage']
+    process = any(w in text for w in rules['process_tokens'])
+    passage = any(w in text for w in rules['passage_tokens'])
     if passage and not process:
         usage, load, fraction, hrrpua = 'passage', 30., .05, 150.
     elif process:
         usage, load, fraction, hrrpua = 'process_or_storage', 600., .4, 250.
-    elif any(w in text+str(building.get('usage','')).lower() for w in ('hotel','숙박','객실')):
+    elif any(w in text+str(building.get('usage','')).lower() for w in rules['lodging_tokens']):
         usage, load, fraction, hrrpua = 'lodging', 310., .31, 250.
     else:
         usage, load, fraction, hrrpua = 'ordinary_room', 400., .31, 250.

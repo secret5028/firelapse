@@ -8,20 +8,12 @@ import re
 from pathlib import Path
 import sys
 from .practical import apply_profile, room_defaults, wall_default, execution_limits
+from building_rules import dedicated_core_kind
 
 
 def cad_key(floor, item):
     label='CAD_'+str(floor)+'_'+str(item)
     return label if re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,35}',label) else 'CAD_'+hashlib.sha256(label.encode('utf-8')).hexdigest()[:24]
-
-
-def dedicated_core_kind(room):
-    """Dedicated room evidence only; an elevator hall is not an elevator shaft."""
-    tags=set(room.get('tags',[]));names=[s for s in room.get('names',[]) if s and s not in ('갑','화','-')]
-    text=' '.join(names).lower();dedicated_label=len(names)<=3
-    if 'stair_inside' in tags or dedicated_label and '계단실' in text:return 'stair'
-    if tags & {'elev','elev_inside'} or dedicated_label and '승강로' in text:return 'elev'
-    return None
 
 
 def resolve_building(project, requested=None):

@@ -44,7 +44,8 @@ def context(building,sha):
             if 'outdoor' in room.get('tags',[]):continue
             rid='CAD_'+floor['name']+'_'+room['id'];label=' / '.join(room.get('names',[]))
             base=choices.get(rid)
-            cls=next((k for k,pattern in table['names'] if re.search(pattern,label,re.I)),table['floor_use'].get(floor.get('use'),'default'))
+            from building_rules import usage_class
+            cls=usage_class(room.get('names',[]),floor.get('use'))[0]
             choice=(saved.get('rooms') or {}).get(rid)
             cls=choice['usage_class'] if choice else base['class'] if base else cls
             if cls not in table['classes']:raise ValueError('연료 정정 클래스 오류')

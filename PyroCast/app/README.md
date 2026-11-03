@@ -311,3 +311,9 @@ C-8 기본값·기준 캡처를 대체한다. 건물·연기(70%, 약한 온도 
 캐시 이행 생성기는 제거했다. 기존 별칭은 `tools/execution_cache.py`가 읽기만 한다. 옛 저장 사례의 경계 데이터 읽기 호환은 유지한다. 건물·사례·결과 폴더 삭제 없음.
 
 현재 UI 회귀: `npm run test:cleanup` (`D2_STAGE=after`, 두 로컬 서버 필요). 캐시 조회: `python -B app/tests/execution_cache.test.py` (프로젝트 루트). 최종 4장면 픽셀 0, UI 목록 25건 재열기 오류 0. 상세: `specs/웹앱-D2-코드정리-20261103.md`.
+
+## D-3 호텔 입력 점검 (2026-11-03)
+
+`config/building-rules.json`에 라벨→용도·문 분류·외기 창 종류/높이·코어 판정 상수를 모았다. 연료 수치는 기존 fire_load_table.json을 사용한다. `tools/prepare_building_graph.py <source> --output <folder>`는 기존 CAD 연결망 함수를 적용하고 근거/미확정 목록을 저장한다. 시뮬레이션은 실행하지 않는다.
+
+파크마린호텔은 14개 도면 층·257실. 생성 파일은 `data/parkmarine-hotel/building.json`. 4개 층은 등가 구획 폭/개구부 폭 충돌로 계산 입력 로더가 거부한다. 현재 운영 화면 선택기에 등록하거나 계산을 실행한 상태는 아니다. 상세: `specs/웹앱-D3-호텔범용성-20261103.md`.

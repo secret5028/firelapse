@@ -1,0 +1,151 @@
+{
+  "revision": "building_rules_v1_preserve_20261103",
+  "usage": {
+    "names": [
+      [
+        "toilet",
+        "화장실|TOILET|RESTROOM|W[.]?C[.]?\\b"
+      ],
+      [
+        "shaft_room",
+        "^(EPS|TPS|AV|AD|DS|PD|PS)\\b|EPS|TPS|AV/PS|AD/PS|파이프\\s*샤프트|덕트\\s*샤프트"
+      ],
+      [
+        "hotel_room",
+        "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
+      ],
+      [
+        "hospital_room",
+        "병실|입원|병동|WARD"
+      ],
+      [
+        "library",
+        "도서|서고|문고|열람|LIBRARY"
+      ],
+      [
+        "classroom",
+        "교실|강의|실습실|CLASS"
+      ],
+      [
+        "theatre",
+        "극장|영화|공연|관람|강당|THEATER|THEATRE|CINEMA"
+      ],
+      [
+        "shopping",
+        "판매|매장|근린|상가|점포|SHOP|STORE|음식점|식당|카페|휴게음식|마트"
+      ],
+      [
+        "office",
+        "사무|업무|회의|OFFICE|관리실|방재실|경비|숙직"
+      ],
+      [
+        "dwelling",
+        "세대|거실|침실|안방|드레스|아파트|주택|원룸"
+      ],
+      [
+        "transport",
+        "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
+      ]
+    ],
+    "floor_use": {
+      "lodging": "hotel_room",
+      "apartment": "dwelling",
+      "office": "office",
+      "retail": "shopping",
+      "medical": "hospital_room",
+      "edu": "classroom",
+      "parking": "parking",
+      "warehouse": "warehouse",
+      "factory": "factory",
+      "penthouse": "default",
+      "default": "default"
+    }
+  },
+  "doors": {
+    "revision": "v7_section5_area_core_token",
+    "core_max_area_m2": 80,
+    "core_kinds": [
+      "stair",
+      "stair_lobby",
+      "elevator_lobby",
+      "elev",
+      "elevator",
+      "emergency_elevator"
+    ],
+    "vertical_first_token": "^(?:계단실|특별피난계단|피난계단|부속실|승강장|비상용\\s*승강기|(?i:ELEV[.\\s]*홀))(?=$|[\\s0-9()·/,_-])",
+    "explicit": "(?i)(?<![A-Z])FD(?![A-Z])|방화문|갑종|60\\+|60\\s*분|FIRE[ _-]*DOOR|SD-F",
+    "vertical": "계단실|특별피난계단|피난계단|부속실|승강장|비상용\\s*승강기|(?i:ELEV[.\\s]*홀)",
+    "service": "전기실|기계실|발전기실|보일러실|창고|(?i:\\b(?:E[.\\s]*P[.\\s]*S|T[.\\s]*P[.\\s]*S|P[.\\s]*S|A[.\\s]*D|D[.\\s]*S)\\b)",
+    "corridor": "복도|통로|(?i:corridor)",
+    "lobby": "로비|(?i:lobby)",
+    "compartment_area_m2": 1000,
+    "sprinkler_compartment_area_m2": 3000,
+    "inferred_fire_door_probability": 0.35
+  },
+  "core": {
+    "ignored_names": [
+      "갑",
+      "화",
+      "-"
+    ],
+    "max_dedicated_labels": 3,
+    "stair_tags": [
+      "stair_inside"
+    ],
+    "stair_tokens": [
+      "계단실"
+    ],
+    "elev_tags": [
+      "elev",
+      "elev_inside"
+    ],
+    "elev_tokens": [
+      "승강로"
+    ]
+  },
+  "native_usage": {
+    "process_tokens": [
+      "assembly",
+      "우레탄",
+      "공장",
+      "작업",
+      "창고",
+      "storage"
+    ],
+    "passage_tokens": [
+      "corridor",
+      "hall",
+      "복도",
+      "통로",
+      "로비",
+      "홀",
+      "계단"
+    ],
+    "lodging_tokens": [
+      "hotel",
+      "숙박",
+      "객실"
+    ]
+  },
+  "openings": {
+    "window_kinds": [
+      "window",
+      "window_inner"
+    ],
+    "outside_id": "out",
+    "sill_m": 0.9,
+    "head_m": 2.2,
+    "door_height_m": 2.1
+  },
+  "vertical": {
+    "max_z_gap_m": 0.5,
+    "minimum_iou": 0.6,
+    "ambiguity_margin": 0.15,
+    "weak_alignment_tokens": [
+      "xcorr",
+      "none",
+      "약함",
+      "unconfirmed"
+    ]
+  }
+}

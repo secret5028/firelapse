@@ -163,64 +163,6 @@
       "lining_ignition_C": null
     }
   },
-  "names": [
-    [
-      "toilet",
-      "화장실|TOILET|RESTROOM|W[.]?C[.]?\\b"
-    ],
-    [
-      "shaft_room",
-      "^(EPS|TPS|AV|AD|DS|PD|PS)\\b|EPS|TPS|AV/PS|AD/PS|파이프\\s*샤프트|덕트\\s*샤프트"
-    ],
-    [
-      "hotel_room",
-      "객실|게스트\\s*룸|GUEST\\s*ROOM|숙박|스위트|SUITE"
-    ],
-    [
-      "hospital_room",
-      "병실|입원|병동|WARD"
-    ],
-    [
-      "library",
-      "도서|서고|문고|열람|LIBRARY"
-    ],
-    [
-      "classroom",
-      "교실|강의|실습실|CLASS"
-    ],
-    [
-      "theatre",
-      "극장|영화|공연|관람|강당|THEATER|THEATRE|CINEMA"
-    ],
-    [
-      "shopping",
-      "판매|매장|근린|상가|점포|SHOP|STORE|음식점|식당|카페|휴게음식|마트"
-    ],
-    [
-      "office",
-      "사무|업무|회의|OFFICE|관리실|방재실|경비|숙직"
-    ],
-    [
-      "dwelling",
-      "세대|거실|침실|안방|드레스|아파트|주택|원룸"
-    ],
-    [
-      "transport",
-      "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
-    ]
-  ],
-  "floor_use": {
-    "lodging": "hotel_room",
-    "apartment": "dwelling",
-    "office": "office",
-    "retail": "shopping",
-    "medical": "hospital_room",
-    "edu": "classroom",
-    "parking": "parking",
-    "warehouse": "warehouse",
-    "factory": "factory",
-    "penthouse": "default",
-    "default": "default"
-  },
-  "_lining_ignition_C": "기본 null: 기존 규칙 유지. coldstore_pu_lining 450℃ 및 민감도 400/500℃는 C11 P5 사용자 가정. 순정 CFAST에서는 T4b 판 표면 온도로 판정하며 상층 온도나 10~15 kW/m²와의 등가성은 미검증."
+  "_lining_ignition_C": "기본 null: 기존 규칙 유지. coldstore_pu_lining 450℃ 및 민감도 400/500℃는 C11 P5 사용자 가정. 순정 CFAST에서는 T4b 판 표면 온도로 판정하며 상층 온도나 10~15 kW/m²와의 등가성은 미검증.",
+  "_classification_rules": "config/building-rules.json usage; numeric fuel properties remain here"
 }

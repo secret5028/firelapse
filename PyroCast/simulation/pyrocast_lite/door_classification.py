@@ -2,7 +2,7 @@
 from copy import deepcopy
 import json,re,math
 from pathlib import Path
-CONFIG=Path(__file__).with_name('door_class_rules.json')
+from building_rules import load_rules
 
 def core_evidence(room,config):
     """Rule 2: area gate AND a core kind or leading core-name token."""
@@ -21,7 +21,7 @@ def core_evidence(room,config):
             'eligible':area_ok and (kind_ok or bool(match))}
 
 def classify_doors(raw,overrides=None):
-    config=json.loads(CONFIG.read_text('utf-8'));model=deepcopy(raw);rows=[]
+    config=load_rules()['doors'];model=deepcopy(raw);rows=[]
     rooms={r['id']:r for r in model['rooms']};overrides=overrides or {}
     def names(r):return ' '.join([str(r.get('name','')),*map(str,r.get('cad_names',[]))])
     def area(r):return r.get('area_m2',r['size_m'][0]*r['size_m'][1])
@@ -39,7 +39,7 @@ def classify_doors(raw,overrides=None):
             rule=1;label='fire';confidence='confirmed';reason='도면 명시: '+evidence
         elif any(row['eligible'] for row in core_checks):
             rule=2;label='fire';confidence='confirmed'
-            reason='80㎡ 이하 코어 연결: '+' / '.join(
+            reason=f"{config['core_max_area_m2']}㎡ 이하 코어 연결: "+' / '.join(
                 f"{r['room']} {r['area_m2']:.2f}㎡ ({r['core_kind'] if r['core_kind_match'] else r['leading_core_token']})"
                 for r in core_checks if r['eligible'])
         elif any(re.search(config['service'],text) for text in texts):

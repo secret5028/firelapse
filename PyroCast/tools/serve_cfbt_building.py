@@ -25,7 +25,7 @@ from pyrocast_cfbt.comparison import compare_ignition,comparison_key
 def execution_key(options,building_sha,engine):
     """Reuse verified native outputs only for identical code, engine and inputs."""
     implementation=hashlib.sha256()
-    for path in sorted((SIM/'pyrocast_cfbt').glob('*.py')):
+    for path in sorted([*(SIM/'pyrocast_cfbt').glob('*.py'),SIM/'building_rules.py',ROOT/'config/building-rules.json']):
         implementation.update(path.name.encode());implementation.update(path.read_bytes())
     for path in [*sorted((SIM/'data').glob('*.json')), *sorted((SIM/'extensions/thermal').glob('*.c')), *list((SIM/'build').glob('plate.dll'))]:
         implementation.update(path.name.encode());implementation.update(path.read_bytes())

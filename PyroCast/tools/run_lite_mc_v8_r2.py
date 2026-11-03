@@ -14,7 +14,9 @@ ROOT=base.ROOT;OUT=ROOT/'simulation/results/lite_v8_mc_R2_10_20261026'
 PARAMS=dict(smooth_state_bounds=True,upper_combustion_enabled=True,door_jet_enabled=True,
             oxygen_inventory_mode=False,remove_cumulative_state=True)
 def read(p):return json.loads(p.read_text('utf-8'))
-def current_hashes():return {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted((ROOT/'simulation/pyrocast_lite').glob('*.py'))}
+def current_hashes():
+    from execution_evidence import engine_hashes
+    return engine_hashes()
 
 def summarize(m,r,sample):
     s=condition_summary(m,r,sample);dt=np.diff(m.sol.t);duration=float(m.sol.t[-1]-m.sol.t[0]);mapping={}

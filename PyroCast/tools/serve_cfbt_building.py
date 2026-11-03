@@ -435,10 +435,13 @@ def main():
                 if request_path=='/cfbt/lite/fixed-openings':
                     from lite_fixed_openings import apply_worst, clear, door_report
                     import lite_screening_service as screening
-                    if not isinstance(body,dict) or set(body) not in ({'job_id'},{'clear'}):raise ValueError('확정 급기 요청 오류')
+                    if not isinstance(body,dict) or set(body) not in ({'job_id'},{'clear'},{'assistant_proposal'}):raise ValueError('확정 급기 요청 오류')
                     with lock:
                         if state['busy'] or (screening.payload().get('progress') or {}).get('state')=='running':return self.json({'error':'현재 계산 중입니다'},409)
-                        if 'clear' in body:
+                        if 'assistant_proposal' in body:
+                            from lite_ai_tools import apply_opening_proposal
+                            apply_opening_proposal(body['assistant_proposal'],sha)
+                        elif 'clear' in body:
                             if body['clear'] is not True:raise ValueError('clear는 true입니다')
                             clear()
                         else:apply_worst(body['job_id'],sha)

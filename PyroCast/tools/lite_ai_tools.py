@@ -1,5 +1,5 @@
 """D-4 grounded read/proposal tools. Never imports or starts a simulation engine."""
-import hashlib,json,math,shutil,subprocess,sys
+import hashlib,json,math,shutil,subprocess,sys,time,uuid,threading
 from pathlib import Path
 from functools import lru_cache
 ROOT=Path(__file__).resolve().parents[1]
@@ -7,6 +7,8 @@ SIM=ROOT/'simulation'
 sys.path.insert(0,str(SIM))
 TYPES=('FO','FGI','backdraft','rollover')
 LABELS={'FO':'FO','FGI':'FGI','backdraft':'백드래프트','rollover':'롤오버'}
+PENDING={}
+PENDING_LOCK=threading.RLock()
 
 def read(p,default=None):
     return json.loads(Path(p).read_text('utf-8-sig')) if Path(p).is_file() else default
@@ -166,7 +168,16 @@ class Tools:
         for r in rows:
             if not isinstance(r,dict) or set(r)!={'id','open'} or r['id'] not in available or type(r['open']) is not bool or r['id'] in seen:raise ValueError('개구부 ID/상태 오류')
             seen.add(r['id'])
-        return {'kind':'openings','openings':rows,'requires_user_apply':True,'applied':False}
+        meta,_=self.building(a['building'])
+        if meta['id']!='cad-main':raise ValueError('이 건물은 개구부 적용 경로가 없습니다')
+        config=SIM/'config/lite-door-overrides.json';old=read(config,{})
+        token=uuid.uuid4().hex
+        with PENDING_LOCK:
+            for k in list(PENDING):
+                if PENDING[k]['expires']<time.monotonic():del PENDING[k]
+            if len(PENDING)>=100:raise ValueError('적용 대기 제안이 너무 많습니다')
+            PENDING[token]={'sha':meta['sha'],'rows':rows,'revision':hashlib.sha256(json.dumps(old,sort_keys=True).encode()).hexdigest(),'expires':time.monotonic()+1800}
+        return {'proposal_id':token,'kind':'openings','openings':rows,'requires_user_apply':True,'applied':False,'basis':'기존 확정 급기, 없으면 저장된 원본 입력의 나머지 개구부 상태 유지'}
     def propose_run(self,a):
         rooms={r['id'] for r in self.get_building(a)['rooms']}
         if a.get('kind') not in ('screening','mc') or a.get('origin') not in rooms:raise ValueError('실행 종류/화점 오류')
@@ -174,3 +185,22 @@ class Tools:
         if type(n) is not int or not (1 if a['kind']=='screening' else 2)<=n<= (len(rooms) if a['kind']=='screening' else 1000):raise ValueError('표본/N 범위 오류')
         return {'kind':a['kind'],'origin':a['origin'],'N':n if a['kind']=='screening' else None,'samples':n if a['kind']=='mc' else None,'requires_user_apply':True,'started':False}
     def get_tactic_rules(self,a):return read(ROOT/'config/tactic_rules.json',{'status':'미평가','rules':[]})
+
+def apply_opening_proposal(token,sha,config_path=None):
+    from lite_fixed_openings import fixed_for
+    from result_catalog import atomic_json
+    config_path=config_path or SIM/'config/lite-door-overrides.json'
+    with PENDING_LOCK:
+        p=PENDING.get(token)
+        if not p or p['sha']!=sha or p['expires']<time.monotonic():raise ValueError('제안 만료/건물 불일치')
+        old=read(config_path,{})
+        if hashlib.sha256(json.dumps(old,sort_keys=True).encode()).hexdigest()!=p['revision']:raise ValueError('문 설정이 바뀌었습니다. 제안을 다시 요청하세요')
+        raw=read(SIM/'results/room_rule_r8_20261025/source-scenario.json');vents={v['id']:v for v in raw['openings']}
+        states=json.loads(json.dumps((old.get('fixed_state') or {}).get('states') or {v['id']:{'a':v['a'],'b':v['b'],'open':v['schedule'][0][1]>0,'effective_fraction':v['schedule'][0][1]} for v in raw['openings']}))
+        for row in p['rows']:
+            v=vents.get(row['id'])
+            if v is None:raise ValueError('원본 입력에 없는 개구부')
+            states[row['id']].update(open=row['open'],effective_fraction=(.5 if 'window' in v.get('kind','') else 1.) if row['open'] else 0.)
+        fixed={'building_sha256':sha,'states':states,'source':'user_applied_assistant_proposal','proposal_id':token}
+        fixed_for(raw,{'fixed_state':fixed});atomic_json(config_path,{**old,'fixed_state':fixed});del PENDING[token]
+        return fixed

@@ -1,0 +1,38 @@
+// D-4 view boundary. Text/numbers come from server evidence; actions need a click.
+export function createAssistantPanel({store,getContext,onNavigate,onProposal,onSaved}){
+ const $=id=>document.getElementById(id),root=document.createElement('details');root.id='aiAssistant';
+ root.innerHTML='<summary>AI 어시스턴트</summary><div class="aiBody"><button type="button" id="aiBrief">브리핑 생성</button><button type="button" id="aiCollapse">접기</button><div id="aiStatus" role="status"></div><div id="aiConversation" aria-live="polite"></div><form id="aiChat"><label>질문<textarea id="aiMessage" rows="3" maxlength="4000" required></textarea></label><button id="aiSend">보내기</button></form><details id="aiPending"><summary>적용 대기</summary><div id="aiProposals"></div></details><div id="aiLegacyFuel"></div></div>';
+ const sidebar=$('pyroShellSidebar');sidebar.append(root);
+ const placement=document.createElement('label');placement.textContent='어시스턴트 위치 ';const select=document.createElement('select');select.id='assistantPosition';for(const [v,n] of [['right','우측'],['left','좌측'],['floating','떠 있는 창']])select.add(new Option(n,v));placement.append(select);$('displayViewSettings').append(placement);
+ const width=document.createElement('label');width.textContent=' 폭 ';const range=document.createElement('input');range.type='range';range.min='280';range.max='640';range.value='340';range.id='assistantWidth';width.append(range);placement.append(width);
+ const style=document.createElement('style');style.textContent=`#aiAssistant{flex-shrink:0;background:#142b3b;color:#eaf3f8;border:1px solid #496273;font:12px system-ui;z-index:160;max-width:96vw}#aiAssistant>summary{padding:9px;cursor:pointer}.aiBody{padding:10px;max-height:55vh;overflow:auto}#aiAssistant textarea{box-sizing:border-box;width:100%;color:inherit;background:#1d4158}#aiAssistant button{margin:3px;color:inherit;background:#1d4158;border:1px solid #577487;padding:5px;cursor:pointer}#aiAssistant button:disabled{opacity:.45;cursor:default}.aiAnswer{white-space:pre-wrap;border-bottom:1px solid #496273;padding:8px 0}.aiEvidence{font-size:10px;color:#b8cbd8}.aiFact{display:block;text-align:left}#aiAssistant[data-position=left],#aiAssistant[data-position=floating]{position:fixed;top:75px;left:12px;width:var(--ai-width,340px)}#aiAssistant[data-position=floating]{top:110px;left:calc(50% - 170px);resize:both;overflow:auto}#aiAssistant[data-position=right]{width:100%}#assistantWidth{max-width:110px}`;document.head.append(style);
+ const abort=new AbortController();let disposed=false,busy=false,session=null,ctxKey='',lastAnswer=null,reportCase=null;
+ function pos(){root.dataset.position=select.value;root.style.setProperty('--ai-width',range.value+'px');if(select.value==='right'){sidebar.append(root);sidebar.style.setProperty('--ai-width',range.value+'px');root.style.maxHeight='65vh';}else document.body.append(root);}
+ select.onchange=pos;range.oninput=()=>{if(select.value==='right')document.body.style.setProperty('--shell-side',range.value+'px');pos();window.dispatchEvent(new Event('resize'));};pos();
+ const priorFuel=$('aiFuel'),fuelMarker=document.createComment('assistant fuel return');if(priorFuel){priorFuel.before(fuelMarker);$('aiLegacyFuel').append(priorFuel);}
+ const status=s=>{$('aiStatus').textContent=s;};
+ const offline=!!window.__PYROCAST_OFFLINE__;
+ async function api(path,body){const r=await fetch('/cfbt/lite/ai/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:abort.signal});const v=await r.json();if(!r.ok)throw Error(v.error||'요청 실패');return v;}
+ function buttons(){for(const id of ['aiSend','aiBrief'])$(id).disabled=busy||offline;}
+ function answer(value){
+  const box=document.createElement('div');box.className='aiAnswer';const text=document.createElement('div');text.textContent=value.text||'';box.append(text);
+  for(const fact of value.facts||[]){const b=document.createElement('button');b.type='button';b.className='aiFact';b.textContent=fact.text;b.disabled=!fact.room;b.onclick=()=>onNavigate({...fact,case:value.case});box.append(b);}
+  const basis=document.createElement('div');basis.className='aiEvidence';basis.textContent=`근거: 도구 호출 ${value.calls?.length??0}회 · 사례 ${value.case??'미선택'} · 규칙 ${(value.rules||[]).join(', ')||'없음'}`;box.append(basis);
+  if(value.briefing_id){const save=document.createElement('button');save.textContent='보고서로 저장';save.disabled=offline;save.onclick=async()=>{save.disabled=true;try{const r=await api('reports/save',{briefing_id:value.briefing_id});await onSaved(r);status('사례 보고서 저장 완료');}catch(e){status(e.message);save.disabled=false;}};box.append(save);}
+  $('aiConversation').append(box);box.scrollIntoView({block:'nearest'});lastAnswer=value;
+  for(const proposal of value.proposals||[]){const block=document.createElement('div');const pre=document.createElement('pre');pre.textContent=JSON.stringify(proposal,null,2);block.append(pre);
+   const selected=[];if(proposal.rows)for(const row of proposal.rows){const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.dataset.room=row.room_id;label.append(c,document.createTextNode(`${row.room_id} · ${row.proposed_usage} · ${row.load} MJ/m²`));block.append(label);selected.push(c);}
+   const apply=document.createElement('button');apply.textContent=proposal.kind==='mc'||proposal.kind==='screening'?'사용자 실행':'선택 적용';apply.disabled=offline;apply.onclick=async()=>{apply.disabled=true;try{await onProposal(proposal,selected.filter(c=>c.checked).map(c=>c.dataset.room),value.building);status('요청 반영 · 현재 사례는 유지됩니다');block.remove();}catch(e){status(e.message);apply.disabled=false;}};block.append(apply);$('aiProposals').append(block);$('aiPending').open=true;
+  }
+ }
+ async function request(brief=false){if(busy||offline)return;const ctx=getContext(),key=JSON.stringify([ctx.building,ctx.case]);if(key!==ctxKey){session=null;ctxKey=key;$('aiProposals').replaceChildren();}
+  const message=brief?'브리핑':$('aiMessage').value.trim();if(!message)return;busy=true;buttons();status('근거 조회 중…');const question=document.createElement('p');question.textContent='나: '+message;$('aiConversation').append(question);
+  try{const value=await api(brief?'briefing':'chat',{context:ctx,message,session});if(disposed)return;session=value.session;answer(value);status(value.status||'완료');$('aiMessage').value='';}catch(e){if(!disposed)status(e.message);}finally{busy=false;if(!disposed)buttons();}
+ }
+ $('aiChat').onsubmit=e=>{e.preventDefault();request();};$('aiBrief').onclick=()=>request(true);$('aiCollapse').onclick=()=>{root.open=false;};
+ const saved=document.createElement('details');saved.id='aiSavedReports';saved.innerHTML='<summary>AI 브리핑 보고서</summary><div></div>';$('resultCase').append(saved);
+ async function reports(){const c=getContext();if(!c.case||reportCase===c.case)return;reportCase=c.case;try{const value=offline?(window.__PYROCAST_OFFLINE__.assistant_reports||[]):(await api('reports/list',{context:c})).reports;if(disposed)return;saved.querySelector('div').replaceChildren();for(const r of value){const item=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('pre');s.textContent=r.case+' · '+r.created;p.textContent=r.markdown;item.append(s,p);saved.querySelector('div').append(item);}}catch(e){if(!disposed)status(e.message);}}
+ const off=store.subscribe('result',()=>{if(store.get('result'))reports();});buttons();
+ if(offline)status('보기 전용');
+ return {refreshReports(){reportCase=null;return reports();},dispose(){disposed=true;abort.abort();off();if(priorFuel)fuelMarker.replaceWith(priorFuel);root.remove();placement.remove();style.remove();saved.remove();document.body.style.removeProperty('--shell-side');}};
+}

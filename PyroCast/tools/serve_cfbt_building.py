@@ -378,6 +378,9 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
+            if request_path.startswith('/cfbt/lite/ai/tools/'):
+                from lite_ai_http import handle
+                return handle(self,request_path)
             if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc','/cfbt/lite/fixed-openings','/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides'):return self.json({'error':'지원하지 않는 요청입니다'},405)
             if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
             try:

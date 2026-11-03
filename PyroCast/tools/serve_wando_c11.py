@@ -12,7 +12,7 @@ ROOT=Path(__file__).resolve().parents[1]
 class Handler(SimpleHTTPRequestHandler):
     def do_POST(self):
         path=urlsplit(self.path).path
-        if path.startswith('/cfbt/lite/ai/tools/'):
+        if path.startswith('/cfbt/lite/ai/'):
             from lite_ai_http import handle
             return handle(self,path)
         return self.send_error(405)

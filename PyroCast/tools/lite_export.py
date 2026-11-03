@@ -111,6 +111,9 @@ def build_export(origin, case, state, interval=10):
         'fixed_openings': corrections.get('fixed_state'), 'route_result': state.get('route_result'),
         'vehicle': state.get('route', {}).get('vehicle'), 'routes': routes,
         'modules': modules, 'scripts': scripts}
+    from lite_ai_tools import Tools
+    from lite_ai_briefing import list_reports
+    envelope['assistant_reports']=list_reports(Tools(),{'building':playback['building_sha256'],'case':case})
     pako = (VIEWER/'vendor/pako_inflate.min.js').read_text('utf-8')
     license_text = (VIEWER/'vendor/pako-LICENSE.txt').read_text('utf-8').replace('--', '—')
     boot = (VIEWER/'offline_bootstrap.js').read_text('utf-8')

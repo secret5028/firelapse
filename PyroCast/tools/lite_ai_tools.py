@@ -155,12 +155,17 @@ class Tools:
         for root in roots:
             for name in ('summary.json','mc-summary.json'):
                 d=read(root/name)
-                if d and d.get('building_sha256')==meta['sha']:return d
+                if d and d.get('building_sha256')==meta['sha']:
+                    from lite_fixed_openings import ranked_samples
+                    try:ranking=ranked_samples(root,meta['sha'])
+                    except (ValueError,KeyError,OSError):ranking=[]
+                    return {**d,'ranking':ranking,'worst':ranking[0] if ranking else None,'ratio_basis':'표본 분포 내 조건 충족 비율; 발생 확률 아님'}
         return {'status':'미평가','reason':'해당 건물과 연결된 MC 요약 없음'}
     def propose_fuel(self,a):
         import lite_ai_fuel
+        from lite_ai_chat import transport
         meta,b=self.building(a['building'])
-        return lite_ai_fuel.propose({'message':a.get('message'),'history':a.get('history',[])},b,meta['sha'])
+        return lite_ai_fuel.propose({'message':a.get('message'),'history':a.get('history',[])},b,meta['sha'],transport=transport)
     def propose_openings(self,a):
         rows=a.get('openings');available={r['id']:r for r in self.get_building(a)['openings']}
         if not isinstance(rows,list) or not rows or len(rows)>len(available):raise ValueError('개구부 제안 목록 오류')

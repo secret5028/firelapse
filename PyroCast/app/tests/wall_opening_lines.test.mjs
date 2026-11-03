@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 import fs from 'node:fs';
-import {wallOpeningVolumes,outsideOpeningIntervals,trimWallLineGeometry} from '../web/layers/wall_opening_lines.js';
+import {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,trimWallLineGeometry} from '../web/layers/wall_opening_lines.js';
 import {BuildingLayer} from '../web/layers/building.js';
 import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
 const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
@@ -11,9 +11,14 @@ assert.equal(kept.length,2);assert(Math.abs(kept[0][1]*6-2.005)<1e-8);assert(Mat
 assert.deepEqual(outsideOpeningIntervals([0,1,1],[6,1,1],cuts),[[0,1]]); // nearby parallel wall
 assert.deepEqual(outsideOpeningIntervals([2,0,0],[2,0,2.1],cuts),[[0,1]]); // jamb
 assert.deepEqual(outsideOpeningIntervals([0,0,2.1],[6,0,2.1],cuts),[[0,1]]); // lintel
+assert.deepEqual(outsideWallOpeningIntervals([2,0,0],[2,0,4.2],cuts),[[0,.5]]); // door side stops at lintel
+assert.deepEqual(outsideWallOpeningIntervals([4,0,4.2],[4,0,2.1],cuts),[]); // reversed seam entirely above door
+assert.deepEqual(outsideWallOpeningIntervals([0,0,0],[0,0,4.2],cuts),[[0,1]]); // structural corner
+assert.deepEqual(outsideWallOpeningIntervals([2,1,0],[2,1,4.2],cuts),[[0,1]]); // different wall
 const win={name:'1F',openings:[{id:'W',kind:'window',sill:1,head:2,polys:[[[2,-.1],[4,-.1],[4,.1],[2,.1]]]}]};
 assert.equal(outsideOpeningIntervals([0,0,1.5],[6,0,1.5],wallOpeningVolumes(win)).length,2);
 assert.deepEqual(outsideOpeningIntervals([0,0,.5],[6,0,.5],wallOpeningVolumes(win)),[[0,1]]);
+assert.deepEqual(outsideWallOpeningIntervals([2,0,0],[2,0,4],wallOpeningVolumes(win)),[[.25,.5]]); // window rectangle only
 const diagonal={name:'3F',openings:[{id:'D',kind:'door',leaves:[{hinge:[0,0],closed:[2,2]}]}]};
 assert.equal(outsideOpeningIntervals([1,1,0],[1,1,3],wallOpeningVolumes(diagonal)).length,1);
 const scheduled=structuredClone(floor);scheduled.openings[0].display_schedule=[[0,0],[10,.5],[20,1]];

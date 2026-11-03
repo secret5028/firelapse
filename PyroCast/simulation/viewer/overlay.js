@@ -915,7 +915,7 @@ function wallOpeningVolumes(floor,time=0){
    let lo=along(a),hi=along(b);if(o.kind==='window'&&points.length){lo=Math.min(...points.map(along));hi=Math.max(...points.map(along));}
    const center=(lo+hi)/2,half=(hi-lo)*fraction/2;
    const normal=across(a),near=points.length?Math.min(normal,...points.map(across)):normal-.075,far=points.length?Math.max(normal,...points.map(across)):normal+.075;
-   cuts.push({id:o.id,u,v,min:[center-half+.005,near-.015,bottom===0?-.015:bottom+.005],max:[center+half-.005,far+.015,top-.005]});
+   cuts.push({id:o.id,u,v,jambs:[center-half,center+half],bottom,top,min:[center-half+.005,near-.015,bottom===0?-.015:bottom+.005],max:[center+half-.005,far+.015,top-.005]});
   }
  }
  return cuts;
@@ -933,6 +933,21 @@ function outsideOpeningIntervals(a,b,cuts){
  }
  return kept;
 }
+// Extruded lintel/sill bands create artificial vertical seams at opening sides.
+// Keep the actual jamb, but remove its extension above/below the rectangle.
+// Only vertical wall edges at that opening are affected; roof edges, remote
+// walls, meshes and the independent opening-frame layer remain untouched.
+function outsideWallOpeningIntervals(a,b,cuts){
+ const vertical=Math.hypot(b[0]-a[0],b[1]-a[1])<1e-5&&Math.abs(b[2]-a[2])>1e-6;
+ if(!vertical)return outsideOpeningIntervals(a,b,cuts);
+ const extensions=[];
+ for(const c of cuts){
+  const along=a[0]*c.u[0]+a[1]*c.u[1],normal=a[0]*c.v[0]+a[1]*c.v[1];
+  if(normal<c.min[1]||normal>c.max[1]||!c.jambs?.some(x=>Math.abs(along-x)<=.02))continue;
+  for(const [low,high] of [[-1e6,c.bottom],[c.top,1e6]])extensions.push({...c,min:[along-.025,c.min[1],low],max:[along+.025,c.max[1],high]});
+ }
+ return outsideOpeningIntervals(a,b,[...cuts,...extensions]);
+}
 function trimWallLineGeometry(T,source,floorGroup,cuts){
  if(!source.isLineSegments||!(source.userData.cadOutline||/_(edge|wall)(_|$)/i.test(source.name||''))||!cuts.length)return null;
  const g=source.geometry,pos=g?.attributes.position;if(!pos)return null;
@@ -942,7 +957,7 @@ function trimWallLineGeometry(T,source,floorGroup,cuts){
  let changed=false;const count=g.index?.count??pos.count,start=g.drawRange.start||0,end=Math.min(count,start+g.drawRange.count);
  for(let i=start;i+1<end;i+=2){const ia=g.index?g.index.getX(i):i,ib=g.index?g.index.getX(i+1):i+1;
   a.fromBufferAttribute(pos,ia).applyMatrix4(transform);b.fromBufferAttribute(pos,ib).applyMatrix4(transform);
-  const intervals=outsideOpeningIntervals(a.toArray(),b.toArray(),cuts);if(intervals.length!==1||intervals[0][0]!==0||intervals[0][1]!==1)changed=true;
+  const intervals=outsideWallOpeningIntervals(a.toArray(),b.toArray(),cuts);if(intervals.length!==1||intervals[0][0]!==0||intervals[0][1]!==1)changed=true;
   for(const [lo,hi] of intervals)for(const t of [lo,hi])for(const [name,attr] of Object.entries(g.attributes))for(let k=0;k<attr.itemSize;k++){
    const x=attr.getComponent(ia,k),y=attr.getComponent(ib,k);arrays[name].push(x+(y-x)*t);
   }
@@ -952,7 +967,7 @@ function trimWallLineGeometry(T,source,floorGroup,cuts){
  result.computeBoundingSphere();return result;
 }
 
-return {wallOpeningVolumes,outsideOpeningIntervals,trimWallLineGeometry};
+return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,trimWallLineGeometry};
 })();
 
 // app/web/layers/building.js

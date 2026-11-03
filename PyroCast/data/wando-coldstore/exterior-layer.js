@@ -3,6 +3,10 @@ export function createExteriorLayer(T,scene,config,pane,redraw=()=>{}){
  const root=new T.Group(),resources=[];root.name='wando-photo-exterior';scene.add(root);
  const own=o=>(resources.push(o),o),mat=color=>own(new T.MeshBasicMaterial({color,side:T.DoubleSide,transparent:true,opacity:.28,depthWrite:false}));
  const white=mat('#d1d8dc'),side=mat('#aebdc6'),blue=mat(config.main_roof.color),darkBlue=mat('#3187a1'),cap=mat('#e8eceb'),glass=mat('#546b74');
+ // A transparent box exposes its thin side faces at each jamb, creating a
+ // vertical stripe all the way to the roof. Use a continuous-thickness-free
+ // facade surface; retain the former front+back composite opacity.
+ const facade=mat('#d1d8dc');facade.opacity=1-(1-white.opacity)**2;
  function mesh(geometry,material){const o=new T.Mesh(own(geometry),material);o.renderOrder=8;o.raycast=()=>{};root.add(o);return o;}
  function box(x,y,z,w,d,h,material){const o=mesh(new T.BoxGeometry(w,d,h),material);o.position.set(x,y,z);return o;}
  function face(points,material){const g=new T.BufferGeometry(),pos=[];for(let i=1;i<points.length-1;i++)for(const p of [points[0],points[i],points[i+1]])pos.push(...p);g.setAttribute('position',new T.Float32BufferAttribute(pos,3));g.computeVertexNormals();return mesh(g,material);}
@@ -16,7 +20,9 @@ export function createExteriorLayer(T,scene,config,pane,redraw=()=>{}){
  // Facade panels leave the existing front door apertures open. These meshes
  // are decorative and never enter the room/door graph or picking planes.
  for(const [a,b,w,h] of [[0,9,.9,2.1],[9,18,2.5,3],[18,27,2.5,3],[27,36,2.5,3],[36,45,2.5,3],[45,53.75,2.5,3],[54,72,2.5,3]]){
-  const c=(a+b)/2;for(const [l,u,lo,hi] of [[a,c-w/2,0,r.eave_z],[c+w/2,b,0,r.eave_z],[c-w/2,c+w/2,h,r.eave_z]])box((l+u)/2,-.025,(lo+hi)/2,u-l,.05,hi-lo,white);
+  const c=(a+b)/2;for(const [l,u,lo,hi] of [[a,c-w/2,0,r.eave_z],[c+w/2,b,0,r.eave_z],[c-w/2,c+w/2,h,r.eave_z]]){
+   const panel=face([[l,-.05,lo],[u,-.05,lo],[u,-.05,hi],[l,-.05,hi]],facade);panel.name='wando-facade-surface';
+  }
   if(a!==45)box(c,0,h/2,w,.035,h,side);
  }
  box(0,9.2,3.2025,.08,18.4,6.405,side);box(72,9.2,3.2025,.08,18.4,6.405,white);box(36,18.4,3.2025,72,.06,6.405,side);

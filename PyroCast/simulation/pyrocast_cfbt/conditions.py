@@ -1,5 +1,87 @@
 """Condition diagnostics only. Never feeds back into ignition or native combustion."""
 import numpy as np
+from collections import deque
+from copy import deepcopy
+
+ROLLOVER_REVISION = 'fgi_path_ignition_v1'
+
+def rollover_records(model, t, fgi, actual_hrr, received_jet, result=None):
+    """Display only: FGI degree × route gate × ignition gate.
+
+    Collapse solver cells to physical rooms. Use all equal-length shortest
+    paths to every exterior-aperture room; upstream means an immediate
+    predecessor on one of those shortest paths. No heat/oxygen is added.
+    """
+    from .openings import realized_fraction
+    t=np.asarray(t);n=len(t);result=result or {'time_s':t}
+    ids={r['id'] for r in model['rooms']}
+    physical={r['id']:r.get('parent_room',r['id']) for r in model['rooms']}
+    origins={physical[g['room']] for g in model.get('fuel_groups',[]) if 'initial_time_s' in g and g['room'] in physical}
+    cfg=model.get('condition_scoring',{})
+    include=cfg.get('rollover_include_origin',True)
+    use_open=cfg.get('rollover_open_only',True)
+    if not isinstance(include,bool) or not isinstance(use_open,bool):raise ValueError('Rollover settings must be boolean')
+    edges=[]
+    for v in model.get('openings',[]):
+        a,b=v['a'],v['b']
+        if a not in ids and b not in ids:continue
+        if a not in ids and a!='OUTSIDE' or b not in ids and b!='OUTSIDE':continue
+        x,y=physical.get(a,a),physical.get(b,b)
+        if x==y:continue
+        fraction=realized_fraction(result,v,t) if use_open else np.ones(n)
+        edges.append((x,y,np.asarray(fraction)>0))
+    nodes=set(physical.values());heat={r:np.zeros(n) for r in nodes};jets={r:np.zeros(n) for r in nodes}
+    for rid in ids:
+        q=actual_hrr.get(rid)
+        if q is not None:heat[physical[rid]]+=np.asarray(q)
+        if received_jet.get(rid) is not None:jets[physical[rid]]+=np.asarray(received_jet[rid])
+    path={r:np.zeros(n,bool) for r in nodes};pilot={r:np.zeros(n,bool) for r in nodes}
+    prevs={r:[[] for _ in t] for r in nodes}
+    for j in range(n):
+        adj={r:set() for r in nodes};exterior=set()
+        for a,b,on in edges:
+            if not on[j]:continue
+            if a=='OUTSIDE':exterior.add(b)
+            elif b=='OUTSIDE':exterior.add(a)
+            else:adj[a].add(b);adj[b].add(a)
+        predecessors={r:set() for r in nodes};on_path=set()
+        for origin in sorted(origins):
+            distance={origin:0};queue=deque([origin])
+            while queue:
+                a=queue.popleft()
+                for b in adj[a]:
+                    if b not in distance:distance[b]=distance[a]+1;queue.append(b)
+            pending=list(exterior.intersection(distance));seen=set(pending)
+            while pending:
+                x=pending.pop();on_path.add(x)
+                for p in adj[x]:
+                    if distance.get(p)==distance[x]-1:
+                        predecessors[x].add(p)
+                        if p not in seen:seen.add(p);pending.append(p)
+        for r in nodes:
+            path[r][j]=r in on_path and (include or r not in origins)
+            prevs[r][j]=sorted(predecessors[r])
+            pilot[r][j]=any(heat[p][j]>0 for p in predecessors[r]) or (include and r in origins and heat[r][j]>0)
+    out={}
+    for rid in ids:
+        r=physical[rid];score=deepcopy(fgi[rid]['scores']);base=score['degree']
+        jet=jets[r]>0
+        ignition=pilot[r]|jet
+        degree=[None if v is None else float(v)*int(path[r][j])*int(ignition[j]) for j,v in enumerate(base)]
+        score.update(degree=degree,all_met=[None if v is None else v>=1 for v in degree],
+                     meaning='FGI index × shortest exterior-path condition × upstream fire/received jet condition; not probability')
+        terms=deepcopy(fgi[rid].get('terms',[]))
+        terms += [term('path','화점→외기 최단 경로',path[r],True,'==','','saved opening graph',n),
+                  term('ignition','상류 연소 또는 수신 분출',ignition,True,'==','','actual HRR > 0 / receiving door jet > 0',n)]
+        record=phenomenon(t,terms,{},score['all_met'],'FGI score × path × ignition')
+        record.update(scores=score,status=fgi[rid].get('status','evaluated'),label='롤오버 가능 조건',
+            score_basis={'revision':ROLLOVER_REVISION,'rollover_include_origin':include,'rollover_open_only':use_open,
+                         'physical_room':r,'origins':sorted(origins),'path':path[r].tolist(),'ignition':ignition.tolist(),
+                         'upstream_rooms':prevs[r],'received_door_jet':jet.tolist(),
+                         'FGI_degree':list(base),'path_basis':'all equal-hop shortest paths; physical rooms; positive effective opening',
+                         'origin_ignition':'own actual HRR when include_origin=true'})
+        out[rid]=record
+    return _finite(out)
 
 
 def logic(values,op='and'):
@@ -102,7 +184,7 @@ def screening_lfl(model,temperature_C):
 
 def evaluate(model,result):
     t=np.asarray(result['time_s']);n=len(t);out={};c=model['criteria'];g=model['gas']
-    inventory=result['solid_fuel_inventory'];pools=result.get('room_fuel_pools',{})
+    inventory=result['solid_fuel_inventory'];pools=result.get('room_fuel_pools',{});actual_by_room={};jet_by_room={}
     if not result['rooms']:return out
     for room in model['rooms']:
         rid=room['id'];s=result['rooms'][rid];p=result['phenomena'][rid]
@@ -188,6 +270,7 @@ def evaluate(model,result):
             received=result.get('zone',{}).get('DJET_'+str(model['rooms'].index(room)+1))
         if received is None:received=p['vent_HRR_W']
         apply_fo_hrr(fo,qa+bulk,np.asarray(received)/1000,required)
+        actual_by_room[rid]=qa+bulk;jet_by_room[rid]=np.asarray(received)/1000
         lfl=screening_lfl(model,temp)
         fgi['scores']=screening_scores((temp,g['hot_C'],False),(yf,lfl,False),
             (o2,c['fgi_oxygen_vol_percent'],False),n,fgi['all_met'])
@@ -198,6 +281,8 @@ def evaluate(model,result):
             (o2,c['oxygen_deficient_vol_percent'],True),n,bd['all_met'])
         upper['scores']=screening_scores((temp,g['gas_ignition_C'],False),(yf,g['fuel_min_mass_fraction'],False),
             (o2,g['oxygen_min_vol_percent'],False),n,upper['all_met'])
+    rollovers=rollover_records(model,t,{rid:out[rid]['fgi'] for rid in actual_by_room},actual_by_room,jet_by_room,result)
+    for rid,record in rollovers.items():out[rid]['rollover']=record
     out['_groups']={}
     for f in model['fuel_groups']:
         views=[v for v in result['candidates'] if v['group']==f['id'] and v.get('status')=='ok']

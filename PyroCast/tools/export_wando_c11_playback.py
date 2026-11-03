@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'simulation'), str(ROOT/'simulation/deps')]
 from pyrocast_cfbt.native import read_native_csv
-from pyrocast_cfbt.conditions import fo_required_hrr
+from pyrocast_cfbt.conditions import fo_required_hrr, rollover_records, ROLLOVER_REVISION
 from pyrocast_cfbt.fo_hrr import apply_fo_hrr, REVISION
 from copy import deepcopy
 
@@ -78,6 +78,10 @@ def main():
         required=fo_required_hrr(model,{'time_s':c['Time'],'opening_states':openings},model['rooms'][i-1],c['Time'])
         apply_fo_hrr(s['conditions']['FO'],s['Qsolid_kW'],s['Qvent_kW'],required)
         solvers[native]=s
+    rollover=rollover_records(model,times,{r:s['conditions']['FGI'] for r,s in solvers.items()},
+        {r:s['Qsolid_kW'] for r,s in solvers.items()},{r:s['Qvent_kW'] for r,s in solvers.items()},
+        {'time_s':times,'opening_states':openings})
+    for r,record in rollover.items():solvers[r]['conditions']['rollover']=record
     p=dict(schema='pyrocast-cad-playback-1',engine_kind='cfast_native',case_id='wando-P1',
         native_mapping='wando-c11-p1-v1',building_sha256=bsha,label='완도 P1 · 순정 CFAST · 마지막 5 s 미출력',
         complete=True,simulation_output_complete=False,requested_end_s=3600,t_end_s=3595,
@@ -95,7 +99,7 @@ def main():
                 '문 분출 발열은 ROOM 합계이며 틈과 절단 개구별로 분리 불가.',
                 '3D 절단 표시는 입력 일정의 우측값. native CSV는 다음 5 s 표본부터 반영.',
                 '경로는 등록 장애물 평면 외곽 0.5 m 회피. 미등록 적재물·호스 굴곡 미반영.'],
-        provenance={'engine_sha256':sha(ROOT/'simulation/build/baseline/cfast-baseline.exe'),
+        provenance={'rollover_revision':ROLLOVER_REVISION,'engine_sha256':sha(ROOT/'simulation/build/baseline/cfast-baseline.exe'),
                     'source_files':{f:sha(SRC/f) for f in ['case.in','case_zone.csv','case_compartments.csv','case_vents.csv','condition-scores.json']},
                     'mapping':{'temperature':'C','O2':'mol_frac (volume fraction)','OD':'case_zone.csv 1/m','HRR':'case_compartments W / 1000','indices':'FO: fo_own_plus_received_door_jet_v1; FGI/BD/rollover: saved condition-scores.json unchanged'},
                     'fo_display':{'revision':REVISION,'threshold_C':model['criteria']['fo_temperature_C'],

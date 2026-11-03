@@ -142,8 +142,7 @@ def analyze(scenario='P1', fan_on=False):
         records={
             'FO':screening_scores((T,cr['fo_temperature_C'],False),(q,required,False),(Ol,g['oxygen_min_vol_percent'],False),n),
             'FGI':screening_scores((T,g['hot_C'],False),(yf,screening_lfl(model,T),False),(O,cr['fgi_oxygen_vol_percent'],False),n),
-            'BD':screening_scores((T,cr['hot_C'],False),(yf,cr['fuel_rich_mass_fraction'],False),(O,cr['oxygen_deficient_vol_percent'],True),n),
-            'rollover':screening_scores((T,g['gas_ignition_C'],False),(yf,g['fuel_min_mass_fraction'],False),(O,g['oxygen_min_vol_percent'],False),n)}
+            'BD':screening_scores((T,cr['hot_C'],False),(yf,cr['fuel_rich_mass_fraction'],False),(O,cr['oxygen_deficient_vol_percent'],True),n)}
         fo_record={'scores':records['FO']}
         apply_fo_hrr(fo_record,q,c[f'DJET_{i}']/1000,required)
         records['FO']=fo_record['scores']
@@ -175,7 +174,11 @@ def analyze(scenario='P1', fan_on=False):
             'prescribed_pyrolysis_kW':np.interp(t,curve['t'],curve['q'])}},
         opening_states=opening_states,ignitions=[],candidates=[],directional_vent_reactions=[]))
     for rid in states:
-        for label,key in {'FO':'fo','FGI':'fgi','BD':'backdraft','rollover':'upper_gas'}.items():
+        scores[rid]['rollover']=common[rid]['rollover']['scores']
+        values=100*np.asarray(scores[rid]['rollover']['degree'],dtype=float)
+        states[rid]['rollover']=values;series[rid]['rollover']=values.tolist()
+        summaries[rid]['indices']['rollover']={'first_70_s':first(values,70),'first_100_s':first(values,100),'peak':peak(values)}
+        for label,key in {'FO':'fo','FGI':'fgi','BD':'backdraft','rollover':'rollover'}.items():
             assert np.array_equal(scores[rid][label]['degree'],common[rid][key]['scores']['degree'])
     save('timeseries.json',series);save('condition-scores.json',scores)
     run_summary=json.loads((OUT/'execution-state.json').read_text(encoding='utf-8'))

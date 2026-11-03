@@ -91,11 +91,11 @@
         "median_of_sample_maxima": null
       },
       "rollover": {
-        "numerator": 1,
+        "numerator": 0,
         "denominator_completed_random": 8,
-        "fraction": 0.125,
-        "maximum_score": 1.0743770683244545,
-        "median_of_sample_maxima": 0.8279584161844804
+        "fraction": 0.0,
+        "median_of_sample_medians": null,
+        "maximum_score": 0.9459274558385024
       }
     },
     "rows": [

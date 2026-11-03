@@ -39,7 +39,7 @@ def factor_scores(record):
 def shared_conditions(model,result):
     t=model.sol.t;y=model.sol.y;n=model.N;size=len(t)
     source=deepcopy(model.input_model);enabled=model.P.get('upper_combustion_enabled',False)
-    source['condition_scoring']={'LFL0_hrr':model.P['LFL0_hrr']}
+    source['condition_scoring']={**source.get('condition_scoring',{}),'LFL0_hrr':model.P['LFL0_hrr']}
     source['gas'].update(enabled=enabled,bulk_enabled=enabled,mixture_enabled=False,mixture_smooth_enabled=False)
     states={};inventory={};zone={'Time':t};ignitions=[]
     for index,g in enumerate(source['fuel_groups'],1):
@@ -73,7 +73,7 @@ def shared_conditions(model,result):
         unten=phenomenon(t,[term('height','연기층 경계 높이',z,model.P['z_ten'],'<','m','legacy z_ten',size),
             term('Tu','통행 높이 고온층',y[2*n+i]-273.15,model.P['T_ten']-273.15,'>','℃','legacy T_ten',size)],{})
         records={'FO':s['fo'],'FGI':s['fgi'],'backdraft':s['backdraft'],
-                 'rollover':s['upper_gas'],'untenable':unten}
+                 'rollover':s['rollover'],'untenable':unten}
         for name,rec in records.items():
             rec['status']='evaluated'
             if name in ('FGI','backdraft','rollover') and not enabled:
@@ -89,7 +89,7 @@ def shared_conditions(model,result):
             if rec['status']=='not_evaluated':
                 rec['scores']={'factors':{k:[None]*size for k in ('temperature','fuel','oxygen')},
                     'degree':[None]*size,'weakest':[None]*size,'strongest':[None]*size}
-        records['rollover']['label']='상층 연소 조건(롤오버 가능 조건); 실제 롤오버 확정 아님'
+        records['rollover']['label']='FGI·경로·점화원 기반 롤오버 가능 조건'
         records['rollover']['actual_upper_reaction_kg_s']=result['rooms'][i].get('upper_reaction_kg_s',[0.]*size)
         records['opening_combustion']={'label':'개구부 분출 연소(간략 계산)',
             'status':'evaluated' if model.P.get('door_jet_enabled',False) else 'not_evaluated',
@@ -104,6 +104,6 @@ def shared_conditions(model,result):
                  'HRR':'primary source and upper reaction separate, W for shared evaluator'},
         'limits':['FO display adds Thomas HRR and configured lower O2 factors; transition rules unchanged',
                   'FGI display adds configured hot_C temperature factor; probability not estimated',
-                  'rollover maps to upper_gas condition table, not native RO reaction flag or flame propagation',
+                  'rollover = FGI score × exterior shortest path × ignition condition; not flame propagation prediction',
                   'door-jet surrogate is reported separately when enabled; detailed oxygen-inflow causality remains unassessed',
                   'tenability uses existing lite temperature/interface rule; no PPE/FED/visibility evaluation']})

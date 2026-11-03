@@ -22,7 +22,7 @@ OUT = ROOT/'simulation/results/wando_C11_P5_20261103'
 TABLE = ROOT/'simulation/pyrocast_lite/fire_load_table.json'
 EXE = ROOT/'simulation/build/baseline/cfast-baseline.exe'
 THRESHOLDS = (400, 450, 500)
-LABELS = {'FO':'fo', 'FGI':'fgi', 'BD':'backdraft', 'rollover':'upper_gas'}
+LABELS = {'FO':'fo', 'FGI':'fgi', 'BD':'backdraft', 'rollover':'rollover'}
 
 
 def sha(p):

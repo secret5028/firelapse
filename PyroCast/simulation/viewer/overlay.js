@@ -1840,287 +1840,38 @@ const savedAttention = {
   ],
   "records": [
     {
+      "schema": "pyrocast.result-index/1",
+      "threshold": 70,
+      "kinds": [
+        "FO",
+        "FGI",
+        "backdraft",
+        "rollover"
+      ],
       "attention_rooms": [
-        "CAD_3F_R3",
-        "CAD_3F_R4"
-      ],
-      "attention_room_count": 2,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R3",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R3\\open_except_confirmed",
-        24.098559699996258,
-        2,
-        1590.0,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "5caca8206f18f09a8c68888895675a1020e4862c8bdeddea7929f86ff3631bd4"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R3"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R3",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R3\\closed",
-        12.752143999998225,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "c4ebc03a301c5aeae210d303fdaa1d0302cd7517a37768a83552446d845dfb85"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R2"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R2",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R2\\open_except_confirmed",
-        25.471592800000508,
-        1,
-        930.0,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "b38e490e8f1dc2b9bfd305bc889b8e72e084b81f2c8fcfebd2f8fc78930c8510"
-    },
-    {
-      "attention_rooms": [],
-      "attention_room_count": 0,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R2",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R2\\closed",
-        28.931953300001624,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "067f12d7db656fe32c71f588784eb4f5d38f2b18d1c0f194fcd9772b673edba2"
-    },
-    {
-      "attention_rooms": [],
-      "attention_room_count": 0,
-      "unknown_rooms": [],
-      "identity": [
         "CAD_3F_R1",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R1\\open_except_confirmed",
-        24.638894199997594,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "c1e01a9bbf73728a051b0e183ca3f614f884f58fb6266471bf6cf9e5f9c4a95b"
-    },
-    {
-      "attention_rooms": [],
-      "attention_room_count": 0,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R1",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R1\\closed",
-        36.15712850000273,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "fdef16e446f9a1ec97972911cf5dde170c583c2a4b634b49f0ea15ecbbd646b8"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R9"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R9",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R9\\open_except_confirmed",
-        15.5820004000052,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "ed9797ce0d91564a426927c9054889df4d0862b533100cc73206af69144454ed"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R9"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R9",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R9\\closed",
-        14.422403699994902,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "6a0e4181f5f82f9dbbf5a18c8e28633fcf2b0f6d131a36c3f0bc73d82327941a"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R8"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R8",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R8\\open_except_confirmed",
-        14.339497300003131,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "a0cfece3ae211aa84be09626c47baafc0a7151e79f25144c53da3702cd0af639"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R8"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R8",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_n8_20261025\\CAD_3F_R8\\closed",
-        13.040854300001229,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "af1e6f7f982953f4b4af95370aa7910c490671b5753f01f341f4a26e4784978a"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R23"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R23",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R23\\open_except_confirmed",
-        14.196333799998683,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "fe0ca07a8138343efbfe358f28edc5fcabf326388b26b13fd7fb21985c9e7268"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R23"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R23",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R23\\closed",
-        12.797113000000536,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "19a033b99a6adc4abe84878b3904708a02f549ec974acdba0104006ea0e7fc17"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R0"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R0",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R0\\open_except_confirmed",
-        13.444232000001648,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "9feb0c246e890c57deb25ab26f38e00ed60866779ac79bfd3f1b232632b731b5"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R0"
-      ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R0",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R0\\closed",
-        12.772539899997355,
-        1,
-        null,
-        3600.0
-      ],
-      "complete": true,
-      "source_sha256": "d9e7d52b46e8d5ca0e1b522c0cf633ed2498f0d4f35d73888e74295a00917c44"
-    },
-    {
-      "attention_rooms": [
+        "CAD_3F_R13",
+        "CAD_3F_R2",
+        "CAD_3F_R3",
         "CAD_3F_R4"
       ],
-      "attention_room_count": 1,
+      "attention_room_count": 5,
       "unknown_rooms": [],
-      "identity": [
-        "CAD_3F_R4",
-        "open_except_confirmed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R4\\open_except_confirmed",
-        23.221728399999847,
-        1,
-        null,
-        3600.0
-      ],
       "complete": true,
-      "source_sha256": "df0aff2dcb613f5f82e1db7491d64bcc9d8bdd8e646b1a6d1a31c2662cba1119"
-    },
-    {
-      "attention_rooms": [
-        "CAD_3F_R4"
+      "source_stamp": [
+        1793682877236535400,
+        52844694
       ],
-      "attention_room_count": 1,
-      "unknown_rooms": [],
+      "source_sha256": "d6231216ffbb5043af7a2d839df5960a69f1f9d349aee77060212b1d2a418216",
       "identity": [
-        "CAD_3F_R4",
-        "closed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_approved_screening_20261025\\CAD_3F_R4\\closed",
-        16.02941290000308,
-        1,
-        null,
+        "CAD_3F_R3",
+        "fixed",
+        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793597384213006900\\CAD_3F_R3\\fixed",
+        675.941614899999,
+        11,
+        260.0,
         3600.0
-      ],
-      "complete": true,
-      "source_sha256": "565431f226b33f8949c74650ee5460649a6da10e17b2795128f003646f267ff2"
+      ]
     }
   ],
   "basis": "union of original rooms across cells/time; any phenomenon degree*100 >=70; no simulation"

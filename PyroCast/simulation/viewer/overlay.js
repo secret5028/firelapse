@@ -392,13 +392,18 @@ class RouteLayer extends EmptyLayer {
  build(result){this.clear();const T=this.THREE;
   const makeMaterial=color=>this.own(new T.MeshBasicMaterial({color,transparent:true,opacity:1,depthTest:false,depthWrite:false,side:T.DoubleSide}));
   const outline=makeMaterial('#07131d');
+  const exteriorOutline=makeMaterial('#07131d');exteriorOutline.depthTest=true;
   const add=(object,floor,route=true,order=38)=>{object.renderOrder=order;object.raycast=()=>{};this.group.add(object);this.items.push({object,floor,route});};
   for(const s of result.segments||[]){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
    if(!this.roomMaterials.has(s.room))this.roomMaterials.set(s.room,makeMaterial(ROUTE_CLEAR));
+   // Exterior hose lies on the ground and must be occluded by the solid truck.
+   // Interior risk paths keep their existing through-smoke presentation.
+   const exterior=s.room===null;
+   this.roomMaterials.get(s.room).depthTest=exterior;
    const d=new T.Vector3().subVectors(b,a),normal=new T.Vector3(-d.y,d.x,0).normalize();
    if(Math.hypot(d.x,d.y)<.01)normal.set(1,0,0);
    // 0.40m coloured centre + 0.08m dark border on either side. No shader changes.
-   for(const [width,material,order] of [[.56,outline,37],[.4,this.roomMaterials.get(s.room),38]]){
+   for(const [width,material,order] of [[.56,exterior?exteriorOutline:outline,37],[.4,this.roomMaterials.get(s.room),38]]){
     const n=normal.clone().multiplyScalar(width/2),p=[a.clone().add(n),b.clone().add(n),b.clone().sub(n),a.clone().sub(n)],positions=[];
     for(const i of [0,1,2,0,2,3])positions.push(...p[i].toArray());
     const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(positions,3));add(new T.Mesh(g,material),s.floor,true,order);

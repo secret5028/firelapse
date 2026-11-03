@@ -1,0 +1,47 @@
+{
+  "errors": [],
+  "samples": [],
+  "materials": [
+    {
+      "name": "",
+      "depthTest": true,
+      "order": 37
+    },
+    {
+      "name": "",
+      "depthTest": true,
+      "order": 38
+    },
+    {
+      "name": "",
+      "depthTest": false,
+      "order": 37
+    },
+    {
+      "name": "",
+      "depthTest": false,
+      "order": 38
+    },
+    {
+      "name": "",
+      "depthTest": false,
+      "order": 37
+    },
+    {
+      "name": "",
+      "depthTest": false,
+      "order": 38
+    },
+    {
+      "name": "",
+      "depthTest": false,
+      "order": 37
+    },
+    {
+      "name": "",
+      "depthTest": false,
+      "order": 38
+    }
+  ],
+  "subscriptionsAfterDispose": 0
+}

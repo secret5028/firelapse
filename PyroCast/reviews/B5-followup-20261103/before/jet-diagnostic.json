@@ -1,0 +1,103 @@
+{
+  "errors": [],
+  "geometry": [
+    {
+      "name": "jet:TOP_GAP:CAVITY:ROOM",
+      "visible": true,
+      "position": [
+        49.11950510401146,
+        17.97,
+        5.884010208022922
+      ],
+      "scale": [
+        0.5109897919770778,
+        0.5109897919770778,
+        1.0303673581610373
+      ],
+      "renderOrder": 20,
+      "maskPass": 0.9375,
+      "values": {
+        "q_kW": 102.53788008095877,
+        "hrrpua": 500,
+        "width": 0.5109897919770778,
+        "height": 0.5109897919770778,
+        "length": 1.0303673581610373,
+        "normal": [
+          0,
+          -1
+        ],
+        "receiver": "CAD_1F_R5",
+        "vent": "TOP_GAP",
+        "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+        "combustion": {
+          "supply_kW": null,
+          "oxygen_fraction": 0.205579222916,
+          "oxygen_basis": "receiving lower layer",
+          "Tu": 393.616127479,
+          "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+          "q_kW": 102.53788008095877,
+          "peak_kW": 765.4293424851131,
+          "ratio": 0.13396126120283014,
+          "supply_ratio": null,
+          "oxygen_vol_percent": 20.5579222916,
+          "ventilationLimited": false,
+          "oxygenLimited": false,
+          "starved": false,
+          "stage": 0,
+          "label": "① 초기",
+          "cap": 0,
+          "partial": true
+        }
+      }
+    },
+    {
+      "name": "jet:CUT:CAVITY:ROOM",
+      "visible": true,
+      "position": [
+        46.036352571020366,
+        17.97,
+        0.7863525710203695
+      ],
+      "scale": [
+        1.427294857959261,
+        1.427294857959261,
+        1.9431387869909438
+      ],
+      "renderOrder": 20,
+      "maskPass": 1,
+      "values": {
+        "q_kW": 799.9950284220413,
+        "hrrpua": 500,
+        "width": 1.427294857959261,
+        "height": 1.427294857959261,
+        "length": 1.9431387869909438,
+        "normal": [
+          0,
+          -1
+        ],
+        "receiver": "CAD_1F_R5",
+        "vent": "CUT",
+        "basis": "DISPLAY ONLY: receiver aggregate DJET allocated by saved upper outflow (total outflow fallback); not native per-vent HRR",
+        "combustion": {
+          "supply_kW": null,
+          "oxygen_fraction": 0.205579222916,
+          "oxygen_basis": "receiving lower layer",
+          "Tu": 393.616127479,
+          "basis": "receiving jet: incoming fuel rate × saved heat of combustion when available; never donor-source supply",
+          "q_kW": 799.9950284220413,
+          "peak_kW": 5696.337792314887,
+          "ratio": 0.1404402367958832,
+          "supply_ratio": null,
+          "oxygen_vol_percent": 20.5579222916,
+          "ventilationLimited": false,
+          "oxygenLimited": false,
+          "starved": false,
+          "stage": 0,
+          "label": "① 초기",
+          "cap": 0,
+          "partial": true
+        }
+      }
+    }
+  ]
+}

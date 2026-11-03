@@ -1,6 +1,6 @@
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PYROCAST_PLAYWRIGHT||'playwright');
-const phase=process.argv[2]||'before',out=path.resolve('reviews/B5-20261103',phase);fs.mkdirSync(out,{recursive:true});
+const phase=process.argv[2]||'before',out=path.resolve(process.env.PYROCAST_REVIEW_DIR||'reviews/B5-20261103',phase);fs.mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const report={errors:[],defaults:[],options:[]};
 try{

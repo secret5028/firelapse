@@ -1,11 +1,23 @@
 {
-  "revision": "B5-option-review-20261103",
+  "revision": "B5-review-followup-20261103",
   "glow_start_C": 450,
   "glow_full_C": 800,
   "brown_start_C": 120,
   "soot_default": 0.1,
   "starved_o2_vol": 15,
   "starved_vent_ratio": 0.8,
-  "soot_cap_coefficients": [0.32, 0.20, 0.10, 0.45],
-  "soot_cap_basis": "display-only thickness coefficients; not a soot mass calculation"
+  "soot_cap_coefficients": [
+    0.32,
+    0.2,
+    0.1,
+    0.45
+  ],
+  "soot_cap_basis": "display-only thickness coefficients; not a soot mass calculation",
+  "brown_weight": 0.5,
+  "edge_density_max": 0.3,
+  "glow_density_start": 0.3,
+  "glow_strong_C": 600,
+  "cap_opacity": 0.5,
+  "cap_radius_scale": 1.5,
+  "smoke_boundary_fade_m": 0.03
 }

@@ -2,7 +2,7 @@
 import {smokeLayerVisibility} from './smoke_visual.js';
 // BEGIN generated display config
 export const displayConfig = {
-  "revision": "B5-option-review-20261103",
+  "revision": "B5-review-followup-20261103",
   "glow_start_C": 450,
   "glow_full_C": 800,
   "brown_start_C": 120,
@@ -15,7 +15,14 @@ export const displayConfig = {
     0.1,
     0.45
   ],
-  "soot_cap_basis": "display-only thickness coefficients; not a soot mass calculation"
+  "soot_cap_basis": "display-only thickness coefficients; not a soot mass calculation",
+  "brown_weight": 0.5,
+  "edge_density_max": 0.3,
+  "glow_density_start": 0.3,
+  "glow_strong_C": 600,
+  "cap_opacity": 0.5,
+  "cap_radius_scale": 1.5,
+  "smoke_boundary_fade_m": 0.03
 };
 // END generated display config
 // Display classification only: use the entrained layer, never substitute upper
@@ -264,7 +271,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
  vec3 wp=p*uSize,drift=wp*.65+vec3(uTime*.09,-uTime*.06,-uTime*.035);
  float coarse=noise3(drift),fine=noise3(drift*2.07+7.);
  float n=.68*coarse+.32*fine;
- float edge=smoothstep(0.,mix(.08,.025,uDarkSmoke),p.z)*smoothstep(0.,.025,1.-p.z);
+ float edge=smoothstep(0.,min(.025,${Number(displayConfig.smoke_boundary_fade_m).toFixed(3)}/max(.03,uSize.z)),p.z)*smoothstep(0.,.025,1.-p.z);
  float d=uOD*2.302585*mix(.25,1.75,smoothstep(.12,.88,n))*edge;
  float a=1.-exp(-d*worldStep);vec3 col=mix(vec3(.13,.15,.17),vec3(.48,.50,.51),n*.65+p.z*.25);
  vec3 dark=mix(vec3(.012,.015,.019),vec3(.19,.20,.21),smoothstep(.25,.72,n)*.85+p.z*.1);
@@ -306,6 +313,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
  // variant adds colour/motion only; extinction, masks and HRR dimensions stay.
  const b5Fragment=fragment
   .replace('uniform float uTime,uOD,','uniform float uStage,uStarved,uSoot;uniform float uTime,uOD,')
+  .replace('vec4 sum=vec4(0.);float jitter','float capSum=0.;vec4 sum=vec4(0.);float jitter')
   .replace('float speed=mix(2.8,2.3+variant*.55,uStyle);','float speed=mix(2.8,2.3+variant*.55,uStyle)*mix(1.,.65,uStarved);')
   .replace('*.08*z;','*.08*z*mix(1.,1.4,uStarved);')
   .replace('col=mix(col,mix(uStageColor*.55,uStageColor,clamp(d*1.4,0.,1.)),uGrowth*.8);sum.rgb',`col=mix(col,mix(uStageColor*.55,uStageColor,clamp(d*1.4,0.,1.)),uGrowth*.8);
@@ -313,18 +321,27 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
  else if(uStage<1.5)col=mix(vec3(1.,.35,.02),vec3(1.,.85,.18),smoothstep(.08,.75,z)+.1*n);
  else if(uStage<2.5)col=mix(vec3(1.,.50,.06),vec3(1.,.98,.85),smoothstep(.2,1.,d)*(1.-z));
  else col=mix(vec3(.35,.03,0.),vec3(.7,.1,.02),clamp(d,0.,1.));
- float cap=smoothstep(1.-uPower-.08,1.-uPower+.04,z)*(1.-smoothstep(.94,1.,z))*smoothstep(.40,.72,n)*(1.-smoothstep(.60,1.,length((p.xy-.5)*2.)));
- float capA=(1.-exp(-cap*worldStep*5.))*step(.001,uPower);
+ float capStart=max(.05,1.-uPower-.08);
+ float capFade=1.-smoothstep(capStart,1.,z);
+ float capEdge=smoothstep(0.,.2,p.x)*smoothstep(0.,.2,1.-p.x)*smoothstep(0.,.2,p.y)*smoothstep(0.,.2,1.-p.y);
+ float cap=smoothstep(capStart,capStart+.06,z)*capFade*smoothstep(.32,.72,n)*capEdge*(1.-smoothstep(.60,1.,length((p.xy-.5)*2.)/${Number(displayConfig.cap_radius_scale).toFixed(2)}));
+ float capA=(1.-exp(-cap*worldStep*3.))*step(.001,uPower);
+ // Bound accumulated cap opacity, not just each ray sample's alpha.
+ capA=min(capA,max(0.,(${Number(displayConfig.cap_opacity).toFixed(2)}-capSum)/max(.001,1.-capSum)));capSum+=(1.-capSum)*capA;
  float totalA=a+capA*(1.-a);col=(col*a*(1.-capA)+vec3(.11,.10,.09)*capA)/max(.0001,totalA);a=totalA;
  sum.rgb`)
   .replace('sum.rgb+=(1.-sum.a)*col*a;sum.a+=(1.-sum.a)*a;\n }\n }if(sum.a>.985)',`// B5 soot colour: no changes to d, a or ODu. Red is a display cue,
  // not resolved blackbody radiation or additional combustion.
  float lum=clamp(.48-3.2*uSoot,0.,1.);
  float warm=clamp((uLayerTemp-${Number(displayConfig.brown_start_C).toFixed(1)})/500.,0.,1.);
- col=vec3(lum+.3*(1.-smoothstep(.2,.75,n)))+vec3(.10,.03,-.08)*warm;
+ float edgeLight=.3*(1.-smoothstep(0.,${Number(displayConfig.edge_density_max).toFixed(2)},n));
+ col=vec3(lum+edgeLight)+vec3(.10,.03,-.08)*warm*${Number(displayConfig.brown_weight).toFixed(2)};
  float glow=clamp((uLayerTemp-${Number(displayConfig.glow_start_C).toFixed(1)})/${Number(displayConfig.glow_full_C-displayConfig.glow_start_C).toFixed(1)},0.,1.);
- float density=smoothstep(.5,.85,n)*edge;
- col+=mix(vec3(.45,.03,0.),vec3(.95,.15,.05),glow)*glow*density*uNoiseAmp*uTemperatureSmoke;
+ float density=smoothstep(${Number(displayConfig.glow_density_start).toFixed(2)},.65,n)*edge;
+ float strong=smoothstep(${Number(displayConfig.glow_start_C).toFixed(1)},${Number(displayConfig.glow_strong_C).toFixed(1)},uLayerTemp);
+ float emission=density*strong*mix(.65,1.,clamp(uNoiseAmp,0.,1.))*uTemperatureSmoke;
+ // Tint the dense interior red; weak noise still keeps the 600 C glow legible.
+ col=col*(1.-.9*emission)+mix(vec3(.45,.03,0.),vec3(.95,.15,.05),glow)*emission;
  col=clamp(col,0.,1.);
  sum.rgb+=(1.-sum.a)*col*a;sum.a+=(1.-sum.a)*a;
  }
@@ -339,7 +356,9 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
   for(const p of ps)for(const ring of [p.o,...p.h]){ring.forEach((v,i)=>{const px=(v[0]-x)/w*256,py=(v[1]-y)/d*256;i?ctx.lineTo(px,py):ctx.moveTo(px,py)});ctx.closePath()}ctx.fill('evenodd');
   const mask=new THREE.CanvasTexture(canvas);mask.flipY=false;mask.minFilter=mask.magFilter=THREE.NearestFilter;
   roomMasks.set(r.key,{x,y,w,d,ps,canvas,flameMask:null});
-  for(const lower of [false,true]){const mesh=make(mask,roots.get(r.floor));let boundary=null;
+  // Upper layer only. Lower-zone values remain in playback/conditions, but no
+  // lower smoke mesh, visibility threshold or UI toggle is created.
+  for(const lower of [false]){const mesh=make(mask,roots.get(r.floor));let boundary=null;
    if(!lower){const points=[];for(const p of ps)for(const ring of [p.o,...p.h])for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length];for(const z of [0,1])points.push(a[0],a[1],z,b[0],b[1],z);}
     const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(points,3));
     boundary=new THREE.LineSegments(geo,new THREE.LineBasicMaterial({color:'#b16cff',transparent:true,opacity:.72,depthTest:false,depthWrite:false}));boundary.visible=false;boundary.renderOrder=23;boundary.raycast=()=>{};roots.get(r.floor).add(boundary);}
@@ -395,7 +414,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
  for(const jet of jets){const bounds=roomMasks.get(jet.room_key),r=rows.find(r=>r.key===jet.room_key);if(!bounds||!r)continue;
   const mesh=make(flameMask(bounds),roots.get(jet.floor)),u=mesh.material.uniforms;
   mesh.name=jet.id;mesh.userData.doorJet=jet.id;mesh.renderOrder=20;u.uFire.value=1;u.uJet.value=1;
-  u.uGrowth={value:1};u.uCluster={value:2};u.uStageColor={value:new THREE.Color(1,.66,.14)};u.uJitterSeed={value:flameIdPhase(jet.id)};
+  u.uGrowth={value:1};u.uCluster={value:0};u.uStageColor={value:new THREE.Color(1,.66,.14)};u.uJitterSeed={value:flameIdPhase(jet.id)};
   const peak=Math.max(0,...jet.HRR_kW);jetMeshes.push({jet,mesh,bounds,r,peak,peakIndex:jet.HRR_kW.indexOf(peak)});
  }
  const wallGlows=[];
@@ -405,7 +424,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
   }
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geo.computeVertexNormals();
   const mat=new THREE.MeshStandardMaterial({color:0x8c3105,emissive:0xff650e,emissiveIntensity:1,transparent:true,opacity:0,side:THREE.DoubleSide,depthTest:false,depthWrite:false});
-  const mesh=new THREE.Mesh(geo,mat);mesh.name='cavity-wall-glow:'+f.id;mesh.userData.flameEffect=true;mesh.renderOrder=20;mesh.visible=false;mesh.raycast=()=>{};roots.get(f.floor).add(mesh);
+  const mesh=new THREE.Mesh(geo,mat);mesh.name='cavity-wall-glow:'+f.id;mesh.userData.flameEffect=true;mesh.renderOrder=19;mesh.visible=false;mesh.raycast=()=>{};roots.get(f.floor).add(mesh);
   wallGlows.push({f,mesh,peak:Math.max(0,...f.hrr),q:0});
  }
  function sizeJet(e,now){const {jet,mesh,bounds,r}=e,u=mesh.material.uniforms,q=jet.q||0,g=jet.geometry;
@@ -459,7 +478,7 @@ function createCfastRealistic({rows,roots,geometry,fire,centre,floorIndex,fires,
    for(const e of flames){const {f,flame,light,fuel,ring}=e,j=Math.min((f.hrr?.length||1)-1,Math.floor(s.time/s.step)),u=s.time/s.step-j,interp=a=>a?THREE.MathUtils.lerp(a[j],a[Math.min(j+1,a.length-1)],u):0,ign=f.ignition_time!==null&&s.time>=f.ignition_time,q=ign?(f.hrr?interp(f.hrr):s.q):0,r=rows.find(r=>r.key===f.room_key)||fire,h=Math.max(0,Math.min(r.height-f.base_height-.1,f.flame_height?interp(f.flame_height):s.h)),c=f.position,width=Math.max(.3,Math.min(2,h*.62));e.q=q;flame.material.uniforms.uFlameGain.value=s.flameGain??1;e.physicalHeight=h;e.maxHeight=Math.max(.05,r.height-f.base_height-.1);flame.visible=active&&s.flamesEnabled&&q>(s.positiveHrrOnly?0:1.0);flame.position.set(c[0]-width/2,c[1]-width/2,f.base_height);flame.scale.set(width,width,Math.max(.001,h));if(flame.visible)sizeFlame(e);if(light){light.position.set(c[0],c[1],f.base_height+Math.max(.2,h*.3));light.intensity=flame.visible?1.2*Math.min(1,q/1000):0;}ring.visible=active&&q>(s.positiveHrrOnly?0:1.0);if(fuel){fuel.visible=active;fuel.traverse(m=>{if(m.userData.fuelColor!==undefined)m.material.color.setHex(m.userData.fuelColor)})}}
   },
   animate(now){if(!active)return;for(const e of jetMeshes)if(e.mesh.visible){sizeJet(e,now);updateMesh(e.mesh,now);}plumeDisplay.animate(now);for(const e of gasFlames)if(e.mesh.visible&&groups[floorIndex.get(e.v.r.floor)].visible)updateMesh(e.mesh,now);for(const v of volumes)if(v.mesh.visible&&groups[floorIndex.get(v.r.floor)].visible)updateMesh(v.mesh,now);for(const e of flames){if(e.flame.visible){sizeFlame(e,now);updateMesh(e.flame,now);}if(e.light)e.light.intensity=e.flame.visible?1.2*Math.min(1,e.q/1000)*(.9+.1*Math.sin(now*.011)):0;}if(state?.flameDisplay==='hrr'){const lights=flames.map(e=>e.light).filter(Boolean),top=flames.filter(e=>e.flame.visible&&e.q>0).sort((a,b)=>b.q-a.q||String(a.f.id).localeCompare(String(b.f.id))).slice(0,3);lights.forEach((light,i)=>{const e=top[i];light.userData.fireId=e?.f.id??null;const starved=state?.flameStyle==='four_stage'&&e?.flame.userData.combustion?.starved;light.color.setHex(starved?0x590800:0xff8c28);light.intensity=e?1.2*Math.min(1,e.q/1000)*(.9+.1*Math.sin(now*.011)):0;if(starved)light.intensity*=.5;if(e){roots.get(e.f.floor).add(light);light.position.set(e.f.position[0],e.f.position[1],(e.f.base_height||0)+Math.max(.2,e.physicalHeight*.3));}});}else{for(const e of flames)if(e.light&&e.light.parent!==roots.get(e.f.floor))roots.get(e.f.floor).add(e.light);}},
-  stats(){return {combustion:flames.map(e=>({id:e.f.id,room:e.f.room_key,visible:e.flame.visible,...flameFourStage(e.q,e.peak,e.f.combustion)})),smoke:volumes.filter(v=>!v.lower).map(v=>({room:v.r.key,visible:v.mesh.visible,soot:v.r.soot,temperature:v.mesh.material.uniforms.uLayerTemp.value,od:v.mesh.material.uniforms.uOD.value,opacity:v.mesh.material.uniforms.uOpacity.value})),doorJets:jetMeshes.filter(e=>e.mesh.visible).map(e=>e.mesh.userData.values),unmappedJets,wallGlows:wallGlows.map(e=>({id:e.f.id,q_kW:e.q,visible:e.mesh.visible,combustion:e.combustion})),gasFlames:gasFlames.filter(e=>e.mesh.visible).map(e=>({room:e.v.r.key,q_kW:e.q,displayOnly:true})),smokeColor:'original_gray_with_risk_layer_boundary',fuelUnitCount:definitions.reduce((n,f)=>n+(f.fuel_units?.length||0),0),fuelHeights:[...new Set(definitions.flatMap(f=>(f.fuel_units||[]).map(u=>u.height_m)))],plume:plumeDisplay.stats(),volumeCount:volumes.filter(v=>v.mesh.visible).length,flames:flames.filter(e=>e.flame.visible).map(e=>e.f.id),method:'polygon-masked-volume-raymarch',steps:32,visibility:'geometry < smoke < flames',flameDimensions:state?.flameDisplay==='hrr'?'display-only Q/HRRPUA area capped by cell area; shared Heskestad height; CAD clipped':state?.flameDisplay==='growth'?'display-only HRR-scaled footprint from room/cell area, CAD clipped; no new fires':state?.flameDisplay==='native'?'native dimensions clipped at room ceiling':'display-only compact location symbols; native HRR unchanged',flameSizes:flames.filter(e=>e.flame.visible).map(e=>({id:e.f.id,physicalHeight:e.physicalHeight,displayHeight:e.displayHeight,enlarged:e.enlarged})),smokeRenderOrder:10,flameRenderOrder:20,depthTest:false}}
+  stats(){return {upperVolumeCount:volumes.filter(v=>!v.lower).length,lowerVolumeCount:volumes.filter(v=>v.lower).length,combustion:flames.map(e=>({id:e.f.id,room:e.f.room_key,visible:e.flame.visible,...flameFourStage(e.q,e.peak,e.f.combustion)})),smoke:volumes.filter(v=>!v.lower).map(v=>({room:v.r.key,visible:v.mesh.visible,bottom_m:v.mesh.position.z,height_m:v.mesh.scale.z,soot:v.r.soot,temperature:v.mesh.material.uniforms.uLayerTemp.value,od:v.mesh.material.uniforms.uOD.value,opacity:v.mesh.material.uniforms.uOpacity.value})),doorJets:jetMeshes.filter(e=>e.mesh.visible).map(e=>e.mesh.userData.values),unmappedJets,wallGlows:wallGlows.map(e=>({id:e.f.id,q_kW:e.q,visible:e.mesh.visible,combustion:e.combustion})),gasFlames:gasFlames.filter(e=>e.mesh.visible).map(e=>({room:e.v.r.key,q_kW:e.q,displayOnly:true})),smokeColor:'original_gray_with_risk_layer_boundary',fuelUnitCount:definitions.reduce((n,f)=>n+(f.fuel_units?.length||0),0),fuelHeights:[...new Set(definitions.flatMap(f=>(f.fuel_units||[]).map(u=>u.height_m)))],plume:plumeDisplay.stats(),volumeCount:volumes.filter(v=>v.mesh.visible).length,flames:flames.filter(e=>e.flame.visible).map(e=>e.f.id),method:'polygon-masked-volume-raymarch',steps:32,visibility:'geometry < smoke < flames',flameDimensions:state?.flameDisplay==='hrr'?'display-only Q/HRRPUA area capped by cell area; shared Heskestad height; CAD clipped':state?.flameDisplay==='growth'?'display-only HRR-scaled footprint from room/cell area, CAD clipped; no new fires':state?.flameDisplay==='native'?'native dimensions clipped at room ceiling':'display-only compact location symbols; native HRR unchanged',flameSizes:flames.filter(e=>e.flame.visible).map(e=>({id:e.f.id,physicalHeight:e.physicalHeight,displayHeight:e.displayHeight,enlarged:e.enlarged})),smokeRenderOrder:10,flameRenderOrder:20,depthTest:false}}
  };
 }
 

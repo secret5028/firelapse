@@ -57,6 +57,26 @@ class Acceptance(unittest.TestCase):
             row=f['evidence']['row'];encoded=json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True)
             self.assertIn(json.dumps(row,sort_keys=True),encoded)
         self.assertIn('초안',b['text']);self.assertTrue(b['facts'])
+    def test_display_labels_and_zero_tooltips(self):
+        from lite_ai_briefing import facts_for
+        value=briefing(self.s,self.ctx)
+        self.assertNotIn('CAD_',value['text'])
+        self.assertIn('3F R3 · 계측기보관실',value['text'])
+        self.assertIn('1F D3',value['text'])
+        for index,tip in [(0,'지수 0: 평가됨'),(None,'미평가: 저장된 지수 없음'),(22,'평가된 지수')]:
+            row={'room':'CAD_3F_R3','label':'3F R3','end_m':94,'phenomenon':'FO','index':index}
+            call={'tool':'get_route','data':{'route':{'entry':'CAD_1F_D3','target':'CAD_3F_R3','length':94,'hoses':7,'stairs':2},'risk':{'rows':[row]}}}
+            fact=facts_for(call,0)[1]
+            self.assertTrue(fact['text'].endswith('— 22' if index==22 else '—'))
+            self.assertEqual(fact['tooltip'],tip)
+            self.assertEqual(fact['room'],'CAD_3F_R3')
+            self.assertIs(fact['evidence']['row'],row)
+        for tool in ['get_building','get_mc_summary']:
+            call={'tool':tool,'data':{'room':'CAD_3F_R3','door':'CAD_1F_D3'}}
+            fact=facts_for(call,0)[0]
+            self.assertNotIn('CAD_',fact['text'])
+            self.assertEqual(fact['evidence']['row']['door'],'CAD_1F_D3')
+
     def test_6_no_rule(self):
         v=self.invoke('분무 각도는?',[plan(missing=True)]);self.assertEqual(v['text'],'규칙표에 없음');self.assertEqual(v['facts'],[])
     def test_unknown_is_not_safe_and_predicates_same_frame(self):

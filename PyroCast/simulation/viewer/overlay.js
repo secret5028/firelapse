@@ -466,19 +466,20 @@ function createAssistantPanel({store,getContext,onNavigate,onProposal,onSaved}){
  select.onchange=pos;range.oninput=()=>{if(select.value==='right')document.body.style.setProperty('--shell-side',range.value+'px');pos();window.dispatchEvent(new Event('resize'));};pos();
  const priorFuel=$('aiFuel'),fuelMarker=document.createComment('assistant fuel return');if(priorFuel){priorFuel.before(fuelMarker);$('aiLegacyFuel').append(priorFuel);}
  const status=s=>{$('aiStatus').textContent=s;};
+ const readable=value=>String(value).replace(/CAD_[A-Za-z0-9]+_[A-Za-z0-9_]+/g,id=>id.slice(4).replaceAll('_',' '));
  const offline=!!window.__PYROCAST_OFFLINE__;
  async function api(path,body){const r=await fetch('/cfbt/lite/ai/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:abort.signal});const v=await r.json();if(!r.ok)throw Error(v.error||'요청 실패');return v;}
  function buttons(){for(const id of ['aiSend','aiBrief'])$(id).disabled=busy||offline;}
  function answer(value){
   const box=document.createElement('div');box.className='aiAnswer';const used=new Set();
-  function factButton(fact){const b=document.createElement('button');b.type='button';b.className='aiFact';b.textContent=fact.text;b.disabled=!fact.room;b.onclick=()=>{try{onNavigate({...fact,case:value.case});}catch(e){status(e.message);}};box.append(b);}
+  function factButton(fact){const b=document.createElement('button');b.type='button';b.className='aiFact';b.textContent=fact.text;if(fact.tooltip)b.title=fact.tooltip;b.disabled=!fact.room;b.onclick=()=>{try{onNavigate({...fact,case:value.case});}catch(e){status(e.message);}};box.append(b);}
   for(const line of (value.text||'').split('\n')){const fact=(value.facts||[]).find(f=>f.text===line.trim());if(fact){used.add(fact);factButton(fact);}else{const text=document.createElement('div');text.textContent=line;box.append(text);}}
   for(const fact of value.facts||[])if(!used.has(fact))factButton(fact);
   const basis=document.createElement('div');basis.className='aiEvidence';basis.textContent=`근거: 도구 호출 ${value.calls?.length??0}회 · 사례 ${value.case??'미선택'} · 규칙 ${(value.rules||[]).join(', ')||'없음'}`;box.append(basis);
   if(value.briefing_id){const save=document.createElement('button');save.textContent='보고서로 저장';save.disabled=offline;save.onclick=async()=>{save.disabled=true;try{const r=await api('reports/save',{briefing_id:value.briefing_id});await onSaved(r);status('사례 보고서 저장 완료');}catch(e){status(e.message);save.disabled=false;}};box.append(save);}
   $('aiConversation').append(box);box.scrollIntoView({block:'nearest'});lastAnswer=value;
-  for(const proposal of value.proposals||[]){const block=document.createElement('div');const pre=document.createElement('pre');pre.textContent=JSON.stringify(proposal,null,2);block.append(pre);
-   const selected=[];if(proposal.rows)for(const row of proposal.rows){const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.dataset.room=row.room_id;label.append(c,document.createTextNode(`${row.room_id} · ${row.proposed_usage} · ${row.load} MJ/m²`));block.append(label);selected.push(c);}
+  for(const proposal of value.proposals||[]){const block=document.createElement('div');const pre=document.createElement('pre');pre.textContent=readable(JSON.stringify(proposal,null,2));block.append(pre);
+   const selected=[];if(proposal.rows)for(const row of proposal.rows){const label=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.dataset.room=row.room_id;label.append(c,document.createTextNode(`${readable(row.room_id)} · ${row.proposed_usage} · ${row.load} MJ/m²`));block.append(label);selected.push(c);}
    const apply=document.createElement('button');apply.textContent=proposal.kind==='mc'||proposal.kind==='screening'?'사용자 실행':'선택 적용';apply.disabled=offline;apply.onclick=async()=>{apply.disabled=true;try{await onProposal(proposal,selected.filter(c=>c.checked).map(c=>c.dataset.room),value.building);status('요청 반영 · 현재 사례는 유지됩니다');block.remove();}catch(e){status(e.message);apply.disabled=false;}};block.append(apply);$('aiProposals').append(block);$('aiPending').open=true;
   }
  }
@@ -488,7 +489,7 @@ function createAssistantPanel({store,getContext,onNavigate,onProposal,onSaved}){
  }
  $('aiChat').onsubmit=e=>{e.preventDefault();request();};$('aiBrief').onclick=()=>request(true);$('aiCollapse').onclick=()=>{root.open=false;};
  const saved=document.createElement('details');saved.id='aiSavedReports';saved.innerHTML='<summary>AI 브리핑 보고서</summary><div></div>';$('resultCase').append(saved);
- async function reports(){const c=getContext();if(!c.case||reportCase===c.case)return;reportCase=c.case;try{const value=offline?(window.__PYROCAST_OFFLINE__.assistant_reports||[]):(await api('reports/list',{context:c})).reports;if(disposed)return;saved.querySelector('div').replaceChildren();for(const r of value){const item=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('pre');s.textContent=r.case+' · '+r.created;p.textContent=r.markdown;item.append(s,p);saved.querySelector('div').append(item);}}catch(e){if(!disposed)status(e.message);}}
+ async function reports(){const c=getContext();if(!c.case||reportCase===c.case)return;reportCase=c.case;try{const value=offline?(window.__PYROCAST_OFFLINE__.assistant_reports||[]):(await api('reports/list',{context:c})).reports;if(disposed)return;saved.querySelector('div').replaceChildren();for(const r of value){const item=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('pre');s.textContent=r.case+' · '+r.created;p.textContent=readable(r.markdown);item.append(s,p);saved.querySelector('div').append(item);}}catch(e){if(!disposed)status(e.message);}}
  const off=store.subscribe('result',()=>{if(store.get('result'))reports();});buttons();
  if(offline)status('보기 전용');
  return {refreshReports(){reportCase=null;return reports();},dispose(){disposed=true;abort.abort();off();if(priorFuel)fuelMarker.replaceWith(priorFuel);root.remove();placement.remove();style.remove();saved.remove();document.body.style.removeProperty('--shell-side');}};

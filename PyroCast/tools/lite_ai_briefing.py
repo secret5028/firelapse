@@ -1,6 +1,6 @@
 """Server-only rule matching and fixed briefing; no tactical text from an LLM."""
 import json,time,uuid,datetime,threading
-from lite_ai_tools import ROOT,SIM,TYPES,LABELS,read,finite,at
+from lite_ai_tools import ROOT,SIM,TYPES,LABELS,read,finite,at,display_label,display_text
 from result_catalog import atomic_json
 REPORTS={}
 LOCK=threading.RLock()
@@ -34,30 +34,34 @@ def match_case(service,a,route,rules):
             for rule in rules['rules']:
                 key=(rid,rule['code'])
                 if key not in seen and matches(rule,values):
-                    seen.add(key);output.append({'room':rid,'cell':c['key'],'time_s':t,'code':rule['code'],'text':rule['text'],'notice':rules['notice'],'values':values})
+                    seen.add(key);output.append({'room':rid,'cell':c['key'],'label':display_label(rid,c.get('display_name')),'time_s':t,'code':rule['code'],'text':rule['text'],'notice':rules['notice'],'values':values})
     return output
 
 def event_fact(e,tool_index):
-    label=e['room']+(' · '+e['name'] if e.get('name') else '')
+    label=display_label(e['room'],e.get('name'))
     return {'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],'text':f"{label} · {LABELS[e['phenomenon']]} 최고 {number(e['peak'])} @ {stamp(e['peak_s'])} · 최초 기준 도달 {stamp(e['first_s'])}",'evidence':{'call':tool_index,'row':e},'numbers':[v for v in [e['peak'],e['peak_s'],e['first_s']] if v is not None]}
 
 def facts_for(call,i):
     name=call['tool'];d=call['data'];facts=[]
     if name=='get_peak_events':return [event_fact(e,i) for e in d if e['peak'] is not None]
     if name=='get_case_summary':
-        return [{'room':d['origin'],'cell':d['origin'],'text':f"현재 저장 사례 화점: {d['origin']} · {d['engine']} · 종료 {stamp(d['end_s'])}",'evidence':{'call':i,'row':d}}]+[event_fact(e,i) for k in TYPES for e in d['events'][k][:1]]
+        return [{'room':d['origin'],'cell':d['origin'],'text':f"현재 저장 사례 화점: {d.get('origin_label',display_label(d['origin']))} · {d['engine']} · 종료 {stamp(d['end_s'])}",'evidence':{'call':i,'row':d}}]+[event_fact(e,i) for k in TYPES for e in d['events'][k][:1]]
     if name=='get_ranking':
         for r in d['second'][:3]:
-            facts.append({'room':r['room'],'time_s':r.get('first_FO_s'),'text':f"{r['room']} · ② {r.get('rank2') or '미평가'}위 · 연소 {number(r.get('burning_room_count'))} · 주의 {number(r.get('attention_room_count'))} · 최초 FO {stamp(r.get('first_FO_s'))}",'evidence':{'call':i,'row':r}})
+            facts.append({'room':r['room'],'time_s':r.get('first_FO_s'),'text':f"{display_label(r['room'],r.get('name'))} · ② {r.get('rank2') or '미평가'}위 · 연소 {number(r.get('burning_room_count'))} · 주의 {number(r.get('attention_room_count'))} · 최초 FO {stamp(r.get('first_FO_s'))}",'evidence':{'call':i,'row':r}})
     elif name=='get_route':
-        r=d['route'];facts.append({'text':r.get('error') or f"{r['entry']} → {r['target']} · {number(r['length'])} m · 호스 {r['hoses']}본 · 계단 {r['stairs']}회",'room':r.get('target'),'evidence':{'call':i,'row':r}})
-        for r in (d.get('risk') or {}).get('rows',[]):facts.append({'text':f"{r['label']} · 누적 {number(r['end_m'])} m · {r['phenomenon'] if r.get('index') is not None and r['index']>=70 else '—'} {number(r.get('index'))}",'room':r.get('room'),'evidence':{'call':i,'row':r}})
+        r=d['route'];facts.append({'text':display_text(r['error']) if r.get('error') else f"{r.get('entry_label',display_label(r['entry']))} → {r.get('target_label',display_label(r['target']))} · {number(r['length'])} m · 호스 {r['hoses']}본 · 계단 {r['stairs']}회",'room':r.get('target'),'evidence':{'call':i,'row':r}})
+        for r in (d.get('risk') or {}).get('rows',[]):
+            index=r.get('index');risk='—' if index is None or index==0 else f"{r['phenomenon'] if index>=70 else '—'} {number(index)}"
+            tip='미평가: 저장된 지수 없음' if index is None else ('지수 0: 평가됨' if index==0 else '평가된 지수')
+            if r.get('partial'):tip+=' · 일부 셀/현상 미평가'
+            facts.append({'text':f"{r['label']} · 누적 {number(r['end_m'])} m · {risk}",'tooltip':tip,'room':r.get('room'),'evidence':{'call':i,'row':r}})
     elif name=='get_room_timeline':
         for c in d['cells']:
             for r in c['rows']:
-                facts.append({'room':d['room'],'cell':c['cell'],'time_s':r['time_s'],'text':f"{c['cell']} @ {stamp(r['time_s'])} · 상층 {number(r['Tu'])} ℃ · O₂ {number(r['Ou']*100 if r['Ou'] is not None else None)} % · 연기층 {number(r['h'])} m",'evidence':{'call':i,'row':r}})
+                facts.append({'room':d['room'],'cell':c['cell'],'time_s':r['time_s'],'text':f"{display_label(c['cell'])} @ {stamp(r['time_s'])} · 상층 {number(r['Tu'])} ℃ · O₂ {number(r['Ou']*100 if r['Ou'] is not None else None)} % · 연기층 {number(r['h'])} m",'evidence':{'call':i,'row':r}})
     elif name in ('get_building','list_buildings','get_mc_summary','get_tactic_rules'):
-        facts.append({'text':json.dumps(d,ensure_ascii=False,indent=2),'evidence':{'call':i,'row':d}})
+        facts.append({'text':display_text(json.dumps(d,ensure_ascii=False,indent=2)),'evidence':{'call':i,'row':d}})
     return facts
 
 def briefing(service,a):
@@ -82,10 +86,10 @@ def briefing(service,a):
     used=[]
     for m in rules['matched']:
         if m['room'] not in route_rooms:continue
-        used.append(m['code']);f={'room':m['room'],'cell':m['cell'],'time_s':m['time_s'],'text':f"{m['room']} @ {stamp(m['time_s'])} [{m['code']}] {m['text']} · {m['notice']}",'evidence':{'call':7,'row':m}};facts.append(f);lines.append('   '+f['text'])
+        used.append(m['code']);f={'room':m['room'],'cell':m['cell'],'time_s':m['time_s'],'text':f"{m['label']} @ {stamp(m['time_s'])} [{m['code']}] {m['text']} · {m['notice']}",'evidence':{'call':7,'row':m}};facts.append(f);lines.append('   '+f['text'])
     if not used:lines.append('   규칙 없음 또는 판정자료 미평가')
     lines.append('5. 한계: 조건 충족 지수이며 발생 예측 아님. 다중 셀 방 평균 없음. 전술 규칙은 사용자 제공 초안이며 현장 지휘관 판단 우선.')
-    lines.extend('   '+str(v) for v in summary['limits'])
+    lines.extend('   '+display_text(v) for v in summary['limits'])
     value={'building':a['building'],'case':a['case'],'text':'\n'.join(lines),'facts':facts,'calls':calls,'rules':sorted(set(used)),'proposals':[],'status':'초안 · 사용자(CFBT) 검수 필요'}
     token=uuid.uuid4().hex;value['briefing_id']=token
     with LOCK:

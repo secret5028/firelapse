@@ -1,7 +1,7 @@
 // Dimension-only CAD bootstrap; all panels, playback and layers are production.
 import * as T from '/vendor/three.module.js';
 import {OrbitControls} from '/vendor/OrbitControls.js';
-import {attach} from '/cfbt/overlay.js';
+import {attach} from '/cfbt/overlay.js?v=scale-view-2';
 import {createIncidentLayer} from './incident-layer.js';
 import {createExteriorLayer} from './exterior-layer.js';
 import {createScaleReference} from './scale-reference.js';
@@ -30,6 +30,19 @@ try{
  $('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
  const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor};
  const app=await attach(viewer);
+ // Include the scale references in the initial framing; room-only fitting can
+ // put the person and most of the truck below the canvas in a narrow viewport.
+ const scaleView=document.createElement('button');scaleView.id='wandoScaleView';scaleView.textContent='소방차·사람 보기';$('cameraButtons').append(scaleView);
+ const showScale=()=>{
+  app.store.dispatch('layers/toggle',{id:'route',visible:true});app.store.dispatch('route/set',{vehicle_visible:true});app.render();
+  const box=new T.Box3(),room=B.floors[0].rooms.find(r=>r.id==='R5');
+  for(const p of room.polys)for(const [x,y] of p.o)for(const z of [0,B.floors[0].h])box.expandByPoint(new T.Vector3(x,y,z));
+  const route=S.getObjectByName('route');route?.updateWorldMatrix(true,true);
+  route?.traverse(o=>{if(o.name.startsWith('scale-truck:')||o.name.startsWith('scale-person:'))box.union(new T.Box3().setFromObject(o));});
+  const sphere=box.getBoundingSphere(new T.Sphere()),halfV=T.MathUtils.degToRad(C.fov/2),halfH=Math.atan(Math.tan(halfV)*C.aspect),distance=sphere.radius/Math.sin(Math.min(halfV,halfH))*1.12;
+  O.target.copy(sphere.center);C.position.copy(sphere.center).addScaledVector(new T.Vector3(25,-35,28).normalize(),distance);O.update();app.render();
+ };
+ scaleView.onclick=showScale;showScale();
  const tactical=await(await fetch('./tactical.json')).json();
  const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));

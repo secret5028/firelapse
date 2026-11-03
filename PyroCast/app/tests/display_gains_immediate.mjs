@@ -7,7 +7,7 @@ try{
  const p=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1});p.setDefaultTimeout(120000);
  p.on('pageerror',e=>report.errors.push(e.message));
  await p.addInitScript(()=>{performance.now=()=>180000;const raf=requestAnimationFrame;window.requestAnimationFrame=cb=>raf(()=>{if(!window.__holdFrames)cb(180000);});});
- await p.route('**/operating.js',async route=>{const r=await route.fetch();await route.fulfill({response:r,body:(await r.text()).replace('const app=await attach(viewer);','const app=await attach(viewer);window.__ui=app;window.__ready=true;')});});
+ await p.route('**/operating.js*',async route=>{const r=await route.fetch();await route.fulfill({response:r,body:(await r.text()).replace('const app=await attach(viewer);','const app=await attach(viewer);window.__ui=app;window.__ready=true;')});});
  await p.goto('http://127.0.0.1:8832/data/wando-coldstore/model.html');await p.waitForFunction(()=>window.__ready);
  await p.evaluate(()=>{const t=document.getElementById('liteTime');t.value=1400;t.oninput();const r=document.getElementById('liteRoom');r.value='CAD_1F_R5';r.onchange();document.getElementById('liteFocus').click();window.__holdFrames=true;});
  const inspect=()=>p.evaluate(()=>{const a=window.__ui,smoke=[],jets=[],walls=[];a.host.scene.traverse(o=>{const u=o.material?.uniforms;if(o.visible&&u?.uFire?.value===0&&u?.uGas?.value===0)smoke.push(u.uOpacity.value);if(o.visible&&o.userData.doorJet)jets.push(u.uFlameGain.value);if(o.visible&&o.name.startsWith('cavity-wall-glow:'))walls.push(o.material.emissiveIntensity);});return {settings:a.store.get('realView'),smoke,jets,walls,panel:[document.getElementById('displaysmokeGain').value,document.getElementById('displayflameGain').value]};});

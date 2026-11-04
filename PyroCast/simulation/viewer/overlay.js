@@ -948,7 +948,8 @@ const __module20=(()=>{
 function wallOpeningVolumes(floor,time=0){
  const cuts=[];
  for(const o of floor.openings||[]){
-  if(!['door','window'].includes(o.kind))continue;
+  if(!['door','door_elev','open_passage','window'].includes(o.kind))continue;
+  const doorLike=o.kind!=='window';
   let fraction=1;if(o.display_schedule){fraction=0;for(const [t,f] of o.display_schedule)if(t<=time)fraction=f;}
   if(!(fraction>0))continue;
   const rings=o.polys?.length?o.polys:(o.geometry_polys||[]).map(p=>p.o),points=rings.flat();
@@ -956,7 +957,7 @@ function wallOpeningVolumes(floor,time=0){
   if(!spans.length){let longest=0,span=null;for(const ring of rings)for(let i=0;i<ring.length;i++){
    const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;span=[a,b];}
   }if(span)spans=[span];}
-  const bottom=o.kind==='door'?(o.sill_m??0):(o.sill_m??o.sill??floor.sill??.9),top=o.kind==='door'?(o.door_h??floor.door_h??2.1):(o.head??floor.head??2.4);
+  const bottom=doorLike?(o.sill_m??0):(o.sill_m??o.sill??floor.sill??.9),top=doorLike?(o.door_h??floor.door_h??2.1):(o.head??floor.head??2.4);
   if(!(top>bottom))continue;
   for(const [a,b] of spans){const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!(length>.02))continue;
    const u=[(b[0]-a[0])/length,(b[1]-a[1])/length],v=[-u[1],u[0]],along=p=>p[0]*u[0]+p[1]*u[1],across=p=>p[0]*v[0]+p[1]*v[1];
@@ -996,7 +997,8 @@ function outsideWallOpeningIntervals(a,b,cuts){
  const extensions=[];
  for(const c of cuts){
   const along=a[0]*c.u[0]+a[1]*c.u[1],normal=a[0]*c.v[0]+a[1]*c.v[1];
-  if(normal<c.min[1]||normal>c.max[1]||!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=.02))continue;
+  const acrossOpening=along>=c.min[0]-.025&&along<=c.max[0]+.025;
+  if(normal<c.min[1]||normal>c.max[1]||(!acrossOpening&&!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=.02)))continue;
   for(const [low,high] of [[-1e6,c.bottom],[c.top,1e6]])extensions.push({...c,min:[along-.025,c.min[1],low],max:[along+.025,c.max[1],high]});
  }
  return outsideOpeningIntervals(a,b,[...cuts,...extensions]);
@@ -1048,8 +1050,56 @@ function trimWallJambFaces(T,source,floorGroup,cuts){
 return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,trimWallLineGeometry,trimWallJambFaces};
 })();
 
-// app/web/layers/building.js
+// app/web/layers/wall_corners.js
 const __module21=(()=>{
+const {outsideWallOpeningIntervals}=__module20;
+// Display geometry only: reject seams inside the union of touching wall pieces.
+const isWallMesh=o=>o.isMesh&&/(?:_wall|_door_head|_win_low|_win_head)$/.test(o.name||'');
+function isReplacedWallOutline(T,o,floor){
+ if(!o.isLineSegments)return false;if(/_(edge|wall)(_|$)/i.test(o.name||''))return true;if(!o.userData.cadOutline)return false;
+ const bounds=source=>{source.updateWorldMatrix(true,false);source.geometry.computeBoundingBox();return source.geometry.boundingBox.clone().applyMatrix4(source.matrixWorld);};
+ const b=bounds(o);return floor.objects.filter(isWallMesh).some(m=>{const q=bounds(m);return b.min.distanceTo(q.min)<.002&&b.max.distanceTo(q.max)<.002;});
+}
+function insideRing(p,ring){let yes=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){const a=ring[i],b=ring[j];if((a.y>p.y)!==(b.y>p.y)&&p.x<(b.x-a.x)*(p.y-a.y)/(b.y-a.y)+a.x)yes=!yes;}return yes;}
+function solidFor(T,source,floor){
+ source.updateWorldMatrix(true,false);floor.updateWorldMatrix(true,false);const matrix=new T.Matrix4().copy(floor.matrixWorld).invert().multiply(source.matrixWorld),inverse=matrix.clone().invert(),geo=source.geometry;
+ geo.computeBoundingBox();const bounds=geo.boundingBox.clone(),world=bounds.clone().applyMatrix4(matrix),shapes=geo.parameters?.shapes;
+ const polys=shapes?(Array.isArray(shapes)?shapes:[shapes]).map(s=>({o:s.getPoints(1),h:s.holes.map(h=>h.getPoints(1))})):null;
+ // CAD extrusion has a translated z range; XY shape coordinates remain CAD-local.
+ if(!polys&&geo.type!=='BoxGeometry')return null;
+ const p=new T.Vector3();return {source,matrix,world,inside(v){if(!world.containsPoint(v))return false;p.copy(v).applyMatrix4(inverse);if(!bounds.containsPoint(p))return false;return !polys||polys.some(q=>insideRing(p,q.o)&&!q.h.some(h=>insideRing(p,h)));}};
+}
+function wallCornerSegments(T,floor,cuts){
+ const solids=floor.objects.filter(isWallMesh).map(o=>solidFor(T,o,floor.group)).filter(Boolean),segments=[],seen=new Set();
+ const eps=.006;
+ for(const solid of solids){
+  const edge=new T.EdgesGeometry(solid.source.geometry,30),a=new T.Vector3(),b=new T.Vector3(),pos=edge.attributes.position;
+  for(let i=0;i<pos.count;i+=2){a.fromBufferAttribute(pos,i).applyMatrix4(solid.matrix);b.fromBufferAttribute(pos,i+1).applyMatrix4(solid.matrix);if(a.distanceTo(b)<.02)continue;
+   const d=b.clone().sub(a).normalize(),axis=Math.abs(d.z)>.9?new T.Vector3(1,0,0):new T.Vector3(0,0,1),u=new T.Vector3().crossVectors(d,axis).normalize(),v=new T.Vector3().crossVectors(d,u).normalize();
+   const nearby=solids.filter(s=>s.world.clone().expandByScalar(eps*2).intersectsBox(new T.Box3().setFromPoints([a,b])));
+   const corner=t=>{const p=a.clone().lerp(b,t);let n=0;for(let k=0;k<8;k++){const theta=Math.PI/8+k*Math.PI/4,q=p.clone().addScaledVector(u,eps*Math.cos(theta)).addScaledVector(v,eps*Math.sin(theta));if(nearby.some(s=>s.inside(q)))n++;}return n>0&&n<8&&n!==4;};
+   // Split at wall-piece extents so partial contacts do not leave seam fragments.
+   const ts=[0,1];for(const s of nearby)for(const axis of ['x','y','z']){const delta=b[axis]-a[axis];if(Math.abs(delta)<1e-9)continue;for(const limit of [s.world.min[axis],s.world.max[axis]]){const t=(limit-a[axis])/delta;if(t>1e-6&&t<1-1e-6)ts.push(t);}}
+   ts.sort((x,y)=>x-y);for(let j=1;j<ts.length;j++){const lo=ts[j-1],hi=ts[j];if((hi-lo)*a.distanceTo(b)<.01||!corner((lo+hi)/2))continue;
+    const p=a.clone().lerp(b,lo),q=a.clone().lerp(b,hi);for(const [start,end] of outsideWallOpeningIntervals(p.toArray(),q.toArray(),cuts)){const x=p.clone().lerp(q,start).toArray(),y=p.clone().lerp(q,end).toArray(),key=[x,y].map(p=>p.map(n=>Math.round(n*1000)).join(',')).sort().join('|');if(seen.has(key))continue;seen.add(key);segments.push(...x,...y);}
+   }
+  }edge.dispose();
+ }
+ // Joining collinear fragments keeps large CAD floors to one inexpensive line batch.
+ const lines=new Map();for(let i=0;i<segments.length;i+=6){const a=new T.Vector3(...segments.slice(i,i+3)),b=new T.Vector3(...segments.slice(i+3,i+6)),d=b.clone().sub(a).normalize();
+  const first=[d.x,d.y,d.z].find(x=>Math.abs(x)>1e-6);if(first<0)d.negate();const anchor=a.clone().addScaledVector(d,-a.dot(d)),key=[...d.toArray().map(n=>Math.round(n*1e5)),...anchor.toArray().map(n=>Math.round(n*1e3))].join(',');
+  if(!lines.has(key))lines.set(key,{d,anchor,spans:[]});const line=lines.get(key);line.spans.push([a.dot(line.d),b.dot(line.d)].sort((x,y)=>x-y));
+ }
+ const out=[];for(const {d,anchor,spans} of lines.values()){spans.sort((a,b)=>a[0]-b[0]);let [lo,hi]=spans[0];const push=()=>out.push(...anchor.clone().addScaledVector(d,lo).toArray(),...anchor.clone().addScaledVector(d,hi).toArray());for(const [a,b] of spans.slice(1)){if(a<=hi+1e-5)hi=Math.max(hi,b);else{push();lo=a;hi=b;}}push();}
+ return out;
+}
+
+return {isWallMesh,isReplacedWallOutline,wallCornerSegments};
+})();
+
+// app/web/layers/building.js
+const __module22=(()=>{
+const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module21;
 const {EmptyLayer,createEmptyLayers}=__module7;
 const {applyRenderPolicy}=__module2;
 const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module20;
@@ -1057,8 +1107,9 @@ const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module20;
 class BuildingLayer extends EmptyLayer {
  static id='building';
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;}
- clearGeometry(){for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;
+  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();}
+ clearCorners(){for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
+ clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
   this.materialState.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.openingSignature=null;this.trimmedLines=0;}
  build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
@@ -1079,16 +1130,25 @@ class BuildingLayer extends EmptyLayer {
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
-  if(signature===this.openingSignature)return;this.openingSignature=signature;this.trimmedLines=0;
+  if(signature===this.openingSignature)return;this.openingSignature=signature;this.trimmedLines=0;this.clearCorners();
   const volumes=floors.map(f=>wallOpeningVolumes(f.floor||{},time));
   for(const resource of this.resources)resource.dispose();this.resources.clear();
   floors.forEach((floor,i)=>{for(const source of floor.objects){const object=this.sourceObjects.get(source);if(!object)continue;
    const clipped=source.isMesh?trimWallJambFaces(this.THREE,source,floor.group,volumes[i]):trimWallLineGeometry(this.THREE,source,floor.group,volumes[i]);object.geometry=clipped?this.own(clipped):source.geometry;if(clipped&&source.isLineSegments)this.trimmedLines++;
-  }});
+  }
+   const points=wallCornerSegments(this.THREE,floor,volumes[i]);if(points.length){
+    const T=this.THREE,geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(points,3));
+    const material=new T.LineBasicMaterial({color:'#8da8b7',transparent:true,opacity:.32,linewidth:1,depthTest:true,depthWrite:false});
+    const line=new T.LineSegments(geometry,material);line.name=floor.id+'_wall_corners';line.userData.wallSources=floor.objects.filter(isWallMesh);line.renderOrder=-1;line.raycast=()=>{};
+    this.floorGroups.get(floor.id).add(line);this.cornerLines.push(line);this.cornerResources.add(geometry);this.cornerResources.add(material);
+    // Existing per-piece wireframes would double the edge and expose seams again.
+    for(const source of floor.objects)if(isReplacedWallOutline(this.THREE,source,floor)){const object=this.sourceObjects.get(source);object.visible=false;this.replacedOutlines.add(object);}
+   }
+  });
  }
  // Newly included stairs/glass may sit inside transformed or hidden groups.
  // Preserve that hierarchy instead of flattening their local coordinates.
- syncSource(){for(const {source,object} of this.bindings){object.visible=source.visible;object.position.copy(source.position);object.quaternion.copy(source.quaternion);object.scale.copy(source.scale);}
+ syncSource(){for(const line of this.cornerLines)line.visible=line.userData.wallSources.some(s=>s.visible);for(const {source,object} of this.bindings){object.visible=source.visible&&!this.replacedOutlines.has(object);object.position.copy(source.position);object.quaternion.copy(source.quaternion);object.scale.copy(source.scale);}
   for(const floor of this.asset?.floors||[]){const g=this.floorGroups.get(floor.id);g.position.copy(floor.group.position);g.quaternion.copy(floor.group.quaternion);g.scale.copy(floor.group.scale);g.visible=floor.group.visible&&(this.floorId===null||this.floorId===floor.id);}
  }
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
@@ -1100,7 +1160,7 @@ class BuildingLayer extends EmptyLayer {
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
- diagnostics(){return {buildCount:this.buildCount,ownedMaterials:0,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines};}
+ diagnostics(){return {buildCount:this.buildCount,ownedMaterials:0,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
  dispose(){this.clearGeometry();this.lastBuilding=null;this.lastResult=null;this.geometryFor=null;super.dispose();}
 }
 function createBuildingLayers(THREE,options){return [new BuildingLayer(THREE,options),...createEmptyLayers(THREE).filter(layer=>layer.constructor.id!=='building')];}
@@ -1109,7 +1169,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module22=(()=>{
+const __module23=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -1151,10 +1211,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module23=(()=>{
+const __module24=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {exteriorWindowFace}=__module22;
+const {exteriorWindowFace}=__module23;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -1237,7 +1297,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module24=(()=>{
+const __module25=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
 
@@ -1289,7 +1349,7 @@ return {CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module25=(()=>{
+const __module26=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1363,7 +1423,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module26=(()=>{
+const __module27=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1371,7 +1431,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module27=(()=>{
+const __module28=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1379,7 +1439,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module28=(()=>{
+const __module29=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1387,11 +1447,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module29=(()=>{
-const {createRealViewSession}=__module25;
-const {createSmokeLayer}=__module26;
-const {createFlameLayer}=__module27;
-const {createPlumeLayer}=__module28;
+const __module30=(()=>{
+const {createRealViewSession}=__module26;
+const {createSmokeLayer}=__module27;
+const {createFlameLayer}=__module28;
+const {createPlumeLayer}=__module29;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1401,7 +1461,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module30=(()=>{
+const __module31=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1478,10 +1538,10 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module31=(()=>{
+const __module32=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module30;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module31;
 const {roomFgiRollover}=__module3;
 
 const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
@@ -1589,7 +1649,7 @@ return {RiskLayer};
 })();
 
 // app/web/scene/picking.js
-const __module32=(()=>{
+const __module33=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -1597,11 +1657,11 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/selection.js
-const __module33=(()=>{
+const __module34=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {joinedSelectionRibbons}=__module30;
-const {ROOM_PICK_LAYER}=__module32;
+const {joinedSelectionRibbons}=__module31;
+const {ROOM_PICK_LAYER}=__module33;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1647,7 +1707,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module34=(()=>{
+const __module35=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const fixed=review?.doors?.fixed_state;
@@ -1658,10 +1718,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module35=(()=>{
+const __module36=(()=>{
 const {createEmptyLayers}=__module7;
-const {ROOM_PICK_LAYER}=__module32;
-const {fixedOpeningsFor}=__module34;
+const {ROOM_PICK_LAYER}=__module33;
+const {fixedOpeningsFor}=__module35;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1734,7 +1794,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module36=(()=>{
+const __module37=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1779,7 +1839,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module37=(()=>{
+const __module38=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -1840,8 +1900,8 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module38=(()=>{
-const {createTimelineRisk}=__module37;
+const __module39=(()=>{
+const {createTimelineRisk}=__module38;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1919,7 +1979,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module39=(()=>{
+const __module40=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -1952,10 +2012,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module40=(()=>{
-const {createDisplayPolicy}=__module39;
+const __module41=(()=>{
+const {createDisplayPolicy}=__module40;
 const {roomFgiRollover}=__module3;
-const {fixedOpeningsFor}=__module34;
+const {fixedOpeningsFor}=__module35;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -2077,7 +2137,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module41=(()=>{
+const __module42=(()=>{
 const {infoTip}=__module12;
 const {roomFgiRollover}=__module3;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -2167,7 +2227,7 @@ return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMC
 })();
 
 // app/web/adapters/attention.js
-const __module42=(()=>{
+const __module43=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2184,7 +2244,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module43=(()=>{
+const __module44=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2236,9 +2296,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module44=(()=>{
-const {attentionRanking}=__module42;
-const {savedAttention}=__module43;
+const __module45=(()=>{
+const {attentionRanking}=__module43;
+const {savedAttention}=__module44;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2308,7 +2368,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module45=(()=>{
+const __module46=(()=>{
 const {createAssistantPanel}=__module0;
 const {attachExport}=__module1;
 const {routeSampleIndex}=__module4;
@@ -2325,18 +2385,18 @@ const {adaptBuilding,adaptResult,adaptScreening}=__module16;
 const {readLegacyBuildingSource}=__module17;
 const {readLegacyOpeningsSource}=__module18;
 const {readLegacyCoreSource}=__module19;
-const {BuildingLayer}=__module21;
-const {OpeningsLayer}=__module23;
-const {CoreLayer}=__module24;
-const {createRealViewLayers}=__module29;
-const {RiskLayer}=__module31;
-const {SelectionLayer}=__module33;
-const {createSceneHost}=__module35;
-const {createLitePanel,updateLitePanel}=__module36;
-const {createPanelShell}=__module38;
-const {createDisplayPanel}=__module40;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module41;
-const {createExplorePanel}=__module44;
+const {BuildingLayer}=__module22;
+const {OpeningsLayer}=__module24;
+const {CoreLayer}=__module25;
+const {createRealViewLayers}=__module30;
+const {RiskLayer}=__module32;
+const {SelectionLayer}=__module34;
+const {createSceneHost}=__module36;
+const {createLitePanel,updateLitePanel}=__module37;
+const {createPanelShell}=__module39;
+const {createDisplayPanel}=__module41;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module42;
+const {createExplorePanel}=__module45;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2539,8 +2599,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module46=(()=>{
-const {attachModern}=__module45;
+const __module47=(()=>{
+const {attachModern}=__module46;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2555,4 +2615,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module46.attach;
+export const attach=__module47.attach;

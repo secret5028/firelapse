@@ -3,7 +3,8 @@
 export function wallOpeningVolumes(floor,time=0){
  const cuts=[];
  for(const o of floor.openings||[]){
-  if(!['door','window'].includes(o.kind))continue;
+  if(!['door','door_elev','open_passage','window'].includes(o.kind))continue;
+  const doorLike=o.kind!=='window';
   let fraction=1;if(o.display_schedule){fraction=0;for(const [t,f] of o.display_schedule)if(t<=time)fraction=f;}
   if(!(fraction>0))continue;
   const rings=o.polys?.length?o.polys:(o.geometry_polys||[]).map(p=>p.o),points=rings.flat();
@@ -11,7 +12,7 @@ export function wallOpeningVolumes(floor,time=0){
   if(!spans.length){let longest=0,span=null;for(const ring of rings)for(let i=0;i<ring.length;i++){
    const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;span=[a,b];}
   }if(span)spans=[span];}
-  const bottom=o.kind==='door'?(o.sill_m??0):(o.sill_m??o.sill??floor.sill??.9),top=o.kind==='door'?(o.door_h??floor.door_h??2.1):(o.head??floor.head??2.4);
+  const bottom=doorLike?(o.sill_m??0):(o.sill_m??o.sill??floor.sill??.9),top=doorLike?(o.door_h??floor.door_h??2.1):(o.head??floor.head??2.4);
   if(!(top>bottom))continue;
   for(const [a,b] of spans){const length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!(length>.02))continue;
    const u=[(b[0]-a[0])/length,(b[1]-a[1])/length],v=[-u[1],u[0]],along=p=>p[0]*u[0]+p[1]*u[1],across=p=>p[0]*v[0]+p[1]*v[1];
@@ -51,7 +52,8 @@ export function outsideWallOpeningIntervals(a,b,cuts){
  const extensions=[];
  for(const c of cuts){
   const along=a[0]*c.u[0]+a[1]*c.u[1],normal=a[0]*c.v[0]+a[1]*c.v[1];
-  if(normal<c.min[1]||normal>c.max[1]||!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=.02))continue;
+  const acrossOpening=along>=c.min[0]-.025&&along<=c.max[0]+.025;
+  if(normal<c.min[1]||normal>c.max[1]||(!acrossOpening&&!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=.02)))continue;
   for(const [low,high] of [[-1e6,c.bottom],[c.top,1e6]])extensions.push({...c,min:[along-.025,c.min[1],low],max:[along+.025,c.max[1],high]});
  }
  return outsideOpeningIntervals(a,b,[...cuts,...extensions]);

@@ -29,7 +29,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'displayRoomNames','도면 방 이름','#e8f2f8',()=>store.get('layers').roomNames,visible=>store.dispatch('layers/toggle',{id:'roomNames',visible}),false,'원본 CAD에 기록된 실 이름을 표시합니다. 이름이 없는 실은 임의로 만들지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'전체 보기에서는 전층, 층 선택 시 해당 층의 계단·승강기를 표시합니다.');
- toggle($('displayLayers'),'displayFixedOpenings','확정 급기 보기','#62dcb0',()=>store.get('openings').fixed,fixed=>store.dispatch('openings/set',{fixed}),false,'다음 계산에 적용할 확정 입력입니다. 현재 재생 사례의 개폐 상태와 다를 수 있습니다. 사각형은 열림, ×는 닫힘(누설 포함). 외부 창은 기존 강조 필터와 카메라 방향을 따릅니다.');
+ toggle($('displayLayers'),'displayFixedOpenings','급기 상태 보기','#62dcb0',()=>store.get('openings').fixed,fixed=>store.dispatch('openings/set',{fixed}),false,'확정 입력이 있으면 다음 계산의 상태를, 없으면 저장된 재생 사례의 입력 상태를 표시합니다. 두 상태는 다를 수 있습니다. 사각형은 열림, ×는 닫힘(누설 포함). 외부 창은 기존 강조 필터와 카메라 방향을 따릅니다.');
  for(const [key,id,label] of [['cellOutline','displayCellOutline','셀 점선'],['floorTint','displayFloorTint','바닥 틴트'],['smokeInterface','displaySmokeInterface','연기 경계면'],['boundaryDots','displayBoundaryDots','경계 ±30 ℃ 점선']])toggle($('displayLayers'),id,label,'#9ca3af',()=>store.get('displayDetails')[key],visible=>store.dispatch('displayDetails/set',{[key]:visible}));
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
@@ -90,8 +90,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   const transparency=Math.round(rv.buildingTransparency*100);$('displayBuildingTransparency').value=transparency;buildingSlider.querySelector('output').textContent=transparency+'%';
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;
+   const stateLabel=fixed?.basis==='saved_case_input'?'재생 사례 급기':'확정 급기 · 다음 실행';
+   $('displayFixedOpenings').title=fixed?`${stateLabel} · 열림 ${Object.values(fixed.states).filter(s=>s.open).length} / 닫힘 ${Object.values(fixed.states).filter(s=>!s.open).length} · 초록 사각=열림, 회색 ×=닫힘`:'저장된 개폐 상태 없음';
    fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);
-   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`확정 급기 · ${fixed.sample_id||'사용자 지정'} · 다음 실행 입력 `);for(const [text,color] of [['□ 열림','#62dcb0'],['⊠ 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
+   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 열림','#62dcb0'],['⊠ 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';

@@ -24,6 +24,14 @@ def playback(ident, job=None):
     value = sim.read(row[0]/'playback.json')
     if value['building_sha256'] != sim.fingerprint(ident): raise ValueError('건물 해시 불일치')
     value['case_id'] = row[0].name
+    # Display the saved calculation input, never today's regenerated defaults.
+    saved = sim.read(row[0]/'input.json')
+    states = saved.get('screening_source', {}).get('opening_states', [])
+    if (saved.get('cad', {}).get('building_sha256') == value['building_sha256']
+            and states and all(type(s.get('open')) is bool for s in states)):
+        value['display_opening_state'] = dict(
+            building_sha256=value['building_sha256'], case_id=value['case_id'],
+            basis='saved_case_input', states={s['id']:s for s in states})
     return value
 
 def scope(ident, floor=None):

@@ -171,7 +171,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const scenario={rooms:[...byRoom.values()],openings:[],cad:{building_sha256:payload.building_sha256}};
   const building=adaptBuilding({scenario,playback:payload,sourceHash:payload.building_sha256}),result=await adaptResult({playback:payload,scenario,building,resultId:id});
   if(seq!==store.get('request').seq)return false;
-  ready=false;data=payload;chosen=id;rawSource={source_hash:payload.building_sha256,result_id:id,data:payload,B,groups};store.dispatch('building/set',building);store.dispatch('result/receive',{seq,result});
+  ready=false;data=payload;chosen=id;store.dispatch('buildingReview/set',{playbackOpenings:payload.display_opening_state??null});rawSource={source_hash:payload.building_sha256,result_id:id,data:payload,B,groups};store.dispatch('building/set',building);store.dispatch('result/receive',{seq,result});
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;select(selected.key);$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   $('liteTime').step=data.output_step_s||10;
@@ -187,6 +187,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);
    if(disposed)return;
    store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
+   if(value.fixed_state)store.dispatch('openings/set',{fixed:true});
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
    await refreshScreening();await catalog();
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';

@@ -3,6 +3,7 @@ import * as T from 'three';
 import {OrbitControls} from '/vendor/OrbitControls.js';
 import {attach} from '/app/web/entry.js';
 import {attachOperationControls} from '/operation-controls.js';
+import {createGroundReference} from '/app/web/scene/ground_reference.js';
 const $=id=>document.getElementById(id);
 try{
  const [B,info,initial]=await Promise.all(['/building.json','/cfbt/model-info','/cfbt/lite/active.json'].map(async url=>{const r=await fetch(url),v=await r.json();if(!r.ok)throw Error(v.error);return v;}));
@@ -24,7 +25,8 @@ try{
   for(const col of f.structural_columns||[])mesh(g,col.polys,0,col.height_m||f.h,0x93acb5,.7);
  }
  let floor=initial.rooms.find(r=>r.key===initial.fire_key)?.cad_floor||B.floors[0].name;
- const setFloor=id=>{floor=id;for(const g of groups)g.visible=id==='all'||g.name===id;};setFloor(floor);
+ const groundGrid=createGroundReference(T,B);if(groundGrid){S.add(groundGrid);keep(groundGrid.geometry);for(const m of Array.isArray(groundGrid.material)?groundGrid.material:[groundGrid.material])keep(m);}
+ const setFloor=id=>{floor=id;for(const g of groups)g.visible=id==='all'||g.name===id;if(groundGrid)groundGrid.visible=id==='all'||id===groundGrid.userData.groundReference.floor;};setFloor(floor);
  for(const name of ['all',...B.floors.map(f=>f.name)]){const b=document.createElement('button');b.textContent=name==='all'?'전체':name;b.onclick=()=>setFloor(name);$('fbtn').append(b);}
  function fit(top=false){const bounds=new T.Box3();for(const f of B.floors)if(floor==='all'||floor===f.name)for(const part of f.slab||[])for(const xy of part.o||part)for(const z of [f.z||0,(f.z||0)+f.h])bounds.expandByPoint(new T.Vector3(...xy,z));if(bounds.isEmpty())return;
   const center=bounds.getCenter(new T.Vector3()),radius=bounds.getSize(new T.Vector3()).length()/2,vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.1;O.target.copy(center);C.position.copy(center).addScaledVector(top?new T.Vector3(0,-.001,1).normalize():new T.Vector3(1,-1,1.1).normalize(),distance);O.update();}

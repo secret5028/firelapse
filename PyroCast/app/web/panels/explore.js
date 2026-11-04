@@ -9,6 +9,19 @@ export function screeningRows(payload){
 export function mcEstimate(summary,samples){
  return finite(summary?.wall_s)&&summary.wall_s>0&&summary.completed>0?summary.wall_s/summary.completed*samples:null;
 }
+export function calculationStatus({floor,origin,job={},pending=false,dirty=false,changed=false,saved=false,verified=false}){
+ if(pending)return '요청 중';
+ if(job.running)return `계산 중 ${job.completed??0}/${job.total??'—'}`;
+ if(job.server_busy)return '다른 계산 진행 중';
+ if(!floor)return '층 선택 필요';
+ if(!origin)return '화점 없음';
+ if(dirty)return '가연물 변경 저장 필요';
+ if(job.error&&(!job.room||job.room===origin))return '계산 실패';
+ if(job.room===origin&&['failed','interrupted'].includes(job.state))return job.state==='failed'?'계산 실패':'계산 중단';
+ if(changed)return '재계산 필요';
+ if(job.room===origin&&job.state==='completed')return job.failed_or_incomplete?'일부 미완료':verified?'계산 완료':'저장 결과 있음';
+ return saved?'저장 결과 있음':'계산 전';
+}
 // DOM only. The controller owns existing HTTP paths; candidate selection does
 // not select a scene cell or mutate the currently displayed simulation.
 export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,onApplyWorst,onFloor,floors=[]}){
@@ -23,12 +36,18 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
  const style=document.createElement('style');style.dataset.pyrocastExplore='true';style.textContent=`
  #exploreContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#exploreContent h3,#workflowFloor h3{font-size:13px;font-weight:700;color:#eaf3f8;margin:14px 0 8px}#workflowFloor h3{margin-top:0}#exploreContent h3 span{cursor:help}.exploreCard{border:1px solid #496273;border-radius:7px;padding:10px;margin-bottom:12px;background:#163345}#exploreContent label{display:block;margin:6px 0}#exploreContent input,#exploreContent select,#exploreContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px;box-sizing:border-box}#exploreContent input{width:70px}#exploreOrigin{width:100%;margin-top:5px}#exploreContent button{cursor:pointer}#exploreContent :disabled{opacity:.5;cursor:default}#exploreRunForm,.exploreButtons{display:flex;gap:6px;align-items:center;flex-wrap:wrap}#exploreContent :focus-visible{outline:2px solid #42e8ff}.exploreScroll{overflow:auto;max-height:270px}#exploreContent table{border-collapse:collapse;width:100%;font-size:11px}#exploreContent th,#exploreContent td{text-align:right;padding:7px 3px;border-bottom:1px solid #304c5e;white-space:nowrap}#exploreContent th:nth-child(2),#exploreContent td:nth-child(2){text-align:left}#exploreContent td:nth-child(2){white-space:normal;min-width:68px}#exploreContent tr[data-room]{cursor:pointer}#exploreContent tr[aria-selected=true]{background:#245166;box-shadow:inset 2px 0 #42e8ff}#exploreStatus,#exploreRankBasis,#exploreEstimate,#exploreMCStatus,#exploreRuleContext{font-size:11px;color:#b8cbd8;margin:8px 0;overflow-wrap:anywhere}#exploreContent details{margin-top:12px}#exploreContent summary{cursor:pointer;color:#b8cbd8}#exploreRules input{max-width:100%}#exploreRules table{display:block;overflow:auto}#exploreRules #r8SettingsGrid{grid-template-columns:1fr!important}#exploreRules #cfbtFrozenRules>summary{display:none}
  `;document.head.append(style);
+ // One explicit execution control at the end of the combined workflow.
+ const calculate=document.createElement('section');calculate.id='exploreCalculate';calculate.className='exploreCard';
+ const engine=document.createElement('small');engine.textContent='간략 엔진 · MC';calculate.append(engine,$('exploreMC'),$('exploreMCStatus'));
+ root.append(calculate);$('exploreMC').textContent='간략 계산하기';
+ $('exploreMC').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const scope=$('workflowFloor');scope.style.margin='12px 16px';$('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
  $('exploreDuration').onchange=()=>store.dispatch('exploration/set',{duration_s:Number($('exploreDuration').value)});
  $('exploreApplyWorst').onclick=onApplyWorst;
- let payload=null,summary=null,mcOrigin=null,pending=false,mcJob={available:false},mcPending=false,lastSamples=null;
+ let payload=null,summary=null,mcOrigin=null,pending=false,mcJob={available:false},mcPending=false,lastSamples=null,submitted=null;
+ const inputKey=()=>JSON.stringify([store.get('floor').floor_id,store.get('exploration').origin_room_id,store.get('exploration').samples,store.get('exploration').duration_s,store.get('fuelSettings').data?.revision??null,store.get('buildingReview').doors]);
  const pretty=id=>id?.replace(/^CAD_/,'').replaceAll('_',' ')||'미선택';
  const useName=row=>row?.origin_budget?.classification?.label??payload?.score.approved_input?.room_uses?.[row?.room]?.label??'용도 미확인';
  const originName=id=>{const row=payload?.score.ranked.find(r=>r.room===id),manual=payload?.manual_origins?.find(r=>r.room===id);return row?`${pretty(id)} · ${useName(row)}`:manual?`${pretty(id)} · ${manual.label}`:pretty(id);};
@@ -40,9 +59,14 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   const matching=Boolean(summary&&mcOrigin&&state.origin_room_id===mcOrigin);$('exploreApplyWorst').disabled=!matching||!summary?.worst||mcJob.running||mcPending;
   $('exploreResults').disabled=!matching;
   $('exploreResults').title=matching?'선택 화점의 저장 MC 집계 보기':`선택 화점의 저장 MC 결과 없음${mcOrigin?' · 저장 화점 '+pretty(mcOrigin):''}`;
-  $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id;
-  $('exploreMC').title=mcJob.available?'직렬 실행 · 표본당 적분 예산 1,200초':'MC 서버 연결 확인 중';
+  const fuel=store.get('fuelSettings'),dirty=Object.values(fuel.draft).some(v=>v&&Object.keys(v).length),changed=!!submitted&&submitted.key!==inputKey();
+  $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id||!store.get('floor').floor_id||dirty||fuel.saving;
+  $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'간략 엔진으로 개구부 조합 MC 계산 · 직렬 실행 · 표본당 적분 예산 1,200초':'MC 실행 연결 없음';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
+  $('exploreMCStatus').title=mcJob.error||'현재 화점 기준. 저장 결과 있음은 현재 설정과의 일치 확인을 뜻하지 않습니다.';
+  engine.textContent='간략 엔진 · MC'+(state.origin_room_id?' · '+pretty(state.origin_room_id):'');
+  $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
+  if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   $('exploreOriginRun').disabled=payload?.available===false||pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
   if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)&&!(state.origin_mode==='manual'&&payload?.manual_origins?.some(r=>r.room===state.origin_room_id))){$('exploreMC').disabled=true;$('exploreMC').title='수동 화점으로 지정한 뒤 실행하세요';}
   $('exploreRun').disabled=payload?.available===false||pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
@@ -54,7 +78,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
  $('exploreRunForm').onsubmit=e=>{e.preventDefault();if(!$('exploreRunForm').reportValidity())return;store.dispatch('exploration/set',{top_n:Number($('exploreN').value)});onRun();};
  $('exploreMC').onclick=()=>{if(!$('exploreSamples').reportValidity())return;store.dispatch('exploration/set',{samples:Number($('exploreSamples').value)});onMC();};
  $('exploreRefresh').onclick=onRefresh;$('exploreResults').onclick=onResults;
- const off=store.subscribe('exploration',sync);
+ const off=store.subscribe('exploration',sync),offFloor=store.subscribe('floor',sync),offFuel=store.subscribe('fuelSettings',sync),offDoors=store.subscribe('buildingReview',sync);
  function update(value){payload=value;const {first,second}=screeningRows(value);$('exploreN').max=first.length;$('exploreOrigin').replaceChildren();for(const row of value.manual_origins??first)$('exploreOrigin').add(new Option(originName(row.room),row.room));$('exploreOrigin').disabled=!first.length;
   $('exploreCandidates').replaceChildren();for(const row of first){const tr=document.createElement('tr');cell(tr,count(row.rank1));cell(tr,`${pretty(row.room)} · ${useName(row)}`).title=row.reason||'';cell(tr,finite(row.score)?row.score.toFixed(3):'—');$('exploreCandidates').append(tr);}
   $('exploreRanking').replaceChildren();for(const row of second){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');tr.title=row.complete?({fixed:'확정 급기',closed:'모두 닫힘',open_except_confirmed:'확정 방화문 제외 모두 열림'}[row.worst_state]||''):'미완료 · 부분 결과';cell(tr,count(row.rank2));cell(tr,pretty(row.room));cell(tr,count(row.rank1));cell(tr,count(row.burning_room_count));cell(tr,count(row.attention_room_count));cell(tr,finite(row.first_FO_s)?`${Math.floor(row.first_FO_s/60)}:${String(Math.floor(row.first_FO_s%60)).padStart(2,'0')}`:'—');
@@ -69,5 +93,5 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   if(value.available===false){$('exploreStatus').textContent=first.length?`적격 ${first.length}실 · 1위 화점 선정`:value.unavailable_reason||'화점 후보 없음';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
- return {update,mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();scope.remove();root.remove();style.remove();}};
+ return {update,calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
 }

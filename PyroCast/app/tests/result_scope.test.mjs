@@ -17,7 +17,7 @@ assert.equal(result.scenario.floor_id,'5F');
 const room=building.floors.find(f=>f.floor_id==='2F').rooms[0];
 assert.equal(room.cells.length,0);assert.equal(result.rooms[room.room_id],undefined);
 assert.equal(resultCoverage(building,result,room).status,'미평가');
-assert.equal(resultCoverage(building,result,room).label,'계산 결과 5F · 화점 5F R16');
+assert.equal(resultCoverage(building,result,room).label,'간략 결과 5F · 화점 5F R16');
 assert.equal(resultCoverage(building,result,building.floors[0].rooms[0]).status,'계산됨');
 assert.equal(resultNumber(selectedScores(result,'CAD_5F_R16',0)[1].value),'0');
 assert.equal(resultNumber(selectedScores(result,'CAD_2F_R1',0)[1].value),'—');

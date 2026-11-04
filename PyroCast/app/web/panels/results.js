@@ -8,7 +8,7 @@ export function resultCoverage(building,result,room){
  const floors=building.floors.filter(f=>f.rooms.some(r=>r.cells.some(c=>result.index_by_cell[c.cell_id]))).map(f=>f.floor_id);
  const origin=result.scenario.origin_room_id?.replace(/^CAD_/,'').replaceAll('_',' ')??'—';
  const evaluated=!!room?.cells.some(c=>result.index_by_cell[c.cell_id]);
- return {label:`계산 결과 ${floors.join('·')||'—'} · 화점 ${origin}`,status:room?(evaluated?'계산됨':'미평가'):'실 선택',evaluated};
+ return {label:`${result.engine?.kind==='cfast'?'CFAST':'간략'} 결과 ${floors.join('·')||'—'} · 화점 ${origin}`,status:room?(evaluated?'계산됨':'미평가'):'실 선택',evaluated};
 }
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
 export function selectedScores(result,cell,index){return resultTypes.map(([type,name,color])=>{

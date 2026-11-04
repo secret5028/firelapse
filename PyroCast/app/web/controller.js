@@ -80,7 +80,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
  const explore=createExplorePanel({store,floors:displayFloors,onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
- routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());
+ routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());$('exploreContent').append($('exploreCalculate'));
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
   try{const response=await fetch('/cfbt/lite/mc',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(disposed)return;const previous=mcJobState;mcJobState=value;explore.mcState(value);
@@ -88,10 +88,11 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    if(value.running||value.server_busy)mcPoll=setTimeout(refreshMC,3000);
   }catch(error){if(!disposed){explore.mcState({available:false,error:error.message});mcPoll=setTimeout(refreshMC,5000);}}
  }
+ let mcStarting=false;
  async function runMC(){
-  const selection=store.get('exploration');if(!selection.origin_room_id||!store.get('floor').floor_id)return;explore.mcState(mcJobState||{available:true},true);
-  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:selection.duration_s,seed:20261025,manual:false,floor:store.get('floor').floor_id,selection_mode:'score_first'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
-  catch(error){if(!disposed)explore.mcState({...mcJobState,available:true,error:error.message});}
+  const selection=store.get('exploration');if(mcStarting||!selection.origin_room_id||!store.get('floor').floor_id||mcJobState?.running||mcJobState?.server_busy)return;mcStarting=true;const calculationKey=explore.calculationKey();explore.mcState(mcJobState||{available:true},true);
+  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:selection.duration_s,seed:20261025,manual:false,floor:store.get('floor').floor_id,selection_mode:'score_first'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed){explore.mcSubmitted(value,calculationKey);await refreshMC();}}
+  catch(error){if(!disposed)explore.mcState({...mcJobState,room:selection.origin_room_id,available:true,error:error.message});}finally{mcStarting=false;}
  }
  let catalogOrigin=null;
  cleanup.push(store.subscribe('exploration',()=>{const origin=store.get('exploration').origin_room_id;if(origin!==catalogOrigin){catalogOrigin=origin;catalog().catch(error=>{if(!disposed)explore.status('결과 목록 읽기 실패 · '+error.message);});}}));

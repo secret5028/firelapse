@@ -7,9 +7,9 @@ const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},bu
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
  realView:{enabled:true,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
- openings:{exterior:false,interior:false,fixed:true},
+ openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
- layers:{building:true,openings:true,core:false,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
+ layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
  risk:{history:false,show:{FO:true,FGI:true,backdraft:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}

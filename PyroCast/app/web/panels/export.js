@@ -2,7 +2,8 @@
 export function attachExport({store,viewer,getCase,getRoute,render}){
  const root=document.createElement('div');root.id='resultExport';
  root.innerHTML='<button id="exportHTML">HTML 내보내기</button> <label id="exportIntervalLabel" hidden>표시 간격 <select id="exportInterval"><option value="10">10 s · 원본</option><option value="20">20 s · 축소</option></select></label><output id="exportStatus" role="status"></output>';
- document.getElementById('resultCase').append(root);
+ const card=document.getElementById('resultCase'),assistant=document.getElementById('aiAssistant');
+ if(assistant?.parentElement===card)card.insertBefore(root,assistant);else card.append(root);
  const button=root.querySelector('button'),status=root.querySelector('output');
  function snapshot(){const route=getRoute();return Object.fromEntries([
   ...['selection','floor','playback','realView','openings','layers','risk','exploration'].map(k=>[k,store.get(k)]),

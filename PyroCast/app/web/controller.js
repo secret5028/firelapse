@@ -4,6 +4,8 @@ import {routeSampleIndex} from './route/risk.js';
 import {readRouteGraph,contains} from './route/graph.js';
 import {RouteLayer} from './layers/route.js';
 import {createRoutePanel} from './panels/route.js';
+import {createFuelSettingsPanel} from './panels/fuel_settings.js';
+import {FuelQuantityLayer} from './layers/fuel_quantity.js';
 import {createBuildingPanel,buildingTable} from './panels/building.js';
 import {attachExplanations} from './panels/explanations.js';
 import {createStore} from './state/store.js';
@@ -48,12 +50,13 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),vehicleSource=referenceGroup?.children.find(c=>c.isGroup);
  let routeUI=null;
  const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
- const layers=[buildingLayer,openings,core,...real,risk,selection,route];
+ const layers=[buildingLayer,openings,core,...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
  const buildingPanel=createBuildingPanel({store});
+ const fuelPanel=createFuelSettingsPanel({store,available:initial.engine_kind!=='cfast_native',onFloor:floor=>{viewer.setFloor(floor);render();},onSaved:async()=>{await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>fuelPanel.dispose());
  async function refreshFuelRooms(){
   if(window.__PYROCAST_OFFLINE__)return;
   try{const response=await fetch('/cfbt/lite/ai/fuel',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&Array.isArray(value.rooms)){aiFuelRooms=value.rooms;store.dispatch('buildingReview/set',{rooms:aiFuelRooms});}}
@@ -62,7 +65,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const assistant=createAssistantPanel({store,available:viewer.capabilities?.assistant!==false,getContext:()=>({building:initial.building_sha256,case:chosen,floor:store.get('floor').floor_id,room:store.get('selection').room_id,origin:data?.route_target_room_id||data?.fire_key,time_s:store.get('playback').t_s,history:store.get('risk').history,vehicle:route.result?.vehicle,route_settings:{hose_m:store.get('route').hose_m,stair_factor:store.get('route').stair_factor}}),
   onNavigate:fact=>{if(fact.case!==chosen)throw Error('현재 사례와 다른 답변입니다. 해당 사례를 먼저 선택하세요.');const c=data.rooms.find(r=>r.key===fact.cell)||data.rooms.find(r=>(r.original_room||r.key)===fact.room);if(!c)return;viewer.setFloor(c.cad_floor);store.dispatch('floor/set',{floor_id:c.cad_floor});select(c.key);if(Number.isFinite(fact.time_s))store.dispatch('playback/seek',{t_s:fact.time_s});render();},
   onProposal:async(p,rooms,building)=>{if(building!==initial.building_sha256&&building!==(B.building_id||'cad-main'))throw Error('다른 건물 제안');if(p.kind==='mc'||p.kind==='screening'){store.dispatch('exploration/set',{origin_room_id:p.origin,origin_mode:'manual',...(p.samples?{samples:p.samples}:{}),...(p.N?{top_n:p.N}:{})});if(p.kind==='mc')await runMC();else await runScreening(true);return;}
-   const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
+   const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
  const explore=createExplorePanel({store,onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
@@ -117,6 +120,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  // Display controls must update the GPU on input, including paused/throttled
  // animation loops in embedded or background viewers. Dispose owns this listener.
  cleanup.push(store.subscribe('realView',render));
+ cleanup.push(store.subscribe('fuelSettings',render));
  cleanup.push(store.subscribe('openings',render));
  cleanup.push(store.subscribe('buildingReview',render));
  function frame(){if(!ready||disposed)return;const ms=clock.now();

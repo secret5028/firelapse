@@ -41,7 +41,7 @@ export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}
    flameDisplay:'hrr',smokeMode:settings.smokeMode,flameStyle:settings.flameStyle,plumesEnabled:frame.layers.plume,noiseAmp:settings.temperaturePattern==='weak'?.4:1,noiseScale:1,rampMode:0,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;
   session.renderer.animate(session.lastAnimateMs);
-  for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
+  for(const {u,g} of session.units){const r=data.rooms.find(r=>r.key===u.room);g.visible=!frame.fuelSettings?.data&&frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===r?.cad_floor);g.material.color.set(data.solvers[u.room]?.Qsolid_kW[lo]>0?'#ff8a3d':'#a6b4ba');}
   // The unchanged bridge hardcodes flamesEnabled=true. Mask only flame draw
   // objects/lights after update; no shader, HRR or geometry changes. Next update
   // restores native visibility before applying the checkbox again.

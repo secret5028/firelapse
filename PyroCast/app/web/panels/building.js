@@ -16,10 +16,12 @@ export function createBuildingPanel({store}){
  const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingSettingsEmpty{color:#b8cbd8}`;document.head.append(style);
  const append=(p,tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;p.append(e);return e;};
  let previous=null;
- function render(){const s=store.get('buildingReview');if(previous===s.rooms)return;previous=s.rooms;
-  const rows=s.rooms||[];$('buildingFuelSection').hidden=!rows.length;$('buildingSettingsEmpty').hidden=!!rows.length;
+ function render(){const s=store.get('buildingReview');const editable=!!store.get('fuelSettings')?.data;
+  $('buildingFuelSection').hidden=editable||!s.rooms?.length;$('buildingSettingsEmpty').hidden=editable||!!s.rooms?.length;
+  if(previous===s.rooms)return;previous=s.rooms;
+  const rows=s.rooms||[];
   $('buildingFuel').replaceChildren();for(const row of rows){const tr=append($('buildingFuel'),'tr');tr.dataset.room=row.id;const first=append(tr,'td'),details=append(first,'details');append(details,'summary',`${short(row.id)} · ${row.usage}`);const source=append(details,'div',`CAD 원문: ${row.name||'미제공'}`);source.className='buildingSource';source.append(infoTip(row.basis||'근거 미제공'));for(const text of [number(row.area,1),number(row.load),Number.isFinite(row.coverage)?number(row.coverage*100)+'%':'미확인',number(row.hrrpua)])append(tr,'td',text);}
  }
- const off=store.subscribe('buildingReview',render);render();
- return {dispose(){off();root.remove();style.remove();}};
+ const off=store.subscribe('buildingReview',render),offFuel=store.subscribe('fuelSettings',render);render();
+ return {dispose(){off();offFuel();root.remove();style.remove();}};
 }

@@ -252,6 +252,9 @@ def main():
                     output,info=build_export('http://127.0.0.1:'+str(self.server.server_port),path.rsplit('/',1)[-1],view_state,int(params.get('interval',['10'])[0]))
                     return self.send_data(output,'text/html; charset=utf-8')
                 except Exception as exc:return self.json({'error':str(exc)},400)
+            if path=='/cfbt/lite/fuel-settings':
+                from lite_fuel_settings import context
+                return self.json(context(building,sha))
             if path=='/cfbt/lite/ai/fuel':
                 if self.client_address[0]!='127.0.0.1':return self.send_error(403)
                 try:
@@ -390,14 +393,14 @@ def main():
             if request_path.startswith('/cfbt/lite/ai/') and request_path!='/cfbt/lite/ai/fuel':
                 from lite_ai_http import handle
                 return handle(self,request_path)
-            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc','/cfbt/lite/fixed-openings','/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides'):return self.json({'error':'지원하지 않는 요청입니다'},405)
+            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc','/cfbt/lite/fixed-openings','/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides','/cfbt/lite/fuel-settings'):return self.json({'error':'지원하지 않는 요청입니다'},405)
             if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
             try:
                 length=int(self.headers.get('Content-Length','0'))
                 if not 0<length<=100000:raise ValueError('요청 크기 오류')
                 body=json.loads(self.rfile.read(length));base_path=None
                 if mc_service.status(sha).get('running'):return self.json({'error':'현재 MC 계산 중입니다'},409)
-                if request_path in ('/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides'):
+                if request_path in ('/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides','/cfbt/lite/fuel-settings'):
                     if self.client_address[0]!='127.0.0.1':return self.send_error(403)
                     import lite_ai_fuel
                     import lite_screening_service as screening
@@ -405,6 +408,9 @@ def main():
                         return self.json(lite_ai_fuel.propose(body,building,sha))
                     with lock:
                         if state['busy'] or (screening.payload().get('progress') or {}).get('running'):return self.json({'error':'현재 계산 중입니다'},409)
+                        if request_path.endswith('/fuel-settings'):
+                            from lite_fuel_settings import apply
+                            return self.json(apply(body,building,sha))
                         return self.json(lite_ai_fuel.apply(body,building,sha))
                 if request_path=='/cfbt/lite/mc':
                     with lock:

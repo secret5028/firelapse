@@ -38,7 +38,9 @@ def screening(ident, floor=None):
     value['approved_input'] = raw['approved_input']
     for r in value['ranked']:
         r['name'] = raw['approved_input']['room_uses'][r['room']]['label']
-    return dict(available=False, unavailable_reason='후보 비교·MC 미연결 · 단일 화점 실행 사용',
+    rows=jobs(ident); target_floor=floor or (rows[0][1]['floor'] if rows else None)
+    saved=next((sim.read(p/'input.json') for p,r in rows if r['floor']==target_floor),{})
+    return dict(available=False, fuel_rerun_required=saved.get('approved_input',{}).get('quantity_settings',{})!=raw['approved_input'].get('quantity_settings',{}), unavailable_reason='후보 비교·MC 미연결 · 단일 화점 실행 사용',
                 score=value, manual_origins=value['ranked'], selection={}, comparison=None, progress={'running':False})
 
 def handler(base, ident):
@@ -71,6 +73,9 @@ def handler(base, ident):
                         if 'door' not in v.get('kind',''):continue
                         rows.append(dict(id=v['id'],a=v['a'],b=v['b'],door_class=v.get('door_class','external' if v['b']=='OUTSIDE' else 'ordinary'),confidence=v.get('door_class_confidence','inferred'),connected_names=[v['a'],v['b']],reason=v.get('door_class_reason','자동 연결망 분류 · 미확인 표시 유지'),read_only=True))
                     return self.json(dict(rows=rows,fixed_state=None))
+                if path=='/cfbt/lite/fuel-settings':
+                    from lite_fuel_settings import context
+                    return self.json(context(sim.read(model_path(sim.entry(ident))),sim.fingerprint(ident)))
                 if path=='/cfbt/lite/ai/fuel':
                     return self.json(dict(configured=False,message='이 건물의 AI 수정 연결 전',rooms=None))
                 if path.startswith('/models/simulation/') and query.get('building',[None])[0]!=ident:
@@ -85,6 +90,18 @@ def handler(base, ident):
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
             path=urlsplit(self.path).path
+            if path=='/cfbt/lite/fuel-settings':
+                if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
+                try:
+                    n=int(self.headers.get('Content-Length','0'))
+                    if not 0<n<=100000:raise ValueError('요청 크기 오류')
+                    body=json.loads(self.rfile.read(n))
+                    from lite_fuel_settings import apply
+                    with sim._lock:
+                        if sim._active:raise RuntimeError('현재 계산 중입니다')
+                        return self.json(apply(body,sim.read(model_path(sim.entry(ident))),sim.fingerprint(ident)))
+                except RuntimeError as exc:return self.json({'error':str(exc)},409)
+                except (ValueError,TypeError,KeyError,OSError) as exc:return self.json({'error':str(exc)},400)
             if path=='/cfbt/lite/ai/reports/list':return self.json({'reports':[]})
             if path=='/models/simulation/run':
                 if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)

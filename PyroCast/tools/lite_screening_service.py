@@ -30,8 +30,8 @@ def payload(top_n=None):
             'progress':progress,'saved_score':read(destination/'score.json'),
             'selection':selection,'playback_replaced':False,
             'opening_mode':'fixed' if screening_states(raw,read(SIM/'config/lite-door-overrides.json',{}))==['fixed'] else 'extremes',
-            'fuel_revision':__import__('lite_ai_fuel').revision(scored.get('approved_input',{}).get('fuel_overrides',{})),
-            'fuel_rerun_required':read(destination/'score.json',{}).get('approved_input',{}).get('fuel_overrides',{})!=scored.get('approved_input',{}).get('fuel_overrides',{}),
+            'fuel_revision':__import__('lite_ai_fuel').revision({k:scored.get('approved_input',{}).get(k,{}) for k in ('fuel_overrides','quantity_settings')}),
+            'fuel_rerun_required':any(read(destination/'score.json',{}).get('approved_input',{}).get(k,{})!=scored.get('approved_input',{}).get(k,{}) for k in ('fuel_overrides','quantity_settings')),
             'attention':comparison_attention(None if legacy else comparison)}
 
 def select(top_n,mc_room=None,rooms=None):

@@ -40,8 +40,13 @@ def entry(ident):
 def fingerprint(ident):
     return hashlib.sha256(model_path(entry(ident)).read_bytes()).hexdigest()
 
-@lru_cache(maxsize=32)
 def prepared(ident, floor, digest):
+    from pyrocast_lite import fuel_quantity as q
+    settings=q.load(digest)
+    return _prepared(ident,floor,digest,json.dumps(settings,sort_keys=True))
+
+@lru_cache(maxsize=32)
+def _prepared(ident, floor, digest, quantity_json):
     from pyrocast_cfbt.cad import adapt, cad_key
     from pyrocast_cfbt.model import normalize
     from building_rules import usage_class
@@ -62,7 +67,8 @@ def prepared(ident, floor, digest):
     for r in raw['rooms']:
         rid = r['id']; src = original[rid]; cls, evidence = usage_class(src.get('names', []), f.get('use'))
         values = table[cls]; core = bool(r.get('core_kind')); area = r['area_m2']
-        load = r['fuel_default']['load_MJ_m2'] if core else values['mean']
+        from pyrocast_lite.fuel_quantity import ratio
+        load = r['fuel_default']['load_MJ_m2'] if core else values['mean']*ratio(json.loads(quantity_json),rid)
         hrrpua = r['fuel_default']['hrrpua_kW_m2'] if core else values['rhrf']
         records[rid] = dict(room=rid, usage_class=cls, label=values['label'],
             classification_basis=evidence, area_m2=area, load_MJ_m2=load,
@@ -76,7 +82,7 @@ def prepared(ident, floor, digest):
             g.update(energy_MJ=area*load, hrrpua_kW_m2=hrrpua, fuel_area_m2=.5*area, coverage_fraction=.5)
             for u in g.get('fuel_units', []): u['energy_MJ'] = g['energy_MJ']*u['budget_fraction']
     raw = normalize(raw)
-    raw['approved_input'] = {'room_uses':records, 'classification':'automatic, not user-approved', 'source_building_sha256':digest}
+    raw['approved_input'] = {'room_uses':records, 'classification':'automatic, not user-approved', 'source_building_sha256':digest,'quantity_settings':json.loads(quantity_json)}
     budgets = origin_budgets(raw); adjusted = deepcopy(raw)
     for g in adjusted['fuel_groups']: g['peak_kW'] = budgets[g['room']]['Q_origin_peak_kW']
     scored = v7.score(adjusted, 1)

@@ -27,10 +27,12 @@ def prepare_inputs(raw):
 
     if raw.get('cad',{}).get('building_sha256')!=cfg['building_sha256']:
         raise ValueError('Approved room classification belongs to a different building')
+    from .fuel_quantity import load as read_quantity,ratio
+    quantity=read_quantity(cfg['building_sha256'])
     m=deepcopy(raw);rooms={r['id']:r for r in m['rooms']};records={};exclusions=[]
     for rid,choice in cfg['rooms'].items():
         r=rooms[rid];cls=table['classes'][choice['class']];area=v7.area(r)
-        load=choice.get('load_override_MJ_m2',cls['mean'])
+        load=choice.get('load_override_MJ_m2',cls['mean'])*ratio(quantity,rid)
         record={**choice,'room':rid,'name':v7.name(r),'label':cls['label'],
             'area_m2':area,'load_MJ_m2':load,'hrrpua_kW_m2':cls['rhrf'],
             'coverage':cfg['coverage'],'table_basis':cls['basis'],
@@ -62,7 +64,7 @@ def prepare_inputs(raw):
         m['explicit_candidates']=[t for t in m['explicit_candidates'] if t.get('room') not in removed and t.get('group') not in removed_groups]
     m['approved_input']={'revision':REVISION,'room_uses':records,'graph_exclusions':exclusions,
         'source_building_sha256':cfg['building_sha256'],'coverage':cfg['coverage'],
-        'fuel_overrides':overrides,
+        'fuel_overrides':overrides,'quantity_settings':quantity,
         'assumptions':['toilet 40MJ/m² and250kW/m² are user assumptions, not standard values',
          'approved use mapping is specific to this building; unresolved names use default',
          ('R2 user-selected AI table class supersedes 1800MJ/m²' if 'CAD_3F_R2' in overrides.get('rooms',{}) else 'R2 1800MJ/m² explicit override; other loads use table mean'),

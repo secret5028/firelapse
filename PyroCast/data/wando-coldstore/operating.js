@@ -1,10 +1,10 @@
 // Dimension-only CAD bootstrap; all panels, playback and layers are production.
 import * as T from '/vendor/three.module.js';
 import {OrbitControls} from '/vendor/OrbitControls.js';
-import {attach} from '/cfbt/overlay.js?v=ui-20261104-peak-score';
+import {attach} from '/cfbt/overlay.js?v=ui-20261104-whole-building';
 import {createIncidentLayer} from './incident-layer.js?v=physical-depth-3';
 import {createExteriorLayer} from './exterior-layer.js?v=physical-depth-3';
-import {createScaleReference} from './scale-reference.js';
+import {createScaleReference} from '/app/web/scene/scale_reference.js';
 const $=id=>document.getElementById(id);
 try{
  const B=await (await fetch('./operating-building.json')).json(),S=new T.Scene(),C=new T.PerspectiveCamera(45,1,.01,1500),R=new T.WebGLRenderer({antialias:true});
@@ -42,7 +42,7 @@ try{
   const sphere=box.getBoundingSphere(new T.Sphere()),halfV=T.MathUtils.degToRad(C.fov/2),halfH=Math.atan(Math.tan(halfV)*C.aspect),distance=sphere.radius/Math.sin(Math.min(halfV,halfH))*1.12;
   O.target.copy(sphere.center);C.position.copy(sphere.center).addScaledVector(new T.Vector3(25,-35,28).normalize(),distance);O.update();app.render();
  };
- scaleView.onclick=showScale;showScale();
+ scaleView.onclick=showScale;
  const tactical=await(await fetch('./tactical.json')).json();
  const incident=createIncidentLayer(T,S,B,tactical,$('shellPane-display'));
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));

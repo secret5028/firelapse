@@ -34,7 +34,7 @@ export class RouteLayer extends EmptyLayer {
    vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);add(vehicle,'1F',false);
   }
  }
- setData(frame){this.frame=frame;if(this.graph.error){if(this.signature!==this.graph.error){this.signature=this.graph.error;this.onChange?.({error:this.graph.error});}this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
+ setData(frame){this.frame=frame;if(this.graph.error){if(this.signature!==this.graph.error){this.signature=this.graph.error;if(this.graph.defaultVehicle)this.build({vehicle:this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
   const signature=JSON.stringify([target,vehicle,state.hose_m,state.stair_factor]);
   if(signature!==this.signature){this.signature=signature;this.result={...findRoute(this.graph,target,vehicle,state),vehicle};this.build(this.result);}
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];

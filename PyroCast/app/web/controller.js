@@ -22,6 +22,7 @@ import {createRealViewLayers} from './layers/real_view_layers.js';
 import {RiskLayer} from './layers/risk.js';
 import {SelectionLayer} from './layers/selection.js';
 import {createSceneHost} from './scene/host.js';
+import {createScaleReference} from './scene/scale_reference.js';
 import {createLitePanel,updateLitePanel} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
 import {createDisplayPanel} from './panels/display.js';
@@ -48,11 +49,18 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let rawSource=null,data=null,selected=null,clicked=false,autoFit=false,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  let routeGraph;try{routeGraph=readRouteGraph(B);}catch(error){routeGraph={error:error.message,ground:{z:0,slab:[]},mainEntrance:null,defaultVehicle:null};}
- const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),vehicleSource=referenceGroup?.children.find(c=>c.isGroup);
+ const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),existingReference=referenceGroup?.children.find(c=>c.isGroup&&c.userData.includeScalePerson);
+ const ownedReference=existingReference?null:createScaleReference(T),vehicleSource=existingReference||ownedReference;
+ // A scale reference remains visible when the entrance/route is unresolved.
+ // This fallback is display-only; it does not invent an entrance or route.
+ if(routeGraph.error){const ground=B.floors.find(f=>/^(1F|F1|1층)$/i.test(f.name))||B.floors[0],points=(ground.slab?.length?ground.slab:ground.rooms.flatMap(r=>r.polys||[])).flatMap(p=>p.o||p);
+  if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-7,ground.z||0];}
+ }
  let routeUI=null;
  const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
  const layers=[buildingLayer,openings,core,new RoomNamesLayer(T,{building:B,groups,camera:C,container:$('v')}),...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
+ if(ownedReference)cleanup.push(()=>ownedReference.userData.dispose());
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
@@ -144,7 +152,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let resizeFrame=null;const observer=new ResizeObserver(()=>{if(resizeFrame===null)resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;if(!disposed)resize();});});observer.observe($('v'));cleanup.push(()=>{observer.disconnect();if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);});on(window,'resize',resize);
  function fitFloor(){const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
   const bounds=new T.Box3();
-  if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab||[])for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}}
+  if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab?.length?f.slab:f.rooms.flatMap(r=>r.polys||[]))for(const xy of p.o||p){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}
+   route.group?.updateWorldMatrix(true,true);for(const item of route.items||[])if(!item.route)bounds.union(new T.Box3().setFromObject(item.object));}
   else for(const r of rooms)for(const p of r.cad_polys)for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m+r.height_m));}
   const center=bounds.getCenter(new T.Vector3()),radius=bounds.getSize(new T.Vector3()).length()/2;
   const vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.05;
@@ -224,7 +233,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
- await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ await install(initial,chosen);viewer.setFloor('all');resize();fitFloor();await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.

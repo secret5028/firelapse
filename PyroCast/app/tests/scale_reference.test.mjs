@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+import {createScaleReference} from '../web/scene/scale_reference.js';
+import {RouteLayer} from '../web/layers/route.js';
+import {createStore} from '../web/state/store.js';
+const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const source=createScaleReference(T),scene=new T.Scene(),graph={error:'unresolved entrance',defaultVehicle:[10,-7,15.7]};
+const layer=new RouteLayer(T,{graph,vehicleSource:source,onChange:()=>{},targetFor:()=>null});layer.mount(scene,createStore());
+const frame={floor:{floor_id:null},route:{vehicle_visible:true}};layer.setData(frame);
+assert.equal(layer.items.length,1);const vehicle=layer.items[0].object;assert(vehicle.visible);assert(vehicle.children.some(o=>o.name.startsWith('scale-person:')));
+vehicle.updateWorldMatrix(true,true);const bounds=new T.Box3().setFromObject(vehicle);assert(Math.abs(bounds.min.z-15.7)<1e-5);assert(bounds.max.z<19);
+assert.equal(layer.result,null);assert.equal(layer.items.filter(x=>x.route).length,0);
+layer.setData({...frame,floor:{floor_id:'5F'}});assert.equal(vehicle.visible,false);
+layer.setData({...frame,floor:{floor_id:'1F'}});assert.equal(vehicle.visible,true);
+layer.setData({...frame,route:{vehicle_visible:false}});assert.equal(vehicle.visible,false);
+layer.dispose();source.userData.dispose();assert.equal(layer.resources.size,0);
+console.log('PASS: scale vehicle/person without inferred route, ground height, visibility and cleanup');

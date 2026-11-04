@@ -398,7 +398,7 @@ class RouteLayer extends EmptyLayer {
    vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);add(vehicle,'1F',false);
   }
  }
- setData(frame){this.frame=frame;if(this.graph.error){if(this.signature!==this.graph.error){this.signature=this.graph.error;this.onChange?.({error:this.graph.error});}this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
+ setData(frame){this.frame=frame;if(this.graph.error){if(this.signature!==this.graph.error){this.signature=this.graph.error;if(this.graph.defaultVehicle)this.build({vehicle:this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
   const signature=JSON.stringify([target,vehicle,state.hose_m,state.stair_factor]);
   if(signature!==this.signature){this.signature=signature;this.result={...findRoute(this.graph,target,vehicle,state),vehicle};this.build(this.result);}
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
@@ -4470,8 +4470,37 @@ function countObjects(scene){let n=0;scene.traverse(()=>n++);return n;}
 return {createSceneHost};
 })();
 
-// app/web/panels/legacy_lite_panel.js
+// app/web/scene/scale_reference.js
 const __module43=(()=>{
+// Restored from the CAD reference model: 8 m truck and 1.75 m human.
+// Display scale only; not incident positions or simulation participants.
+function createScaleReference(T){
+ const ref=new T.Group();ref.name='scale-reference-source';ref.visible=false;
+ ref.userData.includeScalePerson=true;
+ const materials={};const material=color=>materials[color]||(materials[color]=new T.MeshBasicMaterial({color}));
+ function box(w,h,d,x,y,z,color){const m=new T.Mesh(new T.BoxGeometry(w,h,d),material(color));m.position.set(x,y,z);ref.add(m);return m;}
+ function cylinder(r,h,x,y,z,color,rotate=false){const m=new T.Mesh(new T.CylinderGeometry(r,r,h,20),material(color));m.position.set(x,y,z);if(rotate)m.rotation.x=Math.PI/2;ref.add(m);return m;}
+ // Eight metre reference vehicle: chassis, cab, equipment body, roller doors and roof ladder.
+ box(8,.24,2.35,0,.8,0,'#35444e');box(5.25,1.95,2.35,-1.25,1.9,0,'#bd2435');box(2.3,2.1,2.4,2.75,1.95,0,'#d73542');
+ box(.04,.85,2.05,3.92,2.36,0,'#315a70');for(const z of [-1.211,1.211]){box(1.5,.8,.025,2.6,2.4,z,'#315a70');box(7.7,.16,.03,0,1.31,z,'#f3eee2');box(.28,.12,.05,3.5,1.03,z,'#fff3bc');for(const x of [-2.9,-1.25,.4]){box(1.35,1.38,.025,x,2.02,z,'#a4b0b7');for(let j=0;j<8;j++)box(1.29,.022,.038,x,1.45+j*.16,z,'#677781');}}
+ for(const x of [-2.5,2.75])for(const z of [-1.18,1.18]){cylinder(.52,.28,x,.52,z,'#17232b',true);cylinder(.26,.3,x,.52,z,'#aebac1',true);}
+ box(2.4,.15,2.6,2.7,.89,0,'#aebac1');box(1.4,.16,.35,2.7,3.1,0,'#458ce4');
+ for(const z of [-.43,.43])box(4.9,.065,.065,-1.4,3.03,z,'#e9e9dd');for(let i=0;i<13;i++)box(.06,.055,.86,-3.7+i*.37,3.03,0,'#e9e9dd');
+ // Human height is 1.75m, with feet resting on the same ground as the vehicle.
+ const hx=5.1,hz=-.4;for(const dx of [-.12,.12]){box(.15,.67,.18,hx+dx,.42,hz,'#354956');box(.17,.12,.3,hx+dx,.06,hz+.055,'#202a33');}
+ box(.45,.57,.23,hx,1.02,hz,'#e4ac36');for(const dx of [-.29,.29]){const arm=box(.13,.54,.15,hx+dx,1.0,hz,'#dca640');arm.rotation.z=dx>0?.10:-.10;}
+ cylinder(.15,.28,hx,1.46,hz,'#d8ac83');const helmet=new T.Mesh(new T.SphereGeometry(.18,18,12,0,Math.PI*2,0,Math.PI/2),material('#efd267'));helmet.position.set(hx,1.57,hz);ref.add(helmet);
+
+ ref.children.forEach((o,i)=>{o.name=(o.position.x>4.7?'scale-person:':'scale-truck:')+i;o.raycast=()=>{};});
+ ref.userData.dispose=()=>{const resources=new Set();ref.traverse(o=>{if(o.geometry)resources.add(o.geometry);if(o.material)resources.add(o.material);});for(const r of resources)r.dispose();ref.removeFromParent();};
+ return ref;
+}
+
+return {createScaleReference};
+})();
+
+// app/web/panels/legacy_lite_panel.js
+const __module44=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -4516,7 +4545,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module44=(()=>{
+const __module45=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -4577,8 +4606,8 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module45=(()=>{
-const {createTimelineRisk}=__module44;
+const __module46=(()=>{
+const {createTimelineRisk}=__module45;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -4665,7 +4694,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module46=(()=>{
+const __module47=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -4698,8 +4727,8 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module47=(()=>{
-const {createDisplayPolicy}=__module46;
+const __module48=(()=>{
+const {createDisplayPolicy}=__module47;
 const {roomFgiRollover}=__module3;
 const {fixedOpeningsFor}=__module41;
 const backdraftTip='고온연기 축적·산소부족';
@@ -4831,7 +4860,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module48=(()=>{
+const __module49=(()=>{
 const {infoTip}=__module16;
 const {roomFgiRollover}=__module3;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -4921,7 +4950,7 @@ return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMC
 })();
 
 // app/web/adapters/attention.js
-const __module49=(()=>{
+const __module50=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -4938,7 +4967,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module50=(()=>{
+const __module51=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -4990,9 +5019,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module51=(()=>{
-const {attentionRanking}=__module49;
-const {savedAttention}=__module50;
+const __module52=(()=>{
+const {attentionRanking}=__module50;
+const {savedAttention}=__module51;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5069,7 +5098,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module52=(()=>{
+const __module53=(()=>{
 const {createAssistantPanel}=__module0;
 const {attachExport}=__module1;
 const {routeSampleIndex}=__module4;
@@ -5094,11 +5123,12 @@ const {createRealViewLayers}=__module38;
 const {RiskLayer}=__module39;
 const {SelectionLayer}=__module40;
 const {createSceneHost}=__module42;
-const {createLitePanel,updateLitePanel}=__module43;
-const {createPanelShell}=__module45;
-const {createDisplayPanel}=__module47;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module48;
-const {createExplorePanel}=__module51;
+const {createScaleReference}=__module43;
+const {createLitePanel,updateLitePanel}=__module44;
+const {createPanelShell}=__module46;
+const {createDisplayPanel}=__module48;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module49;
+const {createExplorePanel}=__module52;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -5120,11 +5150,18 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let rawSource=null,data=null,selected=null,clicked=false,autoFit=false,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  let routeGraph;try{routeGraph=readRouteGraph(B);}catch(error){routeGraph={error:error.message,ground:{z:0,slab:[]},mainEntrance:null,defaultVehicle:null};}
- const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),vehicleSource=referenceGroup?.children.find(c=>c.isGroup);
+ const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),existingReference=referenceGroup?.children.find(c=>c.isGroup&&c.userData.includeScalePerson);
+ const ownedReference=existingReference?null:createScaleReference(T),vehicleSource=existingReference||ownedReference;
+ // A scale reference remains visible when the entrance/route is unresolved.
+ // This fallback is display-only; it does not invent an entrance or route.
+ if(routeGraph.error){const ground=B.floors.find(f=>/^(1F|F1|1층)$/i.test(f.name))||B.floors[0],points=(ground.slab?.length?ground.slab:ground.rooms.flatMap(r=>r.polys||[])).flatMap(p=>p.o||p);
+  if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-7,ground.z||0];}
+ }
  let routeUI=null;
  const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
  const layers=[buildingLayer,openings,core,new RoomNamesLayer(T,{building:B,groups,camera:C,container:$('v')}),...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
+ if(ownedReference)cleanup.push(()=>ownedReference.userData.dispose());
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
@@ -5216,7 +5253,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let resizeFrame=null;const observer=new ResizeObserver(()=>{if(resizeFrame===null)resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;if(!disposed)resize();});});observer.observe($('v'));cleanup.push(()=>{observer.disconnect();if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);});on(window,'resize',resize);
  function fitFloor(){const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
   const bounds=new T.Box3();
-  if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab||[])for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}}
+  if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab?.length?f.slab:f.rooms.flatMap(r=>r.polys||[]))for(const xy of p.o||p){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}
+   route.group?.updateWorldMatrix(true,true);for(const item of route.items||[])if(!item.route)bounds.union(new T.Box3().setFromObject(item.object));}
   else for(const r of rooms)for(const p of r.cad_polys)for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m+r.height_m));}
   const center=bounds.getCenter(new T.Vector3()),radius=bounds.getSize(new T.Vector3()).length()/2;
   const vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.05;
@@ -5296,7 +5334,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
- await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ await install(initial,chosen);viewer.setFloor('all');resize();fitFloor();await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
@@ -5313,8 +5351,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module53=(()=>{
-const {attachModern}=__module52;
+const __module54=(()=>{
+const {attachModern}=__module53;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -5329,4 +5367,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module53.attach;
+export const attach=__module54.attach;

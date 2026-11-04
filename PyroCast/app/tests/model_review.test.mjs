@@ -1,13 +1,15 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
+import {gunzipSync} from 'node:zlib';
 import {reviewRows} from '../web/panels/model_review.js';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PYROCAST_PLAYWRIGHT||'playwright');
-const out='reviews/cad-interior-arcs-20261104';
+const out=process.env.MODEL_REVIEW_OUT||'reviews/cad-final-axioms-20261104';
 const comparison=JSON.parse(fs.readFileSync(out+'/comparison.json','utf8'));
-const previous=JSON.parse(fs.readFileSync(out+'/building-before.json','utf8'));
+const previous=JSON.parse(fs.existsSync(out+'/building-before.json.gz')?gunzipSync(fs.readFileSync(out+'/building-before.json.gz')).toString('utf8'):fs.readFileSync(out+'/building-before.json','utf8'));
 const b=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json','utf8'));
-const before=JSON.stringify(b),rows=reviewRows(b);const correctionCount=b.model_review.corrections.length;assert.equal(rows.filter(x=>x.status==='자동보정').length,correctionCount);assert.equal(rows.filter(x=>x.kind==='isolated_room').length,comparison.after);assert.equal(JSON.stringify(b),before);
+const unresolved=comparison.unresolved_after??comparison.after;
+const before=JSON.stringify(b),rows=reviewRows(b);const correctionCount=b.model_review.corrections.length;assert.equal(rows.filter(x=>x.status==='자동보정').length,correctionCount);assert.equal(rows.filter(x=>x.kind==='isolated_room').length,unresolved);assert.equal(JSON.stringify(b),before);
 assert.deepEqual(reviewRows({}),[]);
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
 const errors=[],requests=[];
@@ -22,6 +24,11 @@ try{
  await page.getByRole('combobox',{name:'점검 층'}).selectOption('');
  await page.getByRole('combobox',{name:'점검 분류'}).selectOption('자동보정');
  assert.equal(await page.locator('.modelReview tbody tr').count(),correctionCount);
+ if(b.model_axioms){
+  await page.getByRole('button',{name:'B2 R12',exact:true}).click();assert.match(await page.locator('#selected').textContent(),/기둥/);
+  await page.locator('#iso').click();await page.screenshot({path:out+'/hotel-B2-column.png'});
+  assert.match(await page.locator('#review').textContent(),/CAD → 3D → AI 공리 검토/);
+ }
  await page.getByRole('button',{name:'1F D6',exact:true}).click();assert.equal(await page.locator('#floor').inputValue(),'1F');
  await page.screenshot({path:out+'/hotel-corrected-1F.png'});
  await page.getByRole('combobox',{name:'점검 분류'}).selectOption('검토 필요');await page.getByRole('combobox',{name:'점검 층'}).selectOption('B1');
@@ -36,5 +43,5 @@ try{
  await live.locator('#shellTab-building').click();assert.match(await live.locator('.modelReview summary').textContent(),/미실시/);
  await live.close();
  assert.deepEqual(errors,[]);assert.deepEqual(requests,[]);
- fs.writeFileSync(out+'/ui-verification.json',JSON.stringify({passed:true,rows:rows.length,corrections:correctionCount,isolated:comparison.after,floors:b.floors.length,errors,non_get_requests:requests},null,2));console.log('PASS: arc and AI-reviewed connections, before/after captures, 14 floors, filters/location, mobile; errors 0; POST 0');
+ fs.writeFileSync(out+'/ui-verification.json',JSON.stringify({passed:true,rows:rows.length,corrections:correctionCount,isolated:unresolved,floors:b.floors.length,errors,non_get_requests:requests},null,2));console.log('PASS: arc/AI review/column/remaining markers, 14 floors, filters/location, mobile; errors 0; POST 0');
 }finally{await browser.close();}

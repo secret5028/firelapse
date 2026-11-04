@@ -1,0 +1,11 @@
+{
+  "build_only": true,
+  "simulation_runs": 0,
+  "room_count": 74,
+  "vertical_openings": 20,
+  "vertical_kinds": [
+    "elev",
+    "stair"
+  ],
+  "columns_in_compartments": []
+}

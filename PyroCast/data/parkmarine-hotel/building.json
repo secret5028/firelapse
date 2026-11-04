@@ -5294,7 +5294,8 @@
             8.81,
             61.77
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -5372,7 +5373,8 @@
             21.3,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -5406,7 +5408,8 @@
             21.36,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -5496,49 +5499,8 @@
             22.84,
             58.42
           ],
-          "connectivity": "connected"
-        },
-        {
-          "id": "R5",
-          "area": 0.73,
-          "names": [],
-          "tags": [],
-          "polys": [
-            {
-              "o": [
-                [
-                  15.9,
-                  59.61
-                ],
-                [
-                  15.9,
-                  59.05
-                ],
-                [
-                  16.08,
-                  59.03
-                ],
-                [
-                  16.08,
-                  58.85
-                ],
-                [
-                  16.86,
-                  58.85
-                ],
-                [
-                  16.86,
-                  59.61
-                ]
-              ],
-              "h": []
-            }
-          ],
-          "c": [
-            16.4,
-            59.24
-          ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -5796,7 +5758,8 @@
             13.46,
             49.41
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -5840,7 +5803,8 @@
             16.85,
             55.78
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -5880,7 +5844,8 @@
             25.92,
             57.92
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -5920,7 +5885,8 @@
             25.66,
             54.87
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R10",
@@ -6017,7 +5983,8 @@
             1.68,
             43.98
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -6942,14 +6909,6 @@
             "included_in_solver": true
           },
           {
-            "id": "R5",
-            "area": 0.73,
-            "tags": [],
-            "connectivity": "unresolved_isolated",
-            "height_m": 5.9,
-            "included_in_solver": true
-          },
-          {
             "id": "R6",
             "area": 322.38,
             "tags": [],
@@ -7210,7 +7169,6 @@
         ],
         "isolated_rooms": [
           "R2",
-          "R5",
           "R7",
           "R8",
           "R9"
@@ -79645,6 +79603,119 @@
           "opening_ids": [],
           "connection_state": "unresolved"
         }
+      ],
+      "structural_columns": [
+        {
+          "id": "COLUMN_R5",
+          "source_room_id": "R5",
+          "source_room": {
+            "id": "R5",
+            "area": 0.73,
+            "names": [],
+            "tags": [],
+            "polys": [
+              {
+                "o": [
+                  [
+                    15.9,
+                    59.61
+                  ],
+                  [
+                    15.9,
+                    59.05
+                  ],
+                  [
+                    16.08,
+                    59.03
+                  ],
+                  [
+                    16.08,
+                    58.85
+                  ],
+                  [
+                    16.86,
+                    58.85
+                  ],
+                  [
+                    16.86,
+                    59.61
+                  ]
+                ],
+                "h": []
+              }
+            ],
+            "c": [
+              16.4,
+              59.24
+            ],
+            "connectivity": "unresolved_isolated"
+          },
+          "column_center": {
+            "x": 16.35,
+            "y": 59.24,
+            "floors_shared": 7
+          },
+          "polys": [
+            {
+              "o": [
+                [
+                  15.9,
+                  59.61
+                ],
+                [
+                  15.9,
+                  59.05
+                ],
+                [
+                  16.08,
+                  59.03
+                ],
+                [
+                  16.08,
+                  58.85
+                ],
+                [
+                  16.86,
+                  58.85
+                ],
+                [
+                  16.86,
+                  59.61
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "height_m": 5.9,
+          "correction": {
+            "kind": "column_not_room",
+            "floor": "B3",
+            "id": "R5",
+            "before": "room",
+            "after": "column",
+            "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+            "evidence": {
+              "seed_floor": "2F",
+              "seed_room": "R7",
+              "labels": [
+                "C3"
+              ],
+              "center": [
+                16.35,
+                59.24
+              ],
+              "matched_floors": [
+                "1F",
+                "2F",
+                "3F",
+                "B1",
+                "B2",
+                "B3"
+              ],
+              "iou": 0.972766
+            }
+          }
+        }
       ]
     },
     {
@@ -86790,7 +86861,8 @@
             5.59,
             63.75
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -86826,7 +86898,8 @@
             1.55,
             65.76
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -86869,7 +86942,8 @@
             13.14,
             63.77
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -86921,7 +86995,8 @@
             17.28,
             65.26
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -87201,7 +87276,8 @@
             8.4,
             55.99
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -87245,7 +87321,8 @@
             24.56,
             64.17
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -87279,7 +87356,8 @@
             21.3,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -87315,7 +87393,8 @@
             17.12,
             63.34
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -87349,7 +87428,8 @@
             21.4,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -87447,7 +87527,8 @@
             23.16,
             61.08
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R10",
@@ -87483,7 +87564,8 @@
             17.12,
             61.9
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R11",
@@ -87535,41 +87617,8 @@
             26.23,
             60.89
           ],
-          "connectivity": "unresolved_isolated"
-        },
-        {
-          "id": "R12",
-          "area": 0.57,
-          "names": [],
-          "tags": [],
-          "polys": [
-            {
-              "o": [
-                [
-                  15.9,
-                  59.61
-                ],
-                [
-                  15.9,
-                  59.05
-                ],
-                [
-                  16.86,
-                  59.05
-                ],
-                [
-                  16.86,
-                  59.61
-                ]
-              ],
-              "h": []
-            }
-          ],
-          "c": [
-            16.38,
-            59.33
-          ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -87613,7 +87662,8 @@
             7.18,
             57.81
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R14",
@@ -87745,7 +87795,8 @@
             16.85,
             55.78
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -87785,7 +87836,8 @@
             25.92,
             57.92
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -88018,7 +88070,8 @@
             14.38,
             47.65
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -88104,7 +88157,8 @@
             7.2,
             54.36
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -88138,7 +88192,8 @@
             12.07,
             54.93
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R22",
@@ -88180,7 +88235,46 @@
             13.71,
             54.93
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": "elev",
+          "core_axiom_evidence": [
+            {
+              "kind": "elev",
+              "source_core": 2,
+              "iou": 0.8153335128826636,
+              "matched_floors": [
+                "B2",
+                "5F",
+                "6F",
+                "7F",
+                "8F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "B2",
+              "id": "R22",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "elev",
+              "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+              "evidence": [
+                {
+                  "kind": "elev",
+                  "source_core": 2,
+                  "iou": 0.8153335128826636,
+                  "matched_floors": [
+                    "B2",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F"
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ],
       "openings": [
@@ -90309,14 +90403,6 @@
             "included_in_solver": true
           },
           {
-            "id": "R12",
-            "area": 0.57,
-            "tags": [],
-            "connectivity": "unresolved_isolated",
-            "height_m": 5.2,
-            "included_in_solver": true
-          },
-          {
             "id": "R13",
             "area": 15.02,
             "tags": [],
@@ -90795,7 +90881,6 @@
           "R3",
           "R6",
           "R11",
-          "R12",
           "R13",
           "R16",
           "R17",
@@ -124568,6 +124653,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -140638,6 +140725,103 @@
           "opening_ids": [],
           "connection_state": "unresolved"
         }
+      ],
+      "structural_columns": [
+        {
+          "id": "COLUMN_R12",
+          "source_room_id": "R12",
+          "source_room": {
+            "id": "R12",
+            "area": 0.57,
+            "names": [],
+            "tags": [],
+            "polys": [
+              {
+                "o": [
+                  [
+                    15.9,
+                    59.61
+                  ],
+                  [
+                    15.9,
+                    59.05
+                  ],
+                  [
+                    16.86,
+                    59.05
+                  ],
+                  [
+                    16.86,
+                    59.61
+                  ]
+                ],
+                "h": []
+              }
+            ],
+            "c": [
+              16.38,
+              59.33
+            ],
+            "connectivity": "unresolved_isolated"
+          },
+          "column_center": {
+            "x": 16.35,
+            "y": 59.24,
+            "floors_shared": 7
+          },
+          "polys": [
+            {
+              "o": [
+                [
+                  15.9,
+                  59.61
+                ],
+                [
+                  15.9,
+                  59.05
+                ],
+                [
+                  16.86,
+                  59.05
+                ],
+                [
+                  16.86,
+                  59.61
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "height_m": 5.2,
+          "correction": {
+            "kind": "column_not_room",
+            "floor": "B2",
+            "id": "R12",
+            "before": "room",
+            "after": "column",
+            "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+            "evidence": {
+              "seed_floor": "2F",
+              "seed_room": "R7",
+              "labels": [
+                "C3"
+              ],
+              "center": [
+                16.35,
+                59.24
+              ],
+              "matched_floors": [
+                "1F",
+                "2F",
+                "3F",
+                "B1",
+                "B2",
+                "B3"
+              ],
+              "iou": 0.748936
+            }
+          }
+        }
       ]
     },
     {
@@ -147955,7 +148139,8 @@
             13.09,
             64.47
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -148178,7 +148363,8 @@
             12.47,
             51.5
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -148222,7 +148408,8 @@
             24.56,
             64.17
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -148258,7 +148445,8 @@
             21.3,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -148303,7 +148491,8 @@
             1.89,
             63.59
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -148337,7 +148526,8 @@
             21.4,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -148379,7 +148569,8 @@
             10.37,
             62.29
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -148413,7 +148604,8 @@
             11.82,
             62.74
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R10",
@@ -148455,7 +148647,8 @@
             13.27,
             62.29
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R11",
@@ -148507,7 +148700,8 @@
             26.05,
             60.94
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -148543,49 +148737,8 @@
             4.58,
             60.55
           ],
-          "connectivity": "connected"
-        },
-        {
-          "id": "R13",
-          "area": 0.73,
-          "names": [],
-          "tags": [],
-          "polys": [
-            {
-              "o": [
-                [
-                  15.9,
-                  59.61
-                ],
-                [
-                  15.9,
-                  59.05
-                ],
-                [
-                  16.08,
-                  59.03
-                ],
-                [
-                  16.08,
-                  58.85
-                ],
-                [
-                  16.86,
-                  58.85
-                ],
-                [
-                  16.86,
-                  59.61
-                ]
-              ],
-              "h": []
-            }
-          ],
-          "c": [
-            16.4,
-            59.24
-          ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R14",
@@ -148621,7 +148774,58 @@
             13.81,
             57.58
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9977578475336324,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "B1",
+              "id": "R14",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9977578475336324,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R15",
@@ -148665,7 +148869,8 @@
             16.85,
             55.78
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -148713,7 +148918,8 @@
             25.93,
             57.91
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -148828,7 +149034,8 @@
             12.07,
             54.93
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -148892,7 +149099,8 @@
             15.43,
             54.13
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -148930,7 +149138,8 @@
             25.19,
             50.79
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -151102,14 +151311,6 @@
             "included_in_solver": true
           },
           {
-            "id": "R13",
-            "area": 0.73,
-            "tags": [],
-            "connectivity": "unresolved_isolated",
-            "height_m": 3.3,
-            "included_in_solver": true
-          },
-          {
             "id": "R14",
             "area": 12.88,
             "tags": [
@@ -151795,7 +151996,6 @@
         "isolated_rooms": [
           "R5",
           "R6",
-          "R13",
           "R15",
           "R16",
           "R17",
@@ -172410,6 +172610,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -180346,6 +180548,119 @@
           "opening_ids": [],
           "connection_state": "unresolved"
         }
+      ],
+      "structural_columns": [
+        {
+          "id": "COLUMN_R13",
+          "source_room_id": "R13",
+          "source_room": {
+            "id": "R13",
+            "area": 0.73,
+            "names": [],
+            "tags": [],
+            "polys": [
+              {
+                "o": [
+                  [
+                    15.9,
+                    59.61
+                  ],
+                  [
+                    15.9,
+                    59.05
+                  ],
+                  [
+                    16.08,
+                    59.03
+                  ],
+                  [
+                    16.08,
+                    58.85
+                  ],
+                  [
+                    16.86,
+                    58.85
+                  ],
+                  [
+                    16.86,
+                    59.61
+                  ]
+                ],
+                "h": []
+              }
+            ],
+            "c": [
+              16.4,
+              59.24
+            ],
+            "connectivity": "unresolved_isolated"
+          },
+          "column_center": {
+            "x": 16.35,
+            "y": 59.24,
+            "floors_shared": 7
+          },
+          "polys": [
+            {
+              "o": [
+                [
+                  15.9,
+                  59.61
+                ],
+                [
+                  15.9,
+                  59.05
+                ],
+                [
+                  16.08,
+                  59.03
+                ],
+                [
+                  16.08,
+                  58.85
+                ],
+                [
+                  16.86,
+                  58.85
+                ],
+                [
+                  16.86,
+                  59.61
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "height_m": 4.6,
+          "correction": {
+            "kind": "column_not_room",
+            "floor": "B1",
+            "id": "R13",
+            "before": "room",
+            "after": "column",
+            "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+            "evidence": {
+              "seed_floor": "2F",
+              "seed_room": "R7",
+              "labels": [
+                "C3"
+              ],
+              "center": [
+                16.35,
+                59.24
+              ],
+              "matched_floors": [
+                "1F",
+                "2F",
+                "3F",
+                "B1",
+                "B2",
+                "B3"
+              ],
+              "iou": 0.972766
+            }
+          }
+        }
       ]
     },
     {
@@ -186912,7 +187227,8 @@
             8.5,
             65.53
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -187428,7 +187744,8 @@
             11.49,
             56.5
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -187472,7 +187789,8 @@
             15.03,
             65.45
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -187508,7 +187826,8 @@
             24.52,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -187552,7 +187871,8 @@
             21.28,
             63.8
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -187609,7 +187929,8 @@
             4.48,
             62.67
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -187643,7 +187964,8 @@
             26.62,
             60.89
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -187689,49 +188011,8 @@
             4.47,
             60.49
           ],
-          "connectivity": "connected"
-        },
-        {
-          "id": "R8",
-          "area": 0.72,
-          "names": [],
-          "tags": [],
-          "polys": [
-            {
-              "o": [
-                [
-                  15.89,
-                  59.6
-                ],
-                [
-                  15.89,
-                  59.04
-                ],
-                [
-                  16.07,
-                  59.04
-                ],
-                [
-                  16.09,
-                  58.84
-                ],
-                [
-                  16.85,
-                  58.84
-                ],
-                [
-                  16.85,
-                  59.6
-                ]
-              ],
-              "h": []
-            }
-          ],
-          "c": [
-            16.39,
-            59.24
-          ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -187767,7 +188048,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "1F",
+              "id": "R9",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R10",
@@ -187934,7 +188266,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R14",
@@ -187970,7 +188303,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -188006,7 +188340,8 @@
             24.67,
             55.18
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -188042,7 +188377,8 @@
             24.09,
             50.67
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -191315,14 +191651,6 @@
             "included_in_solver": true
           },
           {
-            "id": "R8",
-            "area": 0.72,
-            "tags": [],
-            "connectivity": "unresolved_isolated",
-            "height_m": 3.8,
-            "included_in_solver": true
-          },
-          {
             "id": "R9",
             "area": 12.9,
             "tags": [
@@ -192428,7 +192756,6 @@
           }
         ],
         "isolated_rooms": [
-          "R8",
           "R10",
           "R12",
           "R15"
@@ -201133,6 +201460,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_69e41d1d768e",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_69e41d1d768e"
           ],
@@ -201146,6 +201475,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -205260,6 +205591,119 @@
           "radius_m": 0.305194,
           "opening_ids": [],
           "connection_state": "unresolved"
+        }
+      ],
+      "structural_columns": [
+        {
+          "id": "COLUMN_R8",
+          "source_room_id": "R8",
+          "source_room": {
+            "id": "R8",
+            "area": 0.72,
+            "names": [],
+            "tags": [],
+            "polys": [
+              {
+                "o": [
+                  [
+                    15.89,
+                    59.6
+                  ],
+                  [
+                    15.89,
+                    59.04
+                  ],
+                  [
+                    16.07,
+                    59.04
+                  ],
+                  [
+                    16.09,
+                    58.84
+                  ],
+                  [
+                    16.85,
+                    58.84
+                  ],
+                  [
+                    16.85,
+                    59.6
+                  ]
+                ],
+                "h": []
+              }
+            ],
+            "c": [
+              16.39,
+              59.24
+            ],
+            "connectivity": "unresolved_isolated"
+          },
+          "column_center": {
+            "x": 16.35,
+            "y": 59.24,
+            "floors_shared": 7
+          },
+          "polys": [
+            {
+              "o": [
+                [
+                  15.89,
+                  59.6
+                ],
+                [
+                  15.89,
+                  59.04
+                ],
+                [
+                  16.07,
+                  59.04
+                ],
+                [
+                  16.09,
+                  58.84
+                ],
+                [
+                  16.85,
+                  58.84
+                ],
+                [
+                  16.85,
+                  59.6
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "height_m": 5.1,
+          "correction": {
+            "kind": "column_not_room",
+            "floor": "1F",
+            "id": "R8",
+            "before": "room",
+            "after": "column",
+            "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+            "evidence": {
+              "seed_floor": "2F",
+              "seed_room": "R7",
+              "labels": [
+                "C3"
+              ],
+              "center": [
+                16.35,
+                59.24
+              ],
+              "matched_floors": [
+                "1F",
+                "2F",
+                "3F",
+                "B1",
+                "B2",
+                "B3"
+              ],
+              "iou": 0.977689
+            }
+          }
         }
       ]
     },
@@ -210483,7 +210927,8 @@
             13.01,
             54.44
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -210519,7 +210964,8 @@
             24.52,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -210553,7 +210999,8 @@
             21.3,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -210587,7 +211034,8 @@
             21.4,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -210649,7 +211097,8 @@
             23.4,
             61.62
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -210685,7 +211134,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -210766,51 +211216,8 @@
             23.2,
             58.68
           ],
-          "connectivity": "connected"
-        },
-        {
-          "id": "R7",
-          "area": 0.73,
-          "names": [
-            "C3"
-          ],
-          "tags": [],
-          "polys": [
-            {
-              "o": [
-                [
-                  15.9,
-                  59.6
-                ],
-                [
-                  15.9,
-                  59.04
-                ],
-                [
-                  16.08,
-                  59.02
-                ],
-                [
-                  16.08,
-                  58.84
-                ],
-                [
-                  16.86,
-                  58.84
-                ],
-                [
-                  16.86,
-                  59.6
-                ]
-              ],
-              "h": []
-            }
-          ],
-          "c": [
-            16.4,
-            59.23
-          ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -210846,7 +211253,58 @@
             13.83,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9863897853234195,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "2F",
+              "id": "R8",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9863897853234195,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R9",
@@ -210889,7 +211347,8 @@
             24.97,
             57.13
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R10",
@@ -210925,7 +211384,8 @@
             12.08,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R11",
@@ -210962,7 +211422,8 @@
             15.48,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -212533,14 +212994,6 @@
             "included_in_solver": true
           },
           {
-            "id": "R7",
-            "area": 0.73,
-            "tags": [],
-            "connectivity": "unresolved_isolated",
-            "height_m": 2.6,
-            "included_in_solver": true
-          },
-          {
             "id": "R8",
             "area": 12.9,
             "tags": [
@@ -212865,7 +213318,6 @@
         "isolated_rooms": [
           "R2",
           "R5",
-          "R7",
           "R9"
         ],
         "note": "연결 미확정 공간도 유지. 개구부 미확인은 외기 연결로 바꾸지 않음. 높이 미지정 시 층 기본값 사용."
@@ -223316,6 +223768,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_69e41d1d768e",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_69e41d1d768e"
           ],
@@ -223329,6 +223783,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -228269,6 +228725,121 @@
           "radius_m": 0.305194,
           "opening_ids": [],
           "connection_state": "unresolved"
+        }
+      ],
+      "structural_columns": [
+        {
+          "id": "COLUMN_R7",
+          "source_room_id": "R7",
+          "source_room": {
+            "id": "R7",
+            "area": 0.73,
+            "names": [
+              "C3"
+            ],
+            "tags": [],
+            "polys": [
+              {
+                "o": [
+                  [
+                    15.9,
+                    59.6
+                  ],
+                  [
+                    15.9,
+                    59.04
+                  ],
+                  [
+                    16.08,
+                    59.02
+                  ],
+                  [
+                    16.08,
+                    58.84
+                  ],
+                  [
+                    16.86,
+                    58.84
+                  ],
+                  [
+                    16.86,
+                    59.6
+                  ]
+                ],
+                "h": []
+              }
+            ],
+            "c": [
+              16.4,
+              59.23
+            ],
+            "connectivity": "unresolved_isolated"
+          },
+          "column_center": {
+            "x": 16.35,
+            "y": 59.24,
+            "floors_shared": 7
+          },
+          "polys": [
+            {
+              "o": [
+                [
+                  15.9,
+                  59.6
+                ],
+                [
+                  15.9,
+                  59.04
+                ],
+                [
+                  16.08,
+                  59.02
+                ],
+                [
+                  16.08,
+                  58.84
+                ],
+                [
+                  16.86,
+                  58.84
+                ],
+                [
+                  16.86,
+                  59.6
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "height_m": 3.6,
+          "correction": {
+            "kind": "column_not_room",
+            "floor": "2F",
+            "id": "R7",
+            "before": "room",
+            "after": "column",
+            "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+            "evidence": {
+              "seed_floor": "2F",
+              "seed_room": "R7",
+              "labels": [
+                "C3"
+              ],
+              "center": [
+                16.35,
+                59.24
+              ],
+              "matched_floors": [
+                "1F",
+                "2F",
+                "3F",
+                "B1",
+                "B2",
+                "B3"
+              ],
+              "iou": 1.0
+            }
+          }
         }
       ]
     },
@@ -235318,7 +235889,8 @@
             13.0,
             54.44
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -235354,7 +235926,8 @@
             24.52,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -235388,7 +235961,8 @@
             21.3,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -235422,7 +235996,8 @@
             21.4,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -235480,7 +236055,8 @@
             23.42,
             61.63
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -235516,7 +236092,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -235601,49 +236178,8 @@
             23.27,
             58.71
           ],
-          "connectivity": "connected"
-        },
-        {
-          "id": "R7",
-          "area": 0.72,
-          "names": [],
-          "tags": [],
-          "polys": [
-            {
-              "o": [
-                [
-                  15.88,
-                  59.6
-                ],
-                [
-                  15.88,
-                  59.04
-                ],
-                [
-                  16.06,
-                  59.04
-                ],
-                [
-                  16.08,
-                  58.84
-                ],
-                [
-                  16.84,
-                  58.84
-                ],
-                [
-                  16.84,
-                  59.6
-                ]
-              ],
-              "h": []
-            }
-          ],
-          "c": [
-            16.38,
-            59.24
-          ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -235679,7 +236215,58 @@
             13.83,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9863897853234195,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "3F",
+              "id": "R8",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9863897853234195,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R9",
@@ -235722,7 +236309,8 @@
             24.97,
             57.14
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R10",
@@ -235758,7 +236346,8 @@
             12.08,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R11",
@@ -235795,7 +236384,8 @@
             15.48,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -237885,14 +238475,6 @@
             "included_in_solver": true
           },
           {
-            "id": "R7",
-            "area": 0.72,
-            "tags": [],
-            "connectivity": "unresolved_isolated",
-            "height_m": 3.7,
-            "included_in_solver": true
-          },
-          {
             "id": "R8",
             "area": 12.9,
             "tags": [
@@ -238395,8 +238977,7 @@
         ],
         "isolated_rooms": [
           "R2",
-          "R5",
-          "R7"
+          "R5"
         ],
         "note": "연결 미확정 공간도 유지. 개구부 미확인은 외기 연결로 바꾸지 않음. 높이 미지정 시 층 기본값 사용."
       },
@@ -248822,6 +249403,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_b4f6bda84025",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_b4f6bda84025"
           ],
@@ -248835,6 +249418,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_3fc51e021654",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_3fc51e021654"
           ],
@@ -253731,6 +254316,119 @@
           "radius_m": 0.305194,
           "opening_ids": [],
           "connection_state": "unresolved"
+        }
+      ],
+      "structural_columns": [
+        {
+          "id": "COLUMN_R7",
+          "source_room_id": "R7",
+          "source_room": {
+            "id": "R7",
+            "area": 0.72,
+            "names": [],
+            "tags": [],
+            "polys": [
+              {
+                "o": [
+                  [
+                    15.88,
+                    59.6
+                  ],
+                  [
+                    15.88,
+                    59.04
+                  ],
+                  [
+                    16.06,
+                    59.04
+                  ],
+                  [
+                    16.08,
+                    58.84
+                  ],
+                  [
+                    16.84,
+                    58.84
+                  ],
+                  [
+                    16.84,
+                    59.6
+                  ]
+                ],
+                "h": []
+              }
+            ],
+            "c": [
+              16.38,
+              59.24
+            ],
+            "connectivity": "unresolved_isolated"
+          },
+          "column_center": {
+            "x": 16.35,
+            "y": 59.24,
+            "floors_shared": 7
+          },
+          "polys": [
+            {
+              "o": [
+                [
+                  15.88,
+                  59.6
+                ],
+                [
+                  15.88,
+                  59.04
+                ],
+                [
+                  16.06,
+                  59.04
+                ],
+                [
+                  16.08,
+                  58.84
+                ],
+                [
+                  16.84,
+                  58.84
+                ],
+                [
+                  16.84,
+                  59.6
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "height_m": 5.0,
+          "correction": {
+            "kind": "column_not_room",
+            "floor": "3F",
+            "id": "R7",
+            "before": "room",
+            "after": "column",
+            "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+            "evidence": {
+              "seed_floor": "2F",
+              "seed_room": "R7",
+              "labels": [
+                "C3"
+              ],
+              "center": [
+                16.35,
+                59.24
+              ],
+              "matched_floors": [
+                "1F",
+                "2F",
+                "3F",
+                "B1",
+                "B2",
+                "B3"
+              ],
+              "iou": 0.958381
+            }
+          }
         }
       ]
     },
@@ -265755,7 +266453,8 @@
             6.12,
             65.15
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -265836,7 +266535,8 @@
             13.82,
             63.86
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -266195,7 +266895,8 @@
             14.5,
             56.76
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -266231,7 +266932,8 @@
             24.51,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -266265,7 +266967,8 @@
             21.29,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -266299,7 +267002,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -266351,7 +267055,8 @@
             6.04,
             61.35
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -266411,7 +267116,8 @@
             22.16,
             60.84
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -266447,7 +267153,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -266552,7 +267259,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "4F",
+              "id": "R10",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R11",
@@ -266612,7 +267370,8 @@
             21.94,
             57.23
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -266649,7 +267408,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -266721,7 +267481,8 @@
             13.79,
             53.53
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R14",
@@ -266758,7 +267519,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -266838,7 +267600,8 @@
             6.07,
             53.66
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -266906,7 +267669,8 @@
             21.9,
             53.58
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -266958,7 +267722,8 @@
             6.05,
             49.76
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -267042,7 +267807,8 @@
             22.89,
             47.53
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -267110,7 +267876,8 @@
             13.7,
             46.87
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -267170,7 +267937,8 @@
             18.26,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -267238,7 +268006,8 @@
             6.09,
             45.7
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -309900,6 +310669,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -327701,6 +328472,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -338518,7 +339291,8 @@
             6.04,
             65.21
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -338866,7 +339640,8 @@
             14.51,
             56.77
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -338926,7 +339701,8 @@
             13.84,
             63.89
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -338962,7 +339738,8 @@
             24.52,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -338996,7 +339773,8 @@
             21.29,
             64.39
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -339030,7 +339808,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -339082,7 +339861,8 @@
             6.04,
             61.35
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -339134,7 +339914,8 @@
             22.19,
             60.83
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -339170,7 +339951,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -339259,7 +340041,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "5F",
+              "id": "R10",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R11",
@@ -339311,7 +340144,8 @@
             21.97,
             57.24
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -339348,7 +340182,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -339387,7 +340222,46 @@
             13.72,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "elev",
+          "core_axiom_evidence": [
+            {
+              "kind": "elev",
+              "source_core": 2,
+              "iou": 0.8231077852409507,
+              "matched_floors": [
+                "B2",
+                "5F",
+                "6F",
+                "7F",
+                "8F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "5F",
+              "id": "R13",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "elev",
+              "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+              "evidence": [
+                {
+                  "kind": "elev",
+                  "source_core": 2,
+                  "iou": 0.8231077852409507,
+                  "matched_floors": [
+                    "B2",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R14",
@@ -339424,7 +340298,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -339476,7 +340351,8 @@
             6.04,
             53.64
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -339528,7 +340404,8 @@
             21.97,
             53.56
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -339576,7 +340453,8 @@
             13.84,
             52.82
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -339652,7 +340530,8 @@
             22.93,
             47.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -339704,7 +340583,8 @@
             6.04,
             49.75
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -339764,7 +340644,8 @@
             13.76,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -339824,7 +340705,8 @@
             18.26,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R22",
@@ -339892,7 +340774,8 @@
             6.05,
             45.61
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -398471,6 +399354,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -398782,6 +399667,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -410205,7 +411092,8 @@
             6.04,
             65.2
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -410484,7 +411372,8 @@
             14.5,
             56.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -410544,7 +411433,8 @@
             13.84,
             63.89
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -410580,7 +411470,8 @@
             24.51,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -410614,7 +411505,8 @@
             21.29,
             64.39
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -410648,7 +411540,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -410700,7 +411593,8 @@
             6.04,
             61.34
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -410752,7 +411646,8 @@
             22.2,
             60.84
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -410788,7 +411683,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -410877,7 +411773,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "6F",
+              "id": "R10",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R11",
@@ -410929,7 +411876,8 @@
             21.96,
             57.23
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -410966,7 +411914,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -411005,7 +411954,46 @@
             13.72,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "elev",
+          "core_axiom_evidence": [
+            {
+              "kind": "elev",
+              "source_core": 2,
+              "iou": 0.8231077852409507,
+              "matched_floors": [
+                "B2",
+                "5F",
+                "6F",
+                "7F",
+                "8F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "6F",
+              "id": "R13",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "elev",
+              "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+              "evidence": [
+                {
+                  "kind": "elev",
+                  "source_core": 2,
+                  "iou": 0.8231077852409507,
+                  "matched_floors": [
+                    "B2",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R14",
@@ -411042,7 +412030,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -411094,7 +412083,8 @@
             6.04,
             53.65
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -411146,7 +412136,8 @@
             21.96,
             53.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -411194,7 +412185,8 @@
             13.84,
             52.82
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -411246,7 +412238,8 @@
             6.04,
             49.75
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -411322,7 +412315,8 @@
             22.92,
             47.41
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -411382,7 +412376,8 @@
             13.75,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -411442,7 +412437,8 @@
             18.25,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R22",
@@ -411510,7 +412506,8 @@
             6.05,
             45.6
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -454616,6 +455613,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -472439,6 +473438,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -483571,7 +484572,8 @@
             6.04,
             65.2
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -483848,7 +484850,8 @@
             14.51,
             56.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -483908,7 +484911,8 @@
             13.84,
             63.89
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -483944,7 +484948,8 @@
             24.52,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -483978,7 +484983,8 @@
             21.29,
             64.39
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -484012,7 +485018,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -484064,7 +485071,8 @@
             6.04,
             61.34
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -484116,7 +485124,8 @@
             22.2,
             60.84
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -484152,7 +485161,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -484241,7 +485251,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "7F",
+              "id": "R10",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R11",
@@ -484293,7 +485354,8 @@
             21.96,
             57.23
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -484330,7 +485392,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -484369,7 +485432,46 @@
             13.72,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "elev",
+          "core_axiom_evidence": [
+            {
+              "kind": "elev",
+              "source_core": 2,
+              "iou": 0.8231077852409507,
+              "matched_floors": [
+                "B2",
+                "5F",
+                "6F",
+                "7F",
+                "8F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "7F",
+              "id": "R13",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "elev",
+              "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+              "evidence": [
+                {
+                  "kind": "elev",
+                  "source_core": 2,
+                  "iou": 0.8231077852409507,
+                  "matched_floors": [
+                    "B2",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R14",
@@ -484406,7 +485508,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -484458,7 +485561,8 @@
             6.04,
             53.64
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -484510,7 +485614,8 @@
             21.96,
             53.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -484558,7 +485663,8 @@
             13.84,
             52.82
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -484610,7 +485716,8 @@
             6.04,
             49.75
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -484686,7 +485793,8 @@
             22.91,
             47.41
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -484746,7 +485854,8 @@
             13.75,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -484806,7 +485915,8 @@
             18.25,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R22",
@@ -484874,7 +485984,8 @@
             6.05,
             45.6
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -543499,6 +544610,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -543810,6 +544923,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -556180,7 +557295,8 @@
             6.12,
             65.14
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -556260,7 +557376,8 @@
             13.82,
             63.86
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -556559,7 +557676,8 @@
             14.49,
             56.77
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -556595,7 +557713,8 @@
             24.51,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -556629,7 +557748,8 @@
             21.29,
             64.39
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -556663,7 +557783,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -556715,7 +557836,8 @@
             6.04,
             61.34
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R7",
@@ -556775,7 +557897,8 @@
             22.17,
             60.85
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -556811,7 +557934,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -556916,7 +558040,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "8F",
+              "id": "R10",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R11",
@@ -556976,7 +558151,8 @@
             21.95,
             57.23
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -557013,7 +558189,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -557052,7 +558229,46 @@
             13.72,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "elev",
+          "core_axiom_evidence": [
+            {
+              "kind": "elev",
+              "source_core": 2,
+              "iou": 0.8231077852409507,
+              "matched_floors": [
+                "B2",
+                "5F",
+                "6F",
+                "7F",
+                "8F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "8F",
+              "id": "R13",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "elev",
+              "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+              "evidence": [
+                {
+                  "kind": "elev",
+                  "source_core": 2,
+                  "iou": 0.8231077852409507,
+                  "matched_floors": [
+                    "B2",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R14",
@@ -557089,7 +558305,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -557169,7 +558386,8 @@
             6.07,
             53.67
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -557237,7 +558455,8 @@
             21.9,
             53.59
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -557285,7 +558504,8 @@
             13.84,
             52.82
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -557337,7 +558557,8 @@
             6.04,
             49.75
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -557421,7 +558642,8 @@
             22.88,
             47.52
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -557489,7 +558711,8 @@
             13.69,
             46.86
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R21",
@@ -557549,7 +558772,8 @@
             18.25,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R22",
@@ -557617,7 +558841,8 @@
             6.09,
             45.69
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -618294,6 +619519,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -618715,6 +619942,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -629987,7 +631216,8 @@
             5.47,
             63.94
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -630263,7 +631493,8 @@
             14.51,
             56.77
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -630323,7 +631554,8 @@
             13.84,
             63.89
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -630359,7 +631591,8 @@
             24.52,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -630393,7 +631626,8 @@
             21.29,
             64.39
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -630427,7 +631661,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -630548,7 +631783,8 @@
             22.2,
             60.84
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -630584,7 +631820,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -630620,7 +631857,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "9F",
+              "id": "R9",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R10",
@@ -630672,7 +631960,8 @@
             21.96,
             57.23
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R11",
@@ -630709,7 +631998,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -630781,7 +632071,8 @@
             13.79,
             53.53
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -630818,7 +632109,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R14",
@@ -630870,7 +632162,8 @@
             6.04,
             53.65
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -630922,7 +632215,8 @@
             21.96,
             53.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -630974,7 +632268,8 @@
             6.04,
             49.75
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -631050,7 +632345,8 @@
             22.91,
             47.41
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -631110,7 +632406,8 @@
             13.75,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -631170,7 +632467,8 @@
             18.25,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R20",
@@ -631238,7 +632536,8 @@
             6.05,
             45.6
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -670887,6 +672186,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -687360,6 +688661,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -698663,7 +699966,8 @@
             5.47,
             63.95
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R1",
@@ -698939,7 +700243,8 @@
             14.51,
             56.77
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -698999,7 +700304,8 @@
             13.84,
             63.89
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R3",
@@ -699035,7 +700341,8 @@
             24.51,
             64.18
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -699069,7 +700376,8 @@
             21.29,
             64.4
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R5",
@@ -699103,7 +700411,8 @@
             21.39,
             63.42
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -699224,7 +700533,8 @@
             22.2,
             60.84
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R8",
@@ -699260,7 +700570,8 @@
             26.55,
             62.15
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R9",
@@ -699296,7 +700607,58 @@
             13.82,
             57.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": "stair",
+          "core_axiom_evidence": [
+            {
+              "kind": "stair",
+              "source_core": 3,
+              "iou": 0.9886036776914273,
+              "matched_floors": [
+                "B1",
+                "1F",
+                "2F",
+                "3F",
+                "4F",
+                "5F",
+                "6F",
+                "7F",
+                "8F",
+                "9F",
+                "10F"
+              ]
+            }
+          ],
+          "model_corrections": [
+            {
+              "floor": "10F",
+              "id": "R9",
+              "kind": "repeated_core_identity",
+              "before": null,
+              "after": "stair",
+              "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+              "evidence": [
+                {
+                  "kind": "stair",
+                  "source_core": 3,
+                  "iou": 0.9886036776914273,
+                  "matched_floors": [
+                    "B1",
+                    "1F",
+                    "2F",
+                    "3F",
+                    "4F",
+                    "5F",
+                    "6F",
+                    "7F",
+                    "8F",
+                    "9F",
+                    "10F"
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "R10",
@@ -699348,7 +700710,8 @@
             21.96,
             57.23
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R11",
@@ -699385,7 +700748,8 @@
             12.07,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R12",
@@ -699457,7 +700821,8 @@
             13.79,
             53.53
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R13",
@@ -699494,7 +700859,8 @@
             15.47,
             54.92
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R14",
@@ -699546,7 +700912,8 @@
             6.04,
             53.65
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R15",
@@ -699598,7 +700965,8 @@
             21.96,
             53.57
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R16",
@@ -699698,7 +701066,8 @@
             6.05,
             47.52
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R17",
@@ -699774,7 +701143,8 @@
             22.91,
             47.41
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R18",
@@ -699834,7 +701204,8 @@
             13.75,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R19",
@@ -699894,7 +701265,8 @@
             18.25,
             46.78
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -740488,6 +741860,8 @@
             53.740081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a53d8eb01c96",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a53d8eb01c96"
           ],
@@ -757445,6 +758819,8 @@
             55.310081
           ],
           "radius_m": 0.74,
+          "source_opening": "ARC_a484d5786b9a",
+          "source_leaf_index": 0,
           "opening_ids": [
             "ARC_a484d5786b9a"
           ],
@@ -759059,7 +760435,8 @@
             16.12,
             64.52
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R2",
@@ -759093,7 +760470,8 @@
             11.07,
             65.98
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         },
         {
           "id": "R4",
@@ -759137,7 +760515,8 @@
             24.58,
             64.17
           ],
-          "connectivity": "connected"
+          "connectivity": "connected",
+          "axiom_core_kind": null
         },
         {
           "id": "R6",
@@ -759171,7 +760550,8 @@
             21.39,
             64.4
           ],
-          "connectivity": "unresolved_isolated"
+          "connectivity": "unresolved_isolated",
+          "axiom_core_kind": null
         }
       ],
       "openings": [
@@ -760146,6 +761526,315 @@
   ],
   "shafts": [
     {
+      "kind": "stair",
+      "x": 13.809999999999999,
+      "y": 57.58,
+      "w": 4.459999999999999,
+      "h": 2.8599999999999994,
+      "z0": 5.9,
+      "z1": 51.3,
+      "floors": [
+        "B2",
+        "B1",
+        "1F",
+        "2F",
+        "3F",
+        "4F",
+        "5F",
+        "6F",
+        "7F",
+        "8F",
+        "9F",
+        "10F"
+      ],
+      "room_ids": {
+        "B2": "R14",
+        "B1": "R14",
+        "1F": "R9",
+        "2F": "R8",
+        "3F": "R8",
+        "4F": "R10",
+        "5F": "R10",
+        "6F": "R10",
+        "7F": "R10",
+        "8F": "R10",
+        "9F": "R9",
+        "10F": "R9"
+      },
+      "core_ids": {
+        "B2": "ROOM_R14",
+        "B1": "ROOM_R14",
+        "1F": "ROOM_R9",
+        "2F": "ROOM_R8",
+        "3F": "ROOM_R8",
+        "4F": "ROOM_R10",
+        "5F": "ROOM_R10",
+        "6F": "ROOM_R10",
+        "7F": "ROOM_R10",
+        "8F": "ROOM_R10",
+        "9F": "ROOM_R9",
+        "10F": "ROOM_R9"
+      },
+      "access_room_ids": {
+        "B2": [
+          "R4"
+        ],
+        "B1": [
+          "R3"
+        ],
+        "1F": [
+          "R1"
+        ],
+        "2F": [
+          "R0"
+        ],
+        "3F": [
+          "R0"
+        ],
+        "4F": [
+          "R2"
+        ],
+        "5F": [
+          "R1"
+        ],
+        "6F": [
+          "R1"
+        ],
+        "7F": [
+          "R1"
+        ],
+        "8F": [
+          "R2"
+        ],
+        "9F": [
+          "R1"
+        ],
+        "10F": [
+          "R1"
+        ]
+      },
+      "nodes": [
+        {
+          "core_id": "ROOM_R14",
+          "room_id": "R14",
+          "kind": "stair",
+          "floor": "B2",
+          "x": 13.809999999999999,
+          "y": 57.58,
+          "w": 4.459999999999999,
+          "h": 2.8599999999999994,
+          "z0": 5.9,
+          "z1": 11.100000000000001,
+          "align": "cores edges 12 (full 3) + columns 25 (←B1)",
+          "access_room_ids": [
+            "R4"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R14",
+          "room_id": "R14",
+          "kind": "stair",
+          "floor": "B1",
+          "x": 13.809999999999999,
+          "y": 57.58,
+          "w": 4.459999999999999,
+          "h": 2.8599999999999994,
+          "z0": 11.1,
+          "z1": 15.7,
+          "align": "cores edges 20 (full 5) + columns 15 (←1F)",
+          "access_room_ids": [
+            "R3"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R9",
+          "room_id": "R9",
+          "kind": "stair",
+          "floor": "1F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 15.7,
+          "z1": 20.799999999999997,
+          "align": "base",
+          "access_room_ids": [
+            "R1"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R8",
+          "room_id": "R8",
+          "kind": "stair",
+          "floor": "2F",
+          "x": 13.829999999999998,
+          "y": 57.57,
+          "w": 4.459999999999999,
+          "h": 2.8599999999999994,
+          "z0": 20.8,
+          "z1": 24.400000000000002,
+          "align": "cores edges 20 (full 5) + columns 16 (←1F)",
+          "access_room_ids": [
+            "R0"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R8",
+          "room_id": "R8",
+          "kind": "stair",
+          "floor": "3F",
+          "x": 13.829999999999998,
+          "y": 57.57,
+          "w": 4.459999999999999,
+          "h": 2.8599999999999994,
+          "z0": 24.4,
+          "z1": 29.4,
+          "align": "cores edges 20 (full 5) + columns 16 (←2F)",
+          "access_room_ids": [
+            "R0"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R10",
+          "room_id": "R10",
+          "kind": "stair",
+          "floor": "4F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 29.4,
+          "z1": 32.5,
+          "align": "cores edges 20 (full 5) + columns 15 (←3F)",
+          "access_room_ids": [
+            "R2"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R10",
+          "room_id": "R10",
+          "kind": "stair",
+          "floor": "5F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 32.5,
+          "z1": 35.6,
+          "align": "cores edges 20 (full 5) + columns 0 (←4F)",
+          "access_room_ids": [
+            "R1"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R10",
+          "room_id": "R10",
+          "kind": "stair",
+          "floor": "6F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 35.6,
+          "z1": 38.7,
+          "align": "cores edges 20 (full 5) + columns 0 (←5F)",
+          "access_room_ids": [
+            "R1"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R10",
+          "room_id": "R10",
+          "kind": "stair",
+          "floor": "7F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 38.7,
+          "z1": 41.800000000000004,
+          "align": "cores edges 20 (full 5) + columns 0 (←6F)",
+          "access_room_ids": [
+            "R1"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R10",
+          "room_id": "R10",
+          "kind": "stair",
+          "floor": "8F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 41.8,
+          "z1": 44.9,
+          "align": "cores edges 20 (full 5) + columns 0 (←7F)",
+          "access_room_ids": [
+            "R2"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R9",
+          "room_id": "R9",
+          "kind": "stair",
+          "floor": "9F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 44.9,
+          "z1": 48.0,
+          "align": "cores edges 20 (full 5) + columns 0 (←8F)",
+          "access_room_ids": [
+            "R1"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R9",
+          "room_id": "R9",
+          "kind": "stair",
+          "floor": "10F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.460000000000001,
+          "h": 2.8599999999999994,
+          "z0": 48.0,
+          "z1": 51.3,
+          "align": "cores edges 20 (full 5) + columns 0 (←9F)",
+          "access_room_ids": [
+            "R1"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        }
+      ],
+      "overlaps": [
+        1.0,
+        0.9886,
+        0.9955,
+        1.0,
+        0.9955,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    },
+    {
       "kind": "elev",
       "x": 25.77,
       "y": 54.66,
@@ -760348,6 +762037,123 @@
       "evidence": "adjacent_floor_envelope_overlap_and_room_id"
     },
     {
+      "kind": "elev",
+      "x": 13.719999999999999,
+      "y": 54.92,
+      "w": 2.0600000000000005,
+      "h": 1.9600000000000009,
+      "z0": 32.5,
+      "z1": 44.9,
+      "floors": [
+        "5F",
+        "6F",
+        "7F",
+        "8F"
+      ],
+      "room_ids": {
+        "5F": "R13",
+        "6F": "R13",
+        "7F": "R13",
+        "8F": "R13"
+      },
+      "core_ids": {
+        "5F": "ROOM_R13",
+        "6F": "ROOM_R13",
+        "7F": "ROOM_R13",
+        "8F": "ROOM_R13"
+      },
+      "access_room_ids": {
+        "5F": [
+          "R17"
+        ],
+        "6F": [
+          "R17"
+        ],
+        "7F": [
+          "R17"
+        ],
+        "8F": [
+          "R17"
+        ]
+      },
+      "nodes": [
+        {
+          "core_id": "ROOM_R13",
+          "room_id": "R13",
+          "kind": "elev",
+          "floor": "5F",
+          "x": 13.719999999999999,
+          "y": 54.92,
+          "w": 2.0600000000000005,
+          "h": 1.9600000000000009,
+          "z0": 32.5,
+          "z1": 35.6,
+          "align": "cores edges 20 (full 5) + columns 0 (←4F)",
+          "access_room_ids": [
+            "R17"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R13",
+          "room_id": "R13",
+          "kind": "elev",
+          "floor": "6F",
+          "x": 13.719999999999999,
+          "y": 54.92,
+          "w": 2.0600000000000005,
+          "h": 1.9600000000000009,
+          "z0": 35.6,
+          "z1": 38.7,
+          "align": "cores edges 20 (full 5) + columns 0 (←5F)",
+          "access_room_ids": [
+            "R17"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R13",
+          "room_id": "R13",
+          "kind": "elev",
+          "floor": "7F",
+          "x": 13.719999999999999,
+          "y": 54.92,
+          "w": 2.0600000000000005,
+          "h": 1.9600000000000009,
+          "z0": 38.7,
+          "z1": 41.800000000000004,
+          "align": "cores edges 20 (full 5) + columns 0 (←6F)",
+          "access_room_ids": [
+            "R17"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        },
+        {
+          "core_id": "ROOM_R13",
+          "room_id": "R13",
+          "kind": "elev",
+          "floor": "8F",
+          "x": 13.719999999999999,
+          "y": 54.92,
+          "w": 2.0600000000000005,
+          "h": 1.9600000000000009,
+          "z0": 41.8,
+          "z1": 44.9,
+          "align": "cores edges 20 (full 5) + columns 0 (←7F)",
+          "access_room_ids": [
+            "R17"
+          ],
+          "association": "dedicated_room_tag_or_label"
+        }
+      ],
+      "overlaps": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "evidence": "adjacent_floor_envelope_overlap_and_room_id"
+    },
+    {
       "kind": "stair",
       "x": 6.11,
       "y": 59.4,
@@ -760538,26 +762344,6 @@
   ],
   "core_nodes": [
     {
-      "core_id": "ROOM_R0",
-      "room_id": "R0",
-      "kind": "elev",
-      "floor": "B3",
-      "x": 10.549999999999999,
-      "y": 59.39,
-      "w": 19.7,
-      "h": 13.919999999999995,
-      "z0": 0.0,
-      "z1": 5.9,
-      "align": "cores edges 2 (full 0) + columns 25 (←B2)",
-      "access_room_ids": [
-        "R10",
-        "R3",
-        "R4",
-        "R6"
-      ],
-      "association": "dedicated_room_tag_or_label"
-    },
-    {
       "core_id": "ROOM_R1",
       "room_id": "R1",
       "kind": "stair",
@@ -760576,24 +762362,6 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
-      "core_id": "ROOM_R4",
-      "room_id": "R4",
-      "kind": "elev",
-      "floor": "B3",
-      "x": 22.71,
-      "y": 57.47,
-      "w": 8.260000000000002,
-      "h": 10.04,
-      "z0": 0.0,
-      "z1": 5.9,
-      "align": "cores edges 2 (full 0) + columns 25 (←B2)",
-      "access_room_ids": [
-        "R0",
-        "R1"
-      ],
-      "association": "dedicated_room_tag_or_label"
-    },
-    {
       "core_id": "ROOM_R10",
       "room_id": "R10",
       "kind": "elev",
@@ -760608,31 +762376,6 @@
       "access_room_ids": [
         "R0",
         "R11"
-      ],
-      "association": "dedicated_room_tag_or_label"
-    },
-    {
-      "core_id": "ROOM_R4",
-      "room_id": "R4",
-      "kind": "stair",
-      "floor": "B2",
-      "x": 11.5,
-      "y": 53.870000000000005,
-      "w": 21.520000000000003,
-      "h": 24.880000000000003,
-      "z0": 5.9,
-      "z1": 11.100000000000001,
-      "align": "cores edges 12 (full 3) + columns 25 (←B1)",
-      "access_room_ids": [
-        "R0",
-        "R10",
-        "R14",
-        "R15",
-        "R2",
-        "R21",
-        "R7",
-        "R8",
-        "R9"
       ],
       "association": "dedicated_room_tag_or_label"
     },
@@ -760686,6 +762429,21 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
+      "core_id": "ROOM_R22",
+      "room_id": "R22",
+      "kind": "elev",
+      "floor": "B2",
+      "x": 13.71,
+      "y": 54.93,
+      "w": 2.0600000000000005,
+      "h": 1.9599999999999937,
+      "z0": 5.9,
+      "z1": 11.100000000000001,
+      "align": "cores edges 12 (full 3) + columns 25 (←B1)",
+      "access_room_ids": [],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
       "core_id": "ROOM_R0",
       "room_id": "R0",
       "kind": "elev",
@@ -760722,6 +762480,23 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
+      "core_id": "ROOM_R14",
+      "room_id": "R14",
+      "kind": "stair",
+      "floor": "B1",
+      "x": 13.809999999999999,
+      "y": 57.58,
+      "w": 4.459999999999999,
+      "h": 2.8599999999999994,
+      "z0": 11.1,
+      "z1": 15.7,
+      "align": "cores edges 20 (full 5) + columns 15 (←1F)",
+      "access_room_ids": [
+        "R3"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
       "core_id": "ROOM_R17",
       "room_id": "R17",
       "kind": "elev",
@@ -760749,6 +762524,23 @@
       "z1": 15.7,
       "align": "cores edges 20 (full 5) + columns 15 (←1F)",
       "access_room_ids": [],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R9",
+      "room_id": "R9",
+      "kind": "stair",
+      "floor": "1F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
+      "z0": 15.7,
+      "z1": 20.799999999999997,
+      "align": "base",
+      "access_room_ids": [
+        "R1"
+      ],
       "association": "dedicated_room_tag_or_label"
     },
     {
@@ -760799,22 +762591,36 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
-      "core_id": "ROOM_R0",
-      "room_id": "R0",
-      "kind": "elev",
+      "core_id": "ROOM_R8",
+      "room_id": "R8",
+      "kind": "stair",
+      "floor": "2F",
+      "x": 13.829999999999998,
+      "y": 57.57,
+      "w": 4.459999999999999,
+      "h": 2.8599999999999994,
+      "z0": 20.8,
+      "z1": 24.400000000000002,
+      "align": "cores edges 20 (full 5) + columns 16 (←1F)",
+      "access_room_ids": [
+        "R0"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R8",
+      "room_id": "R8",
+      "kind": "stair",
       "floor": "3F",
-      "x": 14.15,
-      "y": 55.29,
-      "w": 23.220000000000002,
-      "h": 23.58,
+      "x": 13.829999999999998,
+      "y": 57.57,
+      "w": 4.459999999999999,
+      "h": 2.8599999999999994,
       "z0": 24.4,
       "z1": 29.4,
       "align": "cores edges 20 (full 5) + columns 16 (←2F)",
       "access_room_ids": [
-        "R10",
-        "R11",
-        "R3",
-        "R8"
+        "R0"
       ],
       "association": "dedicated_room_tag_or_label"
     },
@@ -760827,6 +762633,23 @@
       "y": 57.47,
       "w": 7.1,
       "h": 3.6200000000000045,
+      "z0": 29.4,
+      "z1": 32.5,
+      "align": "cores edges 20 (full 5) + columns 15 (←3F)",
+      "access_room_ids": [
+        "R2"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R10",
+      "room_id": "R10",
+      "kind": "stair",
+      "floor": "4F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
       "z0": 29.4,
       "z1": 32.5,
       "align": "cores edges 20 (full 5) + columns 15 (←3F)",
@@ -760853,6 +762676,40 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
+      "core_id": "ROOM_R10",
+      "room_id": "R10",
+      "kind": "stair",
+      "floor": "5F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
+      "z0": 32.5,
+      "z1": 35.6,
+      "align": "cores edges 20 (full 5) + columns 0 (←4F)",
+      "access_room_ids": [
+        "R1"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R13",
+      "room_id": "R13",
+      "kind": "elev",
+      "floor": "5F",
+      "x": 13.719999999999999,
+      "y": 54.92,
+      "w": 2.0600000000000005,
+      "h": 1.9600000000000009,
+      "z0": 32.5,
+      "z1": 35.6,
+      "align": "cores edges 20 (full 5) + columns 0 (←4F)",
+      "access_room_ids": [
+        "R17"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
       "core_id": "ROOM_R9",
       "room_id": "R9",
       "kind": "stair",
@@ -760866,6 +762723,40 @@
       "align": "cores edges 20 (full 5) + columns 0 (←5F)",
       "access_room_ids": [
         "R1"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R10",
+      "room_id": "R10",
+      "kind": "stair",
+      "floor": "6F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
+      "z0": 35.6,
+      "z1": 38.7,
+      "align": "cores edges 20 (full 5) + columns 0 (←5F)",
+      "access_room_ids": [
+        "R1"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R13",
+      "room_id": "R13",
+      "kind": "elev",
+      "floor": "6F",
+      "x": 13.719999999999999,
+      "y": 54.92,
+      "w": 2.0600000000000005,
+      "h": 1.9600000000000009,
+      "z0": 35.6,
+      "z1": 38.7,
+      "align": "cores edges 20 (full 5) + columns 0 (←5F)",
+      "access_room_ids": [
+        "R17"
       ],
       "association": "dedicated_room_tag_or_label"
     },
@@ -760887,6 +762778,40 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
+      "core_id": "ROOM_R10",
+      "room_id": "R10",
+      "kind": "stair",
+      "floor": "7F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
+      "z0": 38.7,
+      "z1": 41.800000000000004,
+      "align": "cores edges 20 (full 5) + columns 0 (←6F)",
+      "access_room_ids": [
+        "R1"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R13",
+      "room_id": "R13",
+      "kind": "elev",
+      "floor": "7F",
+      "x": 13.719999999999999,
+      "y": 54.92,
+      "w": 2.0600000000000005,
+      "h": 1.9600000000000009,
+      "z0": 38.7,
+      "z1": 41.800000000000004,
+      "align": "cores edges 20 (full 5) + columns 0 (←6F)",
+      "access_room_ids": [
+        "R17"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
       "core_id": "ROOM_R9",
       "room_id": "R9",
       "kind": "stair",
@@ -760904,6 +762829,40 @@
       "association": "dedicated_room_tag_or_label"
     },
     {
+      "core_id": "ROOM_R10",
+      "room_id": "R10",
+      "kind": "stair",
+      "floor": "8F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
+      "z0": 41.8,
+      "z1": 44.9,
+      "align": "cores edges 20 (full 5) + columns 0 (←7F)",
+      "access_room_ids": [
+        "R2"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R13",
+      "room_id": "R13",
+      "kind": "elev",
+      "floor": "8F",
+      "x": 13.719999999999999,
+      "y": 54.92,
+      "w": 2.0600000000000005,
+      "h": 1.9600000000000009,
+      "z0": 41.8,
+      "z1": 44.9,
+      "align": "cores edges 20 (full 5) + columns 0 (←7F)",
+      "access_room_ids": [
+        "R17"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
       "core_id": "ROOM_R6",
       "room_id": "R6",
       "kind": "stair",
@@ -760912,6 +762871,23 @@
       "y": 59.4,
       "w": 7.08,
       "h": 7.439999999999998,
+      "z0": 44.9,
+      "z1": 48.0,
+      "align": "cores edges 20 (full 5) + columns 0 (←8F)",
+      "access_room_ids": [
+        "R1"
+      ],
+      "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R9",
+      "room_id": "R9",
+      "kind": "stair",
+      "floor": "9F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
       "z0": 44.9,
       "z1": 48.0,
       "align": "cores edges 20 (full 5) + columns 0 (←8F)",
@@ -760936,28 +762912,31 @@
         "R1"
       ],
       "association": "dedicated_room_tag_or_label"
+    },
+    {
+      "core_id": "ROOM_R9",
+      "room_id": "R9",
+      "kind": "stair",
+      "floor": "10F",
+      "x": 13.82,
+      "y": 57.57,
+      "w": 4.460000000000001,
+      "h": 2.8599999999999994,
+      "z0": 48.0,
+      "z1": 51.3,
+      "align": "cores edges 20 (full 5) + columns 0 (←9F)",
+      "access_room_ids": [
+        "R1"
+      ],
+      "association": "dedicated_room_tag_or_label"
     }
   ],
   "unconfirmed_vertical_cores": [
     {
       "floor": "B3",
-      "kind": "elev",
-      "room_id": "R0",
-      "core_id": "ROOM_R0",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "B3",
       "kind": "stair",
       "room_id": "R1",
       "core_id": "ROOM_R1",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "B3",
-      "kind": "elev",
-      "room_id": "R4",
-      "core_id": "ROOM_R4",
       "reason": "no_unambiguous_adjacent_floor_match"
     },
     {
@@ -760969,23 +762948,16 @@
     },
     {
       "floor": "B2",
-      "kind": "stair",
-      "room_id": "R4",
-      "core_id": "ROOM_R4",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "B2",
-      "kind": "stair",
-      "room_id": "R14",
-      "core_id": "ROOM_R14",
+      "kind": "elev",
+      "room_id": "R15",
+      "core_id": "ROOM_R15",
       "reason": "no_unambiguous_adjacent_floor_match"
     },
     {
       "floor": "B2",
       "kind": "elev",
-      "room_id": "R15",
-      "core_id": "ROOM_R15",
+      "room_id": "R22",
+      "core_id": "ROOM_R22",
       "reason": "no_unambiguous_adjacent_floor_match"
     },
     {
@@ -761029,16 +763001,108 @@
       "room_id": "R12",
       "core_id": "ROOM_R12",
       "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "3F",
-      "kind": "elev",
-      "room_id": "R0",
-      "core_id": "ROOM_R0",
-      "reason": "no_unambiguous_adjacent_floor_match"
     }
   ],
   "vertical_connections": [
+    {
+      "kind": "stair",
+      "from_floor": "B2",
+      "from_core": "ROOM_R14",
+      "to_floor": "B1",
+      "to_core": "ROOM_R14",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "B1",
+      "from_core": "ROOM_R14",
+      "to_floor": "1F",
+      "to_core": "ROOM_R9",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9886
+    },
+    {
+      "kind": "stair",
+      "from_floor": "1F",
+      "from_core": "ROOM_R9",
+      "to_floor": "2F",
+      "to_core": "ROOM_R8",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9955
+    },
+    {
+      "kind": "stair",
+      "from_floor": "2F",
+      "from_core": "ROOM_R8",
+      "to_floor": "3F",
+      "to_core": "ROOM_R8",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "3F",
+      "from_core": "ROOM_R8",
+      "to_floor": "4F",
+      "to_core": "ROOM_R10",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 0.9955
+    },
+    {
+      "kind": "stair",
+      "from_floor": "4F",
+      "from_core": "ROOM_R10",
+      "to_floor": "5F",
+      "to_core": "ROOM_R10",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "5F",
+      "from_core": "ROOM_R10",
+      "to_floor": "6F",
+      "to_core": "ROOM_R10",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "6F",
+      "from_core": "ROOM_R10",
+      "to_floor": "7F",
+      "to_core": "ROOM_R10",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "7F",
+      "from_core": "ROOM_R10",
+      "to_floor": "8F",
+      "to_core": "ROOM_R10",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "8F",
+      "from_core": "ROOM_R10",
+      "to_floor": "9F",
+      "to_core": "ROOM_R9",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "stair",
+      "from_floor": "9F",
+      "from_core": "ROOM_R9",
+      "to_floor": "10F",
+      "to_core": "ROOM_R9",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
     {
       "kind": "elev",
       "from_floor": "B2",
@@ -761085,6 +763149,33 @@
       "overlap": 0.9945
     },
     {
+      "kind": "elev",
+      "from_floor": "5F",
+      "from_core": "ROOM_R13",
+      "to_floor": "6F",
+      "to_core": "ROOM_R13",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "6F",
+      "from_core": "ROOM_R13",
+      "to_floor": "7F",
+      "to_core": "ROOM_R13",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
+      "kind": "elev",
+      "from_floor": "7F",
+      "from_core": "ROOM_R13",
+      "to_floor": "8F",
+      "to_core": "ROOM_R13",
+      "evidence": "aligned_cad_core_overlap",
+      "overlap": 1.0
+    },
+    {
       "kind": "stair",
       "from_floor": "9F",
       "from_core": "ROOM_R6",
@@ -761100,7 +763191,7 @@
     "revision": "interior_arc_door_v2",
     "auto_correct": true,
     "connectivity_validation": "incomplete",
-    "unresolved_space_count": 47,
+    "unresolved_space_count": 41,
     "corrections": [
       {
         "floor": "B2",
@@ -761886,9 +763977,1079 @@
         "source_parent_id": "ARC_a484d5786b9a",
         "source_leaf_index": 0,
         "confidence": "inferred"
+      },
+      {
+        "kind": "column_not_room",
+        "floor": "B3",
+        "id": "R5",
+        "before": "room",
+        "after": "column",
+        "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+        "evidence": {
+          "seed_floor": "2F",
+          "seed_room": "R7",
+          "labels": [
+            "C3"
+          ],
+          "center": [
+            16.35,
+            59.24
+          ],
+          "matched_floors": [
+            "1F",
+            "2F",
+            "3F",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "iou": 0.972766
+        }
+      },
+      {
+        "kind": "column_not_room",
+        "floor": "B2",
+        "id": "R12",
+        "before": "room",
+        "after": "column",
+        "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+        "evidence": {
+          "seed_floor": "2F",
+          "seed_room": "R7",
+          "labels": [
+            "C3"
+          ],
+          "center": [
+            16.35,
+            59.24
+          ],
+          "matched_floors": [
+            "1F",
+            "2F",
+            "3F",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "iou": 0.748936
+        }
+      },
+      {
+        "kind": "column_not_room",
+        "floor": "B1",
+        "id": "R13",
+        "before": "room",
+        "after": "column",
+        "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+        "evidence": {
+          "seed_floor": "2F",
+          "seed_room": "R7",
+          "labels": [
+            "C3"
+          ],
+          "center": [
+            16.35,
+            59.24
+          ],
+          "matched_floors": [
+            "1F",
+            "2F",
+            "3F",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "iou": 0.972766
+        }
+      },
+      {
+        "kind": "column_not_room",
+        "floor": "1F",
+        "id": "R8",
+        "before": "room",
+        "after": "column",
+        "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+        "evidence": {
+          "seed_floor": "2F",
+          "seed_room": "R7",
+          "labels": [
+            "C3"
+          ],
+          "center": [
+            16.35,
+            59.24
+          ],
+          "matched_floors": [
+            "1F",
+            "2F",
+            "3F",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "iou": 0.977689
+        }
+      },
+      {
+        "kind": "column_not_room",
+        "floor": "2F",
+        "id": "R7",
+        "before": "room",
+        "after": "column",
+        "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+        "evidence": {
+          "seed_floor": "2F",
+          "seed_room": "R7",
+          "labels": [
+            "C3"
+          ],
+          "center": [
+            16.35,
+            59.24
+          ],
+          "matched_floors": [
+            "1F",
+            "2F",
+            "3F",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "iou": 1.0
+        }
+      },
+      {
+        "kind": "column_not_room",
+        "floor": "3F",
+        "id": "R7",
+        "before": "room",
+        "after": "column",
+        "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+        "evidence": {
+          "seed_floor": "2F",
+          "seed_room": "R7",
+          "labels": [
+            "C3"
+          ],
+          "center": [
+            16.35,
+            59.24
+          ],
+          "matched_floors": [
+            "1F",
+            "2F",
+            "3F",
+            "B1",
+            "B2",
+            "B3"
+          ],
+          "iou": 0.958381
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R22",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "elev",
+        "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+        "evidence": [
+          {
+            "kind": "elev",
+            "source_core": 2,
+            "iou": 0.8153335128826636,
+            "matched_floors": [
+              "B2",
+              "5F",
+              "6F",
+              "7F",
+              "8F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "B1",
+        "id": "R14",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9977578475336324,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "R9",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "R8",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9863897853234195,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "R8",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9863897853234195,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "4F",
+        "id": "R10",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "5F",
+        "id": "R10",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "5F",
+        "id": "R13",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "elev",
+        "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+        "evidence": [
+          {
+            "kind": "elev",
+            "source_core": 2,
+            "iou": 0.8231077852409507,
+            "matched_floors": [
+              "B2",
+              "5F",
+              "6F",
+              "7F",
+              "8F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "6F",
+        "id": "R10",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "6F",
+        "id": "R13",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "elev",
+        "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+        "evidence": [
+          {
+            "kind": "elev",
+            "source_core": 2,
+            "iou": 0.8231077852409507,
+            "matched_floors": [
+              "B2",
+              "5F",
+              "6F",
+              "7F",
+              "8F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "7F",
+        "id": "R10",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "7F",
+        "id": "R13",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "elev",
+        "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+        "evidence": [
+          {
+            "kind": "elev",
+            "source_core": 2,
+            "iou": 0.8231077852409507,
+            "matched_floors": [
+              "B2",
+              "5F",
+              "6F",
+              "7F",
+              "8F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "8F",
+        "id": "R10",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "8F",
+        "id": "R13",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "elev",
+        "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+        "evidence": [
+          {
+            "kind": "elev",
+            "source_core": 2,
+            "iou": 0.8231077852409507,
+            "matched_floors": [
+              "B2",
+              "5F",
+              "6F",
+              "7F",
+              "8F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "9F",
+        "id": "R9",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
+      },
+      {
+        "floor": "10F",
+        "id": "R9",
+        "kind": "repeated_core_identity",
+        "before": null,
+        "after": "stair",
+        "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+        "evidence": [
+          {
+            "kind": "stair",
+            "source_core": 3,
+            "iou": 0.9886036776914273,
+            "matched_floors": [
+              "B1",
+              "1F",
+              "2F",
+              "3F",
+              "4F",
+              "5F",
+              "6F",
+              "7F",
+              "8F",
+              "9F",
+              "10F"
+            ]
+          }
+        ]
       }
     ],
     "items": [
+      {
+        "floor": "B3",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B2",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B1",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "1F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "2F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "3F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "4F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "5F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "6F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "7F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "8F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "9F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "10F",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "PH",
+        "id": "SOURCE_CORE_0",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          24.54,
+          63.545
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B2",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B1",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "1F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "2F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "3F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "4F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "5F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "6F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "7F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "8F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "9F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "10F",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "PH",
+        "id": "SOURCE_CORE_1",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          19.45,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B1",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "1F",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "2F",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "3F",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "4F",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "9F",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "10F",
+        "id": "SOURCE_CORE_2",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          13.7,
+          54.796
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B1",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "1F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "2F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "3F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "4F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "5F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "6F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "7F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "8F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "9F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "10F",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "PH",
+        "id": "SOURCE_CORE_4",
+        "kind": "core_region_unresolved",
+        "point_m": [
+          17.25,
+          65.148
+        ],
+        "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+      },
+      {
+        "floor": "B3",
+        "id": "R0",
+        "kind": "core_region_unresolved",
+        "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+      },
+      {
+        "floor": "B3",
+        "id": "R4",
+        "kind": "core_region_unresolved",
+        "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R4",
+        "kind": "core_region_unresolved",
+        "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+      },
+      {
+        "floor": "3F",
+        "id": "R0",
+        "kind": "core_region_unresolved",
+        "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+      },
       {
         "floor": "B3",
         "id": "D3",
@@ -762070,18 +765231,6 @@
       },
       {
         "floor": "B3",
-        "id": "R5",
-        "kind": "estimated_usage",
-        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-        "usage_class": "parking",
-        "evidence": {
-          "basis": "floor_use",
-          "floor_use": "parking",
-          "label_unmapped": true
-        }
-      },
-      {
-        "floor": "B3",
         "id": "R6",
         "kind": "estimated_usage",
         "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -762155,12 +765304,6 @@
       {
         "floor": "B3",
         "id": "R2",
-        "kind": "isolated_room",
-        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-      },
-      {
-        "floor": "B3",
-        "id": "R5",
         "kind": "isolated_room",
         "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
@@ -762553,18 +765696,6 @@
       },
       {
         "floor": "B2",
-        "id": "R12",
-        "kind": "estimated_usage",
-        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-        "usage_class": "warehouse",
-        "evidence": {
-          "basis": "floor_use",
-          "floor_use": "warehouse",
-          "label_unmapped": true
-        }
-      },
-      {
-        "floor": "B2",
         "id": "R13",
         "kind": "estimated_usage",
         "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -762686,12 +765817,6 @@
       {
         "floor": "B2",
         "id": "R11",
-        "kind": "isolated_room",
-        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-      },
-      {
-        "floor": "B2",
-        "id": "R12",
         "kind": "isolated_room",
         "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
@@ -763252,18 +766377,6 @@
       },
       {
         "floor": "B1",
-        "id": "R13",
-        "kind": "estimated_usage",
-        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-        "usage_class": "shopping",
-        "evidence": {
-          "basis": "floor_use",
-          "floor_use": "retail",
-          "label_unmapped": true
-        }
-      },
-      {
-        "floor": "B1",
         "id": "R14",
         "kind": "estimated_usage",
         "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -763355,12 +766468,6 @@
       {
         "floor": "B1",
         "id": "R6",
-        "kind": "isolated_room",
-        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-      },
-      {
-        "floor": "B1",
-        "id": "R13",
         "kind": "isolated_room",
         "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
@@ -763893,18 +767000,6 @@
       },
       {
         "floor": "1F",
-        "id": "R8",
-        "kind": "estimated_usage",
-        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-        "usage_class": "shopping",
-        "evidence": {
-          "basis": "floor_use",
-          "floor_use": "retail",
-          "label_unmapped": true
-        }
-      },
-      {
-        "floor": "1F",
         "id": "R9",
         "kind": "estimated_usage",
         "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -763962,12 +767057,6 @@
           "floor_use": "retail",
           "label_unmapped": true
         }
-      },
-      {
-        "floor": "1F",
-        "id": "R8",
-        "kind": "isolated_room",
-        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
       {
         "floor": "1F",
@@ -764578,18 +767667,6 @@
       },
       {
         "floor": "2F",
-        "id": "R7",
-        "kind": "estimated_usage",
-        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-        "usage_class": "shopping",
-        "evidence": {
-          "basis": "floor_use",
-          "floor_use": "retail",
-          "label_unmapped": true
-        }
-      },
-      {
-        "floor": "2F",
         "id": "R8",
         "kind": "estimated_usage",
         "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -764621,12 +767698,6 @@
       {
         "floor": "2F",
         "id": "R5",
-        "kind": "isolated_room",
-        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-      },
-      {
-        "floor": "2F",
-        "id": "R7",
         "kind": "isolated_room",
         "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
@@ -765272,18 +768343,6 @@
       },
       {
         "floor": "3F",
-        "id": "R7",
-        "kind": "estimated_usage",
-        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-        "usage_class": "shopping",
-        "evidence": {
-          "basis": "floor_use",
-          "floor_use": "retail",
-          "label_unmapped": true
-        }
-      },
-      {
-        "floor": "3F",
         "id": "R8",
         "kind": "estimated_usage",
         "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -765303,12 +768362,6 @@
       {
         "floor": "3F",
         "id": "R5",
-        "kind": "isolated_room",
-        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-      },
-      {
-        "floor": "3F",
-        "id": "R7",
         "kind": "isolated_room",
         "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
@@ -765776,63 +768829,6 @@
       },
       {
         "floor": "5F",
-        "id": "D0",
-        "kind": "door_connection_estimated",
-        "detail": "문 있음 · 연결 대상 미확정",
-        "sides": null,
-        "candidates": [
-          null,
-          "R1"
-        ],
-        "samples": [
-          [
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R17",
-              "R1"
-            ],
-            [
-              "R17",
-              "R1"
-            ]
-          ],
-          [
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ]
-          ]
-        ],
-        "confidence": "inferred",
-        "reason": "nested_room_boundary"
-      },
-      {
-        "floor": "5F",
         "id": "D4",
         "kind": "door_connection_estimated",
         "detail": "문 있음 · 연결 대상 추정 (실 폴리곤 중첩)",
@@ -766173,63 +769169,6 @@
             ],
             [
               "R17",
-              "R1"
-            ]
-          ]
-        ],
-        "confidence": "inferred",
-        "reason": "nested_room_boundary"
-      },
-      {
-        "floor": "6F",
-        "id": "D0",
-        "kind": "door_connection_estimated",
-        "detail": "문 있음 · 연결 대상 미확정",
-        "sides": null,
-        "candidates": [
-          null,
-          "R1"
-        ],
-        "samples": [
-          [
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R17",
-              "R1"
-            ],
-            [
-              "R17",
-              "R1"
-            ]
-          ],
-          [
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
               "R1"
             ]
           ]
@@ -766588,63 +769527,6 @@
       },
       {
         "floor": "7F",
-        "id": "D0",
-        "kind": "door_connection_estimated",
-        "detail": "문 있음 · 연결 대상 미확정",
-        "sides": null,
-        "candidates": [
-          null,
-          "R1"
-        ],
-        "samples": [
-          [
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R17",
-              "R1"
-            ],
-            [
-              "R17",
-              "R1"
-            ]
-          ],
-          [
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ],
-            [
-              "R1"
-            ]
-          ]
-        ],
-        "confidence": "inferred",
-        "reason": "nested_room_boundary"
-      },
-      {
-        "floor": "7F",
         "id": "D4",
         "kind": "door_connection_estimated",
         "detail": "문 있음 · 연결 대상 추정 (실 폴리곤 중첩)",
@@ -766985,63 +769867,6 @@
             ],
             [
               "R17",
-              "R2"
-            ]
-          ]
-        ],
-        "confidence": "inferred",
-        "reason": "nested_room_boundary"
-      },
-      {
-        "floor": "8F",
-        "id": "D0",
-        "kind": "door_connection_estimated",
-        "detail": "문 있음 · 연결 대상 미확정",
-        "sides": null,
-        "candidates": [
-          null,
-          "R2"
-        ],
-        "samples": [
-          [
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
-              "R17",
-              "R2"
-            ],
-            [
-              "R17",
-              "R2"
-            ]
-          ],
-          [
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
-              "R2"
-            ],
-            [
               "R2"
             ]
           ]
@@ -768186,12 +771011,174 @@
         "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
       },
       {
+        "floor": "B3",
+        "id": "R1",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B3",
+          "kind": "stair",
+          "room_id": "R1",
+          "core_id": "ROOM_R1",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R10",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B3",
+          "kind": "elev",
+          "room_id": "R10",
+          "core_id": "ROOM_R10",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R15",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B2",
+          "kind": "elev",
+          "room_id": "R15",
+          "core_id": "ROOM_R15",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R22",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B2",
+          "kind": "elev",
+          "room_id": "R22",
+          "core_id": "ROOM_R22",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R0",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B1",
+          "kind": "elev",
+          "room_id": "R0",
+          "core_id": "ROOM_R0",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R1",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B1",
+          "kind": "stair",
+          "room_id": "R1",
+          "core_id": "ROOM_R1",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R17",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "B1",
+          "kind": "elev",
+          "room_id": "R17",
+          "core_id": "ROOM_R17",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R10",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "1F",
+          "kind": "elev",
+          "room_id": "R10",
+          "core_id": "ROOM_R10",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R11",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "1F",
+          "kind": "elev",
+          "room_id": "R11",
+          "core_id": "ROOM_R11",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R12",
+        "kind": "vertical_unconfirmed",
+        "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+        "evidence": {
+          "floor": "1F",
+          "kind": "elev",
+          "room_id": "R12",
+          "core_id": "ROOM_R12",
+          "reason": "no_unambiguous_adjacent_floor_match"
+        }
+      },
+      {
         "floor": "B1",
         "id": "LOADER",
         "kind": "loader_failed",
-        "detail": "Opening wider than usable equivalent room: CAD_B1_R9"
+        "detail": "입력 검토 필요 · Opening wider than usable equivalent room: CAD_B1_R9"
       }
     ],
-    "basis": "기하 근거 자동보정 · 현장 확인 아님"
+    "basis": "기하 근거 자동보정 · 현장 확인 아님",
+    "pipeline": {
+      "order": [
+        "cad_to_3d",
+        "ai_axiom_review",
+        "mark_remaining"
+      ],
+      "ai_reviewed_decisions": 8,
+      "ai_review_unconfirmed": 0,
+      "ai_review_status": "recorded_review_applied",
+      "review_mode": "source_bound_recorded_ai_review_and_shared_axioms",
+      "remaining_policy": "visible_markers_not_silent_success",
+      "implementation_scope": "도면→3D 처리 단계 종료; 남은 도면 미완 항목은 표시"
+    }
+  },
+  "model_axioms": {
+    "revision": "cad_model_axioms_20261104",
+    "basis": "사용자 확정 모델링 공리. 수직 연결 범위는 이 프로젝트의 모델 가정이며 현실의 모든 연기 이동 경로를 뜻하지 않음.",
+    "vertical_kinds": [
+      "stair",
+      "elev"
+    ],
+    "column_label_pattern": "^(?:C|COL(?:UMN)?)[-_ ]?\\d+$|^기둥$",
+    "column_position_tolerance_m": 0.05,
+    "column_min_distinct_floors": 3,
+    "column_footprint_min_iou": 0.6,
+    "core_footprint_min_iou": 0.6,
+    "core_ambiguity_margin": 0.15,
+    "stages": [
+      "cad_to_3d",
+      "ai_axiom_review",
+      "mark_remaining"
+    ]
   }
 }

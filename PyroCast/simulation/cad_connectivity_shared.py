@@ -115,16 +115,18 @@ def build_graph(rooms, openings, defaults=None):
         note='연결 미확정 공간도 유지. 개구부 미확인은 외기 연결로 바꾸지 않음. 높이 미지정 시 층 기본값 사용.')
 
 
-def match_vertical_cores(cores):
+def match_vertical_cores(cores, floor_names=None):
     """One-to-one matches on adjacent named floors, with footprint overlap.
 
     Missing floors, weak alignment, or ambiguous matches remain unconfirmed.
     """
     from shapely.geometry import box
     import re
+    unsupported=[dict(floor=c['floor'],kind=c['kind'],room_id=c.get('room_id'),core_id=c.get('core_id'),reason='vertical_kind_excluded_by_model_axiom') for c in cores if c.get('kind') not in ('stair','elev')]
+    cores=[c for c in cores if c.get('kind') in ('stair','elev')]
     normal=[]
-    for c in cores:
-        m=re.fullmatch(r'(B)?(\d+)F?',c['floor'])
+    for name in (floor_names if floor_names is not None else [c['floor'] for c in cores]):
+        m=re.fullmatch(r'(B)?(\d+)F?',name)
         if m and not m[1]:normal.append(int(m[2])-1)
     def ordinal(name):
         if name in ('PH','옥탑'):return max(normal)+1 if normal else None
@@ -134,7 +136,7 @@ def match_vertical_cores(cores):
         x,y=ordinal(a),ordinal(b)
         return x is not None and y is not None and y-x == 1
     def footprint(c):return box(c['x']-c['w']/2,c['y']-c['h']/2,c['x']+c['w']/2,c['y']+c['h']/2)
-    groups=[]; unresolved=[]
+    groups=[]; unresolved=unsupported
     for c in sorted(cores,key=lambda c:c['z0']):
         candidates=[]
         for group in groups:

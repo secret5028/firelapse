@@ -1,30 +1,30 @@
 {
-  "source": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\reviews\\cad-interior-arcs-20261104\\building-input.json",
-  "source_sha256": "2b598f48067c1b708b9137d7db0866b01fe1ec6af4841aba2aeb511dbabdbeaa",
+  "source": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\reviews\\cad-final-axioms-20261104\\input.json",
+  "source_sha256": "86395e175a87f7fbcb8b440c9389895baa4432d5ea49d3bdabfc36f45d0da1c3",
   "rules_revision": "building_rules_v1_preserve_20261103",
   "floors": [
     {
       "floor": "B3",
-      "rooms": 12,
+      "rooms": 11,
       "connections": 8,
       "doors": {
-        "confirmed": 6,
-        "inferred": 2,
+        "confirmed": 5,
+        "inferred": 3,
         "ordinary": 0,
         "external": 0
       },
       "windows": 0,
       "external_windows": 0,
       "cores": {
-        "elev": 3,
-        "stair": 1
+        "stair": 1,
+        "elev": 1
       },
       "excluded": 1,
-      "isolated": 5
+      "isolated": 4
     },
     {
       "floor": "B2",
-      "rooms": 23,
+      "rooms": 22,
       "connections": 15,
       "doors": {
         "confirmed": 2,
@@ -35,97 +35,100 @@
       "windows": 2,
       "external_windows": 0,
       "cores": {
-        "stair": 2,
-        "elev": 2
+        "stair": 1,
+        "elev": 3
       },
       "excluded": 2,
-      "isolated": 11
+      "isolated": 10
     },
     {
       "floor": "B1",
-      "rooms": 22,
+      "rooms": 21,
       "connections": 24,
       "doors": {
-        "confirmed": 4,
+        "confirmed": 5,
         "inferred": 1,
-        "ordinary": 16,
+        "ordinary": 15,
         "external": 0
       },
       "windows": 3,
       "external_windows": 0,
       "cores": {
         "elev": 3,
-        "stair": 1
+        "stair": 2
       },
       "excluded": 2,
-      "isolated": 8
+      "isolated": 7
     },
     {
       "floor": "1F",
-      "rooms": 17,
+      "rooms": 16,
       "connections": 40,
       "doors": {
-        "confirmed": 2,
+        "confirmed": 3,
         "inferred": 2,
-        "ordinary": 13,
+        "ordinary": 12,
         "external": 5
       },
       "windows": 18,
       "external_windows": 16,
       "cores": {
+        "stair": 1,
         "elev": 3
       },
       "excluded": 7,
-      "isolated": 4
+      "isolated": 3
     },
     {
       "floor": "2F",
-      "rooms": 12,
+      "rooms": 11,
       "connections": 11,
       "doors": {
-        "confirmed": 0,
+        "confirmed": 1,
         "inferred": 4,
-        "ordinary": 3,
+        "ordinary": 2,
         "external": 0
       },
       "windows": 4,
       "external_windows": 4,
-      "cores": {},
+      "cores": {
+        "stair": 1
+      },
       "excluded": 2,
-      "isolated": 4
+      "isolated": 3
     },
     {
       "floor": "3F",
-      "rooms": 12,
+      "rooms": 11,
       "connections": 18,
       "doors": {
-        "confirmed": 0,
+        "confirmed": 1,
         "inferred": 5,
-        "ordinary": 3,
+        "ordinary": 2,
         "external": 0
       },
       "windows": 10,
       "external_windows": 10,
       "cores": {
-        "elev": 1
+        "stair": 1
       },
       "excluded": 3,
-      "isolated": 3
+      "isolated": 2
     },
     {
       "floor": "4F",
       "rooms": 22,
       "connections": 53,
       "doors": {
-        "confirmed": 1,
+        "confirmed": 2,
         "inferred": 3,
-        "ordinary": 16,
+        "ordinary": 15,
         "external": 0
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2
       },
       "excluded": 0,
       "isolated": 2
@@ -135,15 +138,16 @@
       "rooms": 23,
       "connections": 54,
       "doors": {
-        "confirmed": 4,
+        "confirmed": 5,
         "inferred": 1,
-        "ordinary": 15,
+        "ordinary": 14,
         "external": 0
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2,
+        "elev": 1
       },
       "excluded": 1,
       "isolated": 1
@@ -153,15 +157,16 @@
       "rooms": 23,
       "connections": 54,
       "doors": {
-        "confirmed": 4,
+        "confirmed": 5,
         "inferred": 1,
-        "ordinary": 15,
+        "ordinary": 14,
         "external": 0
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2,
+        "elev": 1
       },
       "excluded": 1,
       "isolated": 1
@@ -171,15 +176,16 @@
       "rooms": 23,
       "connections": 54,
       "doors": {
-        "confirmed": 4,
+        "confirmed": 5,
         "inferred": 1,
-        "ordinary": 15,
+        "ordinary": 14,
         "external": 0
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2,
+        "elev": 1
       },
       "excluded": 1,
       "isolated": 1
@@ -189,15 +195,16 @@
       "rooms": 23,
       "connections": 54,
       "doors": {
-        "confirmed": 4,
+        "confirmed": 5,
         "inferred": 1,
-        "ordinary": 15,
+        "ordinary": 14,
         "external": 0
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2,
+        "elev": 1
       },
       "excluded": 1,
       "isolated": 1
@@ -207,15 +214,15 @@
       "rooms": 21,
       "connections": 52,
       "doors": {
-        "confirmed": 3,
+        "confirmed": 4,
         "inferred": 2,
-        "ordinary": 14,
+        "ordinary": 13,
         "external": 0
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2
       },
       "excluded": 0,
       "isolated": 2
@@ -225,15 +232,15 @@
       "rooms": 20,
       "connections": 52,
       "doors": {
-        "confirmed": 3,
+        "confirmed": 4,
         "inferred": 2,
-        "ordinary": 13,
+        "ordinary": 12,
         "external": 1
       },
       "windows": 33,
       "external_windows": 33,
       "cores": {
-        "stair": 1
+        "stair": 2
       },
       "excluded": 0,
       "isolated": 2
@@ -275,8 +282,8 @@
           "area_m2": 157.54,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -304,9 +311,9 @@
         "HWR / FCS / HWS / FCR / FCS / FCR / CR / CS / CR / CS / CW / 300ø슬리브 / 250ø슬리브 / 150ø슬리브 / 250ø슬리브 / 150ø슬리브 / 150ø슬리브 / 100ø슬리브 / 65ø슬리브 / 50ø슬리브 / 32ø슬리브 / 125ø슬리브 / 기계실 / PIT / PIT / DA(상부오픈) / 벽체 슬리브 (구조안전진단필요) HWR FCS HWS FCR FCS FCR CR CS CR CS CW 300ø슬리브 250ø슬리브 150ø슬리브 250ø슬리브 150ø슬리브 150ø슬리브 100ø슬리브 65ø슬리브 50ø슬리브 32ø슬리브 125ø슬리브 기계실 PIT PIT DA(상부오픈) 벽체 슬리브 (구조안전진단필요)"
       ],
       "door_class": "fire",
-      "rule": 2,
-      "confidence": "confirmed",
-      "reason": "80㎡ 이하 코어 연결: CAD_B3_R4 52.41㎡ (elev)",
+      "rule": 3,
+      "confidence": "inferred",
+      "reason": "설비·샤프트·창고 연결: 강재집수정 / 저수조 / DA / (상부오픈) / 집수정 강재집수정 저수조 DA (상부오픈) 집수정 / HWR / FCS / HWS / FCR / FCS / FCR / CR / CS / CR / CS / CW / 300ø슬리브 / 250ø슬리브 / 150ø슬리브 / 250ø슬리브 / 150ø슬리브 / 150ø슬리브 / 100ø슬리브 / 65ø슬리브 / 50ø슬리브 / 32ø슬리브 / 125ø슬리브 / 기계실 / PIT / PIT / DA(상부오픈) / 벽체 슬리브 (구조안전진단필요) HWR FCS HWS FCR FCS FCR CR CS CR CS CW 300ø슬리브 250ø슬리브 150ø슬리브 250ø슬리브 150ø슬리브 150ø슬리브 100ø슬리브 65ø슬리브 50ø슬리브 32ø슬리브 125ø슬리브 기계실 PIT PIT DA(상부오픈) 벽체 슬리브 (구조안전진단필요)",
       "core_checks": [
         {
           "room": "CAD_B3_R4",
@@ -314,10 +321,10 @@
           "area_m2": 52.41,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
-          "eligible": true
+          "eligible": false
         },
         {
           "room": "CAD_B3_R0",
@@ -325,13 +332,13 @@
           "area_m2": 157.54,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
       ],
-      "probability": 0.2,
+      "probability": 0.35,
       "position_m": null
     },
     {
@@ -442,8 +449,8 @@
           "area_m2": 157.54,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -462,7 +469,7 @@
       "door_class": "fire",
       "rule": 2,
       "confidence": "confirmed",
-      "reason": "80㎡ 이하 코어 연결: CAD_B3_R1 11.83㎡ (stair) / CAD_B3_R4 52.41㎡ (elev)",
+      "reason": "80㎡ 이하 코어 연결: CAD_B3_R1 11.83㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_B3_R1",
@@ -481,10 +488,10 @@
           "area_m2": 52.41,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
-          "eligible": true
+          "eligible": false
         }
       ],
       "probability": 0.2,
@@ -509,8 +516,8 @@
           "area_m2": 157.54,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -548,8 +555,8 @@
           "area_m2": 157.54,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -598,8 +605,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -637,8 +644,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -665,8 +672,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -770,8 +777,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -809,8 +816,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -859,8 +866,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -898,8 +905,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -937,8 +944,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -976,8 +983,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -1015,8 +1022,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -1054,8 +1061,8 @@
           "area_m2": 115.17,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "stair",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -1149,10 +1156,10 @@
         "gearless / 장애인용 / 단열재 : 마감상부만 설치 / SL-2150 / 105m/s / 기어리스 / 11인승 / 2종근린생활시설 / 일반음식점 / 장애인화장실(남) / 장애인화장실(여) / 11인승 ELEV. / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) / ELEV홀-A / ELEV홀-B / 계단실-B / 복도 / 점자표지위치변경(협회 협의사항) / 면적:근생공용->근생전용변경 / MDF실->근생주방변경 / 벽체오픈 (구조안전진단필요) gearless 장애인용 단열재 : 마감상부만 설치 SL-2150 105m/s 기어리스 11인승 2종근린생활시설 일반음식점 장애인화장실(남) 장애인화장실(여) 11인승 ELEV. 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용) ELEV홀-A ELEV홀-B 계단실-B 복도 점자표지위치변경(협회 협의사항) 면적:근생공용->근생전용변경 MDF실->근생주방변경 벽체오픈 (구조안전진단필요)",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_B1_R14 12.88㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_B1_R3",
@@ -1171,13 +1178,13 @@
           "area_m2": 12.88,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -2076,10 +2083,10 @@
         "",
         "105m/s / 기어리스 / 11인승 / 1종근린생활시설 / 휴게음식점 / 로  비 / 프론트데스크 / 비지니스센터 / 11인승 ELEV. / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) / ELEV홀-A / ELEV홀-B / 계단실-B / 복도 / 0.5B / 창호 폴딩도어로 변경 / 근생출입문크기축소(2.6->2.0) / 인테리어벽체반영 105m/s 기어리스 11인승 1종근린생활시설 휴게음식점 로  비 프론트데스크 비지니스센터 11인승 ELEV. 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용) ELEV홀-A ELEV홀-B 계단실-B 복도 0.5B 창호 폴딩도어로 변경 근생출입문크기축소(2.6->2.0) 인테리어벽체반영"
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_1F_R9 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_1F_R9",
@@ -2087,10 +2094,10 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         },
         {
           "room": "CAD_1F_R1",
@@ -2104,7 +2111,7 @@
           "eligible": false
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -2820,10 +2827,10 @@
         "105m/s / 기어리스 / 11인승 / 전기tray / 통신 tray / 2종근린생활시설 / 일반음식점 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) / 11인승 ELEV. / ELEV홀-A / ELEV홀-B / 계단실-B / 벽체오픈 / 복도폭 축소 / 1200->1000 105m/s 기어리스 11인승 전기tray 통신 tray 2종근린생활시설 일반음식점 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용) 11인승 ELEV. ELEV홀-A ELEV홀-B 계단실-B 벽체오픈 복도폭 축소 1200->1000",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_2F_R8 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_2F_R0",
@@ -2842,13 +2849,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -2948,8 +2955,8 @@
           "area_m2": 446.12,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -3037,8 +3044,8 @@
           "area_m2": 446.12,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -3076,8 +3083,8 @@
           "area_m2": 446.12,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -3093,10 +3100,10 @@
         "2종근린생활시설 / 일반음식점 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) / 11인승 ELEV. / 105m/s / 기어리스 / 11인승 / 전기tray / 통신 tray / ELEV홀-A / ELEV홀-B / 계단실-B / 전용면적선 벽체따라 변경여부 / 벽체오픈 2종근린생활시설 일반음식점 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용) 11인승 ELEV. 105m/s 기어리스 11인승 전기tray 통신 tray ELEV홀-A ELEV홀-B 계단실-B 전용면적선 벽체따라 변경여부 벽체오픈",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_3F_R8 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_3F_R0",
@@ -3104,8 +3111,8 @@
           "area_m2": 446.12,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         },
@@ -3115,13 +3122,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -3181,8 +3188,8 @@
           "area_m2": 446.12,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -3220,8 +3227,8 @@
           "area_m2": 446.12,
           "area_limit_m2": 80,
           "area_ok": false,
-          "core_kind": "elev",
-          "core_kind_match": true,
+          "core_kind": null,
+          "core_kind_match": false,
           "leading_core_token": null,
           "eligible": false
         }
@@ -3393,10 +3400,10 @@
         "ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) / 벽두께 200 -> 180 / 벽두께 200 -> 180 / 벽두께 200 -> 180 ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용) 벽두께 200 -> 180 벽두께 200 -> 180 벽두께 200 -> 180",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_4F_R10 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_4F_R2",
@@ -3415,13 +3422,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -4095,10 +4102,10 @@
         "구조협의(양측과 100찐따) / ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) / 벽두께 200 -> 180 / 벽두께 200 -> 180 / 벽두께 200 -> 180 구조협의(양측과 100찐따) ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용) 벽두께 200 -> 180 벽두께 200 -> 180 벽두께 200 -> 180",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_5F_R10 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_5F_R1",
@@ -4117,13 +4124,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -4761,7 +4768,7 @@
       "door_class": "fire",
       "rule": 2,
       "confidence": "confirmed",
-      "reason": "80㎡ 이하 코어 연결: CAD_5F_R17 7.97㎡ (ELEV홀)",
+      "reason": "80㎡ 이하 코어 연결: CAD_5F_R13 4.12㎡ (elev) / CAD_5F_R17 7.97㎡ (ELEV홀)",
       "core_checks": [
         {
           "room": "CAD_5F_R13",
@@ -4769,10 +4776,10 @@
           "area_m2": 4.12,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "elev",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         },
         {
           "room": "CAD_5F_R17",
@@ -4875,10 +4882,10 @@
         "구조협의(양측과 100찐따) / 실시할때, 건식벽 PIT타입 적용검토 / 지하는 블록벽으로 검토할것(방습문제) / ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) 구조협의(양측과 100찐따) 실시할때, 건식벽 PIT타입 적용검토 지하는 블록벽으로 검토할것(방습문제) ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용)",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_6F_R10 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_6F_R1",
@@ -4897,13 +4904,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -5541,7 +5548,7 @@
       "door_class": "fire",
       "rule": 2,
       "confidence": "confirmed",
-      "reason": "80㎡ 이하 코어 연결: CAD_6F_R17 7.97㎡ (ELEV홀)",
+      "reason": "80㎡ 이하 코어 연결: CAD_6F_R13 4.12㎡ (elev) / CAD_6F_R17 7.97㎡ (ELEV홀)",
       "core_checks": [
         {
           "room": "CAD_6F_R13",
@@ -5549,10 +5556,10 @@
           "area_m2": 4.12,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "elev",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         },
         {
           "room": "CAD_6F_R17",
@@ -5655,10 +5662,10 @@
         "구조협의(양측과 100찐따) / ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) 구조협의(양측과 100찐따) ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용)",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_7F_R10 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_7F_R1",
@@ -5677,13 +5684,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -6321,7 +6328,7 @@
       "door_class": "fire",
       "rule": 2,
       "confidence": "confirmed",
-      "reason": "80㎡ 이하 코어 연결: CAD_7F_R17 7.97㎡ (ELEV홀)",
+      "reason": "80㎡ 이하 코어 연결: CAD_7F_R13 4.12㎡ (elev) / CAD_7F_R17 7.97㎡ (ELEV홀)",
       "core_checks": [
         {
           "room": "CAD_7F_R13",
@@ -6329,10 +6336,10 @@
           "area_m2": 4.12,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "elev",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         },
         {
           "room": "CAD_7F_R17",
@@ -6435,10 +6442,10 @@
         "구조협의(양측과 100찐따) / 실시할때, 건식벽 PIT타입 적용검토 / 지하는 블록벽으로 검토할것(방습문제) / ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) 구조협의(양측과 100찐따) 실시할때, 건식벽 PIT타입 적용검토 지하는 블록벽으로 검토할것(방습문제) ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용)",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_8F_R10 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_8F_R2",
@@ -6457,13 +6464,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -7101,7 +7108,7 @@
       "door_class": "fire",
       "rule": 2,
       "confidence": "confirmed",
-      "reason": "80㎡ 이하 코어 연결: CAD_8F_R17 7.97㎡ (ELEV홀)",
+      "reason": "80㎡ 이하 코어 연결: CAD_8F_R13 4.12㎡ (elev) / CAD_8F_R17 7.97㎡ (ELEV홀)",
       "core_checks": [
         {
           "room": "CAD_8F_R13",
@@ -7109,10 +7116,10 @@
           "area_m2": 4.12,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "elev",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         },
         {
           "room": "CAD_8F_R17",
@@ -7332,10 +7339,10 @@
         "ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용)",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_9F_R9 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_9F_R1",
@@ -7354,13 +7361,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -8034,10 +8041,10 @@
         "ELEV홀-A / 복도 / 복도 / 복도 / 복도 / 13인승 ELEV. / (장애인용) / 13인승 ELEV. / (장애인용) ELEV홀-A 복도 복도 복도 복도 13인승 ELEV. (장애인용) 13인승 ELEV. (장애인용)",
         ""
       ],
-      "door_class": "ordinary",
-      "rule": 6,
-      "confidence": "default",
-      "reason": "일반문 기본값",
+      "door_class": "fire",
+      "rule": 2,
+      "confidence": "confirmed",
+      "reason": "80㎡ 이하 코어 연결: CAD_10F_R9 12.90㎡ (stair)",
       "core_checks": [
         {
           "room": "CAD_10F_R1",
@@ -8056,13 +8063,13 @@
           "area_m2": 12.9,
           "area_limit_m2": 80,
           "area_ok": true,
-          "core_kind": null,
-          "core_kind_match": false,
+          "core_kind": "stair",
+          "core_kind_match": true,
           "leading_core_token": null,
-          "eligible": false
+          "eligible": true
         }
       ],
-      "probability": 0.5,
+      "probability": 0.2,
       "position_m": null
     },
     {
@@ -8706,7 +8713,7 @@
         "floor_use": "parking",
         "label_unmapped": true
       },
-      "core_kind": "elev",
+      "core_kind": null,
       "fuel_load_MJ_m2": 280
     },
     {
@@ -8762,20 +8769,6 @@
         "(상부오픈)",
         "집수정"
       ],
-      "usage_class": "parking",
-      "usage_evidence": {
-        "basis": "floor_use",
-        "floor_use": "parking",
-        "label_unmapped": true
-      },
-      "core_kind": "elev",
-      "fuel_load_MJ_m2": 280
-    },
-    {
-      "id": "CAD_B3_R5",
-      "floor": "B3",
-      "area_m2": 0.73,
-      "labels": [],
       "usage_class": "parking",
       "usage_evidence": {
         "basis": "floor_use",
@@ -9011,7 +9004,7 @@
         "basis": "label",
         "pattern": "화장실|TOILET|RESTROOM|W[.]?C[.]?\\b"
       },
-      "core_kind": "stair",
+      "core_kind": null,
       "fuel_load_MJ_m2": 40
     },
     {
@@ -9112,20 +9105,6 @@
       "labels": [
         "DA"
       ],
-      "usage_class": "warehouse",
-      "usage_evidence": {
-        "basis": "floor_use",
-        "floor_use": "warehouse",
-        "label_unmapped": true
-      },
-      "core_kind": null,
-      "fuel_load_MJ_m2": 1180
-    },
-    {
-      "id": "CAD_B2_R12",
-      "floor": "B2",
-      "area_m2": 0.57,
-      "labels": [],
       "usage_class": "warehouse",
       "usage_evidence": {
         "basis": "floor_use",
@@ -9307,7 +9286,7 @@
         "basis": "label",
         "pattern": "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
       },
-      "core_kind": null,
+      "core_kind": "elev",
       "fuel_load_MJ_m2": 100
     },
     {
@@ -9531,20 +9510,6 @@
       "fuel_load_MJ_m2": 600
     },
     {
-      "id": "CAD_B1_R13",
-      "floor": "B1",
-      "area_m2": 0.73,
-      "labels": [],
-      "usage_class": "shopping",
-      "usage_evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      },
-      "core_kind": null,
-      "fuel_load_MJ_m2": 600
-    },
-    {
       "id": "CAD_B1_R14",
       "floor": "B1",
       "area_m2": 12.88,
@@ -9555,7 +9520,7 @@
         "floor_use": "retail",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 600
     },
     {
@@ -9829,20 +9794,6 @@
       "fuel_load_MJ_m2": 600
     },
     {
-      "id": "CAD_1F_R8",
-      "floor": "1F",
-      "area_m2": 0.72,
-      "labels": [],
-      "usage_class": "shopping",
-      "usage_evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      },
-      "core_kind": null,
-      "fuel_load_MJ_m2": 600
-    },
-    {
       "id": "CAD_1F_R9",
       "floor": "1F",
       "area_m2": 12.9,
@@ -9853,7 +9804,7 @@
         "floor_use": "retail",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 600
     },
     {
@@ -10084,22 +10035,6 @@
       "fuel_load_MJ_m2": 40
     },
     {
-      "id": "CAD_2F_R7",
-      "floor": "2F",
-      "area_m2": 0.73,
-      "labels": [
-        "C3"
-      ],
-      "usage_class": "shopping",
-      "usage_evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      },
-      "core_kind": null,
-      "fuel_load_MJ_m2": 600
-    },
-    {
       "id": "CAD_2F_R8",
       "floor": "2F",
       "area_m2": 12.9,
@@ -10110,7 +10045,7 @@
         "floor_use": "retail",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 600
     },
     {
@@ -10197,7 +10132,7 @@
         "basis": "label",
         "pattern": "판매|매장|근린|상가|점포|SHOP|STORE|음식점|식당|카페|휴게음식|마트"
       },
-      "core_kind": "elev",
+      "core_kind": null,
       "fuel_load_MJ_m2": 600
     },
     {
@@ -10288,20 +10223,6 @@
       "fuel_load_MJ_m2": 40
     },
     {
-      "id": "CAD_3F_R7",
-      "floor": "3F",
-      "area_m2": 0.72,
-      "labels": [],
-      "usage_class": "shopping",
-      "usage_evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      },
-      "core_kind": null,
-      "fuel_load_MJ_m2": 600
-    },
-    {
       "id": "CAD_3F_R8",
       "floor": "3F",
       "area_m2": 12.9,
@@ -10312,7 +10233,7 @@
         "floor_use": "retail",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 600
     },
     {
@@ -10539,7 +10460,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -10884,7 +10805,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -10933,7 +10854,7 @@
         "basis": "label",
         "pattern": "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
       },
-      "core_kind": null,
+      "core_kind": "elev",
       "fuel_load_MJ_m2": 100
     },
     {
@@ -11242,7 +11163,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -11291,7 +11212,7 @@
         "basis": "label",
         "pattern": "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
       },
-      "core_kind": null,
+      "core_kind": "elev",
       "fuel_load_MJ_m2": 100
     },
     {
@@ -11598,7 +11519,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -11647,7 +11568,7 @@
         "basis": "label",
         "pattern": "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
       },
-      "core_kind": null,
+      "core_kind": "elev",
       "fuel_load_MJ_m2": 100
     },
     {
@@ -11956,7 +11877,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -12005,7 +11926,7 @@
         "basis": "label",
         "pattern": "복도|로비|LOBBY|HALL|CORR|통로|전실|부속실|E/?V|ELEV|엘리베이터|승강장|현관|홀"
       },
-      "core_kind": null,
+      "core_kind": "elev",
       "fuel_load_MJ_m2": 100
     },
     {
@@ -12296,7 +12217,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -12622,7 +12543,7 @@
         "floor_use": "lodging",
         "label_unmapped": true
       },
-      "core_kind": null,
+      "core_kind": "stair",
       "fuel_load_MJ_m2": 310
     },
     {
@@ -12992,12 +12913,6 @@
       "label": "AMP",
       "rooms": [
         "CAD_1F_R0"
-      ]
-    },
-    {
-      "label": "C3",
-      "rooms": [
-        "CAD_2F_R7"
       ]
     },
     {
@@ -13735,12 +13650,6 @@
   "errors": [
     {
       "floor": "B3",
-      "id": "R0",
-      "kind": "large_core_label_review",
-      "detail": "코어 태그와 큰 실 면적이 함께 있음. 자동 수정하지 않음."
-    },
-    {
-      "floor": "B3",
       "kind": "excluded_opening",
       "id": "D3",
       "reason": "same_space"
@@ -13748,11 +13657,6 @@
     {
       "floor": "B3",
       "id": "R2",
-      "kind": "isolated_room"
-    },
-    {
-      "floor": "B3",
-      "id": "R5",
       "kind": "isolated_room"
     },
     {
@@ -13769,12 +13673,6 @@
       "floor": "B3",
       "id": "R9",
       "kind": "isolated_room"
-    },
-    {
-      "floor": "B2",
-      "id": "R4",
-      "kind": "large_core_label_review",
-      "detail": "코어 태그와 큰 실 면적이 함께 있음. 자동 수정하지 않음."
     },
     {
       "floor": "B2",
@@ -13801,11 +13699,6 @@
     {
       "floor": "B2",
       "id": "R11",
-      "kind": "isolated_room"
-    },
-    {
-      "floor": "B2",
-      "id": "R12",
       "kind": "isolated_room"
     },
     {
@@ -13863,11 +13756,6 @@
     {
       "floor": "B1",
       "id": "R6",
-      "kind": "isolated_room"
-    },
-    {
-      "floor": "B1",
-      "id": "R13",
       "kind": "isolated_room"
     },
     {
@@ -13939,11 +13827,6 @@
     },
     {
       "floor": "1F",
-      "id": "R8",
-      "kind": "isolated_room"
-    },
-    {
-      "floor": "1F",
       "id": "R10",
       "kind": "isolated_room"
     },
@@ -13981,19 +13864,8 @@
     },
     {
       "floor": "2F",
-      "id": "R7",
-      "kind": "isolated_room"
-    },
-    {
-      "floor": "2F",
       "id": "R9",
       "kind": "isolated_room"
-    },
-    {
-      "floor": "3F",
-      "id": "R0",
-      "kind": "large_core_label_review",
-      "detail": "코어 태그와 큰 실 면적이 함께 있음. 자동 수정하지 않음."
     },
     {
       "floor": "3F",
@@ -14021,11 +13893,6 @@
     {
       "floor": "3F",
       "id": "R5",
-      "kind": "isolated_room"
-    },
-    {
-      "floor": "3F",
-      "id": "R7",
       "kind": "isolated_room"
     },
     {
@@ -14124,597 +13991,1077 @@
   ],
   "auto_corrections": [
     {
+      "kind": "column_not_room",
+      "floor": "B3",
+      "id": "R5",
+      "before": "room",
+      "after": "column",
+      "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+      "evidence": {
+        "seed_floor": "2F",
+        "seed_room": "R7",
+        "labels": [
+          "C3"
+        ],
+        "center": [
+          16.35,
+          59.24
+        ],
+        "matched_floors": [
+          "1F",
+          "2F",
+          "3F",
+          "B1",
+          "B2",
+          "B3"
+        ],
+        "iou": 0.972766
+      }
+    },
+    {
+      "kind": "column_not_room",
       "floor": "B2",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R21",
-        "R4"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "geometry"
+      "id": "R12",
+      "before": "room",
+      "after": "column",
+      "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+      "evidence": {
+        "seed_floor": "2F",
+        "seed_room": "R7",
+        "labels": [
+          "C3"
+        ],
+        "center": [
+          16.35,
+          59.24
+        ],
+        "matched_floors": [
+          "1F",
+          "2F",
+          "3F",
+          "B1",
+          "B2",
+          "B3"
+        ],
+        "iou": 0.748936
+      }
+    },
+    {
+      "kind": "column_not_room",
+      "floor": "B1",
+      "id": "R13",
+      "before": "room",
+      "after": "column",
+      "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+      "evidence": {
+        "seed_floor": "2F",
+        "seed_room": "R7",
+        "labels": [
+          "C3"
+        ],
+        "center": [
+          16.35,
+          59.24
+        ],
+        "matched_floors": [
+          "1F",
+          "2F",
+          "3F",
+          "B1",
+          "B2",
+          "B3"
+        ],
+        "iou": 0.972766
+      }
+    },
+    {
+      "kind": "column_not_room",
+      "floor": "1F",
+      "id": "R8",
+      "before": "room",
+      "after": "column",
+      "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+      "evidence": {
+        "seed_floor": "2F",
+        "seed_room": "R7",
+        "labels": [
+          "C3"
+        ],
+        "center": [
+          16.35,
+          59.24
+        ],
+        "matched_floors": [
+          "1F",
+          "2F",
+          "3F",
+          "B1",
+          "B2",
+          "B3"
+        ],
+        "iou": 0.977689
+      }
+    },
+    {
+      "kind": "column_not_room",
+      "floor": "2F",
+      "id": "R7",
+      "before": "room",
+      "after": "column",
+      "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+      "evidence": {
+        "seed_floor": "2F",
+        "seed_room": "R7",
+        "labels": [
+          "C3"
+        ],
+        "center": [
+          16.35,
+          59.24
+        ],
+        "matched_floors": [
+          "1F",
+          "2F",
+          "3F",
+          "B1",
+          "B2",
+          "B3"
+        ],
+        "iou": 1.0
+      }
+    },
+    {
+      "kind": "column_not_room",
+      "floor": "3F",
+      "id": "R7",
+      "before": "room",
+      "after": "column",
+      "detail": "층간 반복 위치·기둥 표기·형상 일치 → 실에서 기둥으로 재분류",
+      "evidence": {
+        "seed_floor": "2F",
+        "seed_room": "R7",
+        "labels": [
+          "C3"
+        ],
+        "center": [
+          16.35,
+          59.24
+        ],
+        "matched_floors": [
+          "1F",
+          "2F",
+          "3F",
+          "B1",
+          "B2",
+          "B3"
+        ],
+        "iou": 0.958381
+      }
+    },
+    {
+      "floor": "B2",
+      "id": "R22",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "elev",
+      "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+      "evidence": [
+        {
+          "kind": "elev",
+          "source_core": 2,
+          "iou": 0.8153335128826636,
+          "matched_floors": [
+            "B2",
+            "5F",
+            "6F",
+            "7F",
+            "8F"
+          ]
+        }
+      ]
     },
     {
       "floor": "B1",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R19",
-        "R3"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
+      "id": "R14",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9977578475336324,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "1F",
-      "id": "ARC_69e41d1d768e",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R14",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_69e41d1d768e",
-      "source_leaf_index": 0,
-      "confidence": "geometry"
-    },
-    {
-      "floor": "1F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R13",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "geometry"
+      "id": "R9",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "2F",
-      "id": "ARC_69e41d1d768e",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R11",
-        "R0"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_69e41d1d768e",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "2F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R10",
-        "R0"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
+      "id": "R8",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9863897853234195,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "3F",
-      "id": "ARC_b4f6bda84025",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R11",
-        "R0"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_b4f6bda84025",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "3F",
-      "id": "ARC_3fc51e021654",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R10",
-        "R0"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_3fc51e021654",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
+      "id": "R8",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9863897853234195,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "4F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R12",
-        "R13"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "4F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R14",
-        "R2"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
+      "id": "R10",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "5F",
-      "id": "D0_ARC1",
-      "kind": "arc_door_connection",
-      "before": [
-        "R1",
-        "R1"
-      ],
-      "after": [
-        "R1",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "D0",
-      "source_leaf_index": 1,
-      "confidence": "inferred"
+      "id": "R10",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "5F",
-      "id": "D0",
-      "kind": "split_arc_bundle",
-      "before": [
-        "R1",
-        "R1"
-      ],
-      "after": [
-        "D0_ARC1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door"
-    },
-    {
-      "floor": "5F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R12",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "5F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R14",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "5F",
-      "id": "AI_ELEV_R13_R17",
-      "kind": "ai_reviewed_connection",
+      "id": "R13",
+      "kind": "repeated_core_identity",
       "before": null,
-      "after": [
-        "R13",
-        "R17"
-      ],
-      "basis": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
-      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40."
-    },
-    {
-      "floor": "5F",
-      "id": "AI_OPEN_R4_R5",
-      "kind": "ai_reviewed_connection",
-      "before": null,
-      "after": [
-        "R4",
-        "R5"
-      ],
-      "basis": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
-      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정."
+      "after": "elev",
+      "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+      "evidence": [
+        {
+          "kind": "elev",
+          "source_core": 2,
+          "iou": 0.8231077852409507,
+          "matched_floors": [
+            "B2",
+            "5F",
+            "6F",
+            "7F",
+            "8F"
+          ]
+        }
+      ]
     },
     {
       "floor": "6F",
-      "id": "D0_ARC1",
-      "kind": "arc_door_connection",
-      "before": [
-        "R1",
-        "R1"
-      ],
-      "after": [
-        "R1",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "D0",
-      "source_leaf_index": 1,
-      "confidence": "inferred"
+      "id": "R10",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "6F",
-      "id": "D0",
-      "kind": "split_arc_bundle",
-      "before": [
-        "R1",
-        "R1"
-      ],
-      "after": [
-        "D0_ARC1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door"
-    },
-    {
-      "floor": "6F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R12",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "6F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R14",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "6F",
-      "id": "AI_ELEV_R13_R17",
-      "kind": "ai_reviewed_connection",
+      "id": "R13",
+      "kind": "repeated_core_identity",
       "before": null,
-      "after": [
-        "R13",
-        "R17"
-      ],
-      "basis": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
-      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40."
-    },
-    {
-      "floor": "6F",
-      "id": "AI_OPEN_R4_R5",
-      "kind": "ai_reviewed_connection",
-      "before": null,
-      "after": [
-        "R4",
-        "R5"
-      ],
-      "basis": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
-      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정."
+      "after": "elev",
+      "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+      "evidence": [
+        {
+          "kind": "elev",
+          "source_core": 2,
+          "iou": 0.8231077852409507,
+          "matched_floors": [
+            "B2",
+            "5F",
+            "6F",
+            "7F",
+            "8F"
+          ]
+        }
+      ]
     },
     {
       "floor": "7F",
-      "id": "D0_ARC1",
-      "kind": "arc_door_connection",
-      "before": [
-        "R1",
-        "R1"
-      ],
-      "after": [
-        "R1",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "D0",
-      "source_leaf_index": 1,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "7F",
-      "id": "D0",
-      "kind": "split_arc_bundle",
-      "before": [
-        "R1",
-        "R1"
-      ],
-      "after": [
-        "D0_ARC1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door"
-    },
-    {
-      "floor": "7F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R12",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "7F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R14",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "7F",
-      "id": "AI_ELEV_R13_R17",
-      "kind": "ai_reviewed_connection",
+      "id": "R10",
+      "kind": "repeated_core_identity",
       "before": null,
-      "after": [
-        "R13",
-        "R17"
-      ],
-      "basis": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
-      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40."
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "7F",
-      "id": "AI_OPEN_R4_R5",
-      "kind": "ai_reviewed_connection",
+      "id": "R13",
+      "kind": "repeated_core_identity",
       "before": null,
-      "after": [
-        "R4",
-        "R5"
-      ],
-      "basis": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
-      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정."
+      "after": "elev",
+      "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+      "evidence": [
+        {
+          "kind": "elev",
+          "source_core": 2,
+          "iou": 0.8231077852409507,
+          "matched_floors": [
+            "B2",
+            "5F",
+            "6F",
+            "7F",
+            "8F"
+          ]
+        }
+      ]
     },
     {
       "floor": "8F",
-      "id": "D0_ARC1",
-      "kind": "arc_door_connection",
-      "before": [
-        "R2",
-        "R2"
-      ],
-      "after": [
-        "R2",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "D0",
-      "source_leaf_index": 1,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "8F",
-      "id": "D0",
-      "kind": "split_arc_bundle",
-      "before": [
-        "R2",
-        "R2"
-      ],
-      "after": [
-        "D0_ARC1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door"
-    },
-    {
-      "floor": "8F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R12",
-        "R17"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "8F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R14",
-        "R2"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "8F",
-      "id": "AI_ELEV_R13_R17",
-      "kind": "ai_reviewed_connection",
+      "id": "R10",
+      "kind": "repeated_core_identity",
       "before": null,
-      "after": [
-        "R13",
-        "R17"
-      ],
-      "basis": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
-      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40."
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "8F",
-      "id": "AI_OPEN_R4_R5",
-      "kind": "ai_reviewed_connection",
+      "id": "R13",
+      "kind": "repeated_core_identity",
       "before": null,
-      "after": [
-        "R4",
-        "R5"
-      ],
-      "basis": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
-      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정."
+      "after": "elev",
+      "detail": "층간 공통 위치·코어 형상 대응 → 승강기",
+      "evidence": [
+        {
+          "kind": "elev",
+          "source_core": 2,
+          "iou": 0.8231077852409507,
+          "matched_floors": [
+            "B2",
+            "5F",
+            "6F",
+            "7F",
+            "8F"
+          ]
+        }
+      ]
     },
     {
       "floor": "9F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R11",
-        "R12"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "9F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R13",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
+      "id": "R9",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     },
     {
       "floor": "10F",
-      "id": "ARC_a53d8eb01c96",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R11",
-        "R12"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a53d8eb01c96",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
-    },
-    {
-      "floor": "10F",
-      "id": "ARC_a484d5786b9a",
-      "kind": "arc_door_connection",
-      "before": [
-        null,
-        null
-      ],
-      "after": [
-        "R13",
-        "R1"
-      ],
-      "basis": "user_assumption_interior_arc_is_door",
-      "source_parent_id": "ARC_a484d5786b9a",
-      "source_leaf_index": 0,
-      "confidence": "inferred"
+      "id": "R9",
+      "kind": "repeated_core_identity",
+      "before": null,
+      "after": "stair",
+      "detail": "층간 공통 위치·코어 형상 대응 → 계단",
+      "evidence": [
+        {
+          "kind": "stair",
+          "source_core": 3,
+          "iou": 0.9886036776914273,
+          "matched_floors": [
+            "B1",
+            "1F",
+            "2F",
+            "3F",
+            "4F",
+            "5F",
+            "6F",
+            "7F",
+            "8F",
+            "9F",
+            "10F"
+          ]
+        }
+      ]
     }
   ],
   "model_reviews": [
+    {
+      "floor": "B3",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B2",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B1",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "1F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "2F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "3F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "4F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "5F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "6F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "7F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "8F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "9F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "10F",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "PH",
+      "id": "SOURCE_CORE_0",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        24.54,
+        63.545
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B2",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B1",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "1F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "2F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "3F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "4F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "5F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "6F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "7F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "8F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "9F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "10F",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "PH",
+      "id": "SOURCE_CORE_1",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        19.45,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B1",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "1F",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "2F",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "3F",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "4F",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "9F",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "10F",
+      "id": "SOURCE_CORE_2",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        13.7,
+        54.796
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B1",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "1F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "2F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "3F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "4F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "5F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "6F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "7F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "8F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "9F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "10F",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "PH",
+      "id": "SOURCE_CORE_4",
+      "kind": "core_region_unresolved",
+      "point_m": [
+        17.25,
+        65.148
+      ],
+      "detail": "반복 코어 위치 확인 · 대응 실 영역 미확정, 수직 연결 생성 안 함"
+    },
+    {
+      "floor": "B3",
+      "id": "R0",
+      "kind": "core_region_unresolved",
+      "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+    },
+    {
+      "floor": "B3",
+      "id": "R4",
+      "kind": "core_region_unresolved",
+      "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+    },
+    {
+      "floor": "B2",
+      "id": "R4",
+      "kind": "core_region_unresolved",
+      "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+    },
+    {
+      "floor": "3F",
+      "id": "R0",
+      "kind": "core_region_unresolved",
+      "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+    },
     {
       "floor": "B3",
       "id": "D3",
@@ -14896,18 +15243,6 @@
     },
     {
       "floor": "B3",
-      "id": "R5",
-      "kind": "estimated_usage",
-      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-      "usage_class": "parking",
-      "evidence": {
-        "basis": "floor_use",
-        "floor_use": "parking",
-        "label_unmapped": true
-      }
-    },
-    {
-      "floor": "B3",
       "id": "R6",
       "kind": "estimated_usage",
       "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -14981,12 +15316,6 @@
     {
       "floor": "B3",
       "id": "R2",
-      "kind": "isolated_room",
-      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-    },
-    {
-      "floor": "B3",
-      "id": "R5",
       "kind": "isolated_room",
       "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
@@ -15379,18 +15708,6 @@
     },
     {
       "floor": "B2",
-      "id": "R12",
-      "kind": "estimated_usage",
-      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-      "usage_class": "warehouse",
-      "evidence": {
-        "basis": "floor_use",
-        "floor_use": "warehouse",
-        "label_unmapped": true
-      }
-    },
-    {
-      "floor": "B2",
       "id": "R13",
       "kind": "estimated_usage",
       "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -15512,12 +15829,6 @@
     {
       "floor": "B2",
       "id": "R11",
-      "kind": "isolated_room",
-      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-    },
-    {
-      "floor": "B2",
-      "id": "R12",
       "kind": "isolated_room",
       "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
@@ -16078,18 +16389,6 @@
     },
     {
       "floor": "B1",
-      "id": "R13",
-      "kind": "estimated_usage",
-      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-      "usage_class": "shopping",
-      "evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      }
-    },
-    {
-      "floor": "B1",
       "id": "R14",
       "kind": "estimated_usage",
       "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -16181,12 +16480,6 @@
     {
       "floor": "B1",
       "id": "R6",
-      "kind": "isolated_room",
-      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-    },
-    {
-      "floor": "B1",
-      "id": "R13",
       "kind": "isolated_room",
       "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
@@ -16719,18 +17012,6 @@
     },
     {
       "floor": "1F",
-      "id": "R8",
-      "kind": "estimated_usage",
-      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-      "usage_class": "shopping",
-      "evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      }
-    },
-    {
-      "floor": "1F",
       "id": "R9",
       "kind": "estimated_usage",
       "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -16788,12 +17069,6 @@
         "floor_use": "retail",
         "label_unmapped": true
       }
-    },
-    {
-      "floor": "1F",
-      "id": "R8",
-      "kind": "isolated_room",
-      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
     {
       "floor": "1F",
@@ -17404,18 +17679,6 @@
     },
     {
       "floor": "2F",
-      "id": "R7",
-      "kind": "estimated_usage",
-      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-      "usage_class": "shopping",
-      "evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      }
-    },
-    {
-      "floor": "2F",
       "id": "R8",
       "kind": "estimated_usage",
       "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -17447,12 +17710,6 @@
     {
       "floor": "2F",
       "id": "R5",
-      "kind": "isolated_room",
-      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-    },
-    {
-      "floor": "2F",
-      "id": "R7",
       "kind": "isolated_room",
       "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
@@ -18098,18 +18355,6 @@
     },
     {
       "floor": "3F",
-      "id": "R7",
-      "kind": "estimated_usage",
-      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
-      "usage_class": "shopping",
-      "evidence": {
-        "basis": "floor_use",
-        "floor_use": "retail",
-        "label_unmapped": true
-      }
-    },
-    {
-      "floor": "3F",
       "id": "R8",
       "kind": "estimated_usage",
       "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
@@ -18129,12 +18374,6 @@
     {
       "floor": "3F",
       "id": "R5",
-      "kind": "isolated_room",
-      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
-    },
-    {
-      "floor": "3F",
-      "id": "R7",
       "kind": "isolated_room",
       "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
@@ -18602,63 +18841,6 @@
     },
     {
       "floor": "5F",
-      "id": "D0",
-      "kind": "door_connection_estimated",
-      "detail": "문 있음 · 연결 대상 미확정",
-      "sides": null,
-      "candidates": [
-        null,
-        "R1"
-      ],
-      "samples": [
-        [
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R17",
-            "R1"
-          ],
-          [
-            "R17",
-            "R1"
-          ]
-        ],
-        [
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ]
-        ]
-      ],
-      "confidence": "inferred",
-      "reason": "nested_room_boundary"
-    },
-    {
-      "floor": "5F",
       "id": "D4",
       "kind": "door_connection_estimated",
       "detail": "문 있음 · 연결 대상 추정 (실 폴리곤 중첩)",
@@ -18999,63 +19181,6 @@
           ],
           [
             "R17",
-            "R1"
-          ]
-        ]
-      ],
-      "confidence": "inferred",
-      "reason": "nested_room_boundary"
-    },
-    {
-      "floor": "6F",
-      "id": "D0",
-      "kind": "door_connection_estimated",
-      "detail": "문 있음 · 연결 대상 미확정",
-      "sides": null,
-      "candidates": [
-        null,
-        "R1"
-      ],
-      "samples": [
-        [
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R17",
-            "R1"
-          ],
-          [
-            "R17",
-            "R1"
-          ]
-        ],
-        [
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
             "R1"
           ]
         ]
@@ -19414,63 +19539,6 @@
     },
     {
       "floor": "7F",
-      "id": "D0",
-      "kind": "door_connection_estimated",
-      "detail": "문 있음 · 연결 대상 미확정",
-      "sides": null,
-      "candidates": [
-        null,
-        "R1"
-      ],
-      "samples": [
-        [
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R17",
-            "R1"
-          ],
-          [
-            "R17",
-            "R1"
-          ]
-        ],
-        [
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ],
-          [
-            "R1"
-          ]
-        ]
-      ],
-      "confidence": "inferred",
-      "reason": "nested_room_boundary"
-    },
-    {
-      "floor": "7F",
       "id": "D4",
       "kind": "door_connection_estimated",
       "detail": "문 있음 · 연결 대상 추정 (실 폴리곤 중첩)",
@@ -19811,63 +19879,6 @@
           ],
           [
             "R17",
-            "R2"
-          ]
-        ]
-      ],
-      "confidence": "inferred",
-      "reason": "nested_room_boundary"
-    },
-    {
-      "floor": "8F",
-      "id": "D0",
-      "kind": "door_connection_estimated",
-      "detail": "문 있음 · 연결 대상 미확정",
-      "sides": null,
-      "candidates": [
-        null,
-        "R2"
-      ],
-      "samples": [
-        [
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
-            "R17",
-            "R2"
-          ],
-          [
-            "R17",
-            "R2"
-          ]
-        ],
-        [
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
-            "R2"
-          ],
-          [
             "R2"
           ]
         ]
@@ -21012,33 +21023,149 @@
       "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
     },
     {
+      "floor": "B3",
+      "id": "R1",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B3",
+        "kind": "stair",
+        "room_id": "R1",
+        "core_id": "ROOM_R1",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "B3",
+      "id": "R10",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B3",
+        "kind": "elev",
+        "room_id": "R10",
+        "core_id": "ROOM_R10",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "B2",
+      "id": "R15",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B2",
+        "kind": "elev",
+        "room_id": "R15",
+        "core_id": "ROOM_R15",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "B2",
+      "id": "R22",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B2",
+        "kind": "elev",
+        "room_id": "R22",
+        "core_id": "ROOM_R22",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "B1",
+      "id": "R0",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B1",
+        "kind": "elev",
+        "room_id": "R0",
+        "core_id": "ROOM_R0",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "B1",
+      "id": "R1",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B1",
+        "kind": "stair",
+        "room_id": "R1",
+        "core_id": "ROOM_R1",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "B1",
+      "id": "R17",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "B1",
+        "kind": "elev",
+        "room_id": "R17",
+        "core_id": "ROOM_R17",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R10",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "1F",
+        "kind": "elev",
+        "room_id": "R10",
+        "core_id": "ROOM_R10",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R11",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "1F",
+        "kind": "elev",
+        "room_id": "R11",
+        "core_id": "ROOM_R11",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R12",
+      "kind": "vertical_unconfirmed",
+      "detail": "계단·승강기 위치 대응 미완 · 해당 층간 연결 없음",
+      "evidence": {
+        "floor": "1F",
+        "kind": "elev",
+        "room_id": "R12",
+        "core_id": "ROOM_R12",
+        "reason": "no_unambiguous_adjacent_floor_match"
+      }
+    },
+    {
       "floor": "B1",
       "id": "LOADER",
       "kind": "loader_failed",
-      "detail": "Opening wider than usable equivalent room: CAD_B1_R9"
+      "detail": "입력 검토 필요 · Opening wider than usable equivalent room: CAD_B1_R9"
     }
   ],
-  "vertical_connections": 6,
+  "vertical_connections": 20,
   "unconfirmed_vertical_cores": [
-    {
-      "floor": "B3",
-      "kind": "elev",
-      "room_id": "R0",
-      "core_id": "ROOM_R0",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
     {
       "floor": "B3",
       "kind": "stair",
       "room_id": "R1",
       "core_id": "ROOM_R1",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "B3",
-      "kind": "elev",
-      "room_id": "R4",
-      "core_id": "ROOM_R4",
       "reason": "no_unambiguous_adjacent_floor_match"
     },
     {
@@ -21050,23 +21177,16 @@
     },
     {
       "floor": "B2",
-      "kind": "stair",
-      "room_id": "R4",
-      "core_id": "ROOM_R4",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "B2",
-      "kind": "stair",
-      "room_id": "R14",
-      "core_id": "ROOM_R14",
+      "kind": "elev",
+      "room_id": "R15",
+      "core_id": "ROOM_R15",
       "reason": "no_unambiguous_adjacent_floor_match"
     },
     {
       "floor": "B2",
       "kind": "elev",
-      "room_id": "R15",
-      "core_id": "ROOM_R15",
+      "room_id": "R22",
+      "core_id": "ROOM_R22",
       "reason": "no_unambiguous_adjacent_floor_match"
     },
     {
@@ -21109,13 +21229,6 @@
       "kind": "elev",
       "room_id": "R12",
       "core_id": "ROOM_R12",
-      "reason": "no_unambiguous_adjacent_floor_match"
-    },
-    {
-      "floor": "3F",
-      "kind": "elev",
-      "room_id": "R0",
-      "core_id": "ROOM_R0",
       "reason": "no_unambiguous_adjacent_floor_match"
     }
   ]

@@ -8,7 +8,7 @@ import re
 from pathlib import Path
 import sys
 from .practical import apply_profile, room_defaults, wall_default, execution_limits
-from building_rules import dedicated_core_kind
+from building_rules import dedicated_core_kind,vertical_feature_allowed
 
 
 def cad_key(floor, item):
@@ -256,7 +256,7 @@ def adapt(project, options=None):
                 'schedule':[[0,fraction]],'cad_floor':f['name'],'cad_opening':conn['id'],
                 'topology_correction':conn.get('topology_correction'),
                 'raw_geometry':originals.get(conn['id'],{'id':conn['id']})})
-    if not selected_floor:
+    if not selected_floor and vertical_feature_allowed(building,'ramp'):
         # Preserve the established ramp-to-exterior approximation.
         for f in building['floors']:
             for ramp in f.get('model_ramps',[]):

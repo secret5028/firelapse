@@ -8,6 +8,10 @@ CONFIG = Path(__file__).resolve().parents[1] / 'config/building-rules.json'
 def load_rules():
     return json.loads(CONFIG.read_text('utf-8'))
 
+def vertical_feature_allowed(building,kind):
+    policy=building.get('model_axioms')
+    return policy is None or kind in policy.get('vertical_kinds',('stair','elev'))
+
 def usage_class(names, floor_use):
     policy = load_rules()['usage']
     text = ' / '.join(names)
@@ -19,6 +23,8 @@ def usage_class(names, floor_use):
                  'floor_use': floor_use, 'label_unmapped': True}
 
 def dedicated_core_kind(room):
+    if 'axiom_core_kind' in room:
+        return room['axiom_core_kind'] if room['axiom_core_kind'] in ('stair','elev') else None
     cfg = load_rules()['core']
     tags = set(room.get('tags', []))
     names = [s for s in room.get('names', []) if s and s not in cfg['ignored_names']]

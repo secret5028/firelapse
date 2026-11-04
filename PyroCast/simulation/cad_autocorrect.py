@@ -21,8 +21,13 @@ def repair_floor(floor, policy=None):
     shapes = {r['id']: geometry(r['polys']) for r in floor['rooms']}
     arcs = apply_arc_doors(floor, policy)
     changes, reviews = arcs['changes'], arcs['reviews']
-    reviewed=apply_reviewed_connections(floor,policy)
-    changes.extend(reviewed['changes']);reviews.extend(reviewed['reviews'])
+    for decision in floor.get('ai_connection_reviews',[]):
+        try:
+            reviewed=apply_reviewed_connections({**floor,'ai_connection_reviews':[decision]},policy)
+            changes.extend(reviewed['changes']);reviews.extend(reviewed['reviews'])
+        except (ValueError,KeyError,TypeError) as exc:
+            reviews.append(dict(floor=floor['name'],id=decision.get('id','AI_REVIEW'),kind='ai_review_unconfirmed',
+                detail='AI 보정 미적용 · 근거 재확인 필요: '+str(exc),evidence=decision))
     def note(o, kind, detail, **more):
         row = dict(floor=floor['name'], id=o['id'], kind=kind, detail=detail, **more)
         reviews.append(row)

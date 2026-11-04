@@ -1,0 +1,12 @@
+{
+  "revision": "cad_model_axioms_20261104",
+  "basis": "사용자 확정 모델링 공리. 수직 연결 범위는 이 프로젝트의 모델 가정이며 현실의 모든 연기 이동 경로를 뜻하지 않음.",
+  "vertical_kinds": ["stair", "elev"],
+  "column_label_pattern": "^(?:C|COL(?:UMN)?)[-_ ]?\\d+$|^기둥$",
+  "column_position_tolerance_m": 0.05,
+  "column_min_distinct_floors": 3,
+  "column_footprint_min_iou": 0.6,
+  "core_footprint_min_iou": 0.6,
+  "core_ambiguity_margin": 0.15,
+  "stages": ["cad_to_3d", "ai_axiom_review", "mark_remaining"]
+}

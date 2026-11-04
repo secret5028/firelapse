@@ -16,6 +16,7 @@ from building_rules import load_rules, usage_class, dedicated_core_kind
 from cad_connectivity_shared import build_graph, geometry, match_vertical_cores
 from pyrocast_lite.door_classification import classify_doors
 from cad_autocorrect import repair_floor
+from cad_model_axioms import apply_model_axioms
 
 def prepare(source, *, auto_correct=True):
     raw = Path(source).read_bytes()
@@ -26,6 +27,10 @@ def prepare(source, *, auto_correct=True):
     table = json.loads((ROOT/'simulation/pyrocast_lite/fire_load_table.json').read_text('utf-8'))
     unmapped = {}
     core_nodes = []
+    if auto_correct:
+        axioms=apply_model_axioms(building)
+        report['auto_corrections'].extend(axioms['changes'])
+        report['model_reviews'].extend(axioms['reviews'])
     for floor in building['floors']:
         name = floor['name']; adapted = []; nodes = []
         if auto_correct:
@@ -94,7 +99,7 @@ def prepare(source, *, auto_correct=True):
     # Original legacy shaft envelopes are preserved as evidence, not promoted to verified links.
     building.setdefault('source_shafts',deepcopy(building.get('shafts',[])))
     building['core_nodes']=core_nodes
-    building['shafts'],building['unconfirmed_vertical_cores']=match_vertical_cores(core_nodes)
+    building['shafts'],building['unconfirmed_vertical_cores']=match_vertical_cores(core_nodes,[f['name'] for f in building['floors']])
     building['vertical_connections']=[dict(kind=s['kind'],from_floor=a['floor'],from_core=a['core_id'],
         to_floor=b['floor'],to_core=b['core_id'],evidence='aligned_cad_core_overlap',overlap=s['overlaps'][i])
         for s in building['shafts'] for i,(a,b) in enumerate(zip(s['nodes'],s['nodes'][1:]))]
@@ -102,12 +107,22 @@ def prepare(source, *, auto_correct=True):
     report['unmapped_labels']=[dict(label=k,rooms=sorted(set(v))) for k,v in sorted(unmapped.items())]
     report['vertical_connections']=len(building['vertical_connections'])
     report['unconfirmed_vertical_cores']=building['unconfirmed_vertical_cores']
+    report['model_reviews'].extend(dict(floor=x['floor'],id=x.get('room_id') or x.get('core_id'),kind='vertical_unconfirmed',
+        detail='계단·승강기 위치 대응 미완 · 해당 층간 연결 없음',evidence=x) for x in building['unconfirmed_vertical_cores'])
     unconnected=sum(len(f['simulation_graph']['isolated_rooms']) for f in building['floors'])
     building['model_review']=dict(revision=repair['revision'] if auto_correct else 'disabled',auto_correct=auto_correct,
         connectivity_validation='incomplete' if unconnected else 'connected_graph',unresolved_space_count=unconnected,
         corrections=[dict(floor=f['name'],id=o['id'],**c) for f in building['floors']
-                     for o in f['openings'] for c in o.get('auto_corrections',[])],
+                     for o in f['openings'] for c in o.get('auto_corrections',[])]+[c['correction'] for f in building['floors'] for c in f.get('structural_columns',[])]+[c for f in building['floors'] for r in f['rooms'] for c in r.get('model_corrections',[])],
         items=deepcopy(report['model_reviews']),basis='기하 근거 자동보정 · 현장 확인 아님')
+    applied_ai=sum(bool(o.get('connection_evidence',{}).get('ai_review')) for f in building['floors'] for o in f['openings'])
+    building['model_review']['pipeline']=dict(order=['cad_to_3d','ai_axiom_review','mark_remaining'],
+        ai_reviewed_decisions=applied_ai,
+        ai_review_unconfirmed=sum(x['kind']=='ai_review_unconfirmed' for x in report['model_reviews']),
+        ai_review_status='recorded_review_applied' if applied_ai else 'not_provided_or_unconfirmed_mark_remaining',
+        review_mode='source_bound_recorded_ai_review_and_shared_axioms',
+        remaining_policy='visible_markers_not_silent_success',
+        implementation_scope='도면→3D 처리 단계 종료; 남은 도면 미완 항목은 표시')
     report['limitations']=['건물 내부 호는 사용자 규칙에 따라 문으로 간주. 연결 대상 미확정은 외기로 대체하지 않음.',
                           '중첩 실은 포함 관계와 문 양쪽 검사로 연결을 추정하며 실 폴리곤 중첩 자체는 보정하지 않음.',
                           '실명에 없는 용도는 기존 층 용도 기본값 적용; 개별 미매핑 문자는 별도 목록.',

@@ -961,22 +961,1769 @@ function readLegacyBuildingSource({building,groups,sourceHash}){
 return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
-// app/web/adapters/legacy_openings.js
+// app/web/adapters/elevator_door_evidence.js
 const __module20=(()=>{
-// Read-only CAD-loader capability. No classification or opening-state inference.
-function readLegacyOpeningsSource({building,groups,sourceHash}){
- if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
- const floors=building.floors.map(floor=>{
-  const matches=groups.filter(g=>g.name===floor.name);if(matches.length!==1)throw Error('Missing/duplicate CAD floor group: '+floor.name);
-  return Object.freeze({id:floor.name,floor,group:matches[0]});
- });return Object.freeze({source_hash:sourceHash,floors:Object.freeze(floors)});
+// Generated from original CAD sliding-panel pairs. Display only; exact input hash required.
+const elevatorDoorEvidence = [
+  {
+    "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
+    "scope": "display_only",
+    "floors": [
+      {
+        "floor": "B2",
+        "source_dxf": "A-302 지하2층평면도.dxf",
+        "source_sha256": "16f8957cf9a2b86308b63bbaca3344ad3fdddc4492256ed74a32c8d84172e802",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.91001,
+                64.40508
+              ],
+              [
+                18.99001,
+                64.40508
+              ]
+            ],
+            "door_h": 3.5,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 45,
+                "primitive": 600,
+                "block": "xref-B2$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 45,
+                "primitive": 601,
+                "block": "xref-B2$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 3.5,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 92,
+                "primitive": 5877,
+                "block": "xref-B2$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 92,
+                "primitive": 5883,
+                "block": "xref-B2$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "B1",
+        "source_dxf": "A-303 지하1층평면도.dxf",
+        "source_sha256": "65edfc5f58c5fd48ca21bebab02630adc47995d87e9f4f139ec0ffc8926357bc",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                18.99001,
+                64.40508
+              ],
+              [
+                19.91001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 48,
+                "primitive": 786,
+                "block": "xref-B1$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 48,
+                "primitive": 787,
+                "block": "xref-B1$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 64,
+                "primitive": 2741,
+                "block": "xref-B1$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 64,
+                "primitive": 2747,
+                "block": "xref-B1$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                16.79001,
+                64.40508
+              ],
+              [
+                17.71001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 47,
+                "primitive": 770,
+                "block": "xref-B1$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 47,
+                "primitive": 771,
+                "block": "xref-B1$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "1F",
+        "source_dxf": "A-304 지상1층평면도.dxf",
+        "source_sha256": "1ad6a54ec2ac7582aa45da5ad1376cf945aacad0fdd5dfdba9841e8b56bcedd2",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.91001,
+                64.40508
+              ],
+              [
+                18.99001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 12,
+                "primitive": 493,
+                "block": "xref-1F$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 12,
+                "primitive": 494,
+                "block": "xref-1F$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 7,
+                "primitive": 352,
+                "block": "xref-1F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 7,
+                "primitive": 358,
+                "block": "xref-1F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.71001,
+                64.40508
+              ],
+              [
+                16.79001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 11,
+                "primitive": 477,
+                "block": "xref-1F$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 11,
+                "primitive": 478,
+                "block": "xref-1F$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "2F",
+        "source_dxf": "A-305 지상2층평면도.dxf",
+        "source_sha256": "89e2780e3e20645f5639b5772a2099b8b21a4c07ba65c03277cde8269975a621",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 8,
+                "primitive": 205,
+                "block": "xref-2F$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 8,
+                "primitive": 206,
+                "block": "xref-2F$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 1,
+                "primitive": 4,
+                "block": "xref-2F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 1,
+                "primitive": 10,
+                "block": "xref-2F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 7,
+                "primitive": 189,
+                "block": "xref-2F$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 7,
+                "primitive": 190,
+                "block": "xref-2F$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "3F",
+        "source_dxf": "A-306 지상3층평면도.dxf",
+        "source_sha256": "7121523a2a08305cae9cb287a1f7ab3f33ba41c0c1df6764b8b6be0d4b8ebe66",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86,
+                64.40508
+              ],
+              [
+                19.04,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 9,
+                "primitive": 283,
+                "block": "xref-3F$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 9,
+                "primitive": 284,
+                "block": "xref-3F$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39,
+                54.00508
+              ],
+              [
+                14.16,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 2,
+                "primitive": 85,
+                "block": "xref-3F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 2,
+                "primitive": 91,
+                "block": "xref-3F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66,
+                64.40508
+              ],
+              [
+                16.84,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 8,
+                "primitive": 269,
+                "block": "xref-3F$0$승강기 15인승(저층부)"
+              },
+              {
+                "layer": "4",
+                "insertion": 8,
+                "primitive": 270,
+                "block": "xref-3F$0$승강기 15인승(저층부)"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "4F",
+        "source_dxf": "A-307 지상4층평면도.dxf",
+        "source_sha256": "450cf259dc86b32223bb2fb657efdd425f6cab341d6c2621dd1b99848e80fb0b",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 24,
+                "primitive": 637,
+                "block": "xref-4F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 24,
+                "primitive": 638,
+                "block": "xref-4F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 15,
+                "primitive": 271,
+                "block": "xref-4F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 15,
+                "primitive": 277,
+                "block": "xref-4F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 22,
+                "primitive": 581,
+                "block": "xref-4F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 22,
+                "primitive": 582,
+                "block": "xref-4F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "5F",
+        "source_dxf": "A-308 지상5층평면도.dxf",
+        "source_sha256": "f0587322a0952de69aebc382879be897a010a388215d5ba3aae7c211e6279177",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 35,
+                "primitive": 52081,
+                "block": "xref-5F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 35,
+                "primitive": 52082,
+                "block": "xref-5F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 22,
+                "primitive": 51675,
+                "block": "xref-5F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 22,
+                "primitive": 51681,
+                "block": "xref-5F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 34,
+                "primitive": 52065,
+                "block": "xref-5F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 34,
+                "primitive": 52066,
+                "block": "xref-5F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "6F",
+        "source_dxf": "A-309 지상6층평면도.dxf",
+        "source_sha256": "371ff28dbd619c36f4e5893dd6b48f3481692f1b1d61c440c9ed99ce49a9af7d",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 10,
+                "primitive": 415,
+                "block": "xref-6F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 10,
+                "primitive": 416,
+                "block": "xref-6F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 2,
+                "primitive": 63,
+                "block": "xref-6F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 2,
+                "primitive": 69,
+                "block": "xref-6F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 8,
+                "primitive": 359,
+                "block": "xref-6F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 8,
+                "primitive": 360,
+                "block": "xref-6F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "7F",
+        "source_dxf": "A-310 지상7층평면도.dxf",
+        "source_sha256": "81a70fe2f685cb569410f44983612b119c207c40b447aeb9f31e1e55efa07689",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 35,
+                "primitive": 52261,
+                "block": "xref-7F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 35,
+                "primitive": 52262,
+                "block": "xref-7F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 22,
+                "primitive": 51758,
+                "block": "xref-7F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 22,
+                "primitive": 51764,
+                "block": "xref-7F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 34,
+                "primitive": 52245,
+                "block": "xref-7F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 34,
+                "primitive": 52246,
+                "block": "xref-7F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "8F",
+        "source_dxf": "A-311 지상8층평면도.dxf",
+        "source_sha256": "beaf6ac540a4dfaf4cef51cc6fc33930c9ebb949ffdebccccda94d289f99d1d7",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 12,
+                "primitive": 52101,
+                "block": "xref-8F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 12,
+                "primitive": 52102,
+                "block": "xref-8F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 3,
+                "primitive": 51734,
+                "block": "xref-8F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 3,
+                "primitive": 51740,
+                "block": "xref-8F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 10,
+                "primitive": 52045,
+                "block": "xref-8F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 10,
+                "primitive": 52046,
+                "block": "xref-8F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "9F",
+        "source_dxf": "A-312 지상9층평면도.dxf",
+        "source_sha256": "33c318b4c4ff5a5b02506a713d5be13ba2edca090898309c9b7b52c5e0859ae6",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 80,
+                "primitive": 51165,
+                "block": "xref-9F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 80,
+                "primitive": 51166,
+                "block": "xref-9F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 12,
+                "primitive": 159,
+                "block": "xref-9F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 12,
+                "primitive": 165,
+                "block": "xref-9F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 79,
+                "primitive": 51151,
+                "block": "xref-9F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 79,
+                "primitive": 51152,
+                "block": "xref-9F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "10F",
+        "source_dxf": "A-313 지상10층평면도.dxf",
+        "source_sha256": "f59a557add3afab9b3eea8fd26c3fd56d0d080689a4f8767a070ac2ab9ca3c5a",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.86001,
+                64.40508
+              ],
+              [
+                19.04001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 19,
+                "primitive": 376,
+                "block": "xref-10F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 19,
+                "primitive": 377,
+                "block": "xref-10F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                13.39001,
+                54.00508
+              ],
+              [
+                14.16001,
+                54.00508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "APFLVP",
+                "insertion": 11,
+                "primitive": 73,
+                "block": "xref-10F$0$11인승 기어리스"
+              },
+              {
+                "layer": "APFLVP",
+                "insertion": 11,
+                "primitive": 79,
+                "block": "xref-10F$0$11인승 기어리스"
+              }
+            ],
+            "core": [
+              13.7,
+              54.796
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_2",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.66001,
+                64.40508
+              ],
+              [
+                16.84001,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 17,
+                "primitive": 326,
+                "block": "xref-10F$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 17,
+                "primitive": 327,
+                "block": "xref-10F$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      },
+      {
+        "floor": "PH",
+        "source_dxf": "A-314 지붕,옥탑,옥탑지붕평면도.dxf",
+        "source_sha256": "d5f9ad885b254dea01659ecabc41b9ace97ad433aa856d85b5119132a4800c20",
+        "doors": [
+          {
+            "id": "CAD_EV_PANEL_0",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                19.96114,
+                64.40508
+              ],
+              [
+                19.14114,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 19,
+                "primitive": 255,
+                "block": "xref-ROOF$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 19,
+                "primitive": 256,
+                "block": "xref-ROOF$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              19.45,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          },
+          {
+            "id": "CAD_EV_PANEL_1",
+            "kind": "door_elev",
+            "display_frame": true,
+            "display_only": true,
+            "display_span": [
+              [
+                17.76114,
+                64.40508
+              ],
+              [
+                16.94114,
+                64.40508
+              ]
+            ],
+            "door_h": 2.1,
+            "height_basis": "floor door-height assumption, not elevation drawing",
+            "operation": "sliding",
+            "connection_status": "display_only",
+            "normal": [
+              -0.0,
+              -1.0
+            ],
+            "source": [
+              {
+                "layer": "4",
+                "insertion": 18,
+                "primitive": 239,
+                "block": "xref-ROOF$0$승강기 15인승"
+              },
+              {
+                "layer": "4",
+                "insertion": 18,
+                "primitive": 240,
+                "block": "xref-ROOF$0$승강기 15인승"
+              }
+            ],
+            "core": [
+              17.25,
+              65.148
+            ],
+            "evidence": "two parallel thin sliding-door panels in original CAD",
+            "polys": []
+          }
+        ]
+      }
+    ],
+    "unresolved": []
+  }
+];
+
+return {elevatorDoorEvidence};
+})();
+
+// app/web/adapters/elevator_doors.js
+const __module21=(()=>{
+const {elevatorDoorEvidence}=__module20;
+function nearElevator(opening,cores){
+ const points=opening.display_span||opening.geometry_polys?.flatMap(p=>p.o)||opening.polys?.flat()||[];
+ if(!points.length)return false;
+ const p=[points.reduce((n,v)=>n+v[0],0)/points.length,points.reduce((n,v)=>n+v[1],0)/points.length];
+ return cores.some(c=>c.kind==='elev'&&((c.door_ids||[]).includes(opening.id)||(c.region||c.anchor||[]).some(poly=>poly.o.some((a,i)=>{
+  const b=poly.o[(i+1)%poly.o.length],dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy||1)));
+  return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy)<.8;
+ }))));
+}
+// A shared display adapter. Existing CAD door_elev openings take precedence;
+// source-DXF supplements are tied to the exact building hash, never guessed.
+function elevatorDisplayFloor(floor,sourceHash,evidence=elevatorDoorEvidence){
+ const record=evidence.find(r=>r.building_sha256===sourceHash)?.floors.find(f=>f.floor===floor.name);
+ if(!record?.doors.length)return floor;
+ const existing=(floor.openings||[]).filter(o=>o.kind==='door_elev');
+ const center=o=>{const p=o.display_span||o.geometry_polys?.flatMap(p=>p.o)||o.polys?.flat()||[];return p.length?[p.reduce((n,v)=>n+v[0],0)/p.length,p.reduce((n,v)=>n+v[1],0)/p.length]:null;};
+ const added=record.doors.filter(o=>{const c=center(o);return c&&!existing.some(e=>{const p=center(e);return p&&Math.hypot(p[0]-c[0],p[1]-c[1])<.5;});});
+ return added.length?{...floor,openings:[...(floor.openings||[]),...added]}:floor;
 }
 
-return {readLegacyOpeningsSource};
+return {nearElevator,elevatorDisplayFloor};
 })();
 
 // app/web/adapters/parkmarine_core_evidence.js
-const __module21=(()=>{
+const __module22=(()=>{
 // Generated from archived CAD floor cores; do not infer missing floors.
 const parkmarineCoreEvidence = {
   "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
@@ -1674,10 +3421,10 @@ return {parkmarineCoreEvidence};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module22=(()=>{
+const __module23=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; use recorded vertical links only.
-const {parkmarineCoreEvidence}=__module21;
+const {parkmarineCoreEvidence}=__module22;
 // Display footprints are independent of room/simulation-graph classification.
 // A matching building hash is mandatory; never stretch an axis beyond its CAD floors.
 function evidencedCoreTransport(building,floor,sourceHash,evidence=parkmarineCoreEvidence){
@@ -1730,8 +3477,29 @@ function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
 return {evidencedCoreTransport,coreTransport,readLegacyCoreSource};
 })();
 
+// app/web/adapters/legacy_openings.js
+const __module24=(()=>{
+const {elevatorDisplayFloor,nearElevator}=__module21;
+const {coreTransport,evidencedCoreTransport}=__module23;
+// Read-only CAD-loader capability. CAD door supplements are display-only.
+function readLegacyOpeningsSource({building,groups,sourceHash}){
+ if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
+ const floors=building.floors.map(floor=>{
+  const matches=groups.filter(g=>g.name===floor.name);if(matches.length!==1)throw Error('Missing/duplicate CAD floor group: '+floor.name);
+  const cores=evidencedCoreTransport(building,floor,sourceHash)??coreTransport(building,floor);
+  // Old gap classifiers also labelled unrelated wall gaps door_elev. Only show
+  // these as elevator doors when associated with an actual recorded shaft.
+  const openings=(floor.openings||[]).filter(o=>o.kind!=='door_elev'||nearElevator(o,cores));
+  const source=openings.length===(floor.openings||[]).length?floor:{...floor,openings};
+  return Object.freeze({id:floor.name,floor:elevatorDisplayFloor(source,sourceHash),group:matches[0]});
+ });return Object.freeze({source_hash:sourceHash,floors:Object.freeze(floors)});
+}
+
+return {readLegacyOpeningsSource};
+})();
+
 // app/web/layers/wall_opening_lines.js
-const __module23=(()=>{
+const __module25=(()=>{
 // Display-only subtraction of opening interiors from CAD wall line segments.
 // Coordinates are floor-local; opening frames and wall meshes are never edited.
 function wallOpeningVolumes(floor,time=0){
@@ -1840,8 +3608,8 @@ return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,t
 })();
 
 // app/web/layers/wall_corners.js
-const __module24=(()=>{
-const {outsideWallOpeningIntervals}=__module23;
+const __module26=(()=>{
+const {outsideWallOpeningIntervals}=__module25;
 // Display geometry only: reject seams inside the union of touching wall pieces.
 const isWallMesh=o=>o.isMesh&&/(?:_wall|_door_head|_win_low|_win_head)$/.test(o.name||'');
 function isReplacedWallOutline(T,o,floor){
@@ -1887,11 +3655,11 @@ return {isWallMesh,isReplacedWallOutline,wallCornerSegments};
 })();
 
 // app/web/layers/building.js
-const __module25=(()=>{
-const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module24;
+const __module27=(()=>{
+const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module26;
 const {EmptyLayer,createEmptyLayers}=__module7;
 const {applyRenderPolicy}=__module2;
-const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module23;
+const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module25;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -1971,7 +3739,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module26=(()=>{
+const __module28=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -2013,10 +3781,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module27=(()=>{
+const __module29=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {exteriorWindowFace}=__module26;
+const {exteriorWindowFace}=__module28;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -2029,6 +3797,7 @@ class OpeningsLayer extends EmptyLayer {
  clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.views=[];this.asset=null;}
  build(asset){this.clearGeometry();this.asset=asset;this.buildCount++;const T=this.THREE;
   const windowMaterial=this.own(new T.LineBasicMaterial({color:'#62dcb0',linewidth:1})),doorMaterial=this.own(new T.LineBasicMaterial({color:'#e6bd68'}));
+  const elevatorMaterial=this.own(new T.LineBasicMaterial({color:'#80d1ff',linewidth:1}));
   const fixedMaterials={};
   const annotate=(line,vertices,floor,opening,policy,normalVisible=true)=>{
    if(!fixedMaterials[policy]){const open=this.own(line.material.clone()),closed=this.own(line.material.clone());open.color.set('#62dcb0');closed.color.set('#c0cbd3');fixedMaterials[policy]={open,closed};}
@@ -2044,17 +3813,23 @@ class OpeningsLayer extends EmptyLayer {
      line.name=`exterior-window-${floor.name}-${opening.id}`;line.raycast=()=>{};
      line.userData.exteriorNormal=new T.Vector3(...face.normal);line.userData.exteriorCenter=new T.Vector3(...face.center);
      annotate(line,face.corners.map(p=>new T.Vector3(...p)),floor,opening,'openings.window');windows.add(line);}
-    if(opening.kind!=='door')continue;
+    if(!['door','door_elev'].includes(opening.kind))continue;
     const normalVisible=opening.connection_status==='interior'||!!opening.display_frame;
-    let spans=(opening.leaves||[]).map(l=>[l.hinge,l.closed]);
+    let spans=opening.display_span?[opening.display_span]:(opening.leaves||[]).map(l=>[l.hinge,l.closed]);
     if(!spans.length){let longest=0,span=null;for(const ring of opening.polys||[])for(let j=0;j<ring.length;j++){
      const a=ring[j],b=ring[(j+1)%ring.length],length=Math.hypot(b[0]-a[0],b[1]-a[1]);if(length>longest){longest=length;span=[a,b];}
     }if(span)spans=[span];}
     const height=opening.door_h||floor.door_h||2.1;
     for(const [a,b] of spans){const vertices=[[...a,opening.sill_m??.035],[...b,opening.sill_m??.035],[...b,height],[...a,height]].map(p=>new T.Vector3(...p));
-     const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(vertices)),doorMaterial),'openings.door');
+     const line=applyRenderPolicy(new T.LineLoop(this.own(new T.BufferGeometry().setFromPoints(vertices)),opening.kind==='door_elev'?elevatorMaterial:doorMaterial),'openings.door');
      line.name=`interior-door-${floor.name}-${opening.id}`;line.raycast=()=>{};
-     annotate(line,vertices,floor,opening,'openings.door',normalVisible);doors.add(line);}
+     annotate(line,vertices,floor,opening,'openings.door',normalVisible);
+     if(opening.kind==='door_elev'){
+      const mid=[(a[0]+b[0])/2,(a[1]+b[1])/2];
+      const seam=applyRenderPolicy(new T.Line(this.own(new T.BufferGeometry().setFromPoints([new T.Vector3(...mid,opening.sill_m??.035),new T.Vector3(...mid,height)])),elevatorMaterial),'openings.door');
+      seam.raycast=()=>{};line.add(seam);line.userData.elevatorDoor=true;line.userData.displayOnly=!!opening.display_only;
+     }
+     doors.add(line);}
     if(opening.display_schedule){const [a,b]=spans[0],bottom=opening.sill_m??.035;
      const material=this.own(new T.MeshBasicMaterial({color:'#62dcb0',transparent:true,opacity:.35,side:T.DoubleSide,depthTest:false,depthWrite:false}));
      const fill=new T.Mesh(this.own(new T.PlaneGeometry(Math.hypot(b[0]-a[0],b[1]-a[1]),height-bottom)),material);
@@ -2099,7 +3874,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module28=(()=>{
+const __module30=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
 
@@ -2199,7 +3974,7 @@ return {fallbackStairSteps,CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module29=(()=>{
+const __module31=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -2273,7 +4048,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module30=(()=>{
+const __module32=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -2281,7 +4056,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module31=(()=>{
+const __module33=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -2289,7 +4064,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module32=(()=>{
+const __module34=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -2297,11 +4072,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module33=(()=>{
-const {createRealViewSession}=__module29;
-const {createSmokeLayer}=__module30;
-const {createFlameLayer}=__module31;
-const {createPlumeLayer}=__module32;
+const __module35=(()=>{
+const {createRealViewSession}=__module31;
+const {createSmokeLayer}=__module32;
+const {createFlameLayer}=__module33;
+const {createPlumeLayer}=__module34;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -2311,7 +4086,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module34=(()=>{
+const __module36=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -2388,10 +4163,10 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module35=(()=>{
+const __module37=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module34;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module36;
 const {roomFgiRollover}=__module3;
 
 const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
@@ -2499,10 +4274,10 @@ return {RiskLayer};
 })();
 
 // app/web/layers/selection.js
-const __module36=(()=>{
+const __module38=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {joinedSelectionRibbons}=__module34;
+const {joinedSelectionRibbons}=__module36;
 const {ROOM_PICK_LAYER}=__module12;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
@@ -2549,7 +4324,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module37=(()=>{
+const __module39=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const fixed=review?.doors?.fixed_state;
@@ -2560,10 +4335,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module38=(()=>{
+const __module40=(()=>{
 const {createEmptyLayers}=__module7;
 const {ROOM_PICK_LAYER}=__module12;
-const {fixedOpeningsFor}=__module37;
+const {fixedOpeningsFor}=__module39;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -2636,7 +4411,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module39=(()=>{
+const __module41=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -2681,7 +4456,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module40=(()=>{
+const __module42=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -2742,8 +4517,8 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module41=(()=>{
-const {createTimelineRisk}=__module40;
+const __module43=(()=>{
+const {createTimelineRisk}=__module42;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -2821,7 +4596,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module42=(()=>{
+const __module44=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -2854,10 +4629,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module43=(()=>{
-const {createDisplayPolicy}=__module42;
+const __module45=(()=>{
+const {createDisplayPolicy}=__module44;
 const {roomFgiRollover}=__module3;
-const {fixedOpeningsFor}=__module37;
+const {fixedOpeningsFor}=__module39;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -2984,7 +4759,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module44=(()=>{
+const __module46=(()=>{
 const {infoTip}=__module14;
 const {roomFgiRollover}=__module3;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -3074,7 +4849,7 @@ return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMC
 })();
 
 // app/web/adapters/attention.js
-const __module45=(()=>{
+const __module47=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -3091,7 +4866,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module46=(()=>{
+const __module48=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -3143,9 +4918,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module47=(()=>{
-const {attentionRanking}=__module45;
-const {savedAttention}=__module46;
+const __module49=(()=>{
+const {attentionRanking}=__module47;
+const {savedAttention}=__module48;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -3215,7 +4990,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module48=(()=>{
+const __module50=(()=>{
 const {createAssistantPanel}=__module0;
 const {attachExport}=__module1;
 const {routeSampleIndex}=__module4;
@@ -3230,20 +5005,20 @@ const {createStore}=__module17;
 const {createSeriesCache}=__module16;
 const {adaptBuilding,adaptResult,adaptScreening}=__module18;
 const {readLegacyBuildingSource}=__module19;
-const {readLegacyOpeningsSource}=__module20;
-const {readLegacyCoreSource}=__module22;
-const {BuildingLayer}=__module25;
-const {OpeningsLayer}=__module27;
-const {CoreLayer}=__module28;
-const {createRealViewLayers}=__module33;
-const {RiskLayer}=__module35;
-const {SelectionLayer}=__module36;
-const {createSceneHost}=__module38;
-const {createLitePanel,updateLitePanel}=__module39;
-const {createPanelShell}=__module41;
-const {createDisplayPanel}=__module43;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module44;
-const {createExplorePanel}=__module47;
+const {readLegacyOpeningsSource}=__module24;
+const {readLegacyCoreSource}=__module23;
+const {BuildingLayer}=__module27;
+const {OpeningsLayer}=__module29;
+const {CoreLayer}=__module30;
+const {createRealViewLayers}=__module35;
+const {RiskLayer}=__module37;
+const {SelectionLayer}=__module38;
+const {createSceneHost}=__module40;
+const {createLitePanel,updateLitePanel}=__module41;
+const {createPanelShell}=__module43;
+const {createDisplayPanel}=__module45;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module46;
+const {createExplorePanel}=__module49;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -3446,8 +5221,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module49=(()=>{
-const {attachModern}=__module48;
+const __module51=(()=>{
+const {attachModern}=__module50;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -3462,4 +5237,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module49.attach;
+export const attach=__module51.attach;

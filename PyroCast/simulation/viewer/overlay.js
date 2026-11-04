@@ -449,9 +449,9 @@ class RouteLayer extends EmptyLayer {
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
  clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.roomMaterials=new Map();this.riskKey=null;}
  build(result){this.clear();const T=this.THREE;
-  // Physical ground ribbons render with solid objects, before translucent walls
-  // and smoke. Vehicles/equipment occlude them; x-ray walls remain translucent.
-  const makeMaterial=color=>this.own(new T.MeshBasicMaterial({color,transparent:false,opacity:1,depthTest:true,depthWrite:true,side:T.DoubleSide}));
+  // Crisp narrow ribbons render after smoke, while testing solid-object depth.
+  // Vehicles/equipment still occlude the hose; x-ray walls remain translucent.
+  const makeMaterial=color=>this.own(new T.MeshBasicMaterial({color,transparent:true,opacity:1,depthTest:true,depthWrite:false,side:T.DoubleSide}));
   const outline=makeMaterial('#07131d');
   const add=(object,floor,route=true,order=38)=>{object.renderOrder=order;object.raycast=()=>{};this.group.add(object);this.items.push({object,floor,route});};
   for(const s of result.segments||[]){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
@@ -461,8 +461,8 @@ class RouteLayer extends EmptyLayer {
    }
    const d=new T.Vector3().subVectors(b,a),normal=new T.Vector3(-d.y,d.x,0).normalize();
    if(Math.hypot(d.x,d.y)<.01)normal.set(1,0,0);
-   // 0.40m coloured centre + 0.08m dark border on either side. No shader changes.
-   for(const [width,material,order] of [[.56,outline,37],[.4,this.roomMaterials.get(s.room),38]]){
+   // 0.18m coloured centre + 0.05m dark border on either side.
+   for(const [width,material,order] of [[.28,outline,37],[.18,this.roomMaterials.get(s.room),38]]){
     const n=normal.clone().multiplyScalar(width/2),p=[a.clone().add(n),b.clone().add(n),b.clone().sub(n),a.clone().sub(n)],positions=[];
     for(const i of [0,1,2,0,2,3])positions.push(...p[i].toArray());
     const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(positions,3));add(new T.Mesh(g,material),s.floor,true,order);

@@ -29,7 +29,7 @@ for(const [t_s,history,color] of [[1420,false,'ef4444'],[3600,true,'ef4444'],[36
 }
 for(const order of [37,38]){const mesh=layer.items.find(x=>x.object.isMesh&&x.object.renderOrder===order).object;
  const p=mesh.geometry.getAttribute('position'),a=new T.Vector3().fromBufferAttribute(p,0),b=new T.Vector3().fromBufferAttribute(p,5);
- assert.ok(Math.abs(a.distanceTo(b)-(order===38?.4:.56))<1e-5);assert.equal(mesh.material.depthTest,true);assert.equal(mesh.material.depthWrite,true);assert.equal(mesh.material.transparent,false);
+ assert.ok(Math.abs(a.distanceTo(b)-(order===38?.18:.28))<1e-5);assert.equal(mesh.material.depthTest,true);assert.equal(mesh.material.depthWrite,false);assert.equal(mesh.material.transparent,true);assert.equal(mesh.material.opacity,1);
 }
 layer.dispose();assert.equal(layer.resources.size,0);assert.equal(scene.children.length,0);assert.equal(borrowedDisposed,0);
 geometry.dispose();material.dispose();console.log('route layer: 50 rebuilds, owned resources released, borrowed vehicle preserved, floor filter and data identity pass');

@@ -1,7 +1,7 @@
 import {RISK_COLORS} from '../scene/render_order.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
 const types=['FO','FGI','backdraft'];
-const labels={FO:'FO',FGI:'FGI',backdraft:'백드래프트'};
+const labels={FO:'FO',FGI:'FGI',backdraft:'고온연기 축적·산소부족(백드래프트)'};
 export const ROUTE_CLEAR='#38bdf8';
 export function routeSampleIndex(result,t){
  const times=result?.time_s;if(!times?.length||t<times[0])return -1;

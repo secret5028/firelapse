@@ -1,7 +1,8 @@
 import {createDisplayPolicy} from './display_policy.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
 import {fixedOpeningsFor} from '../state/fixed_openings.js';
-const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
+const backdraftTip='백드래프트 전제 환경의 조건 충족 정도이며, 발생 여부를 뜻하지 않음.';
+const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','고온연기 축적·산소부족(백드래프트)','#facc15']];
 export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
@@ -28,7 +29,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
  toggle($('displayLayers'),'displayVehicle','경로 차량','#d33',()=>store.get('route').vehicle_visible,vehicle_visible=>store.dispatch('route/set',{vehicle_visible}));
- for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
+ for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}),false,key==='backdraft'?backdraftTip:'');
  toggle($('displayRisks'),'displayHistory','이력 보기','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
  const opacity=$('liteOpacity');opacity.innerHTML='<option value="1">100%</option><option value="0.7">70% · 기본</option><option value="0.4">40%</option><option value="0.15">15%</option>';
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
@@ -54,6 +55,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ $('legend-backdraft').title=backdraftTip;
  const fixedLegend=document.createElement('span');fixedLegend.className='legendChip';fixedLegend.id='legend-fixedOpenings';fixedLegend.hidden=true;
  fixedLegend.title='확정된 다음 실행 입력 · 현재 재생 결과의 개폐 상태가 아닙니다. 닫힘에는 누설 면적이 남을 수 있습니다.';meaning.prepend(fixedLegend);
  for(const [i,name,color] of [[0,'① 초기','#c41f05'],[1,'② 성장','#ffae23'],[2,'③ 최성','#fffad9'],[3,'④ 산소 부족','#8c0800']]){
@@ -69,7 +71,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  listen($('hudHistory'),'click',()=>store.dispatch('risk/history',{enabled:!store.get('risk').history}));
  const style=document.createElement('style');style.dataset.pyrocastDisplay='true';style.textContent=`
  #shellPane-display{padding:12px 16px;box-sizing:border-box}#shellPane-display h3{font-size:12px;color:#b8cbd8;margin:14px 0 8px;font-weight:500}
- .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
+ .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;flex-shrink:0;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
  .displayInfo{font-size:12px;color:#b6cedb;cursor:help}.displaySettings{padding:10px;border:1px solid #496273;border-radius:7px;display:grid;gap:9px}.displaySettings label{display:flex;justify-content:space-between;gap:10px;align-items:center}.displaySettings input{width:68px}.displaySettings input,.displaySettings select{background:#1d4158;color:#eef5fa;border:1px solid #6a8d9f;border-radius:4px;padding:5px}#displayError{color:#ffc1b0;font-size:11px}#displayError:empty{display:none}
  .displayVehicleMarker{position:absolute;z-index:6;transform:translate(-50%,-50%);background:#17384d;border:2px solid #38bdf8;border-radius:5px;padding:3px 6px;color:#fff;font-size:11px;pointer-events:none}.displayVehicleMarker[hidden]{display:none}
  #hudHistory{pointer-events:auto;background:#17384d;border:1px solid #577487;border-radius:12px;color:#eaf3f8;padding:3px 7px;cursor:pointer}#hudHistory[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}.hudPhenomenon{margin:5px 0}.viewHint[hidden]{display:none!important}

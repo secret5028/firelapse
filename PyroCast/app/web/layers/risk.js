@@ -99,7 +99,7 @@ export class RiskLayer extends EmptyLayer {
   }
   this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
- summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실(롤오버 상태 ${this.rolloverRooms?.length||0}실) · 백드래프트 ${n.backdraft||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
+ summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실(롤오버 상태 ${this.rolloverRooms?.length||0}실) · 고온연기 축적·산소부족(백드래프트) ${n.backdraft||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
  diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],rolloverRooms:this.rolloverRooms||[],cautionRooms:this.cautionRooms||[]};}
  dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }

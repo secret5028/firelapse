@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
 sys.path.insert(0,str(SIM))
 TYPES=('FO','FGI','backdraft')
-LABELS={'FO':'FO','FGI':'FGI','backdraft':'백드래프트'}
+LABELS={'FO':'FO','FGI':'FGI','backdraft':'고온연기 축적·산소부족(백드래프트)'}
 PENDING={}
 PENDING_LOCK=threading.RLock()
 

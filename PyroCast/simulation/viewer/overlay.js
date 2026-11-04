@@ -178,7 +178,7 @@ const __module5=(()=>{
 const {RISK_COLORS}=__module3;
 const {roomFgiRollover}=__module4;
 const types=['FO','FGI','backdraft'];
-const labels={FO:'FO',FGI:'FGI',backdraft:'백드래프트'};
+const labels={FO:'FO',FGI:'FGI',backdraft:'고온연기 축적·산소부족(백드래프트)'};
 const ROUTE_CLEAR='#38bdf8';
 function routeSampleIndex(result,t){
  const times=result?.time_s;if(!times?.length||t<times[0])return -1;
@@ -1568,7 +1568,7 @@ class RiskLayer extends EmptyLayer {
   }
   this.cautionRooms=[...cautionRooms];this.counts.caution=cautionRooms.size;
  }
- summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실(롤오버 상태 ${this.rolloverRooms?.length||0}실) · 백드래프트 ${n.backdraft||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
+ summary(){const n=this.counts;return `외곽 위험 표시: FO ${n.FO||0}실 · FGI ${n.FGI||0}실(롤오버 상태 ${this.rolloverRooms?.length||0}실) · 고온연기 축적·산소부족(백드래프트) ${n.backdraft||0}실 (${this.frame?.risk.history?'현재 층/전 구간 최대':'현재 층/시점'}, 저장된 판정)`;}
  diagnostics(){return {buildCount:this.buildCount,rooms:this.rooms.length,cells:this.views.length,resources:this.resources.size,counts:this.counts,activeRooms:this.activeRooms||[],rolloverRooms:this.rolloverRooms||[],cautionRooms:this.cautionRooms||[]};}
  dispose(){this.clearGeometry();this.building=null;this.resultMeta=null;this.activeRooms=[];this.cautionRooms=[];super.dispose();}
 }
@@ -1732,7 +1732,7 @@ function createLitePanel(){
  <div id="liteBody"><div class="row"><select id="liteSpeed" aria-label="재생 배속"><option>1</option><option>5</option><option>10</option><option selected>20</option><option>30</option><option>60</option></select>배 <label><input id="liteSmoke" type="checkbox" checked>전체 연기층</label><label><input id="liteFuel" type="checkbox" checked>균등 연료 기호</label><span class="grow"></span><select id="liteCase" aria-label="간략 계산 사례"></select><button id="liteRefresh">MC 결과 새로고침</button></div>
  <div class="row"><label><input id="litePlumes" type="checkbox" checked>상승 플룸·천장 고온 가스</label><label><input id="liteHeatSmoke" type="checkbox" checked>연기 온도색</label></div><div>연기 밝은 무늬: 회색(낮은 온도) → 노랑(200℃) → 빨강(600℃ 이상). 층 평균 온도의 표시용 색상이며 실제 연기색·착화 기준이 아닙니다.</div>
  <input id="liteTime" type="range" aria-label="간략 시뮬레이션 시간" min="0" step="10" style="width:100%">
- <div id="liteRiskStatus" role="status"></div><div>위험 테두리: 방 안의 일부 셀이라도 해당하면 원래 방 외곽 전체에 표시 · 여러 유형은 높이를 조금 띄워 함께 표시</div><div id="liteLegend"><span style="color:#ef4444">■ FO</span> · <span style="color:#a855f7">■ FGI</span> · <span style="color:#f97316">━ 롤오버</span> · <span style="color:#facc15">■ 백드래프트</span> · 회색: 주의 · 점선: 전이 온도 기준 ±30℃</div>
+ <div id="liteRiskStatus" role="status"></div><div>위험 테두리: 방 안의 일부 셀이라도 해당하면 원래 방 외곽 전체에 표시 · 여러 유형은 높이를 조금 띄워 함께 표시</div><div id="liteLegend"><span style="color:#ef4444">■ FO</span> · <span style="color:#a855f7">■ FGI</span> · <span style="color:#f97316">━ 롤오버</span> · <span style="color:#facc15">■ 고온연기 축적·산소부족(백드래프트)</span> · 회색: 주의 · 점선: 전이 온도 기준 ±30℃</div>
  <div>조건 충족 단계이며 발생 예측 아님. 문 분출 연소와 상층 연소는 별도입니다.</div>
  <div>화염 단계(표시용): <span style="color:#ff7a14">초기</span> → <span style="color:#ffa824">성장기</span> → <span style="color:#fff08c">최성기</span> → <span style="color:#ff3b09">쇠퇴기</span>. 각 화원 실제 발열량의 최고값 대비 크기·최고 시점 기준이며 실제 불꽃 온도·FO 판정이 아닙니다. 불꽃 범위는 발열량과 실·셀 면적에 따라 화원 주변에서 확대·축소됩니다. 최대 범위는 면적 65% 상당 원을 실 경계로 자른 표시용 가정이며, 불꽃 수는 계산 화원 수가 아닙니다.</div>
  <div class="row"><label>실·셀 <select id="liteRoom" aria-label="간략 실 선택"></select></label><button id="liteFocus">선택 실 확대</button><button id="liteWhole">층 전체</button><label>연기 불투명도 <select id="liteOpacity" aria-label="간략 연기 불투명도"><option value="1" selected>100% · 기본</option><option value=".4">40% · 내부 관찰</option><option value=".15">15%</option></select></label></div>
@@ -1755,7 +1755,7 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
   $('liteClock').textContent=`${stamp(time)} / ${stamp(data.time_s.at(-1))}`;$('liteTime').value=time;$('litePlay').textContent=playing?'일시정지':'재생';
   const s=data.solvers[selected.solver_id],event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
   $('liteDetail').textContent=clicked?`${name(selected)} · 저장 조건 지수 · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${s.Tu[index].toFixed(1)}℃ / 하층 ${s.Tl[index].toFixed(1)}℃ · 상/하층 O₂ ${(s.Ou[index]*100).toFixed(1)}/${(s.Ol[index]*100).toFixed(1)}% · 경계 ${s.h[index].toFixed(2)}m · 고체 ${s.Qsolid_kW[index].toFixed(1)}kW / 문 분출 ${s.Qvent_kW[index].toFixed(1)}kW / 상층 ${s.Qbulk_kW[index].toFixed(1)}kW`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
-  $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','백드래프트']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
+  $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','고온연기 축적·산소부족(백드래프트)']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
   $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);
@@ -1885,7 +1885,8 @@ const __module39=(()=>{
 const {createDisplayPolicy}=__module38;
 const {roomFgiRollover}=__module4;
 const {fixedOpeningsFor}=__module34;
-const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
+const backdraftTip='백드래프트 전제 환경의 조건 충족 정도이며, 발생 여부를 뜻하지 않음.';
+const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','고온연기 축적·산소부족(백드래프트)','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};
@@ -1912,7 +1913,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
  toggle($('displayLayers'),'displayRoute','진입 경로','#38bdf8',()=>store.get('layers').route,visible=>store.dispatch('layers/toggle',{id:'route',visible}));
  toggle($('displayLayers'),'displayVehicle','경로 차량','#d33',()=>store.get('route').vehicle_visible,vehicle_visible=>store.dispatch('route/set',{vehicle_visible}));
- for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}));
+ for(const [key,label,color] of [...phenomena,['smoke','주의 구간','#9ca3af']])toggle($('displayRisks'),'displayType-'+key,label,color,()=>store.get('risk').show[key],visible=>store.dispatch('risk/set',{type:key,visible}),false,key==='backdraft'?backdraftTip:'');
  toggle($('displayRisks'),'displayHistory','이력 보기','#dce8ef',()=>store.get('risk').history,enabled=>store.dispatch('risk/history',{enabled}),false,'전 구간 최대값입니다. 점선은 언젠가 도달, 실선은 지금 도달한 현상입니다.');
  const opacity=$('liteOpacity');opacity.innerHTML='<option value="1">100%</option><option value="0.7">70% · 기본</option><option value="0.4">40%</option><option value="0.15">15%</option>';
  const opacityLabel=$('liteOpacity').closest('label');move(opacityLabel,$('displaySmokeSettings'));
@@ -1938,6 +1939,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
+ $('legend-backdraft').title=backdraftTip;
  const fixedLegend=document.createElement('span');fixedLegend.className='legendChip';fixedLegend.id='legend-fixedOpenings';fixedLegend.hidden=true;
  fixedLegend.title='확정된 다음 실행 입력 · 현재 재생 결과의 개폐 상태가 아닙니다. 닫힘에는 누설 면적이 남을 수 있습니다.';meaning.prepend(fixedLegend);
  for(const [i,name,color] of [[0,'① 초기','#c41f05'],[1,'② 성장','#ffae23'],[2,'③ 최성','#fffad9'],[3,'④ 산소 부족','#8c0800']]){
@@ -1953,7 +1955,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  listen($('hudHistory'),'click',()=>store.dispatch('risk/history',{enabled:!store.get('risk').history}));
  const style=document.createElement('style');style.dataset.pyrocastDisplay='true';style.textContent=`
  #shellPane-display{padding:12px 16px;box-sizing:border-box}#shellPane-display h3{font-size:12px;color:#b8cbd8;margin:14px 0 8px;font-weight:500}
- .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
+ .displayToggle{display:flex;align-items:center;gap:8px;border-bottom:1px solid #304c5e;padding:8px 0}.displayToggle label{flex:1;display:flex;align-items:center;gap:9px}.displayToggle i,.legendChip i{display:inline-block;flex-shrink:0;width:9px;height:9px;border-radius:2px}.displayToggle input{appearance:none;width:34px;height:20px;border-radius:999px;background:#496273;position:relative;cursor:pointer;margin:0;flex:none}.displayToggle input::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}.displayToggle input:checked{background:#2baed4}.displayToggle input:checked::after{left:16px}.displayToggle input:focus-visible{outline:2px solid #42c4e8;outline-offset:3px}
  .displayInfo{font-size:12px;color:#b6cedb;cursor:help}.displaySettings{padding:10px;border:1px solid #496273;border-radius:7px;display:grid;gap:9px}.displaySettings label{display:flex;justify-content:space-between;gap:10px;align-items:center}.displaySettings input{width:68px}.displaySettings input,.displaySettings select{background:#1d4158;color:#eef5fa;border:1px solid #6a8d9f;border-radius:4px;padding:5px}#displayError{color:#ffc1b0;font-size:11px}#displayError:empty{display:none}
  .displayVehicleMarker{position:absolute;z-index:6;transform:translate(-50%,-50%);background:#17384d;border:2px solid #38bdf8;border-radius:5px;padding:3px 6px;color:#fff;font-size:11px;pointer-events:none}.displayVehicleMarker[hidden]{display:none}
  #hudHistory{pointer-events:auto;background:#17384d;border:1px solid #577487;border-radius:12px;color:#eaf3f8;padding:3px 7px;cursor:pointer}#hudHistory[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}.hudPhenomenon{margin:5px 0}.viewHint[hidden]{display:none!important}
@@ -2009,7 +2011,7 @@ return {createDisplayPanel};
 const __module40=(()=>{
 const {infoTip}=__module11;
 const {roomFgiRollover}=__module4;
-const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','백드래프트','#facc15']];
+const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','고온연기 축적·산소부족(백드래프트)','#facc15']];
 const finite=Number.isFinite;
 const number=(v,d=0)=>finite(v)?v.toFixed(d):'미평가';
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -2049,7 +2051,7 @@ function createResultsPanel({panel,store}){
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
  #resultContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#resultContent h3{font-size:12px;font-weight:500;color:#b8cbd8;margin:14px 0 8px}.resultCard{border:1px solid #496273;border-radius:7px;padding:10px;margin-bottom:12px;background:#163345}.resultCard>label{display:block;margin-bottom:5px;color:#b8cbd8}
  #resultContent select{max-width:100%;width:100%;box-sizing:border-box;background:#1d4158;color:#eef5fa;padding:6px;border:1px solid #6a8d9f;border-radius:4px}#resultContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px 7px;cursor:pointer}#resultContent button:focus-visible{outline:2px solid #42e8ff}.resultTools{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}#resultCaseControls button{margin-top:6px}#resultMetadata,#resultBottleneck,#resultMCBasis{font-size:11px;color:#b8cbd8;margin-top:8px}#resultRoomTitle{font-weight:600;margin:10px 0;overflow-wrap:anywhere}#resultCells{margin-bottom:10px}#resultCellList{display:flex;gap:5px;flex-wrap:wrap;padding-top:6px}#resultCellList button[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}
- .resultScore{display:grid;grid-template-columns:62px 1fr 54px;gap:6px;align-items:center;margin:14px 0}.resultBar{height:7px;background:#304c5e;border-radius:4px;position:relative}.resultFill{display:block;height:100%;border-radius:4px}.resultMark{position:absolute;top:-5px;height:17px;border-left:1px dashed #ced9df}.resultMark.main{border-color:#fff;border-left-style:solid}.resultValue{text-align:right;font-variant-numeric:tabular-nums}.resultScale{font-size:10px;text-align:right;color:#b8cbd8}.resultInfo{cursor:help;color:#b8cbd8}#resultQuantities{display:grid;grid-template-columns:1fr auto;gap:5px;margin-top:8px}#resultContent details{margin-top:8px}#resultContent summary{cursor:pointer;color:#b8cbd8}#resultContent table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}#resultContent th,#resultContent td{border-bottom:1px solid #304c5e;padding:7px 2px;text-align:right}#resultContent th:first-child,#resultContent td:first-child{text-align:left}#resultMCLoad{margin-top:8px}#resultLimits li{margin:6px 0;color:#b8cbd8}#resultMCStatus{font-size:11px}
+ .resultScore[data-type=backdraft]>span:first-child{grid-column:1/-1}.resultScore[data-type=backdraft] .resultBar{grid-column:1/3}.resultScore{display:grid;grid-template-columns:62px 1fr 54px;gap:6px;align-items:center;margin:14px 0}.resultBar{height:7px;background:#304c5e;border-radius:4px;position:relative}.resultFill{display:block;height:100%;border-radius:4px}.resultMark{position:absolute;top:-5px;height:17px;border-left:1px dashed #ced9df}.resultMark.main{border-color:#fff;border-left-style:solid}.resultValue{text-align:right;font-variant-numeric:tabular-nums}.resultScale{font-size:10px;text-align:right;color:#b8cbd8}.resultInfo{cursor:help;color:#b8cbd8}#resultQuantities{display:grid;grid-template-columns:1fr auto;gap:5px;margin-top:8px}#resultContent details{margin-top:8px}#resultContent summary{cursor:pointer;color:#b8cbd8}#resultContent table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}#resultContent th,#resultContent td{border-bottom:1px solid #304c5e;padding:7px 2px;text-align:right}#resultContent th:first-child,#resultContent td:first-child{text-align:left}#resultMCLoad{margin-top:8px}#resultLimits li{margin:6px 0;color:#b8cbd8}#resultMCStatus{font-size:11px}
  `;document.head.append(style);
  const append=(parent,tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;parent.append(e);return e;};
  let previous=null,roomKey=null;
@@ -2065,7 +2067,7 @@ function createResultsPanel({panel,store}){
   $('resultCells').hidden=!(room?.cells.length>1);$('resultCells').open=room?.cells.length>1;for(const b of $('resultCellList').children)b.setAttribute('aria-pressed',String(b.dataset.cell===cell));
   const scores=cell?selectedScores(result,cell,index):resultTypes.map(([type,name,color])=>({type,name,color,value:null})),threshold=store.get('risk').threshold,scale=Math.max(200,threshold.ribbon,threshold.caution,...scores.map(s=>s.value??0));
   $('resultScores').replaceChildren();
-  for(const s of scores){const row=append($('resultScores'),'div',undefined,'resultScore');row.dataset.type=s.type;append(row,'span',s.name);const bar=append(row,'div',undefined,'resultBar');bar.setAttribute('role','meter');bar.setAttribute('aria-label',s.name+' 지수');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(scale));if(finite(s.value))bar.setAttribute('aria-valuenow',String(s.value));bar.setAttribute('aria-valuetext',number(s.value));const fill=append(bar,'i',undefined,'resultFill');fill.style.width=(finite(s.value)?Math.max(0,s.value)/scale*100:0)+'%';fill.style.background=s.color;
+  for(const s of scores){const row=append($('resultScores'),'div',undefined,'resultScore');row.dataset.type=s.type;const name=append(row,'span',s.name);if(s.type==='backdraft'){name.title='백드래프트 전제 환경의 조건 충족 정도이며, 발생 여부를 뜻하지 않음.';name.tabIndex=0;}const bar=append(row,'div',undefined,'resultBar');bar.setAttribute('role','meter');bar.setAttribute('aria-label',s.name+' 지수');bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(scale));if(finite(s.value))bar.setAttribute('aria-valuenow',String(s.value));bar.setAttribute('aria-valuetext',number(s.value));const fill=append(bar,'i',undefined,'resultFill');fill.style.width=(finite(s.value)?Math.max(0,s.value)/scale*100:0)+'%';fill.style.background=s.color;
    for(const [value,cls] of [[threshold.caution,''],[threshold.ribbon,' main']]){const mark=append(bar,'i',undefined,'resultMark'+cls);mark.style.left=value/scale*100+'%';mark.title=String(value);}
    const value=append(row,'span',number(s.value),'resultValue');value.style.color=finite(s.value)&&s.value>=threshold.ribbon?s.color:'';
    if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 진행':'롤오버 진행 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}

@@ -56,8 +56,10 @@ def freeze_openings(data, raw, config):
             fraction=item['effective_fraction']
             if type(fraction) not in (int,float) or not 0<=fraction<=1:
                 raise ValueError('Invalid opening fraction')
+            if type(item.get('open')) is not bool:
+                raise ValueError('Confirmed opening needs a physical open/closed state')
             vent['schedule']=[[0.,fraction]];applied.append(vent['id'])
-        states.append(dict(id=vent['id'],a=vent['a'],b=vent['b'],open=vent['schedule'][0][1]>0,
+        states.append(dict(id=vent['id'],a=vent['a'],b=vent['b'],open=item['open'] if item else vent['schedule'][0][1]>0,
                            effective_fraction=vent['schedule'][0][1],schedule=vent['schedule']))
     basis='confirmed_subset_and_input_default' if applied else 'input_default'
     data['screening_source'].update(state=basis,opening_states=states)

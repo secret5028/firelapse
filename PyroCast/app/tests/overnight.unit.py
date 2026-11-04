@@ -21,10 +21,11 @@ class OpeningSnapshots(unittest.TestCase):
         cfg={'fixed_state':{'building_sha256':'A','states':{'D_OTHER':{'effective_fraction':1}}}}
         self.assertEqual(freeze_openings(self.data,self.raw,cfg),'input_default')
     def test_confirmation_matches_both_endpoints(self):
-        cfg={'fixed_state':{'building_sha256':'A','states':{'D1':{'a':'R1','b':'R2','effective_fraction':.001}}}}
+        cfg={'fixed_state':{'building_sha256':'A','states':{'D1':{'a':'R1','b':'R2','effective_fraction':.001,'open':False}}}}
         freeze_openings(self.data,self.raw,cfg)
         self.assertEqual(self.data['openings'][0]['schedule'],[[0,.001]])
         self.assertEqual(self.data['openings'][1]['schedule'],[[0,.5]])
+        self.assertFalse(self.data['screening_source']['opening_states'][0]['open'])
         cfg['fixed_state']['states']['D1']['b']='R9'
         with self.assertRaisesRegex(ValueError,'endpoints'):freeze_openings(self.data,self.raw,cfg)
     def test_cross_building_rejected(self):

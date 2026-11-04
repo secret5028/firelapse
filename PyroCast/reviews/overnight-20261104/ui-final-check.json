@@ -1,0 +1,13 @@
+{
+  "browser": "Chrome",
+  "url": "http://127.0.0.1:8842/model.html",
+  "loaded_result_floor": "PH",
+  "selected_floor_after": "5F",
+  "active_tab_preserved": "결과",
+  "empty_selection_values": "—",
+  "toggle_roundtrips": 24,
+  "toggle_state_restored": true,
+  "console_errors": 0,
+  "calculation_started": false,
+  "screenshot_comparison": "not performed; interaction verification only"
+}

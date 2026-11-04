@@ -56,7 +56,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
  const buildingPanel=createBuildingPanel({store});
- const fuelPanel=createFuelSettingsPanel({store,available:initial.engine_kind!=='cfast_native',onFloor:floor=>{viewer.setFloor(floor);render();},onSaved:async()=>{await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>fuelPanel.dispose());
+ const fuelPanel=createFuelSettingsPanel({store,available:initial.engine_kind!=='cfast_native',onSaved:async()=>{await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>fuelPanel.dispose());
  async function refreshFuelRooms(){
   if(window.__PYROCAST_OFFLINE__)return;
   try{const response=await fetch('/cfbt/lite/ai/fuel',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&Array.isArray(value.rooms)){aiFuelRooms=value.rooms;store.dispatch('buildingReview/set',{rooms:aiFuelRooms});}}
@@ -114,7 +114,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const f=viewer.getFloor();if(f!==lastFloor){lastFloor=f;store.dispatch('floor/set',{floor_id:f==='all'?null:f});}
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
   host.render();
-  const signature=JSON.stringify([index(),selected?.key,clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
+  const signature=JSON.stringify([index(),selected?.key,store.get('selection'),clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
   if(signature!==lastPanel){$('liteReal').setAttribute('aria-pressed',String(store.get('realView').enabled));updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')};display.hud(context);results.update(context);lastPanel=signature;}
  }finally{busy=false;}}
  // Display controls must update the GPU on input, including paused/throttled
@@ -144,7 +144,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').children){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
- cleanup.push(store.subscribe('selection',s=>{if(!data)return;selected=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id)||selected;$('liteRoom').value=selected.key;if(s.source!=='list'||ready)clicked=true;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);render();}));
+ cleanup.push(store.subscribe('selection',s=>{if(!data)return;const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
  function select(key){const r=data.rooms.find(r=>r.key===key)||selected;store.dispatch('selection/set',{room_id:r.original_room||r.key,cell_id:r.key,source:'list'});}
  handler($('liteRoom'),'onchange',()=>select($('liteRoom').value));
  handler($('liteFocus'),'onclick',()=>{clicked=true;autoFit=false;const p=selected.cad_center_m;O.target.set(p[0],p[1],selected.z_m+1);C.position.set(p[0]+15,p[1]-18,selected.z_m+18);O.update();recordCamera('room');render();});

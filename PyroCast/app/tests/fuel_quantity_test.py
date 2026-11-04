@@ -52,4 +52,53 @@ class FuelQuantityTests(unittest.TestCase):
    for r in raw['rooms']:self.assertEqual(ctx[r['id']]['load'],r['fuel_default']['load_MJ_m2'],r['id'])
   self.assertGreaterEqual(checked,5)
   print('hotel input floors verified:',checked,'unavailable:',unavailable)
+ def test_floor_room_inheritance_and_type(self):
+  ctx=api.context(self.building,self.sha);rows=[r for r in ctx['rooms'] if r['floor']=='5F' and r['editable']];a,b=rows[:2]
+  ctx=api.apply(self.payload(ctx,[dict(id=a['id'],multiplier=1,usage_class='warehouse')]),self.building,self.sha)
+  ctx=api.apply(dict(building_sha256=self.sha,revision=ctx['revision'],floors=[dict(id='5F',multiplier=2,usage_class='office')]),self.building,self.sha)
+  byid={r['id']:r for r in ctx['rooms']};self.assertEqual(byid[a['id']]['usage_class'],'warehouse');self.assertEqual(byid[a['id']]['multiplier'],1)
+  self.assertEqual(byid[b['id']]['usage_class'],'office');self.assertEqual(byid[b['id']]['multiplier'],2)
+  raw,_=model.prepared('parkmarine','5F',self.sha)
+  for rid in (a['id'],b['id']):
+   g=next(g for g in raw['fuel_groups'] if g['room']==rid)
+   area=next(r['area_m2'] for r in raw['rooms'] if r['id']==rid)
+   self.assertEqual(g['hrrpua_kW_m2'],byid[rid]['hrrpua']);self.assertAlmostEqual(g['energy_MJ'],byid[rid]['load']*area,places=2)
+  ctx=api.apply(self.payload(ctx,[dict(id=a['id'],inherit=True)]),self.building,self.sha)
+  r=next(r for r in ctx['rooms'] if r['id']==a['id']);self.assertEqual(r['scope'],'floor');self.assertEqual(r['multiplier'],2);self.assertEqual(r['usage_class'],'office')
+ def test_real_ai_path_mock_transport_and_protection(self):
+  import lite_ai_fuel
+  ctx=api.context(self.building,self.sha);a=next(r for r in ctx['rooms'] if r['floor']=='5F' and r['editable'])
+  ctx=api.apply(self.payload(ctx,[dict(id=a['id'],usage_class='office',multiplier=1)]),self.building,self.sha)
+  calls=[]
+  def transport(cfg,key,messages):
+   facts=json.loads(messages[0]['content'].split('\n',1)[1]);calls.append(facts)
+   self.assertTrue(all('position_m' in r and 'neighbors' in r for r in facts['surrounding_rooms']))
+   return json.dumps([dict(room_id=r['id'],usage_class='hotel_room',reason='층 용도·위치 기준 추정') for r in facts['rooms']])
+  with patch.object(lite_ai_fuel,'settings',return_value=dict(base_url='https://example.invalid',model='test',api_key_env='FUEL_TEST_KEY')),patch.dict('os.environ',{'FUEL_TEST_KEY':'dummy-test-secret'}):
+   ctx=api.initialize_defaults(dict(revision=ctx['revision']),self.building,self.sha,transport)
+  self.assertGreater(len(calls),1);self.assertEqual(len(ctx['ai_pending']),0)
+  saved=q.load(self.sha);self.assertNotIn(a['id'],saved['defaults']);self.assertEqual(saved['rooms'][a['id']]['usage_class'],'office')
+  self.assertNotIn('dummy-test-secret',q.path_for(self.sha).read_text('utf-8'));self.assertFalse(ctx['simulation_started'])
+ def test_missing_ai_does_not_invent_defaults(self):
+  import lite_ai_fuel
+  with patch.object(lite_ai_fuel,'settings',return_value=None):
+   ctx=api.context(self.building,self.sha);self.assertIn('AI 초기 배치 대기',ctx['default_status'])
+   with self.assertRaisesRegex(ValueError,'AI 초기 배치 대기'):api.initialize_defaults(dict(revision=ctx['revision']),self.building,self.sha)
+  self.assertEqual(q.load(self.sha),{})
+ def test_ai_transport_formats_and_invalid_response_atomic(self):
+  import lite_ai_fuel as ai
+  from unittest.mock import MagicMock
+  for base,native in [('https://api.anthropic.com/v1',True),('http://127.0.0.1:8000/v1',False)]:
+   reply={'content':[{'type':'text','text':'[]'}]} if native else {'choices':[{'message':{'content':'[]'}}]}
+   response=MagicMock();response.__enter__.return_value.read.return_value=json.dumps(reply).encode();opener=MagicMock();opener.open.return_value=response
+   with patch.object(ai,'build_opener',return_value=opener):
+    self.assertEqual(ai.completion(dict(base_url=base,model='fixture'),'test-token',[{'role':'system','content':'rules'},{'role':'user','content':'request'}]),'[]')
+   req=opener.open.call_args.args[0];body=json.loads(req.data);self.assertTrue(req.full_url.endswith('/messages' if native else '/chat/completions'))
+   self.assertEqual('system' in body,native);self.assertNotIn('test-token',req.data.decode())
+  calls=[]
+  def invalid(*args):calls.append(1);return '[]'
+  with patch.object(ai,'settings',return_value=dict(base_url='https://example.invalid',model='test',api_key_env='FUEL_TEST_KEY')),patch.dict('os.environ',{'FUEL_TEST_KEY':'test-token'}):
+   ctx=api.context(self.building,self.sha)
+   with self.assertRaisesRegex(ValueError,'검증 실패'):api.initialize_defaults(dict(revision=ctx['revision']),self.building,self.sha,invalid)
+  self.assertEqual(len(calls),2);self.assertEqual(q.load(self.sha),{})
 if __name__=='__main__':unittest.main()

@@ -75,14 +75,21 @@ class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs):return None
 
 def completion(cfg,key,messages):
-    payload=json.dumps(dict(model=cfg['model'],messages=messages,max_tokens=16000),ensure_ascii=False).encode()
-    req=Request(cfg['base_url'].rstrip('/')+'/chat/completions',data=payload,
-        headers={'Content-Type':'application/json','Authorization':'Bearer '+key},method='POST')
+    native=urlsplit(cfg['base_url']).hostname=='api.anthropic.com'
+    body=dict(model=cfg['model'],messages=messages,max_tokens=16000)
+    headers={'Content-Type':'application/json','Authorization':'Bearer '+key}
+    if native:
+        body['system']='\n'.join(m['content'] for m in messages if m['role']=='system')
+        body['messages']=[m for m in messages if m['role']!='system']
+        headers['anthropic-version']='2023-06-01'
+    payload=json.dumps(body,ensure_ascii=False).encode()
+    req=Request(cfg['base_url'].rstrip('/')+('/messages' if native else '/chat/completions'),data=payload,headers=headers,method='POST')
     try:
         with build_opener(NoRedirect).open(req,timeout=90) as response:
             raw=response.read(2_000_001)
         if len(raw)>2_000_000:raise ValueError('size')
-        return json.loads(raw)['choices'][0]['message']['content']
+        value=json.loads(raw)
+        return ''.join(c['text'] for c in value['content'] if c['type']=='text') if native else value['choices'][0]['message']['content']
     except HTTPError as exc:raise ValueError('AI API HTTP '+str(exc.code)) from None
     except Exception:raise ValueError('AI API 연결 또는 응답 형식 오류') from None
 

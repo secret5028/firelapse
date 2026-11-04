@@ -33,7 +33,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
    const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return;
    mouse.set((e.clientX-b.x)/b.width*2-1,-(e.clientY-b.y)/b.height*2+1);scene.updateMatrixWorld(true);camera.updateMatrixWorld();ray.setFromCamera(mouse,camera);
    if(groundPick?.active()){const hit=ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,0,1),-groundPick.z),new THREE.Vector3());if(hit)groundPick.place(hit.toArray());return;}
-   const floorId=store.get('floor').floor_id,planes=(layers.find(l=>l.constructor.id==='selection')?.getPickPlanes?.()||[]).filter(p=>{
+   const floorId=store.get('floor').floor_id,planes=layers.flatMap(l=>l.getPickPlanes?.()||[]).filter(p=>{
     if(floorId!==null&&p.userData.floorId!==floorId)return false;for(let node=p;node;node=node.parent)if(!node.visible)return false;return true;
    });
    const hit=ray.intersectObjects(planes,false)[0];if(hit)store.dispatch('selection/set',{room_id:hit.object.userData.roomId,cell_id:hit.object.userData.liteRoom,source:start.source});

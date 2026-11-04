@@ -27,14 +27,15 @@ def prepare_inputs(raw):
 
     if raw.get('cad',{}).get('building_sha256')!=cfg['building_sha256']:
         raise ValueError('Approved room classification belongs to a different building')
-    from .fuel_quantity import load as read_quantity,ratio
+    from .fuel_quantity import load as read_quantity,resolve
     quantity=read_quantity(cfg['building_sha256'])
     m=deepcopy(raw);rooms={r['id']:r for r in m['rooms']};records={};exclusions=[]
     for rid,choice in cfg['rooms'].items():
         r=rooms[rid];cls=table['classes'][choice['class']];area=v7.area(r)
-        load=choice.get('load_override_MJ_m2',cls['mean'])*ratio(quantity,rid)
+        setting=resolve(quantity,rid,rid.removeprefix('CAD_').split('_',1)[0],choice['class'],choice.get('load_override_MJ_m2',cls['mean']),table['classes'])
+        cls=table['classes'][setting['usage_class']];load=setting['load']
         record={**choice,'room':rid,'name':v7.name(r),'label':cls['label'],
-            'area_m2':area,'load_MJ_m2':load,'hrrpua_kW_m2':cls['rhrf'],
+            'class':setting['usage_class'],'fuel_setting':setting,'area_m2':area,'load_MJ_m2':load,'hrrpua_kW_m2':cls['rhrf'],
             'coverage':cfg['coverage'],'table_basis':cls['basis'],
             'value_basis':choice.get('load_override_basis','fire_load_table.json mean/rhrf'),
             'passage_without_fire':load<50,'graph_excluded':False}
@@ -46,7 +47,7 @@ def prepare_inputs(raw):
         elif load<50:
             record['excluded_reason']='fuel load < 50 MJ/m²; retain flow/temperature node, no candidate or standby fire'
         records[rid]=record
-        r['fuel_default']={**r.get('fuel_default',{}),'usage':('passage' if choice['class']=='transport' else choice['class']),
+        r['fuel_default']={**r.get('fuel_default',{}),'usage':('passage' if setting['usage_class']=='transport' else setting['usage_class']),
             'load_MJ_m2':load,'hrrpua_kW_m2':cls['rhrf'],'occupancy_fraction':cfg['coverage'],
             'basis':record['value_basis'],'classification_basis':choice['classification_basis']}
         r['approved_fuel_class']=record

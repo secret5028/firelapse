@@ -67,12 +67,14 @@ def _prepared(ident, floor, digest, quantity_json):
     for r in raw['rooms']:
         rid = r['id']; src = original[rid]; cls, evidence = usage_class(src.get('names', []), f.get('use'))
         values = table[cls]; core = bool(r.get('core_kind')); area = r['area_m2']
-        from pyrocast_lite.fuel_quantity import ratio
-        load = r['fuel_default']['load_MJ_m2'] if core else values['mean']*ratio(json.loads(quantity_json),rid)
+        from pyrocast_lite.fuel_quantity import resolve
+        setting=resolve(json.loads(quantity_json),rid,floor,cls,values['mean'],table)
+        if not core:cls=setting['usage_class'];values=table[cls]
+        load = r['fuel_default']['load_MJ_m2'] if core else setting['load']
         hrrpua = r['fuel_default']['hrrpua_kW_m2'] if core else values['rhrf']
         records[rid] = dict(room=rid, usage_class=cls, label=values['label'],
             classification_basis=evidence, area_m2=area, load_MJ_m2=load,
-            hrrpua_kW_m2=hrrpua, coverage=.5, automatic=True)
+            hrrpua_kW_m2=hrrpua, coverage=.5, automatic=True, fuel_setting=setting)
         if core: continue
         r['fuel_default'].update(usage='passage' if cls=='transport' else cls,
             load_MJ_m2=load, hrrpua_kW_m2=hrrpua, occupancy_fraction=.5,

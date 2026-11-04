@@ -1,0 +1,122 @@
+[
+  {
+    "building": "ganghwa",
+    "floor": "B1",
+    "error": "Opening wider than usable equivalent room: CAD_B1_R12",
+    "evidence": [
+      {
+        "room": "CAD_B1_R12",
+        "area_m2": 1.1636000000000033,
+        "height_m": 5.1,
+        "cad_bounds_m": [
+          2.74,
+          63.1,
+          3.92,
+          64.26
+        ],
+        "required_width_m": 4.32,
+        "attempted_width_m": 1.9075409836065629,
+        "attempted_depth_m": 0.61,
+        "openings": [
+          {
+            "id": "CAD_B1_W2",
+            "a": "CAD_B1_R12",
+            "b": "CAD_B1_R11",
+            "width_m": 4.12,
+            "kind": "window_inner"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "building": "ganghwa",
+    "floor": "PH",
+    "error": "Invalid room box",
+    "evidence": [
+      {
+        "id": "CAD_PH_R3",
+        "area_m2": 4.959199999999957,
+        "height_m": 3.3,
+        "size_m": [
+          0.5598645434368364,
+          8.857856883661452,
+          3.3
+        ],
+        "cad_bounds_m": [
+          62.337,
+          45.828,
+          62.897,
+          54.688
+        ],
+        "cad_names": [],
+        "core_kind": null
+      }
+    ]
+  },
+  {
+    "building": "parkmarine",
+    "floor": "B1",
+    "error": "Opening wider than usable equivalent room: CAD_B1_R9",
+    "evidence": [
+      {
+        "room": "CAD_B1_R9",
+        "area_m2": 0.9512000000000005,
+        "height_m": 3.3,
+        "cad_bounds_m": [
+          11.24,
+          62.33,
+          12.4,
+          63.15
+        ],
+        "required_width_m": 1.919,
+        "attempted_width_m": 1.5593442622950828,
+        "attempted_depth_m": 0.61,
+        "openings": [
+          {
+            "id": "CAD_B1_EV3",
+            "a": "CAD_B1_R9",
+            "b": "CAD_B1_R3",
+            "width_m": 1.5562,
+            "kind": "door_elev"
+          },
+          {
+            "id": "CAD_B1_EV4",
+            "a": "CAD_B1_R2",
+            "b": "CAD_B1_R9",
+            "width_m": 1.2012,
+            "kind": "door_elev"
+          },
+          {
+            "id": "CAD_B1_EV5",
+            "a": "CAD_B1_R9",
+            "b": "CAD_B1_R8",
+            "width_m": 1.719,
+            "kind": "door_elev"
+          },
+          {
+            "id": "CAD_B1_EV6",
+            "a": "CAD_B1_R10",
+            "b": "CAD_B1_R9",
+            "width_m": 1.719,
+            "kind": "door_elev"
+          },
+          {
+            "id": "CAD_B1_EV10",
+            "a": "CAD_B1_R9",
+            "b": "CAD_B1_R3",
+            "width_m": 1.4009,
+            "kind": "door_elev"
+          },
+          {
+            "id": "CAD_B1_EV11",
+            "a": "CAD_B1_R9",
+            "b": "CAD_B1_R2",
+            "width_m": 1.5802,
+            "kind": "door_elev"
+          }
+        ]
+      }
+    ]
+  }
+]

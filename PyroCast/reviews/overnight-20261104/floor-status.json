@@ -1,0 +1,579 @@
+{
+  "updated_utc": "2026-11-04T09:57:53.971984+00:00",
+  "rows": [
+    {
+      "building": "ganghwa",
+      "floor": "3F",
+      "origin": "CAD_3F_R1",
+      "state": "complete",
+      "engine": "pyrocast_lite",
+      "opening_state": "confirmed_subset_and_input_default",
+      "wall_s": 46.64100000000326,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_3F_R5",
+        "CAD_3F_R26",
+        "CAD_3F_CE0",
+        "CAD_3F_CE1"
+      ],
+      "input_sha256": "619c15308412222d7a64cc6ba0459dcc3654948b9f52f87141e79ee7f8448cda",
+      "burning_rooms": [
+        "CAD_3F_R1"
+      ],
+      "integration_s": 37.12452480000502,
+      "peaks": {
+        "FO": {
+          "index": 39.73244749134577,
+          "time_s": 3600.0,
+          "room": "CAD_3F_R1",
+          "cell": "CAD_3F_R1_C2"
+        },
+        "FGI": {
+          "index": 4.590384888667716e-16,
+          "time_s": 10.0,
+          "room": "CAD_3F_R1",
+          "cell": "CAD_3F_R1_C4"
+        },
+        "backdraft": {
+          "index": 3.550164265420915e-16,
+          "time_s": 10.0,
+          "room": "CAD_3F_R1",
+          "cell": "CAD_3F_R1_C4"
+        }
+      },
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "5F",
+      "origin": "CAD_5F_R16",
+      "state": "complete",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": 58.062000000005355,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_5F_R8"
+      ],
+      "input_sha256": "ca15081e8d1d64e4762f28cc4502d47f4e079ed0ebd203b57ecc955dc828712b",
+      "burning_rooms": [
+        "CAD_5F_R16"
+      ],
+      "integration_s": 51.41892110000481,
+      "peaks": {
+        "FO": {
+          "index": 134.25373068279742,
+          "time_s": 470.0,
+          "room": "CAD_5F_R16",
+          "cell": "CAD_5F_R16"
+        },
+        "FGI": {
+          "index": 78.13066512662445,
+          "time_s": 690.0,
+          "room": "CAD_5F_R16",
+          "cell": "CAD_5F_R16"
+        },
+        "backdraft": {
+          "index": 74.92231401843732,
+          "time_s": 700.0,
+          "room": "CAD_5F_R16",
+          "cell": "CAD_5F_R16"
+        }
+      },
+      "partial_conditions": [
+        {
+          "cell": "CAD_5F_R16",
+          "phenomenon": "backdraft",
+          "coverage": {
+            "known_samples": 358,
+            "total_samples": 361
+          }
+        }
+      ]
+    },
+    {
+      "building": "ganghwa",
+      "floor": "1F",
+      "origin": "CAD_1F_R9",
+      "state": "complete",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": 983.7029999999941,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_1F_R19",
+        "CAD_1F_R21"
+      ],
+      "input_sha256": "044755b871f1c1fb52bc30a25a339970a1bd978bae10dc150c26e327d239d2c1",
+      "burning_rooms": [
+        "CAD_1F_R0",
+        "CAD_1F_R8",
+        "CAD_1F_R9",
+        "CAD_1F_R17"
+      ],
+      "integration_s": 974.7126197000034,
+      "peaks": {
+        "FO": {
+          "index": 104.30008237622133,
+          "time_s": 1870.0,
+          "room": "CAD_1F_R0",
+          "cell": "CAD_1F_R0_C1"
+        },
+        "FGI": {
+          "index": 114.69079483874766,
+          "time_s": 1020.0,
+          "room": "CAD_1F_R31",
+          "cell": "CAD_1F_R31"
+        },
+        "backdraft": {
+          "index": 176.78016200820937,
+          "time_s": 2300.0,
+          "room": "CAD_1F_R17",
+          "cell": "CAD_1F_R17_C1"
+        }
+      },
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "2F",
+      "origin": "CAD_2F_R7",
+      "state": "complete",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": 337.0,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_2F_R13",
+        "CAD_2F_R26"
+      ],
+      "input_sha256": "8dbe0df38ae60b3288bba87de651315bd5724bb6714cadfe4e80db324a085914",
+      "burning_rooms": [
+        "CAD_2F_R7"
+      ],
+      "integration_s": 328.4404132000054,
+      "peaks": {
+        "FO": {
+          "index": 108.8362358694727,
+          "time_s": 910.0,
+          "room": "CAD_2F_R7",
+          "cell": "CAD_2F_R7"
+        },
+        "FGI": {
+          "index": 78.29897716675413,
+          "time_s": 1570.0,
+          "room": "CAD_2F_R7",
+          "cell": "CAD_2F_R7"
+        },
+        "backdraft": {
+          "index": 79.42760806749766,
+          "time_s": 1410.0,
+          "room": "CAD_2F_R7",
+          "cell": "CAD_2F_R7"
+        }
+      },
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "4F",
+      "origin": "CAD_4F_R0",
+      "state": "running",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_4F_R8",
+        "CAD_4F_R20"
+      ],
+      "input_sha256": "4b7ba36d5bb23845a6a7e097c96d0b9fd2418e4c7b3f302143a45af86f1f7261",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "5F",
+      "origin": "CAD_5F_R12",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_5F_R7",
+        "CAD_5F_R20"
+      ],
+      "input_sha256": "a5868a54782d9f26fc87a854700e0a6724111c3ed2775a4f88cabd43dd46009e",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "6F",
+      "origin": "CAD_6F_R2",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_6F_R28",
+        "CAD_6F_R43"
+      ],
+      "input_sha256": "199b02e69dcd3ca14a89599a541140c7474f1bc45e41dde78a8503f42a8f6516",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "7F",
+      "origin": "CAD_7F_R0",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_7F_R24",
+        "CAD_7F_R32"
+      ],
+      "input_sha256": "d6ecadf4d9a2597f6a9756cf046f1e3f1eebd3058c6619bd6ffac398fcac0969",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "B1",
+      "origin": null,
+      "state": "blocked",
+      "engine": "pyrocast_lite",
+      "opening_state": null,
+      "wall_s": null,
+      "error": "ValueError: Opening wider than usable equivalent room: CAD_B1_R12",
+      "isolated_rooms": null,
+      "input_sha256": null,
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "PH",
+      "origin": null,
+      "state": "blocked",
+      "engine": "pyrocast_lite",
+      "opening_state": null,
+      "wall_s": null,
+      "error": "ValueError: Invalid room box",
+      "isolated_rooms": null,
+      "input_sha256": null,
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "10F",
+      "origin": "CAD_10F_R15",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_10F_R4",
+        "CAD_10F_R8"
+      ],
+      "input_sha256": "e758d92db31405188da01dfbda4d189504307c13e8107e6cc6cbae65b7b4b1b8",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "1F",
+      "origin": "CAD_1F_R3",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_1F_R10",
+        "CAD_1F_R12",
+        "CAD_1F_R15"
+      ],
+      "input_sha256": "558b49ca335cb84fc69d2fc155a9f69ec54432fdf4f91ec981d3cb8c3759ea01",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "2F",
+      "origin": "CAD_2F_R1",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_2F_R2",
+        "CAD_2F_R5",
+        "CAD_2F_R9"
+      ],
+      "input_sha256": "d370bbe477840e83928a8cf69b45702826f44de16541edc9fa68eb5859fd574d",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "3F",
+      "origin": "CAD_3F_R1",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_3F_R2",
+        "CAD_3F_R5"
+      ],
+      "input_sha256": "e57427a5a5b50072e6b20221771709714e86b0ad5a07675d63290b94f9df61b0",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "4F",
+      "origin": "CAD_4F_R11",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_4F_R4",
+        "CAD_4F_R8"
+      ],
+      "input_sha256": "bd927dafdd222747e87165663c4ce8c622e457230bb9730d18a4b9ceecde542b",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "6F",
+      "origin": "CAD_6F_R16",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_6F_R8"
+      ],
+      "input_sha256": "3aaacee0a80fcf905370d68c43b009f0c493b336604746da70a217869a160d7b",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "7F",
+      "origin": "CAD_7F_R16",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_7F_R8"
+      ],
+      "input_sha256": "7f8d96d98fec0e7824be94cf5cff3c4424d3e8e0f0fac68a33914de856bc4cdb",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "8F",
+      "origin": "CAD_8F_R11",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_8F_R8"
+      ],
+      "input_sha256": "6f224b694a925600eec755d627c542193ea3b87a1f1d2f4a292fc88ce3fbe321",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "9F",
+      "origin": "CAD_9F_R15",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_9F_R4",
+        "CAD_9F_R8"
+      ],
+      "input_sha256": "da0cef3af09f08171230b2e0d3f36c050721e9185921926ca4b4d940fe303d48",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "B1",
+      "origin": null,
+      "state": "blocked",
+      "engine": "pyrocast_lite",
+      "opening_state": null,
+      "wall_s": null,
+      "error": "ValueError: Opening wider than usable equivalent room: CAD_B1_R9",
+      "isolated_rooms": null,
+      "input_sha256": null,
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "B2",
+      "origin": "CAD_B2_R5",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_B2_R3",
+        "CAD_B2_R6",
+        "CAD_B2_R11",
+        "CAD_B2_R13",
+        "CAD_B2_R16",
+        "CAD_B2_R17",
+        "CAD_B2_R18",
+        "CAD_B2_R19",
+        "CAD_B2_R20",
+        "CAD_B2_R22"
+      ],
+      "input_sha256": "3f80b0c71b6e6fcf319621b16ac789d58623d343668651d5f2378135a10fdf65",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "B3",
+      "origin": "CAD_B3_R6",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_B3_R2",
+        "CAD_B3_R7",
+        "CAD_B3_R8",
+        "CAD_B3_R9"
+      ],
+      "input_sha256": "88f3557da4180d90cab758c829e68592f1e5d5dc4d8235b95e29af65f5e53753",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "PH",
+      "origin": "CAD_PH_R4",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_PH_R2",
+        "CAD_PH_R6"
+      ],
+      "input_sha256": "87cc609c786c8d47a5389a31cea29264c8ccb0559569488fc9ae0ebedd447da9",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "showroom",
+      "floor": "1F",
+      "origin": "CAD_1F_R6",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_1F_R19",
+        "CAD_1F_R21"
+      ],
+      "input_sha256": "79b50a854a42f38928623ea5525f2b8f8e59acee8529d5ff494b625841e7d2b7",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    },
+    {
+      "building": "showroom",
+      "floor": "2F",
+      "origin": "CAD_2F_R27",
+      "state": "queued",
+      "engine": "pyrocast_lite",
+      "opening_state": "input_default",
+      "wall_s": null,
+      "error": null,
+      "isolated_rooms": [
+        "CAD_2F_R11",
+        "CAD_2F_R17",
+        "CAD_2F_R20",
+        "CAD_2F_R29"
+      ],
+      "input_sha256": "5be2fd56606c24518511bfcfcca733aecad3de5476f09c2de9f9f10e88990971",
+      "burning_rooms": null,
+      "integration_s": null,
+      "peaks": null,
+      "partial_conditions": []
+    }
+  ]
+}

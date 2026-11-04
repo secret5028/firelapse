@@ -1984,17 +1984,15 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   const row=document.createElement('label');row.innerHTML=`${label} <select id="${id}"><option value="current">현재</option><option value="${option}">${text}</option></select>`;$('displaySmokeSettings').append(row);
   listen($(id),'change',()=>store.dispatch('realView/set',{[key]:$(id).value}));
  }
- const gainControls=document.createElement('div');gainControls.id='sceneGainControls';gainControls.setAttribute('aria-label','연기·화염 표시 배율');$('v').append(gainControls);
  const gains=[];
  for(const [key,label,min,max] of [['smokeGain','연기 농도',30,150],['flameGain','화염 밝기',50,200]]){
-  for(const [host,prefix] of [[gainControls,'scene'],[$('displaySmokeSettings'),'display']]){
+  for(const [host,prefix] of [[$('displaySmokeSettings'),'display']]){
    const row=document.createElement('label');row.className='gainControl';row.htmlFor=prefix+key;row.append(label);
    const input=document.createElement('input');input.type='range';input.id=prefix+key;input.min=min;input.max=max;input.step=1;input.value=100;input.setAttribute('aria-label',label);row.append(input);
    const output=document.createElement('output');output.htmlFor=input.id;row.append(output);host.append(row);gains.push({key,input,output});
    listen(input,'input',()=>store.dispatch('realView/set',{[key]:input.valueAsNumber/100}));
   }
  }
- for(const event of ['pointerdown','pointermove','pointerup','click','wheel'])listen(gainControls,event,e=>e.stopPropagation());
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
  const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#ffc342'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
@@ -2021,8 +2019,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  #hudHistory{pointer-events:auto;background:#17384d;border:1px solid #577487;border-radius:12px;color:#eaf3f8;padding:3px 7px;cursor:pointer}#hudHistory[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}.hudPhenomenon{margin:5px 0}.viewHint[hidden]{display:none!important}
  #displayLegend{position:absolute;z-index:6;bottom:10px;left:12px;max-width:calc(100% - 24px);pointer-events:none}#displayLegend #cfMeaning{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:5px}.legendChip{background:#142b3be8;border:1px solid #577487;border-radius:14px;padding:3px 7px;display:inline-flex;gap:5px;align-items:center;color:#eaf3f8;font-size:11px;flex-shrink:0;white-space:nowrap}
  .legendChip[hidden]{display:none}
- #sceneGainControls{position:absolute;right:12px;bottom:58px;z-index:8;pointer-events:auto;background:#142b3be8;border:1px solid #577487;border-radius:7px;padding:7px 9px;width:235px;max-width:calc(100% - 42px);color:#eaf3f8;font-size:11px}#sceneGainControls[hidden]{display:none}
- .gainControl{display:flex;align-items:center;gap:7px;white-space:nowrap}.gainControl+.gainControl{margin-top:5px}.gainControl input[type=range]{width:105px;min-width:40px;flex:1;padding:0;accent-color:#42c4e8}.gainControl output{width:36px;text-align:right;font-variant-numeric:tabular-nums}#v:has(#sceneGainControls:not([hidden])) .viewHint{visibility:hidden}
+ .gainControl{display:flex;align-items:center;gap:7px;white-space:nowrap}.gainControl+.gainControl{margin-top:5px}.gainControl input[type=range]{width:105px;min-width:40px;flex:1;padding:0;accent-color:#42c4e8}.gainControl output{width:36px;text-align:right;font-variant-numeric:tabular-nums}
  #displayLegend #cfPlumeLegend{margin:4px 0 0;padding:3px 6px!important;background:#142b3be8;border-radius:4px;font-size:10px;color:#d6e8f3}#displayLegend #cfPlumeLegend small,#displayLegend #cfPlumeNumbers{display:none}
  body.pyroShell #cameraButtons{display:none!important}
  body.pyroShell .viewHint{bottom:70px;right:12px;left:auto;font-size:10px}#displayView{display:flex;align-items:center;gap:5px;white-space:nowrap}.compactHUD{display:none!important;white-space:normal!important;max-width:calc(100% - 24px)}.hudTitle{display:flex;align-items:center;gap:8px}#hudOrigin{pointer-events:auto;margin-top:5px;background:#1d4158;color:#eaf3f8;border:1px solid #577487;border-radius:4px;padding:3px 6px;cursor:pointer}.hudValues{display:flex;gap:12px;margin-top:3px;font-size:12px}.hudValues b{font-variant-numeric:tabular-nums}#hudPill{padding:2px 8px;border-radius:12px;background:#1d4158;color:#eaf3f8;font-size:11px;white-space:nowrap}
@@ -2062,7 +2059,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   const {route,camera}=context,point=route.result?.vehicle,floor=store.get('floor').floor_id;
   vehicleMarker.hidden=!!route.vehicleSource||!point||!store.get('layers').route||!store.get('route').vehicle_visible||(floor!==null&&floor!=='1F');
   if(!vehicleMarker.hidden){const p=new route.THREE.Vector3(...point).project(camera);vehicleMarker.hidden=p.z< -1||p.z>1;vehicleMarker.style.left=(p.x+1)*$('v').clientWidth/2+'px';vehicleMarker.style.top=(1-p.y)*$('v').clientHeight/2+'px';}
- },dispose(){policy.dispose();gainControls.remove();vehicleMarker.remove();plumeLegend?.remove();for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
+ },dispose(){policy.dispose();vehicleMarker.remove();plumeLegend?.remove();for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();style.remove();legend.remove();view.remove();pane.replaceChildren();}};
 }
 
 return {createDisplayPanel};
@@ -2105,12 +2102,10 @@ function createResultsPanel({panel,store}){
  const move=(node,parent)=>{const mark=document.createComment('result restore');node.before(mark);moves.push(()=>mark.replaceWith(node));parent.append(node);};
  root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase" hidden>사례</label><div id="resultCaseControls" hidden></div><div id="resultMetadata" hidden></div><div id="resultReuse" role="status" hidden></div><button id="resultReplay" hidden type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><label for="liteRoom">실·셀</label><div id="resultRoomControl"></div><div id="resultRoomTitle"></div><div id="resultAtmosphere"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><section aria-label="계산값"><h3>계산값</h3><div id="resultQuantities"></div></section></div><section id="resultMCSection" hidden><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div></section><details id="resultLimits" hidden><summary>가정과 한계</summary><ul></ul></details>';
  const riskHeading=$('resultCase').nextElementSibling,riskCard=riskHeading.nextElementSibling;root.prepend(riskHeading,riskCard);
- move($('sceneGainControls'),root);root.prepend($('sceneGainControls'));
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';move($('liteRoom'),$('resultRoomControl'));
  $('resultRoomControl').append($('hudOrigin'));
  $('resultTools').remove();
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
- #resultContent #sceneGainControls{position:static;box-sizing:border-box;width:100%;max-width:none;margin:0 0 14px;padding:10px}
  #resultCase #nativeOutputNotice{display:none!important}
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
  #resultContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#resultContent h3{font-size:12px;font-weight:500;color:#b8cbd8;margin:14px 0 8px}.resultCard{border:1px solid #496273;border-radius:7px;padding:10px;margin-bottom:12px;background:#163345}.resultCard>label{display:block;margin-bottom:5px;color:#b8cbd8}

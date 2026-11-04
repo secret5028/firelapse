@@ -48,13 +48,9 @@ try{
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));
  const offFloor=app.store.subscribe('floor',()=>incident.setFloor(app.store.get('floor').floor_id));
  window.addEventListener('pagehide',()=>{offFloor();incident.dispose();exterior.dispose();},{once:true});
- // A visible, time-linked label distinguishes the cut from static door frames.
- const cut=document.createElement('output');cut.className='wandoOpening';$('v').append(cut);
  const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:#ffd18a;font-size:12px';$('resultCase').prepend(endpoint);
  for(const id of ['exploreRun','exploreOriginRun','exploreMC','resultMCApplyWorst','exportHTML']){const el=$(id);if(el){el.disabled=true;el.title='P1 저장 결과 보기 전용';}}
  for(const el of document.querySelectorAll('#buildingDoors button')){el.disabled=true;el.title='P1 입력 고정';}
  function loop(){requestAnimationFrame(loop);O.update();R.render(S,C);
-  const t=app.store.get('playback').t_s,f=t>=1800?1:t>=1320?.5:0,point=new T.Vector3(46.75,18,2.7).project(C),v=$('v');
-  cut.textContent=`CUT · ${f===0?'닫힘':f===.5?'열림 1 × 2 m':'열림 2 × 2 m'}`;cut.style.left=(point.x+1)*v.clientWidth/2+'px';cut.style.top=(1-point.y)*v.clientHeight/2+'px';cut.hidden=point.z>1||(app.store.get('floor').floor_id!==null&&app.store.get('selection').room_id!=='CAD_1F_CAVITY');
  }loop();window.addEventListener('pagehide',()=>O.dispose());
 }catch(e){$('error').textContent=e.stack;throw e;}

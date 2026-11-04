@@ -28,9 +28,9 @@ for(const region of [[{o:[[0,0],[2.5,0],[2.5,4.76],[0,4.76]],h:[]}],[{o:[[0,0],[
 }
 for(const f of asset.floors)for(const r of f.floor.transport)assert(!b.unconfirmed_vertical_cores.some(n=>n.floor===f.id&&n.core_id===r.id));
 const layer=new CoreLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});const frame={building:{source_hash:hash},resultMeta:null,floor:{floor_id:null}};layer.setData(frame);layer.setVisible(true);layer.tick();
-assert.equal(layer.diagnostics().shells,23);assert.equal(layer.diagnostics().edges,23);assert.equal(layer.group.visible,true);
+assert.equal(layer.diagnostics().shells,4);assert.equal(layer.diagnostics().edges,23);assert.equal(layer.group.visible,true);
 assert.equal(layer.diagnostics().treads,generated.flat().length);
-for(const v of layer.views)for(const m of v.group.children)if(m.renderOrder===72)assert.equal(m.material.color.getHexString(),'2563eb');
+for(const v of layer.views)for(const m of v.group.children)if(m.renderOrder===72){assert.equal(m.material.color.getHexString(),'2563eb');assert.equal(m.isLineSegments,true);}else if(m.isMesh)assert.equal(m.material.color.getHexString(),'55baff');
 for(const v of layer.views){assert.equal(v.group.position.z,v.row.floor.z);for(const mesh of v.group.children)assert.equal(mesh.material.depthTest,false);}
 for(const f of b.floors){
  layer.setData({...frame,floor:{floor_id:f.name}});layer.tick();assert.equal(layer.group.visible,true);

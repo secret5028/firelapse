@@ -59,13 +59,15 @@ export class CoreLayer extends EmptyLayer {
     if(!polys?.length)continue;
     const extrude=(polygons,depth)=>this.own(new T.ExtrudeGeometry(polygons.map(asset.shapeFor),{depth,bevelEnabled:false,curveSegments:1}));
     const geometry=extrude(polys,floor.h);
+    if(core.kind==='elev'){
     const shell=applyRenderPolicy(new T.Mesh(geometry,this.own(new T.MeshBasicMaterial({color,side:T.DoubleSide}))),'core');
     shell.raycast=()=>{};group.add(shell);
+    }
     const edges=applyRenderPolicy(new T.LineSegments(this.own(new T.EdgesGeometry(geometry,25)),this.own(new T.LineBasicMaterial({color}))),'core.edge');
     edges.raycast=()=>{};group.add(edges);
     if(core.kind==='stair')for(const step of core.meshes?.length?core.meshes:fallbackStairSteps(T,core)){
      if(!step.polys?.length||!(step.z1>step.z0))continue;
-     const tread=applyRenderPolicy(new T.Mesh(extrude(step.polys,step.z1-step.z0),this.own(new T.MeshBasicMaterial({color}))),'core.tread');
+     const tread=applyRenderPolicy(new T.LineSegments(this.own(new T.EdgesGeometry(extrude(step.polys,step.z1-step.z0),25)),this.own(new T.LineBasicMaterial({color}))),'core.tread');
      tread.position.z=step.z0;tread.raycast=()=>{};group.add(tread);
     }
    }

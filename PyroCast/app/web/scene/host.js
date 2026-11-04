@@ -6,7 +6,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
  scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000),
  rendererFactory=()=>new THREE.WebGLRenderer({antialias:true,alpha:true}),layers=createEmptyLayers(THREE),seriesAt=()=>null,
- adoptedRenderer=null,legendContainer=null,groundPick=null}){
+ adoptedRenderer=null,legendContainer=null,groundPick=null,vehiclePick=null}){
  if(!container||mounted.has(container)||(container.querySelector('canvas')&&container.querySelector('canvas')!==adoptedRenderer?.domElement))throw Error('Container already owns a canvas/host');
  const ids=layers.map(l=>l.constructor.id);if(new Set(ids).size!==ids.length)throw Error('Duplicate layer IDs');
  let disposed=false,running=false,raf=null,lastTime=null,renderer=null,legendAnchor=null;const cleanups=[];
@@ -33,6 +33,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
    const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return;
    mouse.set((e.clientX-b.x)/b.width*2-1,-(e.clientY-b.y)/b.height*2+1);scene.updateMatrixWorld(true);camera.updateMatrixWorld();ray.setFromCamera(mouse,camera);
    if(groundPick?.active()){const hit=ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,0,1),-groundPick.z),new THREE.Vector3());if(hit)groundPick.place(hit.toArray());return;}
+   const trucks=layers.flatMap(l=>l.getVehiclePickPlanes?.()||[]);if(ray.intersectObjects(trucks,false).length){vehiclePick?.({x:e.clientX,y:e.clientY});return;}
    const floorId=store.get('floor').floor_id,planes=layers.flatMap(l=>l.getPickPlanes?.()||[]).filter(p=>{
     if(floorId!==null&&p.userData.floorId!==floorId)return false;for(let node=p;node;node=node.parent)if(!node.visible)return false;return true;
    });

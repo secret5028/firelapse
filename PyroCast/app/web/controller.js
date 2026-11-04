@@ -1,3 +1,4 @@
+import {vehicleFitsGround} from './scene/vehicle_placement.js';
 import {createAssistantPanel} from './panels/assistant.js';
 import {attachExport} from './panels/export.js';
 import {routeSampleIndex} from './route/risk.js';
@@ -57,7 +58,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-7,ground.z||0];}
  }
  let routeUI=null;
- const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
+ const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const target=store.get('route').target_room_id;if(target)return target;const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
  const layers=[buildingLayer,openings,core,new RoomNamesLayer(T,{building:B,groups,camera:C,container:$('v')}),...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  if(ownedReference)cleanup.push(()=>ownedReference.userData.dispose());
@@ -121,7 +122,13 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   display.applyScene({risk,scene,camera,route});
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}
  }};
- const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>!routeGraph.error&&store.get('route').placing,place:p=>{if(contains(p,routeGraph.ground.slab))store.dispatch('route/set',{message:'건물 밖 지면을 선택하세요'});else store.dispatch('route/set',{vehicle:p,placing:false,message:''});}},seriesAt:()=>cache.get(store.get('result')?.result_id)});
+ function vehiclePositionAllowed(p){
+  // Use the displayed ground grid, not an infinite plane or a basement floor.
+  S.updateMatrixWorld(true);let bounds=null;
+  S.traverse(o=>{if(o.type==='GridHelper'&&o.visible){const box=new T.Box3().setFromObject(o);if(Math.abs(box.min.z-routeGraph.ground.z)<1)bounds=box;}});
+  return vehicleFitsGround(p,bounds,routeGraph.ground.slab);
+ }
+ const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>store.get('route').placing,place:p=>{if(!vehiclePositionAllowed(p))store.dispatch('route/set',{message:'차량 전체가 지상 그리드 안·건물 밖에 놓이도록 선택하세요'});else store.dispatch('route/set',{vehicle:p,placing:false,message:''});}},vehiclePick:position=>routeUI?.showVehicleMenu(position),seriesAt:()=>cache.get(store.get('result')?.result_id)});
  const on=(node,event,fn)=>{node.addEventListener(event,fn);cleanup.push(()=>node.removeEventListener(event,fn));};
  const handler=(node,event,fn)=>{const old=node[event];node[event]=fn;cleanup.push(()=>{node[event]=old;});};
  const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||'용도 미확인'}`;
@@ -162,7 +169,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').querySelectorAll('button')){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
- cleanup.push(store.subscribe('selection',s=>{if(!data)return;const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
+ cleanup.push(store.subscribe('selection',s=>{if(!data)return;if(['click','touch'].includes(s.source)&&$('shellTab-building').getAttribute('aria-selected')==='true'){store.dispatch('route/set',{target_room_id:s.room_id});store.dispatch('layers/toggle',{id:'route',visible:true});}const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
  function select(key){const r=data.rooms.find(r=>r.key===key)||selected;store.dispatch('selection/set',{room_id:r.original_room||r.key,cell_id:r.key,source:'list'});}
  handler($('liteRoom'),'onchange',()=>select($('liteRoom').value));
  handler($('liteFocus'),'onclick',()=>{clicked=true;autoFit=false;const p=selected.cad_center_m;O.target.set(p[0],p[1],selected.z_m+1);C.position.set(p[0]+15,p[1]-18,selected.z_m+18);O.update();recordCamera('room');render();});

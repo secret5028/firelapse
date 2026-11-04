@@ -20,7 +20,7 @@ const plain=findRoute(g,'CAD_3F_R2',undefined,{stair_factor:1});
 assert.ok(Math.abs(r.length-plain.length-5.5)<1e-8);
 const hose=findRoute(g,'CAD_3F_R2',undefined,{hose_m:20});
 assert.equal(hose.length,r.length);assert.equal(hose.hoses,5);
-assert.equal(findRoute(g,'absent').error,'화점 실의 연결 정보 없음');
+assert.equal(findRoute(g,'absent').error,'선택 실의 연결 정보 없음');
 const moved=findRoute(g,'CAD_3F_R2',[60,20,g.ground.z]);
 assert.notEqual(moved.entry,r.entry);assert.notEqual(moved.length,r.length);
 assert.equal(JSON.stringify(building),before,'route does not mutate input/simulation');

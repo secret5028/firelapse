@@ -1,3 +1,4 @@
+import {exteriorPath} from './exterior.js';
 // Read existing CAD connectivity only. No proximity links or fire simulation.
 import {avoidObstacles} from './obstacles.js';
 export const distance=(a,b)=>Math.hypot(...a.map((x,i)=>x-b[i]));
@@ -43,7 +44,9 @@ export function readRouteGraph(building){
  const ground=floors.get('1F');if(!ground)throw Error('1층 지면 미확인');
  const candidates=entrances.filter(e=>e.floor==='1F').sort((a,b)=>b.area-a.area||a.id.localeCompare(b.id));
  const main=building.route_entry_id?candidates.find(e=>e.id===building.route_entry_id):candidates[0];if(!main)throw Error('1층 외부 문 미확인');
- const leaves=main.opening.leaves||[],p=leaves[0]?.hinge,q=leaves.length>1?leaves.at(-1).hinge:leaves[0]?.closed;
+ const leaves=main.opening.leaves||[];let p=leaves[0]?.hinge,q=leaves.length>1?leaves.at(-1).hinge:leaves[0]?.closed;
+ // Sliding/open doors can have a CAD aperture polygon but no swing leaves.
+ if(!p||!q){const ring=main.opening.geometry_polys?.[0]?.o||main.opening.polys?.[0]||[];let longest=0;for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;p=a;q=b;}}}
  if(!p||!q)throw Error('주출입문 법선 미확인');
  const len=Math.hypot(q[0]-p[0],q[1]-p[1]);const normal=[-(q[1]-p[1])/len,(q[0]-p[0])/len];
  const choices=[1,-1].map(sign=>[main.point[0]+normal[0]*5*sign,main.point[1]+normal[1]*5*sign,ground.z]);
@@ -55,8 +58,8 @@ export function readRouteGraph(building){
 export function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,stair_factor=1.5}={}){
  if(!(hose_m>0)||!(stair_factor>=1)||![hose_m,stair_factor,...vehicle].every(Number.isFinite))throw Error('유효한 경로 설정을 입력하세요');
  if(contains(vehicle,graph.ground.slab))return {error:'차량은 건물 밖 지면에 놓으세요'};
- if(!graph.rooms.has(target))return {error:'화점 실의 연결 정보 없음'};
- const entry=[...graph.entrances].sort((a,b)=>distance(vehicle,a.point)-distance(vehicle,b.point)||a.id.localeCompare(b.id))[0];
+ if(!graph.rooms.has(target))return {error:'선택 실의 연결 정보 없음'};
+
  const adj=new Map([...graph.rooms.keys()].map(k=>[k,[]]));
  function segment(a,b,floor,room,stair=false,length=distance(a,b)){return {a,b,floor,room,stair,length};}
  function detour(parts){const out=[];for(const s of parts){const room=graph.rooms.get(s.room);
@@ -71,14 +74,20 @@ export function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,s
   parts=detour(parts);if(!parts)continue;
   const length=parts.reduce((n,p)=>n+p.length,0);adj.get(e.a).push({to:e.b,e,parts,length});adj.get(e.b).push({to:e.a,e,parts:[...parts].reverse().map(p=>({...p,a:p.b,b:p.a})),length});
  }
- const first=graph.rooms.get(entry.room),start=detour([segment(vehicle,entry.point,'1F',null),segment(entry.point,first.point,'1F',entry.room)]);
- if(!start)return {error:'장애물 여유 폭을 지키는 진입 경로 없음',entry:entry.id};
- const best=new Map([[entry.room,start.reduce((n,p)=>n+p.length,0)]]),previous=new Map(),queue=[[best.get(entry.room),entry.room]];
+ // Seed every registered exterior entrance: nearest door is not necessarily
+ // the shortest total route to the chosen room.
+ const starts=new Map(),best=new Map(),previous=new Map(),queue=[];
+ for(const entry of graph.entrances){
+  const first=graph.rooms.get(entry.room),outside=exteriorPath(vehicle,entry.point,graph.ground.slab,contains);if(!outside)continue;
+  const start=detour([...outside.slice(1).map((p,i)=>segment(outside[i],p,'1F',null)),segment(entry.point,first.point,'1F',entry.room)]);
+  if(!start)continue;const cost=start.reduce((n,p)=>n+p.length,0);
+  if(cost<(best.get(entry.room)??Infinity)){best.set(entry.room,cost);starts.set(entry.room,{entry,start});queue.push([cost,entry.room]);}
+ }
  while(queue.length){queue.sort((a,b)=>a[0]-b[0]||a[1].localeCompare(b[1]));const [cost,at]=queue.shift();if(cost!==best.get(at))continue;if(at===target)break;
   for(const step of adj.get(at)){const next=cost+step.length;if(next<(best.get(step.to)??Infinity)){best.set(step.to,next);previous.set(step.to,{from:at,...step});queue.push([next,step.to]);}}
  }
- if(!best.has(target))return {error:'가장 가까운 외부 문에서 화점까지 확인된 연결 없음',entry:entry.id};
- const steps=[];let at=target;while(at!==entry.room){const step=previous.get(at);steps.push(step);at=step.from;}steps.reverse();
+ if(!best.has(target))return {error:'외부 문에서 선택 실까지 확인된 연결 없음'};
+ const steps=[];let at=target;while(previous.has(at)){const step=previous.get(at);steps.push(step);at=step.from;}steps.reverse();const {entry,start}=starts.get(at);
  const segments=[...start,...steps.flatMap(s=>s.parts)].filter(s=>s.length>1e-8);let length=0;for(const s of segments){s.start=length;length+=s.length;s.end=length;}
  const ticks=[];for(let m=hose_m;m<=length;m+=hose_m){const s=segments.find(s=>m<=s.end);const r=(m-s.start)/s.length;ticks.push({number:m/hose_m,point:s.a.map((x,i)=>x+(s.b[i]-x)*r),floor:s.floor});}
  return {target,entry:entry.id,vehicle,segments,ticks,length,hoses:Math.ceil(length/hose_m),stairs:steps.filter(s=>s.e.kind==='stair').length,

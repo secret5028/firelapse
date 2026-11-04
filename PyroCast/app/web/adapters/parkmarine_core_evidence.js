@@ -100,7 +100,43 @@ export const parkmarineCoreEvidence = {
           "y": 63.545,
           "w": 1.54,
           "h": 1.25,
-          "source_core_index": 0
+          "source_core_index": 0,
+          "region": [
+            {
+              "o": [
+                [
+                  22.28,
+                  65.43
+                ],
+                [
+                  22.28,
+                  63.93
+                ],
+                [
+                  22.14,
+                  63.91
+                ],
+                [
+                  22.14,
+                  62.93
+                ],
+                [
+                  26.9,
+                  62.93
+                ],
+                [
+                  26.9,
+                  65.43
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "region_evidence": {
+            "room_id": "R1",
+            "basis": "dedicated stair room footprint; B3 R1 and B2 R5 have identical CAD polygons; detector bbox is only a tread fragment",
+            "area_m2": 11.83
+          }
         },
         {
           "floor": "B2",
@@ -108,7 +144,43 @@ export const parkmarineCoreEvidence = {
           "y": 64.18,
           "w": 4.76,
           "h": 2.5,
-          "source_core_index": 0
+          "source_core_index": 0,
+          "region": [
+            {
+              "o": [
+                [
+                  22.28,
+                  65.43
+                ],
+                [
+                  22.28,
+                  63.93
+                ],
+                [
+                  22.14,
+                  63.91
+                ],
+                [
+                  22.14,
+                  62.93
+                ],
+                [
+                  26.9,
+                  62.93
+                ],
+                [
+                  26.9,
+                  65.43
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "region_evidence": {
+            "room_id": "R5",
+            "basis": "dedicated stair room footprint; B3 R1 and B2 R5 have identical CAD polygons; detector bbox is only a tread fragment",
+            "area_m2": 11.83
+          }
         },
         {
           "floor": "B1",

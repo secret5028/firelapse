@@ -21,6 +21,11 @@ for(const step of fallbackStairSteps(T,fixture))for(const p of step.polys){
  const x=p.o.reduce((s,q)=>s+q[0],0)/p.o.length,y=p.o.reduce((s,q)=>s+q[1],0)/p.o.length;
  assert(!(x<2&&y>4));assert(!(x>.4&&x<1&&y>.4&&y<1));
 }
+// Floor landing must span BOTH flights (not just the returning/right flight).
+for(const region of [[{o:[[0,0],[2.5,0],[2.5,4.76],[0,4.76]],h:[]}],[{o:[[0,0],[4.76,0],[4.76,2.5],[0,2.5]],h:[]}]]){
+ const c={...fixture,region},steps=fallbackStairSteps(T,c),top=steps.at(-1).polys.flatMap(p=>p.o),swap=region[0].o[1][0]>2.5;
+ const width=top.map(p=>p[swap?1:0]);assert.equal(Math.min(...width),0);assert.equal(Math.max(...width),2.5);
+}
 for(const f of asset.floors)for(const r of f.floor.transport)assert(!b.unconfirmed_vertical_cores.some(n=>n.floor===f.id&&n.core_id===r.id));
 const layer=new CoreLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});const frame={building:{source_hash:hash},resultMeta:null,floor:{floor_id:null}};layer.setData(frame);layer.setVisible(true);layer.tick();
 assert.equal(layer.diagnostics().shells,23);assert.equal(layer.diagnostics().edges,23);assert.equal(layer.group.visible,true);

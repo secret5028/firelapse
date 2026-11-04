@@ -12,8 +12,8 @@ for(const [i,axis] of evidence.axes.entries()){
  assert.deepEqual([axis.kind,rows[0].floor,rows.at(-1).floor,rows.length],expected[i]);
  for(let j=0;j<rows.length;j++){
   const r=rows[j],core=r.cores.find(c=>c.id===axis.id),node=axis.nodes[j];
-  assert.equal(core.region[0].o[0][0],node.x-node.w/2);
-  assert.equal(core.region[0].o[0][1],node.y-node.h/2);
+  if(node.region)assert.deepEqual(core.region,node.region);
+  else {assert.equal(core.region[0].o[0][0],node.x-node.w/2);assert.equal(core.region[0].o[0][1],node.y-node.h/2);}
   if(j+1<rows.length){
    assert.equal(core.to_floor,rows[j+1].floor);assert(Math.abs(r.z+core.rise_m-rows[j+1].z)<1e-9);assert(Math.abs(r.z+r.h-rows[j+1].z)<1e-9);
    assert.equal(b.floors.findIndex(f=>f.name===rows[j+1].floor),b.floors.findIndex(f=>f.name===r.floor)+1);
@@ -27,4 +27,7 @@ for(const [i,axis] of evidence.axes.entries()){
 for(const name of ['2F','3F','4F','9F','10F'])assert.equal(floors.find(f=>f.floor===name).cores.filter(c=>c.kind==='elev').length,3);
 assert.equal(evidencedCoreTransport(b,b.floors[0],'wrong-hash'),null);
 assert.equal(JSON.stringify(b),before);
+const b3=floors.find(f=>f.floor==='B3').cores.find(c=>c.kind==='stair'),b2=floors.find(f=>f.floor==='B2').cores.find(c=>c.id===b3.id);
+assert.deepEqual(b3.region,b.floors[0].rooms.find(r=>r.id==='R1').polys);
+assert.deepEqual(b3.region,b2.region);
 console.log(JSON.stringify({floorSegments:floors.reduce((n,f)=>n+f.cores.length,0),axes:expected,gaps:0,buildingUnchanged:true}));

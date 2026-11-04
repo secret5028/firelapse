@@ -1079,7 +1079,43 @@ const parkmarineCoreEvidence = {
           "y": 63.545,
           "w": 1.54,
           "h": 1.25,
-          "source_core_index": 0
+          "source_core_index": 0,
+          "region": [
+            {
+              "o": [
+                [
+                  22.28,
+                  65.43
+                ],
+                [
+                  22.28,
+                  63.93
+                ],
+                [
+                  22.14,
+                  63.91
+                ],
+                [
+                  22.14,
+                  62.93
+                ],
+                [
+                  26.9,
+                  62.93
+                ],
+                [
+                  26.9,
+                  65.43
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "region_evidence": {
+            "room_id": "R1",
+            "basis": "dedicated stair room footprint; B3 R1 and B2 R5 have identical CAD polygons; detector bbox is only a tread fragment",
+            "area_m2": 11.83
+          }
         },
         {
           "floor": "B2",
@@ -1087,7 +1123,43 @@ const parkmarineCoreEvidence = {
           "y": 64.18,
           "w": 4.76,
           "h": 2.5,
-          "source_core_index": 0
+          "source_core_index": 0,
+          "region": [
+            {
+              "o": [
+                [
+                  22.28,
+                  65.43
+                ],
+                [
+                  22.28,
+                  63.93
+                ],
+                [
+                  22.14,
+                  63.91
+                ],
+                [
+                  22.14,
+                  62.93
+                ],
+                [
+                  26.9,
+                  62.93
+                ],
+                [
+                  26.9,
+                  65.43
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "region_evidence": {
+            "room_id": "R5",
+            "basis": "dedicated stair room footprint; B3 R1 and B2 R5 have identical CAD polygons; detector bbox is only a tread fragment",
+            "area_m2": 11.83
+          }
         },
         {
           "floor": "B1",
@@ -1614,7 +1686,7 @@ function evidencedCoreTransport(building,floor,sourceHash,evidence=parkmarineCor
   const index=axis.nodes.findIndex(n=>n.floor===floor.name);if(index<0)return [];
   const n=axis.nodes[index],next=axis.nodes[index+1],target=building.floors.find(f=>f.name===next?.floor);
   const x=n.x-n.w/2,y=n.y-n.h/2;
-  return [{id:axis.id,kind:axis.kind,region:[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}],
+  return [{id:axis.id,kind:axis.kind,region:n.region??[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}],
    connected:axis.nodes.length>1,to_floor:target?.name,rise_m:target?target.z-floor.z:0,meshes:[],
    assumption:'simplified_return_stair_display_only',direction_source:'short_axis_default',
    source:'per-floor CAD core footprint',source_core_index:n.source_core_index}];
@@ -2067,7 +2139,9 @@ function fallbackStairSteps(T,core){
   slab(x0,y1-landing-(i+1)*run/n,x0+w*.46,y1-landing-i*run/n,(i+1)*rise/(2*n));
   slab(x0+w*.54,y0+landing+i*run/n,x1,y0+landing+(i+1)*run/n,rise/2+(i+1)*rise/(2*n));
  }
- slab(x0,y0,x1,y0+landing,rise/2,.14);slab(x0+w*.54,y1-landing,x1,y1,rise,.14);
+ // Full-width floor landing joins the returning flight to the next floor's
+ // first flight. A right-half landing leaves the two flights disconnected.
+ slab(x0,y0,x1,y0+landing,rise/2,.14);slab(x0,y1-landing,x1,y1,rise,.14);
  return steps;
 }
 

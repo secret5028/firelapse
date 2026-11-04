@@ -37,7 +37,9 @@ export function fallbackStairSteps(T,core){
   slab(x0,y1-landing-(i+1)*run/n,x0+w*.46,y1-landing-i*run/n,(i+1)*rise/(2*n));
   slab(x0+w*.54,y0+landing+i*run/n,x1,y0+landing+(i+1)*run/n,rise/2+(i+1)*rise/(2*n));
  }
- slab(x0,y0,x1,y0+landing,rise/2,.14);slab(x0+w*.54,y1-landing,x1,y1,rise,.14);
+ // Full-width floor landing joins the returning flight to the next floor's
+ // first flight. A right-half landing leaves the two flights disconnected.
+ slab(x0,y0,x1,y0+landing,rise/2,.14);slab(x0,y1-landing,x1,y1,rise,.14);
  return steps;
 }
 

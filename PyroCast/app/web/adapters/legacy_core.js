@@ -9,7 +9,7 @@ export function evidencedCoreTransport(building,floor,sourceHash,evidence=parkma
   const index=axis.nodes.findIndex(n=>n.floor===floor.name);if(index<0)return [];
   const n=axis.nodes[index],next=axis.nodes[index+1],target=building.floors.find(f=>f.name===next?.floor);
   const x=n.x-n.w/2,y=n.y-n.h/2;
-  return [{id:axis.id,kind:axis.kind,region:[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}],
+  return [{id:axis.id,kind:axis.kind,region:n.region??[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}],
    connected:axis.nodes.length>1,to_floor:target?.name,rise_m:target?target.z-floor.z:0,meshes:[],
    assumption:'simplified_return_stair_display_only',direction_source:'short_axis_default',
    source:'per-floor CAD core footprint',source_core_index:n.source_core_index}];

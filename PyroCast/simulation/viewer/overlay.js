@@ -504,7 +504,7 @@ function createFuelSettingsPanel({store,onSaved,available=true}){
   if(!autoAttempted&&value.ai_available&&value.ai_pending?.length){autoAttempted=true;await post({initialize_defaults:true},'AI 초기 배치 중…');}
  }catch(e){if(!disposed)update('가연물 설정 읽기 실패');}}
  const offFloor=store.subscribe('floor',value=>{floor=value.floor_id;if(room()?.floor!==floor)selected=null;render();});
- const offSelection=store.subscribe('selection',value=>{if(!['click','touch'].includes(value.source)||!current)return;selected=value.room_id;if(!room()){selected=null;render();return;}render();document.getElementById('shellTab-building')?.click();});
+ const offSelection=store.subscribe('selection',value=>{if(!['click','touch'].includes(value.source)||!current)return;selected=value.room_id;if(!room()){selected=null;render();return;}render();});
  refresh();return {refresh,dispose(){offFloor();offSelection();disposed=true;abort.abort();root.remove();style.remove();}};
 }
 

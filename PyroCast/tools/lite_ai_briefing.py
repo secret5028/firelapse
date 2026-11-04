@@ -66,6 +66,59 @@ def facts_for(call,i):
         facts.append({'text':display_text(json.dumps(d,ensure_ascii=False,indent=2)),'evidence':{'call':i,'row':d}})
     return facts
 
+def compact_sections(route,peaks,rules):
+    """Short display text; original tool rows remain attached as evidence."""
+    sections=[];facts=[]
+    def add(title,text,fact=None):
+        sections.append({'title':title,'text':text})
+        if fact is not None:facts.append({**fact,'text':text})
+    r=route['route'];target=r.get('target')
+    if r.get('error'):
+        add('진입 경로','미평가')
+    else:
+        label=r.get('target_label') or display_label(target)
+        add('진입 경로',f"외부에서 {label}까지 약 {r['length']:.0f} m, 호스 {r['hoses']}본이 필요합니다.",
+            {'room':target,'evidence':{'call':2,'row':r}})
+    rooms={row['room'] for row in (route.get('risk') or {}).get('rows',[])}
+    if target:rooms.add(target)
+    selected={}
+    titles={'backdraft':'산소 부족 상태 — BD','FGI':'가연성 연기 점화 조건 — FGI','FO':'플래시오버 조건 — FO'}
+    for k in ('backdraft','FGI','FO'):
+        candidates=[e for e in peaks[k] if e['room'] in rooms and finite(e.get('peak')) and finite(e.get('first_s'))]
+        if not candidates:continue
+        # Prefer the route destination; otherwise report the highest route-room event.
+        e=max(candidates,key=lambda e:(e['room']==target,e['peak']))
+        selected[k]=e
+        prefix='' if e['room']==target else display_label(e['room'],e.get('name'))+'은 '
+        text=f"{prefix}{stamp(e['first_s'])}부터 조건을 충족합니다."
+        if k=='FGI' and finite(e.get('rollover_first_s')):
+            text+=(' 같은 시각부터' if e['rollover_first_s']==e['first_s'] else f" {stamp(e['rollover_first_s'])}부터")+' 롤오버 진행이 표시됩니다.'
+        text+=f" {stamp(e['peak_s'])}에 최고 {e['peak']:.0f}에 도달합니다."
+        add(titles[k],text,{'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],
+            'evidence':{'call':3+TYPES.index(k),'row':e}})
+    bd=selected.get('backdraft');fgi=selected.get('FGI')
+    if bd and fgi and bd['room']==fgi['room'] and bd['first_s']<fgi['first_s']:
+        flow='초반에는 고온 연기 축적과 산소 부족이 두드러집니다. 이후에는 가연성 연기의 점화 조건이 강해집니다.'
+    elif selected:
+        ordered=sorted(selected.items(),key=lambda kv:kv[1]['first_s'])
+        flow='조건 충족 시작: '+' → '.join(LABELS[k]+' '+stamp(e['first_s']) for k,e in ordered)+'.'
+    else:
+        flow='경로에서 기준 도달이 확인된 현상이 없습니다. 미평가 자료는 안전 판정이 아닙니다.'
+    add('시간에 따른 변화',flow)
+    matched=[m for m in rules['matched'] if m['room'] in rooms]
+    codes={m['code'] for m in matched};advice=[];used=set()
+    if 'O-1' in codes:
+        advice.append(next(m['text'] for m in matched if m['code']=='O-1'));used.add('O-1')
+    if codes & {'F-1','F-2','B-1'}:
+        advice.append('상층 냉각');used.update(codes & {'F-1','F-2','B-1'})
+    if 'R-1' in codes:advice.append('퇴로 확보');used.add('R-1')
+    if not advice and matched:
+        # Keep one actual matched rule, never manufacture a recommendation.
+        m=matched[0];advice.append(m['text']);used.add(m['code'])
+    add('전술 참고','과 '.join(advice)+'.' if advice else '규칙 없음 또는 판정자료 미평가')
+    return sections,facts,sorted(used)
+
+
 def briefing(service,a):
     calls=[]
     def get(name,**kwargs):
@@ -73,26 +126,11 @@ def briefing(service,a):
     ranking=get('get_ranking');summary=get('get_case_summary');route=get('get_route')
     peaks={k:get('get_peak_events',phenomenon=k,threshold=100) for k in TYPES}
     rules=get('get_tactic_rules');rules['matched']=match_case(service,a,route,rules)
-    facts=[];lines=[f"[{a.get('floor') or '선택 건물'} 화재 위험 브리핑 · 사례 {a['case']} · {summary['engine']}]",'1. 최위험 화점 (저장된 ② 순위)']
-    for f in facts_for(calls[0],0):facts.append(f);lines.append('   '+f['text'])
-    if not ranking['second']:lines.append('   미평가')
-    lines.append('2. 진입 경로')
-    for f in facts_for(calls[2],2):facts.append(f);lines.append('   '+f['text'])
-    lines.append('3. 경로상 위험 (전 구간 최고, 현재 시각과 구분)')
-    route_rooms={r['room'] for r in (route.get('risk') or {}).get('rows',[])}
-    for i,k in enumerate(TYPES,3):
-        for e in peaks[k]:
-            if e['room'] in route_rooms and e['peak'] is not None and e['peak']>=70:
-                f=event_fact(e,i);facts.append(f);lines.append('   '+f['text'])
-    lines.append('4. 전술 참고 · '+rules['status'])
-    used=[]
-    for m in rules['matched']:
-        if m['room'] not in route_rooms:continue
-        used.append(m['code']);f={'room':m['room'],'cell':m['cell'],'time_s':m['time_s'],'text':f"{m['label']} @ {stamp(m['time_s'])} [{m['code']}] {m['text']} · {m['notice']}",'evidence':{'call':len(calls)-1,'row':m}};facts.append(f);lines.append('   '+f['text'])
-    if not used:lines.append('   규칙 없음 또는 판정자료 미평가')
-    lines.append('5. 한계: 조건 충족 지수이며 발생 예측 아님. 다중 셀 방 평균 없음. 전술 규칙은 사용자 제공 초안이며 현장 지휘관 판단 우선.')
-    lines.extend('   '+display_text(v) for v in summary['limits'])
-    value={'building':a['building'],'case':a['case'],'text':'\n'.join(lines),'facts':facts,'calls':calls,'rules':sorted(set(used)),'proposals':[],'status':'초안 · 사용자(CFBT) 검수 필요'}
+    sections,facts,used=compact_sections(route,peaks,rules)
+    value={'building':a['building'],'case':a['case'],
+           'text':'\n\n'.join(x['title']+'\n'+x['text'] for x in sections),
+           'sections':sections,'facts':facts,'calls':calls,'rules':used,
+           'proposals':[],'status':''}
     token=uuid.uuid4().hex;value['briefing_id']=token
     with LOCK:
         for k in list(REPORTS):

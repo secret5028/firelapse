@@ -56,13 +56,14 @@ class Acceptance(unittest.TestCase):
         for f in b['facts']:
             row=f['evidence']['row'];encoded=json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True)
             self.assertIn(json.dumps(row,sort_keys=True),encoded)
-        self.assertIn('초안',b['text']);self.assertTrue(b['facts'])
+        self.assertIn('진입 경로',b['text']);self.assertTrue(b['facts'])
+        self.assertIn('전술 참고',b['text']);self.assertNotIn('5. 한계',b['text'])
     def test_display_labels_and_zero_tooltips(self):
         from lite_ai_briefing import facts_for
         value=briefing(self.s,self.ctx)
         self.assertNotIn('CAD_',value['text'])
-        self.assertIn('3F R3 · 계측기보관실',value['text'])
-        self.assertIn('1F D3',value['text'])
+        self.assertIn(value['calls'][2]['data']['route']['target_label'],value['text'])
+        self.assertIn('1F D3',value['calls'][2]['data']['route']['entry_label'])
         for index,tip in [(0,'지수 0: 평가됨'),(None,'미평가: 저장된 지수 없음'),(22,'평가된 지수')]:
             row={'room':'CAD_3F_R3','label':'3F R3','end_m':94,'phenomenon':'FO','index':index}
             call={'tool':'get_route','data':{'route':{'entry':'CAD_1F_D3','target':'CAD_3F_R3','length':94,'hoses':7,'stairs':2},'risk':{'rows':[row]}}}
@@ -76,6 +77,21 @@ class Acceptance(unittest.TestCase):
             fact=facts_for(call,0)[0]
             self.assertNotIn('CAD_',fact['text'])
             self.assertEqual(fact['evidence']['row']['door'],'CAD_1F_D3')
+
+    def test_compact_wando_and_no_invented_events(self):
+        from lite_ai_briefing import compact_sections
+        b=briefing(self.s,{'building':'wando-coldstore','case':'wando-P1','floor':'1F'})
+        self.assertEqual(len(b['sections']),5)
+        for text in ('24 m','호스 2본','22:10','30:00에 최고 140','35:20','38:25에 최고 114','상층 냉각과 퇴로 확보'):
+            self.assertIn(text,b['text'])
+        for f in b['facts']:
+            self.assertIn(json.dumps(f['evidence']['row'],sort_keys=True),json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True))
+        route=b['calls'][2]['data']
+        empty={k:[] for k in TYPES}
+        sections,_,used=compact_sections(route,empty,{'matched':[]})
+        self.assertNotIn('산소 부족 상태',str(sections))
+        self.assertEqual(sections[-1]['text'],'규칙 없음 또는 판정자료 미평가')
+        self.assertEqual(used,[])
 
     def test_6_no_rule(self):
         v=self.invoke('분무 각도는?',[plan(missing=True)]);self.assertEqual(v['text'],'규칙표에 없음');self.assertEqual(v['facts'],[])

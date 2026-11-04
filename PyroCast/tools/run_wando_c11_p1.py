@@ -26,6 +26,13 @@ SPEC = ROOT / 'specs/Claude지시-C11-완도저온창고사례-20261102.md'
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
+def immutable_hashes_match(unchanged):
+    """Evidence recorded on Windows may use backslashes in relative paths."""
+    diagnostic_files={'simulation/pyrocast_cfbt/conditions.py'}
+    return all(match for path,match in unchanged.items()
+               if not path.replace('\\','/').startswith('specs/')
+               and path.replace('\\','/') not in diagnostic_files)
+
 
 def save(name, value):
     (OUT / name).write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding='utf-8')
@@ -118,8 +125,7 @@ def analyze(scenario='P1', fan_on=False):
     unchanged={p:sha(ROOT/p)==h for p,h in evidence['hashes'].items()}
     # A later specification edit does not invalidate the immutable run input.
     # Preserve its mismatch in the audit; engine/physics/deck remain mandatory.
-    diagnostic_files={'simulation/pyrocast_cfbt/conditions.py'}
-    assert all(v for p,v in unchanged.items() if not p.startswith('specs') and p not in diagnostic_files) and sha(OUT/'case.in')==evidence['deck_sha256']
+    assert immutable_hashes_match(unchanged) and sha(OUT/'case.in')==evidence['deck_sha256']
     states={};series={'time_s':t.tolist()};scores={};summaries={};shared_states={}
     def peak(a):
         j=int(np.argmax(a));return {'value':float(a[j]),'time_s':float(t[j])}

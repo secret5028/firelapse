@@ -1,5 +1,6 @@
 """Production panel/scene API for one model. Reads saved jobs; never runs on GET."""
 import json
+import logging
 import threading
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit, parse_qs
@@ -8,13 +9,25 @@ import model_simulation as sim
 
 PORTS = {'parkmarine':8842, 'showroom':8843}
 
-def jobs(ident):
+def jobs(ident, warnings=None):
     digest = sim.fingerprint(ident)
     out = []
     for p in sorted((sim.RESULTS/ident).glob('*/status.json'), key=lambda p:p.stat().st_mtime, reverse=True):
-        status = sim.read(p); request = sim.read(p.parent/'request.json')
-        if status.get('state') == 'complete' and request.get('building_sha256') == digest:
-            out.append((p.parent, request))
+        try:
+            status = json.loads(p.read_text('utf-8-sig'))
+            if not isinstance(status, dict) or status.get('state') != 'complete': continue
+            request = json.loads((p.parent/'request.json').read_text('utf-8-sig'))
+            if not isinstance(request, dict): raise ValueError('Invalid saved request')
+            if request.get('building_sha256') != digest: continue
+            if not all(isinstance(request.get(k), str) and request[k] for k in ('floor', 'room')):
+                raise ValueError('Missing saved floor or room')
+            if not all((p.parent/name).is_file() for name in ('input.json', 'playback.json')):
+                raise ValueError('Incomplete saved result')
+        except (OSError, ValueError, TypeError) as exc:
+            logging.getLogger(__name__).warning('Skipping unreadable saved case %s: %s', p.parent.name, exc)
+            if warnings is not None: warnings.append(dict(case_id=p.parent.name, reason=str(exc)))
+            continue
+        out.append((p.parent, request))
     return out
 
 def playback(ident, job=None):
@@ -72,9 +85,9 @@ def handler(base, ident):
                 if path.startswith('/cfbt/lite/result/'):return self.json(playback(ident,path.rsplit('/',1)[1]))
                 if path=='/cfbt/lite/catalog.json':
                     import model_mc
-                    rows=jobs(ident)
+                    warnings=[];rows=jobs(ident,warnings)
                     cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과") for p,r in rows]+model_mc.cases(ident)
-                    return self.json(dict(cases=cases,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
+                    return self.json(dict(cases=cases,warnings=warnings,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
                         progress_text='저장 결과 · 추가 계산 없음',reuse_by_case={p.name:dict(case_id=p.name,label='저장 결과 재생 · 재계산 없음',equivalent=False) for p,r in rows}))
                 if path.startswith('/cfbt/reuse/lite/'):
                     value=playback(ident,path.rsplit('/',1)[1])

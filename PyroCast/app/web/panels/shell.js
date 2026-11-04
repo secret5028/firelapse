@@ -1,3 +1,4 @@
+import {bindResizeHandle} from './resize_handle.js';
 import {createTimelineRisk} from './timeline_risk.js';
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 export function createPanelShell({panel,store,buildingFloors=[]}){
@@ -15,6 +16,10 @@ export function createPanelShell({panel,store,buildingFloors=[]}){
  #shellSelectedRoom{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;min-width:0;margin-left:5px}#shellSelectedRoom[hidden]{display:none!important}
  #pyroShellHeader #fbtn button[aria-pressed=true]{background:#e7be66;color:#142b3b;border-color:#f0d18e}
  #pyroShellSidebar{top:var(--shell-top);right:0;bottom:var(--shell-bottom);width:var(--shell-side);display:flex;flex-direction:column;border-left:1px solid #496273}
+ body.pyroShell.shellHidden #v{right:0!important}#pyroShellSidebar[hidden]{display:none!important}
+ #shellResize{position:absolute;left:-5px;top:0;bottom:0;width:10px;z-index:150;cursor:col-resize}#shellResize:hover,#shellResize:focus-visible{background:#42c4e855}
+ #shellPanelToggle{position:fixed;top:calc(var(--shell-top) + 8px);right:calc(var(--shell-side) + 9px);z-index:140;width:30px;height:30px;padding:6px;color:#cbe2ed;background:#1c3545;border:1px solid #577487;border-radius:7px;cursor:pointer}body.shellHidden #shellPanelToggle{right:9px}
+ #shellPanelToggle svg{display:block;width:16px;height:16px}
  #pyroShellTabs{display:flex;flex-shrink:0;border-bottom:1px solid #496273}
  #pyroShellTabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent;background:transparent;padding:12px 5px}
  #pyroShellTabs button[aria-selected=true]{border-bottom-color:#42c4e8;color:#a2efff;background:#1c3e52}
@@ -29,12 +34,19 @@ export function createPanelShell({panel,store,buildingFloors=[]}){
  #pyroShellHeader button:focus-visible,#pyroShellTabs button:focus-visible,#pyroShellTimeline :focus-visible{outline:2px solid #42c4e8;outline-offset:2px}
  @media(max-width:860px){body.pyroShell{--shell-mobile:42px}body.pyroShell.shellExpanded{--shell-mobile:46vh}body.pyroShell #v{right:0!important;bottom:calc(var(--shell-bottom) + var(--shell-mobile))!important}
  #pyroShellSidebar{top:auto;left:0;width:100%;height:var(--shell-mobile);border-left:0;border-top:1px solid #496273}#shellMobileToggle{display:block;min-height:40px;flex-shrink:0}body.pyroShell:not(.shellExpanded) #pyroShellTabs,body.pyroShell:not(.shellExpanded) .pyroPane{display:none!important}
+ #shellResize{display:none}#shellPanelToggle{right:9px}body.pyroShell.shellHidden #v{bottom:var(--shell-bottom)!important}
  #pyroShellHeader{gap:8px;padding:6px 8px}#pyroShellHeader .brand{font-size:12px}#pyroShellHeader #fbtn{flex-wrap:nowrap!important;overflow-x:auto}#pyroShellHeader #fbtn button{white-space:nowrap}#pyroShellTimeline{padding:8px;gap:6px}#shellClock{font-size:11px}}
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand">PyroCast</span>';
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"></div><output id="shellClock"></output>';
  document.body.append(header,sidebar,timeline);move($('fbtn'),header);
+ const splitter=document.createElement('div');splitter.id='shellResize';splitter.setAttribute('aria-label','패널 너비 조절');splitter.title='드래그하여 패널 너비 조절';sidebar.prepend(splitter);
+ let resizeFrame=null;const requestResize=()=>{if(resizeFrame===null)resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;window.dispatchEvent(new Event('resize'));});};
+ cleanups.push(bindResizeHandle(splitter,{axis:'x',value:()=>sidebar.getBoundingClientRect().width,setValue:n=>{document.body.style.setProperty('--shell-side',n+'px');requestResize();},limits:()=>[280,Math.min(640,innerWidth*.7)]}),()=>{if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);document.body.style.removeProperty('--shell-side');});
+ const toggle=document.createElement('button');toggle.id='shellPanelToggle';toggle.type='button';toggle.setAttribute('aria-controls','pyroShellSidebar');toggle.innerHTML='<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="3" width="16" height="14" rx="3"/><path d="M12 3v14"/></svg>';document.body.append(toggle);
+ function toggleLabel(){const hidden=sidebar.hidden;toggle.title=hidden?'패널 펼치기':'패널 숨기기';toggle.setAttribute('aria-label',toggle.title);toggle.setAttribute('aria-expanded',String(!hidden));}
+ listen(toggle,'click',()=>{sidebar.hidden=!sidebar.hidden;document.body.classList.toggle('shellHidden',sidebar.hidden);if(!sidebar.hidden&&innerWidth<=860){document.body.classList.add('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded','true');$('shellMobileToggle').textContent='패널 접기';}toggleLabel();requestResize();});toggleLabel();cleanups.push(()=>toggle.remove());
  const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
@@ -90,5 +102,5 @@ export function createPanelShell({panel,store,buildingFloors=[]}){
  cleanups.push(store.subscribe('playback',sync),store.subscribe('result',marks),store.subscribe('floor',floors));sync();marks();floors();
  const sizes=()=>{document.body.style.setProperty('--shell-top',header.getBoundingClientRect().height+'px');document.body.style.setProperty('--shell-bottom',timeline.getBoundingClientRect().height+'px');};
  let sizeFrame=null;const ro=new ResizeObserver(()=>{if(sizeFrame===null)sizeFrame=requestAnimationFrame(()=>{sizeFrame=null;sizes();});});ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>{ro.disconnect();if(sizeFrame!==null)cancelAnimationFrame(sizeFrame);});
- return {dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
+ return {dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded','shellHidden');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
 }

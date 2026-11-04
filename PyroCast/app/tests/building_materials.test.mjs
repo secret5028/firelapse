@@ -47,3 +47,21 @@ const settings=createStore();assert.equal(settings.get('realView').buildingTrans
 for(const x of [-1,1.1,NaN,'0.5'])assert.throws(()=>settings.dispatch('realView/set',{buildingTransparency:x}));
 settings.dispatch('realView/set',{buildingTransparency:.9});assert.equal(settings.get('realView').buildingTransparency,.9);
 console.log(JSON.stringify({cycles:50,material_identity:true,restore_color_opacity_transparent:true,owned_resources:0,disposedMaterials,disposedGeometry,subscriptions}));
+
+// Basement opacity must not bleed into the above-ground floor's shared material.
+const underground=new T.Group();underground.name='B1';
+const basementMesh=new T.Mesh(geometry,shared);basementMesh.name='B1_W1';underground.add(basementMesh);
+const both={source_hash:'b'.repeat(64),floors:[{name:'3F'},{name:'B1'}]};
+const bothAsset=readLegacyBuildingSource({building:both,groups:[floor,underground],sourceHash:both.source_hash});
+let released=0;
+for(let i=0;i<50;i++){
+ const layer=new BuildingLayer(T,{geometryFor:()=>bothAsset});layer.mount(new T.Scene(),store);
+ layer.setData({building:both,floor:{floor_id:null}});
+ const material=layer.sourceObjects.get(basementMesh).material;material.addEventListener('dispose',()=>released++);
+ assert.notEqual(material,shared);assert.equal(shared.opacity,.35);assert.equal(material.opacity,.35*.8);
+ layer.setData({building:both,floor:{floor_id:'B1'}});assert.equal(material.opacity,shared.opacity);
+ layer.setData({building:both,floor:{floor_id:null},realView:{buildingTransparency:1}});assert.equal(material.opacity,0);
+ layer.dispose();assert.equal(layer.basementMaterials.size,0);assert.equal(shared.opacity,.35);
+}
+assert.equal(released,50);assert.equal(disposedMaterials,0);assert.equal(disposedGeometry,0);assert.equal(subscriptions,0);
+console.log('basement: shared-material isolation, floor restoration and 50 disposal cycles PASS');

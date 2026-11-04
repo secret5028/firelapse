@@ -50,38 +50,6 @@
       "review_url": null
     },
     {
-      "id": "hotel-original",
-      "label": "파크마린호텔 · 과거 원본",
-      "path": "data/model-library/hotel-original/building.json",
-      "source_path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\building.json",
-      "source_kind": "cad",
-      "source_evidence": "층별 src .dxf 및 CAD3D 인계 기록",
-      "sha256": "cad9cd55996b2a4a0a1134614f9df7542d99e20e3f2253f64b72bb983213cea7",
-      "original_sha256": "cad9cd55996b2a4a0a1134614f9df7542d99e20e3f2253f64b72bb983213cea7",
-      "floor_count": 14,
-      "room_count": 257,
-      "simulation_enabled": false,
-      "execution_note": "저장 모델 열람 · 계산 실행 연결 없음",
-      "operation_url": null,
-      "review_url": null
-    },
-    {
-      "id": "office",
-      "label": "신축 업무시설 · 과거 CAD",
-      "path": "data/model-library/office/building.json",
-      "source_path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2026-00000010\\building.json",
-      "source_kind": "cad",
-      "source_evidence": "층별 src .dxf 및 CAD3D 인계 기록",
-      "sha256": "0bc6133af8efecbb09df4baaca0ff1b7099fa1cb178efde3b1e3c5c4021c4498",
-      "original_sha256": "0bc6133af8efecbb09df4baaca0ff1b7099fa1cb178efde3b1e3c5c4021c4498",
-      "floor_count": 9,
-      "room_count": 248,
-      "simulation_enabled": false,
-      "execution_note": "저장 모델 열람 · 계산 실행 연결 없음",
-      "operation_url": null,
-      "review_url": null
-    },
-    {
       "id": "showroom",
       "label": "견본주택 · 과거 CAD",
       "path": "data/model-library/showroom/building.json",

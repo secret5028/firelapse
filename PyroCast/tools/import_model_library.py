@@ -24,7 +24,7 @@ def main():
     add('ganghwa','강화 공장',ROOT/'simulation/results/github-publish-20261026/PyroCast/cad-project/building.json','cad','기존 CAD 운영 building.json','http://127.0.0.1:8780/model.html',True)
     add('parkmarine','파크마린호텔 · 보정본',ROOT/'data/parkmarine-hotel/building.json','cad','원본 DWG·층별 DXF 및 공리 보정 기록',review_url='http://127.0.0.1:8840/data/parkmarine-hotel/review.html')
     add('wando','완도 저온창고',ROOT/'data/wando-coldstore/operating-building.json','reconstructed','C11 자료·사진·명세 기반 재구성, 기존 입력/결과 보존','http://127.0.0.1:8832/data/wando-coldstore/model.html')
-    for id,label,folder in [('hotel-original','파크마린호텔 · 과거 원본','28-200-2018-00000088'),('office','신축 업무시설 · 과거 CAD','28-200-2026-00000010'),('showroom','견본주택 · 과거 CAD','28-710-2025-00000016')]:
+    for id,label,folder in [('showroom','견본주택 · 과거 CAD','28-710-2025-00000016')]:
         add(id,label,OLD/'CAD3D/out'/folder/'building.json','cad','층별 src .dxf 및 CAD3D 인계 기록')
     src=OLD/'output/model-trial/final-state.json';state=read(src)
     scan={'schema':'pyrocast.scan-view/1','model_provenance':{'source_kind':'scan','simulation_allowed':False},

@@ -6,7 +6,7 @@ from model_library import entries,model_path,catalog,execution_policy,RUN_PATHS
 
 class ModelLibraryTest(unittest.TestCase):
  def test_all_registered_models_load(self):
-  rows=entries();self.assertEqual(8,len(rows));self.assertEqual(len(rows),len({r['id'] for r in rows}))
+  rows=entries();self.assertEqual(6,len(rows));self.assertEqual(len(rows),len({r['id'] for r in rows}))
   for row in rows:
    b=json.loads(model_path(row).read_text('utf8'));self.assertEqual(row['floor_count'],len(b['floors']))
  def test_scans_never_execute(self):

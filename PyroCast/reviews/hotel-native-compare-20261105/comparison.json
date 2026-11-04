@@ -1,0 +1,2865 @@
+{
+  "complete": false,
+  "compared_horizon_s": 719.999917192,
+  "native_safe_horizon_s": 725.0,
+  "source": "same frozen raw input and identical r8 manifest; different solvers and ignition observables",
+  "native_run": {
+    "state": "incomplete",
+    "wall_s": 1800.875,
+    "native_report": {
+      "complete": false,
+      "error": "CFAST 미완료: wall_time_budget; 마지막 진행 약 735/3600초. 부분 결과는 완료로 저장하지 않습니다.",
+      "native_time_s": 735.0,
+      "native_wall_seconds": 1800.4059999999881,
+      "status_sample_statistics": {
+        "samples": 95,
+        "positive_min_dt_s": 0.0001087,
+        "positive_median_dt_s": 0.03005,
+        "last": {
+          "native_time_s": 735.0,
+          "dt_s": 0.002714,
+          "steps": 38574
+        },
+        "basis": "distinct snapshots at 1 wall second, NOT every solver step"
+      },
+      "engine_sha256": "317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9"
+    },
+    "source_unchanged": {
+      "input.json": true,
+      "rule_manifest.json": true,
+      "result.json": true,
+      "playback.json": true
+    },
+    "retry": false
+  },
+  "lite_wall_s": 58.062000000005355,
+  "lite_integration_s": 51.41892110000481,
+  "conditions_sha256": "5fb4a0a5af96d3b7253448dc6dd47d60b6d2f083d2a69796f64a33dde1801ba5",
+  "native_last_s": 719.999917192,
+  "lite_last_s": 720.0,
+  "shared_FGI_BD_series_verified": 46,
+  "fixed_opening_series_verified": 54,
+  "native_burning": [
+    "CAD_5F_R16"
+  ],
+  "lite_burning": [
+    "CAD_5F_R16"
+  ],
+  "rooms": [
+    {
+      "room": "CAD_5F_R0",
+      "native": {
+        "T_upper_C": {
+          "value": 74.0307635311,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 32.8058609034,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.008056353081249783,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.64028990272884,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.056353081249783,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.8458318998,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 78.34382541343604,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.8,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00040096514056994136,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.06646001102062,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.6456166061164668,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5417379552721069,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.40096514056994137,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.441503918048653,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4342634718428143,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R1",
+      "native": {
+        "T_upper_C": {
+          "value": 229.869173998,
+          "time_s": 570.0
+        },
+        "T_lower_C": {
+          "value": 67.0234820127,
+          "time_s": 605.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.027053580544265324,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 1474.88203444,
+          "time_s": 595.0
+        },
+        "FO": {
+          "value": 7.088835969733993,
+          "time_s": 595.0
+        },
+        "FGI": {
+          "value": 35.01189972836982,
+          "time_s": 665.0
+        },
+        "BD": {
+          "value": 26.80302874883002,
+          "time_s": 700.0
+        },
+        "O2_upper_min_percent": 11.2444362555,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 150.79631519534462,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 420.4161986108086,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 33.1,
+          "time_s": 690.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.04474253708500053,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 1743.0194914789422,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 8.377605109167146,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 65.95420384113531,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 44.742537085000535,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 0.006323374918461805,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 108.51262898327904,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "oxygen",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R2",
+      "native": {
+        "T_upper_C": {
+          "value": 74.5300277382,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 32.9639829722,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.007846566604074953,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.36647447761684,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 7.846566604074952,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.8767554852,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 78.82657212551226,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.8,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0003960722502520177,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 29.90055119536685,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.6479978226629304,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5352665602200294,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.39607225025201764,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.460056652038121,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.431784924855428,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R3",
+      "native": {
+        "T_upper_C": {
+          "value": 63.6999886687,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 28.6755882508,
+          "time_s": 600.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0086574441836232,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 11.384938572770249,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.6574441836232,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 13.0941453753,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 67.37503978970517,
+          "time_s": 720.0
+        },
+        "T_lower_C": {
+          "value": 24.1,
+          "time_s": 690.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00016936709230737517,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 3.8999612425902885,
+          "time_s": 720.0
+        },
+        "FO": {
+          "value": 0.2534958275511017,
+          "time_s": 720.0
+        },
+        "FGI": {
+          "value": 0.22727615370697757,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.16936709230737515,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 1.5781327889308874,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.04039582406415272,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R4",
+      "native": {
+        "T_upper_C": {
+          "value": 100.118840729,
+          "time_s": 575.0
+        },
+        "T_lower_C": {
+          "value": 53.1302094029,
+          "time_s": 600.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.016625781112719985,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 18.03257624941221,
+          "time_s": 685.0
+        },
+        "BD": {
+          "value": 16.262682167799998,
+          "time_s": 715.0
+        },
+        "O2_upper_min_percent": 12.708453839399999,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "temperature"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 249.19099170032905,
+          "time_s": 720.0
+        },
+        "T_lower_C": {
+          "value": 27.3,
+          "time_s": 660.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.002205435509967419,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 5.194129159803726,
+          "time_s": 720.0
+        },
+        "FO": {
+          "value": 0.29500837249503203,
+          "time_s": 720.0
+        },
+        "FGI": {
+          "value": 3.4620798396965693,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 2.2054355099674186,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 0.0707407128987139,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.06676442028391663,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R5",
+      "native": {
+        "T_upper_C": {
+          "value": 120.593317141,
+          "time_s": 570.0
+        },
+        "T_lower_C": {
+          "value": 59.1696927416,
+          "time_s": 600.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.017448933105909198,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 19.7986230914,
+          "time_s": 690.0
+        },
+        "BD": {
+          "value": 17.448933105909198,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.6975798373,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "temperature",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 324.2239496540992,
+          "time_s": 720.0
+        },
+        "T_lower_C": {
+          "value": 30.5,
+          "time_s": 660.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.005050328157316194,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.591371499214087,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 0.7783584186022411,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 8.52544856434549,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 5.050328157316193,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 0.0679935801321334,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4593823521453312,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R6",
+      "native": {
+        "T_upper_C": {
+          "value": 74.4849228958,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 33.223330498,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00823204860412595,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.872629261851289,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.23204860412595,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.824733088,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 79.31314748257967,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.8,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00041524182982746255,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 29.94215457607594,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.6548393115758433,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.561432537252336,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.4152418298274625,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.3209926741505305,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4326217750435764,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R7",
+      "native": {
+        "T_upper_C": {
+          "value": 74.6434561903,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 33.4914592004,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.008471309135084235,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 11.187426650477551,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.471309135084235,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.7948841304,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 79.90517251651767,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.9,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0004296151188947041,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 29.913156262794068,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.661324893531572,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5811490547447674,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.4296151188947041,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.2134475598826677,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4323627394679163,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R8",
+      "native": {
+        "T_upper_C": {
+          "value": 20.0,
+          "time_s": 0.0
+        },
+        "T_lower_C": {
+          "value": 20.0,
+          "time_s": 0.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "BD": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "O2_upper_min_percent": 20.4914220136,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 20.000000000000057,
+          "time_s": 620.0
+        },
+        "T_lower_C": {
+          "value": 20.0,
+          "time_s": 0.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "BD": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "O2_upper_min_percent": 21.025000000000002,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R9",
+      "native": {
+        "T_upper_C": {
+          "value": 67.4700725958,
+          "time_s": 600.0
+        },
+        "T_lower_C": null,
+        "fuel_upper_fraction": {
+          "value": 0.0074102967119620755,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": null,
+        "FGI": {
+          "value": 9.765672102900666,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 7.410296711962075,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 13.847502694800001,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 0
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 85.1355853807039,
+          "time_s": 330.0
+        },
+        "T_lower_C": {
+          "value": 23.8,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00025206073429012314,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 32.27324397440114,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.676432534507567,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.3384081410772533,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.2520607342901231,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 4.635897525619011,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.46348771483891527,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R10",
+      "native": {
+        "T_upper_C": {
+          "value": 77.189883594,
+          "time_s": 590.0
+        },
+        "T_lower_C": null,
+        "fuel_upper_fraction": {
+          "value": 0.01052269979871113,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": null,
+        "FGI": {
+          "value": 13.891266002692932,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 10.52269979871113,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 13.234745943599998,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 0
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 90.50250848574308,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 25.2,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.000487988766592288,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.490146759170422,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.870296358433728,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.6659136415637643,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.48798876659228796,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 2.8747957752073967,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4423465770815832,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R11",
+      "native": {
+        "T_upper_C": {
+          "value": 73.3180927932,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 32.3730572176,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.008108296655806984,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.705981392555374,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.108296655806983,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.833247242099999,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 77.29144697011861,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.7,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00039536075572092587,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.297353391520247,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.637502478916758,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.533789224490312,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.3953607557209258,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.509195448093061,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.43751677212155454,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R12",
+      "native": {
+        "T_upper_C": {
+          "value": 74.5984136356,
+          "time_s": 590.0
+        },
+        "T_lower_C": {
+          "value": 43.032891456,
+          "time_s": 600.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.013045148377226763,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 15.075947426333332,
+          "time_s": 705.0
+        },
+        "BD": {
+          "value": 13.045148377226761,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.2708470359,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "temperature",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 71.97952159825422,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 24.2,
+          "time_s": 690.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0006763406269005455,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 0.9089354455845617,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.6763406269005454,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 0.20891859684372474,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R13",
+      "native": {
+        "T_upper_C": {
+          "value": 27.0461446313,
+          "time_s": 600.0
+        },
+        "T_lower_C": null,
+        "fuel_upper_fraction": {
+          "value": 0.0003527487723229866,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": null,
+        "FGI": {
+          "value": 0.45722053752618264,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 0.35274877232298657,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 18.3580224747,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 0
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 23.9527497888746,
+          "time_s": 650.0
+        },
+        "T_lower_C": {
+          "value": 20.3,
+          "time_s": 690.0
+        },
+        "fuel_upper_fraction": {
+          "value": 3.140084080876379e-05,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 0.04068575524065012,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.03140084080876379,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 13.705439115773027,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R14",
+      "native": {
+        "T_upper_C": {
+          "value": 129.928083434,
+          "time_s": 575.0
+        },
+        "T_lower_C": {
+          "value": 55.4655150058,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.022360245059187017,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 23.892298431033336,
+          "time_s": 675.0
+        },
+        "BD": {
+          "value": 20.604091617433333,
+          "time_s": 695.0
+        },
+        "O2_upper_min_percent": 11.372112225,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "temperature",
+          "BD": "temperature"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 163.5187771517858,
+          "time_s": 650.0
+        },
+        "T_lower_C": {
+          "value": 27.5,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0030944592797116613,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 14.347119073025652,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.447156556854919,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 4.349030019722173,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 3.094459279711661,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 0.02402516407042128,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.21492489153464425,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R15",
+      "native": {
+        "T_upper_C": {
+          "value": 74.4074334813,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 33.1527583761,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.008201811529746547,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.832644252122813,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.201811529746546,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.8283236412,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 79.14686332361771,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.8,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0004127621981943825,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 29.962635624826767,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.6532478580811305,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5580106671497018,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.4127621981943825,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.3415612800271983,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4328931896427016,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R16",
+      "native": {
+        "T_upper_C": {
+          "value": 460.364249413,
+          "time_s": 405.0
+        },
+        "T_lower_C": {
+          "value": 173.262534903,
+          "time_s": 495.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.11042641992283886,
+          "time_s": 650.0
+        },
+        "actual_HRR_kW": {
+          "value": 3308.175,
+          "time_s": 270.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 76.72737490216667,
+          "time_s": 405.0
+        },
+        "FGI": {
+          "value": 86.72957917766666,
+          "time_s": 565.0
+        },
+        "BD": {
+          "value": 74.786747838,
+          "time_s": 620.0
+        },
+        "O2_upper_min_percent": 0.8568519361509999,
+        "indices": {
+          "FO": {
+            "first_70_s": 270.0,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": 555.0,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": 605.0,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": true,
+        "actual_source_energy_MJ": 1243.4431936505437,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "temperature",
+          "FGI": "temperature",
+          "BD": "temperature"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 805.5223840967845,
+          "time_s": 470.0
+        },
+        "T_lower_C": {
+          "value": 33.8,
+          "time_s": 690.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.09713692271604003,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 3308.175000000004,
+          "time_s": 270.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 134.25373068279742,
+          "time_s": 470.0
+        },
+        "FGI": {
+          "value": 78.13066512662445,
+          "time_s": 690.0
+        },
+        "BD": {
+          "value": 74.92231401843732,
+          "time_s": 700.0
+        },
+        "O2_upper_min_percent": -7.863177248099463e-05,
+        "indices": {
+          "FO": {
+            "first_70_s": 190.0,
+            "first_100_s": 230.0,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": 680.0,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": 690.0,
+            "first_100_s": null,
+            "known_samples": 70
+          }
+        },
+        "burning": true,
+        "actual_source_energy_MJ": 1571.3061891472832,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "temperature",
+          "FGI": "temperature",
+          "BD": "temperature"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R17",
+      "native": {
+        "T_upper_C": {
+          "value": 103.70763742,
+          "time_s": 580.0
+        },
+        "T_lower_C": {
+          "value": 52.951998704,
+          "time_s": 600.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.015044063143978777,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 17.745773013675798,
+          "time_s": 700.0
+        },
+        "BD": {
+          "value": 15.044063143978775,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.2124577526,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 145.25102620611688,
+          "time_s": 720.0
+        },
+        "T_lower_C": {
+          "value": 27.9,
+          "time_s": 660.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0024827776983595996,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.281691630305225,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.3253652172708739,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 3.552565632172991,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 2.4827776983595995,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 0.1306546872609059,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4418493545623284,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R18",
+      "native": {
+        "T_upper_C": {
+          "value": 71.1210220253,
+          "time_s": 600.0
+        },
+        "T_lower_C": {
+          "value": 29.8982833317,
+          "time_s": 600.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.007053202628495896,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 9.313108708890237,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 7.053202628495896,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.988343444700002,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 72.81951612403844,
+          "time_s": 290.0
+        },
+        "T_lower_C": {
+          "value": 23.4,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0003238046531883198,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 31.006057911458456,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.5862375536905078,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.43556612252277993,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.32380465318831975,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 4.13139385423555,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4465204171349629,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R19",
+      "native": {
+        "T_upper_C": {
+          "value": 74.4746713174,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 33.2147887238,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.008229124654718045,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.86875292954492,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.229124654718044,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.825074671100001,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 79.29267219612132,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.8,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0004149679524953497,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 29.944976354604023,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.654651482655312,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5610538130120767,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.41496795249534973,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.323308440908009,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.43265971730016367,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R20",
+      "native": {
+        "T_upper_C": {
+          "value": 73.5064401922,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 32.1666588457,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.007672842868279331,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.13483140886924,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 7.672842868279331,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.897325459000001,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 76.98082380463632,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.7,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00037623192452837013,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.20474612979559,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.631285994785999,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5077806387659853,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.3762319245283701,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.6471279864782087,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.435947309296628,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R21",
+      "native": {
+        "T_upper_C": {
+          "value": 73.5064401922,
+          "time_s": 595.0
+        },
+        "T_lower_C": {
+          "value": 32.1666588457,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.007672842868279331,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 10.13483140886924,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 7.672842868279331,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.897325459000001,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 76.98082349942052,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 23.7,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.00037622939788866213,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 30.20453613088736,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.6312746532479356,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.5077772332554805,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.3762293978886621,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 3.6471279847889693,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.4359451689150313,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    },
+    {
+      "room": "CAD_5F_R22",
+      "native": {
+        "T_upper_C": {
+          "value": 82.0616346796,
+          "time_s": 590.0
+        },
+        "T_lower_C": {
+          "value": 39.0535581935,
+          "time_s": 610.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.0089173510003165,
+          "time_s": 719.999917192
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FO": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "FGI": {
+          "value": 11.798515926734126,
+          "time_s": 719.999917192
+        },
+        "BD": {
+          "value": 8.9173510003165,
+          "time_s": 719.999917192
+        },
+        "O2_upper_min_percent": 12.7003264836,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 145
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.0,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      },
+      "lite": {
+        "T_upper_C": {
+          "value": 93.65261563357654,
+          "time_s": 660.0
+        },
+        "T_lower_C": {
+          "value": 24.7,
+          "time_s": 700.0
+        },
+        "fuel_upper_fraction": {
+          "value": 0.000541285245269907,
+          "time_s": 720.0
+        },
+        "actual_HRR_kW": {
+          "value": 0.0,
+          "time_s": 0.0
+        },
+        "received_jet_kW": {
+          "value": 43.29440901057991,
+          "time_s": 700.0
+        },
+        "FO": {
+          "value": 1.756343311564133,
+          "time_s": 700.0
+        },
+        "FGI": {
+          "value": 0.7390788985706758,
+          "time_s": 720.0
+        },
+        "BD": {
+          "value": 0.541285245269907,
+          "time_s": 720.0
+        },
+        "O2_upper_min_percent": 2.2689040609892657,
+        "indices": {
+          "FO": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "FGI": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          },
+          "BD": {
+            "first_70_s": null,
+            "first_100_s": null,
+            "known_samples": 73
+          }
+        },
+        "burning": false,
+        "actual_source_energy_MJ": 0.0,
+        "received_jet_energy_MJ": 0.6260416145686123,
+        "peak_bottleneck": {
+          "FO": "fuel",
+          "FGI": "fuel",
+          "BD": "fuel"
+        }
+      }
+    }
+  ],
+  "limits": [
+    "one fixed ventilation scenario, not all hotel conditions",
+    "native plate triggers versus lite gas-temperature triggers",
+    "stock TUHC and lite effective unburned fuel are model quantities, not measured composition",
+    "unknown zero-upper-mass samples and omitted native single-zone lower-layer fields preserved as null; no interpolation in threshold times",
+    "native HRR is per fire, DJET per receiving compartment; mass sum excludes duplicate diagnostics"
+  ]
+}

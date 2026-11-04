@@ -1,0 +1,24 @@
+{
+  "lite_source": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\overnight-20261104\\parkmarine\\5F",
+  "source_hashes": {
+    "input.json": "ca15081e8d1d64e4762f28cc4502d47f4e079ed0ebd203b57ecc955dc828712b",
+    "rule_manifest.json": "6fa25fb1548d974f3523cbff433bb8174d40639d0f3342ba81ee000ca4eb8e0f",
+    "result.json": "cb4f3827c55d3e6077f5f9f5c8eacef05f1b20720babda4a353d8ef00f51b1b8",
+    "playback.json": "033e357fe7e337f080f9319cefe9d9c96cdd083bdae362ad5944e22489a20bc0"
+  },
+  "native_engine": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\build\\baseline\\cfast-baseline.exe",
+  "engine_sha256": "317cd8d1ae914152effe8733fe9fd49e0dc7284acdb041c7d9a57c77eb3467f9",
+  "manifest_identical": true,
+  "rooms": 23,
+  "sources": 19,
+  "origin": "CAD_5F_R16",
+  "duration_s": 3600,
+  "native_budget_s": 1800,
+  "opening_state": "input_default, exact frozen source",
+  "window_breakage": false,
+  "native_runs": 1,
+  "baseline_runs": 0,
+  "lite_reruns": 0,
+  "trigger_difference": "native r8 plate_sensor; lite upper_layer_temperature",
+  "conditions_sha256": "5fb4a0a5af96d3b7253448dc6dd47d60b6d2f083d2a69796f64a33dde1801ba5"
+}

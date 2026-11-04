@@ -5,7 +5,7 @@ export function groundReferenceSpec(building){
  const points=(floor.slab||[]).flatMap(p=>p.o||p);if(!points.length)return null;
  const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
- const size=Math.ceil((Math.max(x1-x0,y1-y0)+20)/2)*2;
+ const size=Math.ceil((Math.max(x1-x0,y1-y0)+20)*1.5/2)*2;
  return {floor:floor.name,x:(x0+x1)/2,y:(y0+y1)/2,z:floor.z,size,divisions:size/2};
 }
 export function createGroundReference(T,building){

@@ -511,8 +511,122 @@ function createFuelSettingsPanel({store,onSaved,available=true}){
 return {createFuelSettingsPanel};
 })();
 
-// app/web/scene/picking.js
+// app/web/layers/risk_geometry.js
 const __module12=(()=>{
+// Legacy display geometry only; no condition or simulation calculations.
+function boundarySegments(room,original){
+  // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
+  const edges=polys=>polys.flatMap(p=>p.o.map((a,i)=>[a,p.o[(i+1)%p.o.length]]).filter(([a,b])=>Math.hypot(b[0]-a[0],b[1]-a[1])>1e-7));
+  const cellEdges=edges(room.cad_polys);if(!original)return cellEdges.map(([a,b])=>({a,b}));
+  const outerEdges=edges(original.polys),segments=[];
+  // Keep only overlap with the original CAD perimeter. Virtual cell cuts,
+  // including their vertical uprights, are never drawn as room boundaries.
+  for(const [a,b] of cellEdges){
+   const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;
+   for(const [c,d] of outerEdges){
+    if(Math.abs((c[0]-a[0])*uy-(c[1]-a[1])*ux)>.002||Math.abs((d[0]-a[0])*uy-(d[1]-a[1])*ux)>.002)continue;
+    const tc=(c[0]-a[0])*ux+(c[1]-a[1])*uy,td=(d[0]-a[0])*ux+(d[1]-a[1])*uy;
+    const lo=Math.max(0,Math.min(tc,td)),hi=Math.min(len,Math.max(tc,td));if(hi-lo<1e-6)continue;
+    const q=[a[0]+lo*ux,a[1]+lo*uy],r=[a[0]+hi*ux,a[1]+hi*uy];
+    segments.push({a:q,b:r});
+   }
+  }
+  return segments;
+ }
+function joinedSelectionRibbons(polygon,inset=.24,halfWidth=.035){
+ const inRing=(p,ring)=>{let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){
+  const a=ring[i],b=ring[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;
+ }return inside;};
+ const inside=p=>inRing(p,polygon.o)&&!(polygon.h||[]).some(h=>inRing(p,h));
+ const result=[];
+ for(const [ri,raw] of [polygon.o,...(polygon.h||[])].entries()){
+  const ring=raw.filter((p,i)=>!i||Math.hypot(p[0]-raw[i-1][0],p[1]-raw[i-1][1])>1e-7);
+  if(ring.length>1&&Math.hypot(ring[0][0]-ring.at(-1)[0],ring[0][1]-ring.at(-1)[1])<1e-7)ring.pop();
+  if(ring.length<3)continue;
+  let area=0;for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length];area+=a[0]*b[1]-b[0]*a[1];}
+  const sign=(area>=0?1:-1)*(ri===0?1:-1);
+  const normals=ring.map((a,i)=>{const b=ring[(i+1)%ring.length],len=Math.hypot(b[0]-a[0],b[1]-a[1]);return [-(b[1]-a[1])/len*sign,(b[0]-a[0])/len*sign];});
+  const joins=ring.map((p,i)=>{const a=normals[(i+ring.length-1)%ring.length],b=normals[i],den=1+a[0]*b[0]+a[1]*b[1];
+   let x=den>1e-6?(a[0]+b[0])/den:b[0],y=den>1e-6?(a[1]+b[1])/den:b[1];
+   const length=Math.hypot(x,y);if(length>4){x*=4/length;y*=4/length;}return [x,y];
+  });
+  const offset=d=>ring.map((p,i)=>[p[0]+joins[i][0]*d,p[1]+joins[i][1]*d]);
+  const fits=loop=>loop.every((a,i)=>{const b=loop[(i+1)%loop.length],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/.1));
+   for(let j=0;j<=n;j++)if(!inside([a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n]))return false;return true;
+  });
+  for(let attempt=0;attempt<16;attempt++){
+   const scale=2**(-attempt/2),outer=offset((inset-halfWidth)*scale),inner=offset((inset+halfWidth)*scale);
+   if(fits(outer)&&fits(inner)){result.push({outer,inner,inset:inset*scale});break;}
+  }
+ }
+ return result;
+}
+
+// Cut the existing ribbon into fixed-length dashes; no shader or line-width change.
+function dashedRibbonVertices(ribbons,dash=.4,gap=.2){
+ const vertices=[],period=dash+gap;
+ if(!(dash>0&&gap>0))throw Error('Positive dash and gap required');
+ for(const {outer,inner} of ribbons){let distance=0;
+  for(let i=0;i<outer.length;i++){
+   const j=(i+1)%outer.length,a=outer[i],b=outer[j],c=inner[i],d=inner[j];
+   const length=Math.hypot((b[0]+d[0]-a[0]-c[0])/2,(b[1]+d[1]-a[1]-c[1])/2);
+   if(length<1e-8)continue;
+   const point=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
+   for(let k=Math.floor(distance/period);k*period<distance+length;k++){
+    const lo=Math.max(distance,k*period),hi=Math.min(distance+length,k*period+dash);
+    if(hi<=lo)continue;
+    const u=(lo-distance)/length,v=(hi-distance)/length;
+    const quad=[point(a,b,u),point(a,b,v),point(c,d,v),point(c,d,u)];
+    for(const index of [0,1,2,0,2,3])vertices.push(...quad[index],0);
+   }
+   distance+=length;
+  }
+ }
+ return vertices;
+}
+
+return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
+})();
+
+// app/web/layers/selection_outline.js
+const __module13=(()=>{
+const {joinedSelectionRibbons}=__module12;
+
+// Both bands share the same adaptive joins, including narrow and concave rooms.
+function selectionOutlineVertices(polygons,z){
+ const backing=[],foreground=[];
+ for(const p of polygons)for(const r of joinedSelectionRibbons(p,.24,.08)){
+  const mix=(a,b,t)=>a.map((v,i)=>v+(b[i]-v)*t);
+  const outer=r.outer.map((p,i)=>mix(p,r.inner[i],.1875));
+  const inner=r.outer.map((p,i)=>mix(p,r.inner[i],.8125));
+  for(let i=0;i<outer.length;i++){
+   const j=(i+1)%outer.length;
+   for(const [target,o,n] of [[backing,r.outer,r.inner],[foreground,outer,inner]]){
+    const quad=[o[i],o[j],n[j],n[i]];
+    for(const k of [0,1,2,0,2,3])target.push(...quad[k],z+.08);
+   }
+  }
+ }
+ return {backing,foreground};
+}
+function selectionOutlineMaterials(T,own){
+ return ['#10212d','#ffffff'].map(color=>own(new T.MeshBasicMaterial({color,side:T.DoubleSide,transparent:true,opacity:.95,depthTest:false,depthWrite:false})));
+}
+function selectionOutlineGeometry(T,own,polygons,z){
+ const vertices=selectionOutlineVertices(polygons,z);
+ return [vertices.backing,vertices.foreground].map(pts=>{const g=own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(pts,3));return g;});
+}
+function selectionOutlineMesh(T,geometries,materials){
+ const group=new T.Group();
+ geometries.forEach((g,i)=>{const mesh=new T.Mesh(g,materials[i]);mesh.renderOrder=39+i;mesh.raycast=()=>{};group.add(mesh);});
+ return group;
+}
+
+return {selectionOutlineVertices,selectionOutlineMaterials,selectionOutlineGeometry,selectionOutlineMesh};
+})();
+
+// app/web/scene/picking.js
+const __module14=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -520,11 +634,12 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/fuel_quantity.js
-const __module13=(()=>{
+const __module15=(()=>{
+const {selectionOutlineMaterials,selectionOutlineGeometry,selectionOutlineMesh}=__module13;
 const {EmptyLayer}=__module7;
 const {contains}=__module6;
 const {resolveFuel}=__module10;
-const {ROOM_PICK_LAYER}=__module12;
+const {ROOM_PICK_LAYER}=__module14;
 // Symbols describe quantity, not physical furniture or extra simulation fuel units.
 function distanceToSegment(p,a,b){const dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/(dx*dx+dy*dy||1)));return Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy);}
 function fuelPositions(polys){
@@ -542,12 +657,11 @@ class FuelQuantityLayer extends EmptyLayer{
   for(const f of this.building.floors){const units=[];for(const r of f.rooms){const id=`CAD_${f.name}_${r.id}`,setting=rows.get(id);if(!setting?.editable)continue;for(const p of fuelPositions(r.polys))units.push({...p,id,height:f.h,z:f.z});}if(!units.length)continue;const mesh=new T.InstancedMesh(geo,mat,units.length);mesh.raycast=()=>{};mesh.name='fuel-quantity-'+f.name;mesh.renderOrder=12;mesh.frustumCulled=false;this.own(mesh);this.group.add(mesh);this.floors.push({floor:f.name,mesh,units});}
  }
  buildPicks(data,adapter){const T=this.THREE;this.picks=[];const known=new Set((adapter?.floors||[]).flatMap(f=>f.rooms.map(r=>r.room_id))),ids=new Set(data.rooms.filter(r=>r.editable).map(r=>r.id));
-  const mat=this.own(new T.MeshBasicMaterial({side:T.DoubleSide,transparent:true,opacity:0,depthWrite:false})),lineMat=this.own(new T.LineBasicMaterial({color:'#42e8ff',transparent:true,opacity:.95,depthTest:false,depthWrite:false}));
+  const mat=this.own(new T.MeshBasicMaterial({side:T.DoubleSide,transparent:true,opacity:0,depthWrite:false})),lineMaterials=selectionOutlineMaterials(T,r=>this.own(r));
   for(const f of this.building.floors)for(const r of f.rooms){const id=`CAD_${f.name}_${r.id}`;if(!ids.has(id)||known.has(id))continue;
    const shapes=(r.polys||[]).map(p=>{const s=new T.Shape(p.o.map(v=>new T.Vector2(...v)));for(const h of p.h||[])s.holes.push(new T.Path(h.map(v=>new T.Vector2(...v))));return s;});
    const pick=new T.Mesh(this.own(new T.ShapeGeometry(shapes)),mat);pick.position.z=f.z+.07;pick.layers.set(ROOM_PICK_LAYER);pick.userData={roomId:id,liteRoom:null,floorId:f.name};this.group.add(pick);
-   const pts=[];for(const p of r.polys||[])for(let i=0;i<p.o.length;i++)for(const v of [p.o[i],p.o[(i+1)%p.o.length]])pts.push(v[0],v[1],f.z+.08);
-   const geo=this.own(new T.BufferGeometry());geo.setAttribute('position',new T.Float32BufferAttribute(pts,3));const line=new T.LineSegments(geo,lineMat);line.renderOrder=40;line.raycast=()=>{};this.group.add(line);this.picks.push({pick,line,id,floor:f.name});
+   const line=selectionOutlineMesh(T,selectionOutlineGeometry(T,r=>this.own(r),r.polys||[],f.z),lineMaterials);this.group.add(line);this.picks.push({pick,line,id,floor:f.name});
   }
  }
  setData(frame){super.setData(frame);const data=frame.fuelSettings?.data,draft=frame.fuelSettings?.draft||{},rebuilt=!!data&&(data.revision!==this.revision||frame.building!==this.adapter);if(rebuilt){this.build(data);this.buildPicks(data,frame.building);this.revision=data.revision;this.adapter=frame.building;}
@@ -563,7 +677,7 @@ return {fuelPositions,symbolSize,FuelQuantityLayer};
 })();
 
 // app/web/panels/explanations.js
-const __module14=(()=>{
+const __module16=(()=>{
 // Presentation-only migration. Legacy modules and their request handlers stay intact.
 const explanatoryText = text => /(?:입니다|합니다|않습니다|없습니다|아닙니다|뜻하지|표시용|계산 아님|예측 아님|확률 아님|확률이 아님|별개|별도|검토용|자동으로|전파 계산|기준이며|서로 다른|표시 효과|미연결|보는 쪽 외부 창만|도면 문틀 ·|위험 테두리:|임계값은 사용자 가정|가스 화염 표현 끔)/.test(text);
 function infoTip(text){
@@ -616,8 +730,8 @@ return {explanatoryText,infoTip,attachExplanations};
 })();
 
 // app/web/panels/building.js
-const __module15=(()=>{
-const {infoTip}=__module14;
+const __module17=(()=>{
+const {infoTip}=__module16;
 const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
 const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
 function doorCategory(row){return row.door_class==='fire'?(row.confidence==='inferred'?'inferred':['confirmed','user'].includes(row.confidence)?'confirmed':'unknown'):['ordinary','external'].includes(row.door_class)?'ordinary':'unknown';}
@@ -649,7 +763,7 @@ return {doorCategory,buildingTable,openingCounts,createBuildingPanel};
 })();
 
 // app/web/state/series_cache.js
-const __module16=(()=>{
+const __module18=(()=>{
 // One active immutable series payload, outside the observable metadata store.
 function frozenCopy(value){const data=structuredClone(value);const visit=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(visit);Object.freeze(x);}};visit(data);return data;}
 function createSeriesCache(){
@@ -662,9 +776,9 @@ return {createSeriesCache};
 })();
 
 // app/web/state/store.js
-const __module17=(()=>{
+const __module19=(()=>{
 // Pure state transitions. I/O belongs to a future boundary controller.
-const {createSeriesCache}=__module16;
+const {createSeriesCache}=__module18;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
@@ -756,7 +870,7 @@ return {createStore,seriesCache,store,legacyDispatchBridge};
 })();
 
 // app/web/adapters/read.js
-const __module18=(()=>{
+const __module20=(()=>{
 // Pure read adapters: no DOM, fetch, engine imports, defaults, or simulation.
 const copy=x=>structuredClone(x);
 const issue=(errors,code,ref,msg)=>errors.push({code,ref:String(ref),msg});
@@ -933,7 +1047,7 @@ return {snapshotHash,adaptBuilding,SERIES_MAP,indexHistoryExtrema,anyKnown,adapt
 })();
 
 // app/web/adapters/legacy_building.js
-const __module19=(()=>{
+const __module21=(()=>{
 // References are borrowed from the CAD loader, never from another display layer.
 // The three install() branches, in their original order. A colour-bearing
 // material alone is not enough: only objects touched by a branch are selected.
@@ -962,7 +1076,7 @@ return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
 // app/web/adapters/elevator_door_evidence.js
-const __module20=(()=>{
+const __module22=(()=>{
 // Generated from original CAD sliding-panel pairs. Display only; exact input hash required.
 const elevatorDoorEvidence = [
   {
@@ -2697,8 +2811,8 @@ return {elevatorDoorEvidence};
 })();
 
 // app/web/adapters/elevator_doors.js
-const __module21=(()=>{
-const {elevatorDoorEvidence}=__module20;
+const __module23=(()=>{
+const {elevatorDoorEvidence}=__module22;
 function nearElevator(opening,cores){
  const points=opening.display_span||opening.geometry_polys?.flatMap(p=>p.o)||opening.polys?.flat()||[];
  if(!points.length)return false;
@@ -2723,7 +2837,7 @@ return {nearElevator,elevatorDisplayFloor};
 })();
 
 // app/web/adapters/parkmarine_core_evidence.js
-const __module22=(()=>{
+const __module24=(()=>{
 // Generated from archived CAD floor cores; do not infer missing floors.
 const parkmarineCoreEvidence = {
   "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
@@ -3421,10 +3535,10 @@ return {parkmarineCoreEvidence};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module23=(()=>{
+const __module25=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; use recorded vertical links only.
-const {parkmarineCoreEvidence}=__module22;
+const {parkmarineCoreEvidence}=__module24;
 // Display footprints are independent of room/simulation-graph classification.
 // A matching building hash is mandatory; never stretch an axis beyond its CAD floors.
 function evidencedCoreTransport(building,floor,sourceHash,evidence=parkmarineCoreEvidence){
@@ -3478,9 +3592,9 @@ return {evidencedCoreTransport,coreTransport,readLegacyCoreSource};
 })();
 
 // app/web/adapters/legacy_openings.js
-const __module24=(()=>{
-const {elevatorDisplayFloor,nearElevator}=__module21;
-const {coreTransport,evidencedCoreTransport}=__module23;
+const __module26=(()=>{
+const {elevatorDisplayFloor,nearElevator}=__module23;
+const {coreTransport,evidencedCoreTransport}=__module25;
 // Read-only CAD-loader capability. CAD door supplements are display-only.
 function readLegacyOpeningsSource({building,groups,sourceHash}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
@@ -3499,7 +3613,7 @@ return {readLegacyOpeningsSource};
 })();
 
 // app/web/layers/wall_opening_lines.js
-const __module25=(()=>{
+const __module27=(()=>{
 // Display-only subtraction of opening interiors from CAD wall line segments.
 // Coordinates are floor-local; opening frames and wall meshes are never edited.
 function wallOpeningVolumes(floor,time=0){
@@ -3608,8 +3722,8 @@ return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,t
 })();
 
 // app/web/layers/wall_corners.js
-const __module26=(()=>{
-const {outsideWallOpeningIntervals}=__module25;
+const __module28=(()=>{
+const {outsideWallOpeningIntervals}=__module27;
 // Display geometry only: reject seams inside the union of touching wall pieces.
 const isWallMesh=o=>o.isMesh&&/(?:_wall|_door_head|_win_low|_win_head)$/.test(o.name||'');
 function isReplacedWallOutline(T,o,floor){
@@ -3655,11 +3769,11 @@ return {isWallMesh,isReplacedWallOutline,wallCornerSegments};
 })();
 
 // app/web/layers/building.js
-const __module27=(()=>{
-const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module26;
+const __module29=(()=>{
+const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module28;
 const {EmptyLayer,createEmptyLayers}=__module7;
 const {applyRenderPolicy}=__module2;
-const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module25;
+const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module27;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -3739,7 +3853,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module28=(()=>{
+const __module30=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -3781,10 +3895,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module29=(()=>{
+const __module31=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {exteriorWindowFace}=__module28;
+const {exteriorWindowFace}=__module30;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -3874,9 +3988,9 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/room_names.js
-const __module30=(()=>{
+const __module32=(()=>{
 const {EmptyLayer}=__module7;
-const {fuelPositions}=__module13;
+const {fuelPositions}=__module15;
 // CAD text only: never substitute inferred fuel/use classes for missing labels.
 function cadRoomNames(building){return (building.floors||[]).flatMap(f=>(f.rooms||[]).flatMap(r=>{
  const names=[...new Set((r.names||[]).map(n=>String(n).trim()).filter(n=>n&&!/협의|두께|구조검토|기어리스|tray|TRAY|급탕관|환탕관|급수관|주통기관|주오수관|벽체|문폭|복도폭|설치공간|축소|확대|변경|m\/s|→|->|^\(|^\d+\s*인승$|^(갑|화|-)$/.test(n)))];
@@ -3900,7 +4014,7 @@ return {cadRoomNames,RoomNamesLayer};
 })();
 
 // app/web/layers/core.js
-const __module31=(()=>{
+const __module33=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
 
@@ -4000,7 +4114,7 @@ return {fallbackStairSteps,CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module32=(()=>{
+const __module34=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -4074,7 +4188,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module33=(()=>{
+const __module35=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -4082,7 +4196,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module34=(()=>{
+const __module36=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -4090,7 +4204,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module35=(()=>{
+const __module37=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -4098,11 +4212,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module36=(()=>{
-const {createRealViewSession}=__module32;
-const {createSmokeLayer}=__module33;
-const {createFlameLayer}=__module34;
-const {createPlumeLayer}=__module35;
+const __module38=(()=>{
+const {createRealViewSession}=__module34;
+const {createSmokeLayer}=__module35;
+const {createFlameLayer}=__module36;
+const {createPlumeLayer}=__module37;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -4111,88 +4225,11 @@ function createRealViewLayers(THREE,options){
 return {createRealViewLayers};
 })();
 
-// app/web/layers/risk_geometry.js
-const __module37=(()=>{
-// Legacy display geometry only; no condition or simulation calculations.
-function boundarySegments(room,original){
-  // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
-  const edges=polys=>polys.flatMap(p=>p.o.map((a,i)=>[a,p.o[(i+1)%p.o.length]]).filter(([a,b])=>Math.hypot(b[0]-a[0],b[1]-a[1])>1e-7));
-  const cellEdges=edges(room.cad_polys);if(!original)return cellEdges.map(([a,b])=>({a,b}));
-  const outerEdges=edges(original.polys),segments=[];
-  // Keep only overlap with the original CAD perimeter. Virtual cell cuts,
-  // including their vertical uprights, are never drawn as room boundaries.
-  for(const [a,b] of cellEdges){
-   const dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy),ux=dx/len,uy=dy/len;
-   for(const [c,d] of outerEdges){
-    if(Math.abs((c[0]-a[0])*uy-(c[1]-a[1])*ux)>.002||Math.abs((d[0]-a[0])*uy-(d[1]-a[1])*ux)>.002)continue;
-    const tc=(c[0]-a[0])*ux+(c[1]-a[1])*uy,td=(d[0]-a[0])*ux+(d[1]-a[1])*uy;
-    const lo=Math.max(0,Math.min(tc,td)),hi=Math.min(len,Math.max(tc,td));if(hi-lo<1e-6)continue;
-    const q=[a[0]+lo*ux,a[1]+lo*uy],r=[a[0]+hi*ux,a[1]+hi*uy];
-    segments.push({a:q,b:r});
-   }
-  }
-  return segments;
- }
-function joinedSelectionRibbons(polygon,inset=.24,halfWidth=.035){
- const inRing=(p,ring)=>{let inside=false;for(let i=0,j=ring.length-1;i<ring.length;j=i++){
-  const a=ring[i],b=ring[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;
- }return inside;};
- const inside=p=>inRing(p,polygon.o)&&!(polygon.h||[]).some(h=>inRing(p,h));
- const result=[];
- for(const [ri,raw] of [polygon.o,...(polygon.h||[])].entries()){
-  const ring=raw.filter((p,i)=>!i||Math.hypot(p[0]-raw[i-1][0],p[1]-raw[i-1][1])>1e-7);
-  if(ring.length>1&&Math.hypot(ring[0][0]-ring.at(-1)[0],ring[0][1]-ring.at(-1)[1])<1e-7)ring.pop();
-  if(ring.length<3)continue;
-  let area=0;for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length];area+=a[0]*b[1]-b[0]*a[1];}
-  const sign=(area>=0?1:-1)*(ri===0?1:-1);
-  const normals=ring.map((a,i)=>{const b=ring[(i+1)%ring.length],len=Math.hypot(b[0]-a[0],b[1]-a[1]);return [-(b[1]-a[1])/len*sign,(b[0]-a[0])/len*sign];});
-  const joins=ring.map((p,i)=>{const a=normals[(i+ring.length-1)%ring.length],b=normals[i],den=1+a[0]*b[0]+a[1]*b[1];
-   let x=den>1e-6?(a[0]+b[0])/den:b[0],y=den>1e-6?(a[1]+b[1])/den:b[1];
-   const length=Math.hypot(x,y);if(length>4){x*=4/length;y*=4/length;}return [x,y];
-  });
-  const offset=d=>ring.map((p,i)=>[p[0]+joins[i][0]*d,p[1]+joins[i][1]*d]);
-  const fits=loop=>loop.every((a,i)=>{const b=loop[(i+1)%loop.length],n=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/.1));
-   for(let j=0;j<=n;j++)if(!inside([a[0]+(b[0]-a[0])*j/n,a[1]+(b[1]-a[1])*j/n]))return false;return true;
-  });
-  for(let attempt=0;attempt<16;attempt++){
-   const scale=2**(-attempt/2),outer=offset((inset-halfWidth)*scale),inner=offset((inset+halfWidth)*scale);
-   if(fits(outer)&&fits(inner)){result.push({outer,inner,inset:inset*scale});break;}
-  }
- }
- return result;
-}
-
-// Cut the existing ribbon into fixed-length dashes; no shader or line-width change.
-function dashedRibbonVertices(ribbons,dash=.4,gap=.2){
- const vertices=[],period=dash+gap;
- if(!(dash>0&&gap>0))throw Error('Positive dash and gap required');
- for(const {outer,inner} of ribbons){let distance=0;
-  for(let i=0;i<outer.length;i++){
-   const j=(i+1)%outer.length,a=outer[i],b=outer[j],c=inner[i],d=inner[j];
-   const length=Math.hypot((b[0]+d[0]-a[0]-c[0])/2,(b[1]+d[1]-a[1]-c[1])/2);
-   if(length<1e-8)continue;
-   const point=(p,q,t)=>[p[0]+(q[0]-p[0])*t,p[1]+(q[1]-p[1])*t];
-   for(let k=Math.floor(distance/period);k*period<distance+length;k++){
-    const lo=Math.max(distance,k*period),hi=Math.min(distance+length,k*period+dash);
-    if(hi<=lo)continue;
-    const u=(lo-distance)/length,v=(hi-distance)/length;
-    const quad=[point(a,b,u),point(a,b,v),point(c,d,v),point(c,d,u)];
-    for(const index of [0,1,2,0,2,3])vertices.push(...quad[index],0);
-   }
-   distance+=length;
-  }
- }
- return vertices;
-}
-
-return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
-})();
-
 // app/web/layers/risk.js
-const __module38=(()=>{
+const __module39=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module37;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module12;
 const {roomFgiRollover}=__module3;
 
 const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
@@ -4300,11 +4337,10 @@ return {RiskLayer};
 })();
 
 // app/web/layers/selection.js
-const __module39=(()=>{
+const __module40=(()=>{
 const {EmptyLayer}=__module7;
-const {applyRenderPolicy}=__module2;
-const {joinedSelectionRibbons}=__module37;
-const {ROOM_PICK_LAYER}=__module12;
+const {selectionOutlineMaterials,selectionOutlineGeometry,selectionOutlineMesh}=__module13;
+const {ROOM_PICK_LAYER}=__module14;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -4313,7 +4349,7 @@ class SelectionLayer extends EmptyLayer {
  clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.views=[];}
  build(building){this.clearGeometry();this.buildCount++;const T=this.THREE;
   const shape=p=>{const s=new T.Shape(p.o.map(v=>new T.Vector2(...v)));for(const h of p.h)s.holes.push(new T.Path(h.map(v=>new T.Vector2(...v))));return s;};
-  const ribbonMaterial=this.own(new T.MeshBasicMaterial({color:'#42e8ff',side:T.DoubleSide,transparent:true,opacity:.95,depthTest:false,depthWrite:false}));
+  const ribbonMaterials=selectionOutlineMaterials(T,r=>this.own(r));
   const pickMaterial=this.own(new T.MeshBasicMaterial({color:'#ffffff',side:T.DoubleSide,transparent:true,opacity:0,depthWrite:false}));
   for(const floor of building.floors)for(const room of floor.rooms){const sharedRibbons=new Map();
    for(const cell of room.cells){const z=cell.legacy_display?.z_m;if(!Number.isFinite(z))throw Error('Selection requires adapter cell floor height');
@@ -4321,15 +4357,9 @@ class SelectionLayer extends EmptyLayer {
     const pick=new T.Mesh(this.own(new T.ShapeGeometry(polygons(cell).map(shape))),pickMaterial);pick.position.z=z+.07;
     pick.layers.set(ROOM_PICK_LAYER);
     pick.userData.liteRoom=cell.cell_id;pick.userData.roomId=room.room_id;pick.userData.floorId=floor.floor_id;group.add(pick);
-    if(!sharedRibbons.has(z)){const pts=[];
-     // Select the original room, even when picking a partitioned solver cell.
-     for(const p of polygons(cell.cell_id===room.room_id?cell:room))for(const ribbon of joinedSelectionRibbons(p))for(let i=0;i<ribbon.outer.length;i++){
-      const j=(i+1)%ribbon.outer.length,q=[ribbon.outer[i],ribbon.outer[j],ribbon.inner[j],ribbon.inner[i]];
-      for(const k of [0,1,2,0,2,3])pts.push(q[k][0],q[k][1],z+.08);
-     }
-     const geo=this.own(new T.BufferGeometry());geo.setAttribute('position',new T.Float32BufferAttribute(pts,3));sharedRibbons.set(z,geo);
-    }
-    const ribbon=applyRenderPolicy(new T.Mesh(sharedRibbons.get(z),ribbonMaterial),'selection');ribbon.visible=false;ribbon.raycast=()=>{};group.add(ribbon);
+    // Cell picks still highlight the original room perimeter, only at floor level.
+    if(!sharedRibbons.has(z))sharedRibbons.set(z,selectionOutlineGeometry(T,r=>this.own(r),polygons(cell.cell_id===room.room_id?cell:room),z));
+    const ribbon=selectionOutlineMesh(T,sharedRibbons.get(z),ribbonMaterials);ribbon.visible=false;group.add(ribbon);
     this.views.push({id:cell.cell_id,roomId:room.room_id,floorId:floor.floor_id,group,pick,ribbon});
    }
   }
@@ -4350,7 +4380,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module40=(()=>{
+const __module41=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const fixed=review?.doors?.fixed_state;
@@ -4361,10 +4391,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module41=(()=>{
+const __module42=(()=>{
 const {createEmptyLayers}=__module7;
-const {ROOM_PICK_LAYER}=__module12;
-const {fixedOpeningsFor}=__module40;
+const {ROOM_PICK_LAYER}=__module14;
+const {fixedOpeningsFor}=__module41;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -4437,7 +4467,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module42=(()=>{
+const __module43=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -4482,7 +4512,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module43=(()=>{
+const __module44=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -4543,8 +4573,8 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module44=(()=>{
-const {createTimelineRisk}=__module43;
+const __module45=(()=>{
+const {createTimelineRisk}=__module44;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -4622,7 +4652,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module45=(()=>{
+const __module46=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -4655,10 +4685,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module46=(()=>{
-const {createDisplayPolicy}=__module45;
+const __module47=(()=>{
+const {createDisplayPolicy}=__module46;
 const {roomFgiRollover}=__module3;
-const {fixedOpeningsFor}=__module40;
+const {fixedOpeningsFor}=__module41;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -4683,7 +4713,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  buildingSlider.innerHTML='건물 투명도 <input id="displayBuildingTransparency" aria-label="건물 투명도" type="range" min="0" max="100" step="1" value="70"><output for="displayBuildingTransparency">70%</output>';
  $('displayViewSettings').append(buildingSlider);
  listen($('displayBuildingTransparency'),'input',()=>store.dispatch('realView/set',{buildingTransparency:$('displayBuildingTransparency').valueAsNumber/100}));
- for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#42e8ff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
+ for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#ffffff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'displayRoomNames','도면 방 이름','#e8f2f8',()=>store.get('layers').roomNames,visible=>store.dispatch('layers/toggle',{id:'roomNames',visible}),false,'원본 CAD에 기록된 실 이름을 표시합니다. 이름이 없는 실은 임의로 만들지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'전체 보기에서는 전층, 층 선택 시 해당 층의 계단·승강기를 표시합니다.');
@@ -4714,7 +4744,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  }
  for(const id of ['displayRibbon','displayCaution'])listen($(id),'change',()=>{try{store.dispatch('risk/threshold',{ribbon:$('displayRibbon').valueAsNumber,caution:$('displayCaution').valueAsNumber});$('displayError').textContent='';}catch(e){$('displayError').textContent='0 이상이며 주의 ≤ 테두리로 입력하세요.';sync();}});
  const legend=document.createElement('div');legend.id='displayLegend';$('v').append(legend);const meaning=$('cfMeaning');move(meaning,legend);meaning.hidden=false;
- const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#42e8ff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#2563eb'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
+ const chips=[...phenomena.map(([k,n,c])=>[k,n,c]),['smoke','주의 70~99','#9ca3af'],['history','┄ 이력','#dce8ef'],['boundary','┄ 경계 ±30℃','#9ca3af'],['building','건물','#aab7c0'],['smokeLayer','연기','#9ca3af'],['flame','화염','#ffa824'],['selection','선택','#ffffff'],['route','경로','#38bdf8'],['windows','외부 창','#62dcb0'],['doors','실내 문','#e6bd68'],['core','코어','#2563eb'],['fuel','연료','#c8b794'],['cells','셀 점선','#9ca3af'],['tint','바닥','#9ca3af'],['interface','연기 경계','#e7f2fa']];
  meaning.innerHTML=chips.map(([key,name,color])=>`<span class="legendChip" id="legend-${key}"><i style="background:${color}"></i><span>${name}</span></span>`).join('');
  $('legend-backdraft').title=backdraftTip;
  const fixedLegend=document.createElement('span');fixedLegend.className='legendChip';fixedLegend.id='legend-fixedOpenings';fixedLegend.hidden=true;
@@ -4786,8 +4816,8 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module47=(()=>{
-const {infoTip}=__module14;
+const __module48=(()=>{
+const {infoTip}=__module16;
 const {roomFgiRollover}=__module3;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 const finite=Number.isFinite;
@@ -4876,7 +4906,7 @@ return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMC
 })();
 
 // app/web/adapters/attention.js
-const __module48=(()=>{
+const __module49=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -4893,7 +4923,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module49=(()=>{
+const __module50=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -4945,9 +4975,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module50=(()=>{
-const {attentionRanking}=__module48;
-const {savedAttention}=__module49;
+const __module51=(()=>{
+const {attentionRanking}=__module49;
+const {savedAttention}=__module50;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5017,7 +5047,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module51=(()=>{
+const __module52=(()=>{
 const {createAssistantPanel}=__module0;
 const {attachExport}=__module1;
 const {routeSampleIndex}=__module4;
@@ -5025,28 +5055,28 @@ const {readRouteGraph,contains}=__module6;
 const {RouteLayer}=__module8;
 const {createRoutePanel}=__module9;
 const {createFuelSettingsPanel}=__module11;
-const {FuelQuantityLayer}=__module13;
-const {createBuildingPanel,buildingTable}=__module15;
-const {attachExplanations}=__module14;
-const {createStore}=__module17;
-const {createSeriesCache}=__module16;
-const {adaptBuilding,adaptResult,adaptScreening}=__module18;
-const {readLegacyBuildingSource}=__module19;
-const {readLegacyOpeningsSource}=__module24;
-const {readLegacyCoreSource}=__module23;
-const {BuildingLayer}=__module27;
-const {OpeningsLayer}=__module29;
-const {RoomNamesLayer}=__module30;
-const {CoreLayer}=__module31;
-const {createRealViewLayers}=__module36;
-const {RiskLayer}=__module38;
-const {SelectionLayer}=__module39;
-const {createSceneHost}=__module41;
-const {createLitePanel,updateLitePanel}=__module42;
-const {createPanelShell}=__module44;
-const {createDisplayPanel}=__module46;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module47;
-const {createExplorePanel}=__module50;
+const {FuelQuantityLayer}=__module15;
+const {createBuildingPanel,buildingTable}=__module17;
+const {attachExplanations}=__module16;
+const {createStore}=__module19;
+const {createSeriesCache}=__module18;
+const {adaptBuilding,adaptResult,adaptScreening}=__module20;
+const {readLegacyBuildingSource}=__module21;
+const {readLegacyOpeningsSource}=__module26;
+const {readLegacyCoreSource}=__module25;
+const {BuildingLayer}=__module29;
+const {OpeningsLayer}=__module31;
+const {RoomNamesLayer}=__module32;
+const {CoreLayer}=__module33;
+const {createRealViewLayers}=__module38;
+const {RiskLayer}=__module39;
+const {SelectionLayer}=__module40;
+const {createSceneHost}=__module42;
+const {createLitePanel,updateLitePanel}=__module43;
+const {createPanelShell}=__module45;
+const {createDisplayPanel}=__module47;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module48;
+const {createExplorePanel}=__module51;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -5249,8 +5279,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module52=(()=>{
-const {attachModern}=__module51;
+const __module53=(()=>{
+const {attachModern}=__module52;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -5265,4 +5295,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module52.attach;
+export const attach=__module53.attach;

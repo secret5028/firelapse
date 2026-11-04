@@ -1,6 +1,46 @@
 import {EmptyLayer} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
 
+// Same two-flight/landing proportions as cad_model_transport.prepare_model.
+// Display only: triangle clipping respects concave footprints and their holes.
+export function fallbackStairSteps(T,core){
+ if(core.kind!=='stair'||core.assumption!=='simplified_return_stair_display_only'||!(core.rise_m>0))return [];
+ const points=core.region.flatMap(p=>p.o),xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
+ const swap=Math.max(...xs)-Math.min(...xs)>Math.max(...ys)-Math.min(...ys);
+ const local=p=>swap?[p[1],p[0]]:[...p],world=local;
+ const pts=points.map(local),x0=Math.min(...pts.map(p=>p[0])),x1=Math.max(...pts.map(p=>p[0])),y0=Math.min(...pts.map(p=>p[1])),y1=Math.max(...pts.map(p=>p[1]));
+ const w=x1-x0,h=y1-y0,landing=Math.min(w*.5,h*.2,1.3),run=h-2*landing,rise=core.rise_m,n=Math.max(4,Math.ceil(rise/.36));
+ const triangles=[];
+ for(const p of core.region){
+  const outer=p.o.map(q=>new T.Vector2(...local(q))),holes=(p.h||[]).map(r=>r.map(q=>new T.Vector2(...local(q))));
+  const indices=T.ShapeUtils.triangulateShape(outer,holes),vertices=[...outer,...holes.flat()];
+  for(const face of indices)triangles.push(face.map(i=>[vertices[i].x,vertices[i].y]));
+ }
+ const clip=(ring,axis,value,sign)=>{
+  const out=[];
+  for(let i=0;i<ring.length;i++){
+   const a=ring[i],b=ring[(i+1)%ring.length],ia=sign*(a[axis]-value)>=0,ib=sign*(b[axis]-value)>=0;
+   if(ia)out.push(a);
+   if(ia!==ib){const t=(value-a[axis])/(b[axis]-a[axis]);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])]);}
+  }return out;
+ };
+ const steps=[];
+ const slab=(xa,ya,xb,yb,z,th=.1)=>{
+  const polys=[];
+  for(const tri of triangles){let r=tri;for(const [axis,value,sign] of [[0,xa,1],[0,xb,-1],[1,ya,1],[1,yb,-1]])r=clip(r,axis,value,sign);
+   const area=Math.abs(r.reduce((a,p,i)=>a+p[0]*r[(i+1)%r.length][1]-r[(i+1)%r.length][0]*p[1],0))/2;
+   if(area>.0001)polys.push({o:r.map(world),h:[]});
+  }
+  if(polys.length)steps.push({polys,z0:z-th,z1:z});
+ };
+ for(let i=0;i<n;i++){
+  slab(x0,y1-landing-(i+1)*run/n,x0+w*.46,y1-landing-i*run/n,(i+1)*rise/(2*n));
+  slab(x0+w*.54,y0+landing+i*run/n,x1,y0+landing+(i+1)*run/n,rise/2+(i+1)*rise/(2*n));
+ }
+ slab(x0,y0,x1,y0+landing,rise/2,.14);slab(x0+w*.54,y1-landing,x1,y1,rise,.14);
+ return steps;
+}
+
 export class CoreLayer extends EmptyLayer {
  static id='core';
  constructor(THREE,{geometryFor}={}){super(THREE);
@@ -13,7 +53,7 @@ export class CoreLayer extends EmptyLayer {
    for(const core of floor.transport||[]){
     if(!['stair','elev'].includes(core.kind))continue;
     if(!core.connected&&!core.to_floor&&!(core.meshes||[]).length)continue;
-    const color=core.kind==='stair'?'#ffc342':'#55baff',polys=core.region?.length?core.region:core.anchor;
+    const color=core.kind==='stair'?'#2563eb':'#55baff',polys=core.region?.length?core.region:core.anchor;
     if(!polys?.length)continue;
     const extrude=(polygons,depth)=>this.own(new T.ExtrudeGeometry(polygons.map(asset.shapeFor),{depth,bevelEnabled:false,curveSegments:1}));
     const geometry=extrude(polys,floor.h);
@@ -21,7 +61,7 @@ export class CoreLayer extends EmptyLayer {
     shell.raycast=()=>{};group.add(shell);
     const edges=applyRenderPolicy(new T.LineSegments(this.own(new T.EdgesGeometry(geometry,25)),this.own(new T.LineBasicMaterial({color}))),'core.edge');
     edges.raycast=()=>{};group.add(edges);
-    if(core.kind==='stair')for(const step of core.meshes||[]){
+    if(core.kind==='stair')for(const step of core.meshes?.length?core.meshes:fallbackStairSteps(T,core)){
      if(!step.polys?.length||!(step.z1>step.z0))continue;
      const tread=applyRenderPolicy(new T.Mesh(extrude(step.polys,step.z1-step.z0),this.own(new T.MeshBasicMaterial({color}))),'core.tread');
      tread.position.z=step.z0;tread.raycast=()=>{};group.add(tread);

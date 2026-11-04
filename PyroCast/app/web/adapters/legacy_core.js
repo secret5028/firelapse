@@ -15,7 +15,11 @@ export function coreTransport(building,floor){
    const x=n.x-n.w/2,y=n.y-n.h/2;region=[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}];
   }
   if(!region?.length)return [];
-  return [{id:n.core_id,kind:n.kind,region,connected:true,meshes:[],source:'core_nodes + vertical_connections',room_id:n.room_id}];
+  const link=(building.vertical_connections||[]).find(v=>v.kind===n.kind&&v.from_floor===floor.name&&v.from_core===n.core_id);
+  const target=building.floors.find(f=>f.name===link?.to_floor);
+  return [{id:n.core_id,kind:n.kind,region,connected:true,meshes:[],source:'core_nodes + vertical_connections',room_id:n.room_id,
+   to_floor:target?.name,rise_m:target?target.z-floor.z:0,
+   assumption:'simplified_return_stair_display_only',direction_source:'short_axis_default'}];
  });
 }
 export function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){

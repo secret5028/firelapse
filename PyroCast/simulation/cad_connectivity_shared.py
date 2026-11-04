@@ -85,6 +85,10 @@ def build_graph(rooms, openings, defaults=None):
     if len(ids) != len(rooms): raise ValueError('Duplicate room IDs')
     if len({o['id'] for o in openings}) != len(openings): raise ValueError('Duplicate opening IDs')
     for o in openings:
+        if o.get('superseded_by'):
+            o['connection_status']='superseded_arc_bundle'
+            excluded.append(dict(id=o['id'],reason='superseded_arc_bundle'))
+            continue
         status = connection_status(o, ids)
         o['connection_status'] = status
         if status not in ('interior', 'exterior') or o['kind'] == 'vent':

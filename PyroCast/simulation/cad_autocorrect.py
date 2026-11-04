@@ -1,7 +1,8 @@
 """Conservative CAD input repair, never a fire-model or geometry fabrication step.
 
 Only an unambiguous existing aperture gets new sides. Exterior is never inferred.
-Overlapping-room hits remain ambiguous. Every mutation carries its original value.
+Nested-room arc connections are explicitly inferred; other overlaps stay unknown.
+Every mutation carries its original value and evidence.
 """
 from copy import deepcopy
 import json
@@ -9,6 +10,8 @@ from pathlib import Path
 import numpy as np
 from shapely.geometry import Point
 from cad_connectivity_shared import geometry, opening_parts, aperture_frame, opening_dimensions
+from cad_arc_doors import apply_arc_doors
+from cad_reviewed_connections import apply_reviewed_connections
 
 CONFIG = Path(__file__).resolve().parents[1]/'config/cad-autocorrect.json'
 
@@ -16,12 +19,17 @@ CONFIG = Path(__file__).resolve().parents[1]/'config/cad-autocorrect.json'
 def repair_floor(floor, policy=None):
     policy = policy or json.loads(CONFIG.read_text('utf-8'))
     shapes = {r['id']: geometry(r['polys']) for r in floor['rooms']}
-    changes, reviews = [], []
+    arcs = apply_arc_doors(floor, policy)
+    changes, reviews = arcs['changes'], arcs['reviews']
+    reviewed=apply_reviewed_connections(floor,policy)
+    changes.extend(reviewed['changes']);reviews.extend(reviewed['reviews'])
     def note(o, kind, detail, **more):
         row = dict(floor=floor['name'], id=o['id'], kind=kind, detail=detail, **more)
         reviews.append(row)
         return row
     for o in floor['openings']:
+        if o.get('superseded_by') or o.get('connection_evidence'):
+            continue
         if not o.get('kind','').startswith(('door','window')):
             continue
         parts = opening_parts(o)

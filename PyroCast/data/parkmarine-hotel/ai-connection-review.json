@@ -1,0 +1,214 @@
+{
+  "revision": "visual_axiom_review_v1",
+  "scope": "5F-8F visual review; other floors not visually approved",
+  "decisions": [
+    {
+      "floor": "5F",
+      "source_sha256": "f8d1d9355df57c132f224aa0651f7667c75ed12264a4414c6c40ec6314746626",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_ELEV_R13_R17",
+      "kind": "door_elev",
+      "sides": [
+        "R13",
+        "R17"
+      ],
+      "closed_plane": [
+        [
+          13.200007,
+          53.840081
+        ],
+        [
+          14.400007,
+          53.840081
+        ]
+      ],
+      "axiom": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
+      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40.",
+      "capture": "CAD-5F-core.png"
+    },
+    {
+      "floor": "5F",
+      "source_sha256": "f8d1d9355df57c132f224aa0651f7667c75ed12264a4414c6c40ec6314746626",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_OPEN_R4_R5",
+      "kind": "open_passage",
+      "sides": [
+        "R4",
+        "R5"
+      ],
+      "closed_plane": [
+        [
+          20.69,
+          63.94
+        ],
+        [
+          21.89,
+          63.94
+        ]
+      ],
+      "axiom": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
+      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정.",
+      "capture": "CAD-5F-R4.png"
+    },
+    {
+      "floor": "6F",
+      "source_sha256": "a72340ae63853a1009b91be0bc812c3109fe7ad48af0a456f34643e078e4b5ca",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_ELEV_R13_R17",
+      "kind": "door_elev",
+      "sides": [
+        "R13",
+        "R17"
+      ],
+      "closed_plane": [
+        [
+          13.200007,
+          53.840081
+        ],
+        [
+          14.400007,
+          53.840081
+        ]
+      ],
+      "axiom": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
+      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40.",
+      "capture": "CAD-6F-core.png"
+    },
+    {
+      "floor": "6F",
+      "source_sha256": "a72340ae63853a1009b91be0bc812c3109fe7ad48af0a456f34643e078e4b5ca",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_OPEN_R4_R5",
+      "kind": "open_passage",
+      "sides": [
+        "R4",
+        "R5"
+      ],
+      "closed_plane": [
+        [
+          20.69,
+          63.94
+        ],
+        [
+          21.89,
+          63.94
+        ]
+      ],
+      "axiom": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
+      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정.",
+      "capture": "CAD-6F-R4.png"
+    },
+    {
+      "floor": "7F",
+      "source_sha256": "293c88c8671796058b0085d346c64fcfb6f02416d4c1fcf42cb83c38018cbd21",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_ELEV_R13_R17",
+      "kind": "door_elev",
+      "sides": [
+        "R13",
+        "R17"
+      ],
+      "closed_plane": [
+        [
+          13.200007,
+          53.840081
+        ],
+        [
+          14.400007,
+          53.840081
+        ]
+      ],
+      "axiom": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
+      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40.",
+      "capture": "CAD-7F-core.png"
+    },
+    {
+      "floor": "7F",
+      "source_sha256": "293c88c8671796058b0085d346c64fcfb6f02416d4c1fcf42cb83c38018cbd21",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_OPEN_R4_R5",
+      "kind": "open_passage",
+      "sides": [
+        "R4",
+        "R5"
+      ],
+      "closed_plane": [
+        [
+          20.69,
+          63.94
+        ],
+        [
+          21.89,
+          63.94
+        ]
+      ],
+      "axiom": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
+      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정.",
+      "capture": "CAD-7F-R4.png"
+    },
+    {
+      "floor": "8F",
+      "source_sha256": "238385ad58e6f7414a3a5eda33986ce0bf37f2ad1d514f0f53e15d89db5a109d",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_ELEV_R13_R17",
+      "kind": "door_elev",
+      "sides": [
+        "R13",
+        "R17"
+      ],
+      "closed_plane": [
+        [
+          13.200007,
+          53.840081
+        ],
+        [
+          14.400007,
+          53.840081
+        ]
+      ],
+      "axiom": "A실-출입 / 승강기 문은 승강로와 홀을 연결",
+      "evidence": "원 CAD 승강기 문틀·양개 슬라이딩 기호가 R13 남측에서 R17 홀로 열림. 5F APFLVP insertion 22 / 양측 jamb x=13.20,14.40.",
+      "capture": "CAD-8F-core.png"
+    },
+    {
+      "floor": "8F",
+      "source_sha256": "238385ad58e6f7414a3a5eda33986ce0bf37f2ad1d514f0f53e15d89db5a109d",
+      "reviewer": "Codex visual CAD review 2026-11-04",
+      "confidence": "inferred",
+      "review_method": "original CAD vectors + room topology axioms; no model API call",
+      "id": "AI_OPEN_R4_R5",
+      "kind": "open_passage",
+      "sides": [
+        "R4",
+        "R5"
+      ],
+      "closed_plane": [
+        [
+          20.69,
+          63.94
+        ],
+        [
+          21.89,
+          63.94
+        ]
+      ],
+      "axiom": "A실-경계 / 벽 없는 연속 실내 영역은 통행 가능",
+      "evidence": "원 CAD의 R4-R5 경계에 분리벽·문이 없음. 열림 문짝 기호로 전실이 잘못 분절됨. 원 실 ID·면적을 보존하고 전폭 개방 연결로 보정.",
+      "capture": "CAD-8F-R4.png"
+    }
+  ]
+}

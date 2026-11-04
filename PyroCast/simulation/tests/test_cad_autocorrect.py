@@ -25,9 +25,11 @@ class AutoCorrectTests(unittest.TestCase):
         f=fixture();f['rooms'].append(dict(id='C',polys=[rect(9,9,2,2)]));f['openings'][0]['sides']=['A','C']
         r=repair_floor(f);self.assertFalse(r['changes']);self.assertEqual(r['reviews'][0]['kind'],'ambiguous_connection')
         self.assertEqual(f['openings'][0]['sides'],['A','C'])
-    def test_mixed_door_planes_not_joined(self):
+    def test_mixed_door_planes_split_without_joining(self):
         f=fixture();f['openings'][0]['leaves']=[dict(hinge=[0,0],closed=[0,1]),dict(hinge=[0,0],closed=[1,0])]
-        r=repair_floor(f);self.assertFalse(r['changes']);self.assertEqual(r['reviews'][0]['kind'],'mixed_leaf_planes')
+        r=repair_floor(f);self.assertTrue(r['changes'])
+        self.assertEqual(f['openings'][0]['superseded_by'],['D_ARC0'])
+        self.assertEqual(set(f['openings'][1]['sides']),{'A','B'})
     def test_sparse_annotation_removed_from_width_only(self):
         f=fixture();o=f['openings'][0];o['polys']=[rect(-.1,-.44,.2,.88),[[0,2],[.4,2],[.4,2.01],[.01,2.01],[.01,3],[0,3]]]
         original=deepcopy(o['polys']);r=repair_floor(f)

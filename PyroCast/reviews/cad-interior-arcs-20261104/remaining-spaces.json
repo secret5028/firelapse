@@ -1,0 +1,1094 @@
+{
+  "counts": {
+    "no_opening_side_assignment_other": 19,
+    "utility_space_label_without_aperture": 23,
+    "overlapping_room_polygons": 5
+  },
+  "rows": [
+    {
+      "floor": "B3",
+      "room": "R2",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.1,
+      "polygon_area_m2": 1.0559999999999938,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R0",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B3",
+      "room": "R5",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.73,
+      "polygon_area_m2": 0.6953999999999982,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D1",
+      "distance_m": 2.20780433915689,
+      "nearest_door_sides": [
+        "R4",
+        "R0"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B3",
+      "room": "R7",
+      "labels": [
+        "PIT"
+      ],
+      "tags": [],
+      "reported_area_m2": 5.7,
+      "polygon_area_m2": 5.557200000000012,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D1",
+      "distance_m": 2.641968962724576,
+      "nearest_door_sides": [
+        "R4",
+        "R0"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B3",
+      "room": "R8",
+      "labels": [
+        "DA"
+      ],
+      "tags": [],
+      "reported_area_m2": 2.71,
+      "polygon_area_m2": 2.643800000000005,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "EV0",
+      "distance_m": 3.5999999999999943,
+      "nearest_door_sides": [
+        "R1",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B3",
+      "room": "R9",
+      "labels": [
+        "DA"
+      ],
+      "tags": [],
+      "reported_area_m2": 3.27,
+      "polygon_area_m2": 3.1872000000000016,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "EV0",
+      "distance_m": 5.939999999999999,
+      "nearest_door_sides": [
+        "R1",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R3",
+      "labels": [
+        "PIT"
+      ],
+      "tags": [],
+      "reported_area_m2": 4.16,
+      "polygon_area_m2": 4.081600000000016,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D11",
+      "distance_m": 0.37999999999999545,
+      "nearest_door_sides": [
+        "R4",
+        "R7"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R6",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.1,
+      "polygon_area_m2": 1.0559999999999938,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D2",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R4",
+        "R8"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B2",
+      "room": "R11",
+      "labels": [
+        "DA"
+      ],
+      "tags": [],
+      "reported_area_m2": 4.0,
+      "polygon_area_m2": 3.912799999999994,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D9",
+      "distance_m": 1.3200000000000003,
+      "nearest_door_sides": [
+        "R9",
+        "R9"
+      ],
+      "nearest_door_status": "internal_leaf",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R12",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.57,
+      "polygon_area_m2": 0.5376000000000016,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D15",
+      "distance_m": 2.1203773249117717,
+      "nearest_door_sides": [
+        "R10",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B2",
+      "room": "R13",
+      "labels": [
+        "창고"
+      ],
+      "tags": [],
+      "reported_area_m2": 15.02,
+      "polygon_area_m2": 14.866599999999991,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.000799360766977257,
+      "nearest_door_sides": [
+        "R14",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B2",
+      "room": "R16",
+      "labels": [
+        "비드법 보온판 2종1호",
+        "PIT"
+      ],
+      "tags": [],
+      "reported_area_m2": 5.7,
+      "polygon_area_m2": 5.557200000000012,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D15",
+      "distance_m": 2.6439364591457153,
+      "nearest_door_sides": [
+        "R10",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R17",
+      "labels": [
+        "DA"
+      ],
+      "tags": [],
+      "reported_area_m2": 2.71,
+      "polygon_area_m2": 2.643800000000005,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D9",
+      "distance_m": 1.1322543883774494,
+      "nearest_door_sides": [
+        "R9",
+        "R9"
+      ],
+      "nearest_door_status": "internal_leaf",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R18",
+      "labels": [
+        "주차 14대",
+        "OPEN-후타설 구간",
+        "페놀폼",
+        "기계식주차장",
+        "승강로",
+        "기계식 주차장(14대)",
+        "평면왕복식 7대X2단",
+        "직원휴게실 평면변경",
+        "점검구 신설",
+        "비드법 + 방화보드"
+      ],
+      "tags": [],
+      "reported_area_m2": 252.1,
+      "polygon_area_m2": 251.32500000000002,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.0019900743804195887,
+      "nearest_door_sides": [
+        "R14",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R19",
+      "labels": [
+        "DA"
+      ],
+      "tags": [
+        "elev_inside"
+      ],
+      "reported_area_m2": 3.27,
+      "polygon_area_m2": 3.1872000000000016,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D9",
+      "distance_m": 3.13789738519283,
+      "nearest_door_sides": [
+        "R9",
+        "R9"
+      ],
+      "nearest_door_status": "internal_leaf",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B2",
+      "room": "R20",
+      "labels": [
+        "창고"
+      ],
+      "tags": [],
+      "reported_area_m2": 15.86,
+      "polygon_area_m2": 15.703999999999978,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.0,
+      "nearest_door_sides": [
+        "R14",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B2",
+      "room": "R22",
+      "labels": [
+        "gearless",
+        "장애인용",
+        "SL-700",
+        "105m/s",
+        "기어리스",
+        "11인승",
+        "11인승 ELEV."
+      ],
+      "tags": [],
+      "reported_area_m2": 4.13,
+      "polygon_area_m2": 4.037599999999988,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 1.3423591109112425,
+      "nearest_door_sides": [
+        "R14",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B1",
+      "room": "R5",
+      "labels": [
+        "전실"
+      ],
+      "tags": [],
+      "reported_area_m2": 1.1,
+      "polygon_area_m2": 1.0559999999999938,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R3",
+        "R7"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B1",
+      "room": "R6",
+      "labels": [
+        "장비는 천정형",
+        "난간설치?"
+      ],
+      "tags": [],
+      "reported_area_m2": 5.5,
+      "polygon_area_m2": 5.401799999999991,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 0.0018107149208506541,
+      "nearest_door_sides": [
+        "R12",
+        "R1"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B1",
+      "room": "R13",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.73,
+      "polygon_area_m2": 0.6953999999999982,
+      "category": "overlapping_room_polygons",
+      "raw_opening_references": [],
+      "nearest_door": "D6",
+      "distance_m": 0.4200000000000017,
+      "nearest_door_sides": [
+        "R3",
+        null
+      ],
+      "nearest_door_status": "unresolved",
+      "max_overlap_room": "R3",
+      "max_overlap_m2": 0.6953999999999982,
+      "max_overlap_fraction": 1.0,
+      "utility_label": false
+    },
+    {
+      "floor": "B1",
+      "room": "R15",
+      "labels": [
+        "PIT"
+      ],
+      "tags": [],
+      "reported_area_m2": 5.7,
+      "polygon_area_m2": 5.557200000000012,
+      "category": "overlapping_room_polygons",
+      "raw_opening_references": [],
+      "nearest_door": "D6",
+      "distance_m": 0.008944271909997697,
+      "nearest_door_sides": [
+        "R3",
+        null
+      ],
+      "nearest_door_status": "unresolved",
+      "max_overlap_room": "R3",
+      "max_overlap_m2": 5.557200000000012,
+      "max_overlap_fraction": 1.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B1",
+      "room": "R16",
+      "labels": [
+        "DA"
+      ],
+      "tags": [],
+      "reported_area_m2": 2.66,
+      "polygon_area_m2": 2.599800000000002,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "EV0",
+      "distance_m": 3.6069377593742824,
+      "nearest_door_sides": [
+        "R4",
+        "R11"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B1",
+      "room": "R17",
+      "labels": [
+        "기계식주차장",
+        "승강로"
+      ],
+      "tags": [
+        "elev"
+      ],
+      "reported_area_m2": 20.89,
+      "polygon_area_m2": 20.69760000000001,
+      "category": "overlapping_room_polygons",
+      "raw_opening_references": [],
+      "nearest_door": "D6",
+      "distance_m": 0.12649110640673586,
+      "nearest_door_sides": [
+        "R3",
+        null
+      ],
+      "nearest_door_status": "unresolved",
+      "max_overlap_room": "R3",
+      "max_overlap_m2": 20.69760000000001,
+      "max_overlap_fraction": 1.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B1",
+      "room": "R18",
+      "labels": [
+        "DA"
+      ],
+      "tags": [
+        "elev_inside"
+      ],
+      "reported_area_m2": 3.27,
+      "polygon_area_m2": 3.1872000000000016,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "EV0",
+      "distance_m": 5.9000338982077025,
+      "nearest_door_sides": [
+        "R4",
+        "R11"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "B1",
+      "room": "R21",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.96,
+      "polygon_area_m2": 0.9255999999999995,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D7",
+      "distance_m": 10.214597397841974,
+      "nearest_door_sides": [
+        "R20",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "1F",
+      "room": "R8",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.72,
+      "polygon_area_m2": 0.6915999999999995,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D7",
+      "distance_m": 4.679999999999999,
+      "nearest_door_sides": [
+        "R9",
+        "R1"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "1F",
+      "room": "R10",
+      "labels": [],
+      "tags": [
+        "elev_inside"
+      ],
+      "reported_area_m2": 1.59,
+      "polygon_area_m2": 1.5389999999999935,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "EV13",
+      "distance_m": 3.6799999999999997,
+      "nearest_door_sides": [
+        "R3",
+        "R1"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "1F",
+      "room": "R12",
+      "labels": [
+        "위생기구 1개로 변경"
+      ],
+      "tags": [
+        "elev_inside"
+      ],
+      "reported_area_m2": 1.23,
+      "polygon_area_m2": 1.1911999999999985,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 4.159326868617083,
+      "nearest_door_sides": [
+        "R16",
+        "out"
+      ],
+      "nearest_door_status": "exterior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "1F",
+      "room": "R15",
+      "labels": [
+        "PS"
+      ],
+      "tags": [],
+      "reported_area_m2": 1.08,
+      "polygon_area_m2": 1.0336000000000092,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.580055865485896,
+      "nearest_door_sides": [
+        "R16",
+        "out"
+      ],
+      "nearest_door_status": "exterior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "2F",
+      "room": "R2",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.09,
+      "polygon_area_m2": 1.0439999999999965,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R0",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "2F",
+      "room": "R5",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.81,
+      "polygon_area_m2": 0.7739999999999982,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D8",
+      "distance_m": 3.5,
+      "nearest_door_sides": [
+        "R4",
+        "R4"
+      ],
+      "nearest_door_status": "same_space",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "2F",
+      "room": "R7",
+      "labels": [
+        "C3"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.73,
+      "polygon_area_m2": 0.6953999999999982,
+      "category": "overlapping_room_polygons",
+      "raw_opening_references": [],
+      "nearest_door": "D4",
+      "distance_m": 4.679999999999999,
+      "nearest_door_sides": [
+        "R0",
+        "R8"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": "R0",
+      "max_overlap_m2": 0.6953999999999982,
+      "max_overlap_fraction": 1.0,
+      "utility_label": false
+    },
+    {
+      "floor": "2F",
+      "room": "R9",
+      "labels": [
+        "밸브설치공간",
+        "급탕관(근생용)",
+        "환탕관(근생용)",
+        "급탕관(호텔용)",
+        "급수관(전층용)",
+        "주통기관",
+        "주오수관",
+        "PS"
+      ],
+      "tags": [],
+      "reported_area_m2": 1.28,
+      "polygon_area_m2": 1.2324000000000033,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D7",
+      "distance_m": 2.020890892651058,
+      "nearest_door_sides": [
+        "R6",
+        "R6"
+      ],
+      "nearest_door_status": "same_space",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "3F",
+      "room": "R2",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.09,
+      "polygon_area_m2": 1.0439999999999965,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R0",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "3F",
+      "room": "R5",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.81,
+      "polygon_area_m2": 0.7739999999999982,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D8",
+      "distance_m": 3.5,
+      "nearest_door_sides": [
+        "R4",
+        "R4"
+      ],
+      "nearest_door_status": "same_space",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "3F",
+      "room": "R7",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.72,
+      "polygon_area_m2": 0.6915999999999987,
+      "category": "overlapping_room_polygons",
+      "raw_opening_references": [],
+      "nearest_door": "D4",
+      "distance_m": 4.661544808322666,
+      "nearest_door_sides": [
+        "R0",
+        "R8"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": "R0",
+      "max_overlap_m2": 0.6915999999999987,
+      "max_overlap_fraction": 1.0,
+      "utility_label": false
+    },
+    {
+      "floor": "4F",
+      "room": "R4",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.09,
+      "polygon_area_m2": 1.0439999999999965,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D2",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R2",
+        "R5"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "4F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "5F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "6F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "7F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "8F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "9F",
+      "room": "R4",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.09,
+      "polygon_area_m2": 1.0439999999999965,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R1",
+        "R5"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "9F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D4",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "10F",
+      "room": "R4",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.09,
+      "polygon_area_m2": 1.0439999999999965,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D2",
+      "distance_m": 0.020000000000003123,
+      "nearest_door_sides": [
+        "R1",
+        "R5"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "10F",
+      "room": "R8",
+      "labels": [
+        "AD"
+      ],
+      "tags": [],
+      "reported_area_m2": 0.83,
+      "polygon_area_m2": 0.7912000000000009,
+      "category": "utility_space_label_without_aperture",
+      "raw_opening_references": [],
+      "nearest_door": "D3",
+      "distance_m": 3.8985638381332164,
+      "nearest_door_sides": [
+        "R5",
+        "R3"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": true
+    },
+    {
+      "floor": "PH",
+      "room": "R2",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 0.73,
+      "polygon_area_m2": 0.6992000000000012,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D10",
+      "distance_m": 0.7999999999999972,
+      "nearest_door_sides": [
+        "out",
+        "R0"
+      ],
+      "nearest_door_status": "exterior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    },
+    {
+      "floor": "PH",
+      "room": "R6",
+      "labels": [],
+      "tags": [],
+      "reported_area_m2": 1.1,
+      "polygon_area_m2": 1.0560000000000025,
+      "category": "no_opening_side_assignment_other",
+      "raw_opening_references": [],
+      "nearest_door": "D0",
+      "distance_m": 0.03999999999999914,
+      "nearest_door_sides": [
+        "R0",
+        "R4"
+      ],
+      "nearest_door_status": "interior",
+      "max_overlap_room": null,
+      "max_overlap_m2": 0.0,
+      "max_overlap_fraction": 0.0,
+      "utility_label": false
+    }
+  ],
+  "note": "Evidence classes only; not a claim that the physical rooms have no doors. Source audit retained; not every remaining space visually reviewed."
+}

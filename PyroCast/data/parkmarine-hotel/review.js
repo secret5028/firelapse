@@ -19,8 +19,17 @@ try{
    }
   }
   for(const o of f.openings){const own=rows.filter(x=>x.floor===name&&x.id===o.id),color=chosen?.id===o.id?'#42e8ff':own.some(x=>x.status==='자동보정')?'#7bd6c4':own.length?'#edbf75':'#638497';
-   for(const part of o.autocorrect_aperture_polys||o.geometry_polys||o.polys||[]){const p=part.o||part;if(p.length)line([...p,p[0]].map(q=>[...q,.1]),color,1);}
+   if(!o.superseded_by)for(const part of o.autocorrect_aperture_polys||o.geometry_polys||o.polys||[]){const p=part.o||part;if(p.length)line([...p,p[0]].map(q=>[...q,.1]),color,1);}
+   if(!o.source_parent_id)for(const l of o.leaves||[]){
+    if(!l.open)continue;
+    const a=Math.atan2(l.closed[1]-l.hinge[1],l.closed[0]-l.hinge[0]),b=Math.atan2(l.open[1]-l.hinge[1],l.open[0]-l.hinge[0]);let delta=(b-a+Math.PI*3)%(Math.PI*2)-Math.PI;
+    const r=l.r||Math.hypot(l.closed[0]-l.hinge[0],l.closed[1]-l.hinge[1]);
+    line(Array.from({length:25},(_,i)=>[l.hinge[0]+r*Math.cos(a+delta*i/24),l.hinge[1]+r*Math.sin(a+delta*i/24),.13]),color,.9);
+    line([[...l.hinge,.13],[...l.closed,.13]],color,.9);
+   }
   }
+  const selectedRoom=f.rooms.find(r=>r.id===selected?.id),selectedOpening=f.openings.find(o=>o.id===selected?.id);
+  if(selectedRoom||selectedOpening){const p=(selectedRoom?.polys||selectedOpening?.polys||[]).flatMap(p=>p.o||p);if(p.length){const xx=p.map(q=>q[0]),yy=p.map(q=>q[1]);target.set((Math.min(...xx)+Math.max(...xx))/2,(Math.min(...yy)+Math.max(...yy))/2,.2);distance=Math.max(7,Math.max(Math.max(...xx)-Math.min(...xx),Math.max(...yy)-Math.min(...yy))*2.5);}}
   $('selected').textContent=chosen?`${chosen.floor} ${chosen.id} · ${chosen.status} · ${chosen.detail}`:`${name} · ${f.rooms.length}실 · 모서리 드래그 회전 / 휠 확대`;
   render();
  }
@@ -33,5 +42,6 @@ try{
  const count=k=>rows.filter(r=>r.kind===k).length;
  $('summary').textContent=`14개 도면 층 · 257실 | 자동보정 ${B.model_review.corrections.length}건 | 연결 검토 ${count('ambiguous_connection')+count('mixed_leaf_planes')}개구부 | 고립 ${count('isolated_room')}실 | 용도 추정 ${count('estimated_usage')}실 | 로더 오류 ${count('loader_failed')}층`;
  window.addEventListener('beforeunload',()=>{panel.dispose();resources.forEach(x=>x.dispose());renderer.dispose();});show(floorName);
+ const query=new URLSearchParams(location.search);if(query.has('floor'))show(query.get('floor'),query.has('room')?{floor:query.get('floor'),id:query.get('room'),status:'실 확인',detail:'문 호와 연결 검토'}:null);
  window.__reviewReady=true;
 }catch(e){$('error').textContent=e.stack;throw e;}

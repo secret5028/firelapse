@@ -1,5 +1,7 @@
 {
-  "revision": "geometry_evidence_v1",
+  "revision": "interior_arc_door_v2",
+  "interior_arcs_are_doors": true,
+  "nested_outside_fraction_max": 0.005,
   "basis": "CAD geometry tolerances; project assumptions, not fire-model thresholds",
   "probe_gaps_m": [0.25, 0.35],
   "probe_along_fractions": [-0.5, 0, 0.5],

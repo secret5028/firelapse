@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "rows": 305,
+  "corrections": 44,
+  "isolated": 47,
+  "floors": 14,
+  "errors": [],
+  "non_get_requests": []
+}

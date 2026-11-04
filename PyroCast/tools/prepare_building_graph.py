@@ -102,11 +102,14 @@ def prepare(source, *, auto_correct=True):
     report['unmapped_labels']=[dict(label=k,rooms=sorted(set(v))) for k,v in sorted(unmapped.items())]
     report['vertical_connections']=len(building['vertical_connections'])
     report['unconfirmed_vertical_cores']=building['unconfirmed_vertical_cores']
-    building['model_review']=dict(revision='geometry_evidence_v1',auto_correct=auto_correct,
+    unconnected=sum(len(f['simulation_graph']['isolated_rooms']) for f in building['floors'])
+    building['model_review']=dict(revision=repair['revision'] if auto_correct else 'disabled',auto_correct=auto_correct,
+        connectivity_validation='incomplete' if unconnected else 'connected_graph',unresolved_space_count=unconnected,
         corrections=[dict(floor=f['name'],id=o['id'],**c) for f in building['floors']
                      for o in f['openings'] for c in o.get('auto_corrections',[])],
         items=deepcopy(report['model_reviews']),basis='기하 근거 자동보정 · 현장 확인 아님')
-    report['limitations']=['원본 추출 결과에 있는 개구부만 연결. 미확정은 외기로 대체하지 않음.',
+    report['limitations']=['건물 내부 호는 사용자 규칙에 따라 문으로 간주. 연결 대상 미확정은 외기로 대체하지 않음.',
+                          '중첩 실은 포함 관계와 문 양쪽 검사로 연결을 추정하며 실 폴리곤 중첩 자체는 보정하지 않음.',
                           '실명에 없는 용도는 기존 층 용도 기본값 적용; 개별 미매핑 문자는 별도 목록.',
                           '큰 실에 붙은 코어 태그·복수 용도 문자는 검토 필요. 도면 재인식이나 문 생성 없음.',
                           '기존 샤프트 외곽만으로 층간 연결을 확정하지 않음. 실 좌표·정렬·인접 층 중첩으로 재검사.',

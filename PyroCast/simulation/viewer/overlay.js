@@ -4688,6 +4688,7 @@ function createPanelShell({panel,store,buildingFloors=[]}){
  #pyroShellHeader{top:0;left:0;right:0;min-height:48px;display:flex;align-items:center;gap:14px;padding:8px 14px;border-bottom:1px solid #496273}
  #pyroShellHeader .brand{font-weight:700;white-space:nowrap}#pyroShellHeader #fbtn{flex:1;min-width:0;display:flex;align-items:center;gap:6px}
  #pyroShellHeader #fbtn [hidden]{display:none!important}#shellFloor{min-width:86px;max-width:130px;color:#eaf3f8;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit}
+ #shellSelectedRoom{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;min-width:0;margin-left:5px}#shellSelectedRoom[hidden]{display:none!important}
  #pyroShellHeader #fbtn button[aria-pressed=true]{background:#e7be66;color:#142b3b;border-color:#f0d18e}
  #pyroShellSidebar{top:var(--shell-top);right:0;bottom:var(--shell-bottom);width:var(--shell-side);display:flex;flex-direction:column;border-left:1px solid #496273}
  #pyroShellTabs{display:flex;flex-shrink:0;border-bottom:1px solid #496273}
@@ -4748,6 +4749,16 @@ function createPanelShell({panel,store,buildingFloors=[]}){
  const floorOrder=new Map(buildingFloors.map((f,i)=>[f.name,i]));
  for(const b of [...floorButtons].sort((a,b)=>(floorOrder.get(a.textContent.trim())??Infinity)-(floorOrder.get(b.textContent.trim())??Infinity)))if(b.textContent.trim()!=='전체'){floorSelect.add(new Option(b.textContent.trim(),b.textContent.trim()));b.hidden=true;}
  $('fbtn').append(floorSelect);
+ const roomLabel=document.createElement('span');roomLabel.id='shellSelectedRoom';roomLabel.setAttribute('aria-label','선택 방');roomLabel.hidden=true;$('fbtn').append(roomLabel);
+ function selectedRoom(){
+  const selection=store.get('selection'),floor=store.get('floor').floor_id;
+  const source=buildingFloors.flatMap(f=>f.rooms.map(r=>({floor:f.name,room:r,key:`CAD_${f.name}_${r.id}`}))).find(r=>r.key===selection.room_id);
+  const names=source?.room.names?.filter(Boolean)||[];
+  roomLabel.textContent=names.join(' · ')||source?.room.name||source?.room.id||'';
+  roomLabel.title=source?`${source.floor} ${source.room.id} · ${roomLabel.textContent}`:'';
+  roomLabel.hidden=!source||(floor!==null&&floor!==source.floor);
+ }
+ cleanups.push(store.subscribe('selection',selectedRoom),store.subscribe('floor',selectedRoom),()=>roomLabel.remove());selectedRoom();
  // Invoke the original handler so every building keeps its existing floor and camera policy.
  listen(floorSelect,'change',()=>floorButtons.find(b=>b.textContent.trim()===floorSelect.value)?.click());
  const floors=()=>{const id=store.get('floor').floor_id;floorSelect.value=id??'';for(const b of floorButtons)b.setAttribute('aria-pressed',String(b.textContent.trim()===(id??'전체')));};

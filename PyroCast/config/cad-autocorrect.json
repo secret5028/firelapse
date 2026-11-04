@@ -1,0 +1,12 @@
+{
+  "revision": "geometry_evidence_v1",
+  "basis": "CAD geometry tolerances; project assumptions, not fire-model thresholds",
+  "probe_gaps_m": [0.25, 0.35],
+  "probe_along_fractions": [-0.5, 0, 0.5],
+  "rect_fill_min": 0.98,
+  "fragment_fill_max": 0.25,
+  "rect_area_share_min": 0.7,
+  "rect_width_range_m": [0.4, 3.0],
+  "rect_thickness_range_m": [0.04, 0.35],
+  "boundary_tolerance_m": 0.05
+}

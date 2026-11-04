@@ -54,7 +54,14 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
- const buildingPanel=createBuildingPanel({store,onSave:saveDoor,onClearFixed:()=>saveFixed({clear:true}),onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
+ const buildingPanel=createBuildingPanel({store,building:B,onLocate:row=>{
+  const floor=B.floors.find(f=>f.name===row.floor),item=floor?.rooms.find(r=>r.id===row.id)||floor?.openings.find(o=>o.id===row.id);
+  const points=(item?.polys||[]).flatMap(p=>Array.isArray(p)?p:p.o||[]);if(!points.length)return;
+  const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=(Math.min(...xs)+Math.max(...xs))/2,y=(Math.min(...ys)+Math.max(...ys))/2,z=floor.z||0;
+  viewer.setFloor(row.floor);store.dispatch('floor/set',{floor_id:row.floor});
+  const d=Math.max(8,Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys));
+  store.dispatch('camera/fit',{mode:'room',target:[x,y,z+1],pose:{position:[x+d,y-d,z+d],up:[0,0,1]}});render();
+ },onSave:saveDoor,onClearFixed:()=>saveFixed({clear:true}),onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
  const aiFuel=createAIFuelPanel({onApplied:()=>refreshScreening(),onRooms:rooms=>{aiFuelRooms=rooms;store.dispatch('buildingReview/set',{rooms});}});
  const assistant=createAssistantPanel({store,getContext:()=>({building:initial.building_sha256,case:chosen,floor:store.get('floor').floor_id,room:store.get('selection').room_id,origin:data?.route_target_room_id||data?.fire_key,time_s:store.get('playback').t_s,history:store.get('risk').history,vehicle:route.result?.vehicle,route_settings:{hose_m:store.get('route').hose_m,stair_factor:store.get('route').stair_factor}}),
   onNavigate:fact=>{if(fact.case!==chosen)throw Error('현재 사례와 다른 답변입니다. 해당 사례를 먼저 선택하세요.');const c=data.rooms.find(r=>r.key===fact.cell)||data.rooms.find(r=>(r.original_room||r.key)===fact.room);if(!c)return;viewer.setFloor(c.cad_floor);store.dispatch('floor/set',{floor_id:c.cad_floor});select(c.key);if(Number.isFinite(fact.time_s))store.dispatch('playback/seek',{t_s:fact.time_s});render();},

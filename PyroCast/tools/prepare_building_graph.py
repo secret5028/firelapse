@@ -15,23 +15,31 @@ sys.path[:0] = [str(ROOT/'simulation/deps'), str(ROOT/'simulation')]
 from building_rules import load_rules, usage_class, dedicated_core_kind
 from cad_connectivity_shared import build_graph, geometry, match_vertical_cores
 from pyrocast_lite.door_classification import classify_doors
+from cad_autocorrect import repair_floor
 
-def prepare(source):
+def prepare(source, *, auto_correct=True):
     raw = Path(source).read_bytes()
     building = json.loads(raw)
     report = dict(source=str(Path(source).resolve()), source_sha256=hashlib.sha256(raw).hexdigest(),
                   rules_revision=load_rules()['revision'], floors=[], doors=[], rooms=[],
-                  unmapped_labels=[], errors=[], limitations=[])
+                  unmapped_labels=[], errors=[], limitations=[], auto_corrections=[], model_reviews=[])
     table = json.loads((ROOT/'simulation/pyrocast_lite/fire_load_table.json').read_text('utf-8'))
     unmapped = {}
     core_nodes = []
     for floor in building['floors']:
         name = floor['name']; adapted = []; nodes = []
+        if auto_correct:
+            repair = repair_floor(floor)
+            report['auto_corrections'].extend(repair['changes'])
+            report['model_reviews'].extend(repair['reviews'])
         for room in floor['rooms']:
             rid = f"CAD_{name}_{room['id']}"
             shape = geometry(room['polys']); x0,y0,x1,y1 = shape.bounds
             labels = room.get('names', [])
             cls, evidence = usage_class(labels, floor.get('use'))
+            if evidence.get('basis') != 'label':
+                report['model_reviews'].append(dict(floor=name,id=room['id'],kind='estimated_usage',
+                    detail='용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지',usage_class=cls,evidence=evidence))
             kind = dedicated_core_kind(room)
             adapted.append(dict(id=rid, name=' / '.join(labels), cad_names=labels,
                                 area_m2=room['area'], size_m=[x1-x0,y1-y0,floor['h']], core_kind=kind))
@@ -75,6 +83,8 @@ def prepare(source):
         for row in graph['excluded_openings']:
             report['errors'].append(dict(floor=name,kind='excluded_opening',**row))
         report['errors'].extend(dict(floor=name,id=rid,kind='isolated_room') for rid in graph['isolated_rooms'])
+        report['model_reviews'].extend(dict(floor=name,id=rid,kind='isolated_room',
+            detail='연결 미확인 · 도면에 없는 문을 생성하지 않음') for rid in graph['isolated_rooms'])
         report['floors'].append(dict(floor=name,rooms=len(floor['rooms']),connections=len(graph['connections']),
                                     doors={k:counts[k] for k in ['confirmed','inferred','ordinary','external']},
                                     windows=sum('window' in v['kind'] for v in graph['connections']),
@@ -82,7 +92,7 @@ def prepare(source):
                                     cores=dict(Counter(n['kind'] for n in nodes)),excluded=len(graph['excluded_openings']),
                                     isolated=len(graph['isolated_rooms'])))
     # Original legacy shaft envelopes are preserved as evidence, not promoted to verified links.
-    building['source_shafts']=building.get('shafts',[])
+    building.setdefault('source_shafts',deepcopy(building.get('shafts',[])))
     building['core_nodes']=core_nodes
     building['shafts'],building['unconfirmed_vertical_cores']=match_vertical_cores(core_nodes)
     building['vertical_connections']=[dict(kind=s['kind'],from_floor=a['floor'],from_core=a['core_id'],
@@ -92,9 +102,13 @@ def prepare(source):
     report['unmapped_labels']=[dict(label=k,rooms=sorted(set(v))) for k,v in sorted(unmapped.items())]
     report['vertical_connections']=len(building['vertical_connections'])
     report['unconfirmed_vertical_cores']=building['unconfirmed_vertical_cores']
+    building['model_review']=dict(revision='geometry_evidence_v1',auto_correct=auto_correct,
+        corrections=[dict(floor=f['name'],id=o['id'],**c) for f in building['floors']
+                     for o in f['openings'] for c in o.get('auto_corrections',[])],
+        items=deepcopy(report['model_reviews']),basis='기하 근거 자동보정 · 현장 확인 아님')
     report['limitations']=['원본 추출 결과에 있는 개구부만 연결. 미확정은 외기로 대체하지 않음.',
                           '실명에 없는 용도는 기존 층 용도 기본값 적용; 개별 미매핑 문자는 별도 목록.',
-                          '큰 실에 붙은 코어 태그·복수 용도 문자는 검토 필요. 도면 재인식이나 수동 보정 없음.',
+                          '큰 실에 붙은 코어 태그·복수 용도 문자는 검토 필요. 도면 재인식이나 문 생성 없음.',
                           '기존 샤프트 외곽만으로 층간 연결을 확정하지 않음. 실 좌표·정렬·인접 층 중첩으로 재검사.',
                           '14개 도면 층은 B3~B1·1F~10F·PH이며 지상 14층을 뜻하지 않음.',
                           '분류의 확정은 프로젝트 규칙상 명칭이며 방화 성능 실측 확인이 아님.']
@@ -102,8 +116,9 @@ def prepare(source):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('source');ap.add_argument('--output',required=True)
+    ap.add_argument('--no-auto-correct',action='store_true',help='기하 근거 자동보정 비활성')
     args=ap.parse_args();out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
-    building,report=prepare(args.source)
+    building,report=prepare(args.source,auto_correct=not args.no_auto_correct)
     for name,obj in [('building.json',building),('graph-report.json',report)]:
         (out/name).write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print(json.dumps({'floors':report['floors'],'vertical_connections':report['vertical_connections'],

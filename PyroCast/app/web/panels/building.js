@@ -1,4 +1,5 @@
 import {infoTip} from './explanations.js';
+import {createModelReview} from './model_review.js';
 const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
 const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
 export function doorCategory(row){return row.door_class==='fire'?(row.confidence==='inferred'?'inferred':['confirmed','user'].includes(row.confidence)?'confirmed':'unknown'):['ordinary','external'].includes(row.door_class)?'ordinary':'unknown';}
@@ -10,7 +11,7 @@ export function buildingTable(score){
  }).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
 }
 export function openingCounts(doors,openings){const counts={confirmed:0,inferred:0,ordinary:0,window:0,unknown:0};for(const r of doors||[])counts[doorCategory(r)]++;counts.window=(openings||[]).filter(r=>r.class?.includes('window')).length;return counts;}
-export function createBuildingPanel({store,onSave,onRefresh,onClearFixed}){
+export function createBuildingPanel({store,onSave,onRefresh,onClearFixed,building,onLocate}){
  const $=id=>document.getElementById(id),root=document.createElement('div');root.id='buildingContent';$('shellPane-building').append(root);
  root.innerHTML='<h3>개구부 분류 <span tabindex="0" title="기존 분류 API의 입력 범위입니다. 확정은 분류 규칙상 확정 또는 사용자 정정이며 내화 성능 검증이 아닙니다. 창 개수는 시뮬레이션 입력의 창이며 3D 강조 필터와 별개입니다.">ⓘ</span></h3><div id="buildingScope"></div><div id="buildingOpeningSummary"></div><button id="buildingRefresh">새로고침</button><div id="buildingStatus" role="status"></div><div id="buildingFixedState"></div><button id="buildingClearFixed" hidden>확정 급기 해제</button><h3>문 목록 <span tabindex="0" title="정정은 기존 /cfbt/lite/doors 경로로 저장합니다. 이후 탐색 입력에 적용되며 현재 재생 결과는 바꾸지 않습니다.">ⓘ</span></h3><div class="buildingScroll"><table><thead><tr><th>문 · 연결</th><th>분류</th><th>확정 상태</th><th>정정</th></tr></thead><tbody id="buildingDoors"></tbody></table></div><h3>실 용도·연료 <span tabindex="0" title="승인된 용도·연료값을 그대로 읽습니다. 미제공 값은 미확인입니다. 각 실을 펼치면 CAD 원문과 적용 근거를 확인할 수 있습니다.">ⓘ</span></h3><div class="buildingScroll"><table><thead><tr><th>실·용도</th><th>면적<br>m²</th><th>하중<br>MJ/m²</th><th>피복률</th><th>HRRPUA<br>kW/m²</th></tr></thead><tbody id="buildingFuel"></tbody></table></div>';
  const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}#buildingContent h3 span{cursor:help}#buildingOpeningSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}#buildingOpeningSummary div{border:1px solid #496273;border-radius:6px;text-align:center;padding:7px 2px}#buildingOpeningSummary b{display:block;font-size:18px;margin-top:4px}#buildingContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px;cursor:pointer}#buildingContent button:disabled{opacity:.5;cursor:default}#buildingContent :focus-visible{outline:2px solid #42e8ff}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingDoors td:nth-child(2),#buildingDoors td:nth-child(3){white-space:nowrap}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingScope,#buildingStatus{font-size:11px;color:#b8cbd8;margin:8px 0}`;document.head.append(style);
@@ -22,6 +23,7 @@ export function createBuildingPanel({store,onSave,onRefresh,onClearFixed}){
   const fixed=s.doors?.fixed_state;$('buildingFixedState').textContent=fixed?`확정 급기 상태: 표본 ${fixed.sample_id} 적용 · ${Object.keys(fixed.states).length}개구부`:'';$('buildingClearFixed').hidden=!fixed;$('buildingClearFixed').disabled=s.saving;
   $('buildingRefresh').disabled=s.saving;
  }
+ const review=createModelReview({container:root,building,onLocate});
  $('buildingClearFixed').onclick=onClearFixed;$('buildingRefresh').onclick=onRefresh;const off=store.subscribe('buildingReview',render);render();
- return {dispose(){off();root.remove();style.remove();}};
+ return {dispose(){review.dispose();off();root.remove();style.remove();}};
 }

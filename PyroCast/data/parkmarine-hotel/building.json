@@ -6083,7 +6083,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D1",
@@ -6139,7 +6140,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D2",
@@ -6195,7 +6197,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -6363,7 +6366,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D5",
@@ -6461,7 +6465,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV0",
@@ -6494,7 +6499,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV1",
@@ -6531,7 +6537,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV2",
@@ -6568,7 +6575,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         }
       ],
       "columns": [
@@ -16433,7 +16441,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -16489,7 +16498,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D5",
@@ -16798,7 +16808,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D12",
@@ -16882,7 +16893,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -16938,14 +16950,15 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
           "kind": "window_inner",
           "sides": [
-            "R2",
-            null
+            "R4",
+            "R2"
           ],
           "swing_into": null,
           "span": 1.74,
@@ -17003,14 +17016,70 @@
               ]
             ]
           ],
-          "connection_status": "unresolved"
+          "connection_status": "interior",
+          "auto_corrections": [
+            {
+              "kind": "opening_sides",
+              "before": [
+                "R2",
+                null
+              ],
+              "after": [
+                "R4",
+                "R2"
+              ],
+              "basis": "all_two_sided_geometry_probes_agree",
+              "samples": [
+                [
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ]
+                ],
+                [
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ]
+                ]
+              ]
+            }
+          ]
         },
         {
           "id": "W1",
           "kind": "window_inner",
           "sides": [
-            "R2",
-            null
+            "R4",
+            "R2"
           ],
           "swing_into": null,
           "span": 1.74,
@@ -17048,7 +17117,63 @@
               ]
             ]
           ],
-          "connection_status": "unresolved"
+          "connection_status": "interior",
+          "auto_corrections": [
+            {
+              "kind": "opening_sides",
+              "before": [
+                "R2",
+                null
+              ],
+              "after": [
+                "R4",
+                "R2"
+              ],
+              "basis": "all_two_sided_geometry_probes_agree",
+              "samples": [
+                [
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ],
+                  [
+                    "R4"
+                  ]
+                ],
+                [
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ],
+                  [
+                    "R2"
+                  ]
+                ]
+              ]
+            }
+          ]
         },
         {
           "id": "W2",
@@ -17101,7 +17226,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV0",
@@ -17138,7 +17264,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV1",
@@ -17175,7 +17302,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         }
       ],
       "columns": [
@@ -17931,6 +18059,56 @@
             }
           },
           {
+            "id": "W0",
+            "kind": "window_inner",
+            "sides": [
+              "R4",
+              "R2"
+            ],
+            "boundary": "interior",
+            "opening_states": [
+              0,
+              50,
+              100
+            ],
+            "opening_unit": "percent",
+            "inferred": false,
+            "dimensions": {
+              "width_m": 1.74,
+              "bottom_m": 1.5,
+              "top_m": 3.0,
+              "height_m": 1.5,
+              "area_m2": 2.61,
+              "width_source": "CAD_span",
+              "height_source": "CAD_override_or_floor_default"
+            }
+          },
+          {
+            "id": "W1",
+            "kind": "window_inner",
+            "sides": [
+              "R4",
+              "R2"
+            ],
+            "boundary": "interior",
+            "opening_states": [
+              0,
+              50,
+              100
+            ],
+            "opening_unit": "percent",
+            "inferred": false,
+            "dimensions": {
+              "width_m": 1.74,
+              "bottom_m": 1.5,
+              "top_m": 3.0,
+              "height_m": 1.5,
+              "area_m2": 2.61,
+              "width_source": "CAD_span",
+              "height_source": "CAD_override_or_floor_default"
+            }
+          },
+          {
             "id": "W2",
             "kind": "door_sliding",
             "sides": [
@@ -18014,14 +18192,6 @@
           {
             "id": "D9",
             "reason": "internal_leaf"
-          },
-          {
-            "id": "W0",
-            "reason": "unresolved"
-          },
-          {
-            "id": "W1",
-            "reason": "unresolved"
           }
         ],
         "isolated_rooms": [
@@ -26397,7 +26567,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D1",
@@ -26453,7 +26624,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D2",
@@ -26745,7 +26917,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D5",
@@ -26817,7 +26990,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D6",
@@ -27062,7 +27236,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W1",
@@ -27111,7 +27286,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W2",
@@ -27221,7 +27397,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W4",
@@ -27290,7 +27467,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W5",
@@ -27457,7 +27635,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV4",
@@ -27494,7 +27673,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV5",
@@ -27637,7 +27817,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV9",
@@ -27674,7 +27855,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV10",
@@ -27727,7 +27909,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV11",
@@ -27800,7 +27983,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         }
       ],
       "columns": [
@@ -36823,7 +37007,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D2",
@@ -36980,7 +37165,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D6",
@@ -36990,7 +37176,7 @@
             "R1"
           ],
           "swing_into": null,
-          "span": null,
+          "span": 0.88,
           "door_h": 2.1,
           "leaves": [],
           "polys": [
@@ -37035,7 +37221,40 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "autocorrect_aperture_polys": [
+            {
+              "o": [
+                [
+                  11.61,
+                  53.92
+                ],
+                [
+                  11.61,
+                  53.72
+                ],
+                [
+                  12.49,
+                  53.72
+                ],
+                [
+                  12.49,
+                  53.92
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "auto_corrections": [
+            {
+              "kind": "aperture_width",
+              "before": 3.9369,
+              "after": 0.88,
+              "basis": "single_solid_rectangle_excluding_sparse_drafting_fragments",
+              "area_share": 0.7963800904977383
+            }
+          ],
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -37091,7 +37310,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -37147,7 +37367,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -37295,7 +37516,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -37670,7 +37892,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D20",
@@ -37703,7 +37926,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
@@ -37888,8 +38112,8 @@
           "id": "W3",
           "kind": "window_inner",
           "sides": [
-            null,
-            null
+            "R1",
+            "R7"
           ],
           "swing_into": null,
           "span": 2.2,
@@ -37943,7 +38167,63 @@
               ]
             ]
           ],
-          "connection_status": "unresolved"
+          "connection_status": "interior",
+          "auto_corrections": [
+            {
+              "kind": "opening_sides",
+              "before": [
+                null,
+                null
+              ],
+              "after": [
+                "R1",
+                "R7"
+              ],
+              "basis": "all_two_sided_geometry_probes_agree",
+              "samples": [
+                [
+                  [
+                    "R1"
+                  ],
+                  [
+                    "R1"
+                  ],
+                  [
+                    "R1"
+                  ],
+                  [
+                    "R1"
+                  ],
+                  [
+                    "R1"
+                  ],
+                  [
+                    "R1"
+                  ]
+                ],
+                [
+                  [
+                    "R7"
+                  ],
+                  [
+                    "R7"
+                  ],
+                  [
+                    "R7"
+                  ],
+                  [
+                    "R7"
+                  ],
+                  [
+                    "R7"
+                  ],
+                  [
+                    "R7"
+                  ]
+                ]
+              ]
+            }
+          ]
         },
         {
           "id": "W6",
@@ -38916,7 +39196,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV3",
@@ -38949,7 +39230,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "EV13",
@@ -39799,12 +40081,12 @@
             "opening_unit": "percent",
             "inferred": false,
             "dimensions": {
-              "width_m": 3.9369,
+              "width_m": 0.88,
               "bottom_m": 0.0,
               "top_m": 2.1,
               "height_m": 2.1,
-              "area_m2": 8.26743421285899,
-              "width_source": "CAD_aperture_envelope",
+              "area_m2": 1.848,
+              "width_source": "CAD_span",
               "height_source": "CAD_override_or_floor_default"
             }
           },
@@ -40104,6 +40386,31 @@
               "top_m": 2.4,
               "height_m": 1.5,
               "area_m2": 2.94,
+              "width_source": "CAD_span",
+              "height_source": "CAD_override_or_floor_default"
+            }
+          },
+          {
+            "id": "W3",
+            "kind": "window_inner",
+            "sides": [
+              "R1",
+              "R7"
+            ],
+            "boundary": "interior",
+            "opening_states": [
+              0,
+              50,
+              100
+            ],
+            "opening_unit": "percent",
+            "inferred": false,
+            "dimensions": {
+              "width_m": 2.2,
+              "bottom_m": 0.9,
+              "top_m": 2.4,
+              "height_m": 1.5,
+              "area_m2": 3.3000000000000003,
               "width_source": "CAD_span",
               "height_source": "CAD_override_or_floor_default"
             }
@@ -40592,10 +40899,6 @@
           {
             "id": "W2",
             "reason": "same_space"
-          },
-          {
-            "id": "W3",
-            "reason": "unresolved"
           },
           {
             "id": "W6",
@@ -46392,7 +46695,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D1",
@@ -46448,7 +46752,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D2",
@@ -46491,7 +46796,7 @@
             "R0"
           ],
           "swing_into": null,
-          "span": null,
+          "span": 0.86,
           "door_h": 2.1,
           "leaves": [],
           "polys": [
@@ -46536,7 +46841,39 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "autocorrect_aperture_polys": [
+            {
+              "o": [
+                [
+                  11.62,
+                  53.92
+                ],
+                [
+                  11.62,
+                  53.72
+                ],
+                [
+                  12.48,
+                  53.72
+                ],
+                [
+                  12.48,
+                  53.92
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "auto_corrections": [
+            {
+              "kind": "aperture_width",
+              "before": 3.9216,
+              "after": 0.86,
+              "basis": "single_solid_rectangle_excluding_sparse_drafting_fragments",
+              "area_share": 0.7926267281105999
+            }
+          ]
         },
         {
           "id": "D4",
@@ -47669,12 +48006,12 @@
             "opening_unit": "percent",
             "inferred": false,
             "dimensions": {
-              "width_m": 3.9216,
+              "width_m": 0.86,
               "bottom_m": 0.0,
               "top_m": 2.1,
               "height_m": 2.1,
-              "area_m2": 8.23537473284309,
-              "width_source": "CAD_aperture_envelope",
+              "area_m2": 1.806,
+              "width_source": "CAD_span",
               "height_source": "CAD_override_or_floor_default"
             }
           },
@@ -55412,7 +55749,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D1",
@@ -55468,7 +55806,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D2",
@@ -55511,7 +55850,7 @@
             "R0"
           ],
           "swing_into": null,
-          "span": null,
+          "span": 0.86,
           "door_h": 2.1,
           "leaves": [],
           "polys": [
@@ -55556,7 +55895,39 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "autocorrect_aperture_polys": [
+            {
+              "o": [
+                [
+                  11.62,
+                  53.92
+                ],
+                [
+                  11.62,
+                  53.72
+                ],
+                [
+                  12.48,
+                  53.72
+                ],
+                [
+                  12.48,
+                  53.92
+                ]
+              ],
+              "h": []
+            }
+          ],
+          "auto_corrections": [
+            {
+              "kind": "aperture_width",
+              "before": 3.9216,
+              "after": 0.86,
+              "basis": "single_solid_rectangle_excluding_sparse_drafting_fragments",
+              "area_share": 0.7926267281105999
+            }
+          ]
         },
         {
           "id": "D4",
@@ -57208,12 +57579,12 @@
             "opening_unit": "percent",
             "inferred": false,
             "dimensions": {
-              "width_m": 3.9216,
+              "width_m": 0.86,
               "bottom_m": 0.0,
               "top_m": 2.1,
               "height_m": 2.1,
-              "area_m2": 8.23537473284309,
-              "width_source": "CAD_aperture_envelope",
+              "area_m2": 1.806,
+              "width_source": "CAD_span",
               "height_source": "CAD_override_or_floor_default"
             }
           },
@@ -71199,7 +71570,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -71255,7 +71627,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -71367,7 +71740,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -71423,7 +71797,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -71479,7 +71854,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -71535,7 +71911,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -71725,7 +72102,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D12",
@@ -71781,7 +72159,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -71837,7 +72216,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -71893,7 +72273,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -71949,7 +72330,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -72005,7 +72387,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -72073,7 +72456,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D18",
@@ -72129,7 +72513,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
@@ -88175,7 +88560,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -88231,7 +88617,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -88343,7 +88730,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -88399,7 +88787,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -88455,7 +88844,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -88511,7 +88901,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -88567,7 +88958,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D11",
@@ -88769,7 +89161,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -88825,7 +89218,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -88881,7 +89275,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -88937,7 +89332,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -88993,7 +89389,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -89049,7 +89446,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D18",
@@ -89105,7 +89503,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
@@ -105377,7 +105776,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -105433,7 +105833,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -105561,7 +105962,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -105625,7 +106027,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -105697,7 +106100,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -105753,7 +106157,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -105967,7 +106372,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D12",
@@ -106023,7 +106429,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -106079,7 +106486,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -106151,7 +106559,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -106207,7 +106616,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -106263,7 +106673,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -106331,7 +106742,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D18",
@@ -106387,7 +106799,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
@@ -122489,7 +122902,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -122545,7 +122959,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -122673,7 +123088,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -122737,7 +123153,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -122809,7 +123226,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -122865,7 +123283,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -122921,7 +123340,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D11",
@@ -123139,7 +123559,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -123195,7 +123616,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -123251,7 +123673,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -123323,7 +123746,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -123379,7 +123803,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -123435,7 +123860,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D18",
@@ -123503,7 +123929,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
@@ -140884,7 +141311,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -140940,7 +141368,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -141068,7 +141497,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -141132,7 +141562,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -141204,7 +141635,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -141260,7 +141692,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -141466,7 +141899,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D12",
@@ -141522,7 +141956,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -141578,7 +142013,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -141650,7 +142086,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -141706,7 +142143,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -141762,7 +142200,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -141830,7 +142269,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D18",
@@ -141886,7 +142326,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "W0",
@@ -158187,7 +158628,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D1",
@@ -158340,7 +158782,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -158396,7 +158839,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D5",
@@ -158508,7 +158952,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -158580,7 +159025,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -158636,7 +159082,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -158708,7 +159155,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D11",
@@ -158764,7 +159212,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D12",
@@ -158820,7 +159269,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -158892,7 +159342,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -158948,7 +159399,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -159004,7 +159456,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -159072,7 +159525,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -175335,7 +175789,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D3",
@@ -175391,7 +175846,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D4",
@@ -175503,7 +175959,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D7",
@@ -175575,7 +176032,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D8",
@@ -175631,7 +176089,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D9",
@@ -175703,7 +176162,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -175759,7 +176219,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D11",
@@ -175815,7 +176276,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D12",
@@ -175887,7 +176349,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D13",
@@ -175943,7 +176406,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D14",
@@ -175999,7 +176463,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D15",
@@ -176067,7 +176532,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D16",
@@ -176123,7 +176589,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D17",
@@ -181475,7 +181942,8 @@
               ]
             ]
           ],
-          "connection_status": "interior"
+          "connection_status": "interior",
+          "connection_verification": "two_sided_geometry_probes_agree"
         },
         {
           "id": "D10",
@@ -182912,5 +183380,4314 @@
     }
   ],
   "schema_version": 2,
-  "opening_unit": "percent"
+  "opening_unit": "percent",
+  "model_review": {
+    "revision": "geometry_evidence_v1",
+    "auto_correct": true,
+    "corrections": [
+      {
+        "floor": "B2",
+        "id": "W0",
+        "kind": "opening_sides",
+        "before": [
+          "R2",
+          null
+        ],
+        "after": [
+          "R4",
+          "R2"
+        ],
+        "basis": "all_two_sided_geometry_probes_agree",
+        "samples": [
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ],
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B2",
+        "id": "W1",
+        "kind": "opening_sides",
+        "before": [
+          "R2",
+          null
+        ],
+        "after": [
+          "R4",
+          "R2"
+        ],
+        "basis": "all_two_sided_geometry_probes_agree",
+        "samples": [
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ],
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "D6",
+        "kind": "aperture_width",
+        "before": 3.9369,
+        "after": 0.88,
+        "basis": "single_solid_rectangle_excluding_sparse_drafting_fragments",
+        "area_share": 0.7963800904977383
+      },
+      {
+        "floor": "1F",
+        "id": "W3",
+        "kind": "opening_sides",
+        "before": [
+          null,
+          null
+        ],
+        "after": [
+          "R1",
+          "R7"
+        ],
+        "basis": "all_two_sided_geometry_probes_agree",
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R7"
+            ],
+            [
+              "R7"
+            ],
+            [
+              "R7"
+            ],
+            [
+              "R7"
+            ],
+            [
+              "R7"
+            ],
+            [
+              "R7"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "D3",
+        "kind": "aperture_width",
+        "before": 3.9216,
+        "after": 0.86,
+        "basis": "single_solid_rectangle_excluding_sparse_drafting_fragments",
+        "area_share": 0.7926267281105999
+      },
+      {
+        "floor": "3F",
+        "id": "D3",
+        "kind": "aperture_width",
+        "before": 3.9216,
+        "after": 0.86,
+        "basis": "single_solid_rectangle_excluding_sparse_drafting_fragments",
+        "area_share": 0.7926267281105999
+      }
+    ],
+    "items": [
+      {
+        "floor": "B3",
+        "id": "D3",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R0",
+          "R0"
+        ],
+        "existing": [
+          "R0",
+          "R0"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ],
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B3",
+        "id": "R0",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R1",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R6",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R7",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R8",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R9",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R11",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "parking",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "parking",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B3",
+        "id": "R2",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B3",
+        "id": "R5",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B3",
+        "id": "R7",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B3",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B3",
+        "id": "R9",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "D0",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "B2",
+        "id": "D1",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "B2",
+        "id": "D6",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "B2",
+        "id": "D8",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R4",
+          "R4"
+        ],
+        "existing": [
+          "R4",
+          "R4"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ],
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B2",
+        "id": "D9",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R9",
+          "R9"
+        ],
+        "existing": [
+          "R9",
+          "R9"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ]
+          ],
+          [
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ],
+            [
+              "R9"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B2",
+        "id": "R0",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R1",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R6",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R7",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R8",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R11",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R12",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R13",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R14",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R15",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R16",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R17",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R18",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R19",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R20",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R21",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "warehouse",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "warehouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B2",
+        "id": "R3",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R6",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R11",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R13",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R16",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R17",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R18",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R19",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R20",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R21",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B2",
+        "id": "R22",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "D2",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R3"
+        ],
+        "existing": [
+          "R3",
+          "R14"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R14",
+              "R3"
+            ],
+            [
+              "R14",
+              "R3"
+            ],
+            [
+              "R14",
+              "R3"
+            ],
+            [
+              "R14",
+              "R3"
+            ],
+            [
+              "R14",
+              "R3"
+            ],
+            [
+              "R14",
+              "R3"
+            ]
+          ],
+          [
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B1",
+        "id": "D3",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "B1",
+        "id": "D6",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R3",
+          "R3"
+        ],
+        "existing": [
+          "R3",
+          null
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ]
+          ],
+          [
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B1",
+        "id": "D7",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R3"
+        ],
+        "existing": [
+          "R20",
+          "R3"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R20",
+              "R3"
+            ],
+            [
+              "R20",
+              "R3"
+            ],
+            [
+              "R20",
+              "R3"
+            ],
+            [
+              "R20",
+              "R3"
+            ],
+            [
+              "R20",
+              "R3"
+            ],
+            [
+              "R20",
+              "R3"
+            ]
+          ],
+          [
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B1",
+        "id": "D8",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R3",
+          null
+        ],
+        "existing": [
+          "R19",
+          "R3"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ],
+            [
+              "R3"
+            ]
+          ],
+          [
+            [
+              "R19",
+              "R3"
+            ],
+            [
+              "R19",
+              "R3"
+            ],
+            [
+              "R19",
+              "R3"
+            ],
+            [
+              "R19",
+              "R3"
+            ],
+            [
+              "R19",
+              "R3"
+            ],
+            [
+              "R19",
+              "R3"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B1",
+        "id": "W5",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R2",
+          "R2"
+        ],
+        "existing": [
+          "R2",
+          "R2"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ],
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "B1",
+        "id": "R0",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R1",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R6",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R7",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R8",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R9",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R11",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R12",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R13",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R14",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R15",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R16",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R17",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R18",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R19",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R21",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "B1",
+        "id": "R5",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R6",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R13",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R15",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R16",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R17",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R18",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R21",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "1F",
+        "id": "D9",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R1"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "W2",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R1"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "W6",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          null,
+          null
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "W7",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          null,
+          null
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "W13",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          "R1"
+        ],
+        "existing": [
+          null,
+          "R1"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "W14",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          "R1"
+        ],
+        "existing": [
+          null,
+          null
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "W17",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R1"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "1F",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R6",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R7",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R8",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R9",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R11",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R12",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R13",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "1F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "1F",
+        "id": "R10",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "1F",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "1F",
+        "id": "R15",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "2F",
+        "id": "D2",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R0",
+          null
+        ],
+        "existing": [
+          "R11",
+          "R0"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ],
+          [
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "D3",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R0",
+          null
+        ],
+        "existing": [
+          "R10",
+          "R0"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ],
+          [
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R0"
+        ],
+        "existing": [
+          "R0",
+          "R8"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ]
+          ],
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "D7",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R6"
+        ],
+        "existing": [
+          "R6",
+          "R6"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [],
+            [],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ]
+          ],
+          [
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "D8",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R4",
+          "R4"
+        ],
+        "existing": [
+          "R4",
+          "R4"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ],
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "2F",
+        "id": "R1",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R7",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R8",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R9",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "2F",
+        "id": "R2",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "2F",
+        "id": "R5",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "2F",
+        "id": "R7",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "2F",
+        "id": "R9",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "3F",
+        "id": "D2",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R0",
+          null
+        ],
+        "existing": [
+          "R11",
+          "R0"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ],
+          [
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ],
+            [
+              "R0",
+              "R11"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "D3",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R0",
+          null
+        ],
+        "existing": [
+          "R10",
+          "R0"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ],
+          [
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ],
+            [
+              "R0",
+              "R10"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R0"
+        ],
+        "existing": [
+          "R0",
+          "R8"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ],
+            [
+              "R0",
+              "R8"
+            ]
+          ],
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "D7",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R6"
+        ],
+        "existing": [
+          "R6",
+          "R6"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [],
+            [],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ]
+          ],
+          [
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ],
+            [
+              "R6"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "D8",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R4",
+          "R4"
+        ],
+        "existing": [
+          "R4",
+          "R4"
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ],
+          [
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ],
+            [
+              "R4"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "W6",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R0",
+          null
+        ],
+        "existing": [
+          null,
+          null
+        ],
+        "overlapping_hits": false,
+        "samples": [
+          [
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ],
+            [
+              "R0"
+            ]
+          ],
+          [
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+          ]
+        ]
+      },
+      {
+        "floor": "3F",
+        "id": "R1",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "3F",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "3F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "3F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "3F",
+        "id": "R7",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "3F",
+        "id": "R8",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "shopping",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "retail",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "3F",
+        "id": "R2",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "3F",
+        "id": "R5",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "3F",
+        "id": "R7",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "4F",
+        "id": "D0",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R2",
+          null
+        ],
+        "existing": [
+          "R13",
+          "R2"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ],
+          [
+            [
+              "R13",
+              "R2"
+            ],
+            [
+              "R13",
+              "R2"
+            ],
+            [
+              "R13",
+              "R2"
+            ],
+            [
+              "R13",
+              "R2"
+            ],
+            [
+              "R13",
+              "R2"
+            ],
+            [
+              "R13",
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "4F",
+        "id": "D1",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R2"
+        ],
+        "existing": [
+          "R2",
+          "R14"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R14",
+              "R2"
+            ],
+            [
+              "R14",
+              "R2"
+            ],
+            [
+              "R14",
+              "R2"
+            ],
+            [
+              "R14",
+              "R2"
+            ],
+            [
+              "R14",
+              "R2"
+            ],
+            [
+              "R14",
+              "R2"
+            ]
+          ],
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "4F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R2"
+        ],
+        "existing": [
+          "R2",
+          "R10"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ]
+          ],
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "4F",
+        "id": "D10",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "4F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "4F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "4F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "4F",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "4F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "4F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "4F",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "5F",
+        "id": "D0",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "5F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R10"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "5F",
+        "id": "D11",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "5F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "5F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "5F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "5F",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "5F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "5F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "5F",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "5F",
+        "id": "R13",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "5F",
+        "id": "R14",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "5F",
+        "id": "R17",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "6F",
+        "id": "D0",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "6F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R10"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "6F",
+        "id": "D10",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "6F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "6F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "6F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "6F",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "6F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "6F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "6F",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "6F",
+        "id": "R13",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "6F",
+        "id": "R14",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "6F",
+        "id": "R17",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "7F",
+        "id": "D0",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "7F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R10"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ],
+            [
+              "R1",
+              "R10"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "7F",
+        "id": "D11",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "7F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "7F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "7F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "7F",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "7F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "7F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "7F",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "7F",
+        "id": "R13",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "7F",
+        "id": "R14",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "7F",
+        "id": "R17",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "8F",
+        "id": "D0",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "8F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R2"
+        ],
+        "existing": [
+          "R2",
+          "R10"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ],
+            [
+              "R10",
+              "R2"
+            ]
+          ],
+          [
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ],
+            [
+              "R2"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "8F",
+        "id": "D10",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "8F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "8F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "8F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "8F",
+        "id": "R10",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "8F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "8F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "8F",
+        "id": "R12",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "8F",
+        "id": "R13",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "8F",
+        "id": "R14",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "8F",
+        "id": "R17",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "9F",
+        "id": "D1",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          null
+        ],
+        "existing": [
+          "R12",
+          "R1"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "9F",
+        "id": "D2",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R13"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "9F",
+        "id": "D5",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R9"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "9F",
+        "id": "D17",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "9F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "9F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "9F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "9F",
+        "id": "R9",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "9F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "9F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "9F",
+        "id": "R11",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "10F",
+        "id": "D0",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          "R1",
+          null
+        ],
+        "existing": [
+          "R12",
+          "R1"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ],
+          [
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ],
+            [
+              "R1",
+              "R12"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "10F",
+        "id": "D1",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R13"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ],
+            [
+              "R1",
+              "R13"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "10F",
+        "id": "D4",
+        "kind": "ambiguous_connection",
+        "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+        "candidates": [
+          null,
+          "R1"
+        ],
+        "existing": [
+          "R1",
+          "R9"
+        ],
+        "overlapping_hits": true,
+        "samples": [
+          [
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ],
+            [
+              "R1",
+              "R9"
+            ]
+          ],
+          [
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ],
+            [
+              "R1"
+            ]
+          ]
+        ]
+      },
+      {
+        "floor": "10F",
+        "id": "R3",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "10F",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "10F",
+        "id": "R5",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "10F",
+        "id": "R9",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "hotel_room",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "lodging",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "10F",
+        "id": "R4",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "10F",
+        "id": "R8",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "10F",
+        "id": "R11",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "PH",
+        "id": "D10",
+        "kind": "mixed_leaf_planes",
+        "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+      },
+      {
+        "floor": "PH",
+        "id": "R2",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "default",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "penthouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "PH",
+        "id": "R4",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "default",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "penthouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "PH",
+        "id": "R6",
+        "kind": "estimated_usage",
+        "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+        "usage_class": "default",
+        "evidence": {
+          "basis": "floor_use",
+          "floor_use": "penthouse",
+          "label_unmapped": true
+        }
+      },
+      {
+        "floor": "PH",
+        "id": "R2",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "PH",
+        "id": "R6",
+        "kind": "isolated_room",
+        "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+      },
+      {
+        "floor": "B1",
+        "id": "R9",
+        "kind": "loader_failed",
+        "detail": "입력 검토 필요 · Opening wider than usable equivalent room: CAD_B1_R9"
+      }
+    ],
+    "basis": "기하 근거 자동보정 · 현장 확인 아님"
+  }
 }

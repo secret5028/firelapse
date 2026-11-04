@@ -1781,7 +1781,7 @@ function timelineRiskData(building,result,selection){
   let peak=null;const segments=[];let segment=[];
   for(let i=0;i<times.length;i++){
    const t=times[i],value=values?.[i];
-   if(!finite(t)||!finite(value)){if(segment.length)segments.push(segment);segment=[];continue;}
+   if(!finite(t)||!finite(value)||value<=100){if(segment.length)segments.push(segment);segment=[];continue;}
    segment.push({t,value});if(!peak||value>peak.value)peak={t,value};
   }
   if(segment.length)segments.push(segment);
@@ -1792,25 +1792,25 @@ function timelineRiskData(building,result,selection){
 function createTimelineRisk({host,store}){
  const ns='http://www.w3.org/2000/svg',chart=document.createElement('div');chart.className='timelineRisk';host.prepend(chart);
  const style=document.createElement('style');style.textContent=`
- .timelineRisk{position:relative;margin:0 7px 4px;height:72px}.timelineRisk[hidden]{display:none}
+ .timelineRisk{position:relative;margin:0 7px 4px;height:auto}.timelineRisk[hidden]{display:none}
  .timelineRiskRow{position:relative;height:24px;border-bottom:1px solid #36516455}.timelineRiskRow svg{position:absolute;inset:0;width:100%;height:24px;overflow:visible}
  .timelineRiskLabel{position:absolute;left:0;top:3px;font-size:9px;line-height:14px;background:#142b3bcc;padding-right:3px;pointer-events:none}
  #pyroShellTimeline .timelinePeak{position:absolute;top:0;transform:translateX(-50%);font:9px/12px system-ui;white-space:nowrap;padding:0 3px;border:0;border-radius:3px;background:#142b3bc9;color:var(--peak-color);z-index:2}
  .timelineCursor{position:absolute;top:0;bottom:0;border-left:1px solid #e9f8ff;pointer-events:none;z-index:3}
- .timelineRiskEmpty{font-size:10px;color:#b8cbd8;position:absolute;inset:20px 0;text-align:center}
  `;document.head.append(style);
  let end=0,cursor=null;
  const seek=t=>{store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s:t});};
  function sync(){if(cursor)cursor.style.left=Math.max(0,Math.min(100,(store.get('playback').t_s/(end||1))*100))+'%';}
  function draw(){
   chart.replaceChildren();const result=store.get('result'),data=timelineRiskData(store.get('building'),result,store.get('selection'));end=data.end;chart.hidden=!end;cursor=null;if(!end)return;
-  chart.title='선택 셀 · 전 구간 지수 추이 · 세 곡선은 같은 축 · 최고점 클릭 시 해당 시간 이동';
-  if(!data.cell){const hint=document.createElement('span');hint.className='timelineRiskEmpty';hint.textContent='지수 그래프: 실·셀 선택';chart.append(hint);return;}
-  for(const row of data.rows){
+  chart.title='선택 셀 · 지수 100 초과 구간만 · 바닥선 100, 공통 축 · 최고점 클릭 시 해당 시간 이동';
+  const rows=data.rows.filter(row=>row.peak);chart.hidden=!data.cell||!rows.length;if(chart.hidden)return;
+  for(const row of rows){
    const lane=document.createElement('div');lane.className='timelineRiskRow';chart.append(lane);
    const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1000 24');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');lane.append(svg);
-   const x=t=>+(t/end*1000).toFixed(2),y=v=>+(22-Math.max(0,v)/data.scale*19).toFixed(2);
+   const x=t=>+(t/end*1000).toFixed(2),y=v=>+(22-Math.max(0,v-100)/Math.max(1,data.scale-100)*19).toFixed(2);
    for(const points of row.segments){
+    if(points.length===1){const dot=document.createElementNS(ns,'circle');dot.setAttribute('cx',x(points[0].t));dot.setAttribute('cy',y(points[0].value));dot.setAttribute('r','1.8');dot.setAttribute('fill',row.color);svg.append(dot);}
     const line=points.map((p,i)=>`${i?'L':'M'}${x(p.t)},${y(p.value)}`).join(' ');
     const area=document.createElementNS(ns,'path');area.setAttribute('d',`${line} L${x(points.at(-1).t)},22 L${x(points[0].t)},22 Z`);area.setAttribute('fill',row.color);area.setAttribute('fill-opacity','.22');svg.append(area);
     const path=document.createElementNS(ns,'path');path.setAttribute('d',line);path.setAttribute('fill','none');path.setAttribute('stroke',row.color);path.setAttribute('stroke-width','1.2');path.setAttribute('vector-effect','non-scaling-stroke');svg.append(path);

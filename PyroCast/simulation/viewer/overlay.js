@@ -499,45 +499,9 @@ function attachExplanations(){
 return {explanatoryText,infoTip,attachExplanations};
 })();
 
-// app/web/panels/model_review.js
-const __module11=(()=>{
-// CAD quality is independent of playback and hazard indices.
-function reviewRows(building){
- const r=building?.model_review;
- return [...(r?.corrections||[]).map(x=>({...x,status:'자동보정',detail:x.detail||(x.kind==='aperture_width'?`개구부 폭 ${x.before} → ${x.after} m`:`연결 ${JSON.stringify(x.before)} → ${JSON.stringify(x.after)}`)})),
-  ...(r?.items||[]).map(x=>({...x,status:x.kind==='estimated_usage'?'용도 추정':x.kind==='door_connection_estimated'&&x.sides?'연결 추정':'검토 필요'}))];
-}
-function createModelReview({container,building,onLocate=()=>{}}){
- const rows=reviewRows(building),root=document.createElement('details');root.className='modelReview';root.open=rows.length>0;
- const add=(p,tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;p.append(e);return e;};
- add(root,'summary',building?.model_review?`모델 점검 · 자동보정 ${building.model_review.corrections.length} · 추정/검토 ${building.model_review.items.length}`:'모델 점검 · 미실시');
- const tip=add(root,'div','기하 근거에 따른 보정 · 현장 확인 아님');tip.style.color='#9eb2c4';
- if(building?.model_review?.connectivity_validation==='incomplete')add(root,'div',`연결 검증 미완료 · 미연결 공간 ${building.model_review.unresolved_space_count}개`);
- if(building?.model_review?.pipeline){const p=building.model_review.pipeline;
-  add(root,'div',`CAD → 3D → AI 공리 검토 → 미완 표시 · AI 검토 반영 ${p.ai_reviewed_decisions}건`);
- }
- const floor=add(root,'select');floor.setAttribute('aria-label','점검 층');add(floor,'option','모든 층').value='';
- for(const f of building?.floors||[])add(floor,'option',f.name).value=f.name;
- const status=add(root,'select');status.setAttribute('aria-label','점검 분류');add(status,'option','모든 분류').value='';
- for(const s of ['자동보정','연결 추정','용도 추정','검토 필요'])add(status,'option',s).value=s;
- const scroll=add(root,'div');scroll.style.cssText='max-height:360px;overflow:auto';
- const table=add(scroll,'table'),head=add(table,'thead'),tr=add(head,'tr');for(const s of ['위치','상태','내용'])add(tr,'th',s);const body=add(table,'tbody');
- function render(){body.replaceChildren();for(const r of rows.filter(x=>(!floor.value||x.floor===floor.value)&&(!status.value||x.status===status.value))){
-  const tr=add(body,'tr'),button=add(add(tr,'td'),'button',`${r.floor} ${r.id}`);button.onclick=()=>onLocate(r);button.title='도면 위치 보기';
-  const s=add(tr,'td',r.status);s.style.color=r.status==='자동보정'?'#7bd6c4':'#edbf75';
-  const detail=add(tr,'td',r.detail);detail.title=JSON.stringify(r,null,2);
- }}
- floor.onchange=status.onchange=render;render();container.prepend(root);
- return {root,dispose(){root.remove();}};
-}
-
-return {reviewRows,createModelReview};
-})();
-
 // app/web/panels/building.js
-const __module12=(()=>{
+const __module11=(()=>{
 const {infoTip}=__module10;
-const {createModelReview}=__module11;
 const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
 const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
 function doorCategory(row){return row.door_class==='fire'?(row.confidence==='inferred'?'inferred':['confirmed','user'].includes(row.confidence)?'confirmed':'unknown'):['ordinary','external'].includes(row.door_class)?'ordinary':'unknown';}
@@ -549,28 +513,25 @@ function buildingTable(score){
  }).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
 }
 function openingCounts(doors,openings){const counts={confirmed:0,inferred:0,ordinary:0,window:0,unknown:0};for(const r of doors||[])counts[doorCategory(r)]++;counts.window=(openings||[]).filter(r=>r.class?.includes('window')).length;return counts;}
-function createBuildingPanel({store,onSave,onRefresh,onClearFixed,building,onLocate}){
+function createBuildingPanel({store}){
  const $=id=>document.getElementById(id),root=document.createElement('div');root.id='buildingContent';$('shellPane-building').append(root);
- root.innerHTML='<h3>개구부 분류 <span tabindex="0" title="기존 분류 API의 입력 범위입니다. 확정은 분류 규칙상 확정 또는 사용자 정정이며 내화 성능 검증이 아닙니다. 창 개수는 시뮬레이션 입력의 창이며 3D 강조 필터와 별개입니다.">ⓘ</span></h3><div id="buildingScope"></div><div id="buildingOpeningSummary"></div><button id="buildingRefresh">새로고침</button><div id="buildingStatus" role="status"></div><div id="buildingFixedState"></div><button id="buildingClearFixed" hidden>확정 급기 해제</button><h3>문 목록 <span tabindex="0" title="정정은 기존 /cfbt/lite/doors 경로로 저장합니다. 이후 탐색 입력에 적용되며 현재 재생 결과는 바꾸지 않습니다.">ⓘ</span></h3><div class="buildingScroll"><table><thead><tr><th>문 · 연결</th><th>분류</th><th>확정 상태</th><th>정정</th></tr></thead><tbody id="buildingDoors"></tbody></table></div><h3>실 용도·연료 <span tabindex="0" title="승인된 용도·연료값을 그대로 읽습니다. 미제공 값은 미확인입니다. 각 실을 펼치면 CAD 원문과 적용 근거를 확인할 수 있습니다.">ⓘ</span></h3><div class="buildingScroll"><table><thead><tr><th>실·용도</th><th>면적<br>m²</th><th>하중<br>MJ/m²</th><th>피복률</th><th>HRRPUA<br>kW/m²</th></tr></thead><tbody id="buildingFuel"></tbody></table></div>';
- const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}#buildingContent h3 span{cursor:help}#buildingOpeningSummary{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:8px 0}#buildingOpeningSummary div{border:1px solid #496273;border-radius:6px;text-align:center;padding:7px 2px}#buildingOpeningSummary b{display:block;font-size:18px;margin-top:4px}#buildingContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px;cursor:pointer}#buildingContent button:disabled{opacity:.5;cursor:default}#buildingContent :focus-visible{outline:2px solid #42e8ff}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingDoors td:nth-child(2),#buildingDoors td:nth-child(3){white-space:nowrap}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingScope,#buildingStatus{font-size:11px;color:#b8cbd8;margin:8px 0}`;document.head.append(style);
+ root.innerHTML='<section id="buildingFuelSection" hidden><h3>실 용도·연료</h3><div class="buildingScroll"><table><thead><tr><th>실·용도</th><th>면적<br>m²</th><th>하중<br>MJ/m²</th><th>피복률</th><th>HRRPUA<br>kW/m²</th></tr></thead><tbody id="buildingFuel"></tbody></table></div></section><p id="buildingSettingsEmpty">이 건물에서 제공하는 연료 설정이 없습니다.</p>';
+ const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingSettingsEmpty{color:#b8cbd8}`;document.head.append(style);
  const append=(p,tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;p.append(e);return e;};
- function render(){const s=store.get('buildingReview'),counts=openingCounts(s.doors?.rows,s.openings);$('buildingStatus').textContent=s.status;const floors=[...new Set((s.doors?.rows||[]).flatMap(r=>[r.a,r.b]).filter(id=>id?.startsWith('CAD_')).map(id=>id.split('_')[1]))];$('buildingScope').textContent=floors.length?`문 분류 · ${floors.join(' / ')} · 연료 ${[...new Set((s.rooms||[]).map(r=>r.id?.split('_')[1]).filter(Boolean))].join(' / ')||'미확인'}`:'분류 입력 읽는 중';
-  $('buildingOpeningSummary').replaceChildren();for(const [key,label] of [['confirmed','확정'],['inferred','추정'],['ordinary','일반'],['window','창']]){const c=append($('buildingOpeningSummary'),'div',label);c.dataset.category=key;append(c,'b',s.doors&&s.openings?counts[key]:'—');}if(counts.unknown)$('buildingScope').textContent+=` · 미분류 문 ${counts.unknown}`;
-  $('buildingDoors').replaceChildren();for(const row of s.doors?.rows||[]){const tr=append($('buildingDoors'),'tr');tr.dataset.id=row.id;const identity=append(tr,'td');append(identity,'b',short(row.id));append(identity,'div',`${short(row.a)} ↔ ${short(row.b)}`);const detail=append(identity,'details');append(detail,'summary','근거');const source=append(detail,'div',row.connected_names.join(' / '));source.className='buildingSource';source.append(infoTip(row.reason||'근거 미제공'));const label=({confirmed:'확정 방화문',inferred:'추정 방화문',ordinary:row.door_class==='external'?'외기문':'일반문',unknown:'미분류'})[doorCategory(row)];append(tr,'td',label+(row.confidence==='user'?' · 정정':''));const state=append(tr,'td',row.fixed_state?`${row.fixed_state.open?'열림':'닫힘'} (${Math.round(row.fixed_state.effective_fraction*100)}%)`:'—');state.dataset.fixedFraction=row.fixed_state?.effective_fraction??'';const button=append(append(tr,'td'),'button',row.door_class==='fire'?'일반문으로':'방화문으로');button.disabled=s.saving||row.read_only===true;if(row.read_only)button.title='이 건물의 문 정정 연결 전';button.onclick=()=>onSave(row.id,row.door_class==='fire'?'ordinary':'fire');}
-  $('buildingFuel').replaceChildren();for(const row of s.rooms){const tr=append($('buildingFuel'),'tr');tr.dataset.room=row.id;const first=append(tr,'td'),details=append(first,'details');append(details,'summary',`${short(row.id)} · ${row.usage}`);const source=append(details,'div',`CAD 원문: ${row.name||'미제공'}`);source.className='buildingSource';source.append(infoTip(row.basis||'근거 미제공'));for(const text of [number(row.area,1),number(row.load),Number.isFinite(row.coverage)?number(row.coverage*100)+'%':'미확인',number(row.hrrpua)])append(tr,'td',text);}
-  const fixed=s.doors?.fixed_state;$('buildingFixedState').textContent=fixed?`확정 급기 상태: 표본 ${fixed.sample_id} 적용 · ${Object.keys(fixed.states).length}개구부`:'';$('buildingClearFixed').hidden=!fixed;$('buildingClearFixed').disabled=s.saving;
-  $('buildingRefresh').disabled=s.saving;
+ let previous=null;
+ function render(){const s=store.get('buildingReview');if(previous===s.rooms)return;previous=s.rooms;
+  const rows=s.rooms||[];$('buildingFuelSection').hidden=!rows.length;$('buildingSettingsEmpty').hidden=!!rows.length;
+  $('buildingFuel').replaceChildren();for(const row of rows){const tr=append($('buildingFuel'),'tr');tr.dataset.room=row.id;const first=append(tr,'td'),details=append(first,'details');append(details,'summary',`${short(row.id)} · ${row.usage}`);const source=append(details,'div',`CAD 원문: ${row.name||'미제공'}`);source.className='buildingSource';source.append(infoTip(row.basis||'근거 미제공'));for(const text of [number(row.area,1),number(row.load),Number.isFinite(row.coverage)?number(row.coverage*100)+'%':'미확인',number(row.hrrpua)])append(tr,'td',text);}
  }
- const review=createModelReview({container:root,building,onLocate});
- $('buildingClearFixed').onclick=onClearFixed;$('buildingRefresh').onclick=onRefresh;const off=store.subscribe('buildingReview',render);render();
- return {dispose(){review.dispose();off();root.remove();style.remove();}};
+ const off=store.subscribe('buildingReview',render);render();
+ return {dispose(){off();root.remove();style.remove();}};
 }
 
 return {doorCategory,buildingTable,openingCounts,createBuildingPanel};
 })();
 
 // app/web/state/series_cache.js
-const __module13=(()=>{
+const __module12=(()=>{
 // One active immutable series payload, outside the observable metadata store.
 function frozenCopy(value){const data=structuredClone(value);const visit=x=>{if(x&&typeof x==='object'){Object.values(x).forEach(visit);Object.freeze(x);}};visit(data);return data;}
 function createSeriesCache(){
@@ -583,9 +544,9 @@ return {createSeriesCache};
 })();
 
 // app/web/state/store.js
-const __module14=(()=>{
+const __module13=(()=>{
 // Pure state transitions. I/O belongs to a future boundary controller.
-const {createSeriesCache}=__module13;
+const {createSeriesCache}=__module12;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({buildingReview:{doors:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
@@ -675,7 +636,7 @@ return {createStore,seriesCache,store,legacyDispatchBridge};
 })();
 
 // app/web/adapters/read.js
-const __module15=(()=>{
+const __module14=(()=>{
 // Pure read adapters: no DOM, fetch, engine imports, defaults, or simulation.
 const copy=x=>structuredClone(x);
 const issue=(errors,code,ref,msg)=>errors.push({code,ref:String(ref),msg});
@@ -852,7 +813,7 @@ return {snapshotHash,adaptBuilding,SERIES_MAP,indexHistoryExtrema,anyKnown,adapt
 })();
 
 // app/web/adapters/legacy_building.js
-const __module16=(()=>{
+const __module15=(()=>{
 // References are borrowed from the CAD loader, never from another display layer.
 // The three install() branches, in their original order. A colour-bearing
 // material alone is not enough: only objects touched by a branch are selected.
@@ -881,7 +842,7 @@ return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
 // app/web/adapters/legacy_openings.js
-const __module17=(()=>{
+const __module16=(()=>{
 // Read-only CAD-loader capability. No classification or opening-state inference.
 function readLegacyOpeningsSource({building,groups,sourceHash}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
@@ -895,7 +856,7 @@ return {readLegacyOpeningsSource};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module18=(()=>{
+const __module17=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; filtering remains in the display layer.
 function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
@@ -910,7 +871,7 @@ return {readLegacyCoreSource};
 })();
 
 // app/web/layers/wall_opening_lines.js
-const __module19=(()=>{
+const __module18=(()=>{
 // Display-only subtraction of opening interiors from CAD wall line segments.
 // Coordinates are floor-local; opening frames and wall meshes are never edited.
 function wallOpeningVolumes(floor,time=0){
@@ -1017,10 +978,10 @@ return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,t
 })();
 
 // app/web/layers/building.js
-const __module20=(()=>{
+const __module19=(()=>{
 const {EmptyLayer,createEmptyLayers}=__module7;
 const {applyRenderPolicy}=__module2;
-const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module19;
+const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module18;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -1077,7 +1038,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module21=(()=>{
+const __module20=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -1119,10 +1080,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module22=(()=>{
+const __module21=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {exteriorWindowFace}=__module21;
+const {exteriorWindowFace}=__module20;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -1205,7 +1166,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module23=(()=>{
+const __module22=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
 
@@ -1257,7 +1218,7 @@ return {CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module24=(()=>{
+const __module23=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1331,7 +1292,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module25=(()=>{
+const __module24=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1339,7 +1300,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module26=(()=>{
+const __module25=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1347,7 +1308,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module27=(()=>{
+const __module26=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1355,11 +1316,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module28=(()=>{
-const {createRealViewSession}=__module24;
-const {createSmokeLayer}=__module25;
-const {createFlameLayer}=__module26;
-const {createPlumeLayer}=__module27;
+const __module27=(()=>{
+const {createRealViewSession}=__module23;
+const {createSmokeLayer}=__module24;
+const {createFlameLayer}=__module25;
+const {createPlumeLayer}=__module26;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1369,7 +1330,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module29=(()=>{
+const __module28=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1446,10 +1407,10 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module30=(()=>{
+const __module29=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module29;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module28;
 const {roomFgiRollover}=__module3;
 
 const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
@@ -1557,7 +1518,7 @@ return {RiskLayer};
 })();
 
 // app/web/scene/picking.js
-const __module31=(()=>{
+const __module30=(()=>{
 // Reserved for invisible room hit surfaces. Camera keeps its default layer 0.
 const ROOM_PICK_LAYER=31;
 
@@ -1565,11 +1526,11 @@ return {ROOM_PICK_LAYER};
 })();
 
 // app/web/layers/selection.js
-const __module32=(()=>{
+const __module31=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {joinedSelectionRibbons}=__module29;
-const {ROOM_PICK_LAYER}=__module31;
+const {joinedSelectionRibbons}=__module28;
+const {ROOM_PICK_LAYER}=__module30;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
 class SelectionLayer extends EmptyLayer {
@@ -1615,7 +1576,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module33=(()=>{
+const __module32=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const fixed=review?.doors?.fixed_state;
@@ -1626,10 +1587,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module34=(()=>{
+const __module33=(()=>{
 const {createEmptyLayers}=__module7;
-const {ROOM_PICK_LAYER}=__module31;
-const {fixedOpeningsFor}=__module33;
+const {ROOM_PICK_LAYER}=__module30;
+const {fixedOpeningsFor}=__module32;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1701,7 +1662,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module35=(()=>{
+const __module34=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1746,7 +1707,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module36=(()=>{
+const __module35=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -1807,8 +1768,8 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module37=(()=>{
-const {createTimelineRisk}=__module36;
+const __module36=(()=>{
+const {createTimelineRisk}=__module35;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1859,7 +1820,7 @@ function createPanelShell({panel,store}){
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
  const tabs=[],panes=[];
- for(const [id,label] of [['building','건물'],['explore','탐색'],['result','결과'],['display','표시']]){
+ for(const [id,label] of [['building','설정'],['explore','탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);
   const pane=document.createElement('section');pane.id='shellPane-'+id;pane.className='pyroPane';pane.role='tabpanel';pane.setAttribute('aria-labelledby',tab.id);pane.tabIndex=0;sidebar.append(pane);panes.push(pane);
   listen(tab,'click',()=>activate(id));listen(tab,'keydown',e=>{const i=tabs.indexOf(tab);let next;if(e.key==='ArrowRight')next=(i+1)%tabs.length;else if(e.key==='ArrowLeft')next=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=tabs.length-1;else return;e.preventDefault();tabs[next].click();tabs[next].focus();});
@@ -1886,7 +1847,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module38=(()=>{
+const __module37=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -1919,10 +1880,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module39=(()=>{
-const {createDisplayPolicy}=__module38;
+const __module38=(()=>{
+const {createDisplayPolicy}=__module37;
 const {roomFgiRollover}=__module3;
-const {fixedOpeningsFor}=__module33;
+const {fixedOpeningsFor}=__module32;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -2044,7 +2005,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module40=(()=>{
+const __module39=(()=>{
 const {infoTip}=__module10;
 const {roomFgiRollover}=__module3;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -2134,7 +2095,7 @@ return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMC
 })();
 
 // app/web/adapters/attention.js
-const __module41=(()=>{
+const __module40=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2151,7 +2112,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module42=(()=>{
+const __module41=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2203,9 +2164,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module43=(()=>{
-const {attentionRanking}=__module41;
-const {savedAttention}=__module42;
+const __module42=(()=>{
+const {attentionRanking}=__module40;
+const {savedAttention}=__module41;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2275,33 +2236,33 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module44=(()=>{
+const __module43=(()=>{
 const {createAssistantPanel}=__module0;
 const {attachExport}=__module1;
 const {routeSampleIndex}=__module4;
 const {readRouteGraph,contains}=__module6;
 const {RouteLayer}=__module8;
 const {createRoutePanel}=__module9;
-const {createBuildingPanel,buildingTable}=__module12;
+const {createBuildingPanel,buildingTable}=__module11;
 const {attachExplanations}=__module10;
-const {createStore}=__module14;
-const {createSeriesCache}=__module13;
-const {adaptBuilding,adaptResult,adaptScreening}=__module15;
-const {readLegacyBuildingSource}=__module16;
-const {readLegacyOpeningsSource}=__module17;
-const {readLegacyCoreSource}=__module18;
-const {BuildingLayer}=__module20;
-const {OpeningsLayer}=__module22;
-const {CoreLayer}=__module23;
-const {createRealViewLayers}=__module28;
-const {RiskLayer}=__module30;
-const {SelectionLayer}=__module32;
-const {createSceneHost}=__module34;
-const {createLitePanel,updateLitePanel}=__module35;
-const {createPanelShell}=__module37;
-const {createDisplayPanel}=__module39;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module40;
-const {createExplorePanel}=__module43;
+const {createStore}=__module13;
+const {createSeriesCache}=__module12;
+const {adaptBuilding,adaptResult,adaptScreening}=__module14;
+const {readLegacyBuildingSource}=__module15;
+const {readLegacyOpeningsSource}=__module16;
+const {readLegacyCoreSource}=__module17;
+const {BuildingLayer}=__module19;
+const {OpeningsLayer}=__module21;
+const {CoreLayer}=__module22;
+const {createRealViewLayers}=__module27;
+const {RiskLayer}=__module29;
+const {SelectionLayer}=__module31;
+const {createSceneHost}=__module33;
+const {createLitePanel,updateLitePanel}=__module34;
+const {createPanelShell}=__module36;
+const {createDisplayPanel}=__module38;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module39;
+const {createExplorePanel}=__module42;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2331,14 +2292,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
- const buildingPanel=createBuildingPanel({store,building:B,onLocate:row=>{
-  const floor=B.floors.find(f=>f.name===row.floor),item=floor?.rooms.find(r=>r.id===row.id)||floor?.openings.find(o=>o.id===row.id);
-  const points=(item?.polys||[]).flatMap(p=>Array.isArray(p)?p:p.o||[]);if(!points.length)return;
-  const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=(Math.min(...xs)+Math.max(...xs))/2,y=(Math.min(...ys)+Math.max(...ys))/2,z=floor.z||0;
-  viewer.setFloor(row.floor);store.dispatch('floor/set',{floor_id:row.floor});
-  const d=Math.max(8,Math.max(...xs)-Math.min(...xs),Math.max(...ys)-Math.min(...ys));
-  store.dispatch('camera/fit',{mode:'room',target:[x,y,z+1],pose:{position:[x+d,y-d,z+d],up:[0,0,1]}});render();
- },onSave:saveDoor,onClearFixed:()=>saveFixed({clear:true}),onRefresh:async()=>{await refreshDoors();await refreshScreening();}});
+ const buildingPanel=createBuildingPanel({store});
  async function refreshFuelRooms(){
   if(window.__PYROCAST_OFFLINE__)return;
   try{const response=await fetch('/cfbt/lite/ai/fuel',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&Array.isArray(value.rooms)){aiFuelRooms=value.rooms;store.dispatch('buildingReview/set',{rooms:aiFuelRooms});}}
@@ -2349,7 +2303,6 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   onProposal:async(p,rooms,building)=>{if(building!==initial.building_sha256&&building!==(B.building_id||'cad-main'))throw Error('다른 건물 제안');if(p.kind==='mc'||p.kind==='screening'){store.dispatch('exploration/set',{origin_room_id:p.origin,origin_mode:'manual',...(p.samples?{samples:p.samples}:{}),...(p.N?{top_n:p.N}:{})});if(p.kind==='mc')await runMC();else await runScreening(true);return;}
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
- async function saveDoor(id,door_class){if(store.get('buildingReview').saving||disposed)return;store.dispatch('buildingReview/set',{saving:true,status:'저장 중…'});try{const response=await fetch('/cfbt/lite/doors',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({id,door_class})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(disposed)return;store.dispatch('buildingReview/set',{doors:value,status:id+' · 저장 완료'});await refreshScreening();}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'저장 실패 · '+e.message});}finally{if(!disposed)store.dispatch('buildingReview/set',{saving:false});}}
 
  const explore=createExplorePanel({store,onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());
@@ -2510,8 +2463,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module45=(()=>{
-const {attachModern}=__module44;
+const __module44=(()=>{
+const {attachModern}=__module43;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2526,4 +2479,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module45.attach;
+export const attach=__module44.attach;

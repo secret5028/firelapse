@@ -47,12 +47,16 @@ def prepared(ident, floor, digest):
 
 @lru_cache(maxsize=32)
 def _prepared(ident, floor, digest, quantity_json):
+    return prepare_floor(model_path(entry(ident)), floor, digest, quantity_json)
+
+def prepare_floor(path, floor, digest, quantity_json):
+    """Shared CAD preparation; callers retain their own model access policy."""
     from pyrocast_cfbt.cad import adapt, cad_key
     from pyrocast_cfbt.model import normalize
     from building_rules import usage_class
     from pyrocast_lite import screening_v7 as v7
     from pyrocast_lite.screening_v8_approved import origin_budgets
-    path = model_path(entry(ident)); building = read(path)
+    path = Path(path); building = read(path)
     if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
         raise ValueError('건물이 변경되었습니다. 입력을 다시 확인하세요')
     f = next((f for f in building['floors'] if f['name'] == floor), None)

@@ -11,7 +11,7 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
  function options(el,value){el.replaceChildren(new Option('AI 기본 배치', ''));for(const [id,c] of Object.entries(current.classes))el.add(new Option(c.label,id));el.value=value||'';}
  function configure(el){el.min=current.range.min*100;el.max=current.range.max*100;el.step=current.range.step*100;}
  function render(){if(!current)return;const saved=fuelSettingsWithDraft(current,draft),f=saved.floors[floor]||{multiplier:1},rows=current.rooms.filter(r=>r.editable&&r.floor===floor);
-  $('fuelFloorTitle').textContent=floor?`${floor} 전체 가연물`:'층을 선택하세요';options($('fuelFloorType'),f.usage_class);configure($('fuelFloorAmount'));$('fuelFloorAmount').value=f.multiplier*100;$('fuelFloorValue').textContent=`${Math.round(f.multiplier*100)}% · 개별 설정 실 제외`;
+  $('fuelFloorTitle').textContent=floor?`2단계 · 가연물 설정 (${floor})`:'2단계 · 가연물 설정';options($('fuelFloorType'),f.usage_class);configure($('fuelFloorAmount'));$('fuelFloorAmount').value=f.multiplier*100;$('fuelFloorValue').textContent=`${Math.round(f.multiplier*100)}% · 개별 설정 실 제외`;
   for(const id of ['fuelFloorType','fuelFloorAmount'])$(id).disabled=saving||!rows.length;
   const r=room();$('fuelSelectedRoom').hidden=!r;if(r){const value=resolveFuel(current,draft,r);$('fuelRoomName').textContent=`${r.id.replace(/^CAD_/,'').replaceAll('_',' ')} · ${r.name}`;
    $('fuelRoomScope').textContent=value.scope==='room'?'개별 설정 · 층 변경 시 유지':'층 설정 따름';$('fuelRoomScope').title=r.basis;

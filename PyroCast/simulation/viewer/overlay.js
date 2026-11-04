@@ -1765,8 +1765,70 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
 return {createLitePanel,updateLitePanel};
 })();
 
-// app/web/panels/shell.js
+// app/web/panels/timeline_risk.js
 const __module37=(()=>{
+const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
+const finite=Number.isFinite;
+const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
+// Preserve saved samples and gaps. Never synthesize a multi-cell room average.
+function timelineRiskData(building,result,selection){
+ const room=building?.floors?.flatMap(f=>f.rooms).find(r=>r.room_id===selection?.room_id);
+ const cell=selection?.cell_id??(room?.cells?.length===1?room.cells[0].cell_id:null);
+ const times=result?.time_s||[],end=result?.t_end_s||0;
+ const rows=TYPES.map(([type,color])=>{
+  const values=cell?result?.index_by_cell?.[cell]?.[type]:null;
+  let peak=null;const segments=[];let segment=[];
+  for(let i=0;i<times.length;i++){
+   const t=times[i],value=values?.[i];
+   if(!finite(t)||!finite(value)){if(segment.length)segments.push(segment);segment=[];continue;}
+   segment.push({t,value});if(!peak||value>peak.value)peak={t,value};
+  }
+  if(segment.length)segments.push(segment);
+  return {type,label:type==='backdraft'?'BD':type,color,segments,peak};
+ });
+ return {cell,end,rows,scale:Math.max(100,...rows.map(r=>r.peak?.value??0))};
+}
+function createTimelineRisk({host,store}){
+ const ns='http://www.w3.org/2000/svg',chart=document.createElement('div');chart.className='timelineRisk';host.prepend(chart);
+ const style=document.createElement('style');style.textContent=`
+ .timelineRisk{position:relative;margin:0 7px 4px;height:72px}.timelineRisk[hidden]{display:none}
+ .timelineRiskRow{position:relative;height:24px;border-bottom:1px solid #36516455}.timelineRiskRow svg{position:absolute;inset:0;width:100%;height:24px;overflow:visible}
+ .timelineRiskLabel{position:absolute;left:0;top:3px;font-size:9px;line-height:14px;background:#142b3bcc;padding-right:3px;pointer-events:none}
+ #pyroShellTimeline .timelinePeak{position:absolute;top:0;transform:translateX(-50%);font:9px/12px system-ui;white-space:nowrap;padding:0 3px;border:0;border-radius:3px;background:#142b3bc9;color:var(--peak-color);z-index:2}
+ .timelineCursor{position:absolute;top:0;bottom:0;border-left:1px solid #e9f8ff;pointer-events:none;z-index:3}
+ .timelineRiskEmpty{font-size:10px;color:#b8cbd8;position:absolute;inset:20px 0;text-align:center}
+ `;document.head.append(style);
+ let end=0,cursor=null;
+ const seek=t=>{store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s:t});};
+ function sync(){if(cursor)cursor.style.left=Math.max(0,Math.min(100,(store.get('playback').t_s/(end||1))*100))+'%';}
+ function draw(){
+  chart.replaceChildren();const result=store.get('result'),data=timelineRiskData(store.get('building'),result,store.get('selection'));end=data.end;chart.hidden=!end;cursor=null;if(!end)return;
+  chart.title='선택 셀 · 전 구간 지수 추이 · 세 곡선은 같은 축 · 최고점 클릭 시 해당 시간 이동';
+  if(!data.cell){const hint=document.createElement('span');hint.className='timelineRiskEmpty';hint.textContent='지수 그래프: 실·셀 선택';chart.append(hint);return;}
+  for(const row of data.rows){
+   const lane=document.createElement('div');lane.className='timelineRiskRow';chart.append(lane);
+   const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 1000 24');svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('aria-hidden','true');lane.append(svg);
+   const x=t=>+(t/end*1000).toFixed(2),y=v=>+(22-Math.max(0,v)/data.scale*19).toFixed(2);
+   for(const points of row.segments){
+    const line=points.map((p,i)=>`${i?'L':'M'}${x(p.t)},${y(p.value)}`).join(' ');
+    const area=document.createElementNS(ns,'path');area.setAttribute('d',`${line} L${x(points.at(-1).t)},22 L${x(points[0].t)},22 Z`);area.setAttribute('fill',row.color);area.setAttribute('fill-opacity','.22');svg.append(area);
+    const path=document.createElementNS(ns,'path');path.setAttribute('d',line);path.setAttribute('fill','none');path.setAttribute('stroke',row.color);path.setAttribute('stroke-width','1.2');path.setAttribute('vector-effect','non-scaling-stroke');svg.append(path);
+   }
+   const label=document.createElement('span');label.className='timelineRiskLabel';label.style.color=row.color;label.textContent=row.label;lane.append(label);
+   if(row.peak){const p=row.peak,dot=document.createElementNS(ns,'circle');dot.setAttribute('cx',x(p.t));dot.setAttribute('cy',y(p.value));dot.setAttribute('r','2.4');dot.setAttribute('fill',row.color);svg.append(dot);const b=document.createElement('button');b.type='button';b.className='timelinePeak';b.style.left=(p.t/end*100)+'%';if(p.t/end<.1)b.style.transform='none';else if(p.t/end>.9)b.style.transform='translateX(-100%)';b.style.setProperty('--peak-color',row.color);b.textContent=`${Math.round(p.value)} · ${stamp(p.t)}`;b.title=`${row.label} 최고 ${p.value.toFixed(1)} · ${stamp(p.t)} (동률은 최초 시각)`;b.setAttribute('aria-label',b.title+' 이동');b.onclick=()=>seek(p.t);lane.append(b);}
+  }
+  cursor=document.createElement('i');cursor.className='timelineCursor';chart.append(cursor);sync();
+ }
+ const off=['building','result','selection'].map(k=>store.subscribe(k,draw));off.push(store.subscribe('playback',sync));draw();
+ return {dispose(){off.forEach(fn=>fn());chart.remove();style.remove();}};
+}
+
+return {timelineRiskData,createTimelineRisk};
+})();
+
+// app/web/panels/shell.js
+const __module38=(()=>{
+const {createTimelineRisk}=__module37;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -1802,6 +1864,7 @@ function createPanelShell({panel,store}){
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"><div id="shellMarks" aria-hidden="true"></div></div><output id="shellClock"></output><span id="shellStatus"></span>';
  document.body.append(header,sidebar,timeline);move($('fbtn'),header);
+ const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
@@ -1848,7 +1911,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module38=(()=>{
+const __module39=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -1881,8 +1944,8 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module39=(()=>{
-const {createDisplayPolicy}=__module38;
+const __module40=(()=>{
+const {createDisplayPolicy}=__module39;
 const {roomFgiRollover}=__module4;
 const {fixedOpeningsFor}=__module34;
 const backdraftTip='고온연기 축적·산소부족';
@@ -2008,7 +2071,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module40=(()=>{
+const __module41=(()=>{
 const {infoTip}=__module11;
 const {roomFgiRollover}=__module4;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -2087,7 +2150,7 @@ return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createR
 })();
 
 // app/web/adapters/attention.js
-const __module41=(()=>{
+const __module42=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2104,7 +2167,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module42=(()=>{
+const __module43=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2156,9 +2219,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module43=(()=>{
-const {attentionRanking}=__module41;
-const {savedAttention}=__module42;
+const __module44=(()=>{
+const {attentionRanking}=__module42;
+const {savedAttention}=__module43;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2228,7 +2291,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module44=(()=>{
+const __module45=(()=>{
 const {createAIFuelPanel}=__module0;
 const {createAssistantPanel}=__module1;
 const {attachExport}=__module2;
@@ -2252,10 +2315,10 @@ const {RiskLayer}=__module31;
 const {SelectionLayer}=__module33;
 const {createSceneHost}=__module35;
 const {createLitePanel,updateLitePanel}=__module36;
-const {createPanelShell}=__module37;
-const {createDisplayPanel}=__module39;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module40;
-const {createExplorePanel}=__module43;
+const {createPanelShell}=__module38;
+const {createDisplayPanel}=__module40;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module41;
+const {createExplorePanel}=__module44;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2460,8 +2523,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module45=(()=>{
-const {attachModern}=__module44;
+const __module46=(()=>{
+const {attachModern}=__module45;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2476,4 +2539,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module45.attach;
+export const attach=__module46.attach;

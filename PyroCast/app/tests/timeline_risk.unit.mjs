@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {timelineRiskData} from '../web/panels/timeline_risk.js';
+const building={floors:[{rooms:[{room_id:'R1',cells:[{cell_id:'A'}]},{room_id:'R2',cells:[{cell_id:'B'},{cell_id:'C'}]}]}]};
+const result={t_end_s:30,time_s:[0,10,20,30],index_by_cell:{A:{FO:[0,120,null,120],FGI:[null,null,null,null],backdraft:[0,0,0,0]},B:{FO:[0,30,60,90]}}};
+const copy=JSON.stringify(result),d=timelineRiskData(building,result,{room_id:'R1'});
+assert.equal(d.cell,'A');assert.equal(d.scale,120);assert.deepEqual(d.rows[0].peak,{t:10,value:120});assert.deepEqual(d.rows[0].segments.map(s=>s.length),[2,1]);assert.equal(d.rows[1].peak,null);assert.deepEqual(d.rows[2].peak,{t:0,value:0});
+assert.equal(timelineRiskData(building,result,{room_id:'R2'}).cell,null);
+assert.equal(timelineRiskData(building,result,{room_id:'R2',cell_id:'B'}).rows[0].peak.t,30);
+assert.equal(JSON.stringify(result),copy);assert.equal(timelineRiskData(null,null,{}).end,0);
+console.log('PASS: peak ties, missing gaps, zero vs missing, cell selection, immutable input');

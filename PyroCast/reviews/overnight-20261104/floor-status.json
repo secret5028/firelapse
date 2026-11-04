@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-11-04T09:57:53.971984+00:00",
+  "updated_utc": "2026-11-04T10:26:10.972757+00:00",
   "rows": [
     {
       "building": "ganghwa",
@@ -178,76 +178,160 @@
       "building": "ganghwa",
       "floor": "4F",
       "origin": "CAD_4F_R0",
-      "state": "running",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 78.51499999999942,
       "error": null,
       "isolated_rooms": [
         "CAD_4F_R8",
         "CAD_4F_R20"
       ],
       "input_sha256": "4b7ba36d5bb23845a6a7e097c96d0b9fd2418e4c7b3f302143a45af86f1f7261",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_4F_R0"
+      ],
+      "integration_s": 68.31455850000202,
+      "peaks": {
+        "FO": {
+          "index": 52.217410363145845,
+          "time_s": 1770.0,
+          "room": "CAD_4F_R0",
+          "cell": "CAD_4F_R0_C4"
+        },
+        "FGI": {
+          "index": 46.2523976085658,
+          "time_s": 1970.0,
+          "room": "CAD_4F_R0",
+          "cell": "CAD_4F_R0_C5"
+        },
+        "backdraft": {
+          "index": 41.62834706000042,
+          "time_s": 2040.0,
+          "room": "CAD_4F_R0",
+          "cell": "CAD_4F_R0_C1"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "ganghwa",
       "floor": "5F",
       "origin": "CAD_5F_R12",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 32.6880000000092,
       "error": null,
       "isolated_rooms": [
         "CAD_5F_R7",
         "CAD_5F_R20"
       ],
       "input_sha256": "a5868a54782d9f26fc87a854700e0a6724111c3ed2775a4f88cabd43dd46009e",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_5F_R12"
+      ],
+      "integration_s": 24.21341840000241,
+      "peaks": {
+        "FO": {
+          "index": 118.55003425324693,
+          "time_s": 2510.0,
+          "room": "CAD_5F_R12",
+          "cell": "CAD_5F_R12"
+        },
+        "FGI": {
+          "index": 69.41130721280942,
+          "time_s": 2940.0,
+          "room": "CAD_5F_R12",
+          "cell": "CAD_5F_R12"
+        },
+        "backdraft": {
+          "index": 56.09404458653658,
+          "time_s": 2950.0,
+          "room": "CAD_5F_R12",
+          "cell": "CAD_5F_R12"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "ganghwa",
       "floor": "6F",
       "origin": "CAD_6F_R2",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 133.42200000000594,
       "error": null,
       "isolated_rooms": [
         "CAD_6F_R28",
         "CAD_6F_R43"
       ],
       "input_sha256": "199b02e69dcd3ca14a89599a541140c7474f1bc45e41dde78a8503f42a8f6516",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_6F_R2"
+      ],
+      "integration_s": 121.40087880000647,
+      "peaks": {
+        "FO": {
+          "index": 87.8093255004613,
+          "time_s": 1840.0,
+          "room": "CAD_6F_R2",
+          "cell": "CAD_6F_R2"
+        },
+        "FGI": {
+          "index": 58.99547559396503,
+          "time_s": 1980.0,
+          "room": "CAD_6F_R2",
+          "cell": "CAD_6F_R2"
+        },
+        "backdraft": {
+          "index": 58.99547559396503,
+          "time_s": 1980.0,
+          "room": "CAD_6F_R2",
+          "cell": "CAD_6F_R2"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "ganghwa",
       "floor": "7F",
       "origin": "CAD_7F_R0",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 55.75,
       "error": null,
       "isolated_rooms": [
         "CAD_7F_R24",
         "CAD_7F_R32"
       ],
       "input_sha256": "d6ecadf4d9a2597f6a9756cf046f1e3f1eebd3058c6619bd6ffac398fcac0969",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_7F_R0"
+      ],
+      "integration_s": 46.92840350000188,
+      "peaks": {
+        "FO": {
+          "index": 58.439010591424754,
+          "time_s": 1140.0,
+          "room": "CAD_7F_R0",
+          "cell": "CAD_7F_R0_C2"
+        },
+        "FGI": {
+          "index": 58.853726681650585,
+          "time_s": 1290.0,
+          "room": "CAD_7F_R0",
+          "cell": "CAD_7F_R0_C2"
+        },
+        "backdraft": {
+          "index": 55.3270946150213,
+          "time_s": 1330.0,
+          "room": "CAD_7F_R0",
+          "cell": "CAD_7F_R0_C2"
+        }
+      },
       "partial_conditions": []
     },
     {
@@ -286,11 +370,11 @@
       "building": "parkmarine",
       "floor": "10F",
       "origin": "CAD_10F_R15",
-      "state": "queued",
+      "state": "failed",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
-      "error": null,
+      "wall_s": 299.4060000000027,
+      "error": "Factor is exactly singular",
       "isolated_rooms": [
         "CAD_10F_R4",
         "CAD_10F_R8"
@@ -305,10 +389,10 @@
       "building": "parkmarine",
       "floor": "1F",
       "origin": "CAD_1F_R3",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 14.062999999994645,
       "error": null,
       "isolated_rooms": [
         "CAD_1F_R10",
@@ -316,19 +400,40 @@
         "CAD_1F_R15"
       ],
       "input_sha256": "558b49ca335cb84fc69d2fc155a9f69ec54432fdf4f91ec981d3cb8c3759ea01",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_1F_R3"
+      ],
+      "integration_s": 8.914733199999318,
+      "peaks": {
+        "FO": {
+          "index": 49.726481651027505,
+          "time_s": 180.0,
+          "room": "CAD_1F_R3",
+          "cell": "CAD_1F_R3"
+        },
+        "FGI": {
+          "index": 1.4305249836143955e-09,
+          "time_s": 10.0,
+          "room": "CAD_1F_R5",
+          "cell": "CAD_1F_R5_C1"
+        },
+        "backdraft": {
+          "index": 1.10635574157737e-09,
+          "time_s": 10.0,
+          "room": "CAD_1F_R5",
+          "cell": "CAD_1F_R5_C1"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "parkmarine",
       "floor": "2F",
       "origin": "CAD_2F_R1",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 27.546999999991385,
       "error": null,
       "isolated_rooms": [
         "CAD_2F_R2",
@@ -336,121 +441,313 @@
         "CAD_2F_R9"
       ],
       "input_sha256": "d370bbe477840e83928a8cf69b45702826f44de16541edc9fa68eb5859fd574d",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_2F_R1"
+      ],
+      "integration_s": 23.28300759999547,
+      "peaks": {
+        "FO": {
+          "index": 96.13694567915172,
+          "time_s": 880.0,
+          "room": "CAD_2F_R1",
+          "cell": "CAD_2F_R1"
+        },
+        "FGI": {
+          "index": 101.05119454654951,
+          "time_s": 1190.0,
+          "room": "CAD_2F_R3",
+          "cell": "CAD_2F_R3"
+        },
+        "backdraft": {
+          "index": 69.23094873415232,
+          "time_s": 1210.0,
+          "room": "CAD_2F_R1",
+          "cell": "CAD_2F_R1"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "parkmarine",
       "floor": "3F",
       "origin": "CAD_3F_R1",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 24.360000000000582,
       "error": null,
       "isolated_rooms": [
         "CAD_3F_R2",
         "CAD_3F_R5"
       ],
       "input_sha256": "e57427a5a5b50072e6b20221771709714e86b0ad5a07675d63290b94f9df61b0",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_3F_R1"
+      ],
+      "integration_s": 20.097164599996177,
+      "peaks": {
+        "FO": {
+          "index": 86.96799597455123,
+          "time_s": 1570.0,
+          "room": "CAD_3F_R1",
+          "cell": "CAD_3F_R1"
+        },
+        "FGI": {
+          "index": 80.62637888088469,
+          "time_s": 1640.0,
+          "room": "CAD_3F_R3",
+          "cell": "CAD_3F_R3"
+        },
+        "backdraft": {
+          "index": 59.13357522725946,
+          "time_s": 1690.0,
+          "room": "CAD_3F_R1",
+          "cell": "CAD_3F_R1"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "parkmarine",
       "floor": "4F",
       "origin": "CAD_4F_R11",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 47.71899999999732,
       "error": null,
       "isolated_rooms": [
         "CAD_4F_R4",
         "CAD_4F_R8"
       ],
       "input_sha256": "bd927dafdd222747e87165663c4ce8c622e457230bb9730d18a4b9ceecde542b",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
-      "partial_conditions": []
+      "burning_rooms": [
+        "CAD_4F_R11"
+      ],
+      "integration_s": 42.35866649998934,
+      "peaks": {
+        "FO": {
+          "index": 133.94193781133472,
+          "time_s": 480.0,
+          "room": "CAD_4F_R11",
+          "cell": "CAD_4F_R11"
+        },
+        "FGI": {
+          "index": 75.12053046607167,
+          "time_s": 690.0,
+          "room": "CAD_4F_R11",
+          "cell": "CAD_4F_R11"
+        },
+        "backdraft": {
+          "index": 73.3493182933919,
+          "time_s": 740.0,
+          "room": "CAD_4F_R11",
+          "cell": "CAD_4F_R11"
+        }
+      },
+      "partial_conditions": [
+        {
+          "cell": "CAD_4F_R11",
+          "phenomenon": "backdraft",
+          "coverage": {
+            "known_samples": 357,
+            "total_samples": 361
+          }
+        }
+      ]
     },
     {
       "building": "parkmarine",
       "floor": "6F",
       "origin": "CAD_6F_R16",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 47.655999999988126,
       "error": null,
       "isolated_rooms": [
         "CAD_6F_R8"
       ],
       "input_sha256": "3aaacee0a80fcf905370d68c43b009f0c493b336604746da70a217869a160d7b",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
-      "partial_conditions": []
+      "burning_rooms": [
+        "CAD_6F_R16"
+      ],
+      "integration_s": 42.08600369999476,
+      "peaks": {
+        "FO": {
+          "index": 133.8924468792545,
+          "time_s": 480.0,
+          "room": "CAD_6F_R16",
+          "cell": "CAD_6F_R16"
+        },
+        "FGI": {
+          "index": 77.32603370091637,
+          "time_s": 690.0,
+          "room": "CAD_6F_R16",
+          "cell": "CAD_6F_R16"
+        },
+        "backdraft": {
+          "index": 74.07551125936523,
+          "time_s": 690.0,
+          "room": "CAD_6F_R16",
+          "cell": "CAD_6F_R16"
+        }
+      },
+      "partial_conditions": [
+        {
+          "cell": "CAD_6F_R16",
+          "phenomenon": "backdraft",
+          "coverage": {
+            "known_samples": 357,
+            "total_samples": 361
+          }
+        }
+      ]
     },
     {
       "building": "parkmarine",
       "floor": "7F",
       "origin": "CAD_7F_R16",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 47.0619999999908,
       "error": null,
       "isolated_rooms": [
         "CAD_7F_R8"
       ],
       "input_sha256": "7f8d96d98fec0e7824be94cf5cff3c4424d3e8e0f0fac68a33914de856bc4cdb",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
-      "partial_conditions": []
+      "burning_rooms": [
+        "CAD_7F_R16"
+      ],
+      "integration_s": 41.565885699994396,
+      "peaks": {
+        "FO": {
+          "index": 133.89163242085087,
+          "time_s": 480.0,
+          "room": "CAD_7F_R16",
+          "cell": "CAD_7F_R16"
+        },
+        "FGI": {
+          "index": 77.08961476832094,
+          "time_s": 690.0,
+          "room": "CAD_7F_R16",
+          "cell": "CAD_7F_R16"
+        },
+        "backdraft": {
+          "index": 74.20822898553648,
+          "time_s": 690.0,
+          "room": "CAD_7F_R16",
+          "cell": "CAD_7F_R16"
+        }
+      },
+      "partial_conditions": [
+        {
+          "cell": "CAD_7F_R16",
+          "phenomenon": "backdraft",
+          "coverage": {
+            "known_samples": 358,
+            "total_samples": 361
+          }
+        }
+      ]
     },
     {
       "building": "parkmarine",
       "floor": "8F",
       "origin": "CAD_8F_R11",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 48.03100000000268,
       "error": null,
       "isolated_rooms": [
         "CAD_8F_R8"
       ],
       "input_sha256": "6f224b694a925600eec755d627c542193ea3b87a1f1d2f4a292fc88ce3fbe321",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
-      "partial_conditions": []
+      "burning_rooms": [
+        "CAD_8F_R11"
+      ],
+      "integration_s": 42.51240230000985,
+      "peaks": {
+        "FO": {
+          "index": 133.58693044215335,
+          "time_s": 480.0,
+          "room": "CAD_8F_R11",
+          "cell": "CAD_8F_R11"
+        },
+        "FGI": {
+          "index": 73.88599620555988,
+          "time_s": 710.0,
+          "room": "CAD_8F_R11",
+          "cell": "CAD_8F_R11"
+        },
+        "backdraft": {
+          "index": 73.88599620555988,
+          "time_s": 710.0,
+          "room": "CAD_8F_R11",
+          "cell": "CAD_8F_R11"
+        }
+      },
+      "partial_conditions": [
+        {
+          "cell": "CAD_8F_R11",
+          "phenomenon": "backdraft",
+          "coverage": {
+            "known_samples": 359,
+            "total_samples": 361
+          }
+        }
+      ]
     },
     {
       "building": "parkmarine",
       "floor": "9F",
       "origin": "CAD_9F_R15",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 46.92200000000594,
       "error": null,
       "isolated_rooms": [
         "CAD_9F_R4",
         "CAD_9F_R8"
       ],
       "input_sha256": "da0cef3af09f08171230b2e0d3f36c050721e9185921926ca4b4d940fe303d48",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
-      "partial_conditions": []
+      "burning_rooms": [
+        "CAD_9F_R15"
+      ],
+      "integration_s": 41.75666189999902,
+      "peaks": {
+        "FO": {
+          "index": 133.95851497822343,
+          "time_s": 480.0,
+          "room": "CAD_9F_R15",
+          "cell": "CAD_9F_R15"
+        },
+        "FGI": {
+          "index": 78.97655242286687,
+          "time_s": 700.0,
+          "room": "CAD_9F_R15",
+          "cell": "CAD_9F_R15"
+        },
+        "backdraft": {
+          "index": 76.89482733999925,
+          "time_s": 710.0,
+          "room": "CAD_9F_R15",
+          "cell": "CAD_9F_R15"
+        }
+      },
+      "partial_conditions": [
+        {
+          "cell": "CAD_9F_R15",
+          "phenomenon": "backdraft",
+          "coverage": {
+            "known_samples": 359,
+            "total_samples": 361
+          }
+        }
+      ]
     },
     {
       "building": "parkmarine",
@@ -472,10 +769,10 @@
       "building": "parkmarine",
       "floor": "B2",
       "origin": "CAD_B2_R5",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 49.95299999999406,
       "error": null,
       "isolated_rooms": [
         "CAD_B2_R3",
@@ -490,19 +787,41 @@
         "CAD_B2_R22"
       ],
       "input_sha256": "3f80b0c71b6e6fcf319621b16ac789d58623d343668651d5f2378135a10fdf65",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_B2_R5",
+        "CAD_B2_R8"
+      ],
+      "integration_s": 44.149314700000104,
+      "peaks": {
+        "FO": {
+          "index": 100.24769949062227,
+          "time_s": 850.0,
+          "room": "CAD_B2_R5",
+          "cell": "CAD_B2_R5"
+        },
+        "FGI": {
+          "index": 73.07058575633475,
+          "time_s": 1040.0,
+          "room": "CAD_B2_R5",
+          "cell": "CAD_B2_R5"
+        },
+        "backdraft": {
+          "index": 85.1656028462645,
+          "time_s": 1010.0,
+          "room": "CAD_B2_R5",
+          "cell": "CAD_B2_R5"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "parkmarine",
       "floor": "B3",
       "origin": "CAD_B3_R6",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 72.95299999999406,
       "error": null,
       "isolated_rooms": [
         "CAD_B3_R2",
@@ -511,57 +830,122 @@
         "CAD_B3_R9"
       ],
       "input_sha256": "88f3557da4180d90cab758c829e68592f1e5d5dc4d8235b95e29af65f5e53753",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_B3_R6"
+      ],
+      "integration_s": 68.4192108999996,
+      "peaks": {
+        "FO": {
+          "index": 17.352603537374335,
+          "time_s": 3150.0,
+          "room": "CAD_B3_R6",
+          "cell": "CAD_B3_R6_C1"
+        },
+        "FGI": {
+          "index": 7.372908869329879,
+          "time_s": 3600.0,
+          "room": "CAD_B3_R6",
+          "cell": "CAD_B3_R6_C1"
+        },
+        "backdraft": {
+          "index": 5.487949210910383,
+          "time_s": 3600.0,
+          "room": "CAD_B3_R6",
+          "cell": "CAD_B3_R6_C1"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "parkmarine",
       "floor": "PH",
       "origin": "CAD_PH_R4",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 5.062000000005355,
       "error": null,
       "isolated_rooms": [
         "CAD_PH_R2",
         "CAD_PH_R6"
       ],
       "input_sha256": "87cc609c786c8d47a5389a31cea29264c8ccb0559569488fc9ae0ebedd447da9",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_PH_R4"
+      ],
+      "integration_s": 1.8727670999942347,
+      "peaks": {
+        "FO": {
+          "index": 87.24358527372974,
+          "time_s": 2920.0,
+          "room": "CAD_PH_R4",
+          "cell": "CAD_PH_R4"
+        },
+        "FGI": {
+          "index": 1.5301082875282712e-08,
+          "time_s": 10.0,
+          "room": "CAD_PH_R0",
+          "cell": "CAD_PH_R0"
+        },
+        "backdraft": {
+          "index": 1.1833726138018318e-08,
+          "time_s": 10.0,
+          "room": "CAD_PH_R0",
+          "cell": "CAD_PH_R0"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "showroom",
       "floor": "1F",
       "origin": "CAD_1F_R6",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 170.875,
       "error": null,
       "isolated_rooms": [
         "CAD_1F_R19",
         "CAD_1F_R21"
       ],
       "input_sha256": "79b50a854a42f38928623ea5525f2b8f8e59acee8529d5ff494b625841e7d2b7",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_1F_R6",
+        "CAD_1F_R7",
+        "CAD_1F_R14"
+      ],
+      "integration_s": 164.97024629999942,
+      "peaks": {
+        "FO": {
+          "index": 55.04939023353869,
+          "time_s": 760.0,
+          "room": "CAD_1F_R6",
+          "cell": "CAD_1F_R6_C1"
+        },
+        "FGI": {
+          "index": 68.18874756156018,
+          "time_s": 940.0,
+          "room": "CAD_1F_R6",
+          "cell": "CAD_1F_R6_C0"
+        },
+        "backdraft": {
+          "index": 62.70755148404652,
+          "time_s": 960.0,
+          "room": "CAD_1F_R6",
+          "cell": "CAD_1F_R6_C0"
+        }
+      },
       "partial_conditions": []
     },
     {
       "building": "showroom",
       "floor": "2F",
       "origin": "CAD_2F_R27",
-      "state": "queued",
+      "state": "complete",
       "engine": "pyrocast_lite",
       "opening_state": "input_default",
-      "wall_s": null,
+      "wall_s": 20.156000000002678,
       "error": null,
       "isolated_rooms": [
         "CAD_2F_R11",
@@ -570,9 +954,30 @@
         "CAD_2F_R29"
       ],
       "input_sha256": "5be2fd56606c24518511bfcfcca733aecad3de5476f09c2de9f9f10e88990971",
-      "burning_rooms": null,
-      "integration_s": null,
-      "peaks": null,
+      "burning_rooms": [
+        "CAD_2F_R27"
+      ],
+      "integration_s": 14.039317999995546,
+      "peaks": {
+        "FO": {
+          "index": 56.64510982732936,
+          "time_s": 850.0,
+          "room": "CAD_2F_R27",
+          "cell": "CAD_2F_R27"
+        },
+        "FGI": {
+          "index": 51.72205583131212,
+          "time_s": 1080.0,
+          "room": "CAD_2F_R27",
+          "cell": "CAD_2F_R27"
+        },
+        "backdraft": {
+          "index": 43.54378016671974,
+          "time_s": 1130.0,
+          "room": "CAD_2F_R27",
+          "cell": "CAD_2F_R27"
+        }
+      },
       "partial_conditions": []
     }
   ]

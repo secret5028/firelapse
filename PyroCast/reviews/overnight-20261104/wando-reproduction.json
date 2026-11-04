@@ -1,0 +1,28 @@
+{
+  "deck_identical": true,
+  "engine_identical": true,
+  "csv": [
+    {
+      "file": "case_compartments.csv",
+      "same_keys": true,
+      "same_shapes": true,
+      "different_columns": {}
+    },
+    {
+      "file": "case_masses.csv",
+      "same_keys": true,
+      "same_shapes": true,
+      "different_columns": {}
+    },
+    {
+      "file": "case_vents.csv",
+      "same_keys": true,
+      "same_shapes": true,
+      "different_columns": {}
+    }
+  ],
+  "analyzer_precondition_mismatches": [
+    "specs\\Claude지시-C11-완도저온창고사례-20261102.md",
+    "simulation\\pyrocast_cfbt\\conditions.py"
+  ]
+}

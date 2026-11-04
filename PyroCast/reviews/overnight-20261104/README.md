@@ -61,3 +61,12 @@ Claude 데스크톱 대화 `73181e32-dbf5-8712-946f-bf957b48152e`, 제목 PyroCa
 - blocked-geometry.json은 입력 변경 없이 예외 프레임에서 추출한 치수. 강화 B1 작은 실 R12(1.1636 m²)에 폭 4.12 m W2, 호텔 B1 R9(.9512 m²)에 승강기 문 6개(최대 1.719 m)가 연결됐다. **잘못된 소속이라는 Claude 의견은 아직 추정**. 도면 경계/개구부 형상을 검증하기 전 이동·삭제 금지.
 - 강화 PH R3은 .5599×8.8579 m, 면적 4.9592 m². 기존 등가화가 depth만 최소 .61 m로 조정하고 width의 대칭 경우를 처리하지 않는 현상 확인. 그러나 원본에도 이름 없음·개구부 없음·unresolved_isolated. 이 공간을 사람이 쓰는 실/이송 공간으로 단정하거나 임의 제외하지 않는다. 면적 보존으로 박스만 바꾸더라도 열손실 둘레는 변하므로, 원본 CAD의 공간 정체 확인 전에는 blocked 유지. 현재 배치의 engine SHA도 유지.
 - Claude 3차 의견은 claude-review-3.txt. 전처리 분류/치수 진단만, 이번 후속에서 엔진/건물 입력 수정 없음. Claude가 언급한 일반 종횡비 한계·손실 무시 가능성은 검증된 근거로 채택하지 않음.
+
+## 19:24 이후 · 계산 배치 종료/완도 추가
+
+- 간략 22회 종료: **21 완주, 호텔 10F 1 실패**, 준비 blocked 3은 별도. 세션 42392 정상 종료. 전체 성공 파일 검증: 입력 SHA·엔진 SHA 불변, complete/3600 s, 물리 시계열 길이·유한값, 게시 사본 일치 **21건 오류 0**(result-validation.json). 수치 유한성과 물리적 타당성은 같은 뜻이 아니다.
+- 호텔 10F R15: 299.406 s 후 `Factor is exactly singular`. 보존된 출력은 700 s까지, 마지막 정상 완료 적분구간 끝 704.8065 s. 실패 구간 안의 실제 실패 시각/상태는 저장 안 됨. sparse numeric Jacobian factor overflow와 NaN 경고를 관측했으나 최초 원인 성분은 미확정. 실패 결과를 완료 목록에 올리지 않았고 재시도 없음. hotel-10F-failure.json 참조. Claude 4차 의견 중 h=0/층 질량0/채터링 단정은 미채택; 각 구간 새 BDF이므로 이전 구간 factor 이월 가설도 맞지 않음.
+- 간략 전부 종료·배치 잠금 확보 후 완도 1F 전용 P1 native **1회**. 새 폴더 `simulation/results/overnight-20261104/wando/P1`. 원본 deck/model/engine 동일. CFAST normal exit, 엔진 로그 154 s/경과 157.766 s. 기존과 동일하게 CSV 3595 s까지, 마지막 5 s 미출력. `nightly-status.json`은 **partial_output**, 정상종료와 불완전 끝 표본을 함께 기록. 외삽/재실행 없음. 세션11830 종료.
+- 원본 P1 대조: compartments/masses/vents 3개 CSV의 모든 컬럼·shape·수치 **차이 0**(wando-reproduction.json). 새 그래프·3지수 후처리 생성. 운영 Wando 화면의 기존 사례 자동 교체 없음.
+- 발견한 추가 버그: P1 후처리에서 Windows backslash 증거 경로가 기존 specs/conditions 허용 예외와 매치되지 않아 assert 실패. 판정시 구분자만 정규화한 `843dbb3`; 엔진/덱/model.py 위변조는 여전히 거절. 2시험 PASS. 후처리만 재실행했고 native 실행은 1회. 원래 strict horizon 실패 로그/실행 상태는 증거로 남겼으며, 별도 nightly-status에서 3595 s 예외를 명확히 구분.
+- 후속은 계산 반복보다 앱 저장·선택/표시 검증을 계속한다. 호텔10F는 정확한 실패 상태 확보 없는 물리 수정 금지. blocked 기하의 임의 병합·폭 축소 금지. 아침 최종 보고에 21성공/1실패/3blocked와 native3595를 별도 표기.

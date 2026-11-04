@@ -1,0 +1,112 @@
+{
+  "engine_unchanged": true,
+  "successful_cases": 21,
+  "cases": [
+    {
+      "building": "ganghwa",
+      "floor": "3F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "5F",
+      "errors": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "1F",
+      "errors": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "2F",
+      "errors": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "4F",
+      "errors": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "5F",
+      "errors": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "6F",
+      "errors": []
+    },
+    {
+      "building": "ganghwa",
+      "floor": "7F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "1F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "2F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "3F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "4F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "6F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "7F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "8F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "9F",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "B2",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "B3",
+      "errors": []
+    },
+    {
+      "building": "parkmarine",
+      "floor": "PH",
+      "errors": []
+    },
+    {
+      "building": "showroom",
+      "floor": "1F",
+      "errors": []
+    },
+    {
+      "building": "showroom",
+      "floor": "2F",
+      "errors": []
+    }
+  ],
+  "errors": 0
+}

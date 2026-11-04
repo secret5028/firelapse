@@ -38,7 +38,7 @@ export function createPanelShell({panel,store}){
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
  if(!window.__PYROCAST_OFFLINE__&&location.protocol!=='file:'){
-  const current=buildingSelect.value;
+  const current=document.body.dataset.operationUrl||buildingSelect.value;
   buildingSelect.add(new Option('전체 모델 · 과거 작업 보기','http://127.0.0.1:8841/models/'));
   fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();

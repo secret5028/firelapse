@@ -1,5 +1,5 @@
 // D-4 view boundary. Text/numbers come from server evidence; actions need a click.
-export function createAssistantPanel({store,getContext,onNavigate,onProposal,onSaved}){
+export function createAssistantPanel({store,available=true,getContext,onNavigate,onProposal,onSaved}){
  const $=id=>document.getElementById(id),root=document.createElement('details');root.id='aiAssistant';
  root.innerHTML='<summary>AI 어시스턴트</summary><div class="aiBody"><button type="button" id="aiBrief">브리핑 생성</button><button type="button" id="aiCollapse">접기</button><div id="aiStatus" role="status"></div><div id="aiConversation" aria-live="polite"></div><form id="aiChat"><label>질문<textarea id="aiMessage" rows="3" maxlength="4000" required></textarea></label><button id="aiSend">보내기</button></form><details id="aiPending"><summary>적용 대기</summary><div id="aiProposals"></div></details><div id="aiLegacyFuel"></div></div>';
  const sidebar=$('pyroShellSidebar');sidebar.append(root);
@@ -14,7 +14,7 @@ export function createAssistantPanel({store,getContext,onNavigate,onProposal,onS
  const readable=value=>String(value).replace(/CAD_[A-Za-z0-9]+_[A-Za-z0-9_]+/g,id=>id.slice(4).replaceAll('_',' '));
  const offline=!!window.__PYROCAST_OFFLINE__;
  async function api(path,body){const r=await fetch('/cfbt/lite/ai/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:abort.signal});const v=await r.json();if(!r.ok)throw Error(v.error||'요청 실패');return v;}
- function buttons(){for(const id of ['aiSend','aiBrief'])$(id).disabled=busy||offline;}
+ function buttons(){for(const id of ['aiSend','aiBrief'])$(id).disabled=busy||offline||!available;}
  function answer(value){
   const box=document.createElement('div');box.className='aiAnswer';const used=new Set();
   function factButton(fact){const b=document.createElement('button');b.type='button';b.className='aiFact';b.textContent=fact.text;if(fact.tooltip)b.title=fact.tooltip;b.disabled=!fact.room;b.onclick=()=>{try{onNavigate({...fact,case:value.case});}catch(e){status(e.message);}};box.append(b);}

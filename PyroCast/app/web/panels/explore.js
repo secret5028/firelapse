@@ -36,9 +36,9 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id;
   $('exploreMC').title=mcJob.available?'직렬 실행 · 표본당 적분 예산 1,200초':'MC 서버 연결 확인 중';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
-  $('exploreOriginRun').disabled=pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
+  $('exploreOriginRun').disabled=payload?.available===false||pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
   if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)&&!(state.origin_mode==='manual'&&payload?.manual_origins?.some(r=>r.room===state.origin_room_id))){$('exploreMC').disabled=true;$('exploreMC').title='수동 화점으로 지정한 뒤 실행하세요';}
-  $('exploreRun').disabled=pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
+  $('exploreRun').disabled=payload?.available===false||pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
  }
  $('exploreN').onchange=()=>{if($('exploreN').checkValidity())store.dispatch('exploration/set',{top_n:Number($('exploreN').value)});};
  $('exploreSamples').onchange=()=>{if($('exploreSamples').checkValidity())store.dispatch('exploration/set',{samples:Number($('exploreSamples').value)});};
@@ -59,6 +59,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   if(value.saved_score?.opening_states&&JSON.stringify(value.saved_score.opening_states)!==JSON.stringify(value.score.opening_states))$('exploreRankBasis').textContent+=' · 현재 문 설정과 다름';
   if(value.fuel_rerun_required)$('exploreRankBasis').textContent+=' · 재실행 필요 (연료 변경)';
   const current=store.get('exploration');if(!(value.manual_origins??first).some(r=>r.room===current.origin_room_id)){const proposed=value.selection?.mc_room??c?.default_mc_room??first[0]?.room;store.dispatch('exploration/set',{origin_room_id:(value.manual_origins??first).some(r=>r.room===proposed)?proposed:first[0]?.room??null});}
+  if(value.available===false){$('exploreStatus').textContent=value.unavailable_reason||'실행 연결 전';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
  return {update,mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();root.remove();style.remove();}};

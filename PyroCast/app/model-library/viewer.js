@@ -1,6 +1,5 @@
 import * as T from 'three';
 import {OrbitControls} from '/vendor/OrbitControls.js';
-import {createSimulation} from '/models/simulation.js';
 import {createModelReview} from '/app/web/panels/model_review.js';
 const $=id=>document.getElementById(id),stage=$('stage');
 const scene=new T.Scene();scene.background=new T.Color('#142936');
@@ -9,7 +8,6 @@ const renderer=new T.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math
 const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=false;
 scene.add(new T.HemisphereLight(0xe4f4ff,0x50616c,2));const sun=new T.DirectionalLight(0xffffff,1.8);sun.position.set(30,-50,100);scene.add(sun);
 let root=null,panel=null,selected=null,picks=[],wallMeshes=[],openingGroups=[],floors=[],generation=0,model=null,resources=[];
-const simulation=createSimulation({THREE:T,camera,scene,getBuilding:()=>model,getGroups:()=>floors,getFloor:()=>$('floor').value,draw,onFloor:name=>{$('floor').value=name;showFloor(name)}});
 const keep=x=>(resources.push(x),x);
 function draw(){renderer.render(scene,camera)}controls.addEventListener('change',draw);
 function resize(){const r=stage.getBoundingClientRect();renderer.setSize(r.width,r.height);camera.aspect=r.width/r.height;camera.updateProjectionMatrix();draw()}new ResizeObserver(resize).observe(stage);
@@ -42,7 +40,7 @@ function cadFloor(f,group){
 }
 function bounds(){const b=new T.Box3();for(const f of floors)if(f.visible)b.expandByObject(f);return b}
 function fit(top=false){const b=bounds();if(b.isEmpty())return;const c=b.getCenter(new T.Vector3()),s=b.getSize(new T.Vector3()),d=Math.max(s.x,s.y,s.z,5)*1.65;controls.target.copy(c);camera.position.copy(c).add(top?new T.Vector3(0,-.001,d):new T.Vector3(d*.65,-d*.9,d*.75));camera.near=.1;camera.far=Math.max(3000,d*10);camera.updateProjectionMatrix();controls.update();draw()}
-function showFloor(value){for(const f of floors)f.visible=value==='all'||f.name===value;simulation.update();draw()}
+function showFloor(value){for(const f of floors)f.visible=value==='all'||f.name===value;draw()}
 function clear(){panel?.dispose();panel=null;if(root)scene.remove(root);for(const r of resources)r.dispose();resources=[];picks=[];wallMeshes=[];openingGroups=[];floors=[];selected=null}
 function selectRoom(hit){if(selected){selected.parent.remove(selected);selected.geometry.dispose();selected.material.dispose();selected=null}if(!hit)return;const r=hit.room,group=floors.find(f=>f.name===hit.floor);if(!group)return;const pts=(r.polys||[]).flatMap(p=>{const q=p.o||p;return q.flatMap((a,i)=>[[...a,.1],[...q[(i+1)%q.length],.1]])});selected=new T.LineSegments(new T.BufferGeometry().setFromPoints(pts.map(p=>new T.Vector3(...p))),new T.LineBasicMaterial({color:0x42e8ff,depthTest:false,transparent:true,opacity:1}));group.add(selected);$('selection').textContent=`${hit.floor} ${hit.id} · ${(r.names||[]).join(' / ')||'용도 미확인'}`;draw()}
 async function load(e){const ticket=++generation;$('loading').textContent='모델 불러오는 중…';$('error').textContent='';$('model').value=e.id;
@@ -51,13 +49,13 @@ async function load(e){const ticket=++generation;$('loading').textContent='모�
   for(const f of b.floors){const g=new T.Group();g.name=f.name;g.position.z=f.scan_page?.elevation??f.z??0;root.add(g);floors.push(g);if(f.scan_page)scanFloor(f,g,buildings.indexOf(f.scan_page.building)*100);else cadFloor(f,g)}
   $('name').textContent=e.label;$('source').textContent={cad:'CAD 원본',scan:'스캔 기반 · 열람 전용',reconstructed:'자료 기반 재구성'}[e.source_kind];$('source').className='badge'+(e.source_kind==='scan'?' scan':'');
   $('counts').textContent=`${e.floor_count}개 층/도면${e.room_count===null?' · 실 분할 미확정':' · '+e.room_count+'개 공간'}`;
-  $('reason').textContent=e.execution_note;$('run').disabled=!e.simulation_enabled;$('run').title=e.execution_note;$('run').onclick=e.simulation_enabled?()=>location.assign(e.operation_url):null;
+  $('reason').textContent=e.execution_note;$('run').disabled=!e.simulation_enabled;$('run').title=e.execution_note;$('run').textContent=e.simulation_enabled?'운영 화면 · 시뮬레이션':'시뮬레이션 불가';$('run').onclick=e.simulation_enabled?()=>location.assign(e.operation_url):null;
   $('note').textContent=e.source_evidence+(b.notes?.length?'\n'+b.notes.join('\n'):'')+(e.id==='modori-scan'?'\n전체 보기의 동 간 간격은 열람용 분리 배치이며 실제 대지 배치가 아닙니다.':'');
   $('links').replaceChildren();for(const [text,url] of [['기존 운영 화면 · 저장 결과',e.operation_url],['도면 보정·미완 위치 상세',e.review_url]])if(url){const a=document.createElement('a');a.className='button';a.href=url;a.textContent=text;$('links').append(a)}
   $('floor').replaceChildren(new Option('전체 건물','all'));for(const f of b.floors)$('floor').add(new Option(f.name,f.name));$('floor').value='all';
   panel=createModelReview({container:$('review'),building:b,onLocate:x=>{const f=b.floors.find(f=>f.name===x.floor);if(!f)return;$('floor').value=f.name;showFloor(f.name);const r=f.rooms?.find(r=>r.id===x.id);if(r)selectRoom({floor:f.name,id:r.id,room:r});else $('selection').textContent=`${x.floor} ${x.id} · ${x.detail}`;fit()}});
   $('selection').textContent=e.source_kind==='scan'?'스캔 형상 열람 · 문·창은 바닥 추적선, 높이 미확정':'실을 클릭하면 선택됩니다';
-  wallMeshes.forEach(m=>m.material.opacity=$('walls').checked?.25:.85);openingGroups.forEach(g=>g.visible=$('openings').checked);fit();history.replaceState(null,'','?id='+e.id);window.__modelLibrary={ready:true,id:e.id,floors:b.floors.length,scan:e.source_kind==='scan',meshes:root.children.length};await simulation.bind(e);
+  wallMeshes.forEach(m=>m.material.opacity=$('walls').checked?.25:.85);openingGroups.forEach(g=>g.visible=$('openings').checked);fit();history.replaceState(null,'','?id='+e.id);window.__modelLibrary={ready:true,id:e.id,floors:b.floors.length,scan:e.source_kind==='scan',meshes:root.children.length};
  }catch(error){$('error').textContent=error.message;window.__modelLibrary={ready:false,error:error.message}}finally{if(ticket===generation)$('loading').textContent=''}
 }
 $('floor').onchange=()=>showFloor($('floor').value);$('iso').onclick=()=>fit();$('top').onclick=()=>fit(true);$('fit').onclick=()=>fit();

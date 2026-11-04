@@ -9,7 +9,6 @@ if not ASSETS.is_dir():
 FILES={
  '/models/':(ROOT/'app/model-library/index.html','text/html; charset=utf-8'),
  '/models/viewer.js':(ROOT/'app/model-library/viewer.js','text/javascript; charset=utf-8'),
- '/models/simulation.js':(ROOT/'app/model-library/simulation.js','text/javascript; charset=utf-8'),
  '/app/web/panels/model_review.js':(ROOT/'app/web/panels/model_review.js','text/javascript; charset=utf-8'),
  '/vendor/three.module.js':(ASSETS/'three.module.js','text/javascript'),
  '/vendor/OrbitControls.js':(ASSETS/'addons/controls/OrbitControls.js','text/javascript')}
@@ -22,7 +21,7 @@ class Handler(BaseHTTPRequestHandler):
   if zipped:data=gzip.compress(data,compresslevel=1,mtime=0)
   self.send_response(code);self.send_header('Content-Type',mime);self.send_header('Content-Length',str(len(data)))
   origin=self.headers.get('Origin')
-  if origin in ('http://127.0.0.1:8780','http://127.0.0.1:8832','http://127.0.0.1:8840','http://127.0.0.1:8841'):self.send_header('Access-Control-Allow-Origin',origin)
+  if origin in ('http://127.0.0.1:8780','http://127.0.0.1:8832','http://127.0.0.1:8840','http://127.0.0.1:8841','http://127.0.0.1:8842','http://127.0.0.1:8843'):self.send_header('Access-Control-Allow-Origin',origin)
   if zipped:self.send_header('Content-Encoding','gzip')
   self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff');self.end_headers();self.wfile.write(data)
  def json(self,d,code=200):return self.send(json.dumps(d,ensure_ascii=False).encode(),code=code)
@@ -67,4 +66,6 @@ class Handler(BaseHTTPRequestHandler):
  def do_DELETE(self):return self.do_PUT()
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--port',type=int,default=8841);a=p.parse_args()
+ from model_operation import start_servers
+ operation_servers=start_servers(Handler)
  ThreadingHTTPServer(('127.0.0.1',a.port),Handler).serve_forever()

@@ -30,7 +30,7 @@
       "room_count": 251,
       "simulation_enabled": true,
       "execution_note": "검증된 층에서 간략 시뮬레이션 · 화점·급기 선택",
-      "operation_url": null,
+      "operation_url": "http://127.0.0.1:8842/model.html",
       "review_url": "http://127.0.0.1:8840/data/parkmarine-hotel/review.html",
       "execution_mode": "library_lite"
     },
@@ -63,7 +63,7 @@
       "room_count": 54,
       "simulation_enabled": true,
       "execution_note": "검증된 층에서 간략 시뮬레이션 · 화점·급기 선택",
-      "operation_url": null,
+      "operation_url": "http://127.0.0.1:8843/model.html",
       "review_url": null,
       "execution_mode": "library_lite"
     },

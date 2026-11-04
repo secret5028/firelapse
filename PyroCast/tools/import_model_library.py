@@ -45,6 +45,7 @@ def main():
                 row['sha256']=hashlib.sha256(prepared.read_bytes()).hexdigest()
         if row['id'] in ('parkmarine','showroom'):
             row.update(simulation_enabled=True,execution_mode='library_lite',
+                       operation_url='http://127.0.0.1:'+str(8842 if row['id']=='parkmarine' else 8843)+'/model.html',
                        execution_note='검증된 층에서 간략 시뮬레이션 · 화점·급기 선택')
         elif row['id']=='wando':
             row['execution_note']='완도 공동·절단·배풍기 전용 CFAST 입력: 기존 P1~P5 결과 보기 (일반 CAD 계산 대상 아님)'

@@ -20,8 +20,7 @@ export function createPanelShell({panel,store}){
  body.pyroShell #cfbtPanel{position:static;max-height:none;width:100%;border:0;overflow:visible;padding:12px;left:auto;right:auto;bottom:auto;font-size:12px}
  #pyroShellSidebar #cfbtPanel .row{align-items:flex-start}#pyroShellSidebar #cfbtPanel select{min-width:0;max-width:100%}
  #pyroShellTimeline{bottom:0;left:0;right:0;min-height:58px;padding:9px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid #496273}
- #pyroShellTimeline .track{position:relative;flex:1;min-width:70px;padding-bottom:6px}#shellTime{width:100%;margin:0;accent-color:#42c4e8}
- #shellMarks{position:absolute;left:7px;right:7px;height:6px;bottom:0;pointer-events:none}#shellMarks i{position:absolute;height:6px;border-left:2px solid #ffb34d}#shellMarks i.fo{border-color:#ef4444}
+ #pyroShellTimeline .track{position:relative;flex:1;min-width:70px}#shellTime{width:100%;margin:0;accent-color:#42c4e8}
  #shellClock{white-space:nowrap;font-variant-numeric:tabular-nums}
  #pyroShellHeader button,#pyroShellSidebar>button,#pyroShellTabs button,#pyroShellTimeline button,#pyroShellTimeline select{color:inherit;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit;cursor:pointer}
  #pyroShellTabs button{border-radius:0;border-width:0 0 2px}#shellMobileToggle{display:none}
@@ -32,7 +31,7 @@ export function createPanelShell({panel,store}){
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand">PyroCast</span>';
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
- const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"><div id="shellMarks" aria-hidden="true"></div></div><output id="shellClock"></output>';
+ const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"></div><output id="shellClock"></output>';
  document.body.append(header,sidebar,timeline);move($('fbtn'),header);
  const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
@@ -63,11 +62,7 @@ export function createPanelShell({panel,store}){
  listen($('shellTime'),'input',()=>{const t_s=+$('shellTime').value;store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s});});
  const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
  function sync(){const p=store.get('playback');$('shellPlay').textContent=p.playing?'일시정지':'재생';$('shellPlay').setAttribute('aria-pressed',String(p.playing));$('shellSpeed').value=p.speed;$('shellTime').max=p.t_end_s;$('shellTime').value=p.t_s;$('shellClock').textContent=`${stamp(p.t_s)} / ${stamp(p.t_end_s)}`;}
- function marks(){const r=store.get('result'),host=$('shellMarks');host.replaceChildren();if(!r?.t_end_s)return;$('shellTime').step=r.dt_out_s||10;
-  const entries=r.events.filter(e=>e.kind==='supply_start').map(e=>({t:e.t_s,title:`${e.room_id} 연료 공급 시작`,fo:false}));
-  for(const [id,frames] of Object.entries(r.conditions)){const i=r.time_s.findIndex((_,i)=>frames[i]?.FO?.met===true);if(i>=0)entries.push({t:r.time_s[i],title:`${id} FO 조건 충족`,fo:true});}
-  for(const e of entries){const mark=document.createElement('i');mark.style.left=Math.min(100,e.t/r.t_end_s*100)+'%';mark.className=e.fo?'fo':'';mark.title=e.title+' '+stamp(e.t);host.append(mark);}
- }
+ function marks(){const r=store.get('result');$('shellTime').step=r?.dt_out_s||10;}
  const floors=()=>{const id=store.get('floor').floor_id;for(const b of $('fbtn').children)b.setAttribute('aria-pressed',String(b.textContent===(id??'전체')));};
  const oldFloorAttributes=[...$('fbtn').children].map(b=>[b,b.getAttribute('aria-pressed')]);
  cleanups.push(()=>{for(const [b,value] of oldFloorAttributes)if(value===null)b.removeAttribute('aria-pressed');else b.setAttribute('aria-pressed',value);});

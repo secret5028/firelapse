@@ -13,6 +13,7 @@ try{
   await page.waitForFunction(id=>window.__modelLibrary?.ready&&window.__modelLibrary.id===id,e.id,{timeout:60000});
   assert.equal(await page.locator('#error').textContent(),'');assert.equal(await page.locator('canvas').count(),1);
   assert.equal(await page.locator('#floor option').count(),e.floor_count+1);
+  if(e.execution_mode==='library_lite')await page.waitForFunction(()=>!document.querySelector('#run').disabled,null,{timeout:60000});
   assert.equal(await page.locator('#run').isEnabled(),e.simulation_enabled);
   if(e.source_kind==='scan')assert.match(await page.locator('#reason').textContent(),/시뮬레이션 금지/);
   const first=await page.locator('#floor option').nth(1).getAttribute('value');await page.locator('#floor').selectOption(first);await page.locator('#top').click();

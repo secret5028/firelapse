@@ -37,6 +37,17 @@ def main():
           'floors':[dict(name=p['initial'].get('building','')+' '+p['initial'].get('levelLabel',str(p['initial'].get('floor'))),scan_page=p['initial'],rooms=[]) for p in d['pages'] if p.get('initial',{}).get('included') and p['initial'].get('shapes')],
           'notes':['저장된 이미지 판독 초기 형상·층고 가정을 열람용으로 사용. 개구부는 계산 입력으로 사용 금지.']}
     add('modori-scan','모도리 267 · 1~4동 스캔 판독',src,'scan','저장 REVIEW_DATA 이미지와 initial 수동 판독 형상. 원본 result-with-heads.html 보존.',imported=scan)
+    for row in models:
+        if row['id']=='showroom':
+            prepared=ROOT/'data/model-library/showroom/prepared/building.json'
+            if prepared.exists():
+                row['path']=prepared.relative_to(ROOT).as_posix()
+                row['sha256']=hashlib.sha256(prepared.read_bytes()).hexdigest()
+        if row['id'] in ('parkmarine','showroom'):
+            row.update(simulation_enabled=True,execution_mode='library_lite',
+                       execution_note='검증된 층에서 간략 시뮬레이션 · 화점·급기 선택')
+        elif row['id']=='wando':
+            row['execution_note']='완도 공동·절단·배풍기 전용 CFAST 입력: 기존 P1~P5 결과 보기 (일반 CAD 계산 대상 아님)'
     save(ROOT/'config/model-library.json',{'schema':'pyrocast.model-library/1','models':models})
     print(json.dumps([{k:e[k] for k in ('id','label','floor_count','room_count','source_kind','simulation_enabled')} for e in models],ensure_ascii=False,indent=2))
 if __name__=='__main__':main()

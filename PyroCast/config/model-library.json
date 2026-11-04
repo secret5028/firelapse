@@ -28,10 +28,11 @@
       "original_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
       "floor_count": 14,
       "room_count": 251,
-      "simulation_enabled": false,
-      "execution_note": "저장 모델 열람 · 계산 실행 연결 없음",
+      "simulation_enabled": true,
+      "execution_note": "검증된 층에서 간략 시뮬레이션 · 화점·급기 선택",
       "operation_url": null,
-      "review_url": "http://127.0.0.1:8840/data/parkmarine-hotel/review.html"
+      "review_url": "http://127.0.0.1:8840/data/parkmarine-hotel/review.html",
+      "execution_mode": "library_lite"
     },
     {
       "id": "wando",
@@ -45,25 +46,26 @@
       "floor_count": 1,
       "room_count": 9,
       "simulation_enabled": false,
-      "execution_note": "저장 모델 열람 · 계산 실행 연결 없음",
+      "execution_note": "완도 공동·절단·배풍기 전용 CFAST 입력: 기존 P1~P5 결과 보기 (일반 CAD 계산 대상 아님)",
       "operation_url": "http://127.0.0.1:8832/data/wando-coldstore/model.html",
       "review_url": null
     },
     {
       "id": "showroom",
       "label": "견본주택 · 과거 CAD",
-      "path": "data/model-library/showroom/building.json",
+      "path": "data/model-library/showroom/prepared/building.json",
       "source_path": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-710-2025-00000016\\building.json",
       "source_kind": "cad",
-      "source_evidence": "층별 src .dxf 및 CAD3D 인계 기록",
-      "sha256": "56f439777f91e39cf51f3b2069bd3bc9729598fb3ed2e89c8547b291fde5f6d9",
+      "source_evidence": "층별 src .dxf 및 CAD3D 인계 기록 · 공통 연결망/공리 보정 적용 (원본 보존)",
+      "sha256": "95c4c76b85f066027285d678674b6c07ee1dc34fd66cc5b7b68f193470b915c3",
       "original_sha256": "56f439777f91e39cf51f3b2069bd3bc9729598fb3ed2e89c8547b291fde5f6d9",
       "floor_count": 2,
       "room_count": 54,
-      "simulation_enabled": false,
-      "execution_note": "저장 모델 열람 · 계산 실행 연결 없음",
+      "simulation_enabled": true,
+      "execution_note": "검증된 층에서 간략 시뮬레이션 · 화점·급기 선택",
       "operation_url": null,
-      "review_url": null
+      "review_url": null,
+      "execution_mode": "library_lite"
     },
     {
       "id": "apartment-scan",

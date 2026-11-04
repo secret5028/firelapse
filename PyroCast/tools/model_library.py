@@ -25,6 +25,8 @@ def execution_policy(building,source=None):
     if row is None and source and Path(source).is_file():
         digest=hashlib.sha256(Path(source).read_bytes()).hexdigest()
         row=next((e for e in entries() if e.get('sha256')==digest),None)
+    if row and row.get('execution_mode') == 'library_lite':
+        return {'allowed':False,'reason':'모델 목록의 건물별 간략 계산 경로를 사용하세요'}
     if row:
         return {'allowed':row.get('simulation_enabled',False) and row['source_kind']!='scan','reason':row['execution_note']}
     # Older unregistered drawings need provenance, not an unrestricted execution fallback.

@@ -1,0 +1,4318 @@
+{
+  "source": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\data\\model-library\\showroom\\building.json",
+  "source_sha256": "56f439777f91e39cf51f3b2069bd3bc9729598fb3ed2e89c8547b291fde5f6d9",
+  "rules_revision": "building_rules_v1_preserve_20261103",
+  "floors": [
+    {
+      "floor": "1F",
+      "rooms": 24,
+      "connections": 24,
+      "doors": {
+        "confirmed": 0,
+        "inferred": 1,
+        "ordinary": 18,
+        "external": 0
+      },
+      "windows": 5,
+      "external_windows": 5,
+      "cores": {},
+      "excluded": 6,
+      "isolated": 3
+    },
+    {
+      "floor": "2F",
+      "rooms": 30,
+      "connections": 37,
+      "doors": {
+        "confirmed": 0,
+        "inferred": 0,
+        "ordinary": 30,
+        "external": 0
+      },
+      "windows": 7,
+      "external_windows": 5,
+      "cores": {},
+      "excluded": 4,
+      "isolated": 5
+    }
+  ],
+  "doors": [
+    {
+      "id": "CAD_1F_D0",
+      "a": "CAD_1F_R0",
+      "b": "CAD_1F_R1",
+      "connected_names": [
+        "탕비실 탕비실",
+        "분양사무실_5석 분양사무실_5석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R0",
+          "name": "탕비실 탕비실",
+          "area_m2": 4.47,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R1",
+          "name": "분양사무실_5석 분양사무실_5석",
+          "area_m2": 32.22,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D2",
+      "a": "CAD_1F_R3",
+      "b": "CAD_1F_R2",
+      "connected_names": [
+        "조합사무실_5석 조합사무실_5석",
+        "문서보관실 문서보관실"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R3",
+          "name": "조합사무실_5석 조합사무실_5석",
+          "area_m2": 21.76,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R2",
+          "name": "문서보관실 문서보관실",
+          "area_m2": 7.97,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D3",
+      "a": "CAD_1F_R5",
+      "b": "CAD_1F_R6",
+      "connected_names": [
+        "도우미실 도우미실",
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R5",
+          "name": "도우미실 도우미실",
+          "area_m2": 10.28,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D4",
+      "a": "CAD_1F_R16",
+      "b": "OUTSIDE",
+      "connected_names": [
+        "기계실 기계실"
+      ],
+      "door_class": "fire",
+      "rule": 3,
+      "confidence": "inferred",
+      "reason": "설비·샤프트·창고 연결: 기계실 기계실",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R16",
+          "name": "기계실 기계실",
+          "area_m2": 40.23,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.35,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D8",
+      "a": "CAD_1F_R6",
+      "b": "CAD_1F_R11",
+      "connected_names": [
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R11",
+          "name": "",
+          "area_m2": 1.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D9",
+      "a": "CAD_1F_R12",
+      "b": "CAD_1F_R9",
+      "connected_names": [
+        "화장실(여) 화장실(여)",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R12",
+          "name": "화장실(여) 화장실(여)",
+          "area_m2": 7.27,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R9",
+          "name": "",
+          "area_m2": 1.45,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D10",
+      "a": "CAD_1F_R15",
+      "b": "CAD_1F_R6",
+      "connected_names": [
+        "화장실(남) 화장실(남)",
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R15",
+          "name": "화장실(남) 화장실(남)",
+          "area_m2": 11.72,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D11",
+      "a": "CAD_1F_R12",
+      "b": "CAD_1F_R8",
+      "connected_names": [
+        "화장실(여) 화장실(여)",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R12",
+          "name": "화장실(여) 화장실(여)",
+          "area_m2": 7.27,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R8",
+          "name": "",
+          "area_m2": 1.45,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D12",
+      "a": "CAD_1F_R11",
+      "b": "CAD_1F_R7",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R11",
+          "name": "",
+          "area_m2": 1.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R7",
+          "name": "",
+          "area_m2": 1.3,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D13",
+      "a": "CAD_1F_R17",
+      "b": "CAD_1F_R15",
+      "connected_names": [
+        "",
+        "화장실(남) 화장실(남)"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R17",
+          "name": "",
+          "area_m2": 1.45,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R15",
+          "name": "화장실(남) 화장실(남)",
+          "area_m2": 11.72,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D14",
+      "a": "CAD_1F_R18",
+      "b": "CAD_1F_R15",
+      "connected_names": [
+        "",
+        "화장실(남) 화장실(남)"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R18",
+          "name": "",
+          "area_m2": 1.45,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R15",
+          "name": "화장실(남) 화장실(남)",
+          "area_m2": 11.72,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D15",
+      "a": "CAD_1F_R12",
+      "b": "CAD_1F_R10",
+      "connected_names": [
+        "화장실(여) 화장실(여)",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R12",
+          "name": "화장실(여) 화장실(여)",
+          "area_m2": 7.27,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R10",
+          "name": "",
+          "area_m2": 1.45,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D16",
+      "a": "CAD_1F_R1",
+      "b": "CAD_1F_R3",
+      "connected_names": [
+        "분양사무실_5석 분양사무실_5석",
+        "조합사무실_5석 조합사무실_5석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R1",
+          "name": "분양사무실_5석 분양사무실_5석",
+          "area_m2": 32.22,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R3",
+          "name": "조합사무실_5석 조합사무실_5석",
+          "area_m2": 21.76,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D17",
+      "a": "CAD_1F_R4",
+      "b": "CAD_1F_R6",
+      "connected_names": [
+        "미화원실 미화원실",
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R4",
+          "name": "미화원실 미화원실",
+          "area_m2": 6.69,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D19",
+      "a": "CAD_1F_R6",
+      "b": "CAD_1F_R14",
+      "connected_names": [
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R14",
+          "name": "",
+          "area_m2": 1.5,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D20",
+      "a": "CAD_1F_R13",
+      "b": "CAD_1F_R1",
+      "connected_names": [
+        "창 고 창 고",
+        "분양사무실_5석 분양사무실_5석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R13",
+          "name": "창 고 창 고",
+          "area_m2": 6.13,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R1",
+          "name": "분양사무실_5석 분양사무실_5석",
+          "area_m2": 32.22,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D21",
+      "a": "CAD_1F_R14",
+      "b": "CAD_1F_R1",
+      "connected_names": [
+        "",
+        "분양사무실_5석 분양사무실_5석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R14",
+          "name": "",
+          "area_m2": 1.5,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R1",
+          "name": "분양사무실_5석 분양사무실_5석",
+          "area_m2": 32.22,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D1_ARC5",
+      "a": "CAD_1F_R22",
+      "b": "CAD_1F_R6",
+      "connected_names": [
+        "",
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R22",
+          "name": "",
+          "area_m2": 4.24,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_1F_D1_ARC7",
+      "a": "CAD_1F_R23",
+      "b": "CAD_1F_R6",
+      "connected_names": [
+        "",
+        "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_1F_R23",
+          "name": "",
+          "area_m2": 4.24,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_1F_R6",
+          "name": "WIDE COLOR / 창 고 / 단지모형 / 주출입구 / 지역광역도 / 상담공간_8석 WIDE COLOR 창 고 단지모형 주출입구 지역광역도 상담공간_8석",
+          "area_m2": 370.76,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D0",
+      "a": "CAD_2F_R22",
+      "b": "CAD_2F_R9",
+      "connected_names": [
+        "",
+        "72B 72B"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R22",
+          "name": "",
+          "area_m2": 8.92,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R9",
+          "name": "72B 72B",
+          "area_m2": 45.64,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D1",
+      "a": "CAD_2F_R26",
+      "b": "CAD_2F_R9",
+      "connected_names": [
+        "",
+        "72B 72B"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R26",
+          "name": "",
+          "area_m2": 8.98,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R9",
+          "name": "72B 72B",
+          "area_m2": 45.64,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D2",
+      "a": "CAD_2F_R12",
+      "b": "CAD_2F_R9",
+      "connected_names": [
+        "72㎡B TYPE 72㎡B TYPE",
+        "72B 72B"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R12",
+          "name": "72㎡B TYPE 72㎡B TYPE",
+          "area_m2": 16.5,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R9",
+          "name": "72B 72B",
+          "area_m2": 45.64,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D3",
+      "a": "CAD_2F_R28",
+      "b": "CAD_2F_R9",
+      "connected_names": [
+        "",
+        "72B 72B"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R28",
+          "name": "",
+          "area_m2": 3.2,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R9",
+          "name": "72B 72B",
+          "area_m2": 45.64,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D4",
+      "a": "CAD_2F_R18",
+      "b": "CAD_2F_R12",
+      "connected_names": [
+        "",
+        "72㎡B TYPE 72㎡B TYPE"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R18",
+          "name": "",
+          "area_m2": 2.81,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R12",
+          "name": "72㎡B TYPE 72㎡B TYPE",
+          "area_m2": 16.5,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D5",
+      "a": "CAD_2F_R4",
+      "b": "CAD_2F_R7",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R4",
+          "name": "",
+          "area_m2": 2.67,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R7",
+          "name": "",
+          "area_m2": 2.54,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D7",
+      "a": "CAD_2F_R14",
+      "b": "CAD_2F_R9",
+      "connected_names": [
+        "",
+        "72B 72B"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R14",
+          "name": "",
+          "area_m2": 2.37,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R9",
+          "name": "72B 72B",
+          "area_m2": 45.64,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D8",
+      "a": "CAD_2F_R3",
+      "b": "CAD_2F_R6",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R3",
+          "name": "",
+          "area_m2": 14.95,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R6",
+          "name": "",
+          "area_m2": 2.75,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D9",
+      "a": "CAD_2F_R13",
+      "b": "CAD_2F_R19",
+      "connected_names": [
+        "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R13",
+          "name": "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+          "area_m2": 38.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R19",
+          "name": "",
+          "area_m2": 7.98,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D10",
+      "a": "CAD_2F_R13",
+      "b": "CAD_2F_R24",
+      "connected_names": [
+        "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R13",
+          "name": "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+          "area_m2": 38.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R24",
+          "name": "",
+          "area_m2": 8.14,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D11",
+      "a": "CAD_2F_R10",
+      "b": "CAD_2F_R13",
+      "connected_names": [
+        "",
+        "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R10",
+          "name": "",
+          "area_m2": 1.09,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R13",
+          "name": "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+          "area_m2": 38.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D12",
+      "a": "CAD_2F_R5",
+      "b": "CAD_2F_R2",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R5",
+          "name": "",
+          "area_m2": 2.06,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R2",
+          "name": "",
+          "area_m2": 2.98,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D14",
+      "a": "CAD_2F_R6",
+      "b": "CAD_2F_R3",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R6",
+          "name": "",
+          "area_m2": 2.75,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R3",
+          "name": "",
+          "area_m2": 14.95,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_D21",
+      "a": "CAD_2F_R27",
+      "b": "CAD_2F_R21",
+      "connected_names": [
+        "조직분양 사무실_80석 조직분양 사무실_80석",
+        "세대입구 / DID패널 / 세대입구 / DID패널 / 미건립 모형 / 특장점(SIGN) 세대입구 DID패널 세대입구 DID패널 미건립 모형 특장점(SIGN)"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R27",
+          "name": "조직분양 사무실_80석 조직분양 사무실_80석",
+          "area_m2": 84.11,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R21",
+          "name": "세대입구 / DID패널 / 세대입구 / DID패널 / 미건립 모형 / 특장점(SIGN) 세대입구 DID패널 세대입구 DID패널 미건립 모형 특장점(SIGN)",
+          "area_m2": 167.49,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W0",
+      "a": "CAD_2F_R23",
+      "b": "CAD_2F_R22",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R23",
+          "name": "",
+          "area_m2": 6.29,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R22",
+          "name": "",
+          "area_m2": 8.92,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W1",
+      "a": "CAD_2F_R23",
+      "b": "CAD_2F_R26",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R23",
+          "name": "",
+          "area_m2": 6.29,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R26",
+          "name": "",
+          "area_m2": 8.98,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W3",
+      "a": "CAD_2F_R0",
+      "b": "CAD_2F_R12",
+      "connected_names": [
+        "",
+        "72㎡B TYPE 72㎡B TYPE"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R12",
+          "name": "72㎡B TYPE 72㎡B TYPE",
+          "area_m2": 16.5,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W6",
+      "a": "CAD_2F_R7",
+      "b": "CAD_2F_R0",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R7",
+          "name": "",
+          "area_m2": 2.54,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W7",
+      "a": "CAD_2F_R7",
+      "b": "CAD_2F_R12",
+      "connected_names": [
+        "",
+        "72㎡B TYPE 72㎡B TYPE"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R7",
+          "name": "",
+          "area_m2": 2.54,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R12",
+          "name": "72㎡B TYPE 72㎡B TYPE",
+          "area_m2": 16.5,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W8",
+      "a": "CAD_2F_R5",
+      "b": "CAD_2F_R1",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R5",
+          "name": "",
+          "area_m2": 2.06,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R1",
+          "name": "",
+          "area_m2": 33.25,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W9",
+      "a": "CAD_2F_R19",
+      "b": "CAD_2F_R1",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R19",
+          "name": "",
+          "area_m2": 7.98,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R1",
+          "name": "",
+          "area_m2": 33.25,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W10",
+      "a": "CAD_2F_R24",
+      "b": "CAD_2F_R1",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R24",
+          "name": "",
+          "area_m2": 8.14,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R1",
+          "name": "",
+          "area_m2": 33.25,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W11",
+      "a": "CAD_2F_R0",
+      "b": "CAD_2F_R13",
+      "connected_names": [
+        "",
+        "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R13",
+          "name": "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+          "area_m2": 38.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W13",
+      "a": "CAD_2F_R0",
+      "b": "CAD_2F_R3",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R3",
+          "name": "",
+          "area_m2": 14.95,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W14",
+      "a": "CAD_2F_R0",
+      "b": "CAD_2F_R8",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R8",
+          "name": "",
+          "area_m2": 1.94,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W15",
+      "a": "CAD_2F_R0",
+      "b": "CAD_2F_R13",
+      "connected_names": [
+        "",
+        "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R13",
+          "name": "59A / 72㎡B TYPE / 59㎡A TYPE 59A 72㎡B TYPE 59㎡A TYPE",
+          "area_m2": 38.17,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_W16",
+      "a": "CAD_2F_R3",
+      "b": "CAD_2F_R5",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R3",
+          "name": "",
+          "area_m2": 14.95,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R5",
+          "name": "",
+          "area_m2": 2.06,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_EV0",
+      "a": "CAD_2F_R0",
+      "b": "CAD_2F_R4",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R0",
+          "name": "",
+          "area_m2": 40.66,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R4",
+          "name": "",
+          "area_m2": 2.67,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_EV1",
+      "a": "CAD_2F_R2",
+      "b": "CAD_2F_R1",
+      "connected_names": [
+        "",
+        ""
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R2",
+          "name": "",
+          "area_m2": 2.98,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R1",
+          "name": "",
+          "area_m2": 33.25,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    },
+    {
+      "id": "CAD_2F_EV2",
+      "a": "CAD_2F_R25",
+      "b": "CAD_2F_R21",
+      "connected_names": [
+        "",
+        "세대입구 / DID패널 / 세대입구 / DID패널 / 미건립 모형 / 특장점(SIGN) 세대입구 DID패널 세대입구 DID패널 미건립 모형 특장점(SIGN)"
+      ],
+      "door_class": "ordinary",
+      "rule": 6,
+      "confidence": "default",
+      "reason": "일반문 기본값",
+      "core_checks": [
+        {
+          "room": "CAD_2F_R25",
+          "name": "",
+          "area_m2": 3.24,
+          "area_limit_m2": 80,
+          "area_ok": true,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        },
+        {
+          "room": "CAD_2F_R21",
+          "name": "세대입구 / DID패널 / 세대입구 / DID패널 / 미건립 모형 / 특장점(SIGN) 세대입구 DID패널 세대입구 DID패널 미건립 모형 특장점(SIGN)",
+          "area_m2": 167.49,
+          "area_limit_m2": 80,
+          "area_ok": false,
+          "core_kind": null,
+          "core_kind_match": false,
+          "leading_core_token": null,
+          "eligible": false
+        }
+      ],
+      "probability": 0.5,
+      "position_m": null
+    }
+  ],
+  "rooms": [
+    {
+      "id": "CAD_1F_R0",
+      "floor": "1F",
+      "area_m2": 4.47,
+      "labels": [
+        "탕비실"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R1",
+      "floor": "1F",
+      "area_m2": 32.22,
+      "labels": [
+        "분양사무실_5석"
+      ],
+      "usage_class": "office",
+      "usage_evidence": {
+        "basis": "label",
+        "pattern": "사무|업무|회의|OFFICE|관리실|방재실|경비|숙직"
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 420
+    },
+    {
+      "id": "CAD_1F_R2",
+      "floor": "1F",
+      "area_m2": 7.97,
+      "labels": [
+        "문서보관실"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R3",
+      "floor": "1F",
+      "area_m2": 21.76,
+      "labels": [
+        "조합사무실_5석"
+      ],
+      "usage_class": "office",
+      "usage_evidence": {
+        "basis": "label",
+        "pattern": "사무|업무|회의|OFFICE|관리실|방재실|경비|숙직"
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 420
+    },
+    {
+      "id": "CAD_1F_R4",
+      "floor": "1F",
+      "area_m2": 6.69,
+      "labels": [
+        "미화원실"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R5",
+      "floor": "1F",
+      "area_m2": 10.28,
+      "labels": [
+        "도우미실"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R6",
+      "floor": "1F",
+      "area_m2": 370.76,
+      "labels": [
+        "WIDE COLOR",
+        "창 고",
+        "단지모형",
+        "주출입구",
+        "지역광역도",
+        "상담공간_8석"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R7",
+      "floor": "1F",
+      "area_m2": 1.3,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R8",
+      "floor": "1F",
+      "area_m2": 1.45,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R9",
+      "floor": "1F",
+      "area_m2": 1.45,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R10",
+      "floor": "1F",
+      "area_m2": 1.45,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R11",
+      "floor": "1F",
+      "area_m2": 1.17,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R12",
+      "floor": "1F",
+      "area_m2": 7.27,
+      "labels": [
+        "화장실(여)"
+      ],
+      "usage_class": "toilet",
+      "usage_evidence": {
+        "basis": "label",
+        "pattern": "화장실|TOILET|RESTROOM|W[.]?C[.]?\\b"
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 40
+    },
+    {
+      "id": "CAD_1F_R13",
+      "floor": "1F",
+      "area_m2": 6.13,
+      "labels": [
+        "창 고"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R14",
+      "floor": "1F",
+      "area_m2": 1.5,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R15",
+      "floor": "1F",
+      "area_m2": 11.72,
+      "labels": [
+        "화장실(남)"
+      ],
+      "usage_class": "toilet",
+      "usage_evidence": {
+        "basis": "label",
+        "pattern": "화장실|TOILET|RESTROOM|W[.]?C[.]?\\b"
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 40
+    },
+    {
+      "id": "CAD_1F_R16",
+      "floor": "1F",
+      "area_m2": 40.23,
+      "labels": [
+        "기계실"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R17",
+      "floor": "1F",
+      "area_m2": 1.45,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R18",
+      "floor": "1F",
+      "area_m2": 1.45,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R19",
+      "floor": "1F",
+      "area_m2": 0.6,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R20",
+      "floor": "1F",
+      "area_m2": 0.38,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R21",
+      "floor": "1F",
+      "area_m2": 1.09,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R22",
+      "floor": "1F",
+      "area_m2": 4.24,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_1F_R23",
+      "floor": "1F",
+      "area_m2": 4.24,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R0",
+      "floor": "2F",
+      "area_m2": 40.66,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R1",
+      "floor": "2F",
+      "area_m2": 33.25,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R2",
+      "floor": "2F",
+      "area_m2": 2.98,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R3",
+      "floor": "2F",
+      "area_m2": 14.95,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R4",
+      "floor": "2F",
+      "area_m2": 2.67,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R5",
+      "floor": "2F",
+      "area_m2": 2.06,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R6",
+      "floor": "2F",
+      "area_m2": 2.75,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R7",
+      "floor": "2F",
+      "area_m2": 2.54,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R8",
+      "floor": "2F",
+      "area_m2": 1.94,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R9",
+      "floor": "2F",
+      "area_m2": 45.64,
+      "labels": [
+        "72B"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R10",
+      "floor": "2F",
+      "area_m2": 1.09,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R11",
+      "floor": "2F",
+      "area_m2": 1.31,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R12",
+      "floor": "2F",
+      "area_m2": 16.5,
+      "labels": [
+        "72㎡B TYPE"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R13",
+      "floor": "2F",
+      "area_m2": 38.17,
+      "labels": [
+        "59A",
+        "72㎡B TYPE",
+        "59㎡A TYPE"
+      ],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R14",
+      "floor": "2F",
+      "area_m2": 2.37,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R15",
+      "floor": "2F",
+      "area_m2": 1.41,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R16",
+      "floor": "2F",
+      "area_m2": 0.39,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R17",
+      "floor": "2F",
+      "area_m2": 2.76,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R18",
+      "floor": "2F",
+      "area_m2": 2.81,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R19",
+      "floor": "2F",
+      "area_m2": 7.98,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R20",
+      "floor": "2F",
+      "area_m2": 4.83,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R21",
+      "floor": "2F",
+      "area_m2": 167.49,
+      "labels": [
+        "세대입구",
+        "DID패널",
+        "세대입구",
+        "DID패널",
+        "미건립 모형",
+        "특장점(SIGN)"
+      ],
+      "usage_class": "dwelling",
+      "usage_evidence": {
+        "basis": "label",
+        "pattern": "세대|거실|침실|안방|드레스|아파트|주택|원룸"
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 780
+    },
+    {
+      "id": "CAD_2F_R22",
+      "floor": "2F",
+      "area_m2": 8.92,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R23",
+      "floor": "2F",
+      "area_m2": 6.29,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R24",
+      "floor": "2F",
+      "area_m2": 8.14,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R25",
+      "floor": "2F",
+      "area_m2": 3.24,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R26",
+      "floor": "2F",
+      "area_m2": 8.98,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R27",
+      "floor": "2F",
+      "area_m2": 84.11,
+      "labels": [
+        "조직분양 사무실_80석"
+      ],
+      "usage_class": "office",
+      "usage_evidence": {
+        "basis": "label",
+        "pattern": "사무|업무|회의|OFFICE|관리실|방재실|경비|숙직"
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 420
+    },
+    {
+      "id": "CAD_2F_R28",
+      "floor": "2F",
+      "area_m2": 3.2,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    },
+    {
+      "id": "CAD_2F_R29",
+      "floor": "2F",
+      "area_m2": 2.76,
+      "labels": [],
+      "usage_class": "default",
+      "usage_evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      },
+      "core_kind": null,
+      "fuel_load_MJ_m2": 500
+    }
+  ],
+  "unmapped_labels": [
+    {
+      "label": "59A",
+      "rooms": [
+        "CAD_2F_R13"
+      ]
+    },
+    {
+      "label": "59㎡A TYPE",
+      "rooms": [
+        "CAD_2F_R13"
+      ]
+    },
+    {
+      "label": "72B",
+      "rooms": [
+        "CAD_2F_R9"
+      ]
+    },
+    {
+      "label": "72㎡B TYPE",
+      "rooms": [
+        "CAD_2F_R12",
+        "CAD_2F_R13"
+      ]
+    },
+    {
+      "label": "DID패널",
+      "rooms": [
+        "CAD_2F_R21"
+      ]
+    },
+    {
+      "label": "WIDE COLOR",
+      "rooms": [
+        "CAD_1F_R6"
+      ]
+    },
+    {
+      "label": "기계실",
+      "rooms": [
+        "CAD_1F_R16"
+      ]
+    },
+    {
+      "label": "단지모형",
+      "rooms": [
+        "CAD_1F_R6"
+      ]
+    },
+    {
+      "label": "도우미실",
+      "rooms": [
+        "CAD_1F_R5"
+      ]
+    },
+    {
+      "label": "문서보관실",
+      "rooms": [
+        "CAD_1F_R2"
+      ]
+    },
+    {
+      "label": "미건립 모형",
+      "rooms": [
+        "CAD_2F_R21"
+      ]
+    },
+    {
+      "label": "미화원실",
+      "rooms": [
+        "CAD_1F_R4"
+      ]
+    },
+    {
+      "label": "상담공간_8석",
+      "rooms": [
+        "CAD_1F_R6"
+      ]
+    },
+    {
+      "label": "주출입구",
+      "rooms": [
+        "CAD_1F_R6"
+      ]
+    },
+    {
+      "label": "지역광역도",
+      "rooms": [
+        "CAD_1F_R6"
+      ]
+    },
+    {
+      "label": "창 고",
+      "rooms": [
+        "CAD_1F_R13",
+        "CAD_1F_R6"
+      ]
+    },
+    {
+      "label": "탕비실",
+      "rooms": [
+        "CAD_1F_R0"
+      ]
+    },
+    {
+      "label": "특장점(SIGN)",
+      "rooms": [
+        "CAD_2F_R21"
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "floor": "1F",
+      "kind": "excluded_opening",
+      "id": "D1",
+      "reason": "superseded_arc_bundle"
+    },
+    {
+      "floor": "1F",
+      "kind": "excluded_opening",
+      "id": "D7",
+      "reason": "same_space"
+    },
+    {
+      "floor": "1F",
+      "kind": "excluded_opening",
+      "id": "W2",
+      "reason": "unresolved"
+    },
+    {
+      "floor": "1F",
+      "kind": "excluded_opening",
+      "id": "W3",
+      "reason": "unresolved"
+    },
+    {
+      "floor": "1F",
+      "kind": "excluded_opening",
+      "id": "W7",
+      "reason": "unresolved"
+    },
+    {
+      "floor": "1F",
+      "kind": "excluded_opening",
+      "id": "W8",
+      "reason": "unresolved"
+    },
+    {
+      "floor": "1F",
+      "id": "R19",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "1F",
+      "id": "R20",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "1F",
+      "id": "R21",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "2F",
+      "kind": "excluded_opening",
+      "id": "D13",
+      "reason": "same_space"
+    },
+    {
+      "floor": "2F",
+      "kind": "excluded_opening",
+      "id": "D18",
+      "reason": "same_space"
+    },
+    {
+      "floor": "2F",
+      "kind": "excluded_opening",
+      "id": "D19",
+      "reason": "same_space"
+    },
+    {
+      "floor": "2F",
+      "kind": "excluded_opening",
+      "id": "W2",
+      "reason": "unresolved"
+    },
+    {
+      "floor": "2F",
+      "id": "R11",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "2F",
+      "id": "R16",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "2F",
+      "id": "R17",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "2F",
+      "id": "R20",
+      "kind": "isolated_room"
+    },
+    {
+      "floor": "2F",
+      "id": "R29",
+      "kind": "isolated_room"
+    }
+  ],
+  "limitations": [
+    "건물 내부 호는 사용자 규칙에 따라 문으로 간주. 연결 대상 미확정은 외기로 대체하지 않음.",
+    "중첩 실은 포함 관계와 문 양쪽 검사로 연결을 추정하며 실 폴리곤 중첩 자체는 보정하지 않음.",
+    "실명에 없는 용도는 기존 층 용도 기본값 적용; 개별 미매핑 문자는 별도 목록.",
+    "큰 실에 붙은 코어 태그·복수 용도 문자는 검토 필요. 도면 재인식이나 문 생성 없음.",
+    "기존 샤프트 외곽만으로 층간 연결을 확정하지 않음. 실 좌표·정렬·인접 층 중첩으로 재검사.",
+    "14개 도면 층은 B3~B1·1F~10F·PH이며 지상 14층을 뜻하지 않음.",
+    "분류의 확정은 프로젝트 규칙상 명칭이며 방화 성능 실측 확인이 아님."
+  ],
+  "auto_corrections": [
+    {
+      "floor": "1F",
+      "id": "D1_ARC5",
+      "kind": "arc_door_connection",
+      "before": [
+        "R6",
+        "R6"
+      ],
+      "after": [
+        "R22",
+        "R6"
+      ],
+      "basis": "user_assumption_interior_arc_is_door",
+      "source_parent_id": "D1",
+      "source_leaf_index": 5,
+      "confidence": "geometry"
+    },
+    {
+      "floor": "1F",
+      "id": "D1_ARC7",
+      "kind": "arc_door_connection",
+      "before": [
+        "R6",
+        "R6"
+      ],
+      "after": [
+        "R23",
+        "R6"
+      ],
+      "basis": "user_assumption_interior_arc_is_door",
+      "source_parent_id": "D1",
+      "source_leaf_index": 7,
+      "confidence": "geometry"
+    },
+    {
+      "floor": "1F",
+      "id": "D1",
+      "kind": "split_arc_bundle",
+      "before": [
+        "R6",
+        "R6"
+      ],
+      "after": [
+        "D1_ARC5",
+        "D1_ARC7"
+      ],
+      "basis": "user_assumption_interior_arc_is_door"
+    }
+  ],
+  "model_reviews": [
+    {
+      "floor": "1F",
+      "id": "R6",
+      "kind": "core_region_unresolved",
+      "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+    },
+    {
+      "floor": "2F",
+      "id": "R21",
+      "kind": "core_region_unresolved",
+      "detail": "복합 실 코어 표기만 있음 · 전체 실을 수직 통로로 간주하지 않음"
+    },
+    {
+      "floor": "1F",
+      "id": "D1",
+      "kind": "door_connection_estimated",
+      "detail": "문 있음 · 연결 대상 미확정",
+      "sides": null,
+      "candidates": [
+        "R6",
+        "R6"
+      ],
+      "samples": [
+        [
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ]
+        ],
+        [
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ]
+        ]
+      ],
+      "confidence": "geometry",
+      "reason": "two_sided_leaf_probes"
+    },
+    {
+      "floor": "1F",
+      "id": "D1",
+      "kind": "door_connection_estimated",
+      "detail": "문 있음 · 연결 대상 미확정",
+      "sides": null,
+      "candidates": [
+        null,
+        "R22"
+      ],
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ]
+        ]
+      ],
+      "confidence": "geometry",
+      "reason": "two_sided_leaf_probes"
+    },
+    {
+      "floor": "1F",
+      "id": "D1",
+      "kind": "door_connection_estimated",
+      "detail": "문 있음 · 연결 대상 미확정",
+      "sides": null,
+      "candidates": [
+        "R22",
+        null
+      ],
+      "samples": [
+        [
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ],
+          [
+            "R22"
+          ]
+        ],
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "confidence": "geometry",
+      "reason": "two_sided_leaf_probes"
+    },
+    {
+      "floor": "1F",
+      "id": "D1",
+      "kind": "door_connection_estimated",
+      "detail": "문 있음 · 연결 대상 미확정",
+      "sides": null,
+      "candidates": [
+        null,
+        "R23"
+      ],
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ]
+        ]
+      ],
+      "confidence": "geometry",
+      "reason": "two_sided_leaf_probes"
+    },
+    {
+      "floor": "1F",
+      "id": "D1",
+      "kind": "door_connection_estimated",
+      "detail": "문 있음 · 연결 대상 미확정",
+      "sides": null,
+      "candidates": [
+        "R23",
+        null
+      ],
+      "samples": [
+        [
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ],
+          [
+            "R23"
+          ]
+        ],
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ],
+      "confidence": "geometry",
+      "reason": "two_sided_leaf_probes"
+    },
+    {
+      "floor": "1F",
+      "id": "D7",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        "R6",
+        "R6"
+      ],
+      "existing": [
+        "R6",
+        "R6"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ]
+        ],
+        [
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ]
+        ]
+      ]
+    },
+    {
+      "floor": "1F",
+      "id": "W2",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        null
+      ],
+      "existing": [
+        null,
+        "out"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ]
+    },
+    {
+      "floor": "1F",
+      "id": "W3",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        null
+      ],
+      "existing": [
+        null,
+        "out"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ]
+    },
+    {
+      "floor": "1F",
+      "id": "W7",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        "R6"
+      ],
+      "existing": [
+        "R6",
+        null
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ]
+        ]
+      ]
+    },
+    {
+      "floor": "1F",
+      "id": "W8",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        "R6"
+      ],
+      "existing": [
+        "R6",
+        null
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ],
+          [
+            "R6"
+          ]
+        ]
+      ]
+    },
+    {
+      "floor": "1F",
+      "id": "R0",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R2",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R4",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R5",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R6",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R7",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R8",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R9",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R10",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R11",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R13",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R14",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R16",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R17",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R18",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R19",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R20",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R21",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R22",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R23",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "1F",
+      "id": "R19",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "1F",
+      "id": "R20",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "1F",
+      "id": "R21",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "2F",
+      "id": "D13",
+      "kind": "door_connection_estimated",
+      "detail": "문 있음 · 연결 대상 미확정",
+      "sides": null,
+      "candidates": [
+        "R21",
+        "R21"
+      ],
+      "samples": [
+        [
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ]
+        ],
+        [
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ]
+        ]
+      ],
+      "confidence": "geometry",
+      "reason": "two_sided_leaf_probes"
+    },
+    {
+      "floor": "2F",
+      "id": "D10",
+      "kind": "mixed_leaf_planes",
+      "detail": "여러 방향의 문짝이 묶임 · 연결 추정 보류"
+    },
+    {
+      "floor": "2F",
+      "id": "D13",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        "R21",
+        "R21"
+      ],
+      "existing": [
+        "R21",
+        "R21"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ]
+        ],
+        [
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ],
+          [
+            "R21"
+          ]
+        ]
+      ]
+    },
+    {
+      "floor": "2F",
+      "id": "D18",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        null
+      ],
+      "existing": [
+        "out",
+        "out"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ]
+    },
+    {
+      "floor": "2F",
+      "id": "D19",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        null
+      ],
+      "existing": [
+        "out",
+        "out"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ]
+      ]
+    },
+    {
+      "floor": "2F",
+      "id": "W2",
+      "kind": "ambiguous_connection",
+      "detail": "추정 · 기존 연결 유지, 자동 연결 안 함",
+      "candidates": [
+        null,
+        "R9"
+      ],
+      "existing": [
+        null,
+        "R9"
+      ],
+      "overlapping_hits": false,
+      "samples": [
+        [
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ],
+        [
+          [
+            "R9"
+          ],
+          [
+            "R9"
+          ],
+          [
+            "R9"
+          ],
+          [
+            "R9"
+          ],
+          [
+            "R9"
+          ],
+          [
+            "R9"
+          ]
+        ]
+      ]
+    },
+    {
+      "floor": "2F",
+      "id": "R0",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R1",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R2",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R3",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R4",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R5",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R6",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R7",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R8",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R9",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R10",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R11",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R12",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R13",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R14",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R15",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R16",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R17",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R18",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R19",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R20",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R22",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R23",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R24",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R25",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R26",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R28",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R29",
+      "kind": "estimated_usage",
+      "detail": "용도 추정 · 도면 라벨 미매핑, 기존 층 기본값 유지",
+      "usage_class": "default",
+      "evidence": {
+        "basis": "default",
+        "floor_use": "exhibit",
+        "label_unmapped": true
+      }
+    },
+    {
+      "floor": "2F",
+      "id": "R11",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "2F",
+      "id": "R16",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "2F",
+      "id": "R17",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "2F",
+      "id": "R20",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    },
+    {
+      "floor": "2F",
+      "id": "R29",
+      "kind": "isolated_room",
+      "detail": "연결 미확인 · 도면에 없는 문을 생성하지 않음"
+    }
+  ],
+  "vertical_connections": 0,
+  "unconfirmed_vertical_cores": []
+}

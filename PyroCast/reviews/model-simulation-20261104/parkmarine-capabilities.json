@@ -1,0 +1,1129 @@
+{
+  "building": "parkmarine",
+  "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
+  "floors": [
+    {
+      "floor": "B3",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_B3_R6",
+          "label": "B3 R6 · 주차장",
+          "Q_origin_peak_kW": 4336.544491297189,
+          "score": 2.8974586272836618
+        },
+        {
+          "id": "CAD_B3_R4",
+          "label": "B3 R4 · 주차장",
+          "Q_origin_peak_kW": 2510.6310212773205,
+          "score": 2.372956380359283
+        },
+        {
+          "id": "CAD_B3_R0",
+          "label": "B3 R0 · 주차장",
+          "Q_origin_peak_kW": 4336.544491297189,
+          "score": 2.2088337489273218
+        },
+        {
+          "id": "CAD_B3_R3",
+          "label": "B3 R3 · 주차장",
+          "Q_origin_peak_kW": 181.29999999999947,
+          "score": 1.3473041466755509
+        },
+        {
+          "id": "CAD_B3_R11",
+          "label": "B3 R11 · 주차장",
+          "Q_origin_peak_kW": 1320.1499999999996,
+          "score": 0.7071079480112579
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "B2",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_B2_R5",
+          "label": "B2 R5 · 창고",
+          "Q_origin_peak_kW": 2168.2722456485944,
+          "score": 2.970007162782781
+        },
+        {
+          "id": "CAD_B2_R0",
+          "label": "B2 R0 · 창고",
+          "Q_origin_peak_kW": 7189.5342882032355,
+          "score": 2.9336167127363937
+        },
+        {
+          "id": "CAD_B2_R2",
+          "label": "B2 R2 · 창고",
+          "Q_origin_peak_kW": 4336.544491297189,
+          "score": 2.4001008501688985
+        },
+        {
+          "id": "CAD_B2_R10",
+          "label": "B2 R10 · 창고",
+          "Q_origin_peak_kW": 614.2499999999989,
+          "score": 1.9548400671647972
+        },
+        {
+          "id": "CAD_B2_R7",
+          "label": "B2 R7 · 창고",
+          "Q_origin_peak_kW": 614.2499999999989,
+          "score": 1.9548400671647972
+        },
+        {
+          "id": "CAD_B2_R8",
+          "label": "B2 R8 · 창고",
+          "Q_origin_peak_kW": 342.99999999999943,
+          "score": 1.8769331296427476
+        },
+        {
+          "id": "CAD_B2_R9",
+          "label": "B2 R9 · 사무실",
+          "Q_origin_peak_kW": 1641.6000000000029,
+          "score": 1.8474412907151256
+        },
+        {
+          "id": "CAD_B2_R21",
+          "label": "B2 R21 · 창고",
+          "Q_origin_peak_kW": 460.59999999999826,
+          "score": 1.672950244644516
+        },
+        {
+          "id": "CAD_B2_R1",
+          "label": "B2 R1 · 창고",
+          "Q_origin_peak_kW": 641.3500000000016,
+          "score": 1.276852174404504
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "B1",
+      "enabled": false,
+      "rooms": [],
+      "error": "Opening wider than usable equivalent room: CAD_B1_R9"
+    },
+    {
+      "floor": "1F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_1F_R3",
+          "label": "1F R3 · 판매시설",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 3.949481013221746
+        },
+        {
+          "id": "CAD_1F_R1",
+          "label": "1F R1 · 판매시설",
+          "Q_origin_peak_kW": 31832.149999999994,
+          "score": 2.923981429107466
+        },
+        {
+          "id": "CAD_1F_R2",
+          "label": "1F R2 · 판매시설",
+          "Q_origin_peak_kW": 509.90000000000003,
+          "score": 2.7473783033936066
+        },
+        {
+          "id": "CAD_1F_R0",
+          "label": "1F R0 · 사무실",
+          "Q_origin_peak_kW": 381.3749999999995,
+          "score": 2.5812687431205914
+        },
+        {
+          "id": "CAD_1F_R5",
+          "label": "1F R5 · 판매시설",
+          "Q_origin_peak_kW": 744.7499999999989,
+          "score": 2.521116272591761
+        },
+        {
+          "id": "CAD_1F_R7",
+          "label": "1F R7 · 판매시설",
+          "Q_origin_peak_kW": 453.72499999999843,
+          "score": 2.490277387413365
+        },
+        {
+          "id": "CAD_1F_R13",
+          "label": "1F R13 · 판매시설",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 2.474021443482876
+        },
+        {
+          "id": "CAD_1F_R4",
+          "label": "1F R4 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 312.75000000000045,
+          "score": 2.386724221552559
+        },
+        {
+          "id": "CAD_1F_R14",
+          "label": "1F R14 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 1.78359529207214
+        },
+        {
+          "id": "CAD_1F_R16",
+          "label": "1F R16 · 사무실",
+          "Q_origin_peak_kW": 470.6250000000003,
+          "score": 1.5260939862061245
+        },
+        {
+          "id": "CAD_1F_R6",
+          "label": "1F R6 · 판매시설",
+          "Q_origin_peak_kW": 239.2500000000005,
+          "score": 1.4790788056048352
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "2F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_2F_R1",
+          "label": "2F R1 · 판매시설",
+          "Q_origin_peak_kW": 1499.399999999997,
+          "score": 2.731004072264966
+        },
+        {
+          "id": "CAD_2F_R4",
+          "label": "2F R4 · 판매시설",
+          "Q_origin_peak_kW": 1047.1568650398087,
+          "score": 2.523825846789123
+        },
+        {
+          "id": "CAD_2F_R3",
+          "label": "2F R3 · 판매시설",
+          "Q_origin_peak_kW": 175.00000000000026,
+          "score": 2.3106330325058604
+        },
+        {
+          "id": "CAD_2F_R11",
+          "label": "2F R11 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.1999999999997,
+          "score": 1.6439197122089435
+        },
+        {
+          "id": "CAD_2F_R0",
+          "label": "2F R0 · 판매시설",
+          "Q_origin_peak_kW": 2728.1192010247646,
+          "score": 1.6406969741994897
+        },
+        {
+          "id": "CAD_2F_R10",
+          "label": "2F R10 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.6149580731713062
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "3F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_3F_R1",
+          "label": "3F R1 · 판매시설",
+          "Q_origin_peak_kW": 1499.399999999997,
+          "score": 2.7310152817788245
+        },
+        {
+          "id": "CAD_3F_R4",
+          "label": "3F R4 · 판매시설",
+          "Q_origin_peak_kW": 1047.1568650398087,
+          "score": 2.523228758976356
+        },
+        {
+          "id": "CAD_3F_R3",
+          "label": "3F R3 · 판매시설",
+          "Q_origin_peak_kW": 173.75000000000006,
+          "score": 2.3096449298536466
+        },
+        {
+          "id": "CAD_3F_R0",
+          "label": "3F R0 · 판매시설",
+          "Q_origin_peak_kW": 59205.14999999997,
+          "score": 2.1961074421316575
+        },
+        {
+          "id": "CAD_3F_R11",
+          "label": "3F R11 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.1999999999997,
+          "score": 1.6438914973448904
+        },
+        {
+          "id": "CAD_3F_R10",
+          "label": "3F R10 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.6149281715569697
+        },
+        {
+          "id": "CAD_3F_R9",
+          "label": "3F R9 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 157.9999999999996,
+          "score": 1.0772328868955383
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "4F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_4F_R11",
+          "label": "4F R11 · 호텔 객실",
+          "Q_origin_peak_kW": 3287.924999999996,
+          "score": 4.831486230082635
+        },
+        {
+          "id": "CAD_4F_R20",
+          "label": "4F R20 · 호텔 객실",
+          "Q_origin_peak_kW": 3438.8749999999986,
+          "score": 4.818405893384078
+        },
+        {
+          "id": "CAD_4F_R16",
+          "label": "4F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 3244.3750000000036,
+          "score": 4.816363474983159
+        },
+        {
+          "id": "CAD_4F_R19",
+          "label": "4F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3330.7999999999984,
+          "score": 4.783154378540318
+        },
+        {
+          "id": "CAD_4F_R7",
+          "label": "4F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3026.4249999999984,
+          "score": 4.7401286364140605
+        },
+        {
+          "id": "CAD_4F_R17",
+          "label": "4F R17 · 호텔 객실",
+          "Q_origin_peak_kW": 3151.2249999999995,
+          "score": 4.724117151905687
+        },
+        {
+          "id": "CAD_4F_R6",
+          "label": "4F R6 · 호텔 객실",
+          "Q_origin_peak_kW": 3140.8499999999976,
+          "score": 4.720687446187221
+        },
+        {
+          "id": "CAD_4F_R0",
+          "label": "4F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 3121.4999999999973,
+          "score": 4.71428510412898
+        },
+        {
+          "id": "CAD_4F_R18",
+          "label": "4F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 3870.8999999999987,
+          "score": 4.7103498175792895
+        },
+        {
+          "id": "CAD_4F_R15",
+          "label": "4F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3090.025,
+          "score": 4.70385480032522
+        },
+        {
+          "id": "CAD_4F_R1",
+          "label": "4F R1 · 호텔 객실",
+          "Q_origin_peak_kW": 3218.399999999999,
+          "score": 4.700924548269648
+        },
+        {
+          "id": "CAD_4F_R21",
+          "label": "4F R21 · 호텔 객실",
+          "Q_origin_peak_kW": 3450.849999999999,
+          "score": 4.325898396981418
+        },
+        {
+          "id": "CAD_4F_R13",
+          "label": "4F R13 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 1536.225,
+          "score": 3.729581548720815
+        },
+        {
+          "id": "CAD_4F_R2",
+          "label": "4F R2 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 3824.1483757825094,
+          "score": 3.6829854221135583
+        },
+        {
+          "id": "CAD_4F_R5",
+          "label": "4F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.38338050241596
+        },
+        {
+          "id": "CAD_4F_R14",
+          "label": "4F R14 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.773534793734828
+        },
+        {
+          "id": "CAD_4F_R3",
+          "label": "4F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.577119246276969
+        },
+        {
+          "id": "CAD_4F_R12",
+          "label": "4F R12 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 2.140125410425964
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "5F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_5F_R16",
+          "label": "5F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 3308.175000000004,
+          "score": 4.8291261194746005
+        },
+        {
+          "id": "CAD_5F_R11",
+          "label": "5F R11 · 호텔 객실",
+          "Q_origin_peak_kW": 3308.174999999996,
+          "score": 4.829126119474598
+        },
+        {
+          "id": "CAD_5F_R20",
+          "label": "5F R20 · 호텔 객실",
+          "Q_origin_peak_kW": 3438.8749999999977,
+          "score": 4.809157589096106
+        },
+        {
+          "id": "CAD_5F_R21",
+          "label": "5F R21 · 호텔 객실",
+          "Q_origin_peak_kW": 3438.8749999999986,
+          "score": 4.809157589096106
+        },
+        {
+          "id": "CAD_5F_R0",
+          "label": "5F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 3246.349999999996,
+          "score": 4.746588920317061
+        },
+        {
+          "id": "CAD_5F_R7",
+          "label": "5F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3050.7249999999976,
+          "score": 4.7398231250370255
+        },
+        {
+          "id": "CAD_5F_R18",
+          "label": "5F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 4001.599999999998,
+          "score": 4.734804128033863
+        },
+        {
+          "id": "CAD_5F_R15",
+          "label": "5F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3158.600000000001,
+          "score": 4.717846667053813
+        },
+        {
+          "id": "CAD_5F_R19",
+          "label": "5F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3142.849999999998,
+          "score": 4.712672003948411
+        },
+        {
+          "id": "CAD_5F_R6",
+          "label": "5F R6 · 호텔 객실",
+          "Q_origin_peak_kW": 3140.8499999999976,
+          "score": 4.7120145521714045
+        },
+        {
+          "id": "CAD_5F_R2",
+          "label": "5F R2 · 호텔 객실",
+          "Q_origin_peak_kW": 3262.374999999997,
+          "score": 4.706135872490654
+        },
+        {
+          "id": "CAD_5F_R22",
+          "label": "5F R22 · 호텔 객실",
+          "Q_origin_peak_kW": 3669.7249999999985,
+          "score": 4.358719913502547
+        },
+        {
+          "id": "CAD_5F_R1",
+          "label": "5F R1 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 3824.1483757825094,
+          "score": 3.6421570962888317
+        },
+        {
+          "id": "CAD_5F_R5",
+          "label": "5F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.361706338905625
+        },
+        {
+          "id": "CAD_5F_R14",
+          "label": "5F R14 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.8812149361652004
+        },
+        {
+          "id": "CAD_5F_R3",
+          "label": "5F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.5789904737582985
+        },
+        {
+          "id": "CAD_5F_R17",
+          "label": "5F R17 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 981.3750000000009,
+          "score": 1.6308173999369882
+        },
+        {
+          "id": "CAD_5F_R4",
+          "label": "5F R4 · 호텔 객실",
+          "Q_origin_peak_kW": 130.49999999999957,
+          "score": 1.6297758757017307
+        },
+        {
+          "id": "CAD_5F_R12",
+          "label": "5F R12 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.3388749868842453
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "6F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_6F_R16",
+          "label": "6F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.6750000000006,
+          "score": 4.829907230520251
+        },
+        {
+          "id": "CAD_6F_R11",
+          "label": "6F R11 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.674999999994,
+          "score": 4.829907230520249
+        },
+        {
+          "id": "CAD_6F_R21",
+          "label": "6F R21 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.6999999999985,
+          "score": 4.809646806373334
+        },
+        {
+          "id": "CAD_6F_R20",
+          "label": "6F R20 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.699999999997,
+          "score": 4.809646806373333
+        },
+        {
+          "id": "CAD_6F_R0",
+          "label": "6F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 3225.5749999999994,
+          "score": 4.746501165393956
+        },
+        {
+          "id": "CAD_6F_R19",
+          "label": "6F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3993.399999999997,
+          "score": 4.739249701613706
+        },
+        {
+          "id": "CAD_6F_R7",
+          "label": "6F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3023.7000000000007,
+          "score": 4.73706808310309
+        },
+        {
+          "id": "CAD_6F_R18",
+          "label": "6F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.974999999998,
+          "score": 4.717961474049747
+        },
+        {
+          "id": "CAD_6F_R15",
+          "label": "6F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.0249999999983,
+          "score": 4.717647578733294
+        },
+        {
+          "id": "CAD_6F_R2",
+          "label": "6F R2 · 호텔 객실",
+          "Q_origin_peak_kW": 3262.374999999997,
+          "score": 4.712642304105782
+        },
+        {
+          "id": "CAD_6F_R6",
+          "label": "6F R6 · 호텔 객실",
+          "Q_origin_peak_kW": 3119.624999999995,
+          "score": 4.711564352122467
+        },
+        {
+          "id": "CAD_6F_R22",
+          "label": "6F R22 · 호텔 객실",
+          "Q_origin_peak_kW": 3648.8749999999964,
+          "score": 4.359483106800207
+        },
+        {
+          "id": "CAD_6F_R1",
+          "label": "6F R1 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 3824.1483757825094,
+          "score": 3.6442732706987306
+        },
+        {
+          "id": "CAD_6F_R5",
+          "label": "6F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.3626375391515113
+        },
+        {
+          "id": "CAD_6F_R14",
+          "label": "6F R14 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.8826416027714648
+        },
+        {
+          "id": "CAD_6F_R3",
+          "label": "6F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.582411045331608
+        },
+        {
+          "id": "CAD_6F_R17",
+          "label": "6F R17 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 981.3750000000009,
+          "score": 1.632877887757376
+        },
+        {
+          "id": "CAD_6F_R4",
+          "label": "6F R4 · 호텔 객실",
+          "Q_origin_peak_kW": 130.49999999999957,
+          "score": 1.6294692481669064
+        },
+        {
+          "id": "CAD_6F_R12",
+          "label": "6F R12 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.3402193413051566
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "7F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_7F_R16",
+          "label": "7F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.6750000000006,
+          "score": 4.829830899481486
+        },
+        {
+          "id": "CAD_7F_R11",
+          "label": "7F R11 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.674999999994,
+          "score": 4.829830899481484
+        },
+        {
+          "id": "CAD_7F_R21",
+          "label": "7F R21 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.6999999999985,
+          "score": 4.8095690760371985
+        },
+        {
+          "id": "CAD_7F_R20",
+          "label": "7F R20 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.699999999997,
+          "score": 4.809569076037198
+        },
+        {
+          "id": "CAD_7F_R0",
+          "label": "7F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 3225.5749999999994,
+          "score": 4.746425533882098
+        },
+        {
+          "id": "CAD_7F_R7",
+          "label": "7F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3023.7000000000007,
+          "score": 4.736994675146429
+        },
+        {
+          "id": "CAD_7F_R19",
+          "label": "7F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3970.3749999999973,
+          "score": 4.73333327638951
+        },
+        {
+          "id": "CAD_7F_R18",
+          "label": "7F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.974999999998,
+          "score": 4.717886792465332
+        },
+        {
+          "id": "CAD_7F_R15",
+          "label": "7F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3129.2999999999997,
+          "score": 4.714689278299115
+        },
+        {
+          "id": "CAD_7F_R2",
+          "label": "7F R2 · 호텔 객실",
+          "Q_origin_peak_kW": 3262.374999999997,
+          "score": 4.712566270629039
+        },
+        {
+          "id": "CAD_7F_R6",
+          "label": "7F R6 · 호텔 객실",
+          "Q_origin_peak_kW": 3119.624999999995,
+          "score": 4.711489883581358
+        },
+        {
+          "id": "CAD_7F_R22",
+          "label": "7F R22 · 호텔 객실",
+          "Q_origin_peak_kW": 3648.8749999999964,
+          "score": 4.3594029069413525
+        },
+        {
+          "id": "CAD_7F_R1",
+          "label": "7F R1 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 3824.1483757825094,
+          "score": 3.6440835423571447
+        },
+        {
+          "id": "CAD_7F_R5",
+          "label": "7F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.362624423253862
+        },
+        {
+          "id": "CAD_7F_R14",
+          "label": "7F R14 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.8826185499309105
+        },
+        {
+          "id": "CAD_7F_R3",
+          "label": "7F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.58257518019877
+        },
+        {
+          "id": "CAD_7F_R17",
+          "label": "7F R17 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 981.3750000000009,
+          "score": 1.6328602041127036
+        },
+        {
+          "id": "CAD_7F_R4",
+          "label": "7F R4 · 호텔 객실",
+          "Q_origin_peak_kW": 130.49999999999957,
+          "score": 1.6296639832101116
+        },
+        {
+          "id": "CAD_7F_R12",
+          "label": "7F R12 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.3402126655533322
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "8F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_8F_R11",
+          "label": "8F R11 · 호텔 객실",
+          "Q_origin_peak_kW": 3271.4499999999935,
+          "score": 4.828076338800895
+        },
+        {
+          "id": "CAD_8F_R21",
+          "label": "8F R21 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.6999999999985,
+          "score": 4.813986674358428
+        },
+        {
+          "id": "CAD_8F_R16",
+          "label": "8F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 3225.875000000001,
+          "score": 4.81218411195499
+        },
+        {
+          "id": "CAD_8F_R20",
+          "label": "8F R20 · 호텔 객실",
+          "Q_origin_peak_kW": 3313.899999999998,
+          "score": 4.77966193615627
+        },
+        {
+          "id": "CAD_8F_R7",
+          "label": "8F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3001.425000000001,
+          "score": 4.733321886521054
+        },
+        {
+          "id": "CAD_8F_R18",
+          "label": "8F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.974999999998,
+          "score": 4.721924410941851
+        },
+        {
+          "id": "CAD_8F_R6",
+          "label": "8F R6 · 호텔 객실",
+          "Q_origin_peak_kW": 3119.624999999995,
+          "score": 4.715501207404341
+        },
+        {
+          "id": "CAD_8F_R0",
+          "label": "8F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 3104.3,
+          "score": 4.710408729161175
+        },
+        {
+          "id": "CAD_8F_R19",
+          "label": "8F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3846.9999999999977,
+          "score": 4.705597212796947
+        },
+        {
+          "id": "CAD_8F_R1",
+          "label": "8F R1 · 호텔 객실",
+          "Q_origin_peak_kW": 3218.399999999999,
+          "score": 4.702635665492829
+        },
+        {
+          "id": "CAD_8F_R15",
+          "label": "8F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3069.474999999998,
+          "score": 4.698818519719427
+        },
+        {
+          "id": "CAD_8F_R22",
+          "label": "8F R22 · 호텔 객실",
+          "Q_origin_peak_kW": 3429.9999999999973,
+          "score": 4.321789653747654
+        },
+        {
+          "id": "CAD_8F_R2",
+          "label": "8F R2 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 3824.1483757825094,
+          "score": 3.641231287306604
+        },
+        {
+          "id": "CAD_8F_R5",
+          "label": "8F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.3628373024432157
+        },
+        {
+          "id": "CAD_8F_R14",
+          "label": "8F R14 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.883378849207646
+        },
+        {
+          "id": "CAD_8F_R3",
+          "label": "8F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.5893844385313587
+        },
+        {
+          "id": "CAD_8F_R4",
+          "label": "8F R4 · 호텔 객실",
+          "Q_origin_peak_kW": 130.49999999999957,
+          "score": 1.6339587511630136
+        },
+        {
+          "id": "CAD_8F_R17",
+          "label": "8F R17 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 981.3750000000009,
+          "score": 1.633949144495171
+        },
+        {
+          "id": "CAD_8F_R12",
+          "label": "8F R12 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.3411880951486983
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "9F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_9F_R15",
+          "label": "9F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.6750000000006,
+          "score": 4.829920200706734
+        },
+        {
+          "id": "CAD_9F_R10",
+          "label": "9F R10 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.674999999994,
+          "score": 4.829920200706732
+        },
+        {
+          "id": "CAD_9F_R18",
+          "label": "9F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.699999999997,
+          "score": 4.809593988201967
+        },
+        {
+          "id": "CAD_9F_R19",
+          "label": "9F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.6999999999985,
+          "score": 4.809593988201967
+        },
+        {
+          "id": "CAD_9F_R0",
+          "label": "9F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 4823.899999999997,
+          "score": 4.782599106188804
+        },
+        {
+          "id": "CAD_9F_R7",
+          "label": "9F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3023.7000000000007,
+          "score": 4.737216498374995
+        },
+        {
+          "id": "CAD_9F_R17",
+          "label": "9F R17 · 호텔 객실",
+          "Q_origin_peak_kW": 3970.3749999999973,
+          "score": 4.73308225039982
+        },
+        {
+          "id": "CAD_9F_R14",
+          "label": "9F R14 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.0249999999983,
+          "score": 4.717737805302184
+        },
+        {
+          "id": "CAD_9F_R2",
+          "label": "9F R2 · 호텔 객실",
+          "Q_origin_peak_kW": 3262.374999999997,
+          "score": 4.712669187582432
+        },
+        {
+          "id": "CAD_9F_R16",
+          "label": "9F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.974999999998,
+          "score": 4.427795443307945
+        },
+        {
+          "id": "CAD_9F_R20",
+          "label": "9F R20 · 호텔 객실",
+          "Q_origin_peak_kW": 3648.8749999999964,
+          "score": 4.359312805266677
+        },
+        {
+          "id": "CAD_9F_R1",
+          "label": "9F R1 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 3824.1483757825094,
+          "score": 3.60073591246919
+        },
+        {
+          "id": "CAD_9F_R5",
+          "label": "9F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.384125172862831
+        },
+        {
+          "id": "CAD_9F_R13",
+          "label": "9F R13 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.772655685843731
+        },
+        {
+          "id": "CAD_9F_R3",
+          "label": "9F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.588420263139469
+        },
+        {
+          "id": "CAD_9F_R12",
+          "label": "9F R12 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 1533.6499999999994,
+          "score": 2.0241649850734444
+        },
+        {
+          "id": "CAD_9F_R11",
+          "label": "9F R11 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.34024922089369
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "10F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_10F_R15",
+          "label": "10F R15 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.6750000000006,
+          "score": 4.779806583191576
+        },
+        {
+          "id": "CAD_10F_R10",
+          "label": "10F R10 · 호텔 객실",
+          "Q_origin_peak_kW": 3289.674999999994,
+          "score": 4.779806583191573
+        },
+        {
+          "id": "CAD_10F_R19",
+          "label": "10F R19 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.6999999999985,
+          "score": 4.759068068232069
+        },
+        {
+          "id": "CAD_10F_R18",
+          "label": "10F R18 · 호텔 객실",
+          "Q_origin_peak_kW": 3418.699999999997,
+          "score": 4.759068068232068
+        },
+        {
+          "id": "CAD_10F_R0",
+          "label": "10F R0 · 호텔 객실",
+          "Q_origin_peak_kW": 4823.899999999997,
+          "score": 4.7283929399473
+        },
+        {
+          "id": "CAD_10F_R16",
+          "label": "10F R16 · 호텔 객실",
+          "Q_origin_peak_kW": 6913.399999999997,
+          "score": 4.721208115531679
+        },
+        {
+          "id": "CAD_10F_R7",
+          "label": "10F R7 · 호텔 객실",
+          "Q_origin_peak_kW": 3023.7000000000007,
+          "score": 4.688007071726296
+        },
+        {
+          "id": "CAD_10F_R17",
+          "label": "10F R17 · 호텔 객실",
+          "Q_origin_peak_kW": 3974.1249999999973,
+          "score": 4.681893434369409
+        },
+        {
+          "id": "CAD_10F_R14",
+          "label": "10F R14 · 호텔 객실",
+          "Q_origin_peak_kW": 3138.0249999999983,
+          "score": 4.668130242898416
+        },
+        {
+          "id": "CAD_10F_R2",
+          "label": "10F R2 · 호텔 객실",
+          "Q_origin_peak_kW": 3262.374999999997,
+          "score": 4.662644904334934
+        },
+        {
+          "id": "CAD_10F_R1",
+          "label": "10F R1 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 6612.69638505185,
+          "score": 3.638166875134262
+        },
+        {
+          "id": "CAD_10F_R5",
+          "label": "10F R5 · 호텔 객실",
+          "Q_origin_peak_kW": 174.99999999999983,
+          "score": 3.365658699838027
+        },
+        {
+          "id": "CAD_10F_R13",
+          "label": "10F R13 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 284.20000000000016,
+          "score": 2.76126713845077
+        },
+        {
+          "id": "CAD_10F_R3",
+          "label": "10F R3 · 호텔 객실",
+          "Q_origin_peak_kW": 1505.699999999998,
+          "score": 2.5458850305875544
+        },
+        {
+          "id": "CAD_10F_R12",
+          "label": "10F R12 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 1536.225,
+          "score": 1.995549459579422
+        },
+        {
+          "id": "CAD_10F_R11",
+          "label": "10F R11 · 설비 샤프트(PS·EPS 등)",
+          "Q_origin_peak_kW": 235.2000000000003,
+          "score": 1.3308501241427089
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "PH",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_PH_R4",
+          "label": "PH R4 · 기타(미분류)",
+          "Q_origin_peak_kW": 1530.949999999997,
+          "score": 4.846775092869571
+        },
+        {
+          "id": "CAD_PH_R0",
+          "label": "PH R0 · 교통 공용공간(복도·로비)",
+          "Q_origin_peak_kW": 4311.249999999997,
+          "score": 3.1545928281452174
+        }
+      ],
+      "error": null,
+      "warnings": []
+    }
+  ],
+  "engine": "pyrocast_lite",
+  "budget_s": 1200,
+  "states": [
+    "open_except_confirmed",
+    "closed"
+  ],
+  "limits": [
+    "단일 층 계산. 수직 전파·창 파괴 OFF.",
+    "미확인 연결·용도는 도면 표시와 같은 추정 상태. 자동 용도 분류와 기존 연료표 사용.",
+    "강화 기존 운영 화면의 사용자 승인 연료 설정과 별개인 자동 분류 입력입니다."
+  ]
+}

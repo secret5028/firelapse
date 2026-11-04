@@ -32,6 +32,12 @@ assert.equal(layer.diagnostics().shells,23);assert.equal(layer.diagnostics().edg
 assert.equal(layer.diagnostics().treads,generated.flat().length);
 for(const v of layer.views)for(const m of v.group.children)if(m.renderOrder===72)assert.equal(m.material.color.getHexString(),'2563eb');
 for(const v of layer.views){assert.equal(v.group.position.z,v.row.floor.z);for(const mesh of v.group.children)assert.equal(mesh.material.depthTest,false);}
-layer.setData({...frame,floor:{floor_id:'5F'}});assert.equal(layer.group.visible,false);layer.dispose();assert.equal(layer.resources.size,0);assert.equal(JSON.stringify(b),before);
+for(const f of b.floors){
+ layer.setData({...frame,floor:{floor_id:f.name}});layer.tick();assert.equal(layer.group.visible,true);
+ assert.deepEqual(layer.views.filter(v=>v.group.visible).map(v=>v.row.id),[f.name]);
+}
+layer.setVisible(false);assert.equal(layer.group.visible,false);layer.setVisible(true);assert.equal(layer.group.visible,true);
+layer.setData(frame);layer.tick();assert.equal(layer.views.filter(v=>v.group.visible).length,b.floors.length);
+assert.equal(layer.buildCount,1);layer.dispose();assert.equal(layer.resources.size,0);assert.equal(JSON.stringify(b),before);
 const old=JSON.parse(fs.readFileSync('simulation/results/github-publish-20261026/PyroCast/cad-project/building.json','utf8'));for(const f of old.floors)assert.equal(coreTransport(old,f),f.transport);
 console.log(JSON.stringify({hotelVisible:rows.length,stairs:rows.filter(r=>r.kind==='stair').length,elevators:rows.filter(r=>r.kind==='elev').length,treads:generated.flat().length,unconfirmedExcluded:10,factoryTransportUnchanged:true,buildingDataUnchanged:true}));

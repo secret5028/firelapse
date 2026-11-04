@@ -78,8 +78,9 @@ export class CoreLayer extends EmptyLayer {
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.updateVisibility();
  }
- // EmptyLayer's core visibility requires floor_id===null and layer toggle ON.
- tick(){for(const {row,group} of this.views){group.position.copy(row.group.position);group.visible=row.group.visible;}}
+ // Core visibility follows the toggle in both whole-building and single-floor views.
+ updateVisibility(){if(this.group)this.group.visible=this.visible!==false;}
+ tick(){const floor=this.frame?.floor?.floor_id??null;for(const {row,group} of this.views){group.position.copy(row.group.position);group.visible=row.group.visible&&(floor===null||row.id===floor);}}
  diagnostics(){const counts={shells:0,treads:0,edges:0};for(const {group} of this.views)for(const object of group.children){
   if(object.renderOrder===70)counts.shells++;else if(object.renderOrder===72)counts.treads++;else if(object.renderOrder===73)counts.edges++;}
   return {buildCount:this.buildCount,resources:this.resources.size,floors:this.views.length,...counts};

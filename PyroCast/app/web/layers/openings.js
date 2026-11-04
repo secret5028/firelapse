@@ -16,11 +16,11 @@ export class OpeningsLayer extends EmptyLayer {
   const elevatorMaterial=this.own(new T.LineBasicMaterial({color:'#80d1ff',linewidth:1}));
   const fixedMaterials={};
   const annotate=(line,vertices,floor,opening,policy,normalVisible=true)=>{
-   if(!fixedMaterials[policy]){const open=this.own(line.material.clone()),closed=this.own(line.material.clone());open.color.set('#62dcb0');closed.color.set('#c0cbd3');fixedMaterials[policy]={open,closed};}
-   const {open:fixedOpen,closed:fixedClosed}=fixedMaterials[policy];
+   if(!fixedMaterials[policy]){const closed=this.own(line.material.clone());closed.color.set('#c0cbd3');fixedMaterials[policy]={closed};}
+   const {closed:fixedClosed}=fixedMaterials[policy];
    const cross=applyRenderPolicy(new T.LineSegments(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[2],vertices[1],vertices[3]])),fixedClosed),policy);
    cross.name='closed-opening-mark';cross.raycast=()=>{};cross.visible=false;line.add(cross);
-   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,fixedOpen,fixedClosed,cross});
+   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,cross});
   };
   for(const row of asset.floors){const {floor}=row,windows=new T.Group(),doors=new T.Group();windows.name=floor.name+'-windows';doors.name=floor.name+'-doors';this.group.add(windows,doors);this.views.push({row,windows,doors});
    for(const opening of floor.openings||[]){
@@ -72,7 +72,7 @@ export class OpeningsLayer extends EmptyLayer {
    const fixed=this.frame.fixedOpenings;
    windows.visible=visible&&(this.parts.window||!!fixed);doors.visible=visible&&(this.parts.door||!!fixed);
    const applyState=(line,normal)=>{const d=line.userData,s=fixed?.states[d.openingId];
-    line.visible=!!s||(normal&&d.normalVisible);line.material=s?(s.open?d.fixedOpen:d.fixedClosed):d.normalMaterial;
+    line.visible=!!s||(normal&&d.normalVisible);line.material=d.normalMaterial;
     d.cross.visible=!!s&&!s.open;d.confirmedState=s??null;
    };
    for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=this.parts.door&&!fixed&&f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}else applyState(o,this.parts.door);

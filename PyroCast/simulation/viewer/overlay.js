@@ -3914,11 +3914,11 @@ class OpeningsLayer extends EmptyLayer {
   const elevatorMaterial=this.own(new T.LineBasicMaterial({color:'#80d1ff',linewidth:1}));
   const fixedMaterials={};
   const annotate=(line,vertices,floor,opening,policy,normalVisible=true)=>{
-   if(!fixedMaterials[policy]){const open=this.own(line.material.clone()),closed=this.own(line.material.clone());open.color.set('#62dcb0');closed.color.set('#c0cbd3');fixedMaterials[policy]={open,closed};}
-   const {open:fixedOpen,closed:fixedClosed}=fixedMaterials[policy];
+   if(!fixedMaterials[policy]){const closed=this.own(line.material.clone());closed.color.set('#c0cbd3');fixedMaterials[policy]={closed};}
+   const {closed:fixedClosed}=fixedMaterials[policy];
    const cross=applyRenderPolicy(new T.LineSegments(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[2],vertices[1],vertices[3]])),fixedClosed),policy);
    cross.name='closed-opening-mark';cross.raycast=()=>{};cross.visible=false;line.add(cross);
-   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,fixedOpen,fixedClosed,cross});
+   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,cross});
   };
   for(const row of asset.floors){const {floor}=row,windows=new T.Group(),doors=new T.Group();windows.name=floor.name+'-windows';doors.name=floor.name+'-doors';this.group.add(windows,doors);this.views.push({row,windows,doors});
    for(const opening of floor.openings||[]){
@@ -3970,7 +3970,7 @@ class OpeningsLayer extends EmptyLayer {
    const fixed=this.frame.fixedOpenings;
    windows.visible=visible&&(this.parts.window||!!fixed);doors.visible=visible&&(this.parts.door||!!fixed);
    const applyState=(line,normal)=>{const d=line.userData,s=fixed?.states[d.openingId];
-    line.visible=!!s||(normal&&d.normalVisible);line.material=s?(s.open?d.fixedOpen:d.fixedClosed):d.normalMaterial;
+    line.visible=!!s||(normal&&d.normalVisible);line.material=d.normalMaterial;
     d.cross.visible=!!s&&!s.open;d.confirmedState=s??null;
    };
    for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=this.parts.door&&!fixed&&f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}else applyState(o,this.parts.door);
@@ -4782,9 +4782,9 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;
    const stateLabel=fixed?.basis==='saved_case_input'?'재생 사례 급기':'확정 급기 · 다음 실행';
-   $('displayFixedOpenings').title=fixed?`${stateLabel} · 열림 ${Object.values(fixed.states).filter(s=>s.open).length} / 닫힘 ${Object.values(fixed.states).filter(s=>!s.open).length} · 초록 사각=열림, 회색 ×=닫힘`:'저장된 개폐 상태 없음';
+   $('displayFixedOpenings').title=fixed?`${stateLabel} · 열림 ${Object.values(fixed.states).filter(s=>s.open).length} / 닫힘 ${Object.values(fixed.states).filter(s=>!s.open).length} · 문 황금색·창 초록색 · 사각=열림, 회색 ×=닫힘`:'저장된 개폐 상태 없음';
    fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);
-   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 열림','#62dcb0'],['⊠ 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
+   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 문','#e6bd68'],['□ 창','#62dcb0'],['× 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';

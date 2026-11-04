@@ -69,7 +69,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
- const explore=createExplorePanel({store,onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ const explore=createExplorePanel({store,floors:B.floors,onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
@@ -79,8 +79,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   }catch(error){if(!disposed){explore.mcState({available:false,error:error.message});mcPoll=setTimeout(refreshMC,5000);}}
  }
  async function runMC(){
-  const selection=store.get('exploration');explore.mcState(mcJobState||{available:true},true);
-  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:data.time_s.at(-1),seed:20261025,manual:selection.origin_mode==='manual'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
+  const selection=store.get('exploration');if(!selection.origin_room_id||!store.get('floor').floor_id)return;explore.mcState(mcJobState||{available:true},true);
+  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:selection.duration_s,seed:20261025,manual:false,floor:store.get('floor').floor_id,selection_mode:'score_first'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
   catch(error){if(!disposed)explore.mcState({...mcJobState,available:true,error:error.message});}
  }
  let catalogOrigin=null;
@@ -89,7 +89,15 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  function ruleContext(){try{const o=ruleOptions();$('exploreRuleContext').textContent=`정밀 검토 · ${o.fire_floor} ${o.fire_room} · ${o.duration_s/60}분 · 문·창: 서버 기본값`;}catch{$('exploreRuleContext').textContent='탐색 화점 선택 대기';}}
  cleanup.push(store.subscribe('exploration',ruleContext));
  function acceptScreening(value){screeningPayload=value;lastPanel="";store.dispatch('buildingReview/set',{rooms:aiFuelRooms??buildingTable(value.score),openings:value.score.opening_states});store.dispatch('screening/set',adaptScreening({...value,buildingId:store.get('building').building_id,floorId:value.score.ranked[0]?.floor??null}));explore.update(value);ruleContext();if(screeningPoll){clearTimeout(screeningPoll);screeningPoll=null;}if(value.progress?.running)screeningPoll=setTimeout(()=>refreshScreening(),3000);}
- async function refreshScreening(){const wasRunning=screeningPayload?.progress?.running;const seq=++screeningRequest;try{const response=await fetch('/cfbt/lite/screening'+(viewer.getScreeningFloor?.()?'?floor='+encodeURIComponent(viewer.getScreeningFloor()):''),{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&seq===screeningRequest){acceptScreening(value);if(wasRunning&&!value.progress?.running)await catalog();}}catch(error){if(!disposed)explore.status('탐색 목록 읽기 실패 · '+error.message);}}
+ async function refreshScreening(){const floorId=store.get('floor').floor_id,wasRunning=screeningPayload?.progress?.running,seq=++screeningRequest;
+  store.dispatch('exploration/set',{origin_room_id:null});
+  const empty=message=>({available:false,unavailable_reason:message,score:{ranked:[],excluded:[],opening_states:[],approved_input:{}},manual_origins:[],comparison:null});
+  if(!floorId){explore.update(empty('층 하나를 선택하세요'));return;}
+  try{const response=await fetch('/cfbt/lite/screening?floor='+encodeURIComponent(floorId),{signal:exploreAbort.signal});if(!response.ok)throw Error((await response.json()).error||'HTTP '+response.status);let value=await response.json();
+   if(!disposed&&seq===screeningRequest){value={...value,score:{...value.score,ranked:value.score.ranked.filter(r=>r.floor===floorId&&(r.origin_budget?.Q_origin_peak_kW??1)>0)},manual_origins:(value.manual_origins||[]).filter(r=>(r.floor??r.room?.split('_')[1])===floorId)};acceptScreening(value);if(wasRunning&&!value.progress?.running)await catalog();}
+  }catch(error){if(!disposed&&seq===screeningRequest){explore.update(empty(error.message));explore.status('후보 계산 불가 · '+error.message);}}
+ }
+
  async function runScreening(manual=false){if(screeningBusy||disposed)return;const state=store.get('exploration');if(manual?!screeningPayload?.manual_origins?.some(r=>r.room===state.origin_room_id):state.top_n>screeningPayload.score.ranked.length){explore.status('적격 실 범위의 N과 화점을 선택하세요.');return;}
   screeningBusy=true;explore.busy(true);let message='';try{const response=await fetch('/cfbt/lite/screening'+(viewer.getScreeningFloor?.()?'?floor='+encodeURIComponent(viewer.getScreeningFloor()):''),{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:state.top_n,mc_room:manual?state.origin_room_id:(screeningPayload.score.ranked.some(r=>r.room===state.origin_room_id)?state.origin_room_id:null),run:true,...(manual?{rooms:[state.origin_room_id]}:{})})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);message='② 실행 요청 완료 · 직렬 계산';await refreshScreening();if(!disposed&&!screeningPoll)screeningPoll=setTimeout(refreshScreening,1000);}catch(error){message='② 실행 요청 실패 · '+error.message;}finally{screeningBusy=false;if(!disposed){explore.busy(false);if(!screeningPayload?.progress?.running)explore.status(message);}}}
  // Imported CAD operation/person objects are not part of the supported UI.
@@ -178,8 +186,9 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   lastPanel='';ruleContext();ready=true;viewer.setFloor(selected.cad_floor);render();fitFloor();return true;
  }
  let mcSummary=null,mcRun=0,mcAbort=null;
- async function saveFixed(body){
+ async function saveFixed(body,playWorst=false){
   if(disposed||store.get('buildingReview').saving)return;
+  const worstCase=mcSummary?.worst?.case_id;
   store.dispatch('buildingReview/set',{saving:true,status:'확정 급기 저장 중…'});
   $('resultMCApplyWorst').disabled=true;
   try{
@@ -188,6 +197,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    if(disposed)return;
    store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
    if(value.fixed_state)store.dispatch('openings/set',{fixed:true});
+   if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId);$('shellTab-result').click();}
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
    await refreshScreening();await catalog();
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
@@ -215,6 +225,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
  await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}

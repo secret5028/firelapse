@@ -2,11 +2,11 @@
 import {createSeriesCache} from './series_cache.js';
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
-const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,playbackOpenings:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
+const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,playbackOpenings:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10,duration_s:3600},
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
+ realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{roomNames:true,building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
@@ -27,6 +27,7 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
     case 'exploration/set':{
      if(Object.keys(p).some(k=>!Object.hasOwn(state.exploration,k)))throw Error('Unknown exploration setting');
      if(p.origin_mode!==undefined&&!['ranked','manual'].includes(p.origin_mode))throw Error('Invalid origin mode');
+     if(p.duration_s!==undefined&&![1800,3600].includes(p.duration_s))throw Error('30분 또는 60분');
      for(const k of ['top_n','samples'])if(p[k]!==undefined&&(!Number.isSafeInteger(p[k])||p[k]<1))throw Error('Positive integer required');
      if(p.origin_room_id!==undefined&&p.origin_room_id!==null&&typeof p.origin_room_id!=='string')throw Error('Invalid origin');
      put('exploration',{...state.exploration,...p});return true;

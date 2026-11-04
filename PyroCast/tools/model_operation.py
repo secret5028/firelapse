@@ -18,6 +18,9 @@ def jobs(ident):
     return out
 
 def playback(ident, job=None):
+    if job and job.startswith("modelmc-"):
+        import model_mc
+        return model_mc.playback(ident,job)
     rows = jobs(ident)
     row = next((r for r in rows if r[0].name == job), None) if job else next(iter(rows), None)
     if row is None: raise ValueError('이 건물의 완료된 저장 결과가 없습니다')
@@ -44,11 +47,12 @@ def screening(ident, floor=None):
     raw, score = scope(ident, floor)
     value = json.loads(json.dumps(score))
     value['approved_input'] = raw['approved_input']
+    value['ranked'] = [r for r in value['ranked'] if r['origin_budget']['Q_origin_peak_kW'] > 0]
     for r in value['ranked']:
         r['name'] = raw['approved_input']['room_uses'][r['room']]['label']
     rows=jobs(ident); target_floor=floor or (rows[0][1]['floor'] if rows else None)
     saved=next((sim.read(p/'input.json') for p,r in rows if r['floor']==target_floor),{})
-    return dict(available=False, fuel_rerun_required=saved.get('approved_input',{}).get('quantity_settings',{})!=raw['approved_input'].get('quantity_settings',{}), unavailable_reason='후보 비교·MC 미연결 · 단일 화점 실행 사용',
+    return dict(available=False, fuel_rerun_required=saved.get('approved_input',{}).get('quantity_settings',{})!=raw['approved_input'].get('quantity_settings',{}), unavailable_reason='점수 1위 화점 → MC 급기 탐색',
                 score=value, manual_origins=value['ranked'], selection={}, comparison=None, progress={'running':False})
 
 def handler(base, ident):
@@ -67,20 +71,26 @@ def handler(base, ident):
                 if path=='/cfbt/lite/active.json':return self.json(playback(ident))
                 if path.startswith('/cfbt/lite/result/'):return self.json(playback(ident,path.rsplit('/',1)[1]))
                 if path=='/cfbt/lite/catalog.json':
+                    import model_mc
                     rows=jobs(ident)
-                    return self.json(dict(cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].removeprefix('CAD_'+r['floor']+'_')} · {r['duration_s']/60:g}분 · {'확정 방화문 제외 열림' if r['opening_state']=='open_except_confirmed' else '전부 닫힘'}") for p,r in rows],
+                    cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과") for p,r in rows]+model_mc.cases(ident)
+                    return self.json(dict(cases=cases,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
                         progress_text='저장 결과 · 추가 계산 없음',reuse_by_case={p.name:dict(case_id=p.name,label='저장 결과 재생 · 재계산 없음',equivalent=False) for p,r in rows}))
                 if path.startswith('/cfbt/reuse/lite/'):
                     value=playback(ident,path.rsplit('/',1)[1])
                     return self.json(dict(case_id=value['case_id'],label='저장 결과 재생 · 재계산 없음',equivalent=False))
                 if path=='/cfbt/lite/screening':return self.json(screening(ident,query.get('floor',[None])[0]))
-                if path=='/cfbt/lite/mc':return self.json(dict(available=False,running=False,error='이 건물의 MC 연결 전'))
+                if path=='/cfbt/lite/mc':
+                    import model_mc
+                    return self.json(model_mc.status(ident))
                 if path=='/cfbt/lite/doors':
                     raw,_=scope(ident);rows=[]
                     for v in raw['openings']:
                         if 'door' not in v.get('kind',''):continue
                         rows.append(dict(id=v['id'],a=v['a'],b=v['b'],door_class=v.get('door_class','external' if v['b']=='OUTSIDE' else 'ordinary'),confidence=v.get('door_class_confidence','inferred'),connected_names=[v['a'],v['b']],reason=v.get('door_class_reason','자동 연결망 분류 · 미확인 표시 유지'),read_only=True))
-                    return self.json(dict(rows=rows,fixed_state=None))
+                    import model_mc
+                    fixed=sim.read(model_mc.config_path(ident)).get('fixed_state') if model_mc.config_path(ident).exists() else None
+                    return self.json(dict(rows=rows,fixed_state=fixed))
                 if path=='/cfbt/lite/fuel-settings':
                     from lite_fuel_settings import context
                     return self.json(context(sim.read(model_path(sim.entry(ident))),sim.fingerprint(ident)))
@@ -98,6 +108,15 @@ def handler(base, ident):
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
             path=urlsplit(self.path).path
+            if path in ('/cfbt/lite/mc','/cfbt/lite/fixed-openings'):
+                if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
+                try:
+                    n=int(self.headers.get('Content-Length','0'))
+                    if not 0<n<=4096:raise ValueError('요청 크기 오류')
+                    body=json.loads(self.rfile.read(n));import model_mc
+                    return self.json(model_mc.start(ident,body),202) if path.endswith('/mc') else self.json(model_mc.apply(ident,body))
+                except RuntimeError as exc:return self.json({'error':str(exc)},409)
+                except (ValueError,TypeError,KeyError,OSError) as exc:return self.json({'error':str(exc)},400)
             if path=='/cfbt/lite/fuel-settings':
                 if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
                 try:

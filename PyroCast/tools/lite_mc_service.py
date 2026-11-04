@@ -44,7 +44,7 @@ def status(building_sha):
 
 
 def prepare_request(body, building_sha):
-    if not isinstance(body,dict) or set(body)-{'room','samples','duration_s','seed','manual'}:raise ValueError('MC 요청 형식 오류')
+    if not isinstance(body,dict) or set(body)-{'room','samples','duration_s','seed','manual','floor','selection_mode'}:raise ValueError('MC 요청 형식 오류')
     count=body.get('samples');duration=body.get('duration_s',3600);seed=body.get('seed',20261025)
     if type(count) is not int or not 2<=count<=1000:raise ValueError('MC 표본 수는 필수 2표본을 포함한 2~1000 정수입니다')
     if type(duration) is not int or duration not in (1800,3600):raise ValueError('MC 시간은 30분 또는 1시간입니다')
@@ -55,6 +55,10 @@ def prepare_request(body, building_sha):
     config=read(ROOT/'simulation/config/lite-door-overrides.json',{})
     scored=score(raw,1,door_overrides=classifications(config))
     room=body.get('room')
+    automatic=body.get('selection_mode')=='score_first'
+    if automatic:
+        candidates=[r for r in scored['ranked'] if r.get('floor')==body.get('floor') and r.get('origin_budget',{}).get('Q_origin_peak_kW',0)>0]
+        if not candidates or candidates[0]['room']!=room:raise ValueError('선택 층의 점수 1위 화점을 새로 확인하세요')
     manual=body.get('manual',False)
     if type(manual) is not bool:raise ValueError('manual은 참/거짓입니다')
     if manual:
@@ -63,7 +67,8 @@ def prepare_request(body, building_sha):
     else:
         if room not in {r['room'] for r in scored['ranked']}:raise ValueError('적격 화점실을 선택하세요')
         model=scenario(scored,room,'open_except_confirmed',duration=duration)
-    apply_fixed(model,config)
+    if not automatic:apply_fixed(model,config)
+    else:model.pop("fixed_openings",None)
     # Screening replaces the initial fuel group; keep copied CAD metadata in sync too.
     model['cad']['fire_key']=room
     return dict(room=room,samples=count,duration_s=duration,seed=seed,building_sha256=building_sha,manual=manual),model
@@ -98,6 +103,8 @@ def summary(building_sha, room=None):
         if data and data.get('building_sha256')==building_sha and (room is None or data.get('source_room')==room):
             try:
                 ranking=ranked_samples(folder,building_sha)
+                for i,row in enumerate(data.get('rows',[])):row['sample_id']=f'S{i:02d}'
+                for row in ranking:row['case_id']=next((r['id'] for r in data.get('rows',[]) if r['sample_id']==row['sample_id']),None)
                 data.update(job_id=folder.name,ranking=ranking,worst=ranking[0] if ranking else None)
             except (OSError,ValueError,KeyError,TypeError) as exc:data.update(worst=None,worst_error=str(exc))
             return data

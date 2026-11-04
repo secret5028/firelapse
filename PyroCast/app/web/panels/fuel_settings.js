@@ -18,7 +18,7 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
    options($('fuelRoomType'),value.pending?null:value.usage_class);configure($('fuelRoomAmount'));$('fuelRoomAmount').value=value.multiplier*100;$('fuelRoomValue').textContent=value.pending?'AI 초기 배치 대기':`${Math.round(value.multiplier*100)}% · ${Math.round(value.load)} MJ/m² · ${Math.round(value.hrrpua)} kW/m²`;
    $('fuelRoomType').disabled=saving;$('fuelRoomAmount').disabled=saving||value.pending;$('fuelInherit').disabled=saving||value.scope!=='room';
   }
-  $('fuelSave').disabled=saving||!dirty();$('fuelReset').disabled=saving||!dirty();$('fuelDefaultsStatus').textContent=current.default_status||'';
+  $('fuelSave').disabled=saving||!dirty();$('fuelReset').disabled=saving||!dirty();$('fuelDefaultsStatus').textContent=current.ai_pending?.length&&!current.ai_available?'AI 연결 대기 · 현재는 용도별 기준량을 임시 표시':current.default_status||'';
   $('fuelAI').hidden=!current.ai_pending?.length;$('fuelAI').disabled=saving||dirty()||!current.ai_available;$('fuelAI').title=current.ai_available?'미설정 실만 AI 배치':'config/ai.json 및 키 환경변수 설정 필요';$('fuelSettingsStatus').textContent=store.get('fuelSettings').message;
  }
  function changed(){store.dispatch('realView/set',{fuelMarkers:true});update('미저장 변경 · 기존 결과 유지');render();}

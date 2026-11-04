@@ -487,7 +487,7 @@ function createFuelSettingsPanel({store,onSaved,available=true}){
    options($('fuelRoomType'),value.pending?null:value.usage_class);configure($('fuelRoomAmount'));$('fuelRoomAmount').value=value.multiplier*100;$('fuelRoomValue').textContent=value.pending?'AI 초기 배치 대기':`${Math.round(value.multiplier*100)}% · ${Math.round(value.load)} MJ/m² · ${Math.round(value.hrrpua)} kW/m²`;
    $('fuelRoomType').disabled=saving;$('fuelRoomAmount').disabled=saving||value.pending;$('fuelInherit').disabled=saving||value.scope!=='room';
   }
-  $('fuelSave').disabled=saving||!dirty();$('fuelReset').disabled=saving||!dirty();$('fuelDefaultsStatus').textContent=current.default_status||'';
+  $('fuelSave').disabled=saving||!dirty();$('fuelReset').disabled=saving||!dirty();$('fuelDefaultsStatus').textContent=current.ai_pending?.length&&!current.ai_available?'AI 연결 대기 · 현재는 용도별 기준량을 임시 표시':current.default_status||'';
   $('fuelAI').hidden=!current.ai_pending?.length;$('fuelAI').disabled=saving||dirty()||!current.ai_available;$('fuelAI').title=current.ai_available?'미설정 실만 AI 배치':'config/ai.json 및 키 환경변수 설정 필요';$('fuelSettingsStatus').textContent=store.get('fuelSettings').message;
  }
  function changed(){store.dispatch('realView/set',{fuelMarkers:true});update('미저장 변경 · 기존 결과 유지');render();}
@@ -665,7 +665,7 @@ class FuelQuantityLayer extends EmptyLayer{
   }
  }
  setData(frame){super.setData(frame);const data=frame.fuelSettings?.data,draft=frame.fuelSettings?.draft||{},rebuilt=!!data&&(data.revision!==this.revision||frame.building!==this.adapter);if(rebuilt){this.build(data);this.buildPicks(data,frame.building);this.revision=data.revision;this.adapter=frame.building;}
-  if(data&&(rebuilt||data!==this.lastData||draft!==this.lastDraft)){const rows=new Map(data.rooms.map(r=>[r.id,r])),dummy=new this.THREE.Object3D();for(const f of this.floors){f.units.forEach((u,i)=>{const r=rows.get(u.id),value=resolveFuel(data,draft,r),size=value.pending?0:symbolSize(value.load,u.clearance,u.height);dummy.position.set(...u.p,u.z+.04+size/2);dummy.scale.setScalar(size);dummy.updateMatrix();f.mesh.setMatrixAt(i,dummy.matrix);});f.mesh.instanceMatrix.needsUpdate=true;}}
+  if(data&&(rebuilt||data!==this.lastData||draft!==this.lastDraft)){const rows=new Map(data.rooms.map(r=>[r.id,r])),dummy=new this.THREE.Object3D();for(const f of this.floors){f.units.forEach((u,i)=>{const r=rows.get(u.id),value=resolveFuel(data,draft,r),size=symbolSize(value.load,u.clearance,u.height);dummy.position.set(...u.p,u.z+.04+size/2);dummy.scale.setScalar(size);dummy.updateMatrix();f.mesh.setMatrixAt(i,dummy.matrix);});f.mesh.instanceMatrix.needsUpdate=true;}}
   for(const p of this.picks){p.pick.visible=frame.floor.floor_id===null||frame.floor.floor_id===p.floor;p.line.visible=p.pick.visible&&frame.layers.selection&&frame.selection.room_id===p.id;}
   for(const f of this.floors)f.mesh.visible=!!data&&frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===f.floor);this.lastData=data;this.lastDraft=draft;
  }
@@ -744,7 +744,7 @@ function buildingTable(score){
 }
 function openingCounts(doors,openings){const counts={confirmed:0,inferred:0,ordinary:0,window:0,unknown:0};for(const r of doors||[])counts[doorCategory(r)]++;counts.window=(openings||[]).filter(r=>r.class?.includes('window')).length;return counts;}
 function createBuildingPanel({store}){
- const $=id=>document.getElementById(id),root=document.createElement('div');root.id='buildingContent';$('shellPane-building').append(root);
+ const $=id=>document.getElementById(id),root=document.createElement('div');root.id='buildingContent';$('shellPane-building').prepend(root);
  root.innerHTML='<section id="buildingFuelSection" hidden><h3>실 용도·연료</h3><div class="buildingScroll"><table><thead><tr><th>실·용도</th><th>면적<br>m²</th><th>하중<br>MJ/m²</th><th>피복률</th><th>HRRPUA<br>kW/m²</th></tr></thead><tbody id="buildingFuel"></tbody></table></div></section><p id="buildingSettingsEmpty">이 건물에서 제공하는 연료 설정이 없습니다.</p>';
  const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingSettingsEmpty{color:#b8cbd8}`;document.head.append(style);
  const append=(p,tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;p.append(e);return e;};
@@ -781,11 +781,11 @@ const __module19=(()=>{
 const {createSeriesCache}=__module18;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
-const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,playbackOpenings:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10},
+const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,playbackOpenings:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10,duration_s:3600},
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
+ realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{roomNames:true,building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
@@ -806,6 +806,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
     case 'exploration/set':{
      if(Object.keys(p).some(k=>!Object.hasOwn(state.exploration,k)))throw Error('Unknown exploration setting');
      if(p.origin_mode!==undefined&&!['ranked','manual'].includes(p.origin_mode))throw Error('Invalid origin mode');
+     if(p.duration_s!==undefined&&![1800,3600].includes(p.duration_s))throw Error('30분 또는 60분');
      for(const k of ['top_n','samples'])if(p[k]!==undefined&&(!Number.isSafeInteger(p[k])||p[k]<1))throw Error('Positive integer required');
      if(p.origin_room_id!==undefined&&p.origin_room_id!==null&&typeof p.origin_room_id!=='string')throw Error('Invalid origin');
      put('exploration',{...state.exploration,...p});return true;
@@ -4628,12 +4629,14 @@ function createPanelShell({panel,store}){
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
  const tabs=[],panes=[];
- for(const [id,label] of [['building','설정'],['explore','탐색'],['result','결과'],['display','표시']]){
+ for(const [id,label] of [['building','설정·탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);
   const pane=document.createElement('section');pane.id='shellPane-'+id;pane.className='pyroPane';pane.role='tabpanel';pane.setAttribute('aria-labelledby',tab.id);pane.tabIndex=0;sidebar.append(pane);panes.push(pane);
   listen(tab,'click',()=>activate(id));listen(tab,'keydown',e=>{const i=tabs.indexOf(tab);let next;if(e.key==='ArrowRight')next=(i+1)%tabs.length;else if(e.key==='ArrowLeft')next=(i+tabs.length-1)%tabs.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=tabs.length-1;else return;e.preventDefault();tabs[next].click();tabs[next].focus();});
  }
- function activate(id){tabs.forEach(t=>{const active=t.id==='shellTab-'+id;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;});panes.forEach(p=>p.hidden=p.id!=='shellPane-'+id);}
+ const explorePane=document.createElement('div');explorePane.id='shellPane-explore';$('shellPane-building').append(explorePane);
+ const exploreAlias=document.createElement('button');exploreAlias.id='shellTab-explore';exploreAlias.hidden=true;exploreAlias.onclick=()=>activate('building');sidebar.append(exploreAlias);
+ function activate(id){if(id==='explore')id='building';tabs.forEach(t=>{const active=t.id==='shellTab-'+id;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;});panes.forEach(p=>p.hidden=p.id!=='shellPane-'+id);}
  move(panel,$('shellPane-result'));activate('result');
  listen($('shellMobileToggle'),'click',()=>{const expanded=document.body.classList.toggle('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded',String(expanded));$('shellMobileToggle').textContent=expanded?'패널 접기':'결과 패널 펼치기';});
  listen($('shellPlay'),'click',()=>store.dispatch('playback/play',{playing:!store.get('playback').playing}));
@@ -4994,27 +4997,33 @@ function mcEstimate(summary,samples){
 }
 // DOM only. The controller owns existing HTTP paths; candidate selection does
 // not select a scene cell or mutate the currently displayed simulation.
-function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC}){
+function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,onApplyWorst,onFloor,floors=[]}){
  const $=id=>document.getElementById(id),root=document.createElement('div');root.id='exploreContent';$('shellPane-explore').append(root);
- root.innerHTML=`<h3>① 후보 순위 <span tabindex="0" title="연료량이 많고, 환기가 부족하며, 화재가 확산될 통로가 많은 실을 우선합니다.&#10;&#10;후보 점수 = 연료량 + 환기 부족 + 확산 연결 + 복도 인접 + 격리 부족&#10;각 항목 0~1점, 합계 0~5점.&#10;후보 선별용 상대 점수이며 위험도 예측값은 아닙니다.">ⓘ</span></h3>
- <div class="exploreCard"><form id="exploreRunForm"><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
- <h3>② 시뮬레이션 순위 <span tabindex="0" title="표시 순위: 연소 실 수 → 주의 이상 실 수 → 최초 FO가 빠른 순. 주의 이상은 3현상 중 최대 지수 ≥70인 원래 방 수입니다. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
- <div class="exploreCard"><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th title="3현상 최대 지수 ≥70인 실 수">주의 ≥70</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
- <h3>③ 몬테카를로</h3><div class="exploreCard"><label>화점 <select id="exploreOrigin" disabled></select></label><label>표본 수 <input id="exploreSamples" type="number" min="2" max="1000" step="1" value="10" required></label><div id="exploreEstimate" title="저장된 MC 전체 경과시간 ÷ 완료 표본 수 × 요청 표본 수. 다른 화점과 개폐 조건의 소요시간은 달라질 수 있습니다.">예상 시간 —</div><div class="exploreButtons"><button id="exploreOriginRun" disabled>선택 실 2상태 실행</button><button id="exploreMC" disabled title="MC 서버 연결 확인 중">MC 실행</button><button id="exploreResults" disabled>결과 보기</button></div><div id="exploreMCStatus" role="status">MC 서버 연결 확인 중</div></div>
+ root.innerHTML=`<div id="workflowFloor" class="exploreCard"><label>계산 층 <select id="exploreFloor" aria-label="계산 층"><option value="">층 하나를 선택하세요</option></select></label><div id="exploreChosenOrigin"></div></div><h3>① 화점 후보 순위 <span tabindex="0" title="연료량이 많고, 환기가 부족하며, 화재가 확산될 통로가 많은 실을 우선합니다.&#10;&#10;후보 점수 = 연료량 + 환기 부족 + 확산 연결 + 복도 인접 + 격리 부족&#10;각 항목 0~1점, 합계 0~5점.&#10;후보 선별용 상대 점수이며 위험도 예측값은 아닙니다.">ⓘ</span></h3>
+ <div class="exploreCard"><form id="exploreRunForm" hidden><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
+ <h3 hidden>② 시뮬레이션 순위 <span tabindex="0" title="표시 순위: 연소 실 수 → 주의 이상 실 수 → 최초 FO가 빠른 순. 주의 이상은 3현상 중 최대 지수 ≥70인 원래 방 수입니다. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
+ <div class="exploreCard" hidden><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th title="3현상 최대 지수 ≥70인 실 수">주의 ≥70</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
+ <h3>② MC 급기 탐색</h3><div class="exploreCard"><label hidden>화점 <select id="exploreOrigin" disabled></select></label><label>계산 시간 <select id="exploreDuration"><option value="1800">30분</option><option value="3600" selected>60분</option></select></label><label>표본 수 <input id="exploreSamples" type="number" min="2" max="1000" step="1" value="10" required></label><div id="exploreEstimate" title="저장된 MC 전체 경과시간 ÷ 완료 표본 수 × 요청 표본 수. 다른 화점과 개폐 조건의 소요시간은 달라질 수 있습니다.">예상 시간 —</div><div class="exploreButtons"><button id="exploreOriginRun" hidden disabled>선택 실 2상태 실행</button><button id="exploreMC" disabled title="MC 서버 연결 확인 중">최악 급기 탐색</button><button id="exploreResults" hidden disabled>결과 보기</button><button id="exploreApplyWorst" disabled>③ 최악 결과 적용·재생</button></div><div id="exploreMCStatus" role="status">MC 서버 연결 확인 중</div></div>
  <details id="exploreRules"><summary>규칙 설정</summary><div id="exploreRuleContext"></div><div id="exploreRuleMount"></div></details>`;
  const style=document.createElement('style');style.dataset.pyrocastExplore='true';style.textContent=`
  #exploreContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#exploreContent h3{font-size:12px;font-weight:500;color:#b8cbd8;margin:14px 0 8px}#exploreContent h3 span{cursor:help}.exploreCard{border:1px solid #496273;border-radius:7px;padding:10px;margin-bottom:12px;background:#163345}#exploreContent label{display:block;margin:6px 0}#exploreContent input,#exploreContent select,#exploreContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px;box-sizing:border-box}#exploreContent input{width:70px}#exploreOrigin{width:100%;margin-top:5px}#exploreContent button{cursor:pointer}#exploreContent :disabled{opacity:.5;cursor:default}#exploreRunForm,.exploreButtons{display:flex;gap:6px;align-items:center;flex-wrap:wrap}#exploreContent :focus-visible{outline:2px solid #42e8ff}.exploreScroll{overflow:auto;max-height:270px}#exploreContent table{border-collapse:collapse;width:100%;font-size:11px}#exploreContent th,#exploreContent td{text-align:right;padding:7px 3px;border-bottom:1px solid #304c5e;white-space:nowrap}#exploreContent th:nth-child(2),#exploreContent td:nth-child(2){text-align:left}#exploreContent td:nth-child(2){white-space:normal;min-width:68px}#exploreContent tr[data-room]{cursor:pointer}#exploreContent tr[aria-selected=true]{background:#245166;box-shadow:inset 2px 0 #42e8ff}#exploreStatus,#exploreRankBasis,#exploreEstimate,#exploreMCStatus,#exploreRuleContext{font-size:11px;color:#b8cbd8;margin:8px 0;overflow-wrap:anywhere}#exploreContent details{margin-top:12px}#exploreContent summary{cursor:pointer;color:#b8cbd8}#exploreRules input{max-width:100%}#exploreRules table{display:block;overflow:auto}#exploreRules #r8SettingsGrid{grid-template-columns:1fr!important}#exploreRules #cfbtFrozenRules>summary{display:none}
  `;document.head.append(style);
+ const scope=$('workflowFloor');scope.style.margin='12px 16px';$('shellPane-building').prepend(scope);
+ for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
+ $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
+ $('exploreDuration').onchange=()=>store.dispatch('exploration/set',{duration_s:Number($('exploreDuration').value)});
+ $('exploreApplyWorst').onclick=onApplyWorst;
  let payload=null,summary=null,mcOrigin=null,pending=false,mcJob={available:false},mcPending=false,lastSamples=null;
  const pretty=id=>id?.replace(/^CAD_/,'').replaceAll('_',' ')||'미선택';
  const useName=row=>row?.origin_budget?.classification?.label??payload?.score.approved_input?.room_uses?.[row?.room]?.label??'용도 미확인';
  const originName=id=>{const row=payload?.score.ranked.find(r=>r.room===id),manual=payload?.manual_origins?.find(r=>r.room===id);return row?`${pretty(id)} · ${useName(row)}`:manual?`${pretty(id)} · ${manual.label}`:pretty(id);};
  const cell=(tr,value)=>{const td=document.createElement('td');td.textContent=value;tr.append(td);return td;};
- function sync(){const state=store.get('exploration');$('exploreN').value=state.top_n;if(lastSamples!==state.samples){$('exploreSamples').value=state.samples;lastSamples=state.samples;}$('exploreOrigin').value=state.origin_room_id||'';
+ function sync(){const state=store.get('exploration');$('exploreFloor').value=store.get('floor').floor_id||'';$('exploreDuration').value=state.duration_s;$('exploreN').value=state.top_n;if(lastSamples!==state.samples){$('exploreSamples').value=state.samples;lastSamples=state.samples;}$('exploreOrigin').value=state.origin_room_id||'';
   for(const tr of root.querySelectorAll('tr[data-room]'))tr.setAttribute('aria-selected',String(tr.dataset.room===state.origin_room_id));
   const estimate=mcEstimate(summary,state.samples);$('exploreEstimate').textContent=estimate===null?'예상 시간 미확인':`예상 약 ${Math.ceil(estimate/60)}분 · 이전 MC 기준`;
   $('exploreOriginRun').textContent=payload?.opening_mode==='fixed'?'선택 실 확정 급기 실행':'선택 실 2상태 실행';
-  const matching=Boolean(summary&&mcOrigin&&state.origin_room_id===mcOrigin);$('exploreResults').disabled=!matching;
+  const matching=Boolean(summary&&mcOrigin&&state.origin_room_id===mcOrigin);$('exploreApplyWorst').disabled=!matching||!summary?.worst||mcJob.running||mcPending;
+  $('exploreChosenOrigin').textContent=state.origin_room_id?'자동 화점 · '+originName(state.origin_room_id)+' · 후보 점수 1위':'선택 층의 화점 후보 없음';$('exploreResults').disabled=!matching;
   $('exploreResults').title=matching?'선택 화점의 저장 MC 집계 보기':`선택 화점의 저장 MC 결과 없음${mcOrigin?' · 저장 화점 '+pretty(mcOrigin):''}`;
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id;
   $('exploreMC').title=mcJob.available?'직렬 실행 · 표본당 적분 예산 1,200초':'MC 서버 연결 확인 중';
@@ -5041,11 +5050,11 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC}){
   const c=value.comparison;$('exploreRankBasis').textContent=c?`저장 결과 · ${c.manual_rooms?'수동 지정':'상위'} ${c.top_n} × ${c.opening_mode==='fixed'?'확정 급기 1회':'2상태'} · ${c.complete_scenarios??'—'}/${c.attempted_scenarios??'—'} 완료`:'② 실행 대기';if(second.some(r=>!r.index_complete))$('exploreRankBasis').textContent+=' · 새 결과 지수 미집계';$('exploreRankBasis').title='저장 결과 원값의 지수 ≥70 집계. 새 결과 저장 시 지수 집계가 자동 생성됩니다. 미집계는 0 또는 기존 연기 수로 대체하지 않습니다.';
   if(value.saved_score?.opening_states&&JSON.stringify(value.saved_score.opening_states)!==JSON.stringify(value.score.opening_states))$('exploreRankBasis').textContent+=' · 현재 문 설정과 다름';
   if(value.fuel_rerun_required)$('exploreRankBasis').textContent+=' · 재실행 필요 (연료 변경)';
-  const current=store.get('exploration');if(!(value.manual_origins??first).some(r=>r.room===current.origin_room_id)){const proposed=value.selection?.mc_room??c?.default_mc_room??first[0]?.room;store.dispatch('exploration/set',{origin_room_id:(value.manual_origins??first).some(r=>r.room===proposed)?proposed:first[0]?.room??null});}
-  if(value.available===false){$('exploreStatus').textContent=value.unavailable_reason||'실행 연결 전';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
+  const proposed=first[0]?.room??null;if(store.get('exploration').origin_room_id!==proposed||store.get('exploration').origin_mode!=='ranked')store.dispatch('exploration/set',{origin_room_id:proposed,origin_mode:'ranked'});
+  if(value.available===false){$('exploreStatus').textContent=first.length?`적격 ${first.length}실 · 1위 화점 선정`:value.unavailable_reason||'화점 후보 없음';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
- return {update,mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();root.remove();style.remove();}};
+ return {update,mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();scope.remove();root.remove();style.remove();}};
 }
 
 return {screeningRows,mcEstimate,createExplorePanel};
@@ -5124,7 +5133,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
- const explore=createExplorePanel({store,onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ const explore=createExplorePanel({store,floors:B.floors,onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
@@ -5134,8 +5143,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   }catch(error){if(!disposed){explore.mcState({available:false,error:error.message});mcPoll=setTimeout(refreshMC,5000);}}
  }
  async function runMC(){
-  const selection=store.get('exploration');explore.mcState(mcJobState||{available:true},true);
-  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:data.time_s.at(-1),seed:20261025,manual:selection.origin_mode==='manual'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
+  const selection=store.get('exploration');if(!selection.origin_room_id||!store.get('floor').floor_id)return;explore.mcState(mcJobState||{available:true},true);
+  try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:selection.duration_s,seed:20261025,manual:false,floor:store.get('floor').floor_id,selection_mode:'score_first'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed)await refreshMC();}
   catch(error){if(!disposed)explore.mcState({...mcJobState,available:true,error:error.message});}
  }
  let catalogOrigin=null;
@@ -5144,7 +5153,15 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  function ruleContext(){try{const o=ruleOptions();$('exploreRuleContext').textContent=`정밀 검토 · ${o.fire_floor} ${o.fire_room} · ${o.duration_s/60}분 · 문·창: 서버 기본값`;}catch{$('exploreRuleContext').textContent='탐색 화점 선택 대기';}}
  cleanup.push(store.subscribe('exploration',ruleContext));
  function acceptScreening(value){screeningPayload=value;lastPanel="";store.dispatch('buildingReview/set',{rooms:aiFuelRooms??buildingTable(value.score),openings:value.score.opening_states});store.dispatch('screening/set',adaptScreening({...value,buildingId:store.get('building').building_id,floorId:value.score.ranked[0]?.floor??null}));explore.update(value);ruleContext();if(screeningPoll){clearTimeout(screeningPoll);screeningPoll=null;}if(value.progress?.running)screeningPoll=setTimeout(()=>refreshScreening(),3000);}
- async function refreshScreening(){const wasRunning=screeningPayload?.progress?.running;const seq=++screeningRequest;try{const response=await fetch('/cfbt/lite/screening'+(viewer.getScreeningFloor?.()?'?floor='+encodeURIComponent(viewer.getScreeningFloor()):''),{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&seq===screeningRequest){acceptScreening(value);if(wasRunning&&!value.progress?.running)await catalog();}}catch(error){if(!disposed)explore.status('탐색 목록 읽기 실패 · '+error.message);}}
+ async function refreshScreening(){const floorId=store.get('floor').floor_id,wasRunning=screeningPayload?.progress?.running,seq=++screeningRequest;
+  store.dispatch('exploration/set',{origin_room_id:null});
+  const empty=message=>({available:false,unavailable_reason:message,score:{ranked:[],excluded:[],opening_states:[],approved_input:{}},manual_origins:[],comparison:null});
+  if(!floorId){explore.update(empty('층 하나를 선택하세요'));return;}
+  try{const response=await fetch('/cfbt/lite/screening?floor='+encodeURIComponent(floorId),{signal:exploreAbort.signal});if(!response.ok)throw Error((await response.json()).error||'HTTP '+response.status);let value=await response.json();
+   if(!disposed&&seq===screeningRequest){value={...value,score:{...value.score,ranked:value.score.ranked.filter(r=>r.floor===floorId&&(r.origin_budget?.Q_origin_peak_kW??1)>0)},manual_origins:(value.manual_origins||[]).filter(r=>(r.floor??r.room?.split('_')[1])===floorId)};acceptScreening(value);if(wasRunning&&!value.progress?.running)await catalog();}
+  }catch(error){if(!disposed&&seq===screeningRequest){explore.update(empty(error.message));explore.status('후보 계산 불가 · '+error.message);}}
+ }
+
  async function runScreening(manual=false){if(screeningBusy||disposed)return;const state=store.get('exploration');if(manual?!screeningPayload?.manual_origins?.some(r=>r.room===state.origin_room_id):state.top_n>screeningPayload.score.ranked.length){explore.status('적격 실 범위의 N과 화점을 선택하세요.');return;}
   screeningBusy=true;explore.busy(true);let message='';try{const response=await fetch('/cfbt/lite/screening'+(viewer.getScreeningFloor?.()?'?floor='+encodeURIComponent(viewer.getScreeningFloor()):''),{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({top_n:state.top_n,mc_room:manual?state.origin_room_id:(screeningPayload.score.ranked.some(r=>r.room===state.origin_room_id)?state.origin_room_id:null),run:true,...(manual?{rooms:[state.origin_room_id]}:{})})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);message='② 실행 요청 완료 · 직렬 계산';await refreshScreening();if(!disposed&&!screeningPoll)screeningPoll=setTimeout(refreshScreening,1000);}catch(error){message='② 실행 요청 실패 · '+error.message;}finally{screeningBusy=false;if(!disposed){explore.busy(false);if(!screeningPayload?.progress?.running)explore.status(message);}}}
  // Imported CAD operation/person objects are not part of the supported UI.
@@ -5233,8 +5250,9 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   lastPanel='';ruleContext();ready=true;viewer.setFloor(selected.cad_floor);render();fitFloor();return true;
  }
  let mcSummary=null,mcRun=0,mcAbort=null;
- async function saveFixed(body){
+ async function saveFixed(body,playWorst=false){
   if(disposed||store.get('buildingReview').saving)return;
+  const worstCase=mcSummary?.worst?.case_id;
   store.dispatch('buildingReview/set',{saving:true,status:'확정 급기 저장 중…'});
   $('resultMCApplyWorst').disabled=true;
   try{
@@ -5243,6 +5261,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    if(disposed)return;
    store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
    if(value.fixed_state)store.dispatch('openings/set',{fixed:true});
+   if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId);$('shellTab-result').click();}
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
    await refreshScreening();await catalog();
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
@@ -5270,6 +5289,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
  await install(initial,chosen);await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
  }catch(error){$('exploreRuleMount').textContent='규칙 설정 읽기 실패 · '+error.message;}

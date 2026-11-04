@@ -2,7 +2,6 @@
 import * as T from 'three';
 import {OrbitControls} from '/vendor/OrbitControls.js';
 import {attach} from '/app/web/entry.js';
-import {attachOperationControls} from '/operation-controls.js';
 import {createGroundReference} from '/app/web/scene/ground_reference.js';
 const $=id=>document.getElementById(id);
 try{
@@ -32,12 +31,12 @@ try{
   const center=bounds.getCenter(new T.Vector3()),radius=bounds.getSize(new T.Vector3()).length()/2,vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.1;O.target.copy(center);C.position.copy(center).addScaledVector(top?new T.Vector3(0,-.001,1).normalize():new T.Vector3(1,-1,1.1).normalize(),distance);O.update();}
  C.aspect=Math.max(1,$('v').clientWidth)/Math.max(1,$('v').clientHeight);C.updateProjectionMatrix();fit();
  $('top').onclick=()=>fit(true);$('iso').onclick=()=>fit();$('resetView').onclick=()=>fit();$('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
- let controls;const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor,getScreeningFloor:()=>controls?.floor()||initial.rooms.find(r=>r.key===initial.fire_key)?.cad_floor,capabilities:{frozenRules:false,assistant:false}};
- const app=await attach(viewer);controls=await attachOperationControls({app,info,initial});
+ const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor,getScreeningFloor:()=>floor==='all'?null:floor,capabilities:{frozenRules:false,assistant:false}};
+ const app=await attach(viewer);
  const notice=document.createElement('div');notice.textContent='저장된 '+initial.time_s.at(-1)+'초 결과 · 자동 용도 분류 · 미확인 연결은 건물 탭 참조';notice.style.cssText='padding:8px;font-size:12px;color:#d6bd90';$('resultCase').prepend(notice);
  // Export endpoint has not been connected for this model service.
  $('exportHTML').disabled=true;$('exportHTML').title='이 건물의 단독 HTML 내보내기 연결 전';
  let frame;function loop(){frame=requestAnimationFrame(loop);O.update();R.render(S,C);}loop();
- window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);controls.dispose();app.dispose();O.dispose();for(const r of owned)r.dispose();R.dispose();},{once:true});
+ window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);app.dispose();O.dispose();for(const r of owned)r.dispose();R.dispose();},{once:true});
  document.body.dataset.operationReady='true';
 }catch(e){$('error').textContent=e.stack;throw e;}

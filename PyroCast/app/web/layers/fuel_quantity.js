@@ -28,7 +28,7 @@ export class FuelQuantityLayer extends EmptyLayer{
   }
  }
  setData(frame){super.setData(frame);const data=frame.fuelSettings?.data,draft=frame.fuelSettings?.draft||{},rebuilt=!!data&&(data.revision!==this.revision||frame.building!==this.adapter);if(rebuilt){this.build(data);this.buildPicks(data,frame.building);this.revision=data.revision;this.adapter=frame.building;}
-  if(data&&(rebuilt||data!==this.lastData||draft!==this.lastDraft)){const rows=new Map(data.rooms.map(r=>[r.id,r])),dummy=new this.THREE.Object3D();for(const f of this.floors){f.units.forEach((u,i)=>{const r=rows.get(u.id),value=resolveFuel(data,draft,r),size=value.pending?0:symbolSize(value.load,u.clearance,u.height);dummy.position.set(...u.p,u.z+.04+size/2);dummy.scale.setScalar(size);dummy.updateMatrix();f.mesh.setMatrixAt(i,dummy.matrix);});f.mesh.instanceMatrix.needsUpdate=true;}}
+  if(data&&(rebuilt||data!==this.lastData||draft!==this.lastDraft)){const rows=new Map(data.rooms.map(r=>[r.id,r])),dummy=new this.THREE.Object3D();for(const f of this.floors){f.units.forEach((u,i)=>{const r=rows.get(u.id),value=resolveFuel(data,draft,r),size=symbolSize(value.load,u.clearance,u.height);dummy.position.set(...u.p,u.z+.04+size/2);dummy.scale.setScalar(size);dummy.updateMatrix();f.mesh.setMatrixAt(i,dummy.matrix);});f.mesh.instanceMatrix.needsUpdate=true;}}
   for(const p of this.picks){p.pick.visible=frame.floor.floor_id===null||frame.floor.floor_id===p.floor;p.line.visible=p.pick.visible&&frame.layers.selection&&frame.selection.room_id===p.id;}
   for(const f of this.floors)f.mesh.visible=!!data&&frame.realView.fuelMarkers&&(frame.floor.floor_id===null||frame.floor.floor_id===f.floor);this.lastData=data;this.lastDraft=draft;
  }

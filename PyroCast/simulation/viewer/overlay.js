@@ -975,10 +975,651 @@ function readLegacyOpeningsSource({building,groups,sourceHash}){
 return {readLegacyOpeningsSource};
 })();
 
-// app/web/adapters/legacy_core.js
+// app/web/adapters/parkmarine_core_evidence.js
 const __module21=(()=>{
+// Generated from archived CAD floor cores; do not infer missing floors.
+const parkmarineCoreEvidence = {
+  "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
+  "scope": "display_only; original CAD core footprints, not simulation connectivity",
+  "source": "archived per-floor CAD loader output",
+  "sources": [
+    {
+      "floor": "B3",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\B3.json",
+      "sha256": "2e7487bc1fe1735ada1bafc4b81f941b3e9274b521398e7af58d43dccb36f799",
+      "dxf": "A-301 지하3층평면도.dxf"
+    },
+    {
+      "floor": "B2",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\B2.json",
+      "sha256": "f6b2fabb447ad44d812e5d1333855fdf11aca1d43f6585a527bc67f5c03c4c46",
+      "dxf": "A-302 지하2층평면도.dxf"
+    },
+    {
+      "floor": "B1",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\B1.json",
+      "sha256": "bd98d3dd9cc768c2f49210bae5239a784ae3015295a0ae46bbd6a712298b9caa",
+      "dxf": "A-303 지하1층평면도.dxf"
+    },
+    {
+      "floor": "1F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\1F.json",
+      "sha256": "d1ef0b1e4e50584589d4d63c33603847b3084df12dbee18160127f22cf6ecefd",
+      "dxf": "A-304 지상1층평면도.dxf"
+    },
+    {
+      "floor": "2F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\2F.json",
+      "sha256": "9b425df47743c28936bffa9878952de815369a1088475bafa00c307f5a99bd84",
+      "dxf": "A-305 지상2층평면도.dxf"
+    },
+    {
+      "floor": "3F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\3F.json",
+      "sha256": "9aa047bb04ff9ca1b88f80c6a4cda4881de9e4455fc0f15b6689812a3034adcd",
+      "dxf": "A-306 지상3층평면도.dxf"
+    },
+    {
+      "floor": "4F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\4F.json",
+      "sha256": "dfae863fc717cbb4dc9e929deb40c3ff94c860ab920d4d52f70659c69388a6df",
+      "dxf": "A-307 지상4층평면도.dxf"
+    },
+    {
+      "floor": "5F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\5F.json",
+      "sha256": "8d32e266680b2d0f4543475262a5e07f6136eba1d28ddadd77f1b9c7399b8a03",
+      "dxf": "A-308 지상5층평면도.dxf"
+    },
+    {
+      "floor": "6F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\6F.json",
+      "sha256": "4e1a12743dc896b83cadcf05f9fd0f6ff229712902add02fbcc386cac225020f",
+      "dxf": "A-309 지상6층평면도.dxf"
+    },
+    {
+      "floor": "7F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\7F.json",
+      "sha256": "8ab35d4048f0eddd89d876db800fbb69378cd465dadfaeec667a28643faaff8c",
+      "dxf": "A-310 지상7층평면도.dxf"
+    },
+    {
+      "floor": "8F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\8F.json",
+      "sha256": "d6ebf316ac414abcc4328b05227921dd1bb0ee96ceedbb190a527656b8837ca6",
+      "dxf": "A-311 지상8층평면도.dxf"
+    },
+    {
+      "floor": "9F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\9F.json",
+      "sha256": "8d2d347556d8545937cad4fe597748909f73f40d757f36e59a248f8316f5cc41",
+      "dxf": "A-312 지상9층평면도.dxf"
+    },
+    {
+      "floor": "10F",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\10F.json",
+      "sha256": "61c739fec2741c834d86eba7c368c0a6cd20f65c49af875fe542fcabe3df639c",
+      "dxf": "A-313 지상10층평면도.dxf"
+    },
+    {
+      "floor": "PH",
+      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\PH.json",
+      "sha256": "0bd36d982f7aa2e2c86e0c69b99638cc3ffa456c03f9f4128a98d59363d28f42",
+      "dxf": "A-314 지붕,옥탑,옥탑지붕평면도.dxf"
+    }
+  ],
+  "axes": [
+    {
+      "id": "CAD_CORE_0",
+      "kind": "stair",
+      "nodes": [
+        {
+          "floor": "B3",
+          "x": 24.54,
+          "y": 63.545,
+          "w": 1.54,
+          "h": 1.25,
+          "source_core_index": 0
+        },
+        {
+          "floor": "B2",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.76,
+          "h": 2.5,
+          "source_core_index": 0
+        },
+        {
+          "floor": "B1",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.76,
+          "h": 2.5,
+          "source_core_index": 0
+        },
+        {
+          "floor": "1F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "2F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.76,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "3F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.76,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "4F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "5F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "6F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "7F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "8F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "9F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "10F",
+          "x": 24.52,
+          "y": 64.18,
+          "w": 4.78,
+          "h": 2.52,
+          "source_core_index": 0
+        },
+        {
+          "floor": "PH",
+          "x": 24.521,
+          "y": 64.18,
+          "w": 4.98,
+          "h": 2.52,
+          "source_core_index": 0
+        }
+      ]
+    },
+    {
+      "id": "CAD_CORE_1",
+      "kind": "elev",
+      "nodes": [
+        {
+          "floor": "B2",
+          "x": 19.45,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 1
+        },
+        {
+          "floor": "B1",
+          "x": 19.45,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 3
+        },
+        {
+          "floor": "1F",
+          "x": 19.45,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 4
+        },
+        {
+          "floor": "2F",
+          "x": 19.45,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 4
+        },
+        {
+          "floor": "3F",
+          "x": 19.45,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 4
+        },
+        {
+          "floor": "4F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "5F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "6F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "7F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "8F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "9F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "10F",
+          "x": 19.45,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 4
+        },
+        {
+          "floor": "PH",
+          "x": 19.551,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 2
+        }
+      ]
+    },
+    {
+      "id": "CAD_CORE_2",
+      "kind": "elev",
+      "nodes": [
+        {
+          "floor": "B2",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "B1",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 4
+        },
+        {
+          "floor": "1F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "2F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "3F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "4F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "5F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "6F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "7F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "8F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "9F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        },
+        {
+          "floor": "10F",
+          "x": 13.7,
+          "y": 54.796,
+          "w": 1.9,
+          "h": 2.132,
+          "source_core_index": 2
+        }
+      ]
+    },
+    {
+      "id": "CAD_CORE_3",
+      "kind": "stair",
+      "nodes": [
+        {
+          "floor": "B1",
+          "x": 13.81,
+          "y": 57.58,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "1F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "2F",
+          "x": 13.83,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "3F",
+          "x": 13.83,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "4F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "5F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "6F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "7F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "8F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "9F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        },
+        {
+          "floor": "10F",
+          "x": 13.82,
+          "y": 57.57,
+          "w": 4.46,
+          "h": 2.86,
+          "source_core_index": 1
+        }
+      ]
+    },
+    {
+      "id": "CAD_CORE_4",
+      "kind": "elev",
+      "nodes": [
+        {
+          "floor": "B1",
+          "x": 17.25,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 2
+        },
+        {
+          "floor": "1F",
+          "x": 17.25,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 3
+        },
+        {
+          "floor": "2F",
+          "x": 17.25,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 3
+        },
+        {
+          "floor": "3F",
+          "x": 17.25,
+          "y": 65.148,
+          "w": 1.82,
+          "h": 2.275,
+          "source_core_index": 3
+        },
+        {
+          "floor": "4F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "5F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "6F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "7F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "8F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "9F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "10F",
+          "x": 17.25,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 3
+        },
+        {
+          "floor": "PH",
+          "x": 17.351,
+          "y": 65.198,
+          "w": 1.82,
+          "h": 2.175,
+          "source_core_index": 1
+        }
+      ]
+    }
+  ]
+};
+
+return {parkmarineCoreEvidence};
+})();
+
+// app/web/adapters/legacy_core.js
+const __module22=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; use recorded vertical links only.
+const {parkmarineCoreEvidence}=__module21;
+// Display footprints are independent of room/simulation-graph classification.
+// A matching building hash is mandatory; never stretch an axis beyond its CAD floors.
+function evidencedCoreTransport(building,floor,sourceHash,evidence=parkmarineCoreEvidence){
+ if(sourceHash!==evidence.building_sha256)return null;
+ return evidence.axes.flatMap(axis=>{
+  const index=axis.nodes.findIndex(n=>n.floor===floor.name);if(index<0)return [];
+  const n=axis.nodes[index],next=axis.nodes[index+1],target=building.floors.find(f=>f.name===next?.floor);
+  const x=n.x-n.w/2,y=n.y-n.h/2;
+  return [{id:axis.id,kind:axis.kind,region:[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}],
+   connected:axis.nodes.length>1,to_floor:target?.name,rise_m:target?target.z-floor.z:0,meshes:[],
+   assumption:'simplified_return_stair_display_only',direction_source:'short_axis_default',
+   source:'per-floor CAD core footprint',source_core_index:n.source_core_index}];
+ });
+}
 function coreTransport(building,floor){
  if(floor.transport?.length)return floor.transport;
  const linked=new Set();
@@ -989,6 +1630,10 @@ function coreTransport(building,floor){
  }
  return (building.core_nodes||[]).filter(n=>n.floor===floor.name&&linked.has(n.core_id)&&['stair','elev'].includes(n.kind)).flatMap(n=>{
   const room=floor.rooms?.find(r=>r.id===n.room_id);
+  // An inherited elev_inside tag can contradict the explicit CAD label DA.
+  // Suppress the misleading elevator visual, without changing simulation links.
+  const names=room?.names||[];
+  if(n.kind==='elev'&&names.some(s=>/^D\.?\s*A\.?$/i.test(s.trim()))&&!names.some(s=>/ELEV|승강기|엘리베이터/i.test(s)))return [];
   let region=room?.polys;
   if(!region?.length&&[n.x,n.y,n.w,n.h].every(Number.isFinite)&&n.w>0&&n.h>0){
    const x=n.x-n.w/2,y=n.y-n.h/2;region=[{o:[[x,y],[x+n.w,y],[x+n.w,y+n.h],[x,y+n.h]],h:[]}];
@@ -1005,16 +1650,16 @@ function readLegacyCoreSource({building,groups,sourceHash,shapeFor}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash)||typeof shapeFor!=='function')throw Error('CAD source hash and shape converter required');
  const floors=building.floors.map(floor=>{
   const matches=groups.filter(g=>g.name===floor.name);if(matches.length!==1)throw Error('Missing/duplicate CAD floor group: '+floor.name);
-  const transport=coreTransport(building,floor);
+  const transport=evidencedCoreTransport(building,floor,sourceHash)??coreTransport(building,floor);
   return Object.freeze({id:floor.name,floor:transport===floor.transport?floor:{...floor,transport},group:matches[0]});
  });return Object.freeze({source_hash:sourceHash,floors:Object.freeze(floors),shapeFor});
 }
 
-return {coreTransport,readLegacyCoreSource};
+return {evidencedCoreTransport,coreTransport,readLegacyCoreSource};
 })();
 
 // app/web/layers/wall_opening_lines.js
-const __module22=(()=>{
+const __module23=(()=>{
 // Display-only subtraction of opening interiors from CAD wall line segments.
 // Coordinates are floor-local; opening frames and wall meshes are never edited.
 function wallOpeningVolumes(floor,time=0){
@@ -1123,8 +1768,8 @@ return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,t
 })();
 
 // app/web/layers/wall_corners.js
-const __module23=(()=>{
-const {outsideWallOpeningIntervals}=__module22;
+const __module24=(()=>{
+const {outsideWallOpeningIntervals}=__module23;
 // Display geometry only: reject seams inside the union of touching wall pieces.
 const isWallMesh=o=>o.isMesh&&/(?:_wall|_door_head|_win_low|_win_head)$/.test(o.name||'');
 function isReplacedWallOutline(T,o,floor){
@@ -1170,11 +1815,11 @@ return {isWallMesh,isReplacedWallOutline,wallCornerSegments};
 })();
 
 // app/web/layers/building.js
-const __module24=(()=>{
-const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module23;
+const __module25=(()=>{
+const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module24;
 const {EmptyLayer,createEmptyLayers}=__module7;
 const {applyRenderPolicy}=__module2;
-const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module22;
+const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module23;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -1254,7 +1899,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module25=(()=>{
+const __module26=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -1296,10 +1941,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module26=(()=>{
+const __module27=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {exteriorWindowFace}=__module25;
+const {exteriorWindowFace}=__module26;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -1382,7 +2027,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/core.js
-const __module27=(()=>{
+const __module28=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
 
@@ -1474,7 +2119,7 @@ return {fallbackStairSteps,CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module28=(()=>{
+const __module29=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -1548,7 +2193,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module29=(()=>{
+const __module30=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -1556,7 +2201,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module30=(()=>{
+const __module31=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -1564,7 +2209,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module31=(()=>{
+const __module32=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -1572,11 +2217,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module32=(()=>{
-const {createRealViewSession}=__module28;
-const {createSmokeLayer}=__module29;
-const {createFlameLayer}=__module30;
-const {createPlumeLayer}=__module31;
+const __module33=(()=>{
+const {createRealViewSession}=__module29;
+const {createSmokeLayer}=__module30;
+const {createFlameLayer}=__module31;
+const {createPlumeLayer}=__module32;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -1586,7 +2231,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk_geometry.js
-const __module33=(()=>{
+const __module34=(()=>{
 // Legacy display geometry only; no condition or simulation calculations.
 function boundarySegments(room,original){
   // Smoke/risk outlines use exterior rings only; column/stair holes are not boxes.
@@ -1663,10 +2308,10 @@ return {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices};
 })();
 
 // app/web/layers/risk.js
-const __module34=(()=>{
+const __module35=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module33;
+const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module34;
 const {roomFgiRollover}=__module3;
 
 const types=['FO','FGI','backdraft'],colors=['#ef4444','#a855f7','#facc15'];
@@ -1774,10 +2419,10 @@ return {RiskLayer};
 })();
 
 // app/web/layers/selection.js
-const __module35=(()=>{
+const __module36=(()=>{
 const {EmptyLayer}=__module7;
 const {applyRenderPolicy}=__module2;
-const {joinedSelectionRibbons}=__module33;
+const {joinedSelectionRibbons}=__module34;
 const {ROOM_PICK_LAYER}=__module12;
 
 const polygons=row=>row.polygons_m.map(p=>({o:p.polygon_m,h:p.holes_m}));
@@ -1824,7 +2469,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module36=(()=>{
+const __module37=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const fixed=review?.doors?.fixed_state;
@@ -1835,10 +2480,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module37=(()=>{
+const __module38=(()=>{
 const {createEmptyLayers}=__module7;
 const {ROOM_PICK_LAYER}=__module12;
-const {fixedOpeningsFor}=__module36;
+const {fixedOpeningsFor}=__module37;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -1911,7 +2556,7 @@ return {createSceneHost};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module38=(()=>{
+const __module39=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -1956,7 +2601,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module39=(()=>{
+const __module40=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -2017,8 +2662,8 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module40=(()=>{
-const {createTimelineRisk}=__module39;
+const __module41=(()=>{
+const {createTimelineRisk}=__module40;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -2096,7 +2741,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module41=(()=>{
+const __module42=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -2129,10 +2774,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module42=(()=>{
-const {createDisplayPolicy}=__module41;
+const __module43=(()=>{
+const {createDisplayPolicy}=__module42;
 const {roomFgiRollover}=__module3;
-const {fixedOpeningsFor}=__module36;
+const {fixedOpeningsFor}=__module37;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -2259,7 +2904,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module43=(()=>{
+const __module44=(()=>{
 const {infoTip}=__module14;
 const {roomFgiRollover}=__module3;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -2349,7 +2994,7 @@ return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMC
 })();
 
 // app/web/adapters/attention.js
-const __module44=(()=>{
+const __module45=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -2366,7 +3011,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module45=(()=>{
+const __module46=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -2418,9 +3063,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module46=(()=>{
-const {attentionRanking}=__module44;
-const {savedAttention}=__module45;
+const __module47=(()=>{
+const {attentionRanking}=__module45;
+const {savedAttention}=__module46;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -2490,7 +3135,7 @@ return {screeningRows,mcEstimate,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module47=(()=>{
+const __module48=(()=>{
 const {createAssistantPanel}=__module0;
 const {attachExport}=__module1;
 const {routeSampleIndex}=__module4;
@@ -2506,19 +3151,19 @@ const {createSeriesCache}=__module16;
 const {adaptBuilding,adaptResult,adaptScreening}=__module18;
 const {readLegacyBuildingSource}=__module19;
 const {readLegacyOpeningsSource}=__module20;
-const {readLegacyCoreSource}=__module21;
-const {BuildingLayer}=__module24;
-const {OpeningsLayer}=__module26;
-const {CoreLayer}=__module27;
-const {createRealViewLayers}=__module32;
-const {RiskLayer}=__module34;
-const {SelectionLayer}=__module35;
-const {createSceneHost}=__module37;
-const {createLitePanel,updateLitePanel}=__module38;
-const {createPanelShell}=__module40;
-const {createDisplayPanel}=__module42;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module43;
-const {createExplorePanel}=__module46;
+const {readLegacyCoreSource}=__module22;
+const {BuildingLayer}=__module25;
+const {OpeningsLayer}=__module27;
+const {CoreLayer}=__module28;
+const {createRealViewLayers}=__module33;
+const {RiskLayer}=__module35;
+const {SelectionLayer}=__module36;
+const {createSceneHost}=__module38;
+const {createLitePanel,updateLitePanel}=__module39;
+const {createPanelShell}=__module41;
+const {createDisplayPanel}=__module43;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module44;
+const {createExplorePanel}=__module47;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -2721,8 +3366,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module48=(()=>{
-const {attachModern}=__module47;
+const __module49=(()=>{
+const {attachModern}=__module48;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -2737,4 +3382,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module48.attach;
+export const attach=__module49.attach;

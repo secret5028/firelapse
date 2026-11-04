@@ -7,7 +7,8 @@ const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-pub
 const b=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json','utf8')),before=JSON.stringify(b),hash='a'.repeat(64),groups=b.floors.map(f=>{const g=new T.Group();g.name=f.name;g.position.z=f.z;return g;});
 const shape=p=>{const s=new T.Shape(p.o.map(q=>new T.Vector2(...q)));for(const h of p.h||[])s.holes.push(new T.Path(h.map(q=>new T.Vector2(...q))));return s;};
 const asset=readLegacyCoreSource({building:b,groups,sourceHash:hash,shapeFor:shape}),rows=asset.floors.flatMap(f=>f.floor.transport);
-assert.equal(rows.length,25);assert(rows.every(r=>r.connected&&r.meshes.length===0));
+assert.equal(rows.length,23);assert(rows.every(r=>r.connected&&r.meshes.length===0));
+for(const f of asset.floors)for(const r of f.floor.transport)assert(!f.floor.rooms.find(q=>q.id===r.room_id)?.names?.includes('DA'));
 const generated=rows.map(r=>fallbackStairSteps(T,r));
 assert(generated.flat().length>0);
 for(const [i,r] of rows.entries()){
@@ -22,7 +23,7 @@ for(const step of fallbackStairSteps(T,fixture))for(const p of step.polys){
 }
 for(const f of asset.floors)for(const r of f.floor.transport)assert(!b.unconfirmed_vertical_cores.some(n=>n.floor===f.id&&n.core_id===r.id));
 const layer=new CoreLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});const frame={building:{source_hash:hash},resultMeta:null,floor:{floor_id:null}};layer.setData(frame);layer.setVisible(true);layer.tick();
-assert.equal(layer.diagnostics().shells,25);assert.equal(layer.diagnostics().edges,25);assert.equal(layer.group.visible,true);
+assert.equal(layer.diagnostics().shells,23);assert.equal(layer.diagnostics().edges,23);assert.equal(layer.group.visible,true);
 assert.equal(layer.diagnostics().treads,generated.flat().length);
 for(const v of layer.views)for(const m of v.group.children)if(m.renderOrder===72)assert.equal(m.material.color.getHexString(),'2563eb');
 for(const v of layer.views){assert.equal(v.group.position.z,v.row.floor.z);for(const mesh of v.group.children)assert.equal(mesh.material.depthTest,false);}

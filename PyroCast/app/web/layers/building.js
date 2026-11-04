@@ -8,7 +8,7 @@ export class BuildingLayer extends EmptyLayer {
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
   this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();}
  clearCorners(){for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
- clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;
+ clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;material.depthWrite=before.depthWrite;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
   this.materialState.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.openingSignature=null;this.trimmedLines=0;}
  build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
@@ -21,11 +21,23 @@ export class BuildingLayer extends EmptyLayer {
    for(const [i,source] of floor.objects.entries()){const view=Object.create(source);view.userData={};
     const object=new source.constructor().copy(view,false),style=floor.styles[i];object.userData={...source.userData};
     const material=source.material;
-    if(!this.materialState.has(material))this.materialState.set(material,{color:material.color.clone(),opacity:material.opacity,transparent:material.transparent});
+    if(!this.materialState.has(material))this.materialState.set(material,{color:material.color.clone(),opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite});
     material.color.set(style.color);if(style.opacity!==null)material.opacity=style.opacity;object.material=material;
+    this.materialState.get(material).displayOpacity=material.opacity;
     applyRenderPolicy(object,'building');parentFor(source.parent).add(object);parents.set(source,object);this.sourceObjects.set(source,object);this.bindings.push({source,object});
    }
   }
+ }
+ applyTransparency(value=.7){
+  // 70% preserves the established, material-specific translucent appearance.
+  // Endpoints: 0% opaque, 100% invisible. Never multiply last frame's opacity.
+  const alpha=base=>value===.7?base:value<.7?1+(base-1)*value/.7:base*(1-value)/.3;
+  for(const [material,before] of this.materialState){
+   const opacity=alpha(before.displayOpacity),transparent=value===.7?before.transparent:before.transparent||opacity<1;
+   material.opacity=opacity;material.depthWrite=opacity===0?false:before.depthWrite;
+   if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
+  }
+  for(const line of this.cornerLines)line.material.opacity=alpha(.32);
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
@@ -56,6 +68,7 @@ export class BuildingLayer extends EmptyLayer {
    if(asset!==this.asset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.trimOpenings(frame.t_s??0);
+  this.applyTransparency(frame.realView?.buildingTransparency??.7);
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }

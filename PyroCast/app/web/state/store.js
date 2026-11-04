@@ -6,7 +6,7 @@ const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},bu
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
+ realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
@@ -46,6 +46,7 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
     case 'layers/toggle':if(!Object.hasOwn(state.layers,p.id))throw Error('Unknown layer');if(p.visible!==undefined&&typeof p.visible!=='boolean')throw Error('Invalid visibility');put('layers',{...state.layers,[p.id]:p.visible??!state.layers[p.id]});return true;
     case 'realView/set':
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
+     if(p.buildingTransparency!==undefined&&(!Number.isFinite(p.buildingTransparency)||p.buildingTransparency<0||p.buildingTransparency>1))throw Error('Invalid building transparency');
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
       for(const [key,min,max] of [['smokeGain',.3,1.5],['flameGain',.5,2]])if(p[key]!==undefined&&(!Number.isFinite(p[key])||p[key]<min||p[key]>max))throw Error('Invalid display gain');

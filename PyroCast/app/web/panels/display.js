@@ -21,6 +21,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   input.setAttribute('role','switch');host.append(row);bindings.push(()=>input.checked=read());return input;
  }
  toggle($('displayViewSettings'),'displayReal','실감 보기','#62dcb0',()=>store.get('realView').enabled,enabled=>store.dispatch('realView/set',{enabled}));
+ const buildingSlider=document.createElement('label');buildingSlider.className='gainControl';buildingSlider.title='0% 불투명 · 70% 기존 투시 · 100% 숨김. 문·창 강조와 코어 투시는 유지합니다.';
+ buildingSlider.innerHTML='건물 투명도 <input id="displayBuildingTransparency" aria-label="건물 투명도" type="range" min="0" max="100" step="1" value="70"><output for="displayBuildingTransparency">70%</output>';
+ $('displayViewSettings').append(buildingSlider);
+ listen($('displayBuildingTransparency'),'input',()=>store.dispatch('realView/set',{buildingTransparency:$('displayBuildingTransparency').valueAsNumber/100}));
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#42e8ff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
@@ -82,6 +86,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
+  const transparency=Math.round(rv.buildingTransparency*100);$('displayBuildingTransparency').value=transparency;buildingSlider.querySelector('output').textContent=transparency+'%';
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;
    fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);

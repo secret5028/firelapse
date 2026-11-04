@@ -671,7 +671,7 @@ const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},bu
  route:{vehicle:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
+ realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
@@ -711,6 +711,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
     case 'layers/toggle':if(!Object.hasOwn(state.layers,p.id))throw Error('Unknown layer');if(p.visible!==undefined&&typeof p.visible!=='boolean')throw Error('Invalid visibility');put('layers',{...state.layers,[p.id]:p.visible??!state.layers[p.id]});return true;
     case 'realView/set':
      if(Object.keys(p).some(k=>!Object.hasOwn(state.realView,k)))throw Error('Unknown real-view setting');
+     if(p.buildingTransparency!==undefined&&(!Number.isFinite(p.buildingTransparency)||p.buildingTransparency<0||p.buildingTransparency>1))throw Error('Invalid building transparency');
      for(const k of ['enabled','temperatureSmoke','fuelMarkers'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid real-view flag');
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
       for(const [key,min,max] of [['smokeGain',.3,1.5],['flameGain',.5,2]])if(p[key]!==undefined&&(!Number.isFinite(p[key])||p[key]<min||p[key]>max))throw Error('Invalid display gain');
@@ -1180,7 +1181,7 @@ class BuildingLayer extends EmptyLayer {
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
   this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();}
  clearCorners(){for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
- clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;
+ clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;material.depthWrite=before.depthWrite;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
   this.materialState.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.openingSignature=null;this.trimmedLines=0;}
  build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
@@ -1193,11 +1194,23 @@ class BuildingLayer extends EmptyLayer {
    for(const [i,source] of floor.objects.entries()){const view=Object.create(source);view.userData={};
     const object=new source.constructor().copy(view,false),style=floor.styles[i];object.userData={...source.userData};
     const material=source.material;
-    if(!this.materialState.has(material))this.materialState.set(material,{color:material.color.clone(),opacity:material.opacity,transparent:material.transparent});
+    if(!this.materialState.has(material))this.materialState.set(material,{color:material.color.clone(),opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite});
     material.color.set(style.color);if(style.opacity!==null)material.opacity=style.opacity;object.material=material;
+    this.materialState.get(material).displayOpacity=material.opacity;
     applyRenderPolicy(object,'building');parentFor(source.parent).add(object);parents.set(source,object);this.sourceObjects.set(source,object);this.bindings.push({source,object});
    }
   }
+ }
+ applyTransparency(value=.7){
+  // 70% preserves the established, material-specific translucent appearance.
+  // Endpoints: 0% opaque, 100% invisible. Never multiply last frame's opacity.
+  const alpha=base=>value===.7?base:value<.7?1+(base-1)*value/.7:base*(1-value)/.3;
+  for(const [material,before] of this.materialState){
+   const opacity=alpha(before.displayOpacity),transparent=value===.7?before.transparent:before.transparent||opacity<1;
+   material.opacity=opacity;material.depthWrite=opacity===0?false:before.depthWrite;
+   if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
+  }
+  for(const line of this.cornerLines)line.material.opacity=alpha(.32);
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
@@ -1228,6 +1241,7 @@ class BuildingLayer extends EmptyLayer {
    if(asset!==this.asset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.trimOpenings(frame.t_s??0);
+  this.applyTransparency(frame.realView?.buildingTransparency??.7);
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
@@ -2139,6 +2153,10 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   input.setAttribute('role','switch');host.append(row);bindings.push(()=>input.checked=read());return input;
  }
  toggle($('displayViewSettings'),'displayReal','실감 보기','#62dcb0',()=>store.get('realView').enabled,enabled=>store.dispatch('realView/set',{enabled}));
+ const buildingSlider=document.createElement('label');buildingSlider.className='gainControl';buildingSlider.title='0% 불투명 · 70% 기존 투시 · 100% 숨김. 문·창 강조와 코어 투시는 유지합니다.';
+ buildingSlider.innerHTML='건물 투명도 <input id="displayBuildingTransparency" aria-label="건물 투명도" type="range" min="0" max="100" step="1" value="70"><output for="displayBuildingTransparency">70%</output>';
+ $('displayViewSettings').append(buildingSlider);
+ listen($('displayBuildingTransparency'),'input',()=>store.dispatch('realView/set',{buildingTransparency:$('displayBuildingTransparency').valueAsNumber/100}));
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#42e8ff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'전체 건물 보기에서만 표시합니다.');
@@ -2200,6 +2218,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:10px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
+  const transparency=Math.round(rv.buildingTransparency*100);$('displayBuildingTransparency').value=transparency;buildingSlider.querySelector('output').textContent=transparency+'%';
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;
    fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);

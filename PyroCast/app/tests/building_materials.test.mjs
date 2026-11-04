@@ -3,6 +3,7 @@ import {pathToFileURL,fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {BuildingLayer} from '../web/layers/building.js';
 import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
+import {createStore} from '../web/state/store.js';
 const root=fileURLToPath(new URL('../../',import.meta.url));
 const T=await import(pathToFileURL(process.env.PYROCAST_THREE||path.join(root,'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js')));
 const floor=new T.Group();floor.name='3F';
@@ -26,6 +27,15 @@ for(let cycle=0;cycle<50;cycle++){
  for(const [source,clone] of layer.sourceObjects){assert.equal(clone.material,source.material);assert.equal(clone.geometry,source.geometry);}
  assert.equal(shared.color.getHexString(),'aab7c0');assert.equal(fallback.color.getHexString(),'b8c3cb');
  assert.equal(outline.color.getHexString(),'bdcbd5');assert.equal(outline.opacity,.42);
+ const builds=layer.buildCount;
+ for(const t of [1,0,.9,.9,.7]){
+  layer.setData({building,resultMeta:null,floor:{floor_id:'3F'},realView:{buildingTransparency:t}});
+  assert.equal(layer.buildCount,builds);
+  if(t===1){assert.equal(shared.opacity,0);assert.equal(shared.depthWrite,false);}
+  if(t===0)assert.equal(shared.opacity,1);
+  if(t===.9)assert(Math.abs(shared.opacity-.35/3)<1e-12);
+ }
+ assert.equal(shared.opacity,.35);assert.equal(outline.opacity,.42);assert.equal(shared.depthWrite,true);
  // Exercise restoration on rebuild and final dispose, including transparent.
  shared.transparent=false;layer.build(asset);assert.equal(shared.transparent,true);
  shared.transparent=false;layer.dispose();layer.dispose();
@@ -33,4 +43,7 @@ for(let cycle=0;cycle<50;cycle++){
  assert.equal(layer.materialState.size,0);assert.equal(subscriptions,0);
 }
 assert.equal(disposedMaterials,0);assert.equal(disposedGeometry,0);
+const settings=createStore();assert.equal(settings.get('realView').buildingTransparency,.7);
+for(const x of [-1,1.1,NaN,'0.5'])assert.throws(()=>settings.dispatch('realView/set',{buildingTransparency:x}));
+settings.dispatch('realView/set',{buildingTransparency:.9});assert.equal(settings.get('realView').buildingTransparency,.9);
 console.log(JSON.stringify({cycles:50,material_identity:true,restore_color_opacity_transparent:true,owned_resources:0,disposedMaterials,disposedGeometry,subscriptions}));

@@ -27,7 +27,7 @@ export function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings
    phenomenon:maximum===null?(id?'미평가':'외부'):labels[type],partial:missing&&maximum!==null,
    color:maximum>=100?RISK_COLORS[type]:maximum>=70?RISK_COLORS.smoke:ROUTE_CLEAR};
   row.rollover_active=roomFgiRollover(resultMeta,cells,i,100,history);
-  if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 진행'+(history?' 이력':'');
+  if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 조건 충족'+(history?' 이력':'');
   cache.set(id,row);return row;
  }
  for(const s of route.segments||[]){const last=rows.at(-1);

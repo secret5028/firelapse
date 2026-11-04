@@ -184,7 +184,7 @@ function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings}){
    phenomenon:maximum===null?(id?'미평가':'외부'):labels[type],partial:missing&&maximum!==null,
    color:maximum>=100?RISK_COLORS[type]:maximum>=70?RISK_COLORS.smoke:ROUTE_CLEAR};
   row.rollover_active=roomFgiRollover(resultMeta,cells,i,100,history);
-  if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 진행'+(history?' 이력':'');
+  if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 조건 충족'+(history?' 이력':'');
   cache.set(id,row);return row;
  }
  for(const s of route.segments||[]){const last=rows.at(-1);
@@ -2027,8 +2027,8 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
   const risk=store.get('risk'),floor=store.get('floor').floor_id,ids=building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms.flatMap(r=>r.cells));
   const rolling=roomFgiRollover(result,ids,index,risk.threshold.ribbon,risk.history)===true,now=roomFgiRollover(result,ids,index,risk.threshold.ribbon,false)===true;
-  rolloverBadge.hidden=!rolling;rolloverBadge.textContent=now?' · 롤오버 진행':' · 롤오버 진행 이력';
-  if(top?.key==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,risk.threshold.ribbon,false)===true)$('hudPill').textContent+=' · 롤오버 진행';
+  rolloverBadge.hidden=!rolling;rolloverBadge.textContent=now?' · 롤오버 조건 충족':' · 롤오버 조건 충족 이력';
+  if(top?.key==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,risk.threshold.ribbon,false)===true)$('hudPill').textContent+=' · 롤오버 조건 충족';
   const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);
   selectionLabel.title=cell?'선택 셀 · 현재 시각':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
  }
@@ -2062,6 +2062,15 @@ function worstIndexEntries(result,cells){return resultTypes.map(([type,name])=>{
  }
  return {type,name,value,time,source};
 });}
+// Height and interface are local to the selected cell, never a room-average proxy.
+function roomDisplayInfo(room,cell,interfaceHeight){
+ const id=room?.room_id?.replace(/^CAD_/,'').replaceAll('_',' ')||'실 선택';
+ const name=room?.name&&room.name!==room.room_id?`${id} · ${room.name}`:id;
+ const c=room?.cells.find(c=>c.cell_id===cell),cellHeight=c?.legacy_display?.height_m;
+ const height=finite(cellHeight)?cellHeight:room&&finite(room.ceiling_z_m)&&finite(room.floor_z_m)?room.ceiling_z_m-room.floor_z_m:null;
+ const smokeDepth=finite(height)&&finite(interfaceHeight)&&interfaceHeight>=0&&interfaceHeight<=height?height-interfaceHeight:null;
+ return {name,height,smokeDepth};
+}
 // Presentation aggregation only: read saved degrees, deduplicate cells by original room.
 // No time integration, factor recomputation or room-average series.
 function summarizeMCPlayback(playback){
@@ -2078,15 +2087,15 @@ function summarizeMCPlayback(playback){
 function createResultsPanel({panel,store}){
  const $=id=>document.getElementById(id),root=document.createElement('div'),moves=[];root.id='resultContent';$('shellPane-result').append(root);panel.hidden=true;
  const move=(node,parent)=>{const mark=document.createComment('result restore');node.before(mark);moves.push(()=>mark.replaceWith(node));parent.append(node);};
- root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase" hidden>사례</label><div id="resultCaseControls" hidden></div><div id="resultMetadata" hidden></div><div id="resultReuse" role="status" hidden></div><button id="resultReplay" hidden type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><label for="liteRoom">실·셀</label><div id="resultRoomControl"></div><div id="resultRoomTitle"></div><div id="resultAtmosphere"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><section aria-label="계산값"><h3>계산값</h3><div id="resultQuantities"></div></section></div><section id="resultMCSection" hidden><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div></section><details id="resultLimits" hidden><summary>가정과 한계</summary><ul></ul></details>';
+ root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase" hidden>사례</label><div id="resultCaseControls" hidden></div><div id="resultMetadata" hidden></div><div id="resultReuse" role="status" hidden></div><button id="resultReplay" hidden type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><div id="resultRoomTitle"></div><div id="resultAtmosphere"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><section aria-label="계산값"><h3>계산값</h3><div id="resultQuantities"></div></section></div><section id="resultMCSection" hidden><h3>MC 집계 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCStatus" role="status"></div><button id="resultMCLoad">저장 표본 집계 읽기</button><button id="resultMCApplyWorst" disabled title="연소 실 ↓ → 주의 이상 실 ↓ → 최초 FO ↑. 현재 재생 결과는 유지하며 이후 실행 입력에 적용합니다.">최악 표본 적용</button><div id="resultMCWorst"></div><table><thead><tr><th>현상</th><th>≥100 표본</th><th>최대 실</th><th>지수 최대</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div></section><details id="resultLimits" hidden><summary>가정과 한계</summary><ul></ul></details>';
  const riskHeading=$('resultCase').nextElementSibling,riskCard=riskHeading.nextElementSibling;root.prepend(riskHeading,riskCard);
- move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';move($('liteRoom'),$('resultRoomControl'));
+ move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';
  $('resultTools').remove();
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
  #resultCase #nativeOutputNotice{display:none!important}
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
  #resultContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#resultContent h3{font-size:12px;font-weight:500;color:#b8cbd8;margin:14px 0 8px}.resultCard{border:1px solid #496273;border-radius:7px;padding:10px;margin-bottom:12px;background:#163345}.resultCard>label{display:block;margin-bottom:5px;color:#b8cbd8}
- #resultContent select{max-width:100%;width:100%;box-sizing:border-box;background:#1d4158;color:#eef5fa;padding:6px;border:1px solid #6a8d9f;border-radius:4px}#resultContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px 7px;cursor:pointer}#resultContent button:focus-visible{outline:2px solid #42e8ff}.resultTools{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}#resultCaseControls button{margin-top:6px}#resultMetadata,#resultMCBasis{font-size:11px;color:#b8cbd8;margin-top:8px}#resultRoomTitle{font-weight:600;margin:10px 0;overflow-wrap:anywhere}#resultCells{margin-bottom:10px}#resultCellList{display:flex;gap:5px;flex-wrap:wrap;padding-top:6px}#resultCellList button[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}
+ #resultContent select{max-width:100%;width:100%;box-sizing:border-box;background:#1d4158;color:#eef5fa;padding:6px;border:1px solid #6a8d9f;border-radius:4px}#resultContent button{background:#1d4158;color:#eef5fa;border:1px solid #577487;border-radius:4px;padding:5px 7px;cursor:pointer}#resultContent button:focus-visible{outline:2px solid #42e8ff}.resultTools{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}#resultCaseControls button{margin-top:6px}#resultMetadata,#resultMCBasis{font-size:11px;color:#b8cbd8;margin-top:8px}#resultRoomTitle{font-size:20px;line-height:1.4;font-weight:700;margin:10px 0;overflow-wrap:anywhere}#resultCells{margin-bottom:10px}#resultCellList{display:flex;gap:5px;flex-wrap:wrap;padding-top:6px}#resultCellList button[aria-pressed=true]{border-color:#42e8ff;color:#42e8ff}
  .resultScore{display:grid;grid-template-columns:30px minmax(0,1fr) 38px 60px;gap:6px;align-items:center;margin:14px 0}.resultScoreHeading{display:grid;grid-template-columns:30px minmax(0,1fr) 38px 60px;gap:6px;margin-top:12px;color:#b8cbd8;font-size:11px}.resultScoreHeading span{grid-column:4;text-align:right;white-space:nowrap}.resultPeakTime{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:#b8cbd8}.resultBar{height:7px;background:#304c5e;border-radius:4px;position:relative}.resultFill{display:block;height:100%;border-radius:4px}.resultMark{position:absolute;top:-5px;height:17px;border-left:1px dashed #ced9df}.resultMark.main{border-color:#fff;border-left-style:solid}.resultValue{text-align:right;font-variant-numeric:tabular-nums}.resultInfo{cursor:help;color:#b8cbd8}#resultQuantities{display:grid;grid-template-columns:1fr auto;gap:5px;margin-top:8px}#resultContent details{margin-top:8px}#resultContent summary{cursor:pointer;color:#b8cbd8}#resultContent table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px}#resultContent th,#resultContent td{border-bottom:1px solid #304c5e;padding:7px 2px;text-align:right}#resultContent th:first-child,#resultContent td:first-child{text-align:left}#resultMCLoad{margin-top:8px}#resultLimits li{margin:6px 0;color:#b8cbd8}#resultMCStatus{font-size:11px}
  `;document.head.append(style);
  const append=(parent,tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;parent.append(e);return e;};
@@ -2094,8 +2103,9 @@ function createResultsPanel({panel,store}){
  function update({building,result,series,index,selection}){
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
-  $('resultRoomTitle').textContent=`${room?.room_id?.replace('CAD_','')||'실 선택'} · ${stamp(result.time_s[index])}`;
-  $('resultAtmosphere').textContent=`O₂ ${finite(values?.O2_upper_volfrac?.[index])?number(values.O2_upper_volfrac[index]*100,1)+' %':'—'} · 연기층 ${finite(values?.interface_m?.[index])?number(values.interface_m[index],2)+' m':'—'}`;
+  const info=roomDisplayInfo(room,cell,values?.interface_m?.[index]);
+  $('resultRoomTitle').textContent=info.name;
+  $('resultAtmosphere').textContent=`실 높이 ${number(info.height,2)} m · 연기 두께 ${number(info.smokeDepth,2)} m (천장 기준)`;
   const peaks=worstIndexEntries(result,cell?[cell]:(room?.cells||[]).map(c=>c.cell_id));
   if(roomKey!==room?.room_id||previous!==result){$('resultCellList').replaceChildren();for(const c of room?.cells||[]){const b=append($('resultCellList'),'button',c.cell_id.split('_').at(-1));b.dataset.cell=c.cell_id;b.onclick=()=>store.dispatch('selection/set',{room_id:room.room_id,cell_id:c.cell_id,source:'list'});}roomKey=room?.room_id;}
   $('resultCells').hidden=!(room?.cells.length>1);$('resultCells').open=room?.cells.length>1;for(const b of $('resultCellList').children)b.setAttribute('aria-pressed',String(b.dataset.cell===cell));
@@ -2106,7 +2116,7 @@ function createResultsPanel({panel,store}){
    for(const [value,cls] of [[threshold.caution,''],[threshold.ribbon,' main']]){const mark=append(bar,'i',undefined,'resultMark'+cls);mark.style.left=value/scale*100+'%';mark.title=String(value);}
    const value=append(row,'span',number(s.value),'resultValue');value.style.color=finite(s.value)&&s.value>=threshold.ribbon?s.color:'';
    const peak=peaks.find(p=>p.type===s.type),peakTime=append(row,'span',finite(peak?.time)?stamp(peak.time):'—','resultPeakTime');peakTime.title=`전 구간 최대 ${number(peak?.value)} · ${peak?.source??'미평가'} · 동률은 최초 시각`;peakTime.setAttribute('aria-label',s.name+' 최악 시간 '+peakTime.textContent);
-   if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 진행':'롤오버 진행 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
+   if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 조건 충족':'롤오버 조건 충족 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
   }
   $('resultQuantities').replaceChildren();for(const [label,key,unit] of [['상층 온도','T_upper_C','℃'],['하층 온도','T_lower_C','℃'],['상층 산소','O2_upper_volfrac','%'],['하층 산소','O2_lower_volfrac','%'],['연기층 경계 높이','interface_m','m'],['화원 발열','HRR_actual_kW','kW'],['문 분출 연소','HRR_doorjet_kW','kW'],['상층 연소','HRR_upperburn_kW','kW']]){const v=values?.[key]?.[index];append($('resultQuantities'),'span',label);append($('resultQuantities'),'b',finite(v)?number(v*(unit==='%'?100:1),1)+' '+unit:'미평가');}
   if(previous!==result){const list=$('resultLimits').querySelector('ul');list.replaceChildren();for(const text of [...result.limits_text,'지수는 저장된 조건값 × 100이며 실제 발생 확률이 아닙니다. 여러 셀로 나뉜 방은 평균을 만들지 않습니다.','MC 집계는 저장된 완주 표본만 읽습니다. 미완료·읽기 실패·미평가 값은 안전으로 세지 않습니다.','연기 무늬와 화염·플룸은 표시 효과입니다. 온도 입력은 변경하지 않습니다.'])append(list,'li',text);previous=result;}
@@ -2120,7 +2130,7 @@ function createResultsPanel({panel,store}){
  return {update,mc,dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
 }
 
-return {resultTypes,selectedScores,worstIndexEntries,summarizeMCPlayback,createResultsPanel};
+return {resultTypes,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMCPlayback,createResultsPanel};
 })();
 
 // app/web/adapters/attention.js

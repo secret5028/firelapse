@@ -40,7 +40,7 @@ def match_case(service,a,route,rules):
 
 def event_fact(e,tool_index):
     label=display_label(e['room'],e.get('name'))
-    suffix=f" · 롤오버 진행 최초 {stamp(e['rollover_first_s'])}" if e['phenomenon']=='FGI' and e.get('rollover_first_s') is not None else ''
+    suffix=f" · 롤오버 조건 충족 최초 {stamp(e['rollover_first_s'])}" if e['phenomenon']=='FGI' and e.get('rollover_first_s') is not None else ''
     return {'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],'text':f"{label} · {LABELS[e['phenomenon']]} 최고 {number(e['peak'])} @ {stamp(e['peak_s'])} · 최초 기준 도달 {stamp(e['first_s'])}{suffix}",'evidence':{'call':tool_index,'row':e},'numbers':[v for v in [e['peak'],e['peak_s'],e['first_s']] if v is not None]}
 
 def facts_for(call,i):
@@ -92,7 +92,7 @@ def compact_sections(route,peaks,rules):
         prefix='' if e['room']==target else display_label(e['room'],e.get('name'))+'은 '
         text=f"{prefix}{stamp(e['first_s'])}부터 조건을 충족합니다."
         if k=='FGI' and finite(e.get('rollover_first_s')):
-            text+=(' 같은 시각부터' if e['rollover_first_s']==e['first_s'] else f" {stamp(e['rollover_first_s'])}부터")+' 롤오버 진행이 표시됩니다.'
+            text+=(' 같은 시각부터' if e['rollover_first_s']==e['first_s'] else f" {stamp(e['rollover_first_s'])}부터")+' 롤오버 조건 충족으로 표시됩니다.'
         text+=f" {stamp(e['peak_s'])}에 최고 {e['peak']:.0f}에 도달합니다."
         add(titles[k],text,{'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],
             'evidence':{'call':3+TYPES.index(k),'row':e}})

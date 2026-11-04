@@ -105,8 +105,8 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
   $('hudPill').textContent=top?`${top.name} ${Math.round(top.value)}`:'미평가';$('hudPill').style.color=top?.color||'';
   const risk=store.get('risk'),floor=store.get('floor').floor_id,ids=building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms.flatMap(r=>r.cells));
   const rolling=roomFgiRollover(result,ids,index,risk.threshold.ribbon,risk.history)===true,now=roomFgiRollover(result,ids,index,risk.threshold.ribbon,false)===true;
-  rolloverBadge.hidden=!rolling;rolloverBadge.textContent=now?' · 롤오버 진행':' · 롤오버 진행 이력';
-  if(top?.key==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,risk.threshold.ribbon,false)===true)$('hudPill').textContent+=' · 롤오버 진행';
+  rolloverBadge.hidden=!rolling;rolloverBadge.textContent=now?' · 롤오버 조건 충족':' · 롤오버 조건 충족 이력';
+  if(top?.key==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,risk.threshold.ribbon,false)===true)$('hudPill').textContent+=' · 롤오버 조건 충족';
   const format=(n,suffix,digits)=>Number.isFinite(n)?n.toFixed(digits)+suffix:'—';$('hudT').textContent=format(s?.T_upper_C[index],' ℃',0);
   selectionLabel.title=cell?'선택 셀 · 현재 시각':room?.cells.length>1?'방 평균 없음 · 셀을 선택하세요.':'';
  }

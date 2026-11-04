@@ -4674,7 +4674,7 @@ return {timelineRiskData,createTimelineRisk};
 const __module48=(()=>{
 const {createTimelineRisk}=__module47;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
-function createPanelShell({panel,store}){
+function createPanelShell({panel,store,buildingFloors=[]}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('shell restore');node.before(marker);moves.push(()=>{marker.replaceWith(node);});parent.append(node);};
  const listen=(node,type,fn)=>{node.addEventListener(type,fn);cleanups.push(()=>node.removeEventListener(type,fn));};
@@ -4743,7 +4743,8 @@ function createPanelShell({panel,store}){
  const floorButtons=[...$('fbtn').querySelectorAll('button')],oldFloorAttributes=floorButtons.map(b=>[b,b.getAttribute('aria-pressed'),b.hidden]);
  const floorSelect=document.createElement('select');floorSelect.id='shellFloor';floorSelect.setAttribute('aria-label','층 선택');
  const placeholder=new Option('층 선택','');placeholder.disabled=true;floorSelect.add(placeholder);
- for(const b of floorButtons)if(b.textContent.trim()!=='전체'){floorSelect.add(new Option(b.textContent.trim(),b.textContent.trim()));b.hidden=true;}
+ const floorOrder=new Map(buildingFloors.map((f,i)=>[f.name,i]));
+ for(const b of [...floorButtons].sort((a,b)=>(floorOrder.get(a.textContent.trim())??Infinity)-(floorOrder.get(b.textContent.trim())??Infinity)))if(b.textContent.trim()!=='전체'){floorSelect.add(new Option(b.textContent.trim(),b.textContent.trim()));b.hidden=true;}
  $('fbtn').append(floorSelect);
  // Invoke the original handler so every building keeps its existing floor and camera policy.
  listen(floorSelect,'change',()=>floorButtons.find(b=>b.textContent.trim()===floorSelect.value)?.click());
@@ -5206,7 +5207,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length,screening:v=>v.schema==='pyrocast.screening/1'&&!v.errors.length}});
- const shell=createPanelShell({panel,store});
+ const displayFloors=[...B.floors].sort((a,b)=>(b.z??0)-(a.z??0));
+ const shell=createPanelShell({panel,store,buildingFloors:displayFloors});
  const display=createDisplayPanel({store,selectionLabel,isOriginAllowed:room=>screeningPayload?.manual_origins?.some(r=>r.room===room),onOrigin:room=>{if(!screeningPayload?.manual_origins?.some(r=>r.room===room))return;store.dispatch('exploration/set',{origin_room_id:room,origin_mode:'manual'});$('shellTab-explore').click();}});
  const results=createResultsPanel({panel,store});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
@@ -5244,7 +5246,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
- const explore=createExplorePanel({store,floors:B.floors,onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ const explore=createExplorePanel({store,floors:displayFloors,onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;

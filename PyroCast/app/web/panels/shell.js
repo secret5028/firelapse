@@ -1,6 +1,6 @@
 import {createTimelineRisk} from './timeline_risk.js';
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
-export function createPanelShell({panel,store}){
+export function createPanelShell({panel,store,buildingFloors=[]}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('shell restore');node.before(marker);moves.push(()=>{marker.replaceWith(node);});parent.append(node);};
  const listen=(node,type,fn)=>{node.addEventListener(type,fn);cleanups.push(()=>node.removeEventListener(type,fn));};
@@ -69,7 +69,8 @@ export function createPanelShell({panel,store}){
  const floorButtons=[...$('fbtn').querySelectorAll('button')],oldFloorAttributes=floorButtons.map(b=>[b,b.getAttribute('aria-pressed'),b.hidden]);
  const floorSelect=document.createElement('select');floorSelect.id='shellFloor';floorSelect.setAttribute('aria-label','층 선택');
  const placeholder=new Option('층 선택','');placeholder.disabled=true;floorSelect.add(placeholder);
- for(const b of floorButtons)if(b.textContent.trim()!=='전체'){floorSelect.add(new Option(b.textContent.trim(),b.textContent.trim()));b.hidden=true;}
+ const floorOrder=new Map(buildingFloors.map((f,i)=>[f.name,i]));
+ for(const b of [...floorButtons].sort((a,b)=>(floorOrder.get(a.textContent.trim())??Infinity)-(floorOrder.get(b.textContent.trim())??Infinity)))if(b.textContent.trim()!=='전체'){floorSelect.add(new Option(b.textContent.trim(),b.textContent.trim()));b.hidden=true;}
  $('fbtn').append(floorSelect);
  // Invoke the original handler so every building keeps its existing floor and camera policy.
  listen(floorSelect,'change',()=>floorButtons.find(b=>b.textContent.trim()===floorSelect.value)?.click());

@@ -1,0 +1,40 @@
+{
+  "total": 63,
+  "passed": 55,
+  "failures": [
+    {
+      "test": "test_lite_door_jet.DoorJetTests.test_room_oxygen_mode_rejected",
+      "reason": "AssertionError: \"lower-layer oxygen\" does not match \"Room oxygen inventory mode has been removed\""
+    }
+  ],
+  "errors": [
+    {
+      "test": "test_lite_montecarlo.MCTests.test_forced_and_failed_excluded_from_probability_denominator",
+      "reason": "KeyError: 'rollover'"
+    },
+    {
+      "test": "test_lite_room_oxygen.RoomOxygenTests.test_internal_transport_conserves_oxygen_no_fresh_air_reset",
+      "reason": "ValueError: Room oxygen inventory mode has been removed"
+    },
+    {
+      "test": "test_lite_room_oxygen.RoomOxygenTests.test_linear_oxygen_cap_no_lol_and_no_negative_stock_reset",
+      "reason": "ValueError: Room oxygen inventory mode has been removed"
+    },
+    {
+      "test": "test_lite_room_oxygen.RoomOxygenTests.test_one_stock_per_room_and_initial_proxy",
+      "reason": "ValueError: Room oxygen inventory mode has been removed"
+    },
+    {
+      "test": "test_lite_room_oxygen.RoomOxygenTests.test_primary_and_upper_share_one_budget_and_fuel_heat_balance",
+      "reason": "ValueError: Room oxygen inventory mode has been removed"
+    },
+    {
+      "test": "test_lite_room_oxygen.RoomOxygenTests.test_stage_constants_not_silently_overridden",
+      "reason": "ValueError: Room oxygen inventory mode has been removed"
+    },
+    {
+      "test": "unittest.loader._FailedTest.test_lite_visualization",
+      "reason": "ImportError: cannot import name 'states' from 'pyrocast_lite.visualization' (C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\pyrocast_lite\\visualization.py)"
+    }
+  ]
+}

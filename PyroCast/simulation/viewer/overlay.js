@@ -4590,7 +4590,8 @@ function createPanelShell({panel,store}){
  body.pyroShell #v{left:0!important;right:var(--shell-side)!important;top:var(--shell-top)!important;bottom:var(--shell-bottom)!important}
  #pyroShellHeader,#pyroShellSidebar,#pyroShellTimeline{position:fixed;box-sizing:border-box;z-index:125;color:#eaf3f8;background:#142b3b;font:13px/1.45 system-ui,'Malgun Gothic',sans-serif}
  #pyroShellHeader{top:0;left:0;right:0;min-height:48px;display:flex;align-items:center;gap:14px;padding:8px 14px;border-bottom:1px solid #496273}
- #pyroShellHeader .brand{font-weight:700;white-space:nowrap}#pyroShellHeader #fbtn{flex:1;min-width:0}
+ #pyroShellHeader .brand{font-weight:700;white-space:nowrap}#pyroShellHeader #fbtn{flex:1;min-width:0;display:flex;align-items:center;gap:6px}
+ #pyroShellHeader #fbtn [hidden]{display:none!important}#shellFloor{min-width:86px;max-width:130px;color:#eaf3f8;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit}
  #pyroShellHeader #fbtn button[aria-pressed=true]{background:#e7be66;color:#142b3b;border-color:#f0d18e}
  #pyroShellSidebar{top:var(--shell-top);right:0;bottom:var(--shell-bottom);width:var(--shell-side);display:flex;flex-direction:column;border-left:1px solid #496273}
  #pyroShellTabs{display:flex;flex-shrink:0;border-bottom:1px solid #496273}
@@ -4645,9 +4646,15 @@ function createPanelShell({panel,store}){
  const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
  function sync(){const p=store.get('playback');$('shellPlay').textContent=p.playing?'일시정지':'재생';$('shellPlay').setAttribute('aria-pressed',String(p.playing));$('shellSpeed').value=p.speed;$('shellTime').max=p.t_end_s;$('shellTime').value=p.t_s;$('shellClock').textContent=`${stamp(p.t_s)} / ${stamp(p.t_end_s)}`;}
  function marks(){const r=store.get('result');$('shellTime').step=r?.dt_out_s||10;}
- const floors=()=>{const id=store.get('floor').floor_id;for(const b of $('fbtn').children)b.setAttribute('aria-pressed',String(b.textContent===(id??'전체')));};
- const oldFloorAttributes=[...$('fbtn').children].map(b=>[b,b.getAttribute('aria-pressed')]);
- cleanups.push(()=>{for(const [b,value] of oldFloorAttributes)if(value===null)b.removeAttribute('aria-pressed');else b.setAttribute('aria-pressed',value);});
+ const floorButtons=[...$('fbtn').querySelectorAll('button')],oldFloorAttributes=floorButtons.map(b=>[b,b.getAttribute('aria-pressed'),b.hidden]);
+ const floorSelect=document.createElement('select');floorSelect.id='shellFloor';floorSelect.setAttribute('aria-label','층 선택');
+ const placeholder=new Option('층 선택','');placeholder.disabled=true;floorSelect.add(placeholder);
+ for(const b of floorButtons)if(b.textContent.trim()!=='전체'){floorSelect.add(new Option(b.textContent.trim(),b.textContent.trim()));b.hidden=true;}
+ $('fbtn').append(floorSelect);
+ // Invoke the original handler so every building keeps its existing floor and camera policy.
+ listen(floorSelect,'change',()=>floorButtons.find(b=>b.textContent.trim()===floorSelect.value)?.click());
+ const floors=()=>{const id=store.get('floor').floor_id;floorSelect.value=id??'';for(const b of floorButtons)b.setAttribute('aria-pressed',String(b.textContent.trim()===(id??'전체')));};
+ cleanups.push(()=>{floorSelect.remove();for(const [b,value,hidden] of oldFloorAttributes){b.hidden=hidden;if(value===null)b.removeAttribute('aria-pressed');else b.setAttribute('aria-pressed',value);}});
  cleanups.push(store.subscribe('playback',sync),store.subscribe('result',marks),store.subscribe('floor',floors));sync();marks();floors();
  const sizes=()=>{document.body.style.setProperty('--shell-top',header.getBoundingClientRect().height+'px');document.body.style.setProperty('--shell-bottom',timeline.getBoundingClientRect().height+'px');};
  let sizeFrame=null;const ro=new ResizeObserver(()=>{if(sizeFrame===null)sizeFrame=requestAnimationFrame(()=>{sizeFrame=null;sizes();});});ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>{ro.disconnect();if(sizeFrame!==null)cancelAnimationFrame(sizeFrame);});
@@ -5215,7 +5222,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   O.target.copy(center);C.position.copy(center).add(new T.Vector3(1,-1,1.1).normalize().multiplyScalar(distance));O.update();recordCamera(viewer.getFloor()==='all'?'all':'floor');render();
  }
  for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
- for(const button of $('fbtn').children){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
+ for(const button of $('fbtn').querySelectorAll('button')){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
  cleanup.push(store.subscribe('selection',s=>{if(!data)return;const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
  function select(key){const r=data.rooms.find(r=>r.key===key)||selected;store.dispatch('selection/set',{room_id:r.original_room||r.key,cell_id:r.key,source:'list'});}

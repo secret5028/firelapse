@@ -64,10 +64,13 @@ export class CoreLayer extends EmptyLayer {
     shell.raycast=()=>{};group.add(shell);
     }
     const edges=applyRenderPolicy(new T.LineSegments(this.own(new T.EdgesGeometry(geometry,25)),this.own(new T.LineBasicMaterial({color}))),'core.edge');
+    // WebGL native lines are already 1 px; soften stair coverage for a finer outline.
+    if(core.kind==='stair'){edges.material.linewidth=1;edges.material.opacity=.60;}
     edges.raycast=()=>{};group.add(edges);
     if(core.kind==='stair')for(const step of core.meshes?.length?core.meshes:fallbackStairSteps(T,core)){
      if(!step.polys?.length||!(step.z1>step.z0))continue;
      const tread=applyRenderPolicy(new T.LineSegments(this.own(new T.EdgesGeometry(extrude(step.polys,step.z1-step.z0),25)),this.own(new T.LineBasicMaterial({color}))),'core.tread');
+     tread.material.linewidth=1;tread.material.opacity=.55;
      tread.position.z=step.z0;tread.raycast=()=>{};group.add(tread);
     }
    }

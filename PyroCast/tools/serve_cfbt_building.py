@@ -109,6 +109,8 @@ def main():
     job=folder.name if model.name=='cad-output' else hashlib.sha256(source.read_bytes()).hexdigest()[:16]
     assets=project/'work/cad-web/local-resources/cad-assets'
     building=json.loads((model/'building.json').read_text('utf-8'))
+    from model_library import execution_policy,RUN_PATHS
+    model_execution=execution_policy(building,source)
     if not (model/'model.html').is_file():raise ValueError('3D model.html이 없습니다. 도면의 3D 생성 결과 폴더를 지정하세요.')
     sha=hashlib.sha256((model/'building.json').read_bytes()).hexdigest()
     from pyrocast_cfbt.topology import corrected_building
@@ -383,6 +385,8 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
+            if request_path in RUN_PATHS and not model_execution['allowed']:
+                return self.json({'error':model_execution['reason'],'simulation_started':False},403)
             if request_path.startswith('/cfbt/lite/ai/') and request_path!='/cfbt/lite/ai/fuel':
                 from lite_ai_http import handle
                 return handle(self,request_path)

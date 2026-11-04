@@ -1805,6 +1805,16 @@ function createPanelShell({panel,store}){
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
+ const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
+ if(!window.__PYROCAST_OFFLINE__&&location.protocol!=='file:'){
+  const current=buildingSelect.value;
+  buildingSelect.add(new Option('전체 모델 · 과거 작업 보기','http://127.0.0.1:8841/models/'));
+  fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
+   if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
+   for(const e of c.models)buildingSelect.add(new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url));
+   buildingSelect.value=current;
+  }).catch(()=>{});
+ }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
  const tabs=[],panes=[];
  for(const [id,label] of [['building','건물'],['explore','탐색'],['result','결과'],['display','표시']]){

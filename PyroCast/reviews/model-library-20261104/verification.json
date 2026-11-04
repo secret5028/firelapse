@@ -1,0 +1,65 @@
+{
+  "rows": [
+    {
+      "id": "ganghwa",
+      "floors": 9,
+      "simulation_enabled": true,
+      "loaded": true
+    },
+    {
+      "id": "parkmarine",
+      "floors": 14,
+      "simulation_enabled": false,
+      "loaded": true
+    },
+    {
+      "id": "wando",
+      "floors": 1,
+      "simulation_enabled": false,
+      "loaded": true
+    },
+    {
+      "id": "hotel-original",
+      "floors": 14,
+      "simulation_enabled": false,
+      "loaded": true
+    },
+    {
+      "id": "office",
+      "floors": 9,
+      "simulation_enabled": false,
+      "loaded": true
+    },
+    {
+      "id": "showroom",
+      "floors": 2,
+      "simulation_enabled": false,
+      "loaded": true
+    },
+    {
+      "id": "apartment-scan",
+      "floors": 1,
+      "simulation_enabled": false,
+      "loaded": true
+    },
+    {
+      "id": "modori-scan",
+      "floors": 26,
+      "simulation_enabled": false,
+      "loaded": true
+    }
+  ],
+  "operating": [
+    {
+      "url": "http://127.0.0.1:8780/model.html",
+      "models": 8
+    },
+    {
+      "url": "http://127.0.0.1:8832/data/wando-coldstore/model.html",
+      "models": 8
+    }
+  ],
+  "blocked_run_routes": 5,
+  "errors": [],
+  "simulation_runs": 0
+}

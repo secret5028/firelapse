@@ -317,3 +317,8 @@ C-8 기본값·기준 캡처를 대체한다. 건물·연기(70%, 약한 온도 
 `config/building-rules.json`에 라벨→용도·문 분류·외기 창 종류/높이·코어 판정 상수를 모았다. 연료 수치는 기존 fire_load_table.json을 사용한다. `tools/prepare_building_graph.py <source> --output <folder>`는 기존 CAD 연결망 함수를 적용하고 근거/미확정 목록을 저장한다. 시뮬레이션은 실행하지 않는다.
 
 파크마린호텔은 14개 도면 층·257실. 생성 파일은 `data/parkmarine-hotel/building.json`. 4개 층은 등가 구획 폭/개구부 폭 충돌로 계산 입력 로더가 거부한다. 현재 운영 화면 선택기에 등록하거나 계산을 실행한 상태는 아니다. 상세: `specs/웹앱-D3-호텔범용성-20261103.md`.
+
+
+## 작업 모델 목록 (2026-11-04)
+
+`python -B tools/serve_model_library.py` → http://127.0.0.1:8841/models/. 현재·과거 모델 8개. 스캔 2개는 열람 전용이며 실행 요청도 차단한다. 과거 CAD 중 계산 연결이 없는 모델은 열람만 제공한다. 기존 강화/완도 운영 화면에서도 선택 가능하다. 원본과 결과는 보존한다. 상세: `reviews/model-library-20261104/REPORT.md`.

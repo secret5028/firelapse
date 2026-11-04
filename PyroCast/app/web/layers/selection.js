@@ -12,8 +12,9 @@ export class SelectionLayer extends EmptyLayer {
   const ribbonMaterials=selectionOutlineMaterials(T,r=>this.own(r));
   const pickMaterial=this.own(new T.MeshBasicMaterial({color:'#ffffff',side:T.DoubleSide,transparent:true,opacity:0,depthWrite:false}));
   for(const floor of building.floors)for(const room of floor.rooms){const sharedRibbons=new Map();
-   for(const cell of room.cells){const z=cell.legacy_display?.z_m;if(!Number.isFinite(z))throw Error('Selection requires adapter cell floor height');
-    const group=new T.Group();group.name=cell.cell_id;this.group.add(group);
+   const pickAreas=room.cells.length?room.cells:[{cell_id:null,polygons_m:room.polygons_m,legacy_display:{z_m:room.floor_z_m}}];
+   for(const cell of pickAreas){const z=cell.legacy_display?.z_m;if(!Number.isFinite(z))throw Error('Selection requires adapter cell floor height');
+    const group=new T.Group();group.name=cell.cell_id??room.room_id;this.group.add(group);
     const pick=new T.Mesh(this.own(new T.ShapeGeometry(polygons(cell).map(shape))),pickMaterial);pick.position.z=z+.07;
     pick.layers.set(ROOM_PICK_LAYER);
     pick.userData.liteRoom=cell.cell_id;pick.userData.roomId=room.room_id;pick.userData.floorId=floor.floor_id;group.add(pick);

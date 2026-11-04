@@ -47,7 +47,7 @@ export function adaptBuilding({scenario,playback,sourceHash}){
    exterior:v.a==='OUTSIDE'||v.b==='OUTSIDE',initial_fraction:v.schedule?.[0]?.[1],source_kind:v.kind??v.type});
  }
  return {schema:'pyrocast.building/1',building_id:sourceHash,source_hash:sourceHash,
-  units:{length:'m',origin:[0,0,0],up:'z'},floors:[...floors.values()],errors,scope:'saved scenario rooms; not the entire CAD building',
+  units:{length:'m',origin:[0,0,0],up:'z'},floors:[...floors.values()],errors,scope:'provided CAD geometry; result coverage is defined by saved solver cells',
   geometry_notes:['polygon_m/holes_m are the first component; polygons_m preserves ALL components and holes',
    'Coordinates copied from saved CAD geometry; no nearest-room repair or geometry recomputation']};
 }
@@ -144,7 +144,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
  const risk=openingRisk?.status==='evaluated'?Object.fromEntries(Object.entries(openingRisk.rooms).map(([rid,intervals])=>[rid,intervals.map(v=>[v.start_sample_s,v.end_sample_s])])):null;
  const gaps=p.time_s.slice(1).map((t,i)=>t-p.time_s[i]),history=indexHistoryExtrema(indexByCell,p.time_s);
  return {schema:'pyrocast.result/1',result_id:resultId,engine:{kind:native?'cfast':'lite',version:native?'7.7.7':sourceResult?.lite_revision??sourceResult?.revision??null,sha256:p.provenance?.engine_sha256??null},
-  scenario:{building_id:building.building_id,floor_id:building.floors.length===1?building.floors[0].floor_id:null,
+  scenario:{building_id:building.building_id,floor_id:new Set(p.rooms.map(r=>r.cad_floor)).size===1?p.rooms[0].cad_floor:null,
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,

@@ -136,7 +136,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const index=()=>Math.max(0,routeSampleIndex(data,store.get('playback').t_s));
  function recordCamera(mode){store.dispatch('camera/fit',{mode,target:O.target.toArray(),pose:{position:C.position.toArray(),quaternion:C.quaternion.toArray(),up:C.up.toArray(),zoom:C.zoom}});}
  function render(){if(!ready||busy||disposed)return;busy=true;try{
-  const f=viewer.getFloor();if(f!==lastFloor){lastFloor=f;store.dispatch('floor/set',{floor_id:f==='all'?null:f});}
+  const f=viewer.getFloor();if(f!==lastFloor){lastFloor=f;store.dispatch('floor/set',{floor_id:f==='all'?null:f});
+   const selectedFloor=store.get('building')?.floors.find(row=>row.rooms.some(r=>r.room_id===store.get('selection').room_id));
+   if(f!=='all'&&selectedFloor&&selectedFloor.floor_id!==f)store.dispatch('selection/set',{room_id:null,cell_id:null,source:'list'});
+  }
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
   host.render();
   const signature=JSON.stringify([index(),selected?.key,store.get('selection'),clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
@@ -193,6 +196,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const seq=store.dispatch('result/load'),byRoom=new Map();
   for(const c of payload.rooms){const key=c.original_room||c.key;if(byRoom.has(key))continue;const f=B.floors.find(f=>f.name===c.cad_floor),r=f?.rooms.find(r=>`CAD_${f.name}_${r.id}`===key);if(!r)throw Error('CAD room missing: '+key);
    byRoom.set(key,{id:key,name:r.names?.join(' / ')||key,cad_floor:c.cad_floor,cad_polys:r.polys,z_m:c.z_m,height_m:c.height_m});}
+  // CAD selection is available beyond the saved calculation scope. These rooms
+  // have geometry only: no synthetic solver cells or zero-valued time series.
+  for(const f of B.floors)for(const r of f.rooms){const key=`CAD_${f.name}_${r.id}`;
+   if(!byRoom.has(key))byRoom.set(key,{id:key,name:r.names?.join(' / ')||key,cad_floor:f.name,cad_polys:r.polys,z_m:f.z,height_m:f.h});}
   const scenario={rooms:[...byRoom.values()],openings:[],cad:{building_sha256:payload.building_sha256}};
   const building=adaptBuilding({scenario,playback:payload,sourceHash:payload.building_sha256}),result=await adaptResult({playback:payload,scenario,building,resultId:id});
   if(seq!==store.get('request').seq)return false;

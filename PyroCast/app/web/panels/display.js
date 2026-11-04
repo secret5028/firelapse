@@ -1,8 +1,8 @@
 import {createDisplayPolicy} from './display_policy.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
 import {fixedOpeningsFor} from '../state/fixed_openings.js';
-const backdraftTip='백드래프트 전제 환경의 조건 충족 정도이며, 발생 여부를 뜻하지 않음.';
-const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','고온연기 축적·산소부족(백드래프트)','#facc15']];
+const backdraftTip='고온연기 축적·산소부족(백드래프트) — 백드래프트 전제 환경의 조건 충족 정도이며, 발생 여부를 뜻하지 않음.';
+const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const $=id=>document.getElementById(id),pane=$('shellPane-display'),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('display restore');node.before(marker);moves.push(()=>marker.replaceWith(node));parent.append(node);};

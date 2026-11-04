@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {cadRoomNames} from '../web/layers/room_names.js';
+const b=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json')),before=JSON.stringify(b),names=cadRoomNames(b);
+assert.equal(names.length,184);
+assert(names.every(n=>b.floors.find(f=>f.name===n.floor).rooms.find(r=>r.id===n.id).names.includes(n.text)||n.text.includes(' · ')));
+assert.equal(cadRoomNames({floors:[{name:'1F',rooms:[{id:'R1',names:[],polys:[]}]}]}).length,0);
+assert(!names.some(n=>/협의|기어리스|벽체|문폭|tray/.test(n.text)));
+assert.equal(JSON.stringify(b),before);
+console.log(JSON.stringify({CADRoomNames:names.length,sourceUnchanged:true,noInventedNames:true}));

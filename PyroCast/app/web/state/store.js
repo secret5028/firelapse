@@ -9,7 +9,7 @@ const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},bu
  realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:false},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
- layers:{building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
+ layers:{roomNames:true,building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
  risk:{history:false,show:{FO:true,FGI:true,backdraft:true,smoke:false},threshold:{ribbon:100,caution:70}},
  jobs:{active:null,queue:[],lastError:null},request:{seq:0}});
 function finite(x){if(!Number.isFinite(x))throw Error('Finite number required');return x;}

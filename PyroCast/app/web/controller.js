@@ -16,6 +16,7 @@ import {readLegacyOpeningsSource} from './adapters/legacy_openings.js';
 import {readLegacyCoreSource} from './adapters/legacy_core.js';
 import {BuildingLayer} from './layers/building.js';
 import {OpeningsLayer} from './layers/openings.js';
+import {RoomNamesLayer} from './layers/room_names.js';
 import {CoreLayer} from './layers/core.js';
 import {createRealViewLayers} from './layers/real_view_layers.js';
 import {RiskLayer} from './layers/risk.js';
@@ -50,7 +51,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const referenceGroup=S.children.find(g=>g.children?.some(c=>c.type==='GridHelper')),vehicleSource=referenceGroup?.children.find(c=>c.isGroup);
  let routeUI=null;
  const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
- const layers=[buildingLayer,openings,core,...real,new FuelQuantityLayer(T,B),risk,selection,route];
+ const layers=[buildingLayer,openings,core,new RoomNamesLayer(T,{building:B,groups,camera:C,container:$('v')}),...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  let screeningPayload=null,screeningPoll=null,screeningRequest=0,screeningBusy=false,frozenRules=null,mcPoll=null,mcJobState=null,catalogSerial=0;
  const exploreAbort=new AbortController();

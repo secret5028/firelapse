@@ -33,7 +33,6 @@ try{
  $('top').onclick=()=>fit(true);$('iso').onclick=()=>fit();$('resetView').onclick=()=>fit();$('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
  const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor,getScreeningFloor:()=>floor==='all'?null:floor,capabilities:{frozenRules:false,assistant:false}};
  const app=await attach(viewer);
- const notice=document.createElement('div');notice.textContent='저장된 '+initial.time_s.at(-1)+'초 결과 · 자동 용도 분류 · 미확인 연결은 건물 탭 참조';notice.style.cssText='padding:8px;font-size:12px;color:#d6bd90';$('resultCase').prepend(notice);
  // Export endpoint has not been connected for this model service.
  $('exportHTML').disabled=true;$('exportHTML').title='이 건물의 단독 HTML 내보내기 연결 전';
  let frame;function loop(){frame=requestAnimationFrame(loop);O.update();R.render(S,C);}loop();

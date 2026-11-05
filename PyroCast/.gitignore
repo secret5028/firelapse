@@ -9,3 +9,5 @@ simulation/plot_deps/
 simulation/tools/w64devkit/
 simulation/tools/*.7z.exe
 /config/ai.json
+/data/model-imports/
+/data/model-library/scan-*/

@@ -1,0 +1,3 @@
+# Optional scan-import dependencies, in addition to the model viewer runtime.
+Pillow>=10
+pypdfium2>=4

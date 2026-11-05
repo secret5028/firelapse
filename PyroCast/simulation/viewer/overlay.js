@@ -4688,8 +4688,31 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
 return {createLitePanel,updateLitePanel};
 })();
 
-// app/web/panels/timeline_risk.js
+// app/web/panels/new_building.js
 const __module49=(()=>{
+// Shared entry point. Scan import stays on the loopback model-library service.
+function createNewBuildingButton({container,onCreated}){
+ const origin='http://127.0.0.1:8841',button=document.createElement('button');button.id='shellNewBuilding';button.type='button';button.textContent='새 건물 생성하기';button.style.whiteSpace='nowrap';container.append(button);
+ const offline=window.__PYROCAST_OFFLINE__||location.protocol==='file:';button.disabled=!!offline;button.title=offline?'보기 전용 · 운영 앱에서 생성하세요':'스캔 도면 파일·폴더로 새 건물 생성';
+ let dialog=null,frame=null;
+ function close(){dialog?.close();}
+ button.onclick=()=>{if(!dialog){dialog=document.createElement('dialog');dialog.setAttribute('aria-label','새 건물 생성하기');dialog.style.cssText='width:min(1100px,96vw);height:90vh;max-width:96vw;padding:0;border:1px solid #7292a3;border-radius:10px;background:#102331;color:#eaf3f8;overflow:hidden';
+  const bar=document.createElement('div');bar.style.cssText='display:flex;justify-content:flex-end;padding:8px;background:#163345';const exit=document.createElement('button');exit.textContent='닫기';exit.setAttribute('aria-label','새 건물 생성 창 닫기');exit.onclick=close;bar.append(exit);
+  frame=document.createElement('iframe');frame.title='새 건물 도면 업로드';frame.src=origin+'/models/new';frame.style.cssText='display:block;border:0;width:100%;height:calc(100% - 46px)';dialog.append(bar,frame);document.body.append(dialog);
+ }dialog.showModal();};
+ const receive=e=>{if(e.origin!==origin||e.source!==frame?.contentWindow||!/^scan-[a-f0-9]{32}$/.test(e.data?.id||''))return;
+  if(e.data.type==='pyrocast:model-created')onCreated?.();
+  if(e.data.type==='pyrocast:open-created-model')location.assign(origin+'/models/?id='+encodeURIComponent(e.data.id));
+ };
+ window.addEventListener('message',receive);
+ return ()=>{window.removeEventListener('message',receive);dialog?.remove();button.remove();};
+}
+
+return {createNewBuildingButton};
+})();
+
+// app/web/panels/timeline_risk.js
+const __module50=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -4750,9 +4773,10 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module50=(()=>{
+const __module51=(()=>{
+const {createNewBuildingButton}=__module49;
 const {bindResizeHandle}=__module4;
-const {createTimelineRisk}=__module49;
+const {createTimelineRisk}=__module50;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store,buildingFloors=[]}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -4805,17 +4829,16 @@ function createPanelShell({panel,store,buildingFloors=[]}){
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
- if(!window.__PYROCAST_OFFLINE__&&location.protocol!=='file:'){
+ function refreshBuildings(){if(window.__PYROCAST_OFFLINE__||location.protocol==='file:')return;
   const current=document.body.dataset.operationUrl||buildingSelect.value;
-  buildingSelect.add(new Option('전체 모델 · 과거 작업 보기','http://127.0.0.1:8841/models/'));
-  fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
+  return fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
    for(const e of c.models)buildingSelect.add(new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url));
    buildingSelect.value=current;
   }).catch(()=>{});
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
- const newBuilding=document.createElement('button');newBuilding.id='shellNewBuilding';newBuilding.type='button';newBuilding.textContent='새 건물 생성하기';newBuilding.disabled=true;newBuilding.title='새 도면 업로드 기능 연결 전';newBuilding.style.cssText='white-space:nowrap;opacity:.65;cursor:not-allowed';header.append(newBuilding);
+ refreshBuildings();cleanups.push(createNewBuildingButton({container:header,onCreated:refreshBuildings}));
  const tabs=[],panes=[];
  for(const [id,label] of [['building','설정·탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);
@@ -4863,7 +4886,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module51=(()=>{
+const __module52=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -4896,8 +4919,8 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module52=(()=>{
-const {createDisplayPolicy}=__module51;
+const __module53=(()=>{
+const {createDisplayPolicy}=__module52;
 const {roomFgiRollover}=__module8;
 const {fixedOpeningsFor}=__module45;
 const backdraftTip='고온연기 축적·산소부족';
@@ -5029,7 +5052,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module53=(()=>{
+const __module54=(()=>{
 const {infoTip}=__module19;
 const {roomFgiRollover}=__module8;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -5132,7 +5155,7 @@ return {resultTypes,resultNumber,resultCoverage,selectedScores,worstIndexEntries
 })();
 
 // app/web/adapters/attention.js
-const __module54=(()=>{
+const __module55=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -5149,7 +5172,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module55=(()=>{
+const __module56=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -5201,9 +5224,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module56=(()=>{
-const {attentionRanking}=__module54;
-const {savedAttention}=__module55;
+const __module57=(()=>{
+const {attentionRanking}=__module55;
+const {savedAttention}=__module56;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5304,7 +5327,7 @@ return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module57=(()=>{
+const __module58=(()=>{
 const {vehicleFitsGround}=__module3;
 const {createAssistantPanel}=__module5;
 const {attachExport}=__module6;
@@ -5333,10 +5356,10 @@ const {SelectionLayer}=__module44;
 const {createSceneHost}=__module46;
 const {createScaleReference}=__module47;
 const {createLitePanel,updateLitePanel}=__module48;
-const {createPanelShell}=__module50;
-const {createDisplayPanel}=__module52;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module53;
-const {createExplorePanel}=__module56;
+const {createPanelShell}=__module51;
+const {createDisplayPanel}=__module53;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module54;
+const {createExplorePanel}=__module57;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -5617,8 +5640,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module58=(()=>{
-const {attachModern}=__module57;
+const __module59=(()=>{
+const {attachModern}=__module58;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -5633,4 +5656,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module58.attach;
+export const attach=__module59.attach;

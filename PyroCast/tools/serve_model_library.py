@@ -7,6 +7,8 @@ ASSETS=ROOT/'cad-project/work/cad-web/local-resources/cad-assets'
 if not ASSETS.is_dir():
  ASSETS=ROOT/'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets'
 FILES={
+ '/models/new':(ROOT/'app/model-library/new.html','text/html; charset=utf-8'),
+ '/models/new.js':(ROOT/'app/model-library/new.js','text/javascript; charset=utf-8'),
  '/models/':(ROOT/'app/model-library/index.html','text/html; charset=utf-8'),
  '/models/viewer.js':(ROOT/'app/model-library/viewer.js','text/javascript; charset=utf-8'),
  '/app/web/panels/model_review.js':(ROOT/'app/web/panels/model_review.js','text/javascript; charset=utf-8'),
@@ -27,6 +29,15 @@ class Handler(BaseHTTPRequestHandler):
  def json(self,d,code=200):return self.send(json.dumps(d,ensure_ascii=False).encode(),code=code)
  def do_GET(self):
   path=urlsplit(self.path).path
+  if path.startswith('/models/imports/'):
+   try:
+    import model_import
+    parts=path.strip('/').split('/');ident=parts[2]
+    if len(parts)==3:return self.json(model_import.status(ident))
+    if len(parts)==4 and __import__('re').fullmatch(r'page-\d+\.png',parts[3]):
+     return self.send((model_import.folder(ident)/parts[3]).read_bytes(),'image/png')
+    return self.json({'error':'Not found'},404)
+   except (ValueError,OSError,IndexError):return self.json({'error':'업로드를 찾을 수 없습니다'},404)
   if path=='/':path='/models/'
   if path=='/models/catalog.json':return self.json(catalog())
   if path in ('/models/simulation/capabilities','/models/simulation/status','/models/simulation/playback','/models/simulation/jobs'):
@@ -49,6 +60,28 @@ class Handler(BaseHTTPRequestHandler):
    if path=='/models/'+e['id']+'/building.json':return self.send(model_path(e).read_bytes())
   return self.json({'error':'Not found'},404)
  def do_POST(self):
+  path=urlsplit(self.path).path
+  if path=='/models/imports' or path.startswith('/models/imports/'):
+   if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):
+    return self.json({'error':'외부 요청 차단'},403)
+   try:
+    import model_import
+    limit=model_import.MAX_BODY if path=='/models/imports' else 65536
+    n=int(self.headers.get('Content-Length','0'))
+    if not 0<n<=limit:raise ValueError('요청 크기 한도 초과')
+    if self.headers.get('Content-Type','').split(';')[0]!='application/json':raise ValueError('JSON 요청이 필요합니다')
+    body=json.loads(self.rfile.read(n))
+    if not isinstance(body,dict):raise ValueError('요청 형식 오류')
+    if path=='/models/imports':return self.json(model_import.upload(body),201)
+    parts=path.strip('/').split('/')
+    if len(parts)!=4:raise ValueError('요청 경로 오류')
+    ident,action=parts[2:]
+    if action=='analyse':return self.json(model_import.analyse(ident),202)
+    if action=='check':return self.json(model_import.inspect(ident,body)[0])
+    if action=='generate':return self.json(model_import.generate(ident,body))
+    raise ValueError('지원하지 않는 동작')
+   except RuntimeError as exc:return self.json({'error':str(exc)},409)
+   except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
   if urlsplit(self.path).path=='/models/simulation/run':
    if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):
     return self.json({'error':'외부 요청 차단','simulation_started':False},403)

@@ -1,3 +1,4 @@
+import {createNewBuildingButton} from './new_building.js';
 import {bindResizeHandle} from './resize_handle.js';
 import {createTimelineRisk} from './timeline_risk.js';
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
@@ -52,17 +53,16 @@ export function createPanelShell({panel,store,buildingFloors=[]}){
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
- if(!window.__PYROCAST_OFFLINE__&&location.protocol!=='file:'){
+ function refreshBuildings(){if(window.__PYROCAST_OFFLINE__||location.protocol==='file:')return;
   const current=document.body.dataset.operationUrl||buildingSelect.value;
-  buildingSelect.add(new Option('전체 모델 · 과거 작업 보기','http://127.0.0.1:8841/models/'));
-  fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
+  return fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
    for(const e of c.models)buildingSelect.add(new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url));
    buildingSelect.value=current;
   }).catch(()=>{});
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
- const newBuilding=document.createElement('button');newBuilding.id='shellNewBuilding';newBuilding.type='button';newBuilding.textContent='새 건물 생성하기';newBuilding.disabled=true;newBuilding.title='새 도면 업로드 기능 연결 전';newBuilding.style.cssText='white-space:nowrap;opacity:.65;cursor:not-allowed';header.append(newBuilding);
+ refreshBuildings();cleanups.push(createNewBuildingButton({container:header,onCreated:refreshBuildings}));
  const tabs=[],panes=[];
  for(const [id,label] of [['building','설정·탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);

@@ -1,0 +1,10 @@
+{
+  "mode": "isolated fixture; mocked vision provider only in test server",
+  "errors": [],
+  "checks": [
+    "missing floor and unread geometry block creation",
+    "valid interpreted geometry passes and publishes",
+    "new model is selectable and rendered in 3D; simulation disabled"
+  ],
+  "href": "/models/?id=scan-cc18bd8014b346f89e3afd0b31309e85"
+}

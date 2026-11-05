@@ -16,9 +16,11 @@ assert.equal(routeRiskRows(route,{...frame,t_s:20,risk:{history:true}}).rows[2].
 assert.equal(routeRiskRows(route,{...frame,t_s:0,risk:{history:true}}).rows[2].index,140,'full-period danger is visible even at time zero');
 assert.equal(routeSampleIndex(resultMeta,19),1);assert.equal(routeSampleIndex(resultMeta,-1),-1);
 assert.equal(routeRiskRows(route,{...frame,t_s:-1}).rows[2].index,null);
-for(const [value,color] of [[69.99,'#38bdf8'],[70,'#9ca3af'],[99.99,'#9ca3af'],[100,'#f97316']]){
- const changed=structuredClone(resultMeta);changed.index_by_cell.C2=cell([0,0,0],[0,0,0],[0,0,0],[0,value,0]);
- assert.equal(routeRiskRows(route,{...frame,resultMeta:changed}).rows[3].color,color);
+for(const [value,color] of [[69.99,'#38bdf8'],[70,'#9ca3af'],[99.99,'#9ca3af'],[100,'#a855f7']]){
+ // Rollover is an FGI state, not a fourth independently scored phenomenon.
+ const changed=structuredClone(resultMeta);changed.index_by_cell.C2=cell([0,0,0],[0,value,0],[0,0,0],[0,999,0]);
+ const row=routeRiskRows(route,{...frame,resultMeta:changed}).rows[3];
+ assert.equal(row.color,color);assert.equal(row.index,value);assert.equal(row.type,'FGI');
 }
 assert.equal(JSON.stringify(resultMeta),before,'saved indices not modified');
 console.log('PASS route risk: member maximum, fixed gates, missing data, ties, whole-period history, reverse seek, hose boundaries, no mutation');

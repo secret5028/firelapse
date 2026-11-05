@@ -640,6 +640,7 @@ return {RouteLayer};
 
 // app/web/panels/route.js
 const __module15=(()=>{
+const routeIndexText=value=>Number.isFinite(value)&&Math.round(value)!==0?String(Math.round(value)):'—';
 function createRoutePanel({store,graph,onPlaceStart}){
  const container=document.createElement('details');container.id='routeSettings';container.hidden=true;container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace" hidden>차량 지정 취소</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중앙·복도 폭 중앙 우선 배치 경로. 등록 장애물은 회피, 미등록 적재물·실제 호스 처짐은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
@@ -663,13 +664,13 @@ function createRoutePanel({store,graph,onPlaceStart}){
   summary.querySelector('#routeRiskBasis').textContent=r.error||`${stamp} · ${display?.history?'전 구간 최대':'현재 시점'}`;
   for(const row of display?.rows||[]){const tr=document.createElement('tr');tr.dataset.room=row.room||'OUTSIDE';tr.dataset.color=row.color;tr.dataset.index=row.index??'';
    const hose=row.hose_first===row.hose_last?String(row.hose_first):`${row.hose_first}–${row.hose_last}`;
-   for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,Number.isFinite(row.index)&&row.index<70?'—':row.phenomenon,row.index===null||row.index===0?'—':Math.round(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
+   for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,Number.isFinite(row.index)&&row.index<70?'—':row.phenomenon,routeIndexText(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
    tr.children[4].style.color=row.index===null?'#b8cbd8':row.color;tr.title=row.index===null?'저장된 평가 없음':`${row.source_cell} · ${row.type} ${row.index.toFixed(2)}${row.partial?' · 일부 지수 미평가':''}`;body.append(tr);
   }
   $('routeDiagnostics').textContent=JSON.stringify({main:graph.mainEntrance?.id,main_point:graph.mainEntrance?.point,default_vehicle:graph.defaultVehicle,...r});},dispose(){cleanup.forEach(f=>f());popup.remove();hint.remove();hud.remove();container.remove();summary.remove();}};
 }
 
-return {createRoutePanel};
+return {routeIndexText,createRoutePanel};
 })();
 
 // app/web/state/fuel_settings.js

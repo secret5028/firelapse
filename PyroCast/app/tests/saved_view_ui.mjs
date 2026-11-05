@@ -10,6 +10,7 @@ await p.goto('http://127.0.0.1:8842/model.html');await ready();
 const id='modelmc-mc-1793837220766400600-be36c361-S08';
 await p.locator(`#liteCase option[value="${id}"]`).waitFor({state:'attached'});
 await p.evaluate(async id=>{const e=document.getElementById('liteCase');e.value=id;await e.onchange();},id);
+await p.evaluate(()=>{const e=document.getElementById('liteRoom');e.value=[...e.options].find(o=>o.textContent.includes('5F R16')).value;e.onchange();});
 await p.locator('#shellFloor').selectOption('5F');await p.locator('#shellTime').fill('1420');await p.locator('#shellTime').dispatchEvent('input');await p.locator('#shellTab-display').click();
 const snapshot=()=>p.evaluate(()=>({case_id:document.getElementById('liteCase').value,floor:document.getElementById('shellFloor').value,time:document.getElementById('shellTime').value,room:document.getElementById('resultRoomTitle').textContent,tab:document.querySelector('#pyroShellTabs [aria-selected=true]').id,playing:document.getElementById('shellPlay').textContent}));
 const before=await snapshot();await p.reload();await ready();const after=await snapshot();assert.deepEqual(after,before);assert.equal(after.case_id,id);assert.equal(after.time,'1420');report.checks.push({name:'reload MC S08 / 5F / R16 / 1420 / display',before,after});

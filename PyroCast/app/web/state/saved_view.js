@@ -11,7 +11,8 @@ export function readSavedView(storage,key,hash){
 export function writeSavedView(storage,key,value){try{storage.setItem(key,JSON.stringify({...value,version:1}));return true;}catch{return false;}}
 export function restoredView(value,building,end){
  const floor=value.floor===null?null:building.floors.find(f=>f.floor_id===value.floor)?.floor_id??null;
- const room=building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms).find(r=>r.room_id===value.selection?.room_id);
+ const explicit=value.selection_explicit===true||['click','touch'].includes(value.selection?.source);
+ const room=explicit?building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms).find(r=>r.room_id===value.selection?.room_id):null;
  const cell=room?.cells.find(c=>c.cell_id===value.selection?.cell_id)?.cell_id??null;
  return {floor,time_s:Math.min(end,Math.max(0,value.time_s)),tab:value.tab,
   selection:{room_id:room?.room_id??null,cell_id:cell,source:'list'}};

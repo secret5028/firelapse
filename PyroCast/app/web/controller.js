@@ -210,7 +210,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   if(seq!==store.get('request').seq)return false;
   ready=false;data=payload;chosen=id;store.dispatch('buildingReview/set',{playbackOpenings:payload.display_opening_state??null});rawSource={source_hash:payload.building_sha256,result_id:id,data:payload,B,groups};store.dispatch('building/set',building);store.dispatch('result/receive',{seq,result});
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
-  selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;select(selected.key);$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
+  selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;store.dispatch('selection/set',{room_id:null,cell_id:null,source:'list'});$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   $('liteTime').step=data.output_step_s||10;
   lastPanel='';ruleContext();ready=true;viewer.setFloor(selected.cad_floor);render();fitFloor();return true;
  }
@@ -276,7 +276,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  function dispose(){if(disposed)return;disposed=true;catalogSerial++;if(mcPoll)clearTimeout(mcPoll);explanations.dispose();screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();host.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  function saveView(){if(viewTimer!==null){clearTimeout(viewTimer);viewTimer=null;}if(!viewPersistenceReady||!ready||disposed)return;
   writeSavedView(viewStorage,viewKey,{hash:initial.building_sha256,case_id:chosen,floor:store.get('floor').floor_id,time_s:store.get('playback').t_s,
-   selection:store.get('selection'),tab:$('pyroShellTabs').querySelector('[aria-selected="true"]')?.id.replace('shellTab-','')||'result'});
+   selection:store.get('selection'),selection_explicit:clicked&&Boolean(store.get('selection').room_id),tab:$('pyroShellTabs').querySelector('[aria-selected="true"]')?.id.replace('shellTab-','')||'result'});
  }
  function scheduleView(){if(!viewPersistenceReady)return;if(viewTimer===null)viewTimer=setTimeout(saveView,300);}
  viewPersistenceReady=true;

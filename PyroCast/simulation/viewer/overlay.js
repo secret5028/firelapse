@@ -949,8 +949,32 @@ const legacyDispatchBridge=store=>Object.freeze({dispatch:(action,payload)=>stor
 return {createStore,seriesCache,store,legacyDispatchBridge};
 })();
 
-// app/web/adapters/read.js
+// app/web/state/saved_view.js
 const __module23=(()=>{
+// Browser presentation state only: never stores or changes simulation input.
+function viewStorageKey(path,hash){return `pyrocast:view:1:${path}:${hash}`;}
+function readSavedView(storage,key,hash){
+ try{
+  const v=JSON.parse(storage.getItem(key));
+  if(v?.version!==1||v.hash!==hash||typeof v.case_id!=='string'||!v.case_id||v.case_id.length>200||!Number.isFinite(v.time_s)||v.time_s<0)return null;
+  if(v.floor!==null&&typeof v.floor!=='string')return null;
+  return {...v,tab:['building','result','display'].includes(v.tab)?v.tab:'result'};
+ }catch{return null;}
+}
+function writeSavedView(storage,key,value){try{storage.setItem(key,JSON.stringify({...value,version:1}));return true;}catch{return false;}}
+function restoredView(value,building,end){
+ const floor=value.floor===null?null:building.floors.find(f=>f.floor_id===value.floor)?.floor_id??null;
+ const room=building.floors.filter(f=>floor===null||f.floor_id===floor).flatMap(f=>f.rooms).find(r=>r.room_id===value.selection?.room_id);
+ const cell=room?.cells.find(c=>c.cell_id===value.selection?.cell_id)?.cell_id??null;
+ return {floor,time_s:Math.min(end,Math.max(0,value.time_s)),tab:value.tab,
+  selection:{room_id:room?.room_id??null,cell_id:cell,source:'list'}};
+}
+
+return {viewStorageKey,readSavedView,writeSavedView,restoredView};
+})();
+
+// app/web/adapters/read.js
+const __module24=(()=>{
 // Pure read adapters: no DOM, fetch, engine imports, defaults, or simulation.
 const copy=x=>structuredClone(x);
 const issue=(errors,code,ref,msg)=>errors.push({code,ref:String(ref),msg});
@@ -1127,7 +1151,7 @@ return {snapshotHash,adaptBuilding,SERIES_MAP,indexHistoryExtrema,anyKnown,adapt
 })();
 
 // app/web/adapters/legacy_building.js
-const __module24=(()=>{
+const __module25=(()=>{
 // References are borrowed from the CAD loader, never from another display layer.
 // The three install() branches, in their original order. A colour-bearing
 // material alone is not enough: only objects touched by a branch are selected.
@@ -1156,7 +1180,7 @@ return {legacyBuildingStyle,readLegacyBuildingSource};
 })();
 
 // app/web/adapters/elevator_door_evidence.js
-const __module25=(()=>{
+const __module26=(()=>{
 // Generated from original CAD sliding-panel pairs. Display only; exact input hash required.
 const elevatorDoorEvidence = [
   {
@@ -2891,8 +2915,8 @@ return {elevatorDoorEvidence};
 })();
 
 // app/web/adapters/elevator_doors.js
-const __module26=(()=>{
-const {elevatorDoorEvidence}=__module25;
+const __module27=(()=>{
+const {elevatorDoorEvidence}=__module26;
 function nearElevator(opening,cores){
  const points=opening.display_span||opening.geometry_polys?.flatMap(p=>p.o)||opening.polys?.flat()||[];
  if(!points.length)return false;
@@ -2917,7 +2941,7 @@ return {nearElevator,elevatorDisplayFloor};
 })();
 
 // app/web/adapters/parkmarine_core_evidence.js
-const __module27=(()=>{
+const __module28=(()=>{
 // Generated from archived CAD floor cores; do not infer missing floors.
 const parkmarineCoreEvidence = {
   "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
@@ -3615,10 +3639,10 @@ return {parkmarineCoreEvidence};
 })();
 
 // app/web/adapters/legacy_core.js
-const __module28=(()=>{
+const __module29=(()=>{
 // Borrow extracted transport footprints and the CAD loader's shape conversion.
 // Missing connectivity is not inferred; use recorded vertical links only.
-const {parkmarineCoreEvidence}=__module27;
+const {parkmarineCoreEvidence}=__module28;
 // Display footprints are independent of room/simulation-graph classification.
 // A matching building hash is mandatory; never stretch an axis beyond its CAD floors.
 function evidencedCoreTransport(building,floor,sourceHash,evidence=parkmarineCoreEvidence){
@@ -3672,9 +3696,9 @@ return {evidencedCoreTransport,coreTransport,readLegacyCoreSource};
 })();
 
 // app/web/adapters/legacy_openings.js
-const __module29=(()=>{
-const {elevatorDisplayFloor,nearElevator}=__module26;
-const {coreTransport,evidencedCoreTransport}=__module28;
+const __module30=(()=>{
+const {elevatorDisplayFloor,nearElevator}=__module27;
+const {coreTransport,evidencedCoreTransport}=__module29;
 // Read-only CAD-loader capability. CAD door supplements are display-only.
 function readLegacyOpeningsSource({building,groups,sourceHash}){
  if(!/^[a-f0-9]{64}$/.test(sourceHash))throw Error('CAD source hash required');
@@ -3693,7 +3717,7 @@ return {readLegacyOpeningsSource};
 })();
 
 // app/web/layers/wall_opening_lines.js
-const __module30=(()=>{
+const __module31=(()=>{
 // Display-only subtraction of opening interiors from CAD wall line segments.
 // Coordinates are floor-local; opening frames and wall meshes are never edited.
 function wallOpeningVolumes(floor,time=0){
@@ -3802,8 +3826,8 @@ return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,t
 })();
 
 // app/web/layers/wall_corners.js
-const __module31=(()=>{
-const {outsideWallOpeningIntervals}=__module30;
+const __module32=(()=>{
+const {outsideWallOpeningIntervals}=__module31;
 // Display geometry only: reject seams inside the union of touching wall pieces.
 const isWallMesh=o=>o.isMesh&&/(?:_wall|_door_head|_win_low|_win_head)$/.test(o.name||'');
 function isReplacedWallOutline(T,o,floor){
@@ -3849,11 +3873,11 @@ return {isWallMesh,isReplacedWallOutline,wallCornerSegments};
 })();
 
 // app/web/layers/building.js
-const __module32=(()=>{
-const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module31;
+const __module33=(()=>{
+const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module32;
 const {EmptyLayer,createEmptyLayers}=__module11;
 const {applyRenderPolicy}=__module7;
-const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module30;
+const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module31;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
@@ -3937,7 +3961,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module33=(()=>{
+const __module34=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -3979,10 +4003,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module34=(()=>{
+const __module35=(()=>{
 const {EmptyLayer}=__module11;
 const {applyRenderPolicy}=__module7;
-const {exteriorWindowFace}=__module33;
+const {exteriorWindowFace}=__module34;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -4072,7 +4096,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/room_names.js
-const __module35=(()=>{
+const __module36=(()=>{
 const {EmptyLayer}=__module11;
 const {fuelPositions}=__module18;
 // CAD text only: never substitute inferred fuel/use classes for missing labels.
@@ -4098,7 +4122,7 @@ return {cadRoomNames,RoomNamesLayer};
 })();
 
 // app/web/layers/core.js
-const __module36=(()=>{
+const __module37=(()=>{
 const {EmptyLayer}=__module11;
 const {applyRenderPolicy}=__module7;
 
@@ -4198,7 +4222,7 @@ return {fallbackStairSteps,CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module37=(()=>{
+const __module38=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -4272,7 +4296,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module38=(()=>{
+const __module39=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -4280,7 +4304,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module39=(()=>{
+const __module40=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -4288,7 +4312,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module40=(()=>{
+const __module41=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -4296,11 +4320,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module41=(()=>{
-const {createRealViewSession}=__module37;
-const {createSmokeLayer}=__module38;
-const {createFlameLayer}=__module39;
-const {createPlumeLayer}=__module40;
+const __module42=(()=>{
+const {createRealViewSession}=__module38;
+const {createSmokeLayer}=__module39;
+const {createFlameLayer}=__module40;
+const {createPlumeLayer}=__module41;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -4310,7 +4334,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk.js
-const __module42=(()=>{
+const __module43=(()=>{
 const {EmptyLayer}=__module11;
 const {applyRenderPolicy}=__module7;
 const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module16;
@@ -4421,7 +4445,7 @@ return {RiskLayer};
 })();
 
 // app/web/layers/selection.js
-const __module43=(()=>{
+const __module44=(()=>{
 const {EmptyLayer}=__module11;
 const {selectionOutlineMaterials,selectionOutlineGeometry,selectionOutlineMesh}=__module17;
 const {ROOM_PICK_LAYER}=__module10;
@@ -4465,7 +4489,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module44=(()=>{
+const __module45=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const valid=fixed=>fixed?.building_sha256===building?.source_hash&&fixed?.states;
@@ -4479,10 +4503,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module45=(()=>{
+const __module46=(()=>{
 const {createEmptyLayers}=__module11;
 const {ROOM_PICK_LAYER}=__module10;
-const {fixedOpeningsFor}=__module44;
+const {fixedOpeningsFor}=__module45;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -4556,7 +4580,7 @@ return {createSceneHost};
 })();
 
 // app/web/scene/scale_reference.js
-const __module46=(()=>{
+const __module47=(()=>{
 // Restored from the CAD reference model: 8 m truck and 1.75 m human.
 // Display scale only; not incident positions or simulation participants.
 function createScaleReference(T){
@@ -4585,7 +4609,7 @@ return {createScaleReference};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module47=(()=>{
+const __module48=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -4630,7 +4654,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module48=(()=>{
+const __module49=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -4691,9 +4715,9 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module49=(()=>{
+const __module50=(()=>{
 const {bindResizeHandle}=__module4;
-const {createTimelineRisk}=__module48;
+const {createTimelineRisk}=__module49;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store,buildingFloors=[]}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -4803,7 +4827,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module50=(()=>{
+const __module51=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -4836,10 +4860,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module51=(()=>{
-const {createDisplayPolicy}=__module50;
+const __module52=(()=>{
+const {createDisplayPolicy}=__module51;
 const {roomFgiRollover}=__module8;
-const {fixedOpeningsFor}=__module44;
+const {fixedOpeningsFor}=__module45;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -4969,7 +4993,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module52=(()=>{
+const __module53=(()=>{
 const {infoTip}=__module19;
 const {roomFgiRollover}=__module8;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -5072,7 +5096,7 @@ return {resultTypes,resultNumber,resultCoverage,selectedScores,worstIndexEntries
 })();
 
 // app/web/adapters/attention.js
-const __module53=(()=>{
+const __module54=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -5089,7 +5113,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module54=(()=>{
+const __module55=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -5141,9 +5165,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module55=(()=>{
-const {attentionRanking}=__module53;
-const {savedAttention}=__module54;
+const __module56=(()=>{
+const {attentionRanking}=__module54;
+const {savedAttention}=__module55;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5244,7 +5268,7 @@ return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module56=(()=>{
+const __module57=(()=>{
 const {vehicleFitsGround}=__module3;
 const {createAssistantPanel}=__module5;
 const {attachExport}=__module6;
@@ -5257,31 +5281,35 @@ const {FuelQuantityLayer}=__module18;
 const {createBuildingPanel,buildingTable}=__module20;
 const {attachExplanations}=__module19;
 const {createStore}=__module22;
+const {viewStorageKey,readSavedView,writeSavedView,restoredView}=__module23;
 const {createSeriesCache}=__module21;
-const {adaptBuilding,adaptResult,adaptScreening}=__module23;
-const {readLegacyBuildingSource}=__module24;
-const {readLegacyOpeningsSource}=__module29;
-const {readLegacyCoreSource}=__module28;
-const {BuildingLayer}=__module32;
-const {OpeningsLayer}=__module34;
-const {RoomNamesLayer}=__module35;
-const {CoreLayer}=__module36;
-const {createRealViewLayers}=__module41;
-const {RiskLayer}=__module42;
-const {SelectionLayer}=__module43;
-const {createSceneHost}=__module45;
-const {createScaleReference}=__module46;
-const {createLitePanel,updateLitePanel}=__module47;
-const {createPanelShell}=__module49;
-const {createDisplayPanel}=__module51;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module52;
-const {createExplorePanel}=__module55;
+const {adaptBuilding,adaptResult,adaptScreening}=__module24;
+const {readLegacyBuildingSource}=__module25;
+const {readLegacyOpeningsSource}=__module30;
+const {readLegacyCoreSource}=__module29;
+const {BuildingLayer}=__module33;
+const {OpeningsLayer}=__module35;
+const {RoomNamesLayer}=__module36;
+const {CoreLayer}=__module37;
+const {createRealViewLayers}=__module42;
+const {RiskLayer}=__module43;
+const {SelectionLayer}=__module44;
+const {createSceneHost}=__module46;
+const {createScaleReference}=__module47;
+const {createLitePanel,updateLitePanel}=__module48;
+const {createPanelShell}=__module50;
+const {createDisplayPanel}=__module52;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module53;
+const {createExplorePanel}=__module56;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
 // HTTP boundary only; no solver or cache-key imports.
 async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={}){
  const {THREE:T,B,S,C,O,R,groups,shp,legacyRoot}=viewer;
+ let viewStorage=null;try{if(!window.__PYROCAST_OFFLINE__)viewStorage=window.localStorage;}catch{}
+ const viewKey=viewStorageKey(location.pathname,initial.building_sha256);
+ let savedView=readSavedView(viewStorage,viewKey,initial.building_sha256),viewPersistenceReady=false,viewTimer=null;
  // The unchanged lite API rejects payloads from another building before serving.
  // Subsequent case installs must still match this initial server-validated hash.
  const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
@@ -5496,7 +5524,19 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
- await install(initial,chosen);viewer.setFloor('all');resize();fitFloor();await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ let restored=false;
+ if(savedView){try{
+  let payload=initial;
+  if(savedView.case_id!==chosen){const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(savedView.case_id),{signal:exploreAbort.signal});if(!r.ok)throw Error('저장 결과 없음');payload=await r.json();}
+  await install(payload,savedView.case_id);restored=true;
+ }catch{savedView=null;try{viewStorage?.removeItem(viewKey);}catch{}}}
+ if(!restored)await install(initial,initial.case_id||'stage4');
+ viewer.setFloor('all');resize();fitFloor();
+ if(restored){const v=restoredView(savedView,store.get('building'),store.get('playback').t_end_s);
+  store.dispatch('selection/set',v.selection);viewer.setFloor(v.floor??'all');store.dispatch('floor/set',{floor_id:v.floor});
+  store.dispatch('playback/seek',{t_s:v.time_s});store.dispatch('playback/play',{playing:false});$('shellTab-'+v.tab).click();render();fitFloor();
+ }
+ await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
@@ -5505,6 +5545,16 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  cleanup.push(attachExport({store,viewer,getCase:()=>chosen,getRoute:()=>({...route.result,risk_summary:route.riskDisplay}),render}));
  const explanations=attachExplanations();
  function dispose(){if(disposed)return;disposed=true;catalogSerial++;if(mcPoll)clearTimeout(mcPoll);explanations.dispose();screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();host.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function saveView(){if(viewTimer!==null){clearTimeout(viewTimer);viewTimer=null;}if(!viewPersistenceReady||!ready||disposed)return;
+  writeSavedView(viewStorage,viewKey,{hash:initial.building_sha256,case_id:chosen,floor:store.get('floor').floor_id,time_s:store.get('playback').t_s,
+   selection:store.get('selection'),tab:$('pyroShellTabs').querySelector('[aria-selected="true"]')?.id.replace('shellTab-','')||'result'});
+ }
+ function scheduleView(){if(!viewPersistenceReady)return;if(viewTimer===null)viewTimer=setTimeout(saveView,300);}
+ viewPersistenceReady=true;
+ for(const slice of ['result','floor','selection','playback'])cleanup.push(store.subscribe(slice,scheduleView));
+ on($('pyroShellTabs'),'click',scheduleView);on(document,'visibilitychange',()=>{if(document.hidden)saveView();});
+ // Flush synchronously before the scene is disposed on refresh or navigation.
+ on(window,'pagehide',saveView);cleanup.push(()=>{if(viewTimer!==null)clearTimeout(viewTimer);});saveView();
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }
@@ -5513,8 +5563,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module57=(()=>{
-const {attachModern}=__module56;
+const __module58=(()=>{
+const {attachModern}=__module57;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -5529,4 +5579,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module57.attach;
+export const attach=__module58.attach;

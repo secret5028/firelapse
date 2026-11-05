@@ -1,0 +1,47 @@
+{
+  "errors": [],
+  "blockedWrites": [],
+  "checks": [
+    {
+      "name": "reload MC S08 / 5F / R16 / 1420 / display",
+      "before": {
+        "case_id": "modelmc-mc-1793837220766400600-be36c361-S08",
+        "floor": "5F",
+        "time": "1420",
+        "room": "5F R16 · 객실-10",
+        "tab": "shellTab-display",
+        "playing": "재생"
+      },
+      "after": {
+        "case_id": "modelmc-mc-1793837220766400600-be36c361-S08",
+        "floor": "5F",
+        "time": "1420",
+        "room": "5F R16 · 객실-10",
+        "tab": "shellTab-display",
+        "playing": "재생"
+      }
+    },
+    {
+      "name": "different selected floor remains unevaluated",
+      "state": {
+        "case_id": "modelmc-mc-1793837220766400600-be36c361-S08",
+        "floor": "2F",
+        "time": "1420",
+        "room": "2F · 실 선택",
+        "tab": "shellTab-result",
+        "playing": "재생"
+      }
+    },
+    {
+      "name": "missing saved result safely falls back (injected HTTP 404)",
+      "state": {
+        "case_id": "2d9162c004dc49a0b706261ef7107b98",
+        "floor": "",
+        "time": "0",
+        "room": "PH R4",
+        "tab": "shellTab-result",
+        "playing": "재생"
+      }
+    }
+  ]
+}

@@ -10,6 +10,7 @@ import {FuelQuantityLayer} from './layers/fuel_quantity.js';
 import {createBuildingPanel,buildingTable} from './panels/building.js';
 import {attachExplanations} from './panels/explanations.js';
 import {createStore} from './state/store.js';
+import {viewStorageKey,readSavedView,writeSavedView,restoredView} from './state/saved_view.js';
 import {createSeriesCache} from './state/series_cache.js';
 import {adaptBuilding,adaptResult,adaptScreening} from './adapters/read.js';
 import {readLegacyBuildingSource} from './adapters/legacy_building.js';
@@ -35,6 +36,9 @@ import {attachFrozenRules} from '/cfbt/frozen_rule_controls.js';
 // HTTP boundary only; no solver or cache-key imports.
 export async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={}){
  const {THREE:T,B,S,C,O,R,groups,shp,legacyRoot}=viewer;
+ let viewStorage=null;try{if(!window.__PYROCAST_OFFLINE__)viewStorage=window.localStorage;}catch{}
+ const viewKey=viewStorageKey(location.pathname,initial.building_sha256);
+ let savedView=readSavedView(viewStorage,viewKey,initial.building_sha256),viewPersistenceReady=false,viewTimer=null;
  // The unchanged lite API rejects payloads from another building before serving.
  // Subsequent case installs must still match this initial server-validated hash.
  const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
@@ -249,7 +253,19 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  });
  let loadSerial=0;
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
- await install(initial,chosen);viewer.setFloor('all');resize();fitFloor();await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ let restored=false;
+ if(savedView){try{
+  let payload=initial;
+  if(savedView.case_id!==chosen){const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(savedView.case_id),{signal:exploreAbort.signal});if(!r.ok)throw Error('저장 결과 없음');payload=await r.json();}
+  await install(payload,savedView.case_id);restored=true;
+ }catch{savedView=null;try{viewStorage?.removeItem(viewKey);}catch{}}}
+ if(!restored)await install(initial,initial.case_id||'stage4');
+ viewer.setFloor('all');resize();fitFloor();
+ if(restored){const v=restoredView(savedView,store.get('building'),store.get('playback').t_end_s);
+  store.dispatch('selection/set',v.selection);viewer.setFloor(v.floor??'all');store.dispatch('floor/set',{floor_id:v.floor});
+  store.dispatch('playback/seek',{t_s:v.time_s});store.dispatch('playback/play',{playing:false});$('shellTab-'+v.tab).click();render();fitFloor();
+ }
+ await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
@@ -258,6 +274,16 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  cleanup.push(attachExport({store,viewer,getCase:()=>chosen,getRoute:()=>({...route.result,risk_summary:route.riskDisplay}),render}));
  const explanations=attachExplanations();
  function dispose(){if(disposed)return;disposed=true;catalogSerial++;if(mcPoll)clearTimeout(mcPoll);explanations.dispose();screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();host.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
+ function saveView(){if(viewTimer!==null){clearTimeout(viewTimer);viewTimer=null;}if(!viewPersistenceReady||!ready||disposed)return;
+  writeSavedView(viewStorage,viewKey,{hash:initial.building_sha256,case_id:chosen,floor:store.get('floor').floor_id,time_s:store.get('playback').t_s,
+   selection:store.get('selection'),tab:$('pyroShellTabs').querySelector('[aria-selected="true"]')?.id.replace('shellTab-','')||'result'});
+ }
+ function scheduleView(){if(!viewPersistenceReady)return;if(viewTimer===null)viewTimer=setTimeout(saveView,300);}
+ viewPersistenceReady=true;
+ for(const slice of ['result','floor','selection','playback'])cleanup.push(store.subscribe(slice,scheduleView));
+ on($('pyroShellTabs'),'click',scheduleView);on(document,'visibilitychange',()=>{if(document.hidden)saveView();});
+ // Flush synchronously before the scene is disposed on refresh or navigation.
+ on(window,'pagehide',saveView);cleanup.push(()=>{if(viewTimer!==null)clearTimeout(viewTimer);});saveView();
  on(window,'pagehide',dispose);
  return Object.freeze({store,host,layers,render,install,dispose,diagnostics:()=>({ui:'modern',autoFit,case_id:chosen,canvasCount:$('v').querySelectorAll('canvas').length,legendCount:document.querySelectorAll('#cfMeaning').length})});
 }

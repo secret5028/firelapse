@@ -1,0 +1,221 @@
+{
+  "rows": [
+    {
+      "floor": "1F",
+      "rooms_before": 32,
+      "rooms_after": 22,
+      "isolated_before": [
+        "R16",
+        "R20",
+        "R21",
+        "R22",
+        "R23",
+        "R24",
+        "R25",
+        "R26",
+        "R27",
+        "R28",
+        "R29"
+      ],
+      "isolated_after": [
+        "R16"
+      ],
+      "area_change_m2": 0.0
+    },
+    {
+      "floor": "2F",
+      "rooms_before": 27,
+      "rooms_after": 27,
+      "isolated_before": [],
+      "isolated_after": [],
+      "area_change_m2": 2.0008529024156246e-12
+    }
+  ],
+  "loaders_before": [
+    {
+      "floor": "1F",
+      "ok": false,
+      "error": "Opening wider than usable equivalent room: CAD_1F_R19"
+    },
+    {
+      "floor": "2F",
+      "ok": true
+    }
+  ],
+  "loaders_after": [
+    {
+      "floor": "1F",
+      "ok": true
+    },
+    {
+      "floor": "2F",
+      "ok": true
+    }
+  ],
+  "alignment": [
+    {
+      "delta_m": [
+        -85.38300000000001,
+        0.0
+      ],
+      "matches": 36,
+      "fraction": 1.0,
+      "iou": 0.997346047972933,
+      "pairs": [
+        [
+          24,
+          24
+        ],
+        [
+          25,
+          25
+        ],
+        [
+          28,
+          28
+        ],
+        [
+          29,
+          29
+        ],
+        [
+          33,
+          33
+        ],
+        [
+          30,
+          30
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          16,
+          16
+        ],
+        [
+          26,
+          26
+        ],
+        [
+          27,
+          27
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          8,
+          8
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          31,
+          31
+        ],
+        [
+          32,
+          32
+        ],
+        [
+          34,
+          34
+        ],
+        [
+          35,
+          35
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          11,
+          11
+        ],
+        [
+          13,
+          13
+        ],
+        [
+          18,
+          18
+        ],
+        [
+          19,
+          19
+        ],
+        [
+          20,
+          20
+        ],
+        [
+          23,
+          23
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          9,
+          9
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          12,
+          12
+        ],
+        [
+          14,
+          14
+        ],
+        [
+          15,
+          15
+        ],
+        [
+          17,
+          17
+        ],
+        [
+          21,
+          21
+        ],
+        [
+          22,
+          22
+        ]
+      ],
+      "reference": "1F",
+      "floor": "2F",
+      "margin": 0.7222222222222222,
+      "verified": true
+    }
+  ],
+  "api_calls": 0,
+  "api_status": "not_connected; direct Codex source review",
+  "simulation_runs": 0,
+  "remaining": "1F R16 stair landing/under-stair classification unresolved",
+  "source_sha256": "a0671c0154a761e86b81af72aab55cf96425be27da870bb61307cc45c57330f2"
+}

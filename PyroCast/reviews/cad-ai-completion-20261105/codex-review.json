@@ -1,0 +1,26 @@
+{
+  "source_sha256": "a0671c0154a761e86b81af72aab55cf96425be27da870bb61307cc45c57330f2",
+  "reviewer": "Codex direct source-CAD visual review (not API)",
+  "evidence": [
+    "source-small-rooms.png",
+    "source-R16.png"
+  ],
+  "basis": "R20/23/28/29 are door swing partitions of vestibule R19; R21/24/26 belong to R17; R22/25/27 belong to R18. No physical partition walls at swing arcs. Preserve polygon pieces and original records; mark inferred. R16 stair landing remains unresolved.",
+  "floors": {
+    "1F": {
+      "accept": [
+        "1F:merge:R20:R19",
+        "1F:merge:R23:R19",
+        "1F:merge:R28:R19",
+        "1F:merge:R29:R19",
+        "1F:merge:R21:R17",
+        "1F:merge:R24:R17",
+        "1F:merge:R26:R17",
+        "1F:merge:R22:R18",
+        "1F:merge:R25:R18",
+        "1F:merge:R27:R18"
+      ],
+      "uncertain": []
+    }
+  }
+}

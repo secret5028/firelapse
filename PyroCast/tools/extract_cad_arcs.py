@@ -7,7 +7,7 @@ from cad_connectivity_shared import geometry
 from shapely.geometry import LineString,Point
 from shapely.strtree import STRtree
 
-def extract(building,drawings,reader,converter,work):
+def extract(building,drawings,reader,converter,work,render_dir=None):
     sys.path.insert(0,str(reader))
     from cadio import load,units_to_m
     result=[];work.mkdir(parents=True,exist_ok=True)
@@ -21,6 +21,20 @@ def extract(building,drawings,reader,converter,work):
         scale=f.get('scale',1);shift=f.get('shift',[0,0]);origin=building['origin']
         def xy(p):return [round(p[i]*unit*scale+shift[i]-origin[i],6) for i in (0,1)]
         envelope=geometry(f['slab']);arcs=[];outside=0
+        if render_dir is not None:
+            from PIL import Image,ImageDraw,ImageFont
+            render_dir.mkdir(parents=True,exist_ok=True)
+            x0,y0,x1,y1=envelope.bounds;sc=min(2000/max(x1-x0,1),2000/max(y1-y0,1))
+            im=Image.new('RGB',(int((x1-x0)*sc)+40,int((y1-y0)*sc)+40),'white');draw=ImageDraw.Draw(im)
+            def pixel(q):return (20+(q[0]-x0)*sc,20+(y1-q[1])*sc)
+            for primitive in prims:
+                pts=[xy(q) for q in primitive.pts]
+                if len(pts)<2 or max(q[0] for q in pts)<x0 or min(q[0] for q in pts)>x1 or max(q[1] for q in pts)<y0 or min(q[1] for q in pts)>y1:continue
+                draw.line([pixel(q) for q in pts],fill='#197fa0' if primitive.arc else '#555555',width=1)
+            for room in f['rooms']:
+                point=geometry(room['polys']).representative_point()
+                draw.text(pixel((point.x,point.y)),room['id'],fill='#c22c25')
+            im.save(render_dir/('source-'+f['name']+'.png'))
         lines=[LineString([xy(p.pts[0]),xy(p.pts[-1])]) for p in prims if p.arc is None and p.kind=='LINE' and len(p.pts)==2]
         tree=STRtree(lines)
         for p in prims:

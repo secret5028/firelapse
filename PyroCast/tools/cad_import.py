@@ -1,5 +1,5 @@
 """Local CAD import; retained scan importer is a separate, unchanged service."""
-import base64, hashlib, json, math, os, re, subprocess, sys, threading, uuid
+import base64, hashlib, json, math, os, re, subprocess, sys, threading, uuid, shutil, time
 from pathlib import Path, PurePosixPath
 import model_library
 from result_catalog import atomic_json
@@ -94,12 +94,19 @@ def generate(ident,body):
     threading.Thread(target=worker,args=(ident,),daemon=True).start()
     return value
 
-def worker(ident):
+def review(ident):
+    dest=folder(ident);value=read(dest/'manifest.json')
+    if value['state']!='complete':raise ValueError('완료된 CAD 모델만 다시 검토할 수 있습니다')
+    if not LOCK.acquire(False):raise RuntimeError('다른 CAD 도면 처리 중입니다')
+    value.update(state='running',message='공리 자동보정·API AI 검토 중…');atomic_json(dest/'manifest.json',value)
+    threading.Thread(target=worker,args=(ident,True),daemon=True).start();return value
+
+def worker(ident,review_only=False):
     dest=folder(ident); value=read(dest/'manifest.json')
     try:
         env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PYTHONUTF8':'1'}
         with (dest/'conversion.log').open('w',encoding='utf8') as log:
-            process=subprocess.run([sys.executable,'-B','-X','utf8',str(Path(__file__)), '--convert',str(dest)],
+            process=subprocess.run([sys.executable,'-B','-X','utf8',str(Path(__file__)), '--arcs' if review_only else '--convert',str(dest)],
                 cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=1200,
                 creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         if process.returncode: raise ValueError('CAD 형상 추출 실패 · conversion.log 확인')
@@ -109,38 +116,58 @@ def worker(ident):
         if errors:
             value.update(state='blocked',message='생성 불가 · 층 누락 또는 심각한 형상 결측')
         else:
-            from prepare_building_graph import prepare
+            from cad_completion import complete
             from apply_hotel_autocorrect import check
-            building,report=prepare(source)
+            value['message']='층 정렬·미연결 공간 공리 검토 중…';atomic_json(dest/'manifest.json',value)
+            work=dest/'completion'/str(time.time_ns());work.mkdir(parents=True)
+            for image in (dest/'extraction').glob('source-*.png'):shutil.copyfile(image,work/image.name)
+            decisions=read(dest/'codex-review.json') if (dest/'codex-review.json').exists() else None
+            building,report=complete(source,work,arc_evidence=read(dest/'arcs.json'),recorded_review=decisions)
             for floor in building['floors']:
                 if 'unconfirmed' in str(floor.get('align','')):
                     building['model_review']['items'].append(dict(floor=floor['name'],id='ALIGN',kind='alignment_unconfirmed',detail='층간 위치 정렬 미확정 · 원본 좌표 유지'))
-            target=dest/'building.json';atomic_json(target,building)
+            target=dest/'building.json'
+            if target.exists():shutil.copyfile(target,work/'previous-generated-building.json')
+            atomic_json(target,building)
             loaders=check(target)
+            value['floors']=[dict(floor=f['name'],rooms=len(f['rooms']),openings=len(f['openings']),height_m=f['h']) for f in building['floors']]
             for row in loaders:
                 if not row['ok']: building['model_review']['items'].append(dict(floor=row['floor'],id='LOADER',kind='loader_failed',detail=row['error']))
-            building['model_provenance']=dict(source_kind='cad',simulation_allowed=False,import_id=ident,files=value['files'],ai_review='not_performed')
+            building['model_provenance']=dict(source_kind='cad',simulation_allowed=False,import_id=ident,files=value['files'],ai_review=building['cad_completion']['ai_status'])
             building['notes']=['CAD 자동 추출 · 미확인 연결은 검토 목록 참조', '층고 출처: '+str(building.get('levels_src','미확인'))]
-            atomic_json(target,building);atomic_json(dest/'graph-report.json',report)
+            atomic_json(target,building);atomic_json(dest/'graph-report.json',report);atomic_json(work/'report.json',report)
             mid='cad-'+ident
             from model_import import PUBLISH_LOCK
             with PUBLISH_LOCK:
                 registry=read(model_library.REGISTRY)
-                registry['models'].append(dict(id=mid,label=value['name'],path=target.relative_to(ROOT).as_posix(),source_kind='cad',
+                entry=dict(id=mid,label=value['name'],path=target.relative_to(ROOT).as_posix(),source_kind='cad',
                     sha256=hashlib.sha256(target.read_bytes()).hexdigest(),floor_count=len(building['floors']),room_count=sum(len(f['rooms']) for f in building['floors']),
                     simulation_enabled=False,execution_note='CAD 모델 생성 · 연결·층고 검토 후 계산 연결',
-                    source_evidence='DWG/DXF 원본 해시 보존 · 공통 자동보정 적용 · AI 검토 미실시',operation_url=None,review_url=None))
+                    source_evidence='DWG/DXF 원본 보존 · 공리 보정 · AI '+building['cad_completion']['ai_status'],operation_url=None,review_url=None)
+                existing=next((e for e in registry['models'] if e['id']==mid),None)
+                if existing:
+                    previous=model_library.model_path(existing)
+                    if previous!=target and previous.exists():
+                        shutil.copyfile(previous,work/'previous-building.json')
+                        atomic_json(previous,building)
+                        entry['path']=existing['path']
+                    existing.update(entry)
+                else:registry['models'].append(entry)
                 atomic_json(model_library.REGISTRY,registry)
             value.update(state='complete',model_id=mid,url='/models/?id='+mid,message='3D 생성 완료',loaders=loaders,
-                unresolved=sum(len(f['simulation_graph']['isolated_rooms']) for f in building['floors']),review_count=len(building['model_review']['items']))
+                unresolved=sum(len(f['simulation_graph']['isolated_rooms']) for f in building['floors']),review_count=len(building['model_review']['items']),ai_status=building['cad_completion']['ai_status'],ai_calls=building['cad_completion']['ai_calls'])
     except Exception as e: value.update(state='failed',message=str(e),errors=[str(e)])
     finally:
         atomic_json(dest/'manifest.json',value);LOCK.release()
 
 if __name__=='__main__':
     import runpy
-    cfg=runtime(); dest=Path(sys.argv[2]).resolve()
+    mode=sys.argv[1];cfg=runtime(); dest=Path(sys.argv[2]).resolve()
     if not dest.is_relative_to(STAGING.resolve()): raise ValueError('Invalid staging path')
     sys.path[:0]=[str(ROOT/'simulation/deps'),str(ROOT/'simulation/plot_deps'),*cfg.get('dependency_paths',[])]
-    sys.argv=['run_building.py',str(dest/'source'),'--out',str(dest/'extraction'),'--dwg2dxf',cfg['dwg2dxf']]
-    runpy.run_path(str(Path(cfg['reader_dir'])/'run_building.py'),run_name='__main__')
+    if mode=='--convert':
+        sys.argv=['run_building.py',str(dest/'source'),'--out',str(dest/'extraction'),'--dwg2dxf',cfg['dwg2dxf']]
+        runpy.run_path(str(Path(cfg['reader_dir'])/'run_building.py'),run_name='__main__')
+    from extract_cad_arcs import extract
+    arcs=extract(read(dest/'extraction/building.json'),dest/'source',Path(cfg['reader_dir']),Path(cfg['dwg2dxf']),dest/'extraction/dxf',render_dir=dest/'extraction')
+    atomic_json(dest/'arcs.json',arcs)

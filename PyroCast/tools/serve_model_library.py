@@ -88,6 +88,7 @@ class Handler(BaseHTTPRequestHandler):
     if path=='/models/cad-imports':return self.json(cad_import.upload(body),201)
     parts=path.strip('/').split('/')
     if len(parts)==4 and parts[3]=='generate':return self.json(cad_import.generate(parts[2],body),202)
+    if len(parts)==4 and parts[3]=='review':return self.json(cad_import.review(parts[2]),202)
     raise ValueError('지원하지 않는 동작')
    except RuntimeError as exc:return self.json({'error':str(exc)},409)
    except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)

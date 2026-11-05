@@ -11,7 +11,8 @@ export function createModelReview({container,building,onLocate=()=>{}}){
  const tip=add(root,'div','기하 근거에 따른 보정 · 현장 확인 아님');tip.style.color='#9eb2c4';
  if(building?.model_review?.connectivity_validation==='incomplete')add(root,'div',`연결 검증 미완료 · 미연결 공간 ${building.model_review.unresolved_space_count}개`);
  if(building?.model_review?.pipeline){const p=building.model_review.pipeline;
-  add(root,'div',`CAD → 3D → AI 공리 검토 → 미완 표시 · AI 검토 반영 ${p.ai_reviewed_decisions}건`);
+  const status=p.ai_review_status||'',label=status.includes('codex_source_review')?'Codex 도면 검토'+(p.api_calls?' · API 추가 검토':' · API 호출 없음'):status==='reviewed'?'API AI 검토':status.includes('not_connected')?'API 미연결':status.includes('failed')?'API 검토 실패':'AI 미검토';
+  add(root,'div',`${label} · 검토 반영 ${p.ai_reviewed_decisions}건 · 남은 추정 표시`);
  }
  const floor=add(root,'select');floor.setAttribute('aria-label','점검 층');add(floor,'option','모든 층').value='';
  for(const f of building?.floors||[])add(floor,'option',f.name).value=f.name;

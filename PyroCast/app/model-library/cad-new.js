@@ -19,4 +19,8 @@ function render(){message(job.message);$('errors').replaceChildren();for(const t
 async function poll(){try{job=await api('/'+job.id);render();if(job.state==='running')timer=setTimeout(poll,1500);}catch(e){message(e.message);state(false);}}
 $('generate').onclick=async()=>{if(busy)return;state(true);try{job=await api('/'+job.id+'/generate',{name:$('name').value,lowest:$('lowest').value,highest:$('highest').value});render();if(job.state==='running')timer=setTimeout(poll,1500);}catch(e){message(e.message);state(false);}};
 window.addEventListener('pagehide',()=>clearTimeout(timer));
-const saved=sessionStorage.getItem('firelapse-cad-import');if(saved){job={id:saved};poll();}
+const query=new URLSearchParams(location.search).get('review');const saved=/^[a-f0-9]{32}$/.test(query||'')?query:sessionStorage.getItem('firelapse-cad-import');if(saved){job={id:saved};poll();}
+
+$('reviewAgain').onclick=async()=>{if(busy)return;state(true);try{job=await api('/'+job.id+'/review',{});render();if(job.state==='running')timer=setTimeout(poll,1500);}catch(e){message(e.message);state(false);}};
+async function aiState(){try{const v=await(await fetch('/models/ai/connection')).json();$('aiState').textContent=v.connected?'API 연결됨 · 생성 시 공리 검토':'API 미연결 · 기하 자동보정 후 미검토 표시';}catch{$('aiState').textContent='AI 연결 확인 불가';}}
+window.addEventListener('focus',aiState);aiState();

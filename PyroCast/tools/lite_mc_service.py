@@ -110,5 +110,7 @@ def summary(building_sha, room=None):
                 for row in ranking:row['case_id']=next((r['id'] for r in data.get('rows',[]) if r['sample_id']==row['sample_id']),None)
                 data.update(job_id=folder.name,ranking=ranking,worst=ranking[0] if ranking else None)
             except (OSError,ValueError,KeyError,TypeError) as exc:data.update(worst=None,worst_error=str(exc))
+            from mc_display_summary import rooms_max
+            data['rooms_max']=rooms_max(folder,data.get('rows',[]),building_sha)
             return data
     return None

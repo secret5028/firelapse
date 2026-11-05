@@ -92,6 +92,9 @@ def summary(ident,room=None):
         req=read(folder/'request.json');value=read(folder/'mc-summary.json',{})
         if not value or (room and room!=req['room']):continue
         value['job_id']=folder.name
+        from mc_display_summary import rooms_max
+        value['rooms_max']=rooms_max(folder,value['rows'],req['building_sha256'])
+        value['source_room']=req['room']
         for i,row in enumerate(value['rows']):row.update(id=case_id(folder,f'S{i:02d}'),sample_id=f'S{i:02d}')
         try:
             ranking=ranked_samples(folder,req['building_sha256'])

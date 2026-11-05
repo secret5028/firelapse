@@ -257,7 +257,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    if(disposed)return;
    store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
    if(value.fixed_state)store.dispatch('openings/set',{fixed:true});
-   if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId);$('shellTab-result').click();}
+   if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId);}
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
    await refreshScreening();await catalog();
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';

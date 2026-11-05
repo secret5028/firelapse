@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {resultListRows} from '../web/panels/result_list.js';
+const floors=[{name:'5F',rooms:[{id:'R16',names:['객실-10']}]},{name:'B3',rooms:[{id:'R6',names:[]}]}];
+const result={result_id:'S08',status:'complete',engine:{kind:'lite'},scenario:{origin_room_id:'CAD_5F_R16'}};
+const cases=[{id:'S07',label:'5F R16 · MC S07'},{id:'S08',label:'5F R16 · MC S08'},{id:'b',label:'B3 R6 · 저장 결과'}];
+const rows=resultListRows(cases,result,floors);
+assert.equal(rows.filter(r=>r.active).length,1);
+assert.equal(rows[0].id,'S08');assert.match(rows[0].label,/객실-10.*간략.*S08/);
+assert.equal(rows.find(r=>r.id==='b').label,'B3 R6 · 저장 결과');
+assert.equal(resultListRows([],result,floors).length,1);
+assert.equal(resultListRows([],null,floors).length,0);
+assert.equal(resultListRows([...cases,cases[0]],result,floors).length,3);
+const native=resultListRows(cases,{...result,result_id:'native',engine:{kind:'cfast'}},floors);
+assert.equal(native[0].id,'native');assert.match(native[0].label,/CFAST/);
+assert.equal(resultListRows(cases,{...result,status:'failed'},floors).some(r=>r.active),false);
+console.log('PASS: active-only highlight, current first, CAD names, unnamed rooms, fallback, deduplication, CFAST, failed exclusion');

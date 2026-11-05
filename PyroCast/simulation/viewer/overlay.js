@@ -4846,8 +4846,48 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
 return {createLitePanel,updateLitePanel};
 })();
 
-// app/web/panels/new_building.js
+// app/web/panels/result_list.js
 const __module52=(()=>{
+// Saved playback navigation only: selecting a row never starts a calculation.
+function resultListRows(cases,result,floors){
+ const rooms=new Map(floors.flatMap(f=>f.rooms.map(r=>[`CAD_${f.name}_${r.id}`,{floor:f.name,room:r}])));
+ const roomName=source=>source.room.names?.filter(Boolean).join(' · ')||source.room.name||'';
+ const current=result&&['complete','partial'].includes(result.status)?result:null;
+ const rows=new Map(cases.filter(c=>c.id).map(c=>[c.id,{...c}]));
+ if(current&&!rows.has(current.result_id))rows.set(current.result_id,{id:current.result_id,label:current.result_id});
+ return [...rows.values()].map(row=>{
+  const active=row.id===current?.result_id,source=active?rooms.get(current.scenario.origin_room_id):null;
+  const label=String(row.label||row.id).replace(/(?:CAD_)?(B?\d+F?|PH)[ _]+(R\d+)(?:_C\d+)?/g,(match,f,r)=>{const s=rooms.get(`CAD_${f}_${r}`);return s?`${f} ${r}${roomName(s)?' · '+roomName(s):''}`:match.replaceAll('_',' ');});
+  return {...row,active,label:source?`${source.floor} ${source.room.id}${roomName(source)?' · '+roomName(source):''} · ${current.engine.kind==='cfast'?'CFAST':'간략'}${/MC\s+S\d+/.exec(label)?.[0]?' · '+/MC\s+S\d+/.exec(label)[0]:''}`:label};
+ }).sort((a,b)=>Number(b.active)-Number(a.active));
+}
+function createResultList({container,store,floors,onSelect}){
+ let cases=[],pending=null,disposed=false,previousActive=null;
+ const box=document.createElement('details');box.id='sceneResultList';box.open=true;box.hidden=true;
+ box.innerHTML='<summary>계산 결과</summary><div class="sceneResultRows" role="group" aria-label="저장된 계산 결과"></div><div class="sceneResultStatus" role="status" hidden></div>';
+ const rows=box.querySelector('.sceneResultRows'),status=box.querySelector('.sceneResultStatus');
+ const style=document.createElement('style');style.textContent=`#sceneResultList{position:absolute;left:10px;top:10px;z-index:110;width:270px;max-width:calc(100% - 60px);box-sizing:border-box;background:#142b3be8;border:1px solid #496273;border-radius:7px;color:#dcebf3;font:12px/1.4 system-ui,'Malgun Gothic',sans-serif;box-shadow:0 2px 8px #0002}#sceneResultList[hidden],#sceneResultList [hidden]{display:none!important}#sceneResultList summary{padding:7px 10px;cursor:pointer;font-weight:600}#sceneResultList .sceneResultRows{max-height:160px;overflow:auto;overscroll-behavior:contain;padding:0 5px 5px}#sceneResultList button{display:block;width:100%;box-sizing:border-box;text-align:left;padding:7px;border:1px solid transparent;border-radius:4px;background:transparent;color:#c1d2dd;font:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sceneResultList button:hover{background:#254353}#sceneResultList button[aria-current=true]{color:#ff8585;background:#4c3039;border-color:#db6a75;font-weight:700}#sceneResultList button:focus-visible,#sceneResultList summary:focus-visible{outline:2px solid #42c4e8;outline-offset:-2px}#sceneResultList button:disabled{cursor:wait;opacity:.65}#sceneResultList .sceneResultStatus{padding:6px 10px;color:#ffbd85}`;
+ container.append(box);document.head.append(style);
+ const stop=e=>e.stopPropagation();for(const type of ['pointerdown','pointerup','click','dblclick','wheel'])box.addEventListener(type,stop);
+ function render(){if(disposed)return;const entries=resultListRows(cases,store.get('result'),floors);box.hidden=!entries.length;box.querySelector('summary').textContent='계산 결과 · '+entries.length;rows.replaceChildren();
+  for(const entry of entries){const b=document.createElement('button');b.type='button';b.dataset.caseId=entry.id;b.textContent=entry.label;b.title=String(entry.label)+' · '+entry.id;b.setAttribute('aria-current',String(entry.active));b.disabled=pending!==null;
+   b.onclick=async()=>{if(pending!==null)return;pending=entry.id;status.hidden=false;status.textContent='결과 불러오는 중…';box.setAttribute('aria-busy','true');render();
+    try{await onSelect(entry.id);if(!disposed){status.textContent='';status.hidden=true;}}
+    catch(error){if(!disposed){status.hidden=false;status.textContent='결과 읽기 실패 · '+error.message;}}
+    finally{pending=null;if(!disposed){box.setAttribute('aria-busy','false');render();}}
+   };rows.append(b);
+  }
+  const active=entries.find(e=>e.active)?.id??null;if(active!==previousActive){rows.scrollTop=0;previousActive=active;}
+ }
+ const off=store.subscribe('result',render);render();
+ return {setCases(value){cases=value||[];render();},dispose(){disposed=true;off();box.remove();style.remove();}};
+}
+
+return {resultListRows,createResultList};
+})();
+
+// app/web/panels/new_building.js
+const __module53=(()=>{
 // Shared entry point. Scan import stays on the loopback model-library service.
 function createNewBuildingButton({container,onCreated}){
  const origin='http://127.0.0.1:8841',button=document.createElement('button');button.id='shellNewBuilding';button.type='button';button.textContent='새 건물 생성하기';button.style.whiteSpace='nowrap';container.append(button);
@@ -4870,7 +4910,7 @@ return {createNewBuildingButton};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module53=(()=>{
+const __module54=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -4931,10 +4971,11 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module54=(()=>{
-const {createNewBuildingButton}=__module52;
+const __module55=(()=>{
+const {createResultList}=__module52;
+const {createNewBuildingButton}=__module53;
 const {bindResizeHandle}=__module5;
-const {createTimelineRisk}=__module53;
+const {createTimelineRisk}=__module54;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -4974,17 +5015,8 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  #pyroShellHeader{gap:8px;padding:6px 8px}#pyroShellHeader .brand{font-size:12px}#pyroShellHeader #fbtn{flex-wrap:nowrap!important;overflow-x:auto}#pyroShellHeader #fbtn button{white-space:nowrap}#pyroShellTimeline{padding:8px;gap:6px}#shellClock{font-size:11px}}
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand"><strong>FireLapse</strong><small>-compartment fire timeline-</small></span>';
- const resultLink=document.createElement('button');resultLink.id='shellResultLink';resultLink.type='button';resultLink.hidden=true;
- resultLink.style.cssText='color:#ff6b6b;background:none;border:0;padding:3px 0 0;text-align:left;font-size:12px;font-weight:700;cursor:pointer';
- header.querySelector('.brand').append(resultLink);
- function resultLabel(){const result=store.get('result'),rid=result?.scenario.origin_room_id;
-  const source=buildingFloors.flatMap(f=>f.rooms.map(r=>({floor:f.name,room:r,key:`CAD_${f.name}_${r.id}`}))).find(r=>r.key===rid);
-  resultLink.hidden=!source||!['complete','partial'].includes(result?.status);
-  resultLink.textContent=source?`${source.floor} · ${source.room.names?.filter(Boolean).join(' · ')||source.room.name||source.room.id} 결과`:'';
-  resultLink.title=result?`${result.engine.kind==='cfast'?'순정 CFAST':'간략 계산'} · 해당 층·실 결과 보기`:'';
- }
- cleanups.push(store.subscribe('result',resultLabel));resultLabel();
- listen(resultLink,'click',()=>{onShowResult?.();activate('result');if(sidebar.hidden)toggle.click();if(innerWidth<=860&&!document.body.classList.contains('shellExpanded'))$('shellMobileToggle').click();});
+ const resultList=createResultList({container:$('v'),store,floors:buildingFloors,onSelect:async id=>{await onShowResult?.(id);activate('result');if(sidebar.hidden)toggle.click();if(innerWidth<=860&&!document.body.classList.contains('shellExpanded'))$('shellMobileToggle').click();}});
+ cleanups.push(()=>resultList.dispose());
  const oldTitle=document.title;document.title=oldTitle.includes("PyroCast")?oldTitle.replaceAll("PyroCast","FireLapse"):"FireLapse · compartment fire timeline";cleanups.push(()=>{document.title=oldTitle;});
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"></div><output id="shellClock"></output>';
@@ -5050,14 +5082,14 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  cleanups.push(store.subscribe('playback',sync),store.subscribe('result',marks),store.subscribe('floor',floors));sync();marks();floors();
  const sizes=()=>{document.body.style.setProperty('--shell-top',header.getBoundingClientRect().height+'px');document.body.style.setProperty('--shell-bottom',timeline.getBoundingClientRect().height+'px');};
  let sizeFrame=null;const ro=new ResizeObserver(()=>{if(sizeFrame===null)sizeFrame=requestAnimationFrame(()=>{sizeFrame=null;sizes();});});ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>{ro.disconnect();if(sizeFrame!==null)cancelAnimationFrame(sizeFrame);});
- return {dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded','shellHidden');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
+ return {setResults:resultList.setCases,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded','shellHidden');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
 }
 
 return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module55=(()=>{
+const __module56=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -5090,8 +5122,8 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module56=(()=>{
-const {createDisplayPolicy}=__module55;
+const __module57=(()=>{
+const {createDisplayPolicy}=__module56;
 const {roomFgiRollover}=__module9;
 const {fixedOpeningsFor,openingFraction}=__module38;
 const backdraftTip='고온연기 축적·산소부족';
@@ -5224,7 +5256,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module57=(()=>{
+const __module58=(()=>{
 const {infoTip}=__module21;
 const {roomFgiRollover}=__module9;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -5336,7 +5368,7 @@ return {resultTypes,resultNumber,resultCoverage,selectedScores,worstIndexEntries
 })();
 
 // app/web/adapters/attention.js
-const __module58=(()=>{
+const __module59=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -5353,7 +5385,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module59=(()=>{
+const __module60=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -5405,9 +5437,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module60=(()=>{
-const {attentionRanking}=__module58;
-const {savedAttention}=__module59;
+const __module61=(()=>{
+const {attentionRanking}=__module59;
+const {savedAttention}=__module60;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5531,7 +5563,7 @@ return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module61=(()=>{
+const __module62=(()=>{
 const {vehicleFitsGround}=__module4;
 const {createAssistantPanel}=__module6;
 const {attachExport}=__module7;
@@ -5560,10 +5592,10 @@ const {SelectionLayer}=__module48;
 const {createSceneHost}=__module49;
 const {createScaleReference}=__module50;
 const {createLitePanel,updateLitePanel}=__module51;
-const {createPanelShell}=__module54;
-const {createDisplayPanel}=__module56;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module57;
-const {createExplorePanel}=__module60;
+const {createPanelShell}=__module55;
+const {createDisplayPanel}=__module57;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module58;
+const {createExplorePanel}=__module61;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -5579,7 +5611,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length,screening:v=>v.schema==='pyrocast.screening/1'&&!v.errors.length}});
  const displayFloors=[...B.floors].sort((a,b)=>(b.z??0)-(a.z??0));
- const shell=createPanelShell({panel,store,buildingFloors:displayFloors,onShowResult:()=>{
+ const shell=createPanelShell({panel,store,buildingFloors:displayFloors,onShowResult:async id=>{
+  if(id!==chosen&&!await loadSavedCase(id))return;
   const cell=data?.rooms.find(r=>r.key===data.fire_key);if(!cell)return;
   viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
   store.dispatch('layers/toggle',{id:'selection',visible:true});select(cell.key);fitFloor(true);render();
@@ -5833,7 +5866,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const reuseByCase=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);
+ async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);
   let origin=null;const saved=mcSummary?.rows?.find(row=>row.complete);if(saved){try{const p=mcSummary.rows.some(row=>row.id===chosen)?data:await (await fetch('/cfbt/lite/result/'+encodeURIComponent(saved.id),{signal:exploreAbort.signal})).json();if(p.complete&&p.building_sha256===initial.building_sha256)origin=p.rooms.find(r=>r.key===p.fire_key)?.original_room??p.fire_key;}catch{}}
   if(!disposed&&serial===catalogSerial)explore.catalog(c,origin);
  }
@@ -5845,7 +5878,12 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   finally{if(run===mcRun&&!disposed)$('resultMCLoad').disabled=false;}
  });
  let loadSerial=0;
- handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',async()=>{const serial=++loadSerial,id=$('liteCase').value;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id));if(r.ok){const payload=await r.json();if(serial===loadSerial){await install(payload,id);showReuse(reuseByCase.get(id));}}}finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}});
+ async function loadSavedCase(id){const serial=++loadSerial;$('resultReplay').disabled=true;
+  try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});if(!r.ok)throw Error('HTTP '+r.status);const payload=await r.json();if(disposed||serial!==loadSerial)return false;
+   const installed=await install(payload,id);if(installed){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
+  }finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}
+ }
+ handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',()=>loadSavedCase($('liteCase').value).catch(error=>{if(!disposed)$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}));
  let restored=false;
  if(savedView){try{
   let payload=initial;
@@ -5887,8 +5925,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module62=(()=>{
-const {attachModern}=__module61;
+const __module63=(()=>{
+const {attachModern}=__module62;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -5903,4 +5941,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module62.attach;
+export const attach=__module63.attach;

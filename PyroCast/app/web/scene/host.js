@@ -26,7 +26,9 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
   ray.layers.set(ROOM_PICK_LAYER);
   const canvas=renderer.domElement;
   listen(canvas,'pointerdown',e=>{pointers.add(e.pointerId);down=pointers.size===1&&e.button===0?{id:e.pointerId,x:e.clientX,y:e.clientY,tolerance:e.pointerType==='touch'?10:5,source:e.pointerType==='touch'?'touch':'click'}:null;});
-  listen(canvas,'pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>down.tolerance)down=null;});
+  function groundPoint(e){const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return null;mouse.set((e.clientX-b.x)/b.width*2-1,-(e.clientY-b.y)/b.height*2+1);camera.updateMatrixWorld();ray.setFromCamera(mouse,camera);return ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,0,1),-groundPick.z),new THREE.Vector3())?.toArray()??null;}
+  listen(canvas,'pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>down.tolerance)down=null;if(groundPick?.active()&&pointers.size<2)groundPick.hover?.(groundPoint(e));});
+  listen(canvas,'pointerleave',()=>{if(groundPick?.active())groundPick.hover?.(null);});
   listen(canvas,'pointercancel',e=>{pointers.delete(e.pointerId);down=null;});
   listen(canvas,'pointerup',e=>{pointers.delete(e.pointerId);const start=down;down=null;
    if(!start||start.id!==e.pointerId||pointers.size||Math.hypot(e.clientX-start.x,e.clientY-start.y)>start.tolerance)return;

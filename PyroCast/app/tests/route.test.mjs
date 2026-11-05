@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {readRouteGraph,findRoute,contains} from '../web/route/graph.js';
+import {readRouteGraph,findRoute,contains,footprintDistance} from '../web/route/graph.js';
 import {createStore} from '../web/state/store.js';
 const path=process.argv[2];
 if(!path)throw Error('Pass the existing building.json path');
@@ -12,14 +12,14 @@ assert.ok(g.edges.filter(e=>e.source.kind==='open_passage').every(e=>e.eligible)
 assert.ok(g.edges.filter(e=>e.source.kind==='door_elev'||e.source.kind==='elev').every(e=>!e.eligible));
 assert.equal(g.mainEntrance.id,'CAD_1F_D3');
 assert.equal(contains(g.defaultVehicle,g.ground.slab),false);
-assert.ok(Math.abs(Math.hypot(...g.defaultVehicle.map((x,i)=>x-g.mainEntrance.point[i]))-5)<1e-9);
+assert.ok(footprintDistance(g.defaultVehicle,building.floors.flatMap(f=>f.slab))-Math.hypot(4,1.3)>=10-1e-8);
 assert.equal(r.stairs,2);assert.equal(r.hoses,Math.ceil(r.length/15));
 assert.ok(r.edges.every(e=>g.edges.find(x=>x.id===e.id).eligible));
 assert.ok(r.edges.filter(e=>e.kind==='stair').every(e=>e.stair_length===e.rise*1.5));
 const plain=findRoute(g,'CAD_3F_R2',undefined,{stair_factor:1});
 assert.ok(Math.abs(r.length-plain.length-5.5)<1e-8);
 const hose=findRoute(g,'CAD_3F_R2',undefined,{hose_m:20});
-assert.equal(hose.length,r.length);assert.equal(hose.hoses,5);
+assert.equal(hose.length,r.length);assert.equal(hose.hoses,Math.ceil(hose.length/20));
 assert.equal(findRoute(g,'absent').error,'선택 실의 연결 정보 없음');
 const moved=findRoute(g,'CAD_3F_R2',[60,20,g.ground.z]);
 assert.notEqual(moved.entry,r.entry);assert.notEqual(moved.length,r.length);

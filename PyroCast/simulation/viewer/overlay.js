@@ -79,6 +79,16 @@ function ringContains(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<rin
  const a=ring[i],b=ring[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;
 }return inside;}
 const contains=(p,polys)=>polys.some(q=>ringContains(p,q.o)&&!(q.h||[]).some(h=>ringContains(p,h)));
+// Distance to the complete footprint; used for display vehicle clearance only.
+function footprintDistance(p,polys){
+ if(contains(p,polys))return 0;
+ let best=Infinity;
+ for(const poly of polys)for(const ring of [poly.o,...(poly.h||[])])for(let i=0;i<ring.length;i++){
+  const a=ring[i],b=ring[(i+1)%ring.length],dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;
+  const t=l?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l)):0;
+  best=Math.min(best,Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy));
+ }return best;
+}
 const middle=points=>[0,1].map(i=>points.reduce((s,p)=>s+p[i],0)/points.length);
 function aperturePoint(v,z){
  const hinges=(v.leaves||[]).map(l=>l.hinge),closed=(v.leaves||[]).map(l=>l.closed);
@@ -121,9 +131,19 @@ function readRouteGraph(building){
  if(!p||!q){const ring=main.opening.geometry_polys?.[0]?.o||main.opening.polys?.[0]||[];let longest=0;for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;p=a;q=b;}}}
  if(!p||!q)throw Error('주출입문 법선 미확인');
  const len=Math.hypot(q[0]-p[0],q[1]-p[1]);const normal=[-(q[1]-p[1])/len,(q[0]-p[0])/len];
- const choices=[1,-1].map(sign=>[main.point[0]+normal[0]*5*sign,main.point[1]+normal[1]*5*sign,ground.z]);
- const vehicle=choices.find(p=>!contains(p,ground.slab));if(!vehicle)throw Error('주출입문 5m 외부 지점 미확인');
- return {rooms,edges,entrances:candidates,ground,defaultVehicle:vehicle,mainEntrance:main,
+ const footprint=building.floors.flatMap(f=>f.slab?.length?f.slab:f.rooms.flatMap(r=>r.polys||[]));
+ const pts=footprint.flatMap(p=>p.o),extent=Math.hypot(Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))-Math.min(...pts.map(p=>p[1])));
+ const insideRoom=rooms.get(main.room).point;
+ const sign=normal[0]*(main.point[0]-insideRoom[0])+normal[1]*(main.point[1]-insideRoom[1])>=0?1:-1;
+ const front=[normal[0]*sign,normal[1]*sign];
+ let vehicle=null;
+ // Bounding circle of the 8 x 2.6 m vehicle guarantees >=10 m body clearance at any yaw.
+ for(let d=10+Math.hypot(4,1.3);d<=extent+30&&!vehicle;d+=.5){
+  const point=[main.point[0]+normal[0]*d*sign,main.point[1]+normal[1]*d*sign,ground.z];
+  if(footprintDistance(point,footprint)>=10+Math.hypot(4,1.3)-1e-8){vehicle=point;break;}
+ }
+ if(!vehicle)throw Error('건물 외곽 10m 이격 차량 위치 미확인');
+ return {rooms,edges,entrances:candidates,ground,defaultVehicle:vehicle,front,mainEntrance:main,
   sourceEdgeCount:building.floors.reduce((n,f)=>n+(f.simulation_graph?.connections.length||0),0)+(building.vertical_connections?.length||0),
   basis:'existing CAD simulation_graph.connections + vertical_connections, before fire-specific filters'};
 }
@@ -168,16 +188,16 @@ function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,stair_fa
   limits:[...graph.rooms.values()].some(r=>r.obstacles?.length)?'등록 장애물 평면 외곽 0.5 m를 피하는 경로 중심선. 미등록 적재물·호스 굴곡·문 여는 시간 미반영. 실제 진입 안전을 보증하지 않음.':'실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.'};
 }
 
-return {distance,contains,readRouteGraph,findRoute};
+return {distance,contains,footprintDistance,readRouteGraph,findRoute};
 })();
 
 // app/web/scene/vehicle_placement.js
 const __module3=(()=>{
 const {contains}=__module2;
-// Reference truck footprint: 8m long, 2.6m wide, axis-aligned on ground.
-function vehicleFitsGround(p,bounds,slab){
- if(!bounds||!p.every(Number.isFinite))return false;
- for(let x=-4;x<=4;x+=.5)for(let y=-1.3;y<=1.3;y+=.26){const q=[p[0]+x,p[1]+y,p[2]];if(q[0]<bounds.min.x||q[0]>bounds.max.x||q[1]<bounds.min.y||q[1]>bounds.max.y||contains(q,slab))return false;}
+// Reference truck footprint: 8m long, 2.6m wide, rotated around the ground normal.
+function vehicleFitsGround(p,bounds,slab,yaw=0){
+ if(!bounds||!p.every(Number.isFinite)||!Number.isFinite(yaw))return false;
+ for(let x=-4;x<=4;x+=.5)for(let y=-1.3;y<=1.3;y+=.26){const q=[p[0]+x*Math.cos(yaw)-y*Math.sin(yaw),p[1]+x*Math.sin(yaw)+y*Math.cos(yaw),p[2]];if(q[0]<bounds.min.x||q[0]>bounds.max.x||q[1]<bounds.min.y||q[1]>bounds.max.y||contains(q,slab))return false;}
  return true;
 }
 
@@ -447,7 +467,7 @@ const {routeRiskRows,routeSampleIndex,ROUTE_CLEAR}=__module9;
 class RouteLayer extends EmptyLayer {
  static id='route';
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
- clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.roomMaterials=new Map();this.riskKey=null;}
+ clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.vehicleObject=null;this.roomMaterials=new Map();this.riskKey=null;}
  build(result){this.clear();const T=this.THREE;
   // Crisp narrow ribbons render after smoke, while testing solid-object depth.
   // Vehicles/equipment still occlude the hose; x-ray walls remain translucent.
@@ -475,10 +495,10 @@ class RouteLayer extends EmptyLayer {
    // Borrow existing geometry/materials; include scale person only when requested.
    for(const source of this.vehicleSource.children)if(!source.isSprite&&(this.vehicleSource.userData.includeScalePerson||source.position.x<=4.7))vehicle.add(source.clone());
    const pick=new T.Mesh(this.own(new T.BoxGeometry(8,3.2,2.6)),this.own(new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide})));pick.position.y=1.6;pick.layers.set(ROOM_PICK_LAYER);pick.userData.routeVehicle=true;vehicle.add(pick);this.vehiclePick=pick;
-   vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);add(vehicle,'1F',false);
+   vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);this.vehicleObject=vehicle;vehicle.rotation.set(Math.PI/2,0,this.frame?.route.vehicle_yaw||0,'ZYX');add(vehicle,'1F',false);
   }
  }
- setData(frame){this.frame=frame;if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
+ setData(frame){this.frame=frame;if(this.vehicleObject)this.vehicleObject.rotation.set(Math.PI/2,0,frame.route.vehicle_yaw||0,'ZYX');if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
   const signature=JSON.stringify([target,vehicle,state.hose_m,state.stair_factor]);
   if(signature!==this.signature){this.signature=signature;this.result={...findRoute(this.graph,target,vehicle,state),vehicle};this.build(this.result);}
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
@@ -490,9 +510,20 @@ class RouteLayer extends EmptyLayer {
   for(const {object,floor,route} of this.items)object.visible=(frame.floor.floor_id===null||frame.floor.floor_id===floor)&&(route||state.vehicle_visible);
   this.updateVisibility();
  }
+ setVehiclePreview(point,yaw=0,valid=true){
+  if(!point){if(this.preview)this.preview.visible=false;return;}
+  const T=this.THREE;
+  if(!this.preview&&this.vehicleSource){
+   this.preview=new T.Group();this.preview.name='vehicle-placement-preview';this.previewMaterials=new Set();
+   for(const source of this.vehicleSource.children){if(source.isSprite||source.position.x>4.7)continue;
+    const copy=source.clone();copy.traverse(o=>{o.raycast=()=>{};if(o.material){const clone=m=>{const c=m.clone();c.transparent=true;c.opacity=.32;c.depthWrite=false;c.depthTest=false;this.previewMaterials.add(c);return c;};o.material=Array.isArray(o.material)?o.material.map(clone):clone(o.material);o.renderOrder=80;}});this.preview.add(copy);
+   }this.scene.add(this.preview);
+  }
+  if(this.preview){this.preview.visible=true;this.preview.position.fromArray(point);this.preview.rotation.set(Math.PI/2,0,yaw,'ZYX');for(const m of this.previewMaterials)m.color?.set(valid?'#75deef':'#f26464');}
+ }
  getVehiclePickPlanes(){return this.vehiclePick&&this.group?.visible&&this.vehiclePick.parent?.visible?[this.vehiclePick]:[];}
  diagnostics(){return {result:this.result,risk_summary:this.riskDisplay,mainEntrance:this.graph.mainEntrance?.id,entryPoint:this.graph.mainEntrance?.point,defaultVehicle:this.graph.defaultVehicle,sourceEdges:this.graph.sourceEdgeCount,retainedEdges:this.graph.edges?.length,vehicleBorrowed:!!this.vehicleSource,resources:this.resources.size};}
- dispose(){this.clear();this.vehicleSource=null;this.onChange=null;super.dispose();}
+ dispose(){this.preview?.removeFromParent();for(const m of this.previewMaterials||[])m.dispose();this.preview=null;this.clear();this.vehicleSource=null;this.onChange=null;super.dispose();}
 }
 
 return {RouteLayer};
@@ -509,14 +540,14 @@ function createRoutePanel({store,graph,onPlaceStart}){
  const hud=document.createElement('div');hud.id='routeHUD';hud.style.cssText='padding-top:5px;font-size:12px;color:#9cdcff';document.querySelector('.compactHUD').append(hud);
  const $=id=>container.querySelector('#'+id);const cleanup=[];const on=(id,event,fn)=>{$(id).addEventListener(event,fn);cleanup.push(()=>$(id).removeEventListener(event,fn));};
  for(const [id,key] of [['routeHose','hose_m'],['routeStair','stair_factor']])on(id,'change',()=>{try{store.dispatch('route/set',{[key]:+$(id).value});$('routeStatus').textContent='';}catch(e){$('routeStatus').textContent=e.message;$(id).value=store.get('route')[key];}});
- on('routePlace','click',()=>store.dispatch('route/set',{placing:false,message:''}));on('routeReset','click',()=>store.dispatch('route/set',{vehicle:null,placing:false}));
+ on('routePlace','click',()=>store.dispatch('route/set',{placing:false,message:''}));on('routeReset','click',()=>store.dispatch('route/set',{vehicle:null,vehicle_yaw:0,placing:false,message:''}));
  cleanup.push(store.subscribe('route',s=>{$('routePlace').hidden=!s.placing;$('routeStatus').textContent=s.placing?'지상 그리드의 건물 밖을 클릭하세요. Esc: 취소':s.message;}));
  const popup=document.createElement('div');popup.id='vehiclePopup';popup.hidden=true;popup.style.cssText='position:fixed;z-index:210;background:#142b3b;color:#eaf3f8;border:1px solid #7296aa;border-radius:6px;padding:8px;box-shadow:0 3px 12px #0008';popup.innerHTML='<strong>소방차</strong><div><button type="button" data-move>이동</button><button type="button" data-close>닫기</button></div>';document.body.append(popup);
  const hint=document.createElement('div');hint.id='vehicleMoveHint';hint.hidden=true;hint.style.cssText='position:absolute;left:12px;bottom:12px;z-index:130;padding:8px;background:#142b3be8;color:#eaf3f8;border:1px solid #7296aa;border-radius:5px';hint.innerHTML='<span></span> <button type="button">취소</button>';document.getElementById('v').append(hint);
  const cancel=()=>store.dispatch('route/set',{placing:false,message:''});hint.querySelector('button').onclick=cancel;
  popup.querySelector('[data-close]').onclick=()=>{popup.hidden=true;};popup.querySelector('[data-move]').onclick=()=>{popup.hidden=true;onPlaceStart?.();store.dispatch('route/set',{placing:true,vehicle_visible:true,message:''});};
  const escape=e=>{if(e.key==='Escape'){popup.hidden=true;cancel();}};document.addEventListener('keydown',escape);cleanup.push(()=>document.removeEventListener('keydown',escape));
- cleanup.push(store.subscribe('route',s=>{hint.hidden=!s.placing;hint.querySelector('span').textContent=s.message||'지상 그리드의 건물 밖을 클릭하세요';}));
+ cleanup.push(store.subscribe('route',s=>{hint.hidden=!s.placing;hint.querySelector('span').textContent=s.message||'위치 선택 → 방향 조절 → 클릭하여 확정 · Esc 취소';}));
  return {showVehicleMenu({x,y}){popup.hidden=false;popup.style.left=Math.max(8,Math.min(x,window.innerWidth-150))+'px';popup.style.top=Math.max(8,Math.min(y,window.innerHeight-90))+'px';},update(r){hud.textContent=r.error?'경로 · '+r.error:`경로 ${r.length.toFixed(1)} m · 호스 ${r.hoses}본(+1 권장) · 계단 ${r.stairs}회`;hud.title=r.limits||r.error;$('routeSummary').textContent=(r.target?r.target.replace(/^CAD_/,'').replaceAll('_',' ')+' · ':'')+hud.textContent;
   const display=r.risk_summary,body=summary.querySelector('#routeRiskRows');body.replaceChildren();
   const t=display?.sample_s,stamp=Number.isFinite(t)?`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`:'미평가';
@@ -860,7 +891,7 @@ const {createSeriesCache}=__module21;
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,playbackOpenings:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10,duration_s:3600},
- route:{vehicle:null,target_room_id:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
+ route:{vehicle:null,vehicle_yaw:0,target_room_id:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
  realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
@@ -894,6 +925,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      for(const k of ['hose_m','stair_factor'])if(p[k]!==undefined&&(!Number.isFinite(p[k])||p[k]<1))throw Error('호스 길이·계단 계수는 1 이상이어야 합니다');
      if(p.target_room_id!==undefined&&p.target_room_id!==null&&typeof p.target_room_id!=='string')throw Error('Invalid route target');
      if(p.vehicle!==undefined&&p.vehicle!==null&&(!Array.isArray(p.vehicle)||p.vehicle.length!==3||!p.vehicle.every(Number.isFinite)))throw Error('Invalid vehicle point');
+     if(p.vehicle_yaw!==undefined)finite(p.vehicle_yaw);
      for(const k of ['placing','vehicle_visible'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid route flag');
      put('route',{...state.route,...p});return true;
     }
@@ -4533,7 +4565,9 @@ function createSceneHost({container,THREE,store,clock={now:()=>performance.now()
   ray.layers.set(ROOM_PICK_LAYER);
   const canvas=renderer.domElement;
   listen(canvas,'pointerdown',e=>{pointers.add(e.pointerId);down=pointers.size===1&&e.button===0?{id:e.pointerId,x:e.clientX,y:e.clientY,tolerance:e.pointerType==='touch'?10:5,source:e.pointerType==='touch'?'touch':'click'}:null;});
-  listen(canvas,'pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>down.tolerance)down=null;});
+  function groundPoint(e){const b=canvas.getBoundingClientRect();if(!b.width||!b.height)return null;mouse.set((e.clientX-b.x)/b.width*2-1,-(e.clientY-b.y)/b.height*2+1);camera.updateMatrixWorld();ray.setFromCamera(mouse,camera);return ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0,0,1),-groundPick.z),new THREE.Vector3())?.toArray()??null;}
+  listen(canvas,'pointermove',e=>{if(down&&Math.hypot(e.clientX-down.x,e.clientY-down.y)>down.tolerance)down=null;if(groundPick?.active()&&pointers.size<2)groundPick.hover?.(groundPoint(e));});
+  listen(canvas,'pointerleave',()=>{if(groundPick?.active())groundPick.hover?.(null);});
   listen(canvas,'pointercancel',e=>{pointers.delete(e.pointerId);down=null;});
   listen(canvas,'pointerup',e=>{pointers.delete(e.pointerId);const start=down;down=null;
    if(!start||start.id!==e.pointerId||pointers.size||Math.hypot(e.clientX-start.x,e.clientY-start.y)>start.tolerance)return;
@@ -5333,7 +5367,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  // A scale reference remains visible when the entrance/route is unresolved.
  // This fallback is display-only; it does not invent an entrance or route.
  if(routeGraph.error){const ground=B.floors.find(f=>/^(1F|F1|1층)$/i.test(f.name))||B.floors[0],points=(ground.slab?.length?ground.slab:ground.rooms.flatMap(r=>r.polys||[])).flatMap(p=>p.o||p);
-  if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-7,ground.z||0];}
+  if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-15,ground.z||0];}
  }
  let routeUI=null;
  const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const target=store.get('route').target_room_id;if(target)return target;const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
@@ -5401,13 +5435,29 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   display.applyScene({risk,scene,camera,route});
   try{baseRender(scene,camera);}finally{for(const [object,visible] of hidden)object.visible=visible;}
  }};
- function vehiclePositionAllowed(p){
+ function vehiclePositionAllowed(p,yaw=0){
   // Use the displayed ground grid, not an infinite plane or a basement floor.
   S.updateMatrixWorld(true);let bounds=null;
   S.traverse(o=>{if(o.type==='GridHelper'&&o.visible){const box=new T.Box3().setFromObject(o);if(Math.abs(box.min.z-routeGraph.ground.z)<1)bounds=box;}});
-  return vehicleFitsGround(p,bounds,routeGraph.ground.slab);
+  return Math.abs(p[2]-routeGraph.ground.z)<.01&&vehicleFitsGround(p,bounds,routeGraph.ground.slab,yaw);
  }
- const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>store.get('route').placing,place:p=>{if(!vehiclePositionAllowed(p))store.dispatch('route/set',{message:'차량 전체가 지상 그리드 안·건물 밖에 놓이도록 선택하세요'});else store.dispatch('route/set',{vehicle:p,placing:false,message:''});}},vehiclePick:position=>routeUI?.showVehicleMenu(position),seriesAt:()=>cache.get(store.get('result')?.result_id)});
+ let vehicleAnchor=null,previewYaw=0,wasPlacing=false,orbitEnabled=O.enabled;
+ function previewVehicle(p){
+  if(!p){route.setVehiclePreview(null);return;}
+  if(vehicleAnchor&&Math.hypot(p[0]-vehicleAnchor[0],p[1]-vehicleAnchor[1])>.1)previewYaw=Math.atan2(p[1]-vehicleAnchor[1],p[0]-vehicleAnchor[0]);
+  const position=vehicleAnchor||p;route.setVehiclePreview(position,previewYaw,vehiclePositionAllowed(position,previewYaw));
+ }
+ cleanup.push(store.subscribe('route',s=>{
+  if(s.placing&&!wasPlacing){vehicleAnchor=null;previewYaw=s.vehicle_yaw||0;orbitEnabled=O.enabled;O.enabled=false;route.setVehiclePreview(s.vehicle||routeGraph.defaultVehicle,previewYaw);}
+  if(!s.placing&&wasPlacing){vehicleAnchor=null;route.setVehiclePreview(null);O.enabled=orbitEnabled;}
+  wasPlacing=s.placing;
+ }));cleanup.push(()=>{if(wasPlacing)O.enabled=orbitEnabled;});
+ const host=createSceneHost({container:$('v'),THREE:T,store,scene:S,camera:C,layers,clock,adoptedRenderer:renderer,legendContainer:$('cfMeaning'),groundPick:{z:routeGraph.ground.z,active:()=>store.get('route').placing,hover:previewVehicle,place:p=>{
+  previewVehicle(p);const position=vehicleAnchor||p;
+  if(!vehiclePositionAllowed(position,previewYaw)){store.dispatch('route/set',{message:'차량 전체가 지상 그리드 안·건물 밖에 놓이도록 선택하세요'});return;}
+  if(!vehicleAnchor){vehicleAnchor=[...p];store.dispatch('route/set',{message:'마우스로 방향 조절 · 클릭하여 확정 · Esc 취소'});}
+  else store.dispatch('route/set',{vehicle:[...vehicleAnchor],vehicle_yaw:previewYaw,placing:false,message:''});
+ }},vehiclePick:position=>routeUI?.showVehicleMenu(position),seriesAt:()=>cache.get(store.get('result')?.result_id)});
  const on=(node,event,fn)=>{node.addEventListener(event,fn);cleanup.push(()=>node.removeEventListener(event,fn));};
  const handler=(node,event,fn)=>{const old=node[event];node[event]=fn;cleanup.push(()=>{node[event]=old;});};
  const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||'용도 미확인'}`;
@@ -5439,14 +5489,14 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  cleanup.push(()=>{R.render=originalRender;});
  function resize(){const v=$('v');R.setSize(v.clientWidth,v.clientHeight);viewer.L2?.setSize(v.clientWidth,v.clientHeight);C.aspect=v.clientWidth/Math.max(1,v.clientHeight);C.updateProjectionMatrix();render();}
  let resizeFrame=null;const observer=new ResizeObserver(()=>{if(resizeFrame===null)resizeFrame=requestAnimationFrame(()=>{resizeFrame=null;if(!disposed)resize();});});observer.observe($('v'));cleanup.push(()=>{observer.disconnect();if(resizeFrame!==null)cancelAnimationFrame(resizeFrame);});on(window,'resize',resize);
- function fitFloor(){const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
+ function fitFloor(front=false){const rooms=data.rooms.filter(r=>viewer.getFloor()==='all'||r.cad_floor===viewer.getFloor());if(!rooms.length)return;
   const bounds=new T.Box3();
   if(viewer.getFloor()==='all'){for(const f of B.floors)for(const p of f.slab?.length?f.slab:f.rooms.flatMap(r=>r.polys||[]))for(const xy of p.o||p){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],f.z+f.h));}
    route.group?.updateWorldMatrix(true,true);for(const item of route.items||[])if(!item.route)bounds.union(new T.Box3().setFromObject(item.object));}
   else for(const r of rooms)for(const p of r.cad_polys)for(const xy of p.o){bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m));bounds.expandByPoint(new T.Vector3(xy[0],xy[1],r.z_m+r.height_m));}
   const center=bounds.getCenter(new T.Vector3()),radius=bounds.getSize(new T.Vector3()).length()/2;
   const vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.05;
-  O.target.copy(center);C.position.copy(center).add(new T.Vector3(1,-1,1.1).normalize().multiplyScalar(distance));O.update();recordCamera(viewer.getFloor()==='all'?'all':'floor');render();
+  O.target.copy(center);const direction=front&&routeGraph.front?new T.Vector3(...routeGraph.front,.7):new T.Vector3(1,-1,1.1);C.position.copy(center).add(direction.normalize().multiplyScalar(distance));O.update();recordCamera(viewer.getFloor()==='all'?'all':'floor');render();
  }
  for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').querySelectorAll('button')){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
@@ -5533,10 +5583,12 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   await install(payload,savedView.case_id);restored=true;
  }catch{savedView=null;try{viewStorage?.removeItem(viewKey);}catch{}}}
  if(!restored)await install(initial,initial.case_id||'stage4');
- viewer.setFloor('all');resize();fitFloor();
- if(restored){const v=restoredView(savedView,store.get('building'),store.get('playback').t_end_s);
+ viewer.setFloor('all');resize();fitFloor(true);
+ if(restored){
+  if(Array.isArray(savedView.vehicle)&&savedView.vehicle.length===3&&Number.isFinite(savedView.vehicle_yaw)&&vehiclePositionAllowed(savedView.vehicle,savedView.vehicle_yaw))store.dispatch('route/set',{vehicle:savedView.vehicle,vehicle_yaw:savedView.vehicle_yaw});
+  const v=restoredView(savedView,store.get('building'),store.get('playback').t_end_s);
   store.dispatch('selection/set',v.selection);viewer.setFloor(v.floor??'all');store.dispatch('floor/set',{floor_id:v.floor});
-  store.dispatch('playback/seek',{t_s:v.time_s});store.dispatch('playback/play',{playing:false});$('shellTab-'+v.tab).click();render();fitFloor();
+  store.dispatch('playback/seek',{t_s:v.time_s});store.dispatch('playback/play',{playing:false});$('shellTab-'+v.tab).click();render();fitFloor(true);
  }
  await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
@@ -5549,11 +5601,11 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  function dispose(){if(disposed)return;disposed=true;catalogSerial++;if(mcPoll)clearTimeout(mcPoll);explanations.dispose();screeningRequest++;exploreAbort.abort();if(screeningPoll)clearTimeout(screeningPoll);frozenRules?.dispose();loadSerial++;mcRun++;mcAbort?.abort();store.dispatch('result/load');observer.disconnect();for(const off of cleanup.reverse())off();host.dispose();buildingPanel.dispose();explore.dispose();results.dispose();display.dispose();shell.dispose();cache.clear();panel.remove();selectionLabel.remove();style.remove();legacyRoot.visible=legacyVisible;document.body.classList.toggle('cfbtReady',wasReady);if(panelHeight)document.documentElement.style.setProperty('--cfbt-height',panelHeight);else document.documentElement.style.removeProperty('--cfbt-height');}
  function saveView(){if(viewTimer!==null){clearTimeout(viewTimer);viewTimer=null;}if(!viewPersistenceReady||!ready||disposed)return;
   writeSavedView(viewStorage,viewKey,{hash:initial.building_sha256,case_id:chosen,floor:store.get('floor').floor_id,time_s:store.get('playback').t_s,
-   selection:store.get('selection'),selection_explicit:clicked&&Boolean(store.get('selection').room_id),tab:$('pyroShellTabs').querySelector('[aria-selected="true"]')?.id.replace('shellTab-','')||'result'});
+   vehicle:store.get('route').vehicle,vehicle_yaw:store.get('route').vehicle_yaw,selection:store.get('selection'),selection_explicit:clicked&&Boolean(store.get('selection').room_id),tab:$('pyroShellTabs').querySelector('[aria-selected="true"]')?.id.replace('shellTab-','')||'result'});
  }
  function scheduleView(){if(!viewPersistenceReady)return;if(viewTimer===null)viewTimer=setTimeout(saveView,300);}
  viewPersistenceReady=true;
- for(const slice of ['result','floor','selection','playback'])cleanup.push(store.subscribe(slice,scheduleView));
+ for(const slice of ['result','floor','selection','playback','route'])cleanup.push(store.subscribe(slice,scheduleView));
  on($('pyroShellTabs'),'click',scheduleView);on(document,'visibilitychange',()=>{if(document.hidden)saveView();});
  // Flush synchronously before the scene is disposed on refresh or navigation.
  on(window,'pagehide',saveView);cleanup.push(()=>{if(viewTimer!==null)clearTimeout(viewTimer);});saveView();

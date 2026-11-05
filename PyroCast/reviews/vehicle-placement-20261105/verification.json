@@ -1,0 +1,47 @@
+{
+  "errors": [],
+  "writes": [],
+  "default": {
+    "entry": "CAD_1F_D18",
+    "vehicle": [
+      -14.448948168962616,
+      61.432,
+      15.7
+    ],
+    "front": [
+      -1,
+      0
+    ],
+    "minimumBodyClearance": 10.242999999999999,
+    "insideGrid": true,
+    "cameraDirection": [
+      -0.8192319205190409,
+      0,
+      0.5734623443633279
+    ]
+  },
+  "fixed": {
+    "vehicle": [
+      -14.448948066438454,
+      58.43200038942581,
+      15.7
+    ],
+    "vehicle_yaw": 1.5707963525475033,
+    "target_room_id": null,
+    "placing": false,
+    "vehicle_visible": true,
+    "hose_m": 15,
+    "stair_factor": 1.5,
+    "message": ""
+  },
+  "checks": [
+    "default clearance >=10m",
+    "default ground grid valid",
+    "ghost follows cursor without route commit",
+    "first click locks location",
+    "cursor controls rotation",
+    "second click commits and stops following",
+    "Escape preserves previous pose",
+    "refresh restores fixed position and direction"
+  ]
+}

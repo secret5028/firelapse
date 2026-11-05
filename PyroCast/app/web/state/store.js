@@ -3,7 +3,7 @@ import {createSeriesCache} from './series_cache.js';
 const freeze=x=>{if(x&&typeof x==='object'&&!Object.isFrozen(x)){Object.values(x).forEach(freeze);Object.freeze(x);}return x;};
 const snapshot=x=>freeze(structuredClone(x));
 const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},buildingReview:{doors:null,playbackOpenings:null,openings:null,rooms:[],saving:false,status:""},building:null,result:null,screening:null,exploration:{top_n:8,origin_room_id:null,origin_mode:'ranked',samples:10,duration_s:3600},
- route:{vehicle:null,target_room_id:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
+ route:{vehicle:null,vehicle_yaw:0,target_room_id:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
  realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
@@ -37,6 +37,7 @@ export function createStore({validators={},seriesCache=createSeriesCache()}={}){
      for(const k of ['hose_m','stair_factor'])if(p[k]!==undefined&&(!Number.isFinite(p[k])||p[k]<1))throw Error('호스 길이·계단 계수는 1 이상이어야 합니다');
      if(p.target_room_id!==undefined&&p.target_room_id!==null&&typeof p.target_room_id!=='string')throw Error('Invalid route target');
      if(p.vehicle!==undefined&&p.vehicle!==null&&(!Array.isArray(p.vehicle)||p.vehicle.length!==3||!p.vehicle.every(Number.isFinite)))throw Error('Invalid vehicle point');
+     if(p.vehicle_yaw!==undefined)finite(p.vehicle_yaw);
      for(const k of ['placing','vehicle_visible'])if(p[k]!==undefined&&typeof p[k]!=='boolean')throw Error('Invalid route flag');
      put('route',{...state.route,...p});return true;
     }

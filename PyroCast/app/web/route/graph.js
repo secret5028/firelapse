@@ -7,6 +7,16 @@ function ringContains(p,ring){let inside=false;for(let i=0,j=ring.length-1;i<rin
  const a=ring[i],b=ring[j];if((a[1]>p[1])!==(b[1]>p[1])&&p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0])inside=!inside;
 }return inside;}
 export const contains=(p,polys)=>polys.some(q=>ringContains(p,q.o)&&!(q.h||[]).some(h=>ringContains(p,h)));
+// Distance to the complete footprint; used for display vehicle clearance only.
+export function footprintDistance(p,polys){
+ if(contains(p,polys))return 0;
+ let best=Infinity;
+ for(const poly of polys)for(const ring of [poly.o,...(poly.h||[])])for(let i=0;i<ring.length;i++){
+  const a=ring[i],b=ring[(i+1)%ring.length],dx=b[0]-a[0],dy=b[1]-a[1],l=dx*dx+dy*dy;
+  const t=l?Math.max(0,Math.min(1,((p[0]-a[0])*dx+(p[1]-a[1])*dy)/l)):0;
+  best=Math.min(best,Math.hypot(p[0]-a[0]-t*dx,p[1]-a[1]-t*dy));
+ }return best;
+}
 const middle=points=>[0,1].map(i=>points.reduce((s,p)=>s+p[i],0)/points.length);
 function aperturePoint(v,z){
  const hinges=(v.leaves||[]).map(l=>l.hinge),closed=(v.leaves||[]).map(l=>l.closed);
@@ -49,9 +59,19 @@ export function readRouteGraph(building){
  if(!p||!q){const ring=main.opening.geometry_polys?.[0]?.o||main.opening.polys?.[0]||[];let longest=0;for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;p=a;q=b;}}}
  if(!p||!q)throw Error('주출입문 법선 미확인');
  const len=Math.hypot(q[0]-p[0],q[1]-p[1]);const normal=[-(q[1]-p[1])/len,(q[0]-p[0])/len];
- const choices=[1,-1].map(sign=>[main.point[0]+normal[0]*5*sign,main.point[1]+normal[1]*5*sign,ground.z]);
- const vehicle=choices.find(p=>!contains(p,ground.slab));if(!vehicle)throw Error('주출입문 5m 외부 지점 미확인');
- return {rooms,edges,entrances:candidates,ground,defaultVehicle:vehicle,mainEntrance:main,
+ const footprint=building.floors.flatMap(f=>f.slab?.length?f.slab:f.rooms.flatMap(r=>r.polys||[]));
+ const pts=footprint.flatMap(p=>p.o),extent=Math.hypot(Math.max(...pts.map(p=>p[0]))-Math.min(...pts.map(p=>p[0])),Math.max(...pts.map(p=>p[1]))-Math.min(...pts.map(p=>p[1])));
+ const insideRoom=rooms.get(main.room).point;
+ const sign=normal[0]*(main.point[0]-insideRoom[0])+normal[1]*(main.point[1]-insideRoom[1])>=0?1:-1;
+ const front=[normal[0]*sign,normal[1]*sign];
+ let vehicle=null;
+ // Bounding circle of the 8 x 2.6 m vehicle guarantees >=10 m body clearance at any yaw.
+ for(let d=10+Math.hypot(4,1.3);d<=extent+30&&!vehicle;d+=.5){
+  const point=[main.point[0]+normal[0]*d*sign,main.point[1]+normal[1]*d*sign,ground.z];
+  if(footprintDistance(point,footprint)>=10+Math.hypot(4,1.3)-1e-8){vehicle=point;break;}
+ }
+ if(!vehicle)throw Error('건물 외곽 10m 이격 차량 위치 미확인');
+ return {rooms,edges,entrances:candidates,ground,defaultVehicle:vehicle,front,mainEntrance:main,
   sourceEdgeCount:building.floors.reduce((n,f)=>n+(f.simulation_graph?.connections.length||0),0)+(building.vertical_connections?.length||0),
   basis:'existing CAD simulation_graph.connections + vertical_connections, before fire-specific filters'};
 }

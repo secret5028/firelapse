@@ -5,7 +5,7 @@ import {routeRiskRows,routeSampleIndex,ROUTE_CLEAR} from '../route/risk.js';
 export class RouteLayer extends EmptyLayer {
  static id='route';
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
- clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.roomMaterials=new Map();this.riskKey=null;}
+ clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.vehicleObject=null;this.roomMaterials=new Map();this.riskKey=null;}
  build(result){this.clear();const T=this.THREE;
   // Crisp narrow ribbons render after smoke, while testing solid-object depth.
   // Vehicles/equipment still occlude the hose; x-ray walls remain translucent.
@@ -33,10 +33,10 @@ export class RouteLayer extends EmptyLayer {
    // Borrow existing geometry/materials; include scale person only when requested.
    for(const source of this.vehicleSource.children)if(!source.isSprite&&(this.vehicleSource.userData.includeScalePerson||source.position.x<=4.7))vehicle.add(source.clone());
    const pick=new T.Mesh(this.own(new T.BoxGeometry(8,3.2,2.6)),this.own(new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide})));pick.position.y=1.6;pick.layers.set(ROOM_PICK_LAYER);pick.userData.routeVehicle=true;vehicle.add(pick);this.vehiclePick=pick;
-   vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);add(vehicle,'1F',false);
+   vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);this.vehicleObject=vehicle;vehicle.rotation.set(Math.PI/2,0,this.frame?.route.vehicle_yaw||0,'ZYX');add(vehicle,'1F',false);
   }
  }
- setData(frame){this.frame=frame;if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
+ setData(frame){this.frame=frame;if(this.vehicleObject)this.vehicleObject.rotation.set(Math.PI/2,0,frame.route.vehicle_yaw||0,'ZYX');if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
   const signature=JSON.stringify([target,vehicle,state.hose_m,state.stair_factor]);
   if(signature!==this.signature){this.signature=signature;this.result={...findRoute(this.graph,target,vehicle,state),vehicle};this.build(this.result);}
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
@@ -48,7 +48,18 @@ export class RouteLayer extends EmptyLayer {
   for(const {object,floor,route} of this.items)object.visible=(frame.floor.floor_id===null||frame.floor.floor_id===floor)&&(route||state.vehicle_visible);
   this.updateVisibility();
  }
+ setVehiclePreview(point,yaw=0,valid=true){
+  if(!point){if(this.preview)this.preview.visible=false;return;}
+  const T=this.THREE;
+  if(!this.preview&&this.vehicleSource){
+   this.preview=new T.Group();this.preview.name='vehicle-placement-preview';this.previewMaterials=new Set();
+   for(const source of this.vehicleSource.children){if(source.isSprite||source.position.x>4.7)continue;
+    const copy=source.clone();copy.traverse(o=>{o.raycast=()=>{};if(o.material){const clone=m=>{const c=m.clone();c.transparent=true;c.opacity=.32;c.depthWrite=false;c.depthTest=false;this.previewMaterials.add(c);return c;};o.material=Array.isArray(o.material)?o.material.map(clone):clone(o.material);o.renderOrder=80;}});this.preview.add(copy);
+   }this.scene.add(this.preview);
+  }
+  if(this.preview){this.preview.visible=true;this.preview.position.fromArray(point);this.preview.rotation.set(Math.PI/2,0,yaw,'ZYX');for(const m of this.previewMaterials)m.color?.set(valid?'#75deef':'#f26464');}
+ }
  getVehiclePickPlanes(){return this.vehiclePick&&this.group?.visible&&this.vehiclePick.parent?.visible?[this.vehiclePick]:[];}
  diagnostics(){return {result:this.result,risk_summary:this.riskDisplay,mainEntrance:this.graph.mainEntrance?.id,entryPoint:this.graph.mainEntrance?.point,defaultVehicle:this.graph.defaultVehicle,sourceEdges:this.graph.sourceEdgeCount,retainedEdges:this.graph.edges?.length,vehicleBorrowed:!!this.vehicleSource,resources:this.resources.size};}
- dispose(){this.clear();this.vehicleSource=null;this.onChange=null;super.dispose();}
+ dispose(){this.preview?.removeFromParent();for(const m of this.previewMaterials||[])m.dispose();this.preview=null;this.clear();this.vehicleSource=null;this.onChange=null;super.dispose();}
 }

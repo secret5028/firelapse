@@ -13,5 +13,11 @@ assert.equal(layer.result,null);assert.equal(layer.items.filter(x=>x.route).leng
 layer.setData({...frame,floor:{floor_id:'5F'}});assert.equal(vehicle.visible,false);
 layer.setData({...frame,floor:{floor_id:'1F'}});assert.equal(vehicle.visible,true);
 layer.setData({...frame,route:{vehicle_visible:false}});assert.equal(vehicle.visible,false);
+layer.setVehiclePreview([20,10,15.7],Math.PI/2,true);const ghost=layer.preview;
+assert(ghost.visible);assert.equal(ghost.position.x,20);assert.equal(ghost.rotation.z,Math.PI/2);
+assert([...layer.previewMaterials].every(m=>m.transparent&&m.opacity===.32&&!m.depthWrite));
+layer.setVehiclePreview([22,12,15.7],0,false);assert.equal(layer.preview,ghost,'reuse preview geometry');
+layer.setVehiclePreview(null);assert(!ghost.visible);
+layer.setData({...frame,route:{vehicle_visible:true,vehicle_yaw:Math.PI/2}});assert.equal(vehicle.rotation.z,Math.PI/2);
 layer.dispose();source.userData.dispose();assert.equal(layer.resources.size,0);
 console.log('PASS: scale vehicle/person without inferred route, ground height, visibility and cleanup');

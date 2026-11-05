@@ -23,3 +23,7 @@ assert(!vehicleFitsGround([-19,5,0],grid,polys),'centre inside grid but truck ex
 assert(!vehicleFitsGround([-30,5,0],grid,polys),'outside grid');
 assert(!vehicleFitsGround([-10,5,0],null,polys),'no grid means no placement');
 console.log('vehicle placement: outside-only, whole footprint within displayed grid PASS');
+
+assert(vehicleFitsGround([-2,5,0],grid,polys,Math.PI/2),"rotation fits narrow clearance");
+assert(!vehicleFitsGround([-2,5,0],grid,polys,0),"unrotated body intersects wall");
+assert(!vehicleFitsGround([-10,18,0],grid,polys,Math.PI/2),"rotated body exceeds grid");

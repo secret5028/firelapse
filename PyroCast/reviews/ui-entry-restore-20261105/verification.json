@@ -1,0 +1,25 @@
+{
+  "cause": "New CAD review navigated away from the operational FireLapse app to the separate model-library preview. Existing app and saved results were not deleted.",
+  "fix": [
+    "Keep new CAD review inside the existing import dialog",
+    "Preserve operating building, selected room, result tab and playback time when closing review",
+    "Identify standalone preview as FireLapse model review"
+  ],
+  "verification": {
+    "operating_url": "http://127.0.0.1:8842/model.html",
+    "saved_hotel_results": 34,
+    "new_cad_review_dialog": "PASS",
+    "top_level_url_unchanged": "PASS",
+    "close_restores_room": "객실-10",
+    "close_restores_tab": "결과",
+    "close_restores_clock": "00:00 / 60:00",
+    "new_building_upload_dialog": "PASS",
+    "browser_console_errors": [],
+    "syntax_checks": [
+      "new_building.js PASS",
+      "shell.js PASS"
+    ],
+    "simulations": 0,
+    "push": false
+  }
+}

@@ -18,7 +18,7 @@ try {
  assert(await frame.locator('#nameSource').isVisible());
  await page.screenshot({path:'reviews/new-building-20261105/operational-dialog.png'});
  await page.getByRole('button',{name:'새 건물 생성 창 닫기'}).click();
- assert.equal(await page.locator('dialog[aria-label="새 건물 생성하기"]').isVisible(),false);
+ assert.equal(await page.locator('dialog[aria-label="새 건물 생성·모델 검토"]').isVisible(),false);
  assert.deepEqual(errors,[]);
  const result={url:page.url(),dialog:'PASS',file_and_folder_inputs:'PASS',name_input_and_drawing_choice:'PASS',close:'PASS',errors,uploads:0,simulations:0};
  fs.writeFileSync('reviews/new-building-20261105/operational-verification.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));

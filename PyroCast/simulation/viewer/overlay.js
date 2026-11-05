@@ -4907,16 +4907,19 @@ function createNewBuildingButton({container,onCreated}){
  const offline=window.__PYROCAST_OFFLINE__||location.protocol==='file:';button.disabled=!!offline;button.title=offline?'보기 전용 · 운영 앱에서 생성하세요':'CAD 도면(DWG·DXF)으로 새 건물 생성';
  let dialog=null,frame=null;
  function close(){dialog?.close();}
- button.onclick=()=>{if(!dialog){dialog=document.createElement('dialog');dialog.setAttribute('aria-label','새 건물 생성하기');dialog.style.cssText='width:min(1100px,96vw);height:90vh;max-width:96vw;padding:0;border:1px solid #7292a3;border-radius:10px;background:#102331;color:#eaf3f8;overflow:hidden';
+ function open(url){if(!dialog){dialog=document.createElement('dialog');dialog.setAttribute('aria-label','새 건물 생성·모델 검토');dialog.style.cssText='width:min(1100px,96vw);height:90vh;max-width:96vw;padding:0;border:1px solid #7292a3;border-radius:10px;background:#102331;color:#eaf3f8;overflow:hidden';
   const bar=document.createElement('div');bar.style.cssText='display:flex;justify-content:flex-end;padding:8px;background:#163345';const exit=document.createElement('button');exit.textContent='닫기';exit.setAttribute('aria-label','새 건물 생성 창 닫기');exit.onclick=close;bar.append(exit);
   frame=document.createElement('iframe');frame.title='새 건물 도면 업로드';frame.src=origin+'/models/new';frame.style.cssText='display:block;border:0;width:100%;height:calc(100% - 46px)';dialog.append(bar,frame);document.body.append(dialog);
- }dialog.showModal();};
+ }frame.src=url;if(!dialog.open)dialog.showModal();}
+ button.onclick=()=>open(origin+'/models/new');
+ const review=e=>{if(/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.detail?.id||''))open(origin+'/models/?id='+encodeURIComponent(e.detail.id));};
+ window.addEventListener('firelapse:review-model',review);
  const receive=e=>{if(e.origin!==origin||e.source!==frame?.contentWindow||!/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.data?.id||''))return;
   if(e.data.type==='pyrocast:model-created')onCreated?.();
-  if(e.data.type==='pyrocast:open-created-model')location.assign(origin+'/models/?id='+encodeURIComponent(e.data.id));
+  if(e.data.type==='pyrocast:open-created-model')open(origin+'/models/?id='+encodeURIComponent(e.data.id));
  };
  window.addEventListener('message',receive);
- return ()=>{window.removeEventListener('message',receive);dialog?.remove();button.remove();};
+ return ()=>{window.removeEventListener('message',receive);window.removeEventListener('firelapse:review-model',review);dialog?.remove();button.remove();};
 }
 
 return {createNewBuildingButton};
@@ -5042,6 +5045,7 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  listen(toggle,'click',()=>{sidebar.hidden=!sidebar.hidden;document.body.classList.toggle('shellHidden',sidebar.hidden);if(!sidebar.hidden&&innerWidth<=860){document.body.classList.add('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded','true');$('shellMobileToggle').textContent='패널 접기';}toggleLabel();requestResize();});toggleLabel();cleanups.push(()=>toggle.remove());
  const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
+ const currentOperation=document.body.dataset.operationUrl||new URL(location.pathname,location.origin).href;
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
@@ -5049,11 +5053,11 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
   const current=document.body.dataset.operationUrl||buildingSelect.value;
   return fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
-   for(const e of c.models)buildingSelect.add(new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url));
+   for(const e of c.models){const option=new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url);if(!e.operation_url&&/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.id))option.dataset.reviewId=e.id;buildingSelect.add(option);}
    buildingSelect.value=current;
   }).catch(()=>{});
  }
- header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
+ header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>{const id=buildingSelect.selectedOptions[0]?.dataset.reviewId;if(id){window.dispatchEvent(new CustomEvent('firelapse:review-model',{detail:{id}}));buildingSelect.value=document.body.dataset.operationUrl||currentOperation;}else location.assign(buildingSelect.value);});
  refreshBuildings();cleanups.push(createNewBuildingButton({container:header,onCreated:refreshBuildings}));header.insertBefore($("shellNewBuilding"),buildingSelect);
  const tabs=[],panes=[];
  for(const [id,label] of [['building','설정·탐색'],['result','결과'],['display','표시']]){

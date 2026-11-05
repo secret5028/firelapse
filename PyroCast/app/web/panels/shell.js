@@ -55,6 +55,7 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  listen(toggle,'click',()=>{sidebar.hidden=!sidebar.hidden;document.body.classList.toggle('shellHidden',sidebar.hidden);if(!sidebar.hidden&&innerWidth<=860){document.body.classList.add('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded','true');$('shellMobileToggle').textContent='패널 접기';}toggleLabel();requestResize();});toggleLabel();cleanups.push(()=>toggle.remove());
  const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
+ const currentOperation=document.body.dataset.operationUrl||new URL(location.pathname,location.origin).href;
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
@@ -62,11 +63,11 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
   const current=document.body.dataset.operationUrl||buildingSelect.value;
   return fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
-   for(const e of c.models)buildingSelect.add(new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url));
+   for(const e of c.models){const option=new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url);if(!e.operation_url&&/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.id))option.dataset.reviewId=e.id;buildingSelect.add(option);}
    buildingSelect.value=current;
   }).catch(()=>{});
  }
- header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
+ header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>{const id=buildingSelect.selectedOptions[0]?.dataset.reviewId;if(id){window.dispatchEvent(new CustomEvent('firelapse:review-model',{detail:{id}}));buildingSelect.value=document.body.dataset.operationUrl||currentOperation;}else location.assign(buildingSelect.value);});
  refreshBuildings();cleanups.push(createNewBuildingButton({container:header,onCreated:refreshBuildings}));header.insertBefore($("shellNewBuilding"),buildingSelect);
  const tabs=[],panes=[];
  for(const [id,label] of [['building','설정·탐색'],['result','결과'],['display','표시']]){

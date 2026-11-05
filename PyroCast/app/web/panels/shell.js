@@ -13,10 +13,10 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  body.pyroShell #v{left:0!important;right:var(--shell-side)!important;top:var(--shell-top)!important;bottom:var(--shell-bottom)!important}
  #pyroShellHeader,#pyroShellSidebar,#pyroShellTimeline{position:fixed;box-sizing:border-box;z-index:125;color:#eaf3f8;background:#142b3b;font:13px/1.45 system-ui,'Malgun Gothic',sans-serif}
  #pyroShellHeader{top:0;left:0;right:0;min-height:48px;display:flex;align-items:center;gap:14px;padding:8px 14px;border-bottom:1px solid #496273}
- #pyroShellHeader .brand{display:flex;flex-direction:column;flex-shrink:0;line-height:1.2;white-space:nowrap}#pyroShellHeader .brand strong{font-size:19px;font-weight:750;letter-spacing:-.3px}#pyroShellHeader .brand small{font-size:10px;font-weight:400;color:#afc6d4;margin-top:3px}#shellBuilding{max-width:clamp(150px,23vw,300px);min-width:130px}#pyroShellHeader #fbtn{flex:1;min-width:0;display:flex;align-items:center;gap:6px}
+ #pyroShellHeader .brand{display:flex;flex-direction:column;flex-shrink:0;line-height:1.2;white-space:nowrap}#pyroShellHeader .brand strong{font-size:19px;font-weight:750;letter-spacing:-.3px}#pyroShellHeader .brand small{font-size:11px;letter-spacing:.2px;font-weight:400;color:#afc6d4;margin-top:3px}#shellBuilding{max-width:clamp(150px,23vw,300px);min-width:130px}#pyroShellHeader #fbtn{flex:1;min-width:0;display:flex;align-items:center;gap:6px}
  #pyroShellHeader #fbtn [hidden]{display:none!important}#shellFloor{min-width:86px;max-width:130px;color:#eaf3f8;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit}
  #shellSelectedRoom{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;min-width:0;margin-left:5px}#shellSelectedRoom[hidden]{display:none!important}
- #pyroShellHeader #fbtn button[aria-pressed=true]{background:#d4e0e7;color:#142b3b;border-color:#e6eef3}
+ #pyroShellHeader #fbtn button[aria-pressed=true]{background:#2a4d63;color:#eaf3f8;border-color:#7f9cae}
  #pyroShellSidebar{top:var(--shell-top);right:0;bottom:var(--shell-bottom);width:var(--shell-side);display:flex;flex-direction:column;border-left:1px solid #496273}
  body.pyroShell.shellHidden #v{right:0!important}#pyroShellSidebar[hidden]{display:none!important}
  #shellResize{position:absolute;left:-5px;top:0;bottom:0;width:10px;z-index:150;cursor:col-resize}#shellResize:hover,#shellResize:focus-visible{background:#42c4e855}
@@ -24,12 +24,14 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  #shellPanelToggle svg{display:block;width:16px;height:16px}
  #pyroShellTabs{display:flex;flex-shrink:0;border-bottom:1px solid #496273}
  #pyroShellTabs button{flex:1;border:0;border-radius:0;border-bottom:2px solid transparent;background:transparent;padding:12px 5px}
- #pyroShellTabs button[aria-selected=true]{border-bottom-color:#42c4e8;color:#a2efff;background:#1c3e52}
+ #pyroShellTabs button[aria-selected=true]{border-bottom-color:#42c4e8;color:#a2efff;background:#102331}
  #pyroShellSidebar .pyroPane{flex:1;min-height:0;overflow:auto}#pyroShellSidebar [hidden]{display:none!important}
  body.pyroShell #cfbtPanel{position:static;max-height:none;width:100%;border:0;overflow:visible;padding:12px;left:auto;right:auto;bottom:auto;font-size:12px}
  #pyroShellSidebar #cfbtPanel .row{align-items:flex-start}#pyroShellSidebar #cfbtPanel select{min-width:0;max-width:100%}
  #pyroShellTimeline{bottom:0;left:0;right:0;min-height:58px;padding:9px 14px;display:flex;align-items:center;gap:10px;border-top:1px solid #496273}
- #pyroShellTimeline .track{position:relative;flex:1;min-width:70px}#shellTime{width:100%;margin:0;accent-color:#42c4e8}
+ #pyroShellTimeline .track{position:relative;flex:1;min-width:70px}#shellTime{width:100%;margin:0;accent-color:#42c4e8;appearance:none;-webkit-appearance:none;height:20px;background:transparent;cursor:pointer}
+ #shellTime::-webkit-slider-runnable-track{height:4px;background:#2a4d63;border-radius:2px}#shellTime::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#42c4e8;border:0;margin-top:-5px}
+ #shellTime::-moz-range-track{height:4px;background:#2a4d63;border-radius:2px}#shellTime::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#42c4e8;border:0}
  #shellClock{white-space:nowrap;font-variant-numeric:tabular-nums}
  #pyroShellHeader button,#pyroShellSidebar>button,#pyroShellTabs button,#pyroShellTimeline button,#pyroShellTimeline select{color:inherit;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit;cursor:pointer}
  #pyroShellTabs button{border-radius:0;border-width:0 0 2px}#shellMobileToggle{display:none}
@@ -42,17 +44,26 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  /* Shared panel finish. Specific selectors keep semantic state colors intact. */
  #pyroShellSidebar{--panel-card-border:#ffffff1f;--panel-control-border:#ffffff30}
  #pyroShellSidebar :is(.resultCard,.exploreCard,#fuelSettings){border-color:var(--panel-card-border);border-radius:6px;padding:12px}
- #pyroShellSidebar .workflowStep>h3{font-size:14px;font-weight:600;margin-bottom:12px}
- #pyroShellSidebar :is(button,select,input[type=number],input[type=text]){min-height:32px;border-radius:6px;font-family:inherit}
- #pyroShellSidebar :is(button,select,input[type=number],input[type=text]):not([aria-pressed=true]){border-color:var(--panel-control-border)}
+ #pyroShellSidebar .workflowStep>h3{font-size:13px;font-weight:600;color:#eaf3f8;margin-bottom:12px}
+ #pyroShellHeader :is(button,select),#pyroShellSidebar :is(button,select,input,textarea),#pyroShellTimeline :is(#shellPlay,#shellSpeed){font:inherit;font-size:13px;box-sizing:border-box}
+ #pyroShellHeader :is(button,select),#pyroShellSidebar :is(button,select,input[type=number],input[type=text]),#pyroShellTimeline :is(#shellPlay,#shellSpeed){height:32px;padding:0 10px;border-radius:5px}
+ #pyroShellHeader :is(button,select):not([aria-pressed=true]),#pyroShellSidebar :is(button,select,input[type=number],input[type=text]):not([aria-pressed=true]):not([aria-selected=true]),#pyroShellTimeline :is(#shellPlay,#shellSpeed):not([aria-pressed=true]){background:#1d4158;border:1px solid #577487;color:#eaf3f8}
+ #pyroShellSidebar #pyroShellTabs button{height:40px;border-width:0 0 2px;border-radius:0;border-bottom-color:transparent;color:#b8cbd8}
+ #pyroShellSidebar #pyroShellTabs button[aria-selected=true]{background:#102331;color:#a2efff;border-bottom-color:#42c4e8}
+ #pyroShellSidebar #shellMobileToggle{height:40px}
+ #pyroShellSidebar :is(table){font-size:12px;line-height:1.3;table-layout:auto;width:100%}
+ #pyroShellSidebar :is(th,td){font-size:12px;padding:5px 6px;overflow-wrap:anywhere}
+ #pyroShellSidebar :is(#resultContent,#routeRiskSummary)>h3,#pyroShellSidebar #resultContent section>h3{font-size:11px;font-weight:600;color:#93a7bb;letter-spacing:.3px;margin:16px 0 6px}
+ #pyroShellSidebar :is(.resultCard,.exploreCard,#fuelSettings) :is(.resultCard,.exploreCard){border:0;border-top:1px solid #ffffff12;border-radius:0}
  #pyroShellSidebar button:not(:disabled):hover{filter:brightness(1.12)}
  #pyroShellSidebar :is(button,input,select,textarea):focus-visible{outline:2px solid #42c4e8;outline-offset:2px}
  #pyroShellSidebar button:disabled{opacity:.45;cursor:default}
- #pyroShellSidebar :is(#exploreCalculateRun,#aiSend){min-height:36px}
- #pyroShellSidebar #exploreCalculateRun:not(:disabled){background:#216b87;border-color:#55cce4}
+ #pyroShellSidebar :is(#exploreCalculateRun,#aiSend){height:36px;min-height:36px}
+ #pyroShellSidebar :is(#exploreCalculateRun,#aiSend):not(:disabled){background:#2f7fb8;border-color:#3f93cc;color:#fff}
  #pyroShellSidebar #resultQuantities{row-gap:7px;font-variant-numeric:tabular-nums}
  #pyroShellSidebar .resultScoreHeading{margin-top:16px}
  @media(max-width:600px){
+ #shellBuilding{min-width:180px;max-width:calc(100vw - 16px)}
  #pyroShellTimeline{display:grid;grid-template-columns:auto auto 1fr;gap:6px 8px}
  #pyroShellTimeline .track{grid-column:1/-1;grid-row:1;min-width:0}
  #shellPlay{grid-column:1;grid-row:2}#shellSpeed{grid-column:2;grid-row:2}#shellClock{grid-column:3;grid-row:2;justify-self:end}

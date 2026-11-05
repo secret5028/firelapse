@@ -1,7 +1,7 @@
 export function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
- panel.innerHTML=`<div class="row"><strong>PyroCast · 간략 엔진 v8</strong><output id="liteClock"></output><span id="liteVisible"></span><span class="grow"></span><button id="liteBuilding">건물 전체 맞춤</button><label><input id="liteCores" type="checkbox" checked>수직 공간 투시</label><button id="liteReal" aria-pressed="true">실감 보기</button><button id="liteFireFocus">연소점 확대</button><button id="litePlay">재생</button><button id="liteFold">접기</button></div>
+ panel.innerHTML=`<div class="row"><strong>FireLapse · 간략 엔진</strong><output id="liteClock"></output><span id="liteVisible"></span><span class="grow"></span><button id="liteBuilding">건물 전체 맞춤</button><label><input id="liteCores" type="checkbox" checked>수직 공간 투시</label><button id="liteReal" aria-pressed="true">실감 보기</button><button id="liteFireFocus">연소점 확대</button><button id="litePlay">재생</button><button id="liteFold">접기</button></div>
  <div class="row"><label><input id="liteExterior" type="checkbox" checked><span style="color:#62dcb0">외부 창 강조</span></label><small>보는 쪽 외부 창만 · 뒤편 투시 없음 · 큰 창·난간 제외 · 표시 전용</small></div>
  <div class="row"><label><input id="liteDoors" type="checkbox" checked><span style="color:#e6bd68">실내 문 위치</span></label><small>도면 문틀 · 연기 속 위치 표시 · 개폐 상태와 별도</small></div>
  <div id="liteCoreLegend" hidden><span style="color:#2563eb">■ 계단실·계단</span> · <span style="color:#55baff">■ 승강로</span> — 도면 수직 공간을 벽·슬래브 너머로 표시 (연기 전파 계산 아님)</div>

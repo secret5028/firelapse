@@ -24,5 +24,5 @@ assert.equal(rows[0].engineLabel,'간략');
 console.log('PASS: distinct engines for same room, saved metadata, unknown never assumed lite');
 
 const runs=resultListRows([{id:'a',label:'5F R16 · MC S00',engine_kind:'pyrocast_lite',duration_s:60,saved_at_ms:1793866167503,run_id:'mc-one-123abc'},{id:'b',label:'5F R16 · MC S00',engine_kind:'pyrocast_lite',duration_s:3600,saved_at_ms:1793867167503,run_id:'mc-two-456def'}],null,floors);
-assert.match(runs[0].detail,/1분/);assert.match(runs[1].detail,/60분/);assert.notEqual(runs[0].detail,runs[1].detail);assert.match(runs[1].detail,/456def/);
-console.log('PASS: distinct duration, saved date and batch for otherwise identical labels');
+assert.match(runs[0].detail,/1분/);assert.match(runs[1].detail,/60분/);assert.notEqual(runs[0].detail,runs[1].detail);assert.doesNotMatch(runs[1].detail,/456def/);assert.equal(runs[1].run_id,'mc-two-456def');
+console.log('PASS: distinct duration, saved date; batch retained only as metadata for otherwise identical labels');

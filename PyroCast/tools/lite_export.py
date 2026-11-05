@@ -78,7 +78,9 @@ def build_export(origin, case, state, interval=10, *, model_service=False):
     routes['/cfbt/lite/mc'] = {'running': False, 'available': False, 'server_busy': False}
     routes['/cfbt/calculation'] = {'running': False, 'available': False, 'server_busy': False}
     catalog = value('/cfbt/lite/catalog.json')
-    row = next(r for r in catalog['cases'] if r['id'] == case)
+    row = next((r for r in catalog.get('cases', []) if r.get('id') == case), None)
+    if row is None:
+        raise ValueError('저장 사례 목록이 바뀌었습니다. 결과를 다시 선택한 뒤 내보내세요')
     routes['/cfbt/lite/catalog.json'] = {'cases': [{'id': case, 'label': row['label'], 'engine_kind': playback.get('engine_kind')}],
         'progress_text': '단독 HTML · 보기 전용', 'reuse_by_case': {}}
     config = ROOT/'simulation/config/lite-door-overrides.json'

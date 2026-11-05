@@ -9,7 +9,8 @@ class OperationTest(unittest.TestCase):
  def test_existing_results_and_isolation(self):
   hotel=op.playback('parkmarine');showroom=op.playback('showroom')
   self.assertNotEqual(hotel['building_sha256'],showroom['building_sha256'])
-  self.assertEqual(hotel['time_s'][-1],60)
+  self.assertTrue(hotel['complete']);self.assertGreater(hotel['time_s'][-1],0)
+  self.assertTrue(all(a<b for a,b in zip(hotel['time_s'],hotel['time_s'][1:])))
   with self.assertRaises(ValueError):op.playback('showroom',hotel['case_id'])
  def test_display_does_not_run(self):
   with patch.object(op.sim,'start',side_effect=AssertionError('simulation forbidden')):

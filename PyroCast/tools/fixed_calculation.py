@@ -102,7 +102,7 @@ def cases(sha):
     for p in paths(sha):
         if read(p/'status.json', {}).get('state') != 'complete' or not (p/'playback.json').is_file(): continue
         data = read(p/'playback.json')
-        rows.append(dict(id=p.name, label=data['label'], engine_kind=data.get('engine_kind')))
+        rows.append(dict(id=p.name, label=data['label'], engine_kind=data.get('engine_kind'),duration_s=(data.get('time_s') or [None])[-1],saved_at_ms=int((p/'playback.json').stat().st_mtime*1000),run_id=p.name))
     return rows
 
 

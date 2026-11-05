@@ -56,17 +56,19 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
  const currentOperation=document.body.dataset.operationUrl||new URL(location.pathname,location.origin).href;
- for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
- buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
- if(window.__PYROCAST_OFFLINE__){const info=window.__PYROCAST_OFFLINE__.routes?.['/cfbt/model-info'];buildingSelect.replaceChildren(new Option(info?.label||'저장 건물','offline'));buildingSelect.disabled=true;buildingSelect.title='보기 전용';}
+ const isWando=location.pathname.includes('/wando-coldstore/');
+ const currentLabel=document.body.dataset.buildingLabel||(isWando?'완도 저온창고':location.port==='8780'?'강화 공장':'현재 건물');
+ buildingSelect.add(new Option(currentLabel,currentOperation));buildingSelect.value=currentOperation;
+ if(window.__PYROCAST_OFFLINE__){const info=window.__PYROCAST_OFFLINE__.routes?.['/cfbt/model-info'];buildingSelect.replaceChildren(new Option(info?.label||currentLabel,'offline'));buildingSelect.disabled=true;buildingSelect.title='보기 전용';}
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
  function refreshBuildings(){if(window.__PYROCAST_OFFLINE__||location.protocol==='file:')return;
-  const current=document.body.dataset.operationUrl||buildingSelect.value;
+  const current=document.body.dataset.operationUrl||currentOperation;
   return fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
    for(const e of c.models){const option=new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url);if(!e.operation_url&&/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.id))option.dataset.reviewId=e.id;buildingSelect.add(option);}
-   buildingSelect.value=current;
-  }).catch(()=>{});
+   if(![...buildingSelect.options].some(o=>o.value===current))buildingSelect.add(new Option(currentLabel,current));
+   buildingSelect.value=current;buildingSelect.title='';
+  }).catch(()=>{if(!catalogAbort.signal.aborted)buildingSelect.title='건물 목록 연결 안 됨 · 현재 건물 유지';});
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>{const id=buildingSelect.selectedOptions[0]?.dataset.reviewId;if(id){window.dispatchEvent(new CustomEvent('firelapse:review-model',{detail:{id}}));buildingSelect.value=document.body.dataset.operationUrl||currentOperation;}else location.assign(buildingSelect.value);});
  refreshBuildings();cleanups.push(createNewBuildingButton({container:header,onCreated:refreshBuildings}));header.insertBefore($("shellNewBuilding"),buildingSelect);

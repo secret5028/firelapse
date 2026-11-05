@@ -420,7 +420,7 @@ function attachExport({store,viewer,getCase,getRoute,render}){
   if(state.floor){viewer.setFloor(state.floor.floor_id??'all');store.dispatch('floor/set',state.floor);}
   if(state.playback){store.dispatch('playback/speed',{speed:state.playback.speed});store.dispatch('playback/seek',{t_s:state.playback.t_s});}
   if(state.camera){viewer.C.position.fromArray(state.camera.position);viewer.C.up.fromArray(state.camera.up);viewer.O.target.fromArray(state.camera.target);viewer.O.update();}
-  const selector='#exploreRun,#exploreOriginRun,#exploreMC,#exploreCalculateRun,#resultMCApplyWorst,#buildingClearFixed,#buildingDoors select,#cfbtFrozenRules button,#resultReplay,#exportHTML,#run,#mc';
+  const selector='#fuelSettings input,#fuelSettings select,#fuelSettings button,#exploreDuration,#exploreSamples,#exploreEngineLite,#exploreEngineCfast,#exploreOrigin,#exploreRun,#exploreOriginRun,#exploreMC,#exploreCalculateRun,#resultMCApplyWorst,#buildingClearFixed,#buildingDoors select,#cfbtFrozenRules button,#resultReplay,#exportHTML,#run,#mc';
   const lock=()=>{for(const node of document.querySelectorAll(selector)){if(!node.disabled)node.disabled=true;if(node.title!=='보기 전용')node.title='보기 전용';}};
   const guard=e=>{if(e.target.closest?.(selector)){e.preventDefault();e.stopImmediatePropagation();}};
   document.addEventListener('click',guard,true);document.addEventListener('change',guard,true);
@@ -4366,7 +4366,14 @@ class RoomNamesLayer extends EmptyLayer{
   for(const row of cadRoomNames(this.building)){const floor=this.groups.find(g=>g.name===row.floor);if(!floor)continue;const label=doc.createElement('span');label.textContent=row.text;label.title=row.floor+' '+row.id+' · '+row.text;label.style.cssText='position:absolute;transform:translate(-50%,-50%);white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis;font:11px sans-serif;color:#f2f7fa;text-shadow:0 1px 2px #102331,1px 0 2px #102331,-1px 0 2px #102331';this.root.append(label);this.labels.push({row,floor,label});}
  }
  tick(){this.root.hidden=this.visible===false||!this.frame?.layers?.building;if(this.root.hidden)return;const selected=this.frame.floor.floor_id;this.camera.updateMatrixWorld();
-  for(const {row,floor,label} of this.labels){label.hidden=!floor.visible||(selected!==null&&selected!==row.floor);if(label.hidden)continue;floor.updateWorldMatrix(true,false);const p=floor.localToWorld(new this.THREE.Vector3(...row.point)).project(this.camera);label.hidden=p.z< -1||p.z>1||Math.abs(p.x)>1||Math.abs(p.y)>1;if(!label.hidden){label.style.left=(p.x+1)*this.container.clientWidth/2+'px';label.style.top=(1-p.y)*this.container.clientHeight/2+'px';}}
+  const occupied=[],chosen=this.frame.selection?.room_id;
+  const ordered=[...this.labels].sort((a,b)=>Number(`CAD_${b.row.floor}_${b.row.id}`===chosen)-Number(`CAD_${a.row.floor}_${a.row.id}`===chosen));
+  for(const item of ordered){const {row,floor,label}=item;label.hidden=!floor.visible||(selected!==null&&selected!==row.floor);if(label.hidden)continue;floor.updateWorldMatrix(true,false);const p=floor.localToWorld(new this.THREE.Vector3(...row.point)).project(this.camera);label.hidden=p.z< -1||p.z>1||Math.abs(p.x)>1||Math.abs(p.y)>1;if(label.hidden)continue;
+   const x=(p.x+1)*this.container.clientWidth/2,y=(1-p.y)*this.container.clientHeight/2,w=item.width||(item.width=label.offsetWidth),h=16;
+   const box=[x-w/2-3,y-h/2-2,x+w/2+3,y+h/2+2];
+   if(occupied.some(b=>box[0]<b[2]&&box[2]>b[0]&&box[1]<b[3]&&box[3]>b[1])){label.hidden=true;continue;}
+   occupied.push(box);label.style.left=x+'px';label.style.top=y+'px';
+  }
  }
  dispose(){this.root?.remove();this.labels=[];super.dispose();}
 }
@@ -4920,7 +4927,10 @@ function resultListRows(cases,result,floors){
   const label=String(row.label||row.id).replace(/(?:CAD_)?(B?\d+F?|PH)[ _]+(R\d+)(?:_C\d+)?/g,(match,f,r)=>{const s=rooms.get(`CAD_${f}_${r}`);return s?`${f} ${r}${roomName(s)?' · '+roomName(s):''}`:match.replaceAll('_',' ');});
   const engine=active?current.engine.kind:row.engine_kind;
   const engineLabel=['lite','pyrocast_lite'].includes(engine)?'간략':['cfast','cfast_native'].includes(engine)?'CFAST 원본':'방식 미확인';
-  return {...row,active,engineLabel,label:source?`${source.floor} ${source.room.id}${roomName(source)?' · '+roomName(source):''} · ${current.engine.kind==='cfast'?'CFAST':'간략'}${/MC\s+S\d+/.exec(label)?.[0]?' · '+/MC\s+S\d+/.exec(label)[0]:''}`:label};
+  const minutes=Number.isFinite(row.duration_s)?`${Math.round(row.duration_s/60)}분`:'';
+  const d=new Date(row.saved_at_ms),date=Number.isFinite(row.saved_at_ms)&&!Number.isNaN(d.valueOf())?`${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`:'';
+  const detail=[minutes,date,row.run_id?row.run_id.slice(-6):''].filter(Boolean).join(' · ');
+  return {...row,active,engineLabel,detail,label:source?`${source.floor} ${source.room.id}${roomName(source)?' · '+roomName(source):''} · ${current.engine.kind==='cfast'?'CFAST':'간략'}${/MC\s+S\d+/.exec(label)?.[0]?' · '+/MC\s+S\d+/.exec(label)[0]:''}`:label};
  }).sort((a,b)=>Number(b.active)-Number(a.active));
 }
 function createResultList({container,store,floors,onSelect}){
@@ -4928,11 +4938,11 @@ function createResultList({container,store,floors,onSelect}){
  const box=document.createElement('details');box.id='sceneResultList';box.open=true;box.hidden=true;
  box.innerHTML='<summary>계산 결과</summary><div class="sceneResultRows" role="group" aria-label="저장된 계산 결과"></div><div class="sceneResultStatus" role="status" hidden></div>';
  const rows=box.querySelector('.sceneResultRows'),status=box.querySelector('.sceneResultStatus');
- const style=document.createElement('style');style.textContent=`#sceneResultList{position:absolute;left:10px;top:10px;z-index:110;width:230px;max-width:calc(100% - 60px);box-sizing:border-box;background:#142b3be8;border:1px solid #496273;border-radius:7px;color:#dcebf3;font:11px/1.4 system-ui,'Malgun Gothic',sans-serif;box-shadow:0 2px 8px #0002}#sceneResultList[hidden],#sceneResultList [hidden]{display:none!important}#sceneResultList summary{padding:5px 8px;cursor:pointer;font-weight:600}#sceneResultList .sceneResultRows{max-height:78px;overflow:auto;overscroll-behavior:contain;padding:0 4px}#sceneResultList button{display:flex;align-items:center;gap:5px;width:100%;box-sizing:border-box;text-align:left;height:26px;padding:4px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:#c1d2dd;font:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sceneResultList .resultName{min-width:0;overflow:hidden;text-overflow:ellipsis;flex:1}#sceneResultList .resultEngine{flex:none;font-size:10px;padding:1px 4px;border:1px solid #617786;border-radius:3px;color:#e4edf4}#sceneResultList button:hover{background:#254353}#sceneResultList button[aria-current=true]{color:#ff8585;background:#4c3039;border-color:#db6a75;font-weight:700}#sceneResultList button:focus-visible,#sceneResultList summary:focus-visible{outline:2px solid #42c4e8;outline-offset:-2px}#sceneResultList button:disabled{cursor:wait;opacity:.65}#sceneResultList .sceneResultStatus{padding:6px 10px;color:#ffbd85}`;
+ const style=document.createElement('style');style.textContent=`#sceneResultList{position:absolute;left:10px;top:10px;z-index:110;width:230px;max-width:calc(100% - 60px);box-sizing:border-box;background:#142b3be8;border:1px solid #496273;border-radius:7px;color:#dcebf3;font:11px/1.4 system-ui,'Malgun Gothic',sans-serif;box-shadow:0 2px 8px #0002}#sceneResultList[hidden],#sceneResultList [hidden]{display:none!important}#sceneResultList summary{padding:5px 8px;cursor:pointer;font-weight:600}#sceneResultList .sceneResultRows{max-height:114px;overflow:auto;overscroll-behavior:contain;padding:0 4px}#sceneResultList button{display:flex;align-items:center;gap:5px;width:100%;box-sizing:border-box;text-align:left;height:38px;padding:4px 6px;border:1px solid transparent;border-radius:4px;background:transparent;color:#c1d2dd;font:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sceneResultList .resultText{display:flex;flex-direction:column;min-width:0;flex:1}#sceneResultList .resultDetail{font-size:9px;font-weight:400;color:#b4c7d2;overflow:hidden;text-overflow:ellipsis}#sceneResultList .resultName{min-width:0;overflow:hidden;text-overflow:ellipsis;flex:1}#sceneResultList .resultEngine{flex:none;font-size:10px;padding:1px 4px;border:1px solid #617786;border-radius:3px;color:#e4edf4}#sceneResultList button:hover{background:#254353}#sceneResultList button[aria-current=true]{color:#ff8585;background:#4c3039;border-color:#db6a75;font-weight:700}#sceneResultList button:focus-visible,#sceneResultList summary:focus-visible{outline:2px solid #42c4e8;outline-offset:-2px}#sceneResultList button:disabled{cursor:wait;opacity:.65}#sceneResultList .sceneResultStatus{padding:6px 10px;color:#ffbd85}`;
  container.append(box);document.head.append(style);
  const stop=e=>e.stopPropagation();for(const type of ['pointerdown','pointerup','click','dblclick','wheel'])box.addEventListener(type,stop);
  function render(){if(disposed)return;const entries=resultListRows(cases,store.get('result'),floors);box.hidden=!entries.length;box.querySelector('summary').textContent='계산 결과 · '+entries.length;rows.replaceChildren();
-  for(const entry of entries){const b=document.createElement('button');b.type='button';b.dataset.caseId=entry.id;const name=document.createElement('span');name.className='resultName';name.textContent=entry.label.replace(/ · (?:순정 CFAST|CFAST|간략 계산|간략|저장 결과)(?= ·|$)/g,'');const badge=document.createElement('span');badge.className='resultEngine';badge.textContent=entry.engineLabel;b.append(name,badge);b.title=entry.engineLabel+' · '+String(entry.label)+' · '+entry.id;b.setAttribute('aria-current',String(entry.active));b.disabled=pending!==null;
+  for(const entry of entries){const b=document.createElement('button');b.type='button';b.dataset.caseId=entry.id;const name=document.createElement('span');name.className='resultName';name.textContent=entry.label.replace(/ · (?:순정 CFAST|CFAST|간략 계산|간략|저장 결과)(?= ·|$)/g,'');const badge=document.createElement('span');badge.className='resultEngine';badge.textContent=entry.engineLabel;const text=document.createElement('span');text.className='resultText';text.append(name);if(entry.detail){const sub=document.createElement('small');sub.className='resultDetail';sub.textContent=entry.detail;text.append(sub);}b.append(text,badge);b.title=[entry.engineLabel,entry.label,entry.detail,entry.id].filter(Boolean).join(' · ');b.setAttribute('aria-current',String(entry.active));b.disabled=pending!==null;
    b.onclick=async()=>{if(pending!==null)return;pending=entry.id;status.hidden=false;status.textContent='결과 불러오는 중…';box.setAttribute('aria-busy','true');render();
     try{await onSelect(entry.id);if(!disposed){status.textContent='';status.hidden=true;}}
     catch(error){if(!disposed){status.hidden=false;status.textContent='결과 읽기 실패 · '+error.message;}}
@@ -5099,17 +5109,19 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  const riskTimeline=createTimelineRisk({host:timeline.querySelector('.track'),store});cleanups.push(()=>riskTimeline.dispose());
  const buildingSelect=document.createElement('select');buildingSelect.id='shellBuilding';buildingSelect.setAttribute('aria-label','건물 선택');
  const currentOperation=document.body.dataset.operationUrl||new URL(location.pathname,location.origin).href;
- for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
- buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
- if(window.__PYROCAST_OFFLINE__){const info=window.__PYROCAST_OFFLINE__.routes?.['/cfbt/model-info'];buildingSelect.replaceChildren(new Option(info?.label||'저장 건물','offline'));buildingSelect.disabled=true;buildingSelect.title='보기 전용';}
+ const isWando=location.pathname.includes('/wando-coldstore/');
+ const currentLabel=document.body.dataset.buildingLabel||(isWando?'완도 저온창고':location.port==='8780'?'강화 공장':'현재 건물');
+ buildingSelect.add(new Option(currentLabel,currentOperation));buildingSelect.value=currentOperation;
+ if(window.__PYROCAST_OFFLINE__){const info=window.__PYROCAST_OFFLINE__.routes?.['/cfbt/model-info'];buildingSelect.replaceChildren(new Option(info?.label||currentLabel,'offline'));buildingSelect.disabled=true;buildingSelect.title='보기 전용';}
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
  function refreshBuildings(){if(window.__PYROCAST_OFFLINE__||location.protocol==='file:')return;
-  const current=document.body.dataset.operationUrl||buildingSelect.value;
+  const current=document.body.dataset.operationUrl||currentOperation;
   return fetch('http://127.0.0.1:8841/models/catalog.json',{signal:catalogAbort.signal}).then(r=>{if(!r.ok)throw Error('catalog');return r.json();}).then(c=>{
    if(catalogAbort.signal.aborted)return;buildingSelect.replaceChildren();
    for(const e of c.models){const option=new Option(e.label+(e.source_kind==='scan'?' [열람 전용]':''),e.operation_url||e.url);if(!e.operation_url&&/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.id))option.dataset.reviewId=e.id;buildingSelect.add(option);}
-   buildingSelect.value=current;
-  }).catch(()=>{});
+   if(![...buildingSelect.options].some(o=>o.value===current))buildingSelect.add(new Option(currentLabel,current));
+   buildingSelect.value=current;buildingSelect.title='';
+  }).catch(()=>{if(!catalogAbort.signal.aborted)buildingSelect.title='건물 목록 연결 안 됨 · 현재 건물 유지';});
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>{const id=buildingSelect.selectedOptions[0]?.dataset.reviewId;if(id){window.dispatchEvent(new CustomEvent('firelapse:review-model',{detail:{id}}));buildingSelect.value=document.body.dataset.operationUrl||currentOperation;}else location.assign(buildingSelect.value);});
  refreshBuildings();cleanups.push(createNewBuildingButton({container:header,onCreated:refreshBuildings}));header.insertBefore($("shellNewBuilding"),buildingSelect);
@@ -5415,7 +5427,7 @@ function createResultsPanel({panel,store}){
    const peakTime=append(row,'span',finite(peak?.time)?stamp(peak.time):'—','resultPeakTime');peakTime.title=`전 구간 최대 ${number(peak?.value)} · ${peak?.source??'미평가'} · 동률은 최초 시각`;peakTime.setAttribute('aria-label',s.name+' 최악 시간 '+peakTime.textContent);
    if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 조건 충족':'롤오버 조건 충족 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
   }
-  $('resultQuantities').replaceChildren();for(const [label,key,unit] of [['상층 온도','T_upper_C','℃'],['하층 온도','T_lower_C','℃'],['상층 산소','O2_upper_volfrac','%'],['하층 산소','O2_lower_volfrac','%'],['연기층 경계 높이','interface_m','m'],['화원 발열','HRR_actual_kW','kW'],['문 분출 연소','HRR_doorjet_kW','kW'],['상층 연소','HRR_upperburn_kW','kW']]){const v=values?.[key]?.[index];append($('resultQuantities'),'span',label);append($('resultQuantities'),'b',finite(v)?number(v*(unit==='%'?100:1),1)+' '+unit:'—');}
+  $('resultQuantities').replaceChildren();for(const [label,key,unit] of [['상층 온도','T_upper_C','℃'],['하층 온도','T_lower_C','℃'],['상층 산소','O2_upper_volfrac','%'],['하층 산소','O2_lower_volfrac','%'],['연기층 경계 높이','interface_m','m'],['화원 발열','HRR_actual_kW','kW'],['문 분출 연소','HRR_doorjet_kW','kW'],['상층 연소','HRR_upperburn_kW','kW']]){const v=values?.[key]?.[index],noLower=['T_lower_C','O2_lower_volfrac'].includes(key)&&finite(values?.interface_m?.[index])&&values.interface_m[index]<.05;append($('resultQuantities'),'span',label);const shown=append($('resultQuantities'),'b',!noLower&&finite(v)?number(v*(unit==='%'?100:1),1)+' '+unit:'—');if(noLower)shown.title='하층 두께 0.05 m 미만 · 구획 평균값 표시 생략';}
   if(previous!==result){const list=$('resultLimits').querySelector('ul');list.replaceChildren();for(const text of [...result.limits_text,'지수는 저장된 조건값 × 100이며 실제 발생 확률이 아닙니다. 여러 셀로 나뉜 방은 평균을 만들지 않습니다.','MC 집계는 저장된 완주 표본만 읽습니다. 미완료·읽기 실패·미평가 값은 안전으로 세지 않습니다.','연기 무늬와 화염·플룸은 표시 효과입니다. 온도 입력은 변경하지 않습니다.'])append(list,'li',text);previous=result;}
  }
  function mc(summary,full=null){$('resultMCSection').hidden=!summary;const host=$('resultMCRows');host.replaceChildren();for(const [key,name] of resultTypes){const r=summary?.rates?.[key],q=full?.[key],tr=append(host,'tr');tr.dataset.type=key;for(const text of [name,r?`${r.numerator} / ${r.denominator_completed_random}건`:'—',q?(q.unknown?'최소 ':'')+q.rooms+'실':'—',r&&finite(r.maximum_score)?number(r.maximum_score*100):'미평가'])append(tr,'td',text);if(q?.unknown)tr.title='일부 값이 미평가여서 확인된 실 수만 표시합니다. 실제 충족 실 수는 더 많을 수 있습니다.';}
@@ -5430,7 +5442,7 @@ function createResultsPanel({panel,store}){
    append(card,'div',`최초 FO 조건 충족 ${finite(worst.first_FO_s)?stamp(worst.first_FO_s):'—'}`);
    card.append(infoTip('연소 실이 많은 순 → 지수 70 이상 실이 많은 순 → 최초 FO가 빠른 순으로 선정합니다. 현재 재생 중인 조합과는 다를 수 있습니다.'));
   }else append(card,'div',summary?.worst_error||'최악 조합 미선정');
-  $('resultMCStatus').textContent=summary?`저장 ${summary.completed}/${summary.rows.length}표본`:'저장 MC 집계 없음';$('resultMCLoad').disabled=!summary;
+  $('resultMCStatus').textContent=summary?`저장 ${summary.completed}/${summary.rows.length}표본 · 필수 ${summary.rows.slice(0,2).filter(r=>r.complete).length} + 무작위 ${summary.rows.slice(2).filter(r=>r.complete).length}`:'저장 MC 집계 없음';$('resultMCLoad').disabled=!summary;
  }
  mc(null);
  return {update,mc,dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
@@ -5568,7 +5580,8 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  const inputKey=()=>JSON.stringify([store.get('floor').floor_id,store.get('exploration').origin_room_id,store.get('exploration').samples,store.get('exploration').duration_s,store.get('fuelSettings').data?.revision??null,store.get('buildingReview').doors]);
  const pretty=id=>id?.replace(/^CAD_/,'').replaceAll('_',' ')||'미선택';
  const useName=row=>row?.origin_budget?.classification?.label??payload?.score.approved_input?.room_uses?.[row?.room]?.label??'용도 미확인';
- const originName=id=>{const row=payload?.score.ranked.find(r=>r.room===id),manual=payload?.manual_origins?.find(r=>r.room===id);return row?`${pretty(id)} · ${useName(row)}`:manual?`${pretty(id)} · ${manual.label}`:pretty(id);};
+ const cadNames=new Map(floors.flatMap(f=>(f.rooms||[]).map(r=>[`CAD_${f.name}_${r.id}`,(r.names||[]).filter(Boolean).join(' · ')||r.name||''])));
+ const originName=id=>{const row=payload?.score.ranked.find(r=>r.room===id),manual=payload?.manual_origins?.find(r=>r.room===id),name=cadNames.get(id),usage=row?useName(row):manual?.label;return `${pretty(id)}${name?' · '+name:usage?' · '+usage:''}${name&&usage&&name!==usage?' ('+usage+')':''}`;};
  const cell=(tr,value)=>{const td=document.createElement('td');td.textContent=value;tr.append(td);return td;};
  function sync(){root.disabled=!store.get('floor').floor_id;root.inert=root.disabled;const state=store.get('exploration');$('exploreFloor').value=store.get('floor').floor_id||'';$('exploreDuration').value=state.duration_s;$('exploreN').value=state.top_n;if(lastSamples!==state.samples){$('exploreSamples').value=state.samples;lastSamples=state.samples;}$('exploreOrigin').value=state.origin_room_id||'';
   for(const tr of root.querySelectorAll('tr[data-room]'))tr.setAttribute('aria-selected',String(tr.dataset.room===state.origin_room_id));
@@ -5616,7 +5629,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  const off=store.subscribe('exploration',sync),offFloor=store.subscribe('floor',sync),offFuel=store.subscribe('fuelSettings',sync),offDoors=store.subscribe('buildingReview',sync);
  function update(value){payload=value;const {first,second}=screeningRows(value);$('exploreN').max=first.length;$('exploreOrigin').replaceChildren();for(const row of value.manual_origins??first)$('exploreOrigin').add(new Option(originName(row.room),row.room));$('exploreOrigin').disabled=!first.length;
   $('exploreCandidates').replaceChildren();for(const row of first.slice(0,5)){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');
-   const choose=()=>{store.dispatch('exploration/set',{origin_room_id:row.room,origin_mode:'manual'});onCandidate?.(row);};tr.onclick=choose;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}};cell(tr,count(row.rank1));cell(tr,`${pretty(row.room)} · ${useName(row)}`).title=row.reason||'';cell(tr,finite(row.score)?row.score.toFixed(3):'—');$('exploreCandidates').append(tr);}
+   const choose=()=>{store.dispatch('exploration/set',{origin_room_id:row.room,origin_mode:'manual'});onCandidate?.(row);};tr.onclick=choose;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}};cell(tr,count(row.rank1));cell(tr,originName(row.room)).title=row.reason||'';cell(tr,finite(row.score)?row.score.toFixed(3):'—');$('exploreCandidates').append(tr);}
   $('exploreRanking').replaceChildren();for(const row of second){const tr=document.createElement('tr');tr.dataset.room=row.room;tr.tabIndex=0;tr.setAttribute('aria-label',originName(row.room)+' 화점 선택');tr.title=row.complete?({fixed:'확정 급기',closed:'모두 닫힘',open_except_confirmed:'확정 방화문 제외 모두 열림'}[row.worst_state]||''):'미완료 · 부분 결과';cell(tr,count(row.rank2));cell(tr,pretty(row.room));cell(tr,count(row.rank1));cell(tr,count(row.burning_room_count));cell(tr,count(row.attention_room_count));cell(tr,finite(row.first_FO_s)?`${Math.floor(row.first_FO_s/60)}:${String(Math.floor(row.first_FO_s%60)).padStart(2,'0')}`:'—');
    const choose=()=>{if((value.manual_origins??first).some(r=>r.room===row.room))store.dispatch('exploration/set',{origin_room_id:row.room,origin_mode:'ranked'});};tr.onclick=choose;tr.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose();}};$('exploreRanking').append(tr);
   }
@@ -5923,7 +5936,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   lastPanel='';ruleContext();ready=true;
   if(focusOrigin)showResultOrigin();else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
  }
- let mcSummary=null,mcRun=0,mcAbort=null;
+ let mcSummary=null,mcRun=0,mcAbort=null;const mcRoomCache=new Map();const mcRoomKey=s=>JSON.stringify([s?.job_id,s?.completed,s?.rows?.map(r=>[r.id,r.complete])]);
  async function saveFixed(body,playWorst=false){
   if(disposed||store.get('buildingReview').saving)return;
   const worstCase=mcSummary?.worst?.case_id;
@@ -5949,14 +5962,14 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const reuseByCase=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);
+ async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcRoomCache.get(mcRoomKey(mcSummary)));
   let origin=null;const saved=mcSummary?.rows?.find(row=>row.complete);if(saved){try{const p=mcSummary.rows.some(row=>row.id===chosen)?data:await (await fetch('/cfbt/lite/result/'+encodeURIComponent(saved.id),{signal:exploreAbort.signal})).json();if(p.complete&&p.building_sha256===initial.building_sha256)origin=p.rooms.find(r=>r.key===p.fire_key)?.original_room??p.fire_key;}catch{}}
-  if(!disposed&&serial===catalogSerial)explore.catalog(c,origin);
+  if(!disposed&&serial===catalogSerial){explore.catalog(c,origin);if(mcSummary&&!mcRoomCache.has(mcRoomKey(mcSummary)))$('resultMCLoad').click();}
  }
  handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;const run=++mcRun,summary=mcSummary;mcAbort?.abort();mcAbort=new AbortController();const full=Object.fromEntries(resultTypes.map(([k])=>[k,{rooms:0,unknown:false}]));$('resultMCLoad').disabled=true;
   try{const rows=summary.rows.filter(r=>r.complete);let done=0;
    for(const row of rows){$('resultMCStatus').textContent=`저장 표본 읽는 중 ${done}/${rows.length}`;const response=await fetch('/cfbt/lite/result/'+encodeURIComponent(row.id),{signal:mcAbort.signal});if(!response.ok)throw Error(`${row.id} HTTP ${response.status}`);const p=await response.json();if(run!==mcRun||disposed)return;if(p.building_sha256!==initial.building_sha256||p.schema!=='pyrocast-cad-playback-1')throw Error('다른 건물 또는 형식의 표본');const record=summarizeMCPlayback(p);for(const [key] of resultTypes){full[key].rooms=Math.max(full[key].rooms,record[key].rooms);full[key].unknown ||= record[key].unknown;}done++;}
-   results.mc(summary,full);$('resultMCStatus').textContent=`집계 완료 ${done}/${summary.rows.length}표본`;
+   mcRoomCache.set(mcRoomKey(summary),full);results.mc(summary,full);
   }catch(error){if(run===mcRun&&!disposed)$('resultMCStatus').textContent='집계 미완료 · '+error.message;}
   finally{if(run===mcRun&&!disposed)$('resultMCLoad').disabled=false;}
  });
@@ -6014,11 +6027,14 @@ const {attachModern}=__module63;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
+ const loading=document.createElement('div');loading.id='firelapseLoading';loading.setAttribute('role','status');loading.style.cssText='position:fixed;inset:0;z-index:10000;background:#102331ed;color:#eaf3f8;display:grid;place-content:center;text-align:center;font:16px system-ui';loading.textContent='건물·저장 결과 불러오는 중…';document.body.append(loading);
  const pending=(async()=>{
+  try{
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;
   if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1'].includes(data.native_mapping)))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
   document.documentElement.dataset.pyrocastUi='modern';
-  return attachModern(viewer,data);
+  const app=await attachModern(viewer,data);loading.remove();return app;
+  }catch(error){loading.textContent='불러오기 실패 · '+error.message;throw error;}
  })();attached.set(viewer.R.domElement,pending);return pending;
 }
 

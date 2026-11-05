@@ -1,0 +1,65 @@
+{
+  "selection": {
+    "room_id": "CAD_1F_R3",
+    "cell_id": "CAD_1F_R3",
+    "source": "list"
+  },
+  "floor": {
+    "floor_id": "1F"
+  },
+  "playback": {
+    "t_s": 1800,
+    "playing": false,
+    "speed": 20,
+    "t_end_s": 3600
+  },
+  "camera": {
+    "position": [
+      58.134967156416764,
+      -26.074967156412825,
+      44.69546387205462
+    ],
+    "up": [
+      0,
+      0,
+      1
+    ],
+    "target": [
+      20.23,
+      11.830000000000004,
+      3.0000000000000004
+    ]
+  },
+  "route": {
+    "vehicle": [
+      -11.330948168962617,
+      21.985,
+      0
+    ],
+    "vehicle_yaw": 0,
+    "target_room_id": "CAD_1F_R3",
+    "placing": false,
+    "vehicle_visible": true,
+    "hose_m": 15,
+    "stair_factor": 1.5,
+    "message": ""
+  },
+  "route_result_keys": [
+    "layout_warnings",
+    "target",
+    "entry",
+    "vehicle",
+    "segments",
+    "ticks",
+    "length",
+    "hoses",
+    "stairs",
+    "edges",
+    "graph_edges",
+    "source_edges",
+    "traversable_edges",
+    "limits",
+    "risk_summary"
+  ],
+  "bytes": 2802220
+}

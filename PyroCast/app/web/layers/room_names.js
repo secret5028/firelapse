@@ -14,7 +14,14 @@ export class RoomNamesLayer extends EmptyLayer{
   for(const row of cadRoomNames(this.building)){const floor=this.groups.find(g=>g.name===row.floor);if(!floor)continue;const label=doc.createElement('span');label.textContent=row.text;label.title=row.floor+' '+row.id+' · '+row.text;label.style.cssText='position:absolute;transform:translate(-50%,-50%);white-space:nowrap;max-width:170px;overflow:hidden;text-overflow:ellipsis;font:11px sans-serif;color:#f2f7fa;text-shadow:0 1px 2px #102331,1px 0 2px #102331,-1px 0 2px #102331';this.root.append(label);this.labels.push({row,floor,label});}
  }
  tick(){this.root.hidden=this.visible===false||!this.frame?.layers?.building;if(this.root.hidden)return;const selected=this.frame.floor.floor_id;this.camera.updateMatrixWorld();
-  for(const {row,floor,label} of this.labels){label.hidden=!floor.visible||(selected!==null&&selected!==row.floor);if(label.hidden)continue;floor.updateWorldMatrix(true,false);const p=floor.localToWorld(new this.THREE.Vector3(...row.point)).project(this.camera);label.hidden=p.z< -1||p.z>1||Math.abs(p.x)>1||Math.abs(p.y)>1;if(!label.hidden){label.style.left=(p.x+1)*this.container.clientWidth/2+'px';label.style.top=(1-p.y)*this.container.clientHeight/2+'px';}}
+  const occupied=[],chosen=this.frame.selection?.room_id;
+  const ordered=[...this.labels].sort((a,b)=>Number(`CAD_${b.row.floor}_${b.row.id}`===chosen)-Number(`CAD_${a.row.floor}_${a.row.id}`===chosen));
+  for(const item of ordered){const {row,floor,label}=item;label.hidden=!floor.visible||(selected!==null&&selected!==row.floor);if(label.hidden)continue;floor.updateWorldMatrix(true,false);const p=floor.localToWorld(new this.THREE.Vector3(...row.point)).project(this.camera);label.hidden=p.z< -1||p.z>1||Math.abs(p.x)>1||Math.abs(p.y)>1;if(label.hidden)continue;
+   const x=(p.x+1)*this.container.clientWidth/2,y=(1-p.y)*this.container.clientHeight/2,w=item.width||(item.width=label.offsetWidth),h=16;
+   const box=[x-w/2-3,y-h/2-2,x+w/2+3,y+h/2+2];
+   if(occupied.some(b=>box[0]<b[2]&&box[2]>b[0]&&box[1]<b[3]&&box[3]>b[1])){label.hidden=true;continue;}
+   occupied.push(box);label.style.left=x+'px';label.style.top=y+'px';
+  }
  }
  dispose(){this.root?.remove();this.labels=[];super.dispose();}
 }

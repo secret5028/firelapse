@@ -170,7 +170,7 @@ def handler(base, ident):
                 if path=='/cfbt/model-info':return self.json(dict(building_id=ident,label=sim.entry(ident)['label'],operation_url=operation_url(sim.entry(ident))))
                 if path=='/cfbt/lite/active.json':return self.json(active_playback(ident))
                 if path.startswith('/cfbt/lite/export/'):
-                    if self.client_address[0]!='127.0.0.1':return self.json({'error':'외부 요청 차단'},403)
+                    if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
                     from lite_export import build_export
                     output,_=build_export('http://127.0.0.1:'+str(self.server.server_port),path.rsplit('/',1)[-1],
                         json.loads(query.get('state',['{}'])[0]),int(query.get('interval',['10'])[0]),model_service=True)
@@ -180,7 +180,7 @@ def handler(base, ident):
                     import model_mc
                     import fixed_calculation
                     warnings=[];rows=jobs(ident,warnings)
-                    cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과",engine_kind=r.get('engine') or saved_engine(p/'playback.json',(p/'playback.json').stat().st_mtime_ns)) for p,r in rows]+model_mc.cases(ident)+fixed_calculation.cases(sim.fingerprint(ident))
+                    cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과",duration_s=r.get('duration_s'),saved_at_ms=int((p/'playback.json').stat().st_mtime*1000),run_id=p.name,engine_kind=r.get('engine') or saved_engine(p/'playback.json',(p/'playback.json').stat().st_mtime_ns)) for p,r in rows]+model_mc.cases(ident)+fixed_calculation.cases(sim.fingerprint(ident))
                     return self.json(dict(cases=cases,warnings=warnings,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
                         progress_text='저장 결과 · 추가 계산 없음',reuse_by_case={p.name:dict(case_id=p.name,label='저장 결과 재생 · 재계산 없음',equivalent=False) for p,r in rows}))
                 if path.startswith('/cfbt/reuse/lite/'):

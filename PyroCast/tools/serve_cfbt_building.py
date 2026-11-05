@@ -343,15 +343,18 @@ def main():
                 conf=SIM/'config/lite-viewer.json'
                 if not conf.is_file():return self.json({'error':'No adopted lite result'},404)
                 cfg=json.loads(conf.read_text('utf-8'))
-                cfg['cases']=catalog_index.cases(sha,'lite',cfg.get('cases',[]))
+                if not path.endswith('active.json'):
+                    cfg['cases']=catalog_index.cases(sha,'lite',cfg.get('cases',[]))
                 requested_room=parse_qs(urlsplit(self.path).query).get('mc_room',[None])[0]
-                current_summary=mc_service.summary(sha,requested_room)
+                current_summary=mc_service.summary(sha,requested_room) if path.endswith('catalog.json') else None
                 if current_summary:cfg['mc_summary']=current_summary;cfg['progress_text']='MC 저장 결과 · '+str(current_summary['completed'])+'표본 완료'
                 if path.endswith('catalog.json'):
                     cfg['reuse_by_case']={r['id']:reuse_info(r,'lite') for r in cfg['cases']}
                     import fixed_calculation
                     cfg['cases']=[r for r in cfg['cases'] if '/fixed-calculations/' not in r.get('path','').replace('\\','/')]+fixed_calculation.cases(sha)
-                    return self.json({k:v for k,v in cfg.items() if k!='active_path'})
+                    public={k:v for k,v in cfg.items() if k!='active_path'}
+                    public['cases']=[{k:v for k,v in row.items() if k!='path'} for row in cfg['cases']]
+                    return self.json(public)
                 chosen=cfg.get('active_path') if path.endswith('active.json') else next((x['path'] for x in cfg.get('cases',[]) if x['id']==path.rsplit('/',1)[-1]),None)
                 if not chosen:return self.json({'error':'Unknown lite case'},404)
                 file=Path(chosen).resolve()

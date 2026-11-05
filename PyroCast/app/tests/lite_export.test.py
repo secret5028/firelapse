@@ -75,5 +75,9 @@ class ExportTests(unittest.TestCase):
         self.assertIn('/vendor/three.module.js',data['modules'])
         self.assertTrue(data['scripts']);self.assertEqual(info['modules'],2)
         self.assertFalse(any('legacy-context' in r or 'hydraulics' in r for r in requested))
+        routes['/cfbt/lite/catalog.json']={'cases':[]}
+        with patch('lite_export.urlopen',side_effect=lambda url,**kw:Response(url)):
+            with self.assertRaisesRegex(ValueError,'목록이 바뀌었습니다'):
+                build_export('http://127.0.0.1:1','saved',state,model_service=True)
 
 if __name__=='__main__':unittest.main()

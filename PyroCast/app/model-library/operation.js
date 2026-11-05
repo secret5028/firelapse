@@ -6,7 +6,7 @@ import {createGroundReference} from '/app/web/scene/ground_reference.js';
 const $=id=>document.getElementById(id);
 try{
  const [B,info,initial]=await Promise.all(['/building.json','/cfbt/model-info','/cfbt/lite/active.json'].map(async url=>{const r=await fetch(url),v=await r.json();if(!r.ok)throw Error(v.error);return v;}));
- document.body.dataset.operationUrl=info.operation_url;document.title='FireLapse · '+info.label;
+ document.body.dataset.operationUrl=info.operation_url;document.body.dataset.buildingLabel=info.label;document.title='FireLapse · '+info.label;
  const S=new T.Scene(),C=new T.PerspectiveCamera(45,1,.1,5000),R=new T.WebGLRenderer({antialias:true});
  S.background=new T.Color('#102331');C.up.set(0,0,1);R.setPixelRatio(Math.min(devicePixelRatio,2));$('v').prepend(R.domElement);
  const O=new OrbitControls(C,R.domElement),groups=[],legacyRoot=new T.Group();S.add(legacyRoot);

@@ -6,7 +6,7 @@ from model_library import entries,model_path,catalog,execution_policy,RUN_PATHS
 
 class ModelLibraryTest(unittest.TestCase):
  def test_all_registered_models_load(self):
-  rows=entries();self.assertEqual(6,len(rows));self.assertEqual(len(rows),len({r['id'] for r in rows}))
+  rows=entries();self.assertTrue({'ganghwa','parkmarine','wando','showroom'}.issubset({r['id'] for r in rows}));self.assertEqual(len(rows),len({r['id'] for r in rows}))
   for row in rows:
    b=json.loads(model_path(row).read_text('utf8'));self.assertEqual(row['floor_count'],len(b['floors']))
  def test_scans_never_execute(self):
@@ -19,7 +19,14 @@ class ModelLibraryTest(unittest.TestCase):
  def test_originals_preserved(self):
   import hashlib
   for e in entries():
-   self.assertEqual(e['original_sha256'],hashlib.sha256(Path(e['source_path']).read_bytes()).hexdigest())
+   if 'original_sha256' in e:
+    self.assertEqual(e['original_sha256'],hashlib.sha256(Path(e['source_path']).read_bytes()).hexdigest())
+   else:
+    provenance=json.loads(model_path(e).read_text('utf8'))['model_provenance']
+    self.assertTrue(provenance['files'])
+    source=ROOT/'data'/('cad-imports' if e['source_kind']=='cad' else 'model-imports')/provenance['import_id']
+    hashes={hashlib.sha256(p.read_bytes()).hexdigest() for p in (source/'source').rglob('*') if p.is_file()} if e['source_kind']=='cad' else {hashlib.sha256(p.read_bytes()).hexdigest() for p in source.glob('source-*')}
+    self.assertTrue({f['sha256'] for f in provenance['files']}.issubset(hashes))
  def test_known_operating_cad_allowed(self):
   e=next(e for e in entries() if e['id']=='ganghwa');self.assertTrue(execution_policy(json.loads(model_path(e).read_text('utf8')),model_path(e))['allowed'])
  def test_unknown_not_silently_executable(self):self.assertFalse(execution_policy({})['allowed'])

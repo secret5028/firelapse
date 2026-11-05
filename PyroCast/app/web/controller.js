@@ -284,7 +284,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   lastPanel='';ruleContext();ready=true;
   if(focusOrigin)showResultOrigin();else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
  }
- let mcSummary=null,mcRun=0,mcAbort=null;
+ let mcSummary=null,mcRun=0,mcAbort=null;const mcRoomCache=new Map();const mcRoomKey=s=>JSON.stringify([s?.job_id,s?.completed,s?.rows?.map(r=>[r.id,r.complete])]);
  async function saveFixed(body,playWorst=false){
   if(disposed||store.get('buildingReview').saving)return;
   const worstCase=mcSummary?.worst?.case_id;
@@ -310,14 +310,14 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const reuseByCase=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary);
+ async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcRun++;mcAbort?.abort();mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcRoomCache.get(mcRoomKey(mcSummary)));
   let origin=null;const saved=mcSummary?.rows?.find(row=>row.complete);if(saved){try{const p=mcSummary.rows.some(row=>row.id===chosen)?data:await (await fetch('/cfbt/lite/result/'+encodeURIComponent(saved.id),{signal:exploreAbort.signal})).json();if(p.complete&&p.building_sha256===initial.building_sha256)origin=p.rooms.find(r=>r.key===p.fire_key)?.original_room??p.fire_key;}catch{}}
-  if(!disposed&&serial===catalogSerial)explore.catalog(c,origin);
+  if(!disposed&&serial===catalogSerial){explore.catalog(c,origin);if(mcSummary&&!mcRoomCache.has(mcRoomKey(mcSummary)))$('resultMCLoad').click();}
  }
  handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;const run=++mcRun,summary=mcSummary;mcAbort?.abort();mcAbort=new AbortController();const full=Object.fromEntries(resultTypes.map(([k])=>[k,{rooms:0,unknown:false}]));$('resultMCLoad').disabled=true;
   try{const rows=summary.rows.filter(r=>r.complete);let done=0;
    for(const row of rows){$('resultMCStatus').textContent=`저장 표본 읽는 중 ${done}/${rows.length}`;const response=await fetch('/cfbt/lite/result/'+encodeURIComponent(row.id),{signal:mcAbort.signal});if(!response.ok)throw Error(`${row.id} HTTP ${response.status}`);const p=await response.json();if(run!==mcRun||disposed)return;if(p.building_sha256!==initial.building_sha256||p.schema!=='pyrocast-cad-playback-1')throw Error('다른 건물 또는 형식의 표본');const record=summarizeMCPlayback(p);for(const [key] of resultTypes){full[key].rooms=Math.max(full[key].rooms,record[key].rooms);full[key].unknown ||= record[key].unknown;}done++;}
-   results.mc(summary,full);$('resultMCStatus').textContent=`집계 완료 ${done}/${summary.rows.length}표본`;
+   mcRoomCache.set(mcRoomKey(summary),full);results.mc(summary,full);
   }catch(error){if(run===mcRun&&!disposed)$('resultMCStatus').textContent='집계 미완료 · '+error.message;}
   finally{if(run===mcRun&&!disposed)$('resultMCLoad').disabled=false;}
  });

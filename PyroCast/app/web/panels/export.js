@@ -33,7 +33,7 @@ export function attachExport({store,viewer,getCase,getRoute,render}){
   if(state.floor){viewer.setFloor(state.floor.floor_id??'all');store.dispatch('floor/set',state.floor);}
   if(state.playback){store.dispatch('playback/speed',{speed:state.playback.speed});store.dispatch('playback/seek',{t_s:state.playback.t_s});}
   if(state.camera){viewer.C.position.fromArray(state.camera.position);viewer.C.up.fromArray(state.camera.up);viewer.O.target.fromArray(state.camera.target);viewer.O.update();}
-  const selector='#exploreRun,#exploreOriginRun,#exploreMC,#exploreCalculateRun,#resultMCApplyWorst,#buildingClearFixed,#buildingDoors select,#cfbtFrozenRules button,#resultReplay,#exportHTML,#run,#mc';
+  const selector='#fuelSettings input,#fuelSettings select,#fuelSettings button,#exploreDuration,#exploreSamples,#exploreEngineLite,#exploreEngineCfast,#exploreOrigin,#exploreRun,#exploreOriginRun,#exploreMC,#exploreCalculateRun,#resultMCApplyWorst,#buildingClearFixed,#buildingDoors select,#cfbtFrozenRules button,#resultReplay,#exportHTML,#run,#mc';
   const lock=()=>{for(const node of document.querySelectorAll(selector)){if(!node.disabled)node.disabled=true;if(node.title!=='보기 전용')node.title='보기 전용';}};
   const guard=e=>{if(e.target.closest?.(selector)){e.preventDefault();e.stopImmediatePropagation();}};
   document.addEventListener('click',guard,true);document.addEventListener('change',guard,true);

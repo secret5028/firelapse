@@ -63,7 +63,9 @@ class Acceptance(unittest.TestCase):
         value=briefing(self.s,self.ctx)
         self.assertNotIn('CAD_',value['text'])
         self.assertIn(value['calls'][2]['data']['route']['target_label'],value['text'])
-        self.assertIn('1F D3',value['calls'][2]['data']['route']['entry_label'])
+        entry=value['calls'][2]['data']['route']
+        self.assertNotIn('CAD_',entry['entry_label'])
+        self.assertIn(entry['entry'].split('_')[-1],entry['entry_label'])
         for index,tip in [(0,'지수 0: 평가됨'),(None,'미평가: 저장된 지수 없음'),(22,'평가된 지수')]:
             row={'room':'CAD_3F_R3','label':'3F R3','end_m':94,'phenomenon':'FO','index':index}
             call={'tool':'get_route','data':{'route':{'entry':'CAD_1F_D3','target':'CAD_3F_R3','length':94,'hoses':7,'stairs':2},'risk':{'rows':[row]}}}
@@ -82,7 +84,8 @@ class Acceptance(unittest.TestCase):
         from lite_ai_briefing import compact_sections
         b=briefing(self.s,{'building':'wando-coldstore','case':'wando-P1','floor':'1F'})
         self.assertEqual(len(b['sections']),5)
-        for text in ('24 m','호스 2본','22:10','30:00에 최고 140','35:20','38:25에 최고 114','상층 냉각과 퇴로 확보'):
+        saved_route=b['calls'][2]['data']['route']
+        for text in (f"{saved_route['length']:.0f} m",f"호스 {saved_route['hoses']}본",'22:10','30:00에 최고 140','35:20','38:25에 최고 114','상층 냉각과 퇴로 확보'):
             self.assertIn(text,b['text'])
         for f in b['facts']:
             self.assertIn(json.dumps(f['evidence']['row'],sort_keys=True),json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True))

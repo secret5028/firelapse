@@ -1,0 +1,12 @@
+Result origin selection - 2026-11-05
+Explicit saved-result opening now shares showResultOrigin: floor, origin cell/room, selection layer, results tab, camera fit and immediate view persistence.
+Result-list click (including already loaded result), calculation-result opening and play-worst install use this path. Startup restoration still preserves intentional browsing state.
+Before: result-list selection already focused the origin; generic saved-case install and play-worst install cleared selection. The supplied screenshot itself showed loaded 9F result with a browsed 7F room; it does not establish a failed result-list click.
+UI checks at http://127.0.0.1:8842/model.html:
+7F -> 9F R15 result: floor 9F, room 9F R15, result tab, active result match.
+Browse 7F/settings then reselect same 9F result: all return to 9F R15/result.
+Immediate reload: 9F R15 and active result preserved.
+9F -> 7F R16 result: floor 7F, room 7F R16, result tab match.
+Peak 08:00: FO 134, upper temperature 803.3 C; selection outline visible. Console errors 0.
+Node result_list.test.mjs PASS. UI bundle built (64 modules).
+No simulation, physics, input or server change. No push.

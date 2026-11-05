@@ -46,10 +46,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length,screening:v=>v.schema==='pyrocast.screening/1'&&!v.errors.length}});
  const displayFloors=[...B.floors].sort((a,b)=>(b.z??0)-(a.z??0));
  const shell=createPanelShell({panel,store,buildingFloors:displayFloors,onShowResult:async id=>{
-  if(id!==chosen&&!await loadSavedCase(id))return;
-  const cell=data?.rooms.find(r=>r.key===data.fire_key);if(!cell)return;
-  viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
-  store.dispatch('layers/toggle',{id:'selection',visible:true});select(cell.key);fitFloor(true);render();
+  if(id===chosen)showResultOrigin();else await loadSavedCase(id);
  }});
  const display=createDisplayPanel({store,selectionLabel,isOriginAllowed:room=>screeningPayload?.manual_origins?.some(r=>r.room===room),onOrigin:room=>{if(!screeningPayload?.manual_origins?.some(r=>r.room===room))return;store.dispatch('exploration/set',{origin_room_id:room,origin_mode:'manual'});$('shellTab-explore').click();}});
  const results=createResultsPanel({panel,store});
@@ -137,8 +134,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  }
  async function openCalculation(){
   const id=calculationState.case_id;if(!id)return;
-  try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});const p=await r.json();if(!r.ok)throw Error(p.error||'결과 읽기 실패');if(disposed)return;await install(p,id);
-   const cell=p.rooms.find(r=>r.key===p.fire_key);if(cell){viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});select(cell.key);fitFloor(true);} $('shellTab-result').click();render();
+  try{await loadSavedCase(id);
   }catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
  }
  cleanup.push(()=>{if(calculationPoll)clearTimeout(calculationPoll);});
@@ -256,7 +252,16 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  handler($('liteSpeed'),'onchange',()=>store.dispatch('playback/speed',{speed:+$('liteSpeed').value}));store.dispatch('playback/speed',{speed:20});
  handler($('liteTime'),'oninput',()=>{store.dispatch('playback/play',{playing:false});store.dispatch('playback/seek',{t_s:+$('liteTime').value});render();});
  handler($('liteFold'),'onclick',()=>{$('liteBody').hidden=!$('liteBody').hidden;$('liteFold').textContent=$('liteBody').hidden?'펼치기':'접기';});
- async function install(payload,id){
+ // Every explicit result-open path selects that result's own origin. A CAD
+ // room selected while browsing another floor must never leak into this action.
+ function showResultOrigin(){
+  const cell=data?.rooms.find(r=>r.key===data.fire_key);
+  if(!cell)throw Error('계산 결과의 화점실 정보가 없습니다.');
+  viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
+  store.dispatch('layers/toggle',{id:'selection',visible:true});
+  select(cell.key);$('shellTab-result').click();render();fitFloor(true);saveView();
+ }
+ async function install(payload,id,{focusOrigin=false}={}){
   if(payload.schema!=='pyrocast-cad-playback-1'||!payload.complete||payload.building_sha256!==initial.building_sha256)throw Error('다른 건물 또는 미완료 계산 결과입니다. 표시하지 않습니다.');
   const seq=store.dispatch('result/load'),byRoom=new Map();
   for(const c of payload.rooms){const key=c.original_room||c.key;if(byRoom.has(key))continue;const f=B.floors.find(f=>f.name===c.cad_floor),r=f?.rooms.find(r=>`CAD_${f.name}_${r.id}`===key);if(!r)throw Error('CAD room missing: '+key);
@@ -272,7 +277,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;store.dispatch('selection/set',{room_id:null,cell_id:null,source:'list'});$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   $('liteTime').step=data.output_step_s||10;
-  lastPanel='';ruleContext();ready=true;viewer.setFloor(selected.cad_floor);render();fitFloor();return true;
+  lastPanel='';ruleContext();ready=true;
+  if(focusOrigin)showResultOrigin();else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
  }
  let mcSummary=null,mcRun=0,mcAbort=null;
  async function saveFixed(body,playWorst=false){
@@ -286,7 +292,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    if(disposed)return;
    store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
    if(value.fixed_state)store.dispatch('openings/set',{fixed:true});
-   if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId);}
+   if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId,{focusOrigin:true});}
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
    await refreshScreening();await catalog();
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
@@ -314,7 +320,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let loadSerial=0;
  async function loadSavedCase(id){const serial=++loadSerial;$('resultReplay').disabled=true;
   try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});if(!r.ok)throw Error('HTTP '+r.status);const payload=await r.json();if(disposed||serial!==loadSerial)return false;
-   const installed=await install(payload,id);if(installed){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
+   const installed=await install(payload,id,{focusOrigin:true});if(installed){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
   }finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}
  }
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',()=>loadSavedCase($('liteCase').value).catch(error=>{if(!disposed)$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}));

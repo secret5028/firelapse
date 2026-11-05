@@ -40,7 +40,7 @@ export class RouteLayer extends EmptyLayer {
    vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);this.vehicleObject=vehicle;vehicle.rotation.set(Math.PI/2,0,this.frame?.route.vehicle_yaw||0,'ZYX');add(vehicle,'1F',false);
   }
  }
- setData(frame){this.frame=frame;if(this.vehicleObject)this.vehicleObject.rotation.set(Math.PI/2,0,frame.route.vehicle_yaw||0,'ZYX');if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
+ setData(frame){this.frame=frame;if(this.vehicleObject)this.vehicleObject.rotation.set(Math.PI/2,0,frame.route.vehicle_yaw||0,'ZYX');if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object} of this.items)object.visible=frame.route.vehicle_visible;this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
   const signature=JSON.stringify([target,vehicle,state.hose_m,state.stair_factor]);
   if(signature!==this.signature){this.signature=signature;this.result={...findRoute(this.graph,target,vehicle,state),vehicle};this.build(this.result);}
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
@@ -49,7 +49,7 @@ export class RouteLayer extends EmptyLayer {
    for(const row of this.riskDisplay.rows)this.roomMaterials.get(row.room)?.color.set(row.color);
    this.onChange?.({...this.result,risk_summary:this.riskDisplay});
   }
-  for(const {object,floor,route} of this.items)object.visible=(frame.floor.floor_id===null||frame.floor.floor_id===floor)&&(route||state.vehicle_visible);
+  for(const {object,route} of this.items)object.visible=route||state.vehicle_visible;
   this.updateVisibility();
  }
  setVehiclePreview(point,yaw=0,valid=true){

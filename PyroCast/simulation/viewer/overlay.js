@@ -562,7 +562,7 @@ class RouteLayer extends EmptyLayer {
    vehicle.position.fromArray(result.vehicle||this.graph.defaultVehicle);this.vehicleObject=vehicle;vehicle.rotation.set(Math.PI/2,0,this.frame?.route.vehicle_yaw||0,'ZYX');add(vehicle,'1F',false);
   }
  }
- setData(frame){this.frame=frame;if(this.vehicleObject)this.vehicleObject.rotation.set(Math.PI/2,0,frame.route.vehicle_yaw||0,'ZYX');if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object,floor} of this.items)object.visible=frame.route.vehicle_visible&&(frame.floor.floor_id===null||frame.floor.floor_id===floor);this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
+ setData(frame){this.frame=frame;if(this.vehicleObject)this.vehicleObject.rotation.set(Math.PI/2,0,frame.route.vehicle_yaw||0,'ZYX');if(this.graph.error){const errorKey=JSON.stringify([this.graph.error,frame.route.vehicle]);if(this.signature!==errorKey){this.signature=errorKey;if(this.graph.defaultVehicle)this.build({vehicle:frame.route.vehicle||this.graph.defaultVehicle});this.onChange?.({error:this.graph.error});}for(const {object} of this.items)object.visible=frame.route.vehicle_visible;this.updateVisibility();return;}const state=frame.route,target=this.targetFor(),vehicle=state.vehicle||this.graph.defaultVehicle;
   const signature=JSON.stringify([target,vehicle,state.hose_m,state.stair_factor]);
   if(signature!==this.signature){this.signature=signature;this.result={...findRoute(this.graph,target,vehicle,state),vehicle};this.build(this.result);}
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
@@ -571,7 +571,7 @@ class RouteLayer extends EmptyLayer {
    for(const row of this.riskDisplay.rows)this.roomMaterials.get(row.room)?.color.set(row.color);
    this.onChange?.({...this.result,risk_summary:this.riskDisplay});
   }
-  for(const {object,floor,route} of this.items)object.visible=(frame.floor.floor_id===null||frame.floor.floor_id===floor)&&(route||state.vehicle_visible);
+  for(const {object,route} of this.items)object.visible=route||state.vehicle_visible;
   this.updateVisibility();
  }
  setVehiclePreview(point,yaw=0,valid=true){
@@ -4375,9 +4375,9 @@ function fallbackStairSteps(T,core){
 
 class CoreLayer extends EmptyLayer {
  static id='core';
- constructor(THREE,{geometryFor}={}){super(THREE);
+ constructor(THREE,{geometryFor,contextFloorsFor=()=>[]}={}){super(THREE);
   if(typeof geometryFor!=='function')throw Error('CAD core source provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.views=[];this.buildCount=0;
+  this.geometryFor=geometryFor;this.contextFloorsFor=contextFloorsFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.views=[];this.buildCount=0;
  }
  clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.views=[];this.asset=null;}
  build(asset){this.clearGeometry();this.asset=asset;this.buildCount++;const T=this.THREE;
@@ -4415,12 +4415,23 @@ class CoreLayer extends EmptyLayer {
  }
  // Core visibility follows the toggle in both whole-building and single-floor views.
  updateVisibility(){if(this.group)this.group.visible=this.visible!==false;}
- tick(){const floor=this.frame?.floor?.floor_id??null;for(const {row,group} of this.views){group.position.copy(row.group.position);group.visible=row.group.visible&&(floor===null||row.id===floor);}}
+ tick(){const floor=this.frame?.floor?.floor_id??null;
+  const selectedZ=this.views.find(v=>v.row.id===floor)?.row.group.position.z;
+  const context=new Set(this.frame?.layers?.route!==false?this.contextFloorsFor():[]);
+  for(const {row,group} of this.views){group.position.copy(row.group.position);
+   const below=floor!==null&&Number.isFinite(selectedZ)&&row.group.position.z<selectedZ;
+   group.visible=(row.group.visible&&(floor===null||row.id===floor))||(below&&context.has(row.id));
+   for(const object of group.children){const material=object.material;if(!material)continue;
+    material.userData.coreOpacity??=material.opacity;
+    material.opacity=material.userData.coreOpacity*(below?.35:1);
+   }
+  }
+ }
  diagnostics(){const counts={shells:0,treads:0,edges:0};for(const {group} of this.views)for(const object of group.children){
   if(object.renderOrder===70)counts.shells++;else if(object.renderOrder===72)counts.treads++;else if(object.renderOrder===73)counts.edges++;}
   return {buildCount:this.buildCount,resources:this.resources.size,floors:this.views.length,...counts};
  }
- dispose(){this.clearGeometry();this.geometryFor=null;this.lastBuilding=null;this.lastResult=null;super.dispose();}
+ dispose(){this.clearGeometry();this.geometryFor=null;this.contextFloorsFor=null;this.lastBuilding=null;this.lastResult=null;super.dispose();}
 }
 
 return {fallbackStairSteps,CoreLayer};
@@ -5153,7 +5164,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#ffffff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'displayRoomNames','도면 방 이름','#e8f2f8',()=>store.get('layers').roomNames,visible=>store.dispatch('layers/toggle',{id:'roomNames',visible}),false,'원본 CAD에 기록된 실 이름을 표시합니다. 이름이 없는 실은 임의로 만들지 않습니다.');
- toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'전체 보기에서는 전층, 층 선택 시 해당 층의 계단·승강기를 표시합니다.');
+ toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'선택 층 위는 숨기고, 아래쪽 경로의 계단·승강기는 흐리게 표시합니다. 전체 보기에서는 전층을 표시합니다.');
  toggle($('displayLayers'),'displayFixedOpenings','급기 상태 보기','#62dcb0',()=>store.get('openings').fixed,fixed=>store.dispatch('openings/set',{fixed}),false,'확정 입력이 있으면 다음 계산의 상태를, 없으면 저장된 재생 사례의 입력 상태를 표시합니다. 두 상태는 다를 수 있습니다. 사각형은 열림, ×는 닫힘(누설 포함). 외부 창은 기존 강조 필터와 카메라 방향을 따릅니다.');
  for(const [key,id,label] of [['cellOutline','displayCellOutline','셀 점선'],['floorTint','displayFloorTint','바닥 틴트'],['smokeInterface','displaySmokeInterface','연기 경계면'],['boundaryDots','displayBoundaryDots','경계 ±30 ℃ 점선']])toggle($('displayLayers'),id,label,'#9ca3af',()=>store.get('displayDetails')[key],visible=>store.dispatch('displayDetails/set',{[key]:visible}));
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);
@@ -5622,7 +5633,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});
  const openingsAsset=readLegacyOpeningsSource({building:B,groups,sourceHash:initial.building_sha256});
  const coreAsset=readLegacyCoreSource({building:B,groups,sourceHash:initial.building_sha256,shapeFor:shp});
- const buildingLayer=new BuildingLayer(T,{geometryFor:()=>buildingAsset}),openings=new OpeningsLayer(T,{geometryFor:()=>openingsAsset,camera:C}),core=new CoreLayer(T,{geometryFor:()=>coreAsset});
+ const buildingLayer=new BuildingLayer(T,{geometryFor:()=>buildingAsset}),openings=new OpeningsLayer(T,{geometryFor:()=>openingsAsset,camera:C}),core=new CoreLayer(T,{geometryFor:()=>coreAsset,contextFloorsFor:()=>route.result?.segments?.map(s=>s.floor)||[]});
  let rawSource=null,data=null,selected=null,clicked=false,autoFit=false,chosen=initial.case_id||'stage4',disposed=false,ready=false,busy=false,last=0,fractional=0,lastFloor='',lastPanel='';
  const real=createRealViewLayers(T,{sourceFor:()=>rawSource,camera:C,fuelSymbols:true}),risk=new RiskLayer(T),selection=new SelectionLayer(T);
  let routeGraph;try{routeGraph=readRouteGraph(B);}catch(error){routeGraph={error:error.message,ground:{z:0,slab:[]},mainEntrance:null,defaultVehicle:null};}
@@ -5804,7 +5815,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').querySelectorAll('button')){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
- cleanup.push(store.subscribe('selection',s=>{if(!data)return;if(['click','touch'].includes(s.source)&&$('shellTab-building').getAttribute('aria-selected')==='true'){store.dispatch('route/set',{target_room_id:s.room_id});store.dispatch('layers/toggle',{id:'route',visible:true});}const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
+ cleanup.push(store.subscribe('selection',s=>{if(!data)return;if(['click','touch'].includes(s.source)){store.dispatch('route/set',{target_room_id:s.room_id});store.dispatch('layers/toggle',{id:'route',visible:true});}const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
  function select(key){const r=data.rooms.find(r=>r.key===key)||selected;store.dispatch('selection/set',{room_id:r.original_room||r.key,cell_id:r.key,source:'list'});}
  handler($('liteRoom'),'onchange',()=>select($('liteRoom').value));
  handler($('liteFocus'),'onclick',()=>{clicked=true;autoFit=false;const p=selected.cad_center_m;O.target.set(p[0],p[1],selected.z_m+1);C.position.set(p[0]+15,p[1]-18,selected.z_m+18);O.update();recordCamera('room');render();});

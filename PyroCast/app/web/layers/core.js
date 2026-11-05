@@ -45,9 +45,9 @@ export function fallbackStairSteps(T,core){
 
 export class CoreLayer extends EmptyLayer {
  static id='core';
- constructor(THREE,{geometryFor}={}){super(THREE);
+ constructor(THREE,{geometryFor,contextFloorsFor=()=>[]}={}){super(THREE);
   if(typeof geometryFor!=='function')throw Error('CAD core source provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.views=[];this.buildCount=0;
+  this.geometryFor=geometryFor;this.contextFloorsFor=contextFloorsFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.views=[];this.buildCount=0;
  }
  clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.views=[];this.asset=null;}
  build(asset){this.clearGeometry();this.asset=asset;this.buildCount++;const T=this.THREE;
@@ -85,10 +85,21 @@ export class CoreLayer extends EmptyLayer {
  }
  // Core visibility follows the toggle in both whole-building and single-floor views.
  updateVisibility(){if(this.group)this.group.visible=this.visible!==false;}
- tick(){const floor=this.frame?.floor?.floor_id??null;for(const {row,group} of this.views){group.position.copy(row.group.position);group.visible=row.group.visible&&(floor===null||row.id===floor);}}
+ tick(){const floor=this.frame?.floor?.floor_id??null;
+  const selectedZ=this.views.find(v=>v.row.id===floor)?.row.group.position.z;
+  const context=new Set(this.frame?.layers?.route!==false?this.contextFloorsFor():[]);
+  for(const {row,group} of this.views){group.position.copy(row.group.position);
+   const below=floor!==null&&Number.isFinite(selectedZ)&&row.group.position.z<selectedZ;
+   group.visible=(row.group.visible&&(floor===null||row.id===floor))||(below&&context.has(row.id));
+   for(const object of group.children){const material=object.material;if(!material)continue;
+    material.userData.coreOpacity??=material.opacity;
+    material.opacity=material.userData.coreOpacity*(below?.35:1);
+   }
+  }
+ }
  diagnostics(){const counts={shells:0,treads:0,edges:0};for(const {group} of this.views)for(const object of group.children){
   if(object.renderOrder===70)counts.shells++;else if(object.renderOrder===72)counts.treads++;else if(object.renderOrder===73)counts.edges++;}
   return {buildCount:this.buildCount,resources:this.resources.size,floors:this.views.length,...counts};
  }
- dispose(){this.clearGeometry();this.geometryFor=null;this.lastBuilding=null;this.lastResult=null;super.dispose();}
+ dispose(){this.clearGeometry();this.geometryFor=null;this.contextFloorsFor=null;this.lastBuilding=null;this.lastResult=null;super.dispose();}
 }

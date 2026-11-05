@@ -24,7 +24,7 @@ const resultMeta={time_s:[1420,3600],index_by_cell:{R2_C0:{FO:[120,0],FGI:[0,0],
 const riskResources=[...layer.resources];
 for(const [t_s,history,color] of [[1420,false,'ef4444'],[3600,true,'ef4444'],[3600,false,'38bdf8']]){
  layer.setData({...frame,building,resultMeta,t_s,risk:{history}});
- assert.equal(layer.roomMaterials.get('CAD_3F_R2').color.getHexString(),color);
+ assert.equal(layer.roomMaterials.get('CAD_3F_R2').color.getHexString(),'ffffff');
  assert.deepEqual([...layer.resources],riskResources,'time/history changes only materials, never geometry');
 }
 for(const order of [37,38]){const mesh=layer.items.find(x=>x.object.isMesh&&x.object.renderOrder===order).object;

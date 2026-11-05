@@ -523,7 +523,7 @@ const __module13=(()=>{
 const {ROOM_PICK_LAYER}=__module11;
 const {EmptyLayer}=__module12;
 const {findRoute}=__module3;
-const {routeRiskRows,routeSampleIndex,ROUTE_CLEAR}=__module10;
+const {routeRiskRows,routeSampleIndex}=__module10;
 class RouteLayer extends EmptyLayer {
  static id='route';
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
@@ -537,7 +537,7 @@ class RouteLayer extends EmptyLayer {
   const batches=new Map(),segments=result.segments||[];
   for(const [index,s] of segments.entries()){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
    if(!this.roomMaterials.has(s.room)){
-    const material=makeMaterial(ROUTE_CLEAR);material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
+    const material=makeMaterial('#ffffff');material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
     this.roomMaterials.set(s.room,material);
    }
    const d=new T.Vector3().subVectors(b,a),normal=new T.Vector3(-d.y,d.x,0).normalize();
@@ -552,7 +552,7 @@ class RouteLayer extends EmptyLayer {
    }
   }
   for(const batch of batches.values()){const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(batch.positions,3));add(new T.Mesh(g,batch.material),batch.floor,true,batch.order);}
-  for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#38bdf8';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
+  for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#ffffff';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
    const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }
   if(this.vehicleSource){const vehicle=new T.Group();vehicle.rotation.x=Math.PI/2;
@@ -568,7 +568,7 @@ class RouteLayer extends EmptyLayer {
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
   if(!this.riskKey||riskKey.some((x,i)=>x!==this.riskKey[i])){
    this.riskKey=riskKey;this.riskDisplay=routeRiskRows(this.result,frame);
-   for(const row of this.riskDisplay.rows)this.roomMaterials.get(row.room)?.color.set(row.color);
+   // The hose stays white; risk values and colours remain in the summary table.
    this.onChange?.({...this.result,risk_summary:this.riskDisplay});
   }
   for(const {object,route} of this.items)object.visible=route||state.vehicle_visible;
@@ -5815,7 +5815,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  for(const id of ['top','iso','resetView','zoomIn','zoomOut']){const button=$(id),old=button.onclick;handler(button,'onclick',function(e){old?.call(this,e);recordCamera(id==='top'?'top':id==='iso'||id==='resetView'?(viewer.getFloor()==='all'?'all':'floor'):store.get('camera').mode);render();});}
  for(const button of $('fbtn').querySelectorAll('button')){const old=button.onclick;handler(button,'onclick',function(e){const position=C.position.clone(),target=O.target.clone(),zoom=C.zoom;autoFit=false;old?.call(this,e);C.position.copy(position);O.target.copy(target);C.zoom=zoom;C.updateProjectionMatrix();O.update();store.dispatch('floor/set',{floor_id:viewer.getFloor()==='all'?null:viewer.getFloor()});recordCamera(store.get('camera').mode);render();});}
  on(R.domElement,'pointerdown',()=>{autoFit=false;});
- cleanup.push(store.subscribe('selection',s=>{if(!data)return;if(['click','touch'].includes(s.source)){store.dispatch('route/set',{target_room_id:s.room_id});store.dispatch('layers/toggle',{id:'route',visible:true});}const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
+ cleanup.push(store.subscribe('selection',s=>{if(!data)return;if(s.room_id)store.dispatch('route/set',{target_room_id:s.room_id});if(['click','touch'].includes(s.source))store.dispatch('layers/toggle',{id:'route',visible:true});const match=data.rooms.find(r=>r.key===s.cell_id)||data.rooms.find(r=>(r.original_room||r.key)===s.room_id);if(match){selected=match;$('liteRoom').value=selected.key;if(viewer.getFloor()!=='all'&&viewer.getFloor()!==selected.cad_floor)viewer.setFloor(selected.cad_floor);}if(s.source!=='list'||ready)clicked=true;render();}));
  function select(key){const r=data.rooms.find(r=>r.key===key)||selected;store.dispatch('selection/set',{room_id:r.original_room||r.key,cell_id:r.key,source:'list'});}
  handler($('liteRoom'),'onchange',()=>select($('liteRoom').value));
  handler($('liteFocus'),'onclick',()=>{clicked=true;autoFit=false;const p=selected.cad_center_m;O.target.set(p[0],p[1],selected.z_m+1);C.position.set(p[0]+15,p[1]-18,selected.z_m+18);O.update();recordCamera('room');render();});

@@ -1,7 +1,7 @@
 import {ROOM_PICK_LAYER} from '../scene/picking.js';
 import {EmptyLayer} from './empty.js';
 import {findRoute} from '../route/graph.js';
-import {routeRiskRows,routeSampleIndex,ROUTE_CLEAR} from '../route/risk.js';
+import {routeRiskRows,routeSampleIndex} from '../route/risk.js';
 export class RouteLayer extends EmptyLayer {
  static id='route';
  constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
@@ -15,7 +15,7 @@ export class RouteLayer extends EmptyLayer {
   const batches=new Map(),segments=result.segments||[];
   for(const [index,s] of segments.entries()){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
    if(!this.roomMaterials.has(s.room)){
-    const material=makeMaterial(ROUTE_CLEAR);material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
+    const material=makeMaterial('#ffffff');material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
     this.roomMaterials.set(s.room,material);
    }
    const d=new T.Vector3().subVectors(b,a),normal=new T.Vector3(-d.y,d.x,0).normalize();
@@ -30,7 +30,7 @@ export class RouteLayer extends EmptyLayer {
    }
   }
   for(const batch of batches.values()){const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(batch.positions,3));add(new T.Mesh(g,batch.material),batch.floor,true,batch.order);}
-  for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#38bdf8';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
+  for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#ffffff';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
    const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }
   if(this.vehicleSource){const vehicle=new T.Group();vehicle.rotation.x=Math.PI/2;
@@ -46,7 +46,7 @@ export class RouteLayer extends EmptyLayer {
   const riskKey=[frame.building,frame.resultMeta,routeSampleIndex(frame.resultMeta,frame.t_s),frame.risk?.history===true];
   if(!this.riskKey||riskKey.some((x,i)=>x!==this.riskKey[i])){
    this.riskKey=riskKey;this.riskDisplay=routeRiskRows(this.result,frame);
-   for(const row of this.riskDisplay.rows)this.roomMaterials.get(row.room)?.color.set(row.color);
+   // The hose stays white; risk values and colours remain in the summary table.
    this.onChange?.({...this.result,risk_summary:this.riskDisplay});
   }
   for(const {object,route} of this.items)object.visible=route||state.vehicle_visible;

@@ -20,7 +20,7 @@ const core=new CoreLayer(T,{geometryFor:()=>asset,contextFloorsFor:()=>route.res
 const frame={building:{source_hash:hash},route:store.get('route'),floor:{floor_id:'7F'},layers:{route:true}};
 route.setData(frame);core.setData(frame);core.tick();
 assert(!route.result.error);assert.equal(route.result.stairs,6);
-assert(route.items.every(x=>x.object.visible));assert.equal(route.getVehiclePickPlanes().length,1);
+assert(route.items.every(x=>x.object.visible));assert([...route.roomMaterials.values()].every(m=>m.color.getHexString()==='ffffff'),'hose stays white');assert.equal(route.getVehiclePickPlanes().length,1);
 const visible=core.views.filter(v=>v.group.visible).map(v=>v.row.id);
 assert.deepEqual(visible,['1F','2F','3F','4F','5F','6F','7F']);
 assert(groups.filter(g=>g.visible).every(g=>g.name==='7F'),'lower architectural floors stay hidden');

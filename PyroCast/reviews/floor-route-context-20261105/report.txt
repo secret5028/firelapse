@@ -1,0 +1,9 @@
+Floor route context and compact result list
+- Selected floor: whole hose and ground vehicle retained; lower architectural floors stay hidden.
+- Route floors below selection: cores opacity x0.35. Above selection: hidden. Core toggle OFF/ON verified in operating hotel UI.
+- Room selection from click/touch/list/restored selection sets route destination. Camera fit code unchanged.
+- Hotel 7F R16 fixture: 6 stairs; visible core floors 1F through 7F. Higher-route target 9F does not reveal cores above 7F.
+- Existing route_selection test PASS. route_floor_context test PASS, including vehicle/core/route toggles and white hose materials.
+- Result list: measured width 218px, font 11px, row 26px, scroll viewport 78px = 3 rows. result_list test PASS.
+- Hose: white with existing dark edge and solid-object depth occlusion. Risk summary still uses saved values.
+- No simulation rerun, engine/server/data edits, or push.

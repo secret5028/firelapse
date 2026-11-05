@@ -46,15 +46,19 @@ export function outsideOpeningIntervals(a,b,cuts){
 // Keep the actual jamb, but remove its extension above/below the rectangle.
 // Only vertical wall edges at that opening are affected; roof edges, remote
 // walls, meshes and the independent opening-frame layer remain untouched.
+// CAD wall-band outlines can be offset 2 cm from the opening footprint.
+// Match only local jamb seams, allowing rounding in Float32 geometry.
+const seamTolerance=.03001;
+const seamNormalPadding=.01501; // footprint already has 1.5 cm padding
 export function outsideWallOpeningIntervals(a,b,cuts){
  const vertical=Math.hypot(b[0]-a[0],b[1]-a[1])<1e-5&&Math.abs(b[2]-a[2])>1e-6;
  if(!vertical)return outsideOpeningIntervals(a,b,cuts);
  const extensions=[];
  for(const c of cuts){
   const along=a[0]*c.u[0]+a[1]*c.u[1],normal=a[0]*c.v[0]+a[1]*c.v[1];
-  const acrossOpening=along>=c.min[0]-.025&&along<=c.max[0]+.025;
-  if(normal<c.min[1]||normal>c.max[1]||(!acrossOpening&&!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=.02)))continue;
-  for(const [low,high] of [[-1e6,c.bottom],[c.top,1e6]])extensions.push({...c,min:[along-.025,c.min[1],low],max:[along+.025,c.max[1],high]});
+  const acrossOpening=along>=c.min[0]-seamTolerance&&along<=c.max[0]+seamTolerance;
+  if(normal<c.min[1]-seamNormalPadding||normal>c.max[1]+seamNormalPadding||(!acrossOpening&&!(c.seams||c.jambs)?.some(x=>Math.abs(along-x)<=seamTolerance)))continue;
+  for(const [low,high] of [[-1e6,c.bottom],[c.top,1e6]])extensions.push({...c,min:[along-seamTolerance,c.min[1]-seamNormalPadding,low],max:[along+seamTolerance,c.max[1]+seamNormalPadding,high]});
  }
  return outsideOpeningIntervals(a,b,[...cuts,...extensions]);
 }
@@ -91,7 +95,7 @@ export function trimWallJambFaces(T,source,floorGroup,cuts){
  for(let i=start;i+2<end;i+=3){let poly=[0,1,2].map(k=>vertex(g.index?g.index.getX(i+k):i+k));
   for(const c of cuts){if(poly.length<3)break;
    const xyz=poly.map(v=>v.world),us=xyz.map(v=>v[0]*c.u[0]+v[1]*c.u[1]),vs=xyz.map(v=>v[0]*c.v[0]+v[1]*c.v[1]),zs=xyz.map(v=>v[2]);
-   if(Math.max(...zs)-Math.min(...zs)<1e-6||Math.max(...us)-Math.min(...us)>.025||!(c.seams||c.jambs).some(j=>us.every(u=>Math.abs(j-u)<=.025))||vs.some(v=>v<c.min[1]||v>c.max[1]))continue;
+   if(Math.max(...zs)-Math.min(...zs)<1e-6||Math.max(...us)-Math.min(...us)>.025||!(c.seams||c.jambs).some(j=>us.every(u=>Math.abs(j-u)<=seamTolerance))||vs.some(v=>v<c.min[1]-seamNormalPadding||v>c.max[1]+seamNormalPadding))continue;
    if(Math.min(...zs)>=c.bottom-1e-6&&Math.max(...zs)<=c.top+1e-6)continue;
    poly=clip(clip(poly,c.bottom,true),c.top,false);changed=true;
   }

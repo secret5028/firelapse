@@ -39,3 +39,19 @@ layer.setData({...frame,t_s:10});const half=layer.sourceObjects.get(source).geom
 layer.setData({...frame,t_s:11});assert.equal(layer.sourceObjects.get(source).geometry,half);layer.setData({...frame,t_s:20});assert.equal(disposed,1);assert.equal(layer.sourceObjects.get(source).material,source.material);layer.dispose();assert.equal(source.material.opacity,.42);
 const cad=JSON.parse(fs.readFileSync('simulation/results/github-publish-20261026/PyroCast/cad-project/building.json','utf8'));
 console.log(JSON.stringify({door:true,window:true,diagonal:true,transformed_floor:true,frames_preserved:true,schedule:true,no_rebuild_same_fraction:true,source_unchanged:true,other_building_cuts:cad.floors.map(f=>({floor:f.name,count:wallOpeningVolumes(f).length}))}));
+
+// Hotel W0: wall mesh is 2 cm outside the CAD window footprint.
+const offsetCuts=wallOpeningVolumes(win);
+assert.deepEqual(outsideWallOpeningIntervals([1.98,-.12,0],[1.98,-.12,4],offsetCuts),[[.25,.5]]);
+assert.deepEqual(outsideWallOpeningIntervals([1.9,-.2,0],[1.9,-.2,4],offsetCuts),[[0,1]]);
+assert.deepEqual(outsideWallOpeningIntervals([1.98,-.12,1],[1.98,-.12,2],offsetCuts),[[0,1]]);
+console.log('PASS offset window seam removed; jamb and remote structural corner retained');
+
+const offsetCap=new T.Mesh(new T.BufferGeometry().setFromPoints([
+ new T.Vector3(1.98,-.12,0),new T.Vector3(2,-.1,0),new T.Vector3(2,-.1,4)
+]),new T.MeshBasicMaterial());offsetCap.name='1F_wall';
+const offsetGroup=new T.Group();offsetGroup.add(offsetCap);
+const offsetResult=trimWallJambFaces(T,offsetCap,offsetGroup,offsetCuts);assert(offsetResult);
+for(let i=0;i<offsetResult.attributes.position.count;i++){const z=offsetResult.attributes.position.getZ(i);assert(z>=.99999&&z<=2.00001);}
+offsetResult.dispose();offsetCap.geometry.dispose();offsetCap.material.dispose();
+console.log('PASS bevelled jamb cap cropped to window height');

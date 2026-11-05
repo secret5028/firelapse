@@ -1,0 +1,116 @@
+[
+  {
+    "building": "hotel",
+    "build_ms": 771,
+    "floors": [
+      {
+        "floor": "B3",
+        "segments": 1729
+      },
+      {
+        "floor": "B2",
+        "segments": 2110
+      },
+      {
+        "floor": "B1",
+        "segments": 2150
+      },
+      {
+        "floor": "1F",
+        "segments": 1577
+      },
+      {
+        "floor": "2F",
+        "segments": 1443
+      },
+      {
+        "floor": "3F",
+        "segments": 1559
+      },
+      {
+        "floor": "4F",
+        "segments": 2634
+      },
+      {
+        "floor": "5F",
+        "segments": 2417
+      },
+      {
+        "floor": "6F",
+        "segments": 2390
+      },
+      {
+        "floor": "7F",
+        "segments": 2410
+      },
+      {
+        "floor": "8F",
+        "segments": 2602
+      },
+      {
+        "floor": "9F",
+        "segments": 2433
+      },
+      {
+        "floor": "10F",
+        "segments": 2432
+      },
+      {
+        "floor": "PH",
+        "segments": 378
+      }
+    ]
+  },
+  {
+    "building": "ganghwa",
+    "build_ms": 3018,
+    "floors": [
+      {
+        "floor": "B1",
+        "segments": 14126
+      },
+      {
+        "floor": "1F",
+        "segments": 5027
+      },
+      {
+        "floor": "2F",
+        "segments": 3058
+      },
+      {
+        "floor": "3F",
+        "segments": 6808
+      },
+      {
+        "floor": "4F",
+        "segments": 2656
+      },
+      {
+        "floor": "5F",
+        "segments": 2704
+      },
+      {
+        "floor": "6F",
+        "segments": 4310
+      },
+      {
+        "floor": "7F",
+        "segments": 3708
+      },
+      {
+        "floor": "PH",
+        "segments": 620
+      }
+    ]
+  },
+  {
+    "building": "wando",
+    "build_ms": 29,
+    "floors": [
+      {
+        "floor": "1F",
+        "segments": 194
+      }
+    ]
+  }
+]

@@ -1,0 +1,7 @@
+Window jamb extension regression — 2026-11-05
+Cause: hotel 5F W0 (객실-6) footprint starts at (3.27,43.36); wall-band corner is (3.25,43.34). Existing normal padding 0.015 m and along tolerance 0.02 m missed the 2 cm offset (plus Float32 rounding). Thin wall-corner rendering exposed the extrusion seam.
+Fix: local vertical seam / jamb cap matching tolerates 3 cm including rounding. Opening interior clipping and horizontal wall edges unchanged. Independent opening-frame layer unchanged. Walls remain translucent. No engine, CAD input, or result data changes.
+Operational browser: W0 full-height line at (3.25,43.34) previously z=-0.15..3.10; now z=0.90..2.20 (window sill/head). Extensions outside window = 0. Before/after screenshots at same camera.
+Tests: wall_opening_lines.test.mjs PASS; wall_corners.test.mjs PASS. Added offset seam + bevel cap regression; actual jamb, nearby remote wall corner, scheduling, transformed floors and resource disposal preserved.
+Geometry smoke test: hotel14 floors / Ganghwa9 / Wando1 all finite. Screenshots are hotel operational screen, other buildings geometry checks only.
+No simulation or push.

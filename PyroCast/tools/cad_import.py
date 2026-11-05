@@ -8,6 +8,7 @@ ROOT=model_library.ROOT
 STAGING=ROOT/'data/cad-imports'
 MAX_BODY=90*1024*1024
 LOCK=threading.Lock()
+PIPELINE_REVISION='cad-auto-20261105'
 
 def read(p): return json.loads(Path(p).read_text('utf-8-sig'))
 def folder(ident):
@@ -18,6 +19,7 @@ def folder(ident):
 
 def status(ident):
     value=read(folder(ident)/'manifest.json')
+    value['processor_revision']=PIPELINE_REVISION
     if value['state']=='running' and not LOCK.locked():
         value.update(state='interrupted',message='CAD 변환 중단 · 도면을 다시 추가하세요')
     return value
@@ -66,6 +68,7 @@ def geometry_checks(building,expected):
     from prepare_building_graph import geometry
     errors=[]; rows=[]; floors=building.get('floors',[])
     actual=[f.get('name') for f in floors]
+    if not floors: errors.append('층 형상 없음')
     missing=set(expected)-set(actual)
     if missing: errors.append('누락 층: '+', '.join(sorted(missing)))
     if len(actual)!=len(set(actual)): errors.append('층 중복')
@@ -80,6 +83,12 @@ def geometry_checks(building,expected):
         if coverage<.25: errors.append(f"{f['name']}: 실 형상 심각한 결측 (바닥 대비 {coverage:.0%})")
         rows.append(dict(floor=f['name'],rooms=len(rooms),openings=len(f.get('openings',[])),coverage=round(coverage,3),height_m=height))
     return errors,rows
+
+def progress(dest,value,stage,message,**details):
+    """Persist each automatic stage so polling/reloads expose the actual work."""
+    value.update(stage=stage,message=message,**details)
+    value.setdefault('pipeline',[]).append(dict(stage=stage,at=time.time()))
+    atomic_json(dest/'manifest.json',value)
 
 def generate(ident,body):
     dest=folder(ident); value=read(dest/'manifest.json')
@@ -104,6 +113,9 @@ def review(ident):
 def worker(ident,review_only=False):
     dest=folder(ident); value=read(dest/'manifest.json')
     try:
+        value['pipeline']=[]
+        value['pipeline_revision']=PIPELINE_REVISION
+        progress(dest,value,'extract','1/5 · CAD 형상·원본 문 호 추출 중…')
         env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PYTHONUTF8':'1'}
         with (dest/'conversion.log').open('w',encoding='utf8') as log:
             process=subprocess.run([sys.executable,'-B','-X','utf8',str(Path(__file__)), '--arcs' if review_only else '--convert',str(dest)],
@@ -111,6 +123,7 @@ def worker(ident,review_only=False):
                 creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         if process.returncode: raise ValueError('CAD 형상 추출 실패 · conversion.log 확인')
         source=dest/'extraction/building.json'; building=read(source)
+        progress(dest,value,'validate','2/5 · 층 누락·형상 결측 검사 중…')
         errors,rows=geometry_checks(building,value['expected'])
         value.update(floors=rows,errors=errors)
         if errors:
@@ -118,17 +131,26 @@ def worker(ident,review_only=False):
         else:
             from cad_completion import complete
             from apply_hotel_autocorrect import check
-            value['message']='층 정렬·미연결 공간 공리 검토 중…';atomic_json(dest/'manifest.json',value)
+            progress(dest,value,'correct','3/5 · 층 정렬·연결 공리 자동보정·AI 검토 중…')
             work=dest/'completion'/str(time.time_ns());work.mkdir(parents=True)
             for image in (dest/'extraction').glob('source-*.png'):shutil.copyfile(image,work/image.name)
             decisions=read(dest/'codex-review.json') if (dest/'codex-review.json').exists() else None
             building,report=complete(source,work,arc_evidence=read(dest/'arcs.json'),recorded_review=decisions)
+            # A successful AI response is not a successful model. Validate its
+            # final geometry before replacing a model or publishing a URL.
+            errors,rows=geometry_checks(building,value['expected'])
+            if errors:
+                atomic_json(work/'rejected-building.json',building)
+                atomic_json(work/'report.json',report)
+                value.update(state='blocked',message='생성 불가 · 보정 후 형상 검사 실패',errors=errors,floors=rows)
+                return
             for floor in building['floors']:
                 if 'unconfirmed' in str(floor.get('align','')):
                     building['model_review']['items'].append(dict(floor=floor['name'],id='ALIGN',kind='alignment_unconfirmed',detail='층간 위치 정렬 미확정 · 원본 좌표 유지'))
             target=dest/'building.json'
             if target.exists():shutil.copyfile(target,work/'previous-generated-building.json')
             atomic_json(target,building)
+            progress(dest,value,'load','4/5 · 층별 계산 입력 검사 중…')
             loaders=check(target)
             value['floors']=[dict(floor=f['name'],rooms=len(f['rooms']),openings=len(f['openings']),height_m=f['h']) for f in building['floors']]
             for row in loaders:
@@ -137,6 +159,7 @@ def worker(ident,review_only=False):
             building['notes']=['CAD 자동 추출 · 미확인 연결은 검토 목록 참조', '층고 출처: '+str(building.get('levels_src','미확인'))]
             atomic_json(target,building);atomic_json(dest/'graph-report.json',report);atomic_json(work/'report.json',report)
             mid='cad-'+ident
+            progress(dest,value,'register','5/5 · 건물 목록·운영 화면 등록 중…')
             from model_import import PUBLISH_LOCK
             with PUBLISH_LOCK:
                 registry=read(model_library.REGISTRY)
@@ -157,7 +180,7 @@ def worker(ident,review_only=False):
                 else:registry['models'].append(entry)
                 atomic_json(model_library.REGISTRY,registry)
             ensure_server(entry)
-            value.update(state='complete',model_id=mid,url=entry.get('operation_url') or '/models/?id='+mid,operation_url=entry.get('operation_url'),message='3D 생성 완료 · 층별 계산 가능' if entry['simulation_enabled'] else '3D 생성 완료 · 계산 층 검토 필요',loaders=loaders,
+            progress(dest,value,'complete','3D 생성 완료 · 층별 계산 가능' if entry['simulation_enabled'] else '3D 생성 완료 · 계산 층 검토 필요',state='complete',model_id=mid,url=entry.get('operation_url') or '/models/?id='+mid,operation_url=entry.get('operation_url'),loaders=loaders,
                 unresolved=sum(len(f['simulation_graph']['isolated_rooms']) for f in building['floors']),review_count=len(building['model_review']['items']),ai_status=building['cad_completion']['ai_status'],ai_calls=building['cad_completion']['ai_calls'])
     except Exception as e: value.update(state='failed',message=str(e),errors=[str(e)])
     finally:

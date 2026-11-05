@@ -67,7 +67,7 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  const rolloverBadge=document.createElement('b');rolloverBadge.id='fgiRolloverBadge';rolloverBadge.hidden=true;rolloverBadge.style.color='#f97316';rolloverBadge.title='FGI 부속 상태 · 보라 리본의 주황 점. 독립 지수 아님.';$('legend-FGI').append(rolloverBadge);
  $('liteLegend').remove();
  const vehicleMarker=document.createElement('span');vehicleMarker.className='displayVehicleMarker';vehicleMarker.textContent='차량';vehicleMarker.title='경로 차량 위치 · 표시 기호';vehicleMarker.hidden=true;$('v').append(vehicleMarker);
- const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');view.append('보기 ');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
+ const view=document.createElement('div');view.id='displayView';view.setAttribute('role','group');view.setAttribute('aria-label','보기');$('pyroShellHeader').append(view);move($('top'),view);move($('iso'),view);
  const toolbar=$('resetView').parentElement;move($('liteFocus'),toolbar);move($('liteFireFocus'),toolbar);$('resetView').textContent='⟲';$('resetView').title='시점 복원';$('liteFocus').textContent='실 확대';$('liteFireFocus').textContent='연소점';move($('resetView'),view);
  selectionLabel.replaceChildren();selectionLabel.classList.add('compactHUD');selectionLabel.innerHTML='<div class="hudTitle"><b id="hudRoom"></b><button id="hudHistory" type="button" aria-pressed="false">이력 보기</button></div><div class="hudPhenomenon"><span id="hudPill"></span></div><div class="hudValues">상층 <b id="hudT"></b></div><button id="hudOrigin" type="button" disabled>이 실을 화점으로</button>';
  listen($('hudOrigin'),'click',()=>onOrigin(store.get('selection').room_id));

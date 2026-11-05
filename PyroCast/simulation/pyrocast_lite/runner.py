@@ -3,6 +3,7 @@ import time
 from types import SimpleNamespace
 import numpy as np
 from scipy.integrate import solve_ivp
+from .jacobian import fresh_jacobian
 
 
 def run(model, duration_s, output_s=10., budget_s=600., method='BDF'):
@@ -43,7 +44,7 @@ def run(model, duration_s, output_s=10., budget_s=600., method='BDF'):
         end = min([float(duration_s)]+future)
         try:
             sol = solve_ivp(rhs,(t,end),y,method=method,rtol=1e-4,atol=atol,
-                            jac_sparsity=sparsity,events=events or None,dense_output=True)
+                            jac=fresh_jacobian(rhs,atol,sparsity),events=events or None,dense_output=True)
         except (TimeoutError, RuntimeError, ValueError, FloatingPointError) as exc:
             failure = str(exc)
             model.failed_segment_start=(float(t),y.copy())
@@ -71,6 +72,7 @@ def run(model, duration_s, output_s=10., budget_s=600., method='BDF'):
     model.sol=SimpleNamespace(t=np.array(samples_t),y=np.array(samples_y).T,
                               success=complete,message=failure or 'Completed')
     model.integration={'complete':complete,'wall_seconds':elapsed,'segments':segments,'solver':method,
+                       'jacobian':'fresh_sqrt_eps_scaled_by_state_atol',
                        'from_zero_replays':0,'event_restarts':sum(x['reason']=='event' for x in segments),
                        'accepted_steps':sum(x['accepted_steps'] for x in segments),
                        'nfev':sum(x['nfev'] for x in segments),

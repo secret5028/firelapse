@@ -53,7 +53,7 @@ class DoorJetTests(unittest.TestCase):
 
     def test_room_oxygen_mode_rejected(self):
         raw=json.loads((Path(__file__).resolve().parents[2]/'fixtures/room_rule_benchmark_3room_b3.json').read_text('utf-8'))
-        with self.assertRaisesRegex(ValueError,'lower-layer oxygen'):
+        with self.assertRaisesRegex(ValueError,'Room oxygen inventory mode has been removed'):
             prepare(raw,{'oxygen_inventory_mode':True,'door_jet_enabled':True})
 
     def test_virtual_cell_boundaries_excluded(self):

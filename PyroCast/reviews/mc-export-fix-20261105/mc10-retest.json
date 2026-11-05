@@ -1,0 +1,103 @@
+{
+  "same_input": true,
+  "progress": {
+    "state": "completed",
+    "completed": 10,
+    "total": 10,
+    "failed_or_incomplete": 0,
+    "wall_s": 218.0283364999923
+  },
+  "code_unchanged_during_batch": true,
+  "rows": [
+    {
+      "sample_id": "S00",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 15.529434500000207,
+        "integration_s": 10.85192100002314
+      }
+    },
+    {
+      "sample_id": "S01",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 10.938452600006713,
+        "integration_s": 6.549768900003983
+      }
+    },
+    {
+      "sample_id": "S02",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 9.281675800011726,
+        "integration_s": 4.946341400005622
+      }
+    },
+    {
+      "sample_id": "S03",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 10.717110099998536,
+        "integration_s": 6.4386300000187475
+      }
+    },
+    {
+      "sample_id": "S04",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 22.62932749997708,
+        "integration_s": 18.104604699998163
+      }
+    },
+    {
+      "sample_id": "S05",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 15.233845200011274,
+        "integration_s": 10.728676600003382
+      }
+    },
+    {
+      "sample_id": "S06",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 18.05648940001265,
+        "integration_s": 13.691364900005283
+      }
+    },
+    {
+      "sample_id": "S07",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 44.52696509999805,
+        "integration_s": 40.16034090000903
+      }
+    },
+    {
+      "sample_id": "S08",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 16.374529900000198,
+        "integration_s": 12.05460440000752
+      }
+    },
+    {
+      "sample_id": "S09",
+      "complete": true,
+      "failure": null,
+      "times": {
+        "total_s": 28.692699100007303,
+        "integration_s": 24.330277300003218
+      }
+    }
+  ]
+}

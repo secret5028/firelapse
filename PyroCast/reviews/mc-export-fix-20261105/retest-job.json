@@ -1,0 +1,17 @@
+{
+  "request": {
+    "room": "CAD_1F_R3",
+    "samples": 10,
+    "duration_s": 3600,
+    "seed": 20261025,
+    "floor": "1F",
+    "selection_mode": "score_first"
+  },
+  "response": {
+    "started": true,
+    "id": "mc-1793866167503118800-d936ebef",
+    "room": "CAD_1F_R3",
+    "workers": 1,
+    "budget_s_per_sample": 1200
+  }
+}

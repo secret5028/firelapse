@@ -19,6 +19,17 @@ export function footprintDistance(p,polys){
  }return best;
 }
 const middle=points=>[0,1].map(i=>points.reduce((s,p)=>s+p[i],0)/points.length);
+// Double-action CAD doors repeat each hinge for inward/outward swing arcs.
+// Source order is not a geometric span: first/last can be the same point.
+function doorSpan(opening){
+ const leaves=opening.leaves||[],hinges=leaves.map(l=>l.hinge).filter(p=>p?.length>=2&&p.slice(0,2).every(Number.isFinite));
+ let pair=null,longest=1e-8;
+ const consider=(a,b)=>{if(!a||!b)return;const d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(Number.isFinite(d)&&d>longest){longest=d;pair=[a,b];}};
+ for(let i=0;i<hinges.length;i++)for(let j=i+1;j<hinges.length;j++)consider(hinges[i],hinges[j]);
+ if(!pair)for(const leaf of leaves)consider(leaf.hinge,leaf.closed);
+ if(!pair){const ring=opening.geometry_polys?.[0]?.o||opening.polys?.[0]||[];for(let i=0;i<ring.length;i++)consider(ring[i],ring[(i+1)%ring.length]);}
+ return pair;
+}
 function aperturePoint(v,z){
  const hinges=(v.leaves||[]).map(l=>l.hinge),closed=(v.leaves||[]).map(l=>l.closed);
  const xy=hinges.length>1?middle(hinges):hinges.length?middle([hinges[0],closed[0]]):middle((v.geometry_polys?.[0]?.o||v.polys?.[0]||[]));
@@ -56,9 +67,7 @@ export function readRouteGraph(building){
  const ground=floors.get('1F');if(!ground)throw Error('1층 지면 미확인');
  const candidates=entrances.filter(e=>e.floor==='1F').sort((a,b)=>b.area-a.area||a.id.localeCompare(b.id));
  const main=building.route_entry_id?candidates.find(e=>e.id===building.route_entry_id):candidates[0];if(!main)throw Error('1층 외부 문 미확인');
- const leaves=main.opening.leaves||[];let p=leaves[0]?.hinge,q=leaves.length>1?leaves.at(-1).hinge:leaves[0]?.closed;
- // Sliding/open doors can have a CAD aperture polygon but no swing leaves.
- if(!p||!q){const ring=main.opening.geometry_polys?.[0]?.o||main.opening.polys?.[0]||[];let longest=0;for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length],d=Math.hypot(b[0]-a[0],b[1]-a[1]);if(d>longest){longest=d;p=a;q=b;}}}
+ const [p,q]=doorSpan(main.opening)||[];
  if(!p||!q)throw Error('주출입문 법선 미확인');
  const len=Math.hypot(q[0]-p[0],q[1]-p[1]);const normal=[-(q[1]-p[1])/len,(q[0]-p[0])/len];
  const footprint=building.floors.flatMap(f=>f.slab?.length?f.slab:f.rooms.flatMap(r=>r.polys||[]));

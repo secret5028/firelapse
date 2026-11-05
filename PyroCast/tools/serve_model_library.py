@@ -7,10 +7,12 @@ ASSETS=ROOT/'cad-project/work/cad-web/local-resources/cad-assets'
 if not ASSETS.is_dir():
  ASSETS=ROOT/'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets'
 FILES={
+ '/models/scan-new':(ROOT/'app/model-library/new.html','text/html; charset=utf-8'),
+ '/models/scan-new.js':(ROOT/'app/model-library/new.js','text/javascript; charset=utf-8'),
  '/models/ai':(ROOT/'app/model-library/ai.html','text/html; charset=utf-8'),
  '/models/ai.js':(ROOT/'app/model-library/ai.js','text/javascript; charset=utf-8'),
- '/models/new':(ROOT/'app/model-library/new.html','text/html; charset=utf-8'),
- '/models/new.js':(ROOT/'app/model-library/new.js','text/javascript; charset=utf-8'),
+ '/models/new':(ROOT/'app/model-library/cad-new.html','text/html; charset=utf-8'),
+ '/models/new.js':(ROOT/'app/model-library/cad-new.js','text/javascript; charset=utf-8'),
  '/models/':(ROOT/'app/model-library/index.html','text/html; charset=utf-8'),
  '/models/viewer.js':(ROOT/'app/model-library/viewer.js','text/javascript; charset=utf-8'),
  '/app/web/panels/model_review.js':(ROOT/'app/web/panels/model_review.js','text/javascript; charset=utf-8'),
@@ -34,6 +36,11 @@ class Handler(BaseHTTPRequestHandler):
   if path in ('/models/ai/connection','/models/ai/completion'):
    import ai_connection
    return ai_connection.handle(self,path)
+  if path.startswith('/models/cad-imports/'):
+   try:
+    import cad_import
+    return self.json(cad_import.status(path.rsplit('/',1)[1]))
+   except (ValueError,OSError):return self.json({'error':'CAD 업로드를 찾을 수 없습니다'},404)
   if path.startswith('/models/imports/'):
    try:
     import model_import
@@ -69,6 +76,21 @@ class Handler(BaseHTTPRequestHandler):
   if path in ('/models/ai/connection','/models/ai/completion'):
    import ai_connection
    return ai_connection.handle(self,path)
+  if path=='/models/cad-imports' or path.startswith('/models/cad-imports/'):
+   if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
+   try:
+    import cad_import
+    n=int(self.headers.get('Content-Length','0'))
+    if not 0<n<=(cad_import.MAX_BODY if path=='/models/cad-imports' else 4096):raise ValueError('요청 크기 한도 초과')
+    if self.headers.get('Content-Type','').split(';')[0]!='application/json':raise ValueError('JSON 요청이 필요합니다')
+    body=json.loads(self.rfile.read(n))
+    if not isinstance(body,dict):raise ValueError('요청 형식 오류')
+    if path=='/models/cad-imports':return self.json(cad_import.upload(body),201)
+    parts=path.strip('/').split('/')
+    if len(parts)==4 and parts[3]=='generate':return self.json(cad_import.generate(parts[2],body),202)
+    raise ValueError('지원하지 않는 동작')
+   except RuntimeError as exc:return self.json({'error':str(exc)},409)
+   except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
   if path=='/models/imports' or path.startswith('/models/imports/'):
    if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):
     return self.json({'error':'외부 요청 차단'},403)

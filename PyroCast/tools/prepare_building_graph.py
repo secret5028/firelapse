@@ -115,7 +115,7 @@ def prepare(source, *, auto_correct=True):
         corrections=[dict(floor=f['name'],id=o['id'],**c) for f in building['floors']
                      for o in f['openings'] for c in o.get('auto_corrections',[])]+[c['correction'] for f in building['floors'] for c in f.get('structural_columns',[])]+[c for f in building['floors'] for r in f['rooms'] for c in r.get('model_corrections',[])],
         items=deepcopy(report['model_reviews']),basis='기하 근거 자동보정 · 현장 확인 아님')
-    applied_ai=sum(bool(o.get('connection_evidence',{}).get('ai_review')) for f in building['floors'] for o in f['openings'])
+    applied_ai=sum(bool((o.get('connection_evidence') or {}).get('ai_review')) for f in building['floors'] for o in f['openings'])
     building['model_review']['pipeline']=dict(order=['cad_to_3d','ai_axiom_review','mark_remaining'],
         ai_reviewed_decisions=applied_ai,
         ai_review_unconfirmed=sum(x['kind']=='ai_review_unconfirmed' for x in report['model_reviews']),

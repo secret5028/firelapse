@@ -1,0 +1,7 @@
+{
+  "reader_dir": "C:/CAD3D",
+  "dwg2dxf": "C:/cad-tools/dwg2dxf.exe",
+  "dependency_paths": [
+    "C:/cad-python-deps"
+  ]
+}

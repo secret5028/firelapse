@@ -11,3 +11,6 @@ simulation/tools/*.7z.exe
 /config/ai.json
 /data/model-imports/
 /data/model-library/scan-*/
+
+/config/cad-import.local.json
+/data/cad-imports/

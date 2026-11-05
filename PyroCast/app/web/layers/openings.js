@@ -1,6 +1,7 @@
 import {EmptyLayer} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
 import {exteriorWindowFace} from './openings_geometry.js';
+import {openingFraction} from '../state/fixed_openings.js';
 
 export class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -19,7 +20,14 @@ export class OpeningsLayer extends EmptyLayer {
    const {closed:fixedClosed}=fixedMaterials[policy];
    const cross=applyRenderPolicy(new T.LineSegments(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[2],vertices[1],vertices[3]])),fixedClosed),policy);
    cross.name='closed-opening-mark';cross.raycast=()=>{};cross.visible=false;line.add(cross);
-   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,cross});
+   const fillGeometry=this.own(new T.BufferGeometry());fillGeometry.setAttribute('position',new T.Float32BufferAttribute(new Float32Array(12),3));fillGeometry.setIndex([0,1,2,0,2,3]);
+   const fillMaterial=this.own(new T.MeshBasicMaterial({color:'#c0cbd3',side:T.DoubleSide}));
+   const partialFill=applyRenderPolicy(new T.Mesh(fillGeometry,fillMaterial),policy);fillMaterial.opacity=.22;partialFill.renderOrder=line.renderOrder-1;
+   partialFill.name='partially-closed-opening';partialFill.raycast=()=>{};partialFill.visible=false;line.add(partialFill);
+   const divider=applyRenderPolicy(new T.Line(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[3]])),fixedClosed),policy);
+   divider.name='opening-fraction-divider';divider.raycast=()=>{};divider.visible=false;line.add(divider);
+   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,cross,partialFill,divider,
+    frameVertices:vertices.map(v=>v.clone()),displayFraction:undefined});
   };
   for(const row of asset.floors){const {floor}=row,windows=new T.Group(),doors=new T.Group();windows.name=floor.name+'-windows';doors.name=floor.name+'-doors';this.group.add(windows,doors);this.views.push({row,windows,doors});
    for(const opening of floor.openings||[]){
@@ -72,7 +80,14 @@ export class OpeningsLayer extends EmptyLayer {
    windows.visible=visible&&(this.parts.window||!!fixed);doors.visible=visible&&(this.parts.door||!!fixed);
    const applyState=(line,normal)=>{const d=line.userData,s=fixed?.states[d.openingId];
     line.visible=!!s||(normal&&d.normalVisible);line.material=d.normalMaterial;
-    d.cross.visible=!!s&&!s.open;d.confirmedState=s??null;
+    const fraction=openingFraction(s),partial=fraction!==null&&fraction>0&&fraction<1;
+    d.cross.visible=fraction!==null&&fraction<1;d.partialFill.visible=partial;d.divider.visible=partial;d.confirmedState=s??null;
+    if(fraction!==d.displayFraction){
+     const [a,b,c,e]=d.frameVertices,closed=1-(fraction??1),bottom=a.clone().lerp(b,closed),top=e.clone().lerp(c,closed);
+     const write=(geometry,points)=>{const attr=geometry.getAttribute('position');points.forEach((p,i)=>attr.setXYZ(i,p.x,p.y,p.z));attr.needsUpdate=true;geometry.computeBoundingSphere();};
+     write(d.cross.geometry,[a,top,bottom,e]);write(d.partialFill.geometry,[a,bottom,top,e]);write(d.divider.geometry,[bottom,top]);
+     d.displayFraction=fraction;d.stateLabel=fraction===null?'개방 비율 미확인':`개방 ${Math.round(fraction*100)}% · 닫힘 ${Math.round((1-fraction)*100)}%`;
+    }
    };
    for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=this.parts.door&&!fixed&&f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}else applyState(o,this.parts.door);
    // Windows and their state marks remain readable through walls, like doors.

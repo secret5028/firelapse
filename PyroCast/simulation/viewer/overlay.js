@@ -4175,11 +4175,31 @@ function exteriorWindowFace(floor, opening) {
 return {exteriorWindowFace};
 })();
 
-// app/web/layers/openings.js
+// app/web/state/fixed_openings.js
 const __module38=(()=>{
+// Confirmed next-run inputs are separate from the currently playing result.
+function openingFraction(state){
+ if(!state)return null;
+ if(Number.isFinite(state.effective_fraction))return Math.max(0,Math.min(1,state.effective_fraction));
+ return typeof state.open==='boolean'?(state.open?1:0):null;
+}
+function fixedOpeningsFor(building,review){
+ const valid=fixed=>fixed?.building_sha256===building?.source_hash&&fixed?.states;
+ const fixed=review?.doors?.fixed_state;
+ if(valid(fixed))return fixed;
+ const saved=review?.playbackOpenings;
+ return valid(saved)?saved:null;
+}
+
+return {openingFraction,fixedOpeningsFor};
+})();
+
+// app/web/layers/openings.js
+const __module39=(()=>{
 const {EmptyLayer}=__module12;
 const {applyRenderPolicy}=__module8;
 const {exteriorWindowFace}=__module37;
+const {openingFraction}=__module38;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -4198,7 +4218,14 @@ class OpeningsLayer extends EmptyLayer {
    const {closed:fixedClosed}=fixedMaterials[policy];
    const cross=applyRenderPolicy(new T.LineSegments(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[2],vertices[1],vertices[3]])),fixedClosed),policy);
    cross.name='closed-opening-mark';cross.raycast=()=>{};cross.visible=false;line.add(cross);
-   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,cross});
+   const fillGeometry=this.own(new T.BufferGeometry());fillGeometry.setAttribute('position',new T.Float32BufferAttribute(new Float32Array(12),3));fillGeometry.setIndex([0,1,2,0,2,3]);
+   const fillMaterial=this.own(new T.MeshBasicMaterial({color:'#c0cbd3',side:T.DoubleSide}));
+   const partialFill=applyRenderPolicy(new T.Mesh(fillGeometry,fillMaterial),policy);fillMaterial.opacity=.22;partialFill.renderOrder=line.renderOrder-1;
+   partialFill.name='partially-closed-opening';partialFill.raycast=()=>{};partialFill.visible=false;line.add(partialFill);
+   const divider=applyRenderPolicy(new T.Line(this.own(new T.BufferGeometry().setFromPoints([vertices[0],vertices[3]])),fixedClosed),policy);
+   divider.name='opening-fraction-divider';divider.raycast=()=>{};divider.visible=false;line.add(divider);
+   Object.assign(line.userData,{openingId:`CAD_${floor.name}_${opening.id}`,normalMaterial:line.material,normalVisible,cross,partialFill,divider,
+    frameVertices:vertices.map(v=>v.clone()),displayFraction:undefined});
   };
   for(const row of asset.floors){const {floor}=row,windows=new T.Group(),doors=new T.Group();windows.name=floor.name+'-windows';doors.name=floor.name+'-doors';this.group.add(windows,doors);this.views.push({row,windows,doors});
    for(const opening of floor.openings||[]){
@@ -4251,7 +4278,14 @@ class OpeningsLayer extends EmptyLayer {
    windows.visible=visible&&(this.parts.window||!!fixed);doors.visible=visible&&(this.parts.door||!!fixed);
    const applyState=(line,normal)=>{const d=line.userData,s=fixed?.states[d.openingId];
     line.visible=!!s||(normal&&d.normalVisible);line.material=d.normalMaterial;
-    d.cross.visible=!!s&&!s.open;d.confirmedState=s??null;
+    const fraction=openingFraction(s),partial=fraction!==null&&fraction>0&&fraction<1;
+    d.cross.visible=fraction!==null&&fraction<1;d.partialFill.visible=partial;d.divider.visible=partial;d.confirmedState=s??null;
+    if(fraction!==d.displayFraction){
+     const [a,b,c,e]=d.frameVertices,closed=1-(fraction??1),bottom=a.clone().lerp(b,closed),top=e.clone().lerp(c,closed);
+     const write=(geometry,points)=>{const attr=geometry.getAttribute('position');points.forEach((p,i)=>attr.setXYZ(i,p.x,p.y,p.z));attr.needsUpdate=true;geometry.computeBoundingSphere();};
+     write(d.cross.geometry,[a,top,bottom,e]);write(d.partialFill.geometry,[a,bottom,top,e]);write(d.divider.geometry,[bottom,top]);
+     d.displayFraction=fraction;d.stateLabel=fraction===null?'개방 비율 미확인':`개방 ${Math.round(fraction*100)}% · 닫힘 ${Math.round((1-fraction)*100)}%`;
+    }
    };
    for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=this.parts.door&&!fixed&&f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}else applyState(o,this.parts.door);
    // Windows and their state marks remain readable through walls, like doors.
@@ -4267,7 +4301,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/room_names.js
-const __module39=(()=>{
+const __module40=(()=>{
 const {EmptyLayer}=__module12;
 const {fuelPositions}=__module19;
 // CAD text only: never substitute inferred fuel/use classes for missing labels.
@@ -4293,7 +4327,7 @@ return {cadRoomNames,RoomNamesLayer};
 })();
 
 // app/web/layers/core.js
-const __module40=(()=>{
+const __module41=(()=>{
 const {EmptyLayer}=__module12;
 const {applyRenderPolicy}=__module8;
 
@@ -4393,7 +4427,7 @@ return {fallbackStairSteps,CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module41=(()=>{
+const __module42=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -4467,7 +4501,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module42=(()=>{
+const __module43=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -4475,7 +4509,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module43=(()=>{
+const __module44=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -4483,7 +4517,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module44=(()=>{
+const __module45=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -4491,11 +4525,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module45=(()=>{
-const {createRealViewSession}=__module41;
-const {createSmokeLayer}=__module42;
-const {createFlameLayer}=__module43;
-const {createPlumeLayer}=__module44;
+const __module46=(()=>{
+const {createRealViewSession}=__module42;
+const {createSmokeLayer}=__module43;
+const {createFlameLayer}=__module44;
+const {createPlumeLayer}=__module45;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -4505,7 +4539,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk.js
-const __module46=(()=>{
+const __module47=(()=>{
 const {EmptyLayer}=__module12;
 const {applyRenderPolicy}=__module8;
 const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module17;
@@ -4616,7 +4650,7 @@ return {RiskLayer};
 })();
 
 // app/web/layers/selection.js
-const __module47=(()=>{
+const __module48=(()=>{
 const {EmptyLayer}=__module12;
 const {selectionOutlineMaterials,selectionOutlineGeometry,selectionOutlineMesh}=__module18;
 const {ROOM_PICK_LAYER}=__module11;
@@ -4659,25 +4693,11 @@ class SelectionLayer extends EmptyLayer {
 return {SelectionLayer};
 })();
 
-// app/web/state/fixed_openings.js
-const __module48=(()=>{
-// Confirmed next-run inputs are separate from the currently playing result.
-function fixedOpeningsFor(building,review){
- const valid=fixed=>fixed?.building_sha256===building?.source_hash&&fixed?.states;
- const fixed=review?.doors?.fixed_state;
- if(valid(fixed))return fixed;
- const saved=review?.playbackOpenings;
- return valid(saved)?saved:null;
-}
-
-return {fixedOpeningsFor};
-})();
-
 // app/web/scene/host.js
 const __module49=(()=>{
 const {createEmptyLayers}=__module12;
 const {ROOM_PICK_LAYER}=__module11;
-const {fixedOpeningsFor}=__module48;
+const {fixedOpeningsFor}=__module38;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -5062,7 +5082,7 @@ return {createDisplayPolicy};
 const __module56=(()=>{
 const {createDisplayPolicy}=__module55;
 const {roomFgiRollover}=__module9;
-const {fixedOpeningsFor}=__module48;
+const {fixedOpeningsFor,openingFraction}=__module38;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -5153,9 +5173,10 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;
    const stateLabel=fixed?.basis==='saved_case_input'?'재생 사례 급기':'확정 급기 · 다음 실행';
-   $('displayFixedOpenings').title=fixed?`${stateLabel} · 열림 ${Object.values(fixed.states).filter(s=>s.open).length} / 닫힘 ${Object.values(fixed.states).filter(s=>!s.open).length} · 문 황금색·창 초록색 · 사각=열림, 회색 ×=닫힘`:'저장된 개폐 상태 없음';
+   const fractions=fixed?Object.values(fixed.states).map(openingFraction):[];
+   $('displayFixedOpenings').title=fixed?`${stateLabel} · 완전 개방 ${fractions.filter(f=>f===1).length} / 부분 개방 ${fractions.filter(f=>f>0&&f<1).length} / 닫힘 ${fractions.filter(f=>f===0).length} · 문 황금색·창 초록색 · 빈 부분=개방, 회색 면·×=닫힌 부분. 비율은 계산 입력의 유효 개방 면적이며 실제 창짝 모양은 아님`:'저장된 개폐 상태 없음';
    fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);
-   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 문','#e6bd68'],['□ 창','#62dcb0'],['× 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
+   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 문','#e6bd68'],['□ 창','#62dcb0'],['회색 면·× 닫힌 부분','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';
@@ -5497,12 +5518,12 @@ const {readLegacyBuildingSource}=__module27;
 const {readLegacyOpeningsSource}=__module32;
 const {readLegacyCoreSource}=__module31;
 const {BuildingLayer}=__module36;
-const {OpeningsLayer}=__module38;
-const {RoomNamesLayer}=__module39;
-const {CoreLayer}=__module40;
-const {createRealViewLayers}=__module45;
-const {RiskLayer}=__module46;
-const {SelectionLayer}=__module47;
+const {OpeningsLayer}=__module39;
+const {RoomNamesLayer}=__module40;
+const {CoreLayer}=__module41;
+const {createRealViewLayers}=__module46;
+const {RiskLayer}=__module47;
+const {SelectionLayer}=__module48;
 const {createSceneHost}=__module49;
 const {createScaleReference}=__module50;
 const {createLitePanel,updateLitePanel}=__module51;

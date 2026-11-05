@@ -1,6 +1,6 @@
 import {createDisplayPolicy} from './display_policy.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
-import {fixedOpeningsFor} from '../state/fixed_openings.js';
+import {fixedOpeningsFor,openingFraction} from '../state/fixed_openings.js';
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -91,9 +91,10 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;
    const stateLabel=fixed?.basis==='saved_case_input'?'재생 사례 급기':'확정 급기 · 다음 실행';
-   $('displayFixedOpenings').title=fixed?`${stateLabel} · 열림 ${Object.values(fixed.states).filter(s=>s.open).length} / 닫힘 ${Object.values(fixed.states).filter(s=>!s.open).length} · 문 황금색·창 초록색 · 사각=열림, 회색 ×=닫힘`:'저장된 개폐 상태 없음';
+   const fractions=fixed?Object.values(fixed.states).map(openingFraction):[];
+   $('displayFixedOpenings').title=fixed?`${stateLabel} · 완전 개방 ${fractions.filter(f=>f===1).length} / 부분 개방 ${fractions.filter(f=>f>0&&f<1).length} / 닫힘 ${fractions.filter(f=>f===0).length} · 문 황금색·창 초록색 · 빈 부분=개방, 회색 면·×=닫힌 부분. 비율은 계산 입력의 유효 개방 면적이며 실제 창짝 모양은 아님`:'저장된 개폐 상태 없음';
    fixedLegend.hidden=!(l.openings&&o.fixed&&fixed);
-   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 문','#e6bd68'],['□ 창','#62dcb0'],['× 닫힘','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
+   fixedLegend.replaceChildren();if(fixed){fixedLegend.append(`${stateLabel} · ${fixed.sample_id||fixed.case_id||'사용자 지정'} `);for(const [text,color] of [['□ 문','#e6bd68'],['□ 창','#62dcb0'],['회색 면·× 닫힌 부분','#c0cbd3']]){const span=document.createElement('span');span.textContent=text;span.style.color=color;fixedLegend.append(span);}}
   const visible={...Object.fromEntries(phenomena.map(([k])=>[k,l.risk&&r.show[k]])),smoke:l.risk&&r.show.smoke,history:l.risk&&r.history,boundary:l.risk&&d.boundaryDots,building:l.building,smokeLayer:rv.enabled&&l.smoke,flame:rv.enabled&&l.flame,selection:l.selection,route:l.route,windows:l.openings&&o.exterior,doors:l.openings&&o.interior,core:l.core,fuel:rv.fuelMarkers,cells:l.risk&&d.cellOutline,tint:l.risk&&d.floorTint,interface:l.risk&&d.smokeInterface};
   for(const [key,on] of Object.entries(visible))$('legend-'+key).hidden=!on;
   $('legend-smokeLayer').lastElementChild.textContent=rv.smokeMode==='soot'?'검정=그을음 · 빨강=600 ℃↑':'연기';

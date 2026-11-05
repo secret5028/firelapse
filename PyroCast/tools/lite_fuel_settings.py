@@ -98,11 +98,34 @@ def search_classes(body,building,sha,transport=None):
             if attempt:raise ValueError('AI 검색 응답 검증 실패') from None
             messages.append({'role':'user','content':'허용된 id와 reason만 포함한 JSON 배열로 다시 응답.'})
 
+def preview_score(building,sha,floor,settings):
+    """Run the existing candidate formula with an unsaved input snapshot only."""
+    if not isinstance(floor,str) or floor not in {f['name'] for f in building['floors']}:raise ValueError('계산 층을 선택하세요')
+    approved=json.loads((ROOT/'simulation/pyrocast_lite/approved_uses_v8.json').read_text('utf-8'))
+    if sha==approved['building_sha256']:
+        from pyrocast_lite.screening_v8_approved import score
+        from lite_fixed_openings import classifications
+        raw=json.loads((ROOT/'simulation/results/room_rule_r8_20261025/source-scenario.json').read_text('utf-8'))
+        p=ROOT/'simulation/config/lite-door-overrides.json'
+        doors=classifications(json.loads(p.read_text('utf-8')) if p.exists() else {})
+        value=score(raw,door_overrides=doors,quantity_settings=settings)
+    else:
+        import hashlib
+        from model_library import entries,model_path
+        from model_simulation import prepare_floor
+        path=next((model_path(e) for e in entries() if e.get('source_kind')=='cad' and hashlib.sha256(model_path(e).read_bytes()).hexdigest()==sha),None)
+        if path is None:raise ValueError('등록된 CAD 건물을 찾을 수 없습니다')
+        raw,value=prepare_floor(path,floor,sha,json.dumps(settings,sort_keys=True))
+        value['approved_input']=raw['approved_input']
+    value.pop('classified_model',None)
+    value['ranked']=[r for r in value['ranked'] if r.get('floor')==floor and r.get('origin_budget',{}).get('Q_origin_peak_kW',1)>0]
+    return dict(score=value,preview=True,saved=False,simulation_started=False)
+
 def apply(body,building,sha):
     if not isinstance(body,dict) or body.get('building_sha256')!=sha:raise ValueError('연료 설정 요청 오류')
     if set(body)=={'building_sha256','revision','initialize_defaults'} and body['initialize_defaults'] is True:return initialize_defaults(body,building,sha)
     if set(body)=={'building_sha256','revision','search'}:return search_classes(body,building,sha)
-    if set(body)-{'building_sha256','revision','rooms','floors'} or not {'revision','building_sha256'}<=set(body):raise ValueError('연료 설정 요청 오류')
+    if set(body)-{'building_sha256','revision','rooms','floors','preview_floor'} or not {'revision','building_sha256'}<=set(body):raise ValueError('연료 설정 요청 오류')
     with _lock:
         ctx=context(building,sha)
         if body['revision']!=ctx['revision']:raise ValueError('입력이 변경되었습니다. 새로 불러오세요')
@@ -125,5 +148,6 @@ def apply(body,building,sha):
             for r in body.get(key,[]):
                 if r.get('inherit'):target.pop(r['id'],None)
                 else:target[r['id']]={'multiplier':r['multiplier'],'usage_class':r.get('usage_class')}
+        if 'preview_floor' in body:return preview_score(building,sha,body['preview_floor'],saved)
         atomic_json(q.path_for(sha),saved)
         return {**context(building,sha),'rerun_required':True,'simulation_started':False}

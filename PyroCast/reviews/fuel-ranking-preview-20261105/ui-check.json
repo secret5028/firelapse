@@ -1,0 +1,29 @@
+{
+  "observed": [
+    {
+      "amount": 150,
+      "rows": [
+        "15F R16 · 호텔 객실4.829",
+        "25F R11 · 호텔 객실4.829",
+        "35F R20 · 호텔 객실4.809",
+        "35F R21 · 호텔 객실4.809",
+        "55F R19 · 호텔 객실4.792"
+      ]
+    },
+    {
+      "amount": 200,
+      "rows": [
+        "15F R19 · 호텔 객실4.812",
+        "25F R16 · 호텔 객실4.797",
+        "35F R11 · 호텔 객실4.797",
+        "45F R20 · 호텔 객실4.776",
+        "45F R21 · 호텔 객실4.776"
+      ]
+    }
+  ],
+  "reset_restored": true,
+  "settings_unchanged": true,
+  "preview_requests": 3,
+  "simulation_requests": 0,
+  "errors": []
+}

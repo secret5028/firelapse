@@ -112,6 +112,24 @@ class FuelQuantityTests(unittest.TestCase):
   new=next(r for r in after['ranked'] if r['room']==rid)
   self.assertNotEqual(row['score'],new['score']);self.assertNotEqual(row['rank1'],new['rank1'])
   print('rank linkage:',rid,'score',row['score'],'->',new['score'],'rank',row['rank1'],'->',new['rank1'])
+ def test_unsaved_rank_preview_is_read_only(self):
+  ctx=api.context(self.building,self.sha);rid='CAD_5F_R19'
+  _,baseline=model.prepared('parkmarine','5F',self.sha)
+  before=next(r for r in baseline['ranked'] if r['room']==rid)
+  for amount,rank in [(1.5,5),(2,1)]:
+   payload={**self.payload(ctx,[dict(id=rid,multiplier=amount)]),'preview_floor':'5F'}
+   preview=api.apply(payload,self.building,self.sha);row=next(r for r in preview['score']['ranked'] if r['room']==rid)
+   self.assertEqual(row['rank1'],rank);self.assertGreater(row['fuel_energy_MJ'],before['fuel_energy_MJ'])
+   self.assertFalse(preview['saved']);self.assertFalse(preview['simulation_started']);self.assertEqual(q.load(self.sha),{})
+   self.assertEqual(list(q.DIRECTORY.glob('*')),[])
+  _,unchanged=model.prepared('parkmarine','5F',self.sha)
+  self.assertEqual(next(r for r in unchanged['ranked'] if r['room']==rid)['score'],before['score'])
+ def test_approved_preview_does_not_persist(self):
+  raw=json.loads((ROOT/'simulation/results/room_rule_r8_20261025/source-scenario.json').read_text('utf-8'))
+  before=prepare_inputs(raw);sha=raw['cad']['building_sha256'];rid='CAD_3F_R2'
+  after=prepare_inputs(raw,{'rooms':{rid:{'multiplier':2}}})
+  self.assertEqual(next(g['energy_MJ'] for g in after['fuel_groups'] if g['room']==rid),2*next(g['energy_MJ'] for g in before['fuel_groups'] if g['room']==rid))
+  self.assertEqual(q.load(sha),{})
  def test_ai_transport_formats_and_invalid_response_atomic(self):
   import lite_ai_fuel as ai
   from unittest.mock import MagicMock

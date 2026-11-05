@@ -71,7 +71,22 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const exploreAbort=new AbortController();
  let aiFuelRooms=null;
  const buildingPanel=createBuildingPanel({store});
- const fuelPanel=createFuelSettingsPanel({store,available:initial.engine_kind!=='cfast_native',onSaved:async()=>{await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>fuelPanel.dispose());
+ let fuelPreviewTimer=null;
+ const fuelPanel=createFuelSettingsPanel({store,available:initial.engine_kind!=='cfast_native',onDraft:previewFuelRanking,onSaved:async()=>{clearTimeout(fuelPreviewTimer);await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>{clearTimeout(fuelPreviewTimer);fuelPanel.dispose();});
+ function previewFuelRanking(current,draft){
+  clearTimeout(fuelPreviewTimer);++screeningRequest;
+  if(!Object.values(draft).some(rows=>Object.keys(rows).length)){refreshScreening();return;}
+  explore.previewState('미저장 변경 · 순위 갱신 중…');
+  fuelPreviewTimer=setTimeout(async()=>{
+   const floor=store.get('floor').floor_id;if(!floor||disposed)return;const seq=++screeningRequest;
+   try{
+    const changes=Object.fromEntries(['floors','rooms'].map(scope=>[scope,Object.entries(draft[scope]||{}).map(([id,row])=>row?{id,...row}:{id,inherit:true})]));
+    const response=await fetch('/cfbt/lite/fuel-settings',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({building_sha256:current.building_sha256,revision:current.revision,preview_floor:floor,...changes})});
+    const value=await response.json();if(!response.ok)throw Error(value.error||'순위 갱신 실패');if(disposed||seq!==screeningRequest)return;
+    acceptScreening({...screeningPayload,score:value.score,preview:true});explore.previewState('미저장 변경 · 순위 미리보기');
+   }catch(error){if(!disposed&&seq===screeningRequest)explore.previewState('순위 갱신 실패 · '+error.message);}
+  },350);
+ }
  async function refreshFuelRooms(){
   if(window.__PYROCAST_OFFLINE__)return;
   try{const response=await fetch('/cfbt/lite/ai/fuel',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed&&Array.isArray(value.rooms)){aiFuelRooms=value.rooms;store.dispatch('buildingReview/set',{rooms:aiFuelRooms});}}

@@ -1,6 +1,6 @@
 import {fuelSettingsWithDraft,resolveFuel} from '../state/fuel_settings.js';
 // Editing changes future inputs only; no simulation is started here.
-export function createFuelSettingsPanel({store,onSaved,available=true}){
+export function createFuelSettingsPanel({store,onSaved,onDraft,available=true}){
  const root=document.createElement('fieldset');root.id='fuelSettings';root.className='exploreCard workflowStep';root.hidden=true;document.getElementById('buildingContent').prepend(root);
  root.innerHTML='<h3 id="fuelFloorTitle"></h3><label class="fuelQuantity">양 <input id="fuelFloorAmount" type="range" aria-label="층 전체 가연물 양"><output id="fuelFloorValue"></output></label><section id="fuelSelectedRoom" hidden><h3 id="fuelRoomName"></h3><small id="fuelRoomScope"></small><label>가연물 기준 검색 <input id="fuelSearch" type="search" placeholder="예: 호텔 객실, 목재 가구" aria-label="가연물 기준 검색"></label><button id="fuelSearchAI" type="button">AI 유사 기준 검색</button><div id="fuelSearchResults" aria-live="polite"></div><div id="fuelActiveName"></div><small id="fuelActiveBasis"></small><select id="fuelRoomType" hidden aria-label="선택 실 가연물 종류"></select><label class="fuelQuantity">양 <input id="fuelRoomAmount" type="range" aria-label="선택 실 가연물 양"><output id="fuelRoomValue"></output></label><button id="fuelInherit">층 설정 따르기</button></section><button id="fuelSave" disabled>변경 저장</button><button id="fuelReset" disabled>취소</button><p id="fuelDefaultsStatus"></p><button id="fuelAI" hidden>AI 전층 기본 배치</button><p id="fuelSettingsStatus" role="status"></p>';
  const $=id=>root.querySelector('#'+id),abort=new AbortController();let disposed=false,current=null,draft={},floor=store.get('floor')?.floor_id||null,selected=null,saving=false,autoAttempted=false,searching=false,searchSeq=0;
@@ -22,7 +22,7 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
   $('fuelSave').disabled=saving||!dirty();$('fuelReset').disabled=saving||!dirty();$('fuelDefaultsStatus').textContent=current.ai_pending?.length&&!current.ai_available?'AI 연결 대기 · 현재는 용도별 기준량을 임시 표시':current.default_status||'';
   $('fuelAI').hidden=!current.ai_pending?.length;$('fuelAI').disabled=saving||dirty()||!current.ai_available;$('fuelAI').title=current.ai_available?'미설정 실만 AI 배치':'설정·탐색의 AI 연결 버튼으로 연결하세요';$('fuelSettingsStatus').textContent=store.get('fuelSettings').message;
  }
- function changed(){store.dispatch('realView/set',{fuelMarkers:true});update('미저장 변경 · 기존 결과 유지');render();}
+ function changed(){store.dispatch('realView/set',{fuelMarkers:true});update('미저장 변경 · 기존 결과 유지');render();onDraft?.(current,structuredClone(draft));}
  function editFloor(){const previous=fuelSettingsWithDraft(current,draft).floors[floor]||{};draft.floors={...draft.floors,[floor]:{...previous,multiplier:Number($('fuelFloorAmount').value)/100}};changed();}
  function editRoom(){const r=room();if(!r)return;draft.rooms={...draft.rooms,[r.id]:{usage_class:$('fuelRoomType').value||null,multiplier:Number($('fuelRoomAmount').value)/100}};changed();}
  $('fuelFloorAmount').oninput=editFloor;$('fuelRoomType').onchange=editRoom;$('fuelRoomAmount').oninput=editRoom;
@@ -36,7 +36,7 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
   const response=await fetch('/cfbt/lite/fuel-settings',{method:'POST',signal:abort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({building_sha256:current.building_sha256,revision:current.revision,search:query})});const value=await response.json();if(!response.ok)throw Error(value.error||'검색 실패');if(!disposed&&seq===searchSeq&&rid===selected)showSearch(value.suggestions,'추정 · 유사 용도 기준이며 정확한 재료 물성이 아닙니다.');
   if(!disposed&&seq===searchSeq&&!value.suggestions?.length)showSearch([],'자료 없음');
  }catch(e){if(!disposed&&seq===searchSeq)showSearch([],e.message);}finally{searching=false;if(!disposed)render();}};
- $('fuelInherit').onclick=()=>{draft.rooms={...draft.rooms,[selected]:null};changed();};$('fuelReset').onclick=()=>{draft={};update('변경 취소');render();};
+ $('fuelInherit').onclick=()=>{draft.rooms={...draft.rooms,[selected]:null};changed();};$('fuelReset').onclick=()=>{draft={};update('변경 취소');render();onDraft?.(current,{});};
  async function post(body,message){if(!current||saving||(!floor&&!body.initialize_defaults))return;saving=true;update(message);render();try{
   const response=await fetch('/cfbt/lite/fuel-settings',{method:'POST',signal:abort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({building_sha256:current.building_sha256,revision:current.revision,...body})});const value=await response.json();if(!response.ok)throw Error(value.error||'저장 실패');if(disposed)return;current=value;draft={};update('저장 완료 · 재계산 필요');if(body.initialize_defaults)store.dispatch('realView/set',{fuelMarkers:true});await onSaved?.();
  }catch(e){if(!disposed)update(e.message);}finally{if(!disposed){saving=false;update();render();}}}
@@ -45,7 +45,7 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
  async function refresh(){if(!available||window.__PYROCAST_OFFLINE__)return;try{const response=await fetch('/cfbt/lite/fuel-settings',{signal:abort.signal});if(!response.ok)return;const value=await response.json();if(disposed||!value.editable)return;current=value;draft={};floor=store.get('floor')?.floor_id;root.hidden=false;update('');render();for(const id of ['buildingFuelSection','buildingSettingsEmpty']){const el=document.getElementById(id);if(el)el.hidden=true;}
   await autoInitialize();
  }catch(e){if(!disposed)update('가연물 설정 읽기 실패');}}
- const offFloor=store.subscribe('floor',value=>{searchSeq++;$('fuelSearchResults').replaceChildren();floor=value.floor_id;if(room()?.floor!==floor)selected=null;render();});
+ const offFloor=store.subscribe('floor',value=>{searchSeq++;$('fuelSearchResults').replaceChildren();floor=value.floor_id;if(room()?.floor!==floor)selected=null;render();if(dirty())onDraft?.(current,structuredClone(draft));});
  async function autoInitialize(){if(current&&!disposed&&!autoAttempted&&!saving&&!dirty()&&current.ai_available&&current.ai_pending?.length){autoAttempted=true;await post({initialize_defaults:true},'AI 전층 기본 배치 중…');}}
  const offSelection=store.subscribe('selection',value=>{if(!['click','touch'].includes(value.source)||!current)return;selected=value.room_id;searchSeq++;$('fuelSearch').value='';$('fuelSearchResults').replaceChildren();if(!room()){selected=null;render();return;}render();});
  const connectionChanged=e=>{if(current){current={...current,ai_available:!!e.detail.connected};if(e.detail.connected)autoAttempted=false;update();render();autoInitialize();}};window.addEventListener('pyrocast:ai-connection',connectionChanged);

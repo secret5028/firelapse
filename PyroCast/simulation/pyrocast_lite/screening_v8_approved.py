@@ -12,7 +12,7 @@ from .screening_v8 import summarize,compare_pairs
 HERE=Path(__file__).parent
 REVISION='v8_approved_screening'
 
-def prepare_inputs(raw):
+def prepare_inputs(raw,quantity_settings=None):
     cfg=json.loads((HERE/'approved_uses_v8.json').read_text('utf-8'))
     table=json.loads((HERE/'fire_load_table.json').read_text('utf-8'))
     # User-selected table classes override approved defaults; no thermal equation changes.
@@ -28,7 +28,7 @@ def prepare_inputs(raw):
     if raw.get('cad',{}).get('building_sha256')!=cfg['building_sha256']:
         raise ValueError('Approved room classification belongs to a different building')
     from .fuel_quantity import load as read_quantity,resolve
-    quantity=read_quantity(cfg['building_sha256'])
+    quantity=read_quantity(cfg['building_sha256']) if quantity_settings is None else quantity_settings
     m=deepcopy(raw);rooms={r['id']:r for r in m['rooms']};records={};exclusions=[]
     for rid,choice in cfg['rooms'].items():
         r=rooms[rid];cls=table['classes'][choice['class']];area=v7.area(r)
@@ -96,8 +96,8 @@ def origin_budgets(m):
             'opening_basis':'gross geometric aperture, same source curve across both states; actual oxygen limitation preserved'}
     return out
 
-def score(raw,top_n=None,options=None,door_overrides=None):
-    m=prepare_inputs(raw);budgets=origin_budgets(m);adjusted=deepcopy(m)
+def score(raw,top_n=None,options=None,door_overrides=None,quantity_settings=None):
+    m=prepare_inputs(raw,quantity_settings);budgets=origin_budgets(m);adjusted=deepcopy(m)
     for g in adjusted['fuel_groups']:g['peak_kW']=budgets[g['room']]['Q_origin_peak_kW']
     s=v7.score(adjusted,top_n,options,door_overrides)
     s['classified_model']['fuel_groups']=deepcopy(m['fuel_groups'])

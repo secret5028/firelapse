@@ -16,7 +16,7 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  #pyroShellHeader .brand{display:flex;flex-direction:column;flex-shrink:0;line-height:1.2;white-space:nowrap}#pyroShellHeader .brand strong{font-size:19px;font-weight:750;letter-spacing:-.3px}#pyroShellHeader .brand small{font-size:10px;font-weight:400;color:#afc6d4;margin-top:3px}#shellBuilding{max-width:clamp(150px,23vw,300px);min-width:130px}#pyroShellHeader #fbtn{flex:1;min-width:0;display:flex;align-items:center;gap:6px}
  #pyroShellHeader #fbtn [hidden]{display:none!important}#shellFloor{min-width:86px;max-width:130px;color:#eaf3f8;background:#1d4158;border:1px solid #577487;border-radius:4px;padding:6px 9px;font:inherit}
  #shellSelectedRoom{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:230px;min-width:0;margin-left:5px}#shellSelectedRoom[hidden]{display:none!important}
- #pyroShellHeader #fbtn button[aria-pressed=true]{background:#e7be66;color:#142b3b;border-color:#f0d18e}
+ #pyroShellHeader #fbtn button[aria-pressed=true]{background:#d4e0e7;color:#142b3b;border-color:#e6eef3}
  #pyroShellSidebar{top:var(--shell-top);right:0;bottom:var(--shell-bottom);width:var(--shell-side);display:flex;flex-direction:column;border-left:1px solid #496273}
  body.pyroShell.shellHidden #v{right:0!important}#pyroShellSidebar[hidden]{display:none!important}
  #shellResize{position:absolute;left:-5px;top:0;bottom:0;width:10px;z-index:150;cursor:col-resize}#shellResize:hover,#shellResize:focus-visible{background:#42c4e855}
@@ -39,6 +39,24 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  #pyroShellSidebar{top:auto;left:0;width:100%;height:var(--shell-mobile);border-left:0;border-top:1px solid #496273}#shellMobileToggle{display:block;min-height:40px;flex-shrink:0}body.pyroShell:not(.shellExpanded) #pyroShellTabs,body.pyroShell:not(.shellExpanded) .pyroPane{display:none!important}
  #shellResize{display:none}#shellPanelToggle{right:9px}body.pyroShell.shellHidden #v{bottom:var(--shell-bottom)!important}
  #pyroShellHeader{gap:8px;padding:6px 8px}#pyroShellHeader .brand{font-size:12px}#pyroShellHeader #fbtn{flex-wrap:nowrap!important;overflow-x:auto}#pyroShellHeader #fbtn button{white-space:nowrap}#pyroShellTimeline{padding:8px;gap:6px}#shellClock{font-size:11px}}
+ /* Shared panel finish. Specific selectors keep semantic state colors intact. */
+ #pyroShellSidebar{--panel-card-border:#ffffff1f;--panel-control-border:#ffffff30}
+ #pyroShellSidebar :is(.resultCard,.exploreCard,#fuelSettings){border-color:var(--panel-card-border);border-radius:6px;padding:12px}
+ #pyroShellSidebar .workflowStep>h3{font-size:14px;font-weight:600;margin-bottom:12px}
+ #pyroShellSidebar :is(button,select,input[type=number],input[type=text]){min-height:32px;border-radius:6px;font-family:inherit}
+ #pyroShellSidebar :is(button,select,input[type=number],input[type=text]):not([aria-pressed=true]){border-color:var(--panel-control-border)}
+ #pyroShellSidebar button:not(:disabled):hover{filter:brightness(1.12)}
+ #pyroShellSidebar :is(button,input,select,textarea):focus-visible{outline:2px solid #42c4e8;outline-offset:2px}
+ #pyroShellSidebar button:disabled{opacity:.45;cursor:default}
+ #pyroShellSidebar :is(#exploreCalculateRun,#aiSend){min-height:36px}
+ #pyroShellSidebar #exploreCalculateRun:not(:disabled){background:#216b87;border-color:#55cce4}
+ #pyroShellSidebar #resultQuantities{row-gap:7px;font-variant-numeric:tabular-nums}
+ #pyroShellSidebar .resultScoreHeading{margin-top:16px}
+ @media(max-width:600px){
+ #pyroShellTimeline{display:grid;grid-template-columns:auto auto 1fr;gap:6px 8px}
+ #pyroShellTimeline .track{grid-column:1/-1;grid-row:1;min-width:0}
+ #shellPlay{grid-column:1;grid-row:2}#shellSpeed{grid-column:2;grid-row:2}#shellClock{grid-column:3;grid-row:2;justify-self:end}
+ }
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand"><strong>FireLapse</strong><small>-compartment fire timeline-</small></span>';
  const resultList=createResultList({container:$('v'),store,floors:buildingFloors,onSelect:async id=>{await onShowResult?.(id);activate('result');if(sidebar.hidden)toggle.click();if(innerWidth<=860&&!document.body.classList.contains('shellExpanded'))$('shellMobileToggle').click();}});

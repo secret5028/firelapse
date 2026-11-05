@@ -24,8 +24,8 @@ export function createTimelineRisk({host,store}){
  const style=document.createElement('style');style.textContent=`
  .timelineRisk{position:relative;margin:0 7px 4px;height:auto}.timelineRisk[hidden]{display:none}
  .timelineRiskRow{position:relative;height:24px;border-bottom:1px solid #36516455}.timelineRiskRow svg{position:absolute;inset:0;width:100%;height:24px;overflow:visible}
- .timelineRiskLabel{position:absolute;left:0;top:3px;font-size:9px;line-height:14px;background:#142b3bcc;padding-right:3px;pointer-events:none}
- #pyroShellTimeline .timelinePeak{position:absolute;top:0;transform:translateX(-50%);font:9px/12px system-ui;white-space:nowrap;padding:0 3px;border:0;border-radius:3px;background:#142b3bc9;color:var(--peak-color);z-index:2}
+ .timelineRiskLabel{position:absolute;left:0;top:3px;font-size:10px;line-height:14px;background:#142b3bcc;padding-right:3px;pointer-events:none}
+ #pyroShellTimeline .timelinePeak{position:absolute;top:0;transform:translateX(-50%);font:600 11px/14px system-ui;white-space:nowrap;padding:0 3px;border:0;border-radius:3px;background:#142b3bf2;color:var(--peak-color);text-shadow:0 1px 2px #07131d;z-index:2}
  .timelineCursor{position:absolute;top:0;bottom:0;border-left:1px solid #e9f8ff;pointer-events:none;z-index:3}
  `;document.head.append(style);
  let end=0,cursor=null;

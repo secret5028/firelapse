@@ -2,7 +2,7 @@ import {createNewBuildingButton} from './new_building.js';
 import {bindResizeHandle} from './resize_handle.js';
 import {createTimelineRisk} from './timeline_risk.js';
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
-export function createPanelShell({panel,store,buildingFloors=[]}){
+export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
  const move=(node,parent)=>{const marker=document.createComment('shell restore');node.before(marker);moves.push(()=>{marker.replaceWith(node);});parent.append(node);};
  const listen=(node,type,fn)=>{node.addEventListener(type,fn);cleanups.push(()=>node.removeEventListener(type,fn));};
@@ -40,6 +40,17 @@ export function createPanelShell({panel,store,buildingFloors=[]}){
  #pyroShellHeader{gap:8px;padding:6px 8px}#pyroShellHeader .brand{font-size:12px}#pyroShellHeader #fbtn{flex-wrap:nowrap!important;overflow-x:auto}#pyroShellHeader #fbtn button{white-space:nowrap}#pyroShellTimeline{padding:8px;gap:6px}#shellClock{font-size:11px}}
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand"><strong>FireLapse</strong><small>-compartment fire timeline-</small></span>';
+ const resultLink=document.createElement('button');resultLink.id='shellResultLink';resultLink.type='button';resultLink.hidden=true;
+ resultLink.style.cssText='color:#ff6b6b;background:none;border:0;padding:3px 0 0;text-align:left;font-size:12px;font-weight:700;cursor:pointer';
+ header.querySelector('.brand').append(resultLink);
+ function resultLabel(){const result=store.get('result'),rid=result?.scenario.origin_room_id;
+  const source=buildingFloors.flatMap(f=>f.rooms.map(r=>({floor:f.name,room:r,key:`CAD_${f.name}_${r.id}`}))).find(r=>r.key===rid);
+  resultLink.hidden=!source||!['complete','partial'].includes(result?.status);
+  resultLink.textContent=source?`${source.floor} · ${source.room.names?.filter(Boolean).join(' · ')||source.room.name||source.room.id} 결과`:'';
+  resultLink.title=result?`${result.engine.kind==='cfast'?'순정 CFAST':'간략 계산'} · 해당 층·실 결과 보기`:'';
+ }
+ cleanups.push(store.subscribe('result',resultLabel));resultLabel();
+ listen(resultLink,'click',()=>{onShowResult?.();activate('result');if(sidebar.hidden)toggle.click();if(innerWidth<=860&&!document.body.classList.contains('shellExpanded'))$('shellMobileToggle').click();});
  const oldTitle=document.title;document.title=oldTitle.includes("PyroCast")?oldTitle.replaceAll("PyroCast","FireLapse"):"FireLapse · compartment fire timeline";cleanups.push(()=>{document.title=oldTitle;});
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
  const timeline=document.createElement('footer');timeline.id='pyroShellTimeline';timeline.setAttribute('aria-label','시뮬레이션 재생');timeline.innerHTML='<button id="shellPlay">재생</button><select id="shellSpeed" aria-label="재생 배속">'+[1,5,10,20,30,60].map(v=>`<option value="${v}">${v}배</option>`).join('')+'</select><div class="track"><input id="shellTime" type="range" min="0" max="0" step="10" value="0" aria-label="시뮬레이션 시각"></div><output id="shellClock"></output>';

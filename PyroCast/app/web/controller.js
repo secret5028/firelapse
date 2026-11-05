@@ -45,7 +45,11 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length,screening:v=>v.schema==='pyrocast.screening/1'&&!v.errors.length}});
  const displayFloors=[...B.floors].sort((a,b)=>(b.z??0)-(a.z??0));
- const shell=createPanelShell({panel,store,buildingFloors:displayFloors});
+ const shell=createPanelShell({panel,store,buildingFloors:displayFloors,onShowResult:()=>{
+  const cell=data?.rooms.find(r=>r.key===data.fire_key);if(!cell)return;
+  viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
+  store.dispatch('layers/toggle',{id:'selection',visible:true});select(cell.key);fitFloor(true);render();
+ }});
  const display=createDisplayPanel({store,selectionLabel,isOriginAllowed:room=>screeningPayload?.manual_origins?.some(r=>r.room===room),onOrigin:room=>{if(!screeningPayload?.manual_origins?.some(r=>r.room===room))return;store.dispatch('exploration/set',{origin_room_id:room,origin_mode:'manual'});$('shellTab-explore').click();}});
  const results=createResultsPanel({panel,store});
  const buildingAsset=readLegacyBuildingSource({building:B,groups,sourceHash:initial.building_sha256});

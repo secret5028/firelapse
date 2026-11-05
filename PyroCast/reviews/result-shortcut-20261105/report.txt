@@ -1,0 +1,4 @@
+Red loaded-result shortcut under FireLapse title. Source: result.scenario.origin_room_id, not draft/click selection.
+Live verification: loaded 5F R16 guestroom10 result -> navigate 4F -> click shortcut -> floor5F, selected guestroom10, Result tab active. No fetch or simulation.
+Existing saved-result text removed in preceding engine-choice commit.
+Screenshot: reviews/engine-choice-20261105/result-shortcut.jpg.

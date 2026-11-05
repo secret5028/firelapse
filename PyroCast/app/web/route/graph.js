@@ -1,3 +1,4 @@
+import {centerRoomSegments} from './centered.js';
 import {exteriorPath} from './exterior.js';
 // Read existing CAD connectivity only. No proximity links or fire simulation.
 import {avoidObstacles} from './obstacles.js';
@@ -26,6 +27,7 @@ function aperturePoint(v,z){
 export function readRouteGraph(building){
  const rooms=new Map(),edges=[],entrances=[],floors=new Map(building.floors.map(f=>[f.name,f]));
  for(const f of building.floors)for(const r of f.rooms){rooms.set(id(f.name,r.id),{id:id(f.name,r.id),floor:f.name,point:building.route_targets?.[id(f.name,r.id)]??[...r.c,f.z],polys:r.polys,
+  corridor:/복도|홀|corridor|hall/i.test((r.names||[]).join(' ')),
   obstacles:(building.obstacles||[]).filter(o=>o.room_id===r.id&&o.floor===f.name),
   elevator:(r.tags||[]).some(t=>['elev','elev_inside'].includes(t))});}
  for(const f of building.floors)for(const source of f.simulation_graph?.connections||[]){
@@ -108,10 +110,11 @@ export function findRoute(graph,target,vehicle=graph.defaultVehicle,{hose_m=15,s
  }
  if(!best.has(target))return {error:'외부 문에서 선택 실까지 확인된 연결 없음'};
  const steps=[];let at=target;while(previous.has(at)){const step=previous.get(at);steps.push(step);at=step.from;}steps.reverse();const {entry,start}=starts.get(at);
- const segments=[...start,...steps.flatMap(s=>s.parts)].filter(s=>s.length>1e-8);let length=0;for(const s of segments){s.start=length;length+=s.length;s.end=length;}
+ const layout=centerRoomSegments([...start,...steps.flatMap(s=>s.parts)].filter(s=>s.length>1e-8),graph.rooms,contains);
+ const segments=layout.segments;let length=0;for(const s of segments){s.start=length;length+=s.length;s.end=length;}
  const ticks=[];for(let m=hose_m;m<=length;m+=hose_m){const s=segments.find(s=>m<=s.end);const r=(m-s.start)/s.length;ticks.push({number:m/hose_m,point:s.a.map((x,i)=>x+(s.b[i]-x)*r),floor:s.floor});}
- return {target,entry:entry.id,vehicle,segments,ticks,length,hoses:Math.ceil(length/hose_m),stairs:steps.filter(s=>s.e.kind==='stair').length,
+ return {layout_warnings:layout.warnings,target,entry:entry.id,vehicle,segments,ticks,length,hoses:Math.ceil(length/hose_m),stairs:steps.filter(s=>s.e.kind==='stair').length,
   edges:steps.map(s=>({id:s.e.id,from:s.from,to:s.to,kind:s.e.kind,length:s.length,rise:s.e.rise??0,stair_length:s.e.kind==='stair'?s.e.rise*stair_factor:0})),
   graph_edges:graph.edges.length,source_edges:graph.sourceEdgeCount,traversable_edges:graph.edges.filter(e=>e.eligible).length,
-  limits:[...graph.rooms.values()].some(r=>r.obstacles?.length)?'등록 장애물 평면 외곽 0.5 m를 피하는 경로 중심선. 미등록 적재물·호스 굴곡·문 여는 시간 미반영. 실제 진입 안전을 보증하지 않음.':'실 중심–문/계단 연결점의 직선 거리 근사. 실내 장애물·적재물·호스 굴곡·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.'};
+  limits:'실 중앙·복도 폭 중앙 우선, 모서리 곡선 경로. '+(layout.warnings.length?'일부 구간은 확인된 기존 경로 유지. ':'')+([...graph.rooms.values()].some(r=>r.obstacles?.length)?'등록 장애물 평면 외곽 0.5 m를 피하는 경로 중심선. 미등록 적재물·실제 호스 처짐·문 여는 시간 미반영. 실제 진입 안전을 보증하지 않음.':'실 중심–문/계단 연결점을 따르는 배치 경로. 미등록 실내 장애물·적재물·실제 호스 처짐·문 여는 시간은 미반영. 실제 진입 안전을 보증하지 않음.')};
 }

@@ -12,7 +12,8 @@ export class RouteLayer extends EmptyLayer {
   const makeMaterial=color=>this.own(new T.MeshBasicMaterial({color,transparent:true,opacity:1,depthTest:true,depthWrite:false,side:T.DoubleSide}));
   const outline=makeMaterial('#07131d');
   const add=(object,floor,route=true,order=38)=>{object.renderOrder=order;object.raycast=()=>{};this.group.add(object);this.items.push({object,floor,route});};
-  for(const s of result.segments||[]){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
+  const batches=new Map(),segments=result.segments||[];
+  for(const [index,s] of segments.entries()){const a=new T.Vector3(...s.a),b=new T.Vector3(...s.b);a.z+=.12;b.z+=.12;
    if(!this.roomMaterials.has(s.room)){
     const material=makeMaterial(ROUTE_CLEAR);material.polygonOffset=true;material.polygonOffsetFactor=-1;material.polygonOffsetUnits=-1;
     this.roomMaterials.set(s.room,material);
@@ -21,11 +22,14 @@ export class RouteLayer extends EmptyLayer {
    if(Math.hypot(d.x,d.y)<.01)normal.set(1,0,0);
    // 0.18m coloured centre + 0.05m dark border on either side.
    for(const [width,material,order] of [[.28,outline,37],[.18,this.roomMaterials.get(s.room),38]]){
-    const n=normal.clone().multiplyScalar(width/2),p=[a.clone().add(n),b.clone().add(n),b.clone().sub(n),a.clone().sub(n)],positions=[];
+    const join=(other,point)=>{if(!other||other.floor!==s.floor||other.stair||s.stair)return normal.clone().multiplyScalar(width/2);const end=point===s.a?other.b:other.a;if(end.some((v,k)=>Math.abs(v-point[k])>1e-6))return normal.clone().multiplyScalar(width/2);
+     const od=new T.Vector3(...other.b).sub(new T.Vector3(...other.a)),on=new T.Vector3(-od.y,od.x,0).normalize(),mid=normal.clone().add(on).normalize(),dot=mid.dot(normal);return dot>.5?mid.multiplyScalar(width/2/dot):normal.clone().multiplyScalar(width/2);};
+    const na=join(segments[index-1],s.a),nb=join(segments[index+1],s.b),p=[a.clone().add(na),b.clone().add(nb),b.clone().sub(nb),a.clone().sub(na)],positions=[];
     for(const i of [0,1,2,0,2,3])positions.push(...p[i].toArray());
-    const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(positions,3));add(new T.Mesh(g,material),s.floor,true,order);
+    const key=JSON.stringify([s.floor,s.room,order]);if(!batches.has(key))batches.set(key,{positions:[],material,floor:s.floor,order});batches.get(key).positions.push(...positions);
    }
   }
+  for(const batch of batches.values()){const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(batch.positions,3));add(new T.Mesh(g,batch.material),batch.floor,true,batch.order);}
   for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#38bdf8';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
    const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }

@@ -98,8 +98,12 @@ def status(sha):
 
 
 def cases(sha):
-    return [dict(id=p.name, label=read(p/'playback.json')['label']) for p in paths(sha)
-            if read(p/'status.json', {}).get('state') == 'complete' and (p/'playback.json').is_file()]
+    rows = []
+    for p in paths(sha):
+        if read(p/'status.json', {}).get('state') != 'complete' or not (p/'playback.json').is_file(): continue
+        data = read(p/'playback.json')
+        rows.append(dict(id=p.name, label=data['label'], engine_kind=data.get('engine_kind')))
+    return rows
 
 
 def playback(sha, case):

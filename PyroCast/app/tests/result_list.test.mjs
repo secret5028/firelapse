@@ -14,3 +14,11 @@ const native=resultListRows(cases,{...result,result_id:'native',engine:{kind:'cf
 assert.equal(native[0].id,'native');assert.match(native[0].label,/CFAST/);
 assert.equal(resultListRows(cases,{...result,status:'failed'},floors).some(r=>r.active),false);
 console.log('PASS: active-only highlight, current first, CAD names, unnamed rooms, fallback, deduplication, CFAST, failed exclusion');
+
+const both=resultListRows([{id:'lite-case',label:'5F R16',engine_kind:'pyrocast_lite'},{id:'native-case',label:'5F R16',engine_kind:'cfast_native'}],null,floors);
+assert.deepEqual(both.map(r=>r.engineLabel),['간략','CFAST 원본']);
+assert.equal(new Set(both.map(r=>r.id)).size,2,'same origin retains two independently selectable engines');
+assert.equal(rows.find(r=>r.id==='b').engineLabel,'방식 미확인');
+assert.equal(native[0].engineLabel,'CFAST 원본');
+assert.equal(rows[0].engineLabel,'간략');
+console.log('PASS: distinct engines for same room, saved metadata, unknown never assumed lite');

@@ -41,11 +41,11 @@ class ResultCatalog:
                 except OSError:continue
                 rel=path.relative_to(self.root).as_posix();stamp=[stat.st_mtime_ns,stat.st_size]
                 old=previous.get(rel)
-                if old and old.get('stamp')==stamp:found[rel]=old;continue
+                if old and old.get('stamp')==stamp and 'engine_kind' in old:found[rel]=old;continue
                 data=read(path)
-                record={'stamp':stamp,'valid':False}
+                record={'stamp':stamp,'valid':False,'engine_kind':None}
                 if isinstance(data,dict) and data.get('schema')=='pyrocast-cad-playback-1' and data.get('building_sha256') and data.get('time_s'):
-                    record.update(valid=True,building_sha256=data['building_sha256'],
+                    record.update(valid=True,building_sha256=data['building_sha256'],engine_kind=data.get('engine_kind'),
                         kind='lite' if data.get('engine_kind')=='pyrocast_lite' else 'native',
                         label=data.get('label') or Path(rel).parent.as_posix(),complete=bool(data.get('complete')))
                 # Cache parse failures only until the file changes; partial writes never enter cases.
@@ -66,6 +66,7 @@ class ResultCatalog:
             if kind=='lite' and not row['complete']:continue
             path=self.root/rel;old=bypath.get(path,{})
             result.append({'id':old.get('id','case-'+hashlib.sha256(rel.encode()).hexdigest()[:20]),
-                'label':old.get('label',row['label']),'path':str(path),'complete':row['complete']})
+                'label':old.get('label',row['label']),'path':str(path),'complete':row['complete'],
+                'engine_kind':row.get('engine_kind')})
         order={r['id']:i for i,r in enumerate(configured)}
         return sorted(result,key=lambda r:(order.get(r['id'],len(order)),r['id']))

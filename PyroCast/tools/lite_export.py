@@ -74,7 +74,7 @@ def build_export(origin, case, state, interval=10):
     routes['/cfbt/calculation'] = {'running': False, 'available': False, 'server_busy': False}
     catalog = value('/cfbt/lite/catalog.json')
     row = next(r for r in catalog['cases'] if r['id'] == case)
-    routes['/cfbt/lite/catalog.json'] = {'cases': [{'id': case, 'label': row['label']}],
+    routes['/cfbt/lite/catalog.json'] = {'cases': [{'id': case, 'label': row['label'], 'engine_kind': playback.get('engine_kind')}],
         'progress_text': '단독 HTML · 보기 전용', 'reuse_by_case': {}}
     config = ROOT/'simulation/config/lite-door-overrides.json'
     corrections = json.loads(config.read_text('utf-8')) if config.exists() else {}

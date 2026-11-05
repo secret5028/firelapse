@@ -28,7 +28,7 @@ class Handler(SimpleHTTPRequestHandler):
         if path=='/':
             self.send_response(302);self.send_header('Location','/data/wando-coldstore/model.html');self.end_headers();return
         if path in ('/cfbt/lite/active.json','/cfbt/lite/result/wando-P1'):return self.json(read('P1-playback.json'))
-        if path=='/cfbt/lite/catalog.json':return self.json({'cases':[{'id':'wando-P1','label':'완도 P1 · 순정 CFAST · 59:55'}],'progress_text':'마지막 5 s 미출력','reuse_by_case':{'wando-P1':{'label':'P1 원본 CSV 재생 · 재계산 없음','equivalent':False}}})
+        if path=='/cfbt/lite/catalog.json':return self.json({'cases':[{'id':'wando-P1','label':'완도 P1 · 순정 CFAST · 59:55','engine_kind':'cfast_native'}],'progress_text':'마지막 5 s 미출력','reuse_by_case':{'wando-P1':{'label':'P1 원본 CSV 재생 · 재계산 없음','equivalent':False}}})
         if path=='/cfbt/lite/mc':return self.json({'available':False,'running':False,'error':'P1 저장 결과 보기 전용'})
         if path=='/cfbt/reuse/lite/wando-P1':return self.json({'case_id':'wando-P1','label':'P1 원본 CSV 재생 · 재계산 없음','equivalent':False})
         if path=='/cfbt/lite/doors':

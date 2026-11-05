@@ -120,5 +120,5 @@ def cases(ident):
     for folder in folders(ident):
         for p in sorted(folder.glob('S*/summary.json')):
             if re.fullmatch(r'S\d+',p.parent.name) and read(p,{}).get('complete'):
-                req=read(folder/'request.json');rows.append(dict(id=case_id(folder,p.parent.name),label=f"{req['floor']} {req['room'].split('_')[-1]} · MC {p.parent.name}"))
+                req=read(folder/'request.json');rows.append(dict(id=case_id(folder,p.parent.name),label=f"{req['floor']} {req['room'].split('_')[-1]} · MC {p.parent.name}",engine_kind="pyrocast_lite"))
     return rows

@@ -4,7 +4,7 @@ export const RENDER_POLICY=Object.freeze({building:policy(0,null,null),
  smoke:policy(10,false,false,true),plume:policy(15,false,false,true),flame:policy(20,false,false,true),
  gasFlame:policy(22,false,false,true),smokeBoundary:policy(23,false,false,true),cellOutline:policy(25,false,false,true),
  band:policy(26,false,false,true),interfacePlane:policy(27,false,false,true),interfaceLine:policy(28,false,false,true),
- 'openings.window':policy(30,true,false,true,.65),risk:policy(35,false,false,true,1),selection:policy(40,false,false,true,.95),
+ 'openings.window':policy(46,false,false,true,.9),risk:policy(35,false,false,true,1),selection:policy(40,false,false,true,.95),
  'openings.door':policy(46,false,false,true,.9),core:policy(70,false,false,true,.10),'core.tread':policy(72,false,false,true,.86),'core.edge':policy(73,false,false,true,.95)});
 export const RISK_TYPES=Object.freeze(['FO','FGI','backdraft','smoke']);
 export const RISK_COLORS=Object.freeze({FO:'#ef4444',FGI:'#a855f7',backdraft:'#facc15',smoke:'#9ca3af'});

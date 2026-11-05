@@ -8,7 +8,6 @@ export class OpeningsLayer extends EmptyLayer {
   if(typeof geometryFor!=='function'||!camera?.isCamera)throw Error('CAD source provider and camera required');
   this.geometryFor=geometryFor;this.camera=camera;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;
   this.views=[];this.buildCount=0;this.tickCount=0;this.windowChecks=0;this.parts={window:true,door:true};
-  this.cameraPosition=new THREE.Vector3();this.delta=new THREE.Vector3();this.center=new THREE.Vector3();this.normal=new THREE.Vector3();
  }
  clearGeometry(){for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.views=[];this.asset=null;}
  build(asset){this.clearGeometry();this.asset=asset;this.buildCount++;const T=this.THREE;
@@ -65,7 +64,7 @@ export class OpeningsLayer extends EmptyLayer {
  // Keep the two existing display checkboxes independent; no new store/UI here.
  setPartVisible(kind,value){if(!Object.hasOwn(this.parts,kind)||typeof value!=='boolean')throw Error('Invalid opening visibility');this.parts[kind]=value;}
  tick(){if(this.state!=='mounted'||!this.frame)return;this.tickCount++;
-  this.camera.getWorldPosition(this.cameraPosition);const floorId=this.frame.floor?.floor_id??null;
+  const floorId=this.frame.floor?.floor_id??null;
   for(const {row,windows,doors} of this.views){
    const visible=row.group.visible&&(floorId===null||row.id===floorId);
    for(const group of [windows,doors]){group.position.copy(row.group.position);group.updateWorldMatrix(true,false);}
@@ -76,9 +75,8 @@ export class OpeningsLayer extends EmptyLayer {
     d.cross.visible=!!s&&!s.open;d.confirmedState=s??null;
    };
    for(const o of doors.children)if(o.userData.schedule){let f=0;for(const [t,v] of o.userData.schedule)if(t<=this.frame.t_s)f=v;o.visible=this.parts.door&&!fixed&&f>0;o.scale.x=Math.max(.00001,f);o.userData.displayFraction=f;}else applyState(o,this.parts.door);
-   for(const line of windows.children){this.center.copy(line.userData.exteriorCenter).applyMatrix4(windows.matrixWorld);
-    this.normal.copy(line.userData.exteriorNormal).transformDirection(windows.matrixWorld);
-    applyState(line,this.parts.window);line.visible&&=this.delta.copy(this.cameraPosition).sub(this.center).dot(this.normal)>0;this.windowChecks++;}
+   // Windows and their state marks remain readable through walls, like doors.
+   for(const line of windows.children){applyState(line,this.parts.window);this.windowChecks++;}
   }
  }
  diagnostics(){return {buildCount:this.buildCount,ticks:this.tickCount,windowChecks:this.windowChecks,resources:this.resources.size,

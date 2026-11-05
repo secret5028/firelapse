@@ -1,0 +1,42 @@
+{
+  "recorded_local": "2026-11-05T16:50:13",
+  "job": "simulation\\results\\lite_mc_jobs\\models\\cad-aabf1346d0e54c94b45ad7d7db7137d4\\mc-1793862932404583700-e49aa6e0",
+  "state": "running",
+  "processed": 6,
+  "total": 10,
+  "current": "S06",
+  "finished_summaries": [
+    {
+      "sample": "S00",
+      "complete": false,
+      "failure": "Factor is exactly singular"
+    },
+    {
+      "sample": "S01",
+      "complete": false,
+      "failure": "Factor is exactly singular"
+    },
+    {
+      "sample": "S02",
+      "complete": false,
+      "failure": "Factor is exactly singular"
+    },
+    {
+      "sample": "S03",
+      "complete": false,
+      "failure": "Factor is exactly singular"
+    },
+    {
+      "sample": "S04",
+      "complete": false,
+      "failure": "Factor is exactly singular"
+    },
+    {
+      "sample": "S05",
+      "complete": false,
+      "failure": "Factor is exactly singular"
+    }
+  ],
+  "engine_modified_during_review": false,
+  "additional_fire_run_started": false
+}

@@ -1,0 +1,9 @@
+{
+  "kind": "isolated finite-difference test, no fire integration",
+  "rhs": "constant 1, exact Jacobian 0",
+  "first_nonfinite_factor_call": 317,
+  "warnings": [
+    "overflow encountered in multiply"
+  ],
+  "interpretation": "Adaptive finite-difference factor can overflow on a locally insensitive column. This is NOT proof of the failing fire-state column, and does not justify raising oxygen or fuel floors."
+}

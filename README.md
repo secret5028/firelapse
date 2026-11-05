@@ -1,3 +1,5 @@
+> **2026-11-05 FireLapse:** 현재 앱은 [PyroCast/](PyroCast/README.md) 아래에 있습니다. **[Claude 검토·수정 인계서](PyroCast/specs/Claude-review-handoff-20261105.md)**와 [사전 내부 점검](PyroCast/reviews/prepublish-review-20261105/report.md)을 먼저 읽으세요. 아래 10월 체크포인트는 보존 기록입니다.
+
 > **2026-10-26 업데이트:** 최신 간략 엔진·3D 화면·저장 MC 결과는 [PyroCast](PyroCast/README.md)에 있습니다. 아래는 보존된 10월 19일 체크포인트 안내입니다.
 
 # 소방 크로키 · CAD → 3D → CFAST

@@ -1,0 +1,48 @@
+[
+  {
+    "test": "route_double_action.test.mjs",
+    "ok": true,
+    "output": "{\"passed\":true,\"entry\":\"CAD_1F_D0\",\"vehicle\":[-11.330948168962617,21.985,0],\"length\":56.343956634500046,\"hoses\":4,\"segments\":43}\n"
+  },
+  {
+    "test": "route_selection.test.mjs",
+    "ok": true,
+    "output": "{\"passed\":true,\"default\":{\"entry\":\"CAD_1F_D2\",\"length\":72.15411751398918,\"hoses\":5,\"stairs\":4},\"moved\":{\"entry\":\"CAD_1F_D0\",\"length\":72.3638571527776,\"hoses\":5},\"sourceEdges\":513,\"alternateRoom\":\"CAD_5F_R6\"}\nvehicle placement: outside-only, whole footprint within displayed grid PASS\n"
+  },
+  {
+    "test": "route_centered.test.mjs",
+    "ok": true,
+    "output": "PASS centered corridor, concave turn containment, room center, obstacle clearance, unsafe-rounding fallback\n"
+  },
+  {
+    "test": "route_index_text.test.mjs",
+    "ok": true,
+    "output": "PASS route index: unavailable and rounded zero use dash; nonzero indices retain integer display\n"
+  },
+  {
+    "test": "model_preview.test.mjs",
+    "ok": true,
+    "output": "PASS: CAD geometry stays selectable; no solver values, fake zero indices, or saved-result rows\n"
+  },
+  {
+    "test": "result_list.test.mjs",
+    "ok": true,
+    "output": "PASS: active-only highlight, current first, CAD names, unnamed rooms, fallback, deduplication, CFAST, failed exclusion\nPASS: distinct engines for same room, saved metadata, unknown never assumed lite\n"
+  },
+  {
+    "test": "result_scope.test.mjs",
+    "ok": true,
+    "output": "PASS: CAD-only picking, saved scope, missing vs genuine zero, disposal\n"
+  },
+  {
+    "test": "calculation_status.test.mjs",
+    "ok": true,
+    "output": "PASS: calculation states, partial failure, stale settings and unrelated saved origins\n"
+  },
+  {
+    "test": "route_risk.test.mjs",
+    "ok": true,
+    "output": "PASS route risk: member maximum, fixed gates, missing data, ties, whole-period history, reverse seek, hose boundaries, no mutation\n",
+    "previous_obsolete_expectation": "node:internal/modules/run_main:123\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '#38bdf8'\n- '#9ca3af'\n\n    at file:///C:/Users/%EC%98%88%EB%B0%A9/Documents/ChatGPT/PyroCast/app/tests/route_risk.test.mjs:21:9\n    at ModuleJob.run (node:internal/modules/esm/module_job:343:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:681:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: '#38bdf8',\n  expected: '#9ca3af',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v22.23.1\n"
+  }
+]

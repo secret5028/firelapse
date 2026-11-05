@@ -1,3 +1,17 @@
+# FireLapse
+-compartment fire timeline-
+
+2026-11-05 현재 앱. 새 CAD 생성·AI 공리 보정 연결, 모델 선택, 층별 가연물/화점, MC 급기 탐색, 간략/CFAST 실행, 저장 결과 재생 UI를 포함합니다.
+
+- **검토·수정 시작:** [Claude 인계서](specs/Claude-review-handoff-20261105.md)
+- **업로드 전 점검:** [시험·수관 수정·미해결 수치 오류](reviews/prepublish-review-20261105/report.md)
+- 실행: 이 폴더에서 `python tools/serve_model_library.py --port 8841`, 이후 `http://127.0.0.1:8841/models/`.
+- CAD 변환기·CFAST 실행 파일·AI 키는 별도 로컬 준비가 필요합니다. 실제 키와 전체 계산 결과/의존 패키지는 포함하지 않습니다.
+- 전체 물리 검증 완료 제품이 아닙니다. MC 적분 실패와 새 모델 일부 기능 차이는 인계서에 명시했습니다.
+
+---
+아래는 보존된 2026-10-26 체크포인트 안내입니다.
+
 # PyroCast · 2026-10-26 체크포인트
 
 현재 작업 중인 간략 엔진, 보존된 CFAST 확장/정밀 코드, 3D 표시 코드와 명세입니다.

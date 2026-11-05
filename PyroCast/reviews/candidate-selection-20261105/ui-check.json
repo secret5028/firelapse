@@ -1,0 +1,32 @@
+{
+  "selected": {
+    "origin": {
+      "top_n": 8,
+      "origin_room_id": "CAD_5F_R20",
+      "origin_mode": "manual",
+      "samples": 10,
+      "duration_s": 3600
+    },
+    "selected": {
+      "room_id": "CAD_5F_R20",
+      "cell_id": null,
+      "source": "click"
+    }
+  },
+  "selection_outline_visible": true,
+  "preserved_after_refresh": true,
+  "keyboard_selected": "CAD_5F_R11",
+  "mc_request": {
+    "room": "CAD_5F_R11",
+    "samples": 10,
+    "duration_s": 3600,
+    "seed": 20261025,
+    "manual": false,
+    "floor": "5F",
+    "selection_mode": "candidate"
+  },
+  "solver_executions": 0,
+  "mc_status": "집계 완료 10/10표본",
+  "mc_worst": "S08 · 연소 2 · 주의 이상 1 · 최초 FO 03:30",
+  "errors": []
+}

@@ -1,0 +1,17 @@
+Candidate selection and MC results — 2026-11-05
+
+Stage 3: first five candidate rows support mouse/touch/Enter/Space. Selected row is highlighted and original room floor outline is shown in 3D. Explicit eligible selection survives ranking refresh; switching floor clears an incompatible origin. Selection does not replace playback.
+Candidate selection is room-level (cell_id=null), so rooms without stored playback cells also highlight correctly.
+MC request now supports an eligible candidate in the selected floor instead of rejecting all but rank 1. Existing automatic rank-1 validation remains.
+Stage 5: MC 결과 보기 opens the result-tab summary. Summary hidden when no saved MC summary exists; stored results do not imply current-input equivalence.
+
+Verification:
+- model_mc_test.py: 8 passed; request preparation only.
+- explore.unit.mjs: PASS.
+- Actual hotel UI: R20 selected by mouse, R11 by Enter, R16 by touch.
+- R20 row highlight and visible room outline checked, screenshot saved.
+- Same-floor ranking refresh preserves R20.
+- MC POST intercepted by browser test: R11, candidate mode, no solver executed.
+- Existing MC summary loaded: 10/10, worst S08, burning 2, attention 1, first FO 03:30.
+- Browser page errors: 0.
+- No engine or condition-table changes; no simulation rerun; no push.

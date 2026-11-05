@@ -51,7 +51,11 @@ def prepare_request(ident,body):
     sha=sim.fingerprint(ident);raw,score=sim.prepared(ident,floor,sha)
     eligible=[r for r in score['ranked'] if r['origin_budget']['Q_origin_peak_kW']>0]
     if not eligible:raise ValueError('계산 가능한 화점 없음')
-    winner=eligible[0]['room']
+    mode=body.get('selection_mode','score_first')
+    if mode not in ('score_first','candidate'):raise ValueError('화점 선택 방식 오류')
+    chosen=next((r for r in eligible if r['room']==body.get('room')),None) if mode=='candidate' else eligible[0]
+    if chosen is None:raise ValueError('선택 층의 적격 후보실을 선택하세요')
+    winner=chosen['room']
     if body.get('room')!=winner:raise ValueError('후보 순위가 변경되었습니다. 새로고침 후 실행하세요')
     from pyrocast_lite.screening_v8_approved import scenario
     model=scenario(score,winner,'open_except_confirmed',duration)
@@ -59,7 +63,7 @@ def prepare_request(ident,body):
     # MC explores new combinations; a prior winner must not lock all openings.
     model.pop('fixed_openings',None)
     request=dict(building=ident,building_sha256=sha,floor=floor,room=winner,samples=count,duration_s=duration,seed=seed,
-                 selection_mode='score_first',origin_score=eligible[0]['score'],owner_pid=os.getpid())
+                 selection_mode=mode,origin_score=chosen['score'],owner_pid=os.getpid())
     return request,model
 
 def start(ident,body):

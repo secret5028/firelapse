@@ -24,6 +24,17 @@ class WorkflowTests(unittest.TestCase):
    body=self.body();body[key]=value
    with self.assertRaises(ValueError):mc.prepare_request('parkmarine',body)
   with self.assertRaises(ValueError):mc.folder_for('parkmarine','../../escape')
+ def test_explicit_candidate_keeps_selected_room(self):
+  _,score=mc.sim.prepared('parkmarine','5F',self.sha)
+  candidates=[r for r in score['ranked'] if r['origin_budget']['Q_origin_peak_kW']>0]
+  body={**self.body(),'room':candidates[2]['room'],'selection_mode':'candidate'}
+  request,model=mc.prepare_request('parkmarine',body)
+  self.assertEqual(request['room'],candidates[2]['room']);self.assertEqual(request['selection_mode'],'candidate')
+  self.assertEqual(model['cad']['fire_key'],candidates[2]['room']);self.assertNotIn('fixed_openings',model)
+  self.assertEqual(request['origin_score'],candidates[2]['score'])
+  for changes in [{'floor':'6F'},{'room':'CAD_5F_R99'},{'selection_mode':'unsupported'}]:
+   with self.assertRaises(ValueError):mc.prepare_request('parkmarine',{**body,**changes})
+  with self.assertRaises(ValueError):mc.prepare_request('parkmarine',{**body,'selection_mode':'score_first'})
  def test_same_worker_lock(self):
   with patch.object(mc.sim,'_active','other'):
    with self.assertRaises(RuntimeError):mc.start('parkmarine',self.body())

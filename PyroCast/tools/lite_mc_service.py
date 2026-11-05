@@ -56,6 +56,9 @@ def prepare_request(body, building_sha):
     scored=score(raw,1,door_overrides=classifications(config))
     room=body.get('room')
     automatic=body.get('selection_mode')=='score_first'
+    candidate=body.get('selection_mode')=='candidate'
+    if body.get('selection_mode') not in (None,'score_first','candidate'):raise ValueError('화점 선택 방식 오류')
+    if candidate and not any(r['room']==room and r.get('floor')==body.get('floor') and r.get('origin_budget',{}).get('Q_origin_peak_kW',0)>0 for r in scored['ranked']):raise ValueError('선택 층의 적격 후보실을 선택하세요')
     if automatic:
         candidates=[r for r in scored['ranked'] if r.get('floor')==body.get('floor') and r.get('origin_budget',{}).get('Q_origin_peak_kW',0)>0]
         if not candidates or candidates[0]['room']!=room:raise ValueError('선택 층의 점수 1위 화점을 새로 확인하세요')
@@ -67,7 +70,7 @@ def prepare_request(body, building_sha):
     else:
         if room not in {r['room'] for r in scored['ranked']}:raise ValueError('적격 화점실을 선택하세요')
         model=scenario(scored,room,'open_except_confirmed',duration=duration)
-    if not automatic:apply_fixed(model,config)
+    if not (automatic or candidate):apply_fixed(model,config)
     else:model.pop("fixed_openings",None)
     # Screening replaces the initial fuel group; keep copied CAD metadata in sync too.
     model['cad']['fire_key']=room

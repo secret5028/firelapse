@@ -1,0 +1,13 @@
+Calculation buttons · 2026-11-05
+- Replaced engine select with two exclusive buttons: 간략 계산 / 순정 CFAST.
+- Initial neither selected, Calculate disabled. Selection enables Calculate only when existing prerequisites pass.
+- Pending shown immediately; running spinner, elapsed mm:ss, disabled duplicate submission/engine switching. Completion exposes result; failures show reason.
+- Added started_at_ms to job evidence/status for elapsed recovery after reload; new requests start a fresh frontend timer.
+Validation:
+- Operating UI 8842: initial disabled; lite=true/cfast=false/enabled=true then lite=false/cfast=true/enabled=true. Screenshot operational.jpg. Console errors 0.
+- app/tests/calculation_controls.fixture.html: PASS 15. Guards, exclusive selection, callback engine, pending/running/elapsed, completion, retry and disposal. Synthetic UI only; no production mock branch.
+- app/tests/calculation_status.test.mjs PASS.
+- app/tests/fixed_calculation_test.py 7 PASS (native execution mocked; saved native CSV conversion verified).
+- JS syntax checks and bundle rebuild PASS. git diff --check PASS.
+- No new physical simulation or MC runs; existing results/physics unchanged.
+- Server restarted idle: PID7300 (8841/8842/8843).

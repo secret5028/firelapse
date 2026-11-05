@@ -5445,13 +5445,15 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  `;document.head.append(style);
  // One explicit execution control at the end of the combined workflow.
  const calculate=document.createElement('section');calculate.id='exploreCalculate';calculate.className='exploreCard';
- calculate.innerHTML='<label>계산 방식 <select id="exploreEngine" aria-label="계산 방식"><option value="lite">간략 계산</option><option value="cfast">순정 CFAST</option></select></label><button id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><button id="exploreCalculationResult" hidden>결과 보기</button>';
+ calculate.innerHTML='<div class="exploreEngineButtons" role="group" aria-label="계산 방식"><button type="button" id="exploreEngineLite" aria-pressed="false">간략 계산</button><button type="button" id="exploreEngineCfast" aria-pressed="false">순정 CFAST</button></div><button type="button" id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><div id="exploreCalculationProgress" hidden><span class="calculationSpinner" aria-hidden="true"></span><span id="exploreCalculationElapsed" aria-live="off"></span></div><button type="button" id="exploreCalculationResult" hidden>결과 보기</button>';
+ style.textContent+=`#exploreContent .exploreEngineButtons{display:flex;gap:6px}#exploreContent .exploreEngineButtons button{flex:1;padding:9px 4px}#exploreContent .exploreEngineButtons button[aria-pressed=true]{background:#34c1df;border-color:#72e3f7;color:#082633;font-weight:700}#exploreCalculateRun:not(:disabled){background:#235e79;border-color:#42cce7}#exploreCalculationProgress:not([hidden]){display:flex;align-items:center;gap:7px;margin-top:8px;color:#72e3f7;font-variant-numeric:tabular-nums}.calculationSpinner{width:12px;height:12px;border:2px solid #486678;border-top-color:#72e3f7;border-radius:50%;animation:calculationSpin .9s linear infinite}@keyframes calculationSpin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.calculationSpinner{animation:none}}`;
  root.append(calculate);$('exploreMC').textContent='MC 급기 탐색';
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
- let calculation={available:false},calculationPending=false;
- $('exploreEngine').onchange=()=>sync();
+ let calculation={available:false},calculationPending=false,selectedEngine=null,calculationTimer=null,calculationStarted=0;
+ for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']])$(id).onclick=()=>{selectedEngine=engine;calculation={...calculation,error:null};sync();};
+ function updateElapsed(){const seconds=Math.max(0,Math.floor((Date.now()-calculationStarted)/1000));$('exploreCalculationElapsed').textContent=`경과 ${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
  $('exploreCalculationResult').onclick=onCalculationResult;
- $('exploreCalculateRun').onclick=()=>onCalculate?.($('exploreEngine').value);
+ $('exploreCalculateRun').onclick=()=>{if(selectedEngine&&!$('exploreCalculateRun').disabled)onCalculate?.(selectedEngine);};
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
@@ -5479,17 +5481,22 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
-  const fixed=store.get('buildingReview').doors?.fixed_state,kind=$('exploreEngine').value;
+  const fixed=store.get('buildingReview').doors?.fixed_state,kind=selectedEngine;
   const ready=fixed?.source_room===state.origin_room_id;
   const calculating=calculationPending||calculation.running;
-  $('exploreCalculationResult').hidden=calculation.state!=='complete'||!calculation.case_id;
+  $('exploreCalculationResult').hidden=calculating||!!calculation.error||calculation.state!=='complete'||!calculation.case_id;
   $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
-  $('exploreEngine').disabled=calculating;
-  $('exploreCalculateRun').disabled=!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
+  for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']]){$(id).disabled=calculating;$(id).setAttribute('aria-pressed',String(kind===engine));}
+  calculate.setAttribute('aria-busy',String(!!calculating));
+  $('exploreCalculateRun').textContent=calculationPending?'요청 중…':calculation.running?'계산 중…':'계산하기';
+  $('exploreCalculationProgress').hidden=!calculating;
+  if(calculating){if(!calculationTimer){calculationStarted=calculation.started_at_ms||Date.now();calculationTimer=setInterval(updateElapsed,1000);}updateElapsed();}
+  else if(calculationTimer){clearInterval(calculationTimer);calculationTimer=null;}
+  $('exploreCalculateRun').disabled=!kind||!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
   $('exploreMC').disabled ||= calculating||calculation.server_busy;
   $('exploreCalculateRun').title=kind==='cfast'?'확정 급기·화점으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:#b8cbd8';
-  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':dirty?'가연물 변경 저장 필요':!ready?'최악 개폐 상태 적용 후 계산':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':calculation.state==='complete'&&calculation.room===state.origin_room_id?'계산 완료':kind==='cfast'?'확정 급기 · 1회 계산':'확정 급기 · 저장 MC 결과 사용';
+  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':!ready?'최악 개폐 상태 적용 후 계산':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':kind==='cfast'?'확정 급기 · 1회 계산':'확정 급기 · 저장 MC 결과 사용';
   $('exploreOriginRun').disabled=payload?.available===false||pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
   if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)&&!(state.origin_mode==='manual'&&payload?.manual_origins?.some(r=>r.room===state.origin_room_id))){$('exploreMC').disabled=true;$('exploreMC').title='수동 화점으로 지정한 뒤 실행하세요';}
   $('exploreRun').disabled=payload?.available===false||pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
@@ -5517,7 +5524,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   if(value.available===false){$('exploreStatus').textContent=first.length?`적격 ${first.length}실`:value.unavailable_reason||'화점 후보 없음';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
- return {update,calculationState(value,pendingRequest=false){calculation=value;calculationPending=pendingRequest;sync();},previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
+ return {update,calculationState(value,pendingRequest=false){calculation=value;calculationPending=pendingRequest;if(value.running||pendingRequest)selectedEngine=value.engine;sync();},previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){if(calculationTimer)clearInterval(calculationTimer);off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
 }
 
 return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
@@ -5656,7 +5663,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  }
  async function runCalculation(engine){
   if(calculationStarting||calculationState.running||disposed)return;calculationStarting=true;
-  const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null},true);
+  const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null,started_at_ms:Date.now()},true);
   try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
   catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
   finally{calculationStarting=false;}

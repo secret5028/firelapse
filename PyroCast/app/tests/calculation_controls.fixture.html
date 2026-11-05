@@ -1,0 +1,26 @@
+<!doctype html><meta charset="utf-8"><title>Calculation controls fixture</title><style>body{background:#102633;color:white;font:14px sans-serif}#shellPane-explore{max-width:340px}</style><pre id="report">Running fixture</pre><div id="shellPane-building"></div><div id="shellPane-explore"></div><script type="module">
+import {createExplorePanel} from '../web/panels/explore.js';
+const $=id=>document.getElementById(id), results=[];
+function check(v,label){if(!v)throw Error(label);results.push(label);}
+const state={floor:{floor_id:'5F'},exploration:{origin_room_id:'R16',duration_s:3600,samples:10,top_n:8},fuelSettings:{draft:{}},buildingReview:{doors:{fixed_state:{source_room:'R16'}}}};
+const listeners=new Map(),store={get:k=>state[k],subscribe(k,f){listeners.set(k,f);return()=>listeners.delete(k);}};
+const idle={available:true,cfast_available:true};let submitted=null;
+const panel=createExplorePanel({store,floors:[{name:'5F'}],onCalculate:engine=>{submitted=engine;panel.calculationState({...idle,engine},true);}});
+try{
+ panel.mcState({available:true});panel.calculationState(idle);
+ check($('exploreCalculateRun').disabled,'No selection disables calculation');
+ $('exploreEngineLite').click();check(!$('exploreCalculateRun').disabled,'Lite selection enables calculation');
+ $('exploreEngineCfast').click();check($('exploreEngineCfast').getAttribute('aria-pressed')==='true'&&$('exploreEngineLite').getAttribute('aria-pressed')==='false','Exclusive CFAST selection');
+ panel.calculationState({...idle,cfast_available:false});check($('exploreCalculateRun').disabled,'Unavailable CFAST blocked');panel.calculationState(idle);
+ state.fuelSettings.draft={R16:{amount:2}};listeners.get('fuelSettings')();check($('exploreCalculateRun').disabled,'Unsaved fuel blocked');state.fuelSettings.draft={};listeners.get('fuelSettings')();
+ state.buildingReview.doors.fixed_state.source_room='R3';listeners.get('buildingReview')();check($('exploreCalculateRun').disabled,'Wrong fixed origin blocked');state.buildingReview.doors.fixed_state.source_room='R16';listeners.get('buildingReview')();
+ $('exploreCalculateRun').click();check(submitted==='cfast','Selected engine submitted');check($('exploreCalculateRun').textContent==='요청 중…'&&$('exploreCalculateRun').disabled,'Pending shown immediately');check($('exploreEngineLite').disabled&&$('exploreEngineCfast').disabled,'Engine locked while pending');
+ panel.calculationState({...idle,engine:'cfast',running:true,started_at_ms:Date.now()-65000});check($('exploreCalculateStatus').textContent.includes('계산 중')&&!$('exploreCalculationProgress').hidden,'Running progress visible');
+ const first=$('exploreCalculationElapsed').textContent;await new Promise(r=>setTimeout(r,1100));check($('exploreCalculationElapsed').textContent!==first,'Elapsed time advances');
+ panel.calculationState({...idle,engine:'cfast',state:'complete',room:'R16',case_id:'fixture'});check(!$('exploreCalculationResult').hidden&&$('exploreCalculationProgress').hidden,'Completion shows result and stops progress');
+ panel.calculationState({...idle,error:'fixture failure'});check($('exploreCalculateStatus').textContent.includes('fixture failure')&&!$('exploreCalculateRun').disabled,'Failure visible with retry');
+ panel.calculationState({...idle,engine:'cfast',running:true,started_at_ms:Date.now()-65000});check($('exploreCalculationElapsed').textContent==='경과 01:05','Reloaded job elapsed restored');
+ panel.dispose();check(!$('exploreContent'),'Dispose removes panel');await new Promise(r=>setTimeout(r,1100));
+ $('report').textContent=`PASS ${results.length}\n`+results.join('\n');
+}catch(e){$('report').textContent='FAIL '+e.stack;}
+</script>

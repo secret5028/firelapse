@@ -119,7 +119,7 @@ def reserve(sha, body, ident=None):
     folder = JOBS/sha/('calc-'+str(time.time_ns())+'-'+uuid.uuid4().hex[:8])
     evidence = dict(**body, building_sha256=sha, source_job=fixed['job_id'],
         source_sample=fixed['sample_id'], source_path=str(source), input_sha256=fingerprint(raw),
-        owner_pid=os.getpid(), automatic_retry=False)
+        owner_pid=os.getpid(), automatic_retry=False, started_at_ms=int(time.time()*1000))
     atomic_json(folder/'request.json', evidence)
     atomic_json(folder/'input.json', raw)
     atomic_json(folder/'fixed-state.json', fixed)

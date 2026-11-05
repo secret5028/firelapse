@@ -129,7 +129,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  }
  async function runCalculation(engine){
   if(calculationStarting||calculationState.running||disposed)return;calculationStarting=true;
-  const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null},true);
+  const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null,started_at_ms:Date.now()},true);
   try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
   catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
   finally{calculationStarting=false;}

@@ -1,0 +1,16 @@
+[
+  {
+    "building": "intech",
+    "bytes": 1078744,
+    "case": "1c2466734281418e94bc2c6814352651",
+    "modules": 74,
+    "status": 200
+  },
+  {
+    "building": "hotel",
+    "bytes": 2550900,
+    "case": "2d9162c004dc49a0b706261ef7107b98",
+    "modules": 74,
+    "status": 200
+  }
+]

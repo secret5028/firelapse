@@ -4,6 +4,9 @@ import json
 from pathlib import Path
 import sys
 import unittest
+from unittest.mock import patch
+from urllib.parse import urlsplit
+import re
 
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
@@ -38,5 +41,39 @@ class ExportTests(unittest.TestCase):
     def test_reject_path_traversal_before_io(self):
         with self.assertRaises(ValueError):build_export('http://127.0.0.1:1','../../secret',{})
         with self.assertRaises(ValueError):sample_playback({},15)
+
+    def test_model_service_external_entry_and_offline_assets(self):
+        playback={'complete':True,'building_sha256':'b','time_s':[0,10], 'rooms':[], 'solvers':{},'fires':[]}
+        routes={'/':(ROOT/'app/model-library/operation.html').read_bytes(),
+          '/operation.js':b"import * as T from 'three'; import {attach} from '/app/web/entry.js';",
+          '/vendor/three.module.js':b'export const Scene=1;',
+          '/app/web/entry.js':b'export const attach=1;',
+          '/building.json':{'floors':[]},'/cfbt/lite/result/saved':playback,
+          '/cfbt/lite/doors':{'fixed_state':{'source':'this-building'}},
+          '/cfbt/lite/screening':{},'/cfbt/lite/fire-load-table':{},
+          '/cfbt/model-info':{'label':'새 건물'},'/cfbt/overlay.css':b'.pyroShell{color:red}',
+          '/cfbt/lite/catalog.json':{'cases':[{'id':'saved','label':'저장 결과'}]}}
+        requested=[]
+        class Response:
+            def __init__(self,url):self.url=url;self.path=urlsplit(url).path;requested.append(self.path)
+            def __enter__(self):return self
+            def __exit__(self,*args):pass
+            def read(self):
+                value=routes[self.path]
+                return value if isinstance(value,bytes) else json.dumps(value).encode()
+        state={'route':{'vehicle':[1,2,0]},'route_result':{'length':23},'fuelSettings':{'data':{'revision':'saved'}}}
+        with patch('lite_export.urlopen',side_effect=lambda url,**kw:Response(url)):
+            html,info=build_export('http://127.0.0.1:1','saved',state,model_service=True)
+        text=html.decode()
+        self.assertNotIn('src="/operation.js"',text)
+        self.assertIn('.pyroShell{color:red}',text)
+        payload=re.search(r'id="pcOfflineData"[^>]*>([^<]+)',text)[1]
+        data=json.loads(gzip.decompress(base64.b64decode(payload)))
+        self.assertEqual(data['state'],state)
+        self.assertEqual(data['fixed_openings'],{'source':'this-building'})
+        self.assertEqual(data['routes']['/cfbt/model-info']['label'],'새 건물')
+        self.assertIn('/vendor/three.module.js',data['modules'])
+        self.assertTrue(data['scripts']);self.assertEqual(info['modules'],2)
+        self.assertFalse(any('legacy-context' in r or 'hydraulics' in r for r in requested))
 
 if __name__=='__main__':unittest.main()

@@ -42,11 +42,11 @@ def sample_playback(source, interval):
     return data
 
 
-def build_export(origin, case, state, interval=10):
+def build_export(origin, case, state, interval=10, *, model_service=False):
     """Fetch only this local viewer's read endpoints; package their exact outputs."""
     if not re.fullmatch(r'[A-Za-z0-9_.-]{1,160}', case):
         raise ValueError('사례 ID 형식 오류')
-    if not isinstance(state, dict) or len(json.dumps(state)) > 100000:
+    if not isinstance(state, dict) or len(json.dumps(state)) > 2*1024*1024:
         raise ValueError('화면 상태 크기 오류')
     def read(path):
         with urlopen(origin + path, timeout=60) as response:
@@ -60,15 +60,20 @@ def build_export(origin, case, state, interval=10):
         model_url = urlsplit(response.url).path
         html = response.read().decode('utf-8')
     directory = model_url.rsplit('/', 1)[0] + '/'
+    if playback.get('model_preview') or not playback.get('complete'):
+        raise ValueError('완료된 계산 결과를 선택하세요')
     routes = {directory+'building.json': value(directory+'building.json'),
-              directory+'legacy-context.json': value(directory+'legacy-context.json'),
               '/cfbt/lite/active.json': playback,
               '/cfbt/lite/result/'+case: playback}
-    for path in ['/cfbt/lite/doors', '/cfbt/lite/screening', '/cfbt/r8/schema',
+    if not model_service:
+        routes[directory+'legacy-context.json'] = value(directory+'legacy-context.json')
+    for path in ['/cfbt/lite/doors', '/cfbt/lite/screening',
                  '/cfbt/lite/fire-load-table', '/cfbt/model-info']:
         routes[path] = value(path)
-    job = directory.strip('/').split('/')[-1]
-    routes['/api/jobs/'+job+'/hydraulics'] = value('/api/jobs/'+job+'/hydraulics')
+    if not model_service:
+        routes['/cfbt/r8/schema'] = value('/cfbt/r8/schema')
+        job = directory.strip('/').split('/')[-1]
+        routes['/api/jobs/'+job+'/hydraulics'] = value('/api/jobs/'+job+'/hydraulics')
     routes['/cfbt/r8/review'] = {'batch_state': None, 'comparison': None, 'progress': {}}
     routes['/cfbt/lite/mc'] = {'running': False, 'available': False, 'server_busy': False}
     routes['/cfbt/calculation'] = {'running': False, 'available': False, 'server_busy': False}
@@ -77,10 +82,10 @@ def build_export(origin, case, state, interval=10):
     routes['/cfbt/lite/catalog.json'] = {'cases': [{'id': case, 'label': row['label'], 'engine_kind': playback.get('engine_kind')}],
         'progress_text': '단독 HTML · 보기 전용', 'reuse_by_case': {}}
     config = ROOT/'simulation/config/lite-door-overrides.json'
-    corrections = json.loads(config.read_text('utf-8')) if config.exists() else {}
+    corrections = routes['/cfbt/lite/doors'] if model_service else json.loads(config.read_text('utf-8')) if config.exists() else {}
     modules = {}
     def resolve(spec, parent):
-        if spec == 'three': return '/cad-assets/three.module.js'
+        if spec == 'three': return '/vendor/three.module.js' if model_service else '/cad-assets/three.module.js'
         if spec.startswith('three/addons/'): return '/cad-assets/addons/'+spec[13:]
         if spec.startswith(('/', './', '../')): return urljoin(parent, spec)
         raise ValueError('외부 모듈은 내보내기에 허용되지 않습니다: '+spec)
@@ -89,7 +94,8 @@ def build_export(origin, case, state, interval=10):
     def translate(code, parent):
         def link(spec):
             path = resolve(spec, parent)
-            if not path.startswith(('/cfbt/', '/cad-assets/')): raise ValueError('모듈 경로 오류')
+            allowed = ('/cfbt/', '/cad-assets/', '/app/web/', '/vendor/', '/simulation/viewer/') if model_service else ('/cfbt/', '/cad-assets/')
+            if not path.startswith(allowed) and not (model_service and path=='/operation.js'): raise ValueError('모듈 경로 오류')
             if path not in modules:
                 modules[path] = ''  # break cycles
                 modules[path] = translate(read(path).decode('utf-8'), path)
@@ -99,20 +105,28 @@ def build_export(origin, case, state, interval=10):
         return relative.sub(lambda m: m[1]+link(m[2])+m[1], code)
     html = re.sub(r'<script type="importmap">.*?</script>', '', html, flags=re.S)
     scripts = []
+    if model_service:
+        # The CAD service has an external entry module, unlike the legacy CAD HTML.
+        html = re.sub(r'<script type="module" src="/operation.js"></script>', '', html)
+        scripts.append(translate(read('/operation.js').decode('utf-8'), '/operation.js'))
     def module_tag(m):
         scripts.append(translate(m[1], model_url))
         return ''
     html = re.sub(r'<script type="module">(.*?)</script>', module_tag, html, flags=re.S)
     html = html.replace('<link rel="stylesheet" href="/cfbt/overlay.css">',
                         '<style>'+read('/cfbt/overlay.css').decode('utf-8')+'</style>')
+    if model_service:
+        html = html.replace('</head>', '<style>'+read('/cfbt/overlay.css').decode('utf-8')+'</style></head>')
     envelope = {'schema': 'pyrocast.offline/1', 'case_id': case, 'interval_s': interval,
         'base_path': directory, 'state': state, 'door_overrides': corrections,
         'fixed_openings': corrections.get('fixed_state'), 'route_result': state.get('route_result'),
         'vehicle': state.get('route', {}).get('vehicle'), 'routes': routes,
         'modules': modules, 'scripts': scripts}
-    from lite_ai_tools import Tools
-    from lite_ai_briefing import list_reports
-    envelope['assistant_reports']=list_reports(Tools(),{'building':playback['building_sha256'],'case':case})
+    envelope['assistant_reports']=[]
+    if not model_service:
+        from lite_ai_tools import Tools
+        from lite_ai_briefing import list_reports
+        envelope['assistant_reports']=list_reports(Tools(),{'building':playback['building_sha256'],'case':case})
     pako = (VIEWER/'vendor/pako_inflate.min.js').read_text('utf-8')
     license_text = (VIEWER/'vendor/pako-LICENSE.txt').read_text('utf-8').replace('--', '—')
     boot = (VIEWER/'offline_bootstrap.js').read_text('utf-8')

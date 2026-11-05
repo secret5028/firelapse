@@ -58,6 +58,7 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  const currentOperation=document.body.dataset.operationUrl||new URL(location.pathname,location.origin).href;
  for(const [label,url] of [['강화 공장','http://127.0.0.1:8780/model.html'],['완도 저온창고','http://127.0.0.1:8832/data/wando-coldstore/model.html']])buildingSelect.add(new Option(label,url));
  buildingSelect.value=location.pathname.includes('/wando-coldstore/')?buildingSelect.options[1].value:buildingSelect.options[0].value;
+ if(window.__PYROCAST_OFFLINE__){const info=window.__PYROCAST_OFFLINE__.routes?.['/cfbt/model-info'];buildingSelect.replaceChildren(new Option(info?.label||'저장 건물','offline'));buildingSelect.disabled=true;buildingSelect.title='보기 전용';}
  const catalogAbort=new AbortController();cleanups.push(()=>catalogAbort.abort());
  function refreshBuildings(){if(window.__PYROCAST_OFFLINE__||location.protocol==='file:')return;
   const current=document.body.dataset.operationUrl||buildingSelect.value;

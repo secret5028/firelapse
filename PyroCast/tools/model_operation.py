@@ -169,6 +169,12 @@ def handler(base, ident):
                 if path=='/building.json':return self.send(model_path(sim.entry(ident)).read_bytes())
                 if path=='/cfbt/model-info':return self.json(dict(building_id=ident,label=sim.entry(ident)['label'],operation_url=operation_url(sim.entry(ident))))
                 if path=='/cfbt/lite/active.json':return self.json(active_playback(ident))
+                if path.startswith('/cfbt/lite/export/'):
+                    if self.client_address[0]!='127.0.0.1':return self.json({'error':'외부 요청 차단'},403)
+                    from lite_export import build_export
+                    output,_=build_export('http://127.0.0.1:'+str(self.server.server_port),path.rsplit('/',1)[-1],
+                        json.loads(query.get('state',['{}'])[0]),int(query.get('interval',['10'])[0]),model_service=True)
+                    return self.send(output,'text/html; charset=utf-8')
                 if path.startswith('/cfbt/lite/result/'):return self.json(playback(ident,path.rsplit('/',1)[1]))
                 if path=='/cfbt/lite/catalog.json':
                     import model_mc
@@ -212,6 +218,16 @@ def handler(base, ident):
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
             path=urlsplit(self.path).path
+            if path.startswith('/cfbt/lite/export/'):
+                if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
+                try:
+                    n=int(self.headers.get('Content-Length','0'))
+                    if not 0<n<=2*1024*1024:raise ValueError('화면 상태 크기 오류')
+                    body=json.loads(self.rfile.read(n))
+                    from lite_export import build_export
+                    output,_=build_export('http://127.0.0.1:'+str(self.server.server_port),path.rsplit('/',1)[-1],body.get('state',{}),int(body.get('interval',10)),model_service=True)
+                    return self.send(output,'text/html; charset=utf-8')
+                except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
             if path=='/cfbt/calculation':
                 if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
                 try:

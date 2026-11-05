@@ -5314,7 +5314,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  // One explicit execution control at the end of the combined workflow.
  const calculate=document.createElement('section');calculate.id='exploreCalculate';calculate.className='exploreCard';
  const engine=document.createElement('small');engine.textContent='간략 엔진 · MC';calculate.append(engine,$('exploreMC'),$('exploreMCStatus'));
- root.append(calculate);$('exploreMC').textContent='간략 계산하기';
+ root.append(calculate);$('exploreMC').textContent='계산하기';
  $('exploreMC').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));

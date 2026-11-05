@@ -11,9 +11,25 @@ class SharedConditionsTests(unittest.TestCase):
         self.assertEqual(s['degree'],[1.5]);self.assertEqual(s['strongest'],['fuel']);self.assertEqual(s['all_met'],[True])
     def test_inverse_oxygen_zero_and_unknown(self):
         s=screening_scores(([600.],300.,False),([.2],.1,False),([0.],10.,True),1,[True])
-        self.assertEqual(s['degree'],[2.]);self.assertTrue(s['unbounded_factors']['oxygen'][0])
+        self.assertEqual(s['degree'],[2.]);self.assertFalse(s['unbounded_factors']['oxygen'][0])
+        self.assertTrue(s['oxygen_numeric_guard']['applied'][0])
         u=screening_scores(([600.],300.,False),None,([0.],10.,True),1,[True])
         self.assertIsNone(u['degree'][0]);self.assertIsNone(u['all_met'][0])
+    def test_inverse_oxygen_crossing_zero_retains_fuel_limited_score(self):
+        oxygen=[8.45693459910182e-7,-2.440107326563614e-6,0.,1e-300,None,float('nan')]
+        before=oxygen.copy()
+        s=screening_scores(([614.1]*6,300.,False),([.1073785]*6,.1,False),(oxygen,10.,True),6)
+        np.testing.assert_allclose(s['degree'][:4],[1.073785]*4)
+        self.assertEqual(s['degree'][4:],[None,None])
+        self.assertEqual(s['oxygen_numeric_guard']['applied'],[False,True,True,True,False,False])
+        self.assertTrue(all(np.isfinite(v) for v in s['factors']['oxygen'][:4]))
+        self.assertEqual(oxygen[:5],before[:5])
+    def test_positive_oxygen_and_other_factors_unchanged(self):
+        s=screening_scores(([600.]*3,300.,False),([.2]*3,.1,False),([5.,10.,20.],10.,True),3)
+        self.assertEqual(s['degree'],[2.,1.,.5])
+        self.assertEqual(s['oxygen_numeric_guard']['applied'],[False]*3)
+        direct=screening_scores(([600.],300.,False),([.2],.1,False),([0.],10.,False),1)
+        self.assertEqual(direct['degree'],[0.])
     def test_thomas_opening_fraction_and_virtual_exclusion(self):
         room={'id':'R','size_m':[5,5,3]}
         vent={'id':'D','a':'R','b':'OUTSIDE','width_m':1.,'top_m':2.,'schedule':[[0,0],[10,1]]}

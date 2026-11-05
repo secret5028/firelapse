@@ -1,0 +1,6 @@
+BD inverse-oxygen numerical floor
+Floor: numpy float64 epsilon = 2.220446049250313e-16 vol%. Used only in inverse oxygen screening ratio. Not a physical threshold. Raw input/physical series and other phenomena unchanged. Missing/nonfinite inputs stay unknown.
+Tests: 9 shared condition/door tests passed; saved S08 regression 12:50 = 107.3785322266207, physical digest unchanged, repeated refresh no-op.
+Migration: 16 affected hotel playbacks; 58 derived files updated; 1498 missing BD samples repaired. Backup: simulation/results/bd-oxygen-floor-20261105/before.zip. No simulation. Existing execution evidence untouched.
+Operating UI: same saved S08, selected 5F R16 guestroom10, 12:50 BD meter aria-valuenow=107.3785322266207; peak display109 @34:40.
+Window input: W21 width .92m and W22 width .84m; height1.3m, each effective_fraction .5; internal D16 closed. Effective opening area1.144m2. At760s Qsupply3308.175kW / Qactual1800.9679287492422kW; upper O2 nearly0%, lower21.025%, interface .1500869m. This patch does not validate layer-mixing physics.

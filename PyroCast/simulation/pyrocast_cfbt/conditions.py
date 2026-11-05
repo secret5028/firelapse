@@ -2,6 +2,10 @@
 import numpy as np
 
 ROLLOVER_REVISION = 'fgi_rollover_state_v2'
+OXYGEN_SCORE_REVISION = 'inverse_oxygen_floor_v1'
+# Numerical division guard in the shared table's oxygen unit (vol%).
+# This is machine precision, not a physical oxygen/ignition threshold.
+OXYGEN_SCORE_FLOOR = float(np.finfo(np.float64).eps)
 
 def rollover_states(model, t, fgi, actual_hrr, received_jet, result=None, threshold=100.):
     """FGI subsidiary state only; no independent score or exterior-path gate.
@@ -80,10 +84,11 @@ def phenomenon(t,terms,intensity,met=None,expression=None):
 def screening_scores(temperature,fuel,oxygen,n,prior_met=None):
     """Shared, display-only section1.5.5 ratios. Never controls ignition.
 
-    Inputs are (value, threshold, lower_is_risk). Zero denominator is retained
-    as an unbounded ratio, not a fabricated finite cap.
+    Inputs are (value, threshold, lower_is_risk). The inverse oxygen ratio
+    uses a numerical positive floor; stored physical values remain untouched.
+    Other zero denominators retain the existing unbounded-ratio semantics.
     """
-    factors={};unbounded={}
+    factors={};unbounded={};oxygen_floored=[False]*n
     for key,spec in [('temperature',temperature),('fuel',fuel),('oxygen',oxygen)]:
         values=[];infinite=[]
         for j in range(n):
@@ -93,6 +98,8 @@ def screening_scores(temperature,fuel,oxygen,n,prior_met=None):
                 a=value[j] if not np.isscalar(value) else value
                 b=threshold[j] if not np.isscalar(threshold) else threshold
                 if a is not None and b is not None and np.isfinite(a) and np.isfinite(b):
+                    if key=='oxygen' and reverse and a<OXYGEN_SCORE_FLOOR:
+                        a=OXYGEN_SCORE_FLOOR;oxygen_floored[j]=True
                     numerator,denominator=(b,a) if reverse else (a,b)
                     ratio=float(numerator/denominator) if denominator>0 else float('inf') if denominator==0 and numerator>0 else None
             values.append(ratio);infinite.append(ratio==float('inf'))
@@ -106,6 +113,8 @@ def screening_scores(temperature,fuel,oxygen,n,prior_met=None):
             met.append(bool(score[-1]>=1))
     return _finite({'factors':factors,'unbounded_factors':unbounded,'degree':score,'weakest':weak,'strongest':strong,
         'all_met':met,'legacy_context_met':prior_met,
+        'oxygen_numeric_guard':{'revision':OXYGEN_SCORE_REVISION,'floor':OXYGEN_SCORE_FLOOR,
+            'unit':'vol%','applied':oxygen_floored,'scope':'inverse oxygen score only; raw values unchanged'},
         'meaning':'project screening ratios, not occurrence probability; three-factor AND; legacy context stored separately'})
 
 

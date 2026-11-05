@@ -16,7 +16,7 @@ try{
  function mesh(g,parts,z,h,color,opacity){if(!parts?.length||h<=0)return;const o=new T.Mesh(keep(new T.ExtrudeGeometry(parts.map(shp),{depth:h,bevelEnabled:false})),keep(new T.MeshLambertMaterial({color,transparent:true,opacity,depthWrite:false,side:T.DoubleSide})));o.position.z=z;o.name=g.name+'_wall';g.add(o);}
  for(const f of B.floors){const g=new T.Group();g.name=f.name;g.position.z=f.z||0;groups.push(g);S.add(g);
   mesh(g,f.slab,-.15,.15,0x8a8a8a,.24);
-  if(f.bands?.length)for(const b of f.bands)if(b.kind==='wall')mesh(g,b.polys,b.z0,b.z1-b.z0,0x93acb5,.25);
+  if(f.bands?.length)for(const b of f.bands)if(['wall','door_head','win_low','win_head'].includes(b.kind))mesh(g,b.polys,b.z0,b.z1-b.z0,0x93acb5,.25);
   for(const r of f.rooms||[])for(const part of r.polys||[]){const p=part.o||part;
    const line=new T.Line(keep(new T.BufferGeometry().setFromPoints([...p,p[0]].map(q=>new T.Vector3(...q,.04)))),keep(new T.LineBasicMaterial({color:0xaab7c0,transparent:true,opacity:.42})));line.name=f.name+'_outline';g.add(line);
    if(!f.bands?.length)for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!len)continue;const n=[-(b[1]-a[1])/len*.04,(b[0]-a[0])/len*.04];mesh(g,[[[a[0]+n[0],a[1]+n[1]],[b[0]+n[0],b[1]+n[1]],[b[0]-n[0],b[1]-n[1]],[a[0]-n[0],a[1]-n[1]]]],0,f.h,0x93acb5,.25);}

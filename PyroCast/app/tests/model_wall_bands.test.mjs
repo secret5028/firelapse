@@ -1,0 +1,10 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';
+import {BuildingLayer} from '../web/layers/building.js';import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
+const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const code=fs.readFileSync('app/model-library/operation.js','utf8'),B=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json','utf8')),S=new T.Scene();
+const create=new Function('T','B','S',"const groups=[];"+code.slice(code.indexOf(' const owned=[]'),code.indexOf(' let floor='))+'return {groups,owned};');const {groups,owned}=create(T,B,S);
+const hash='a'.repeat(64),asset=readLegacyBuildingSource({building:B,groups,sourceHash:hash}),layer=new BuildingLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});layer.setData({building:{source_hash:hash},floor:{floor_id:'5F'},t_s:0});
+const g=layer.floorGroups.get('5F');g.updateWorldMatrix(true,true);const f=B.floors.find(f=>f.name==='5F'),ray=new T.Raycaster();const hit=z=>{ray.set(new T.Vector3(4,43,f.z+z),new T.Vector3(0,1,0));return ray.intersectObject(g,true).filter(h=>h.object.isMesh&&h.distance<.6).length;};
+const samples={below:hit(.45),opening:hit(1.5),above:hit(2.65)};assert(samples.below>0);assert.equal(samples.opening,0);assert(samples.above>0);
+const actual=asset.floors.find(r=>r.id==='5F').objects.filter(o=>o.isMesh).length;assert.equal(actual,1+f.bands.filter(b=>['wall','door_head','win_low','win_head'].includes(b.kind)&&b.polys.length&&b.z1>b.z0).length+(f.structural_columns||[]).length);
+console.log(JSON.stringify({window:'5F W0',wall_raycast:samples,all_wall_bands_loaded:true}));layer.dispose();owned.forEach(r=>r.dispose());

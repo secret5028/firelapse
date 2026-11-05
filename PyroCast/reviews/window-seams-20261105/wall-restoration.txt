@@ -1,0 +1,6 @@
+Correction: wall faces were missing independently of jamb-line clipping.
+The generic CAD operation and library viewers loaded only band.kind=wall. Existing CAD bands door_head, win_low, win_head were omitted. Restored all four existing wall-band types with the same translucent material. CAD source/solver unchanged.
+Hotel 5F: wall band 0..3.1m; door_head 2.1..3.1m; win_low 0..0.9m; win_head 2.2..3.1m.
+Regression test executes actual operation.js construction and shared BuildingLayer. At W0 center, ray hits below window=2, through opening=0, above window=2. Thus opaque geometry exists above/below, and the window itself remains open geometry. Material transparency unchanged.
+Shared window display: both facade directions, same depthTest=false/renderOrder46 as doors. Stored sample states in actual hotel UI:33 windows, all visible, 19 closed with X,14 open without X; matches saved state. Read-only playback load; no calculation/input-save.
+Tests: openings_xray.test.mjs PASS; model_wall_bands.test.mjs PASS. Same-camera screenshots restored-walls.png and window-xray.png. No push.

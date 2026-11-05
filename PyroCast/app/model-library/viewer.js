@@ -27,7 +27,7 @@ function scanFloor(f,group,offset){const p=f.scan_page,outline=p.floorOutline||[
 }
 function cadFloor(f,group){
  extrude(group,f.slab,-.15,.15,0x8198a5,.24,false);
- if(f.bands?.length)for(const b of f.bands){if(b.kind==='wall')extrude(group,b.polys,b.z0,b.z1-b.z0,0xb8c3cb,.25)}
+ if(f.bands?.length)for(const b of f.bands){if(['wall','door_head','win_low','win_head'].includes(b.kind))extrude(group,b.polys,b.z0,b.z1-b.z0,0xb8c3cb,.25)}
  for(const r of f.rooms||[]){for(const part of r.polys||[]){const p=part.o||part;line(group,[...p,p[0]].map(x=>[...x,.04]),0x8da9b9,.5);
   if(!f.bands?.length){for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(!len)continue;const n=[-(b[1]-a[1])/len*.04,(b[0]-a[0])/len*.04];extrude(group,[[[a[0]+n[0],a[1]+n[1]],[b[0]+n[0],b[1]+n[1]],[b[0]-n[0],b[1]-n[1]],[a[0]-n[0],a[1]-n[1]]]],0,f.h,0xb8c3cb,.2)}}
   const mesh=new T.Mesh(keep(new T.ShapeGeometry(shape(part))),keep(new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false,side:T.DoubleSide})));mesh.position.z=.07;mesh.userData.room={floor:f.name,id:r.id,room:r};group.add(mesh);picks.push(mesh);

@@ -1,0 +1,266 @@
+[
+  {
+    "id": "CAD_5F_W0",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W1",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W2",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W3",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W4",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W5",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W6",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W7",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W8",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W9",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W10",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W11",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W12",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W13",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W14",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W15",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W16",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W17",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W18",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W19",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W20",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W21",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W22",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W23",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W24",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W25",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W26",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W27",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W28",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W29",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W30",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W31",
+    "visible": true,
+    "open": true,
+    "cross": false,
+    "depthTest": false,
+    "crossDepthTest": false
+  },
+  {
+    "id": "CAD_5F_W32",
+    "visible": true,
+    "open": false,
+    "cross": true,
+    "depthTest": false,
+    "crossDepthTest": false
+  }
+]

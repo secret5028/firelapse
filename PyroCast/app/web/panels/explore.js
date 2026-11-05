@@ -23,7 +23,7 @@ export function calculationStatus({floor,origin,job={},pending=false,dirty=false
  return saved?'저장 결과 있음':'계산 전';
 }
 // The controller owns scene selection and I/O; picking a candidate never replaces playback.
-export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,onApplyWorst,onCandidate,onFloor,floors=[]}){
+export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,onCalculate,onCalculationResult,onApplyWorst,onCandidate,onFloor,floors=[]}){
  const $=id=>document.getElementById(id),root=document.createElement('fieldset');root.id='exploreContent';$('shellPane-explore').append(root);
  root.innerHTML=`<div id="workflowFloor" class="exploreCard workflowStep"><h3>1단계 · 층 선택</h3><label>계산 층 <select id="exploreFloor" aria-label="계산 층"><option value="">층 하나를 선택하세요</option></select></label></div><div class="exploreCard workflowStep"><h3>3단계 · 화점 확인 <span tabindex="0" title="연료량이 많고, 환기가 부족하며, 화재가 확산될 통로가 많은 실을 우선합니다.&#10;&#10;후보 점수 = 연료량 + 환기 부족 + 확산 연결 + 복도 인접 + 격리 부족&#10;각 항목 0~1점, 합계 0~5점.&#10;후보 선별용 상대 점수이며 위험도 예측값은 아닙니다.">ⓘ</span></h3>
  <form id="exploreRunForm" hidden><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
@@ -37,9 +37,13 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
  `;document.head.append(style);
  // One explicit execution control at the end of the combined workflow.
  const calculate=document.createElement('section');calculate.id='exploreCalculate';calculate.className='exploreCard';
- const engine=document.createElement('small');engine.textContent='간략 엔진 · MC';calculate.append(engine,$('exploreMC'),$('exploreMCStatus'));
- root.append(calculate);$('exploreMC').textContent='계산하기';
- $('exploreMC').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
+ calculate.innerHTML='<label>계산 방식 <select id="exploreEngine" aria-label="계산 방식"><option value="lite">간략 계산</option><option value="cfast">순정 CFAST</option></select></label><button id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><button id="exploreCalculationResult" hidden>결과 보기</button>';
+ root.append(calculate);$('exploreMC').textContent='MC 급기 탐색';
+ $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
+ let calculation={available:false},calculationPending=false;
+ $('exploreEngine').onchange=()=>sync();
+ $('exploreCalculationResult').onclick=onCalculationResult;
+ $('exploreCalculateRun').onclick=()=>onCalculate?.($('exploreEngine').value);
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
@@ -64,9 +68,20 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'간략 엔진으로 개구부 조합 MC 계산 · 직렬 실행 · 표본당 적분 예산 1,200초':'MC 실행 연결 없음';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
   $('exploreMCStatus').title=mcJob.error||'현재 화점 기준. 저장 결과 있음은 현재 설정과의 일치 확인을 뜻하지 않습니다.';
-  engine.textContent='간략 엔진 · MC'+(state.origin_room_id?' · '+pretty(state.origin_room_id):'');
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
+  if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
+  const fixed=store.get('buildingReview').doors?.fixed_state,kind=$('exploreEngine').value;
+  const ready=fixed?.source_room===state.origin_room_id;
+  const calculating=calculationPending||calculation.running;
+  $('exploreCalculationResult').hidden=calculation.state!=='complete'||!calculation.case_id;
+  $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
+  $('exploreEngine').disabled=calculating;
+  $('exploreCalculateRun').disabled=!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
+  $('exploreMC').disabled ||= calculating||calculation.server_busy;
+  $('exploreCalculateRun').title=kind==='cfast'?'확정 급기·화점으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
+  $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:#b8cbd8';
+  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':dirty?'가연물 변경 저장 필요':!ready?'최악 개폐 상태 적용 후 계산':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':calculation.state==='complete'&&calculation.room===state.origin_room_id?'계산 완료':kind==='cfast'?'확정 급기 · 1회 계산':'확정 급기 · 저장 MC 결과 사용';
   $('exploreOriginRun').disabled=payload?.available===false||pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
   if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)&&!(state.origin_mode==='manual'&&payload?.manual_origins?.some(r=>r.room===state.origin_room_id))){$('exploreMC').disabled=true;$('exploreMC').title='수동 화점으로 지정한 뒤 실행하세요';}
   $('exploreRun').disabled=payload?.available===false||pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
@@ -94,5 +109,5 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   if(value.available===false){$('exploreStatus').textContent=first.length?`적격 ${first.length}실`:value.unavailable_reason||'화점 후보 없음';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
- return {update,previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
+ return {update,calculationState(value,pendingRequest=false){calculation=value;calculationPending=pendingRequest;sync();},previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
 }

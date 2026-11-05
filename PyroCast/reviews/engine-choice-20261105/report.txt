@@ -1,0 +1,13 @@
+Engine choice: 간략 계산 / 순정 CFAST (default lite).
+4: MC search remains a separate serial action. Final calculation uses applied fixed sample.
+Lite: reuse completed identical MC playback, solver runs 0.
+CFAST: r8 prepare + stock cfast-baseline.exe once, no separate baseline, no retry, native budget 1800 s. No solver/condition/threshold edits.
+Reject missing fixed state, mismatched building/room/floor/duration/fuel, concurrent admission, unknown engines.
+Results catalog + explicit result view; no automatic scene/tab switch at submit.
+Native mapping: stock CSV temperature, O2 mol_frac, TUHC/upper mass, HRR W/1000, OD, shared FO/FGI/BD and rollover.
+Unknown upper reaction is null. Native opening-specific jet distribution is not evaluated.
+Tests: fixed_calculation_test.py 7 PASS; model_mc_test.py 8 PASS; calculation_status.test.mjs PASS; native saved 23-cell prefix adapter errors 0. No new integration.
+Old stage2 browser suite not run: playwright module missing. Live operational UI verified through browser tool, console errors 0.
+Live CFAST submit rejected before reserve/integration: current hotel fuel 100%, saved MC fuel 110%. No user fuel changes and no new production calculations.
+Screenshot cfast-selection.jpg. Server restarted idle, PID 24524, 8841/8842/8843.
+Full 60-min native run not performed in this task; real native execution is tested with a mocked executable call and existing saved CSV conversion separately.

@@ -274,6 +274,13 @@ def main():
             if path=='/cfbt/lite/mc':
                 with lock:busy=state['busy']
                 return self.json({**mc_service.status(sha),'server_busy':busy,'available':True})
+            if path=='/cfbt/calculation':
+                import fixed_calculation
+                return self.json({**fixed_calculation.status(sha),'available':model_execution['allowed'],'server_busy':state['busy']})
+            if path.startswith('/cfbt/lite/result/calc-'):
+                import fixed_calculation
+                try:return self.json(fixed_calculation.playback(sha,path.rsplit('/',1)[-1]))
+                except ValueError as exc:return self.json({'error':str(exc)},400)
             if path=='/cfbt/lite/screening':
                 import lite_screening_service as screening
                 return self.json(screening.payload())
@@ -342,6 +349,8 @@ def main():
                 if current_summary:cfg['mc_summary']=current_summary;cfg['progress_text']='MC 저장 결과 · '+str(current_summary['completed'])+'표본 완료'
                 if path.endswith('catalog.json'):
                     cfg['reuse_by_case']={r['id']:reuse_info(r,'lite') for r in cfg['cases']}
+                    import fixed_calculation
+                    cfg['cases']=[r for r in cfg['cases'] if '/fixed-calculations/' not in r.get('path','').replace('\\','/')]+fixed_calculation.cases(sha)
                     return self.json({k:v for k,v in cfg.items() if k!='active_path'})
                 chosen=cfg.get('active_path') if path.endswith('active.json') else next((x['path'] for x in cfg.get('cases',[]) if x['id']==path.rsplit('/',1)[-1]),None)
                 if not chosen:return self.json({'error':'Unknown lite case'},404)
@@ -388,18 +397,31 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
-            if request_path in RUN_PATHS and not model_execution['allowed']:
+            if request_path in (RUN_PATHS|{'/cfbt/calculation'}) and not model_execution['allowed']:
                 return self.json({'error':model_execution['reason'],'simulation_started':False},403)
             if request_path.startswith('/cfbt/lite/ai/') and request_path!='/cfbt/lite/ai/fuel':
                 from lite_ai_http import handle
                 return handle(self,request_path)
-            if request_path not in ('/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc','/cfbt/lite/fixed-openings','/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides','/cfbt/lite/fuel-settings'):return self.json({'error':'지원하지 않는 요청입니다'},405)
+            if request_path not in ('/cfbt/calculation','/cfbt/run','/cfbt/ignite','/cfbt/r8/run','/cfbt/lite/doors','/cfbt/lite/screening','/cfbt/lite/mc','/cfbt/lite/fixed-openings','/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides','/cfbt/lite/fuel-settings'):return self.json({'error':'지원하지 않는 요청입니다'},405)
             if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
             try:
                 length=int(self.headers.get('Content-Length','0'))
                 if not 0<length<=100000:raise ValueError('요청 크기 오류')
                 body=json.loads(self.rfile.read(length));base_path=None
                 if mc_service.status(sha).get('running'):return self.json({'error':'현재 MC 계산 중입니다'},409)
+                if request_path=='/cfbt/calculation':
+                    if self.client_address[0]!='127.0.0.1':return self.send_error(403)
+                    import fixed_calculation
+                    with lock:
+                        if state['busy'] or fixed_calculation.status(sha)['running']:return self.json({'error':'현재 계산 중입니다'},409)
+                        destination=fixed_calculation.reserve(sha,body)
+                        state.update(busy=True,kind='fixed',error=None)
+                    def work_fixed():
+                        try:fixed_calculation.compute(destination)
+                        finally:
+                            with lock:state['busy']=False
+                    pool.submit(work_fixed)
+                    return self.json({'started':True,'id':destination.name},202)
                 if request_path in ('/cfbt/lite/ai/fuel','/cfbt/lite/fuel-overrides','/cfbt/lite/fuel-settings'):
                     if self.client_address[0]!='127.0.0.1':return self.send_error(403)
                     import lite_ai_fuel

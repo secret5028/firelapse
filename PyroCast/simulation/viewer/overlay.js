@@ -1192,7 +1192,7 @@ function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:
 }
 
 async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,building,resultId,sourceRefs={}}){
- const native=p.engine_kind==='cfast_native'&&p.native_mapping==='wando-c11-p1-v1';
+ const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1'].includes(p.native_mapping);
  if(p.engine_kind!=='pyrocast_lite'&&!native)throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
  const errors=[],notes=[],n=p.time_s.length;
  if(!n||p.time_s.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=p.time_s[i-1])))throw Error('Time axis must be finite and strictly increasing');
@@ -5420,7 +5420,7 @@ function calculationStatus({floor,origin,job={},pending=false,dirty=false,change
  return saved?'저장 결과 있음':'계산 전';
 }
 // The controller owns scene selection and I/O; picking a candidate never replaces playback.
-function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,onApplyWorst,onCandidate,onFloor,floors=[]}){
+function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,onCalculate,onCalculationResult,onApplyWorst,onCandidate,onFloor,floors=[]}){
  const $=id=>document.getElementById(id),root=document.createElement('fieldset');root.id='exploreContent';$('shellPane-explore').append(root);
  root.innerHTML=`<div id="workflowFloor" class="exploreCard workflowStep"><h3>1단계 · 층 선택</h3><label>계산 층 <select id="exploreFloor" aria-label="계산 층"><option value="">층 하나를 선택하세요</option></select></label></div><div class="exploreCard workflowStep"><h3>3단계 · 화점 확인 <span tabindex="0" title="연료량이 많고, 환기가 부족하며, 화재가 확산될 통로가 많은 실을 우선합니다.&#10;&#10;후보 점수 = 연료량 + 환기 부족 + 확산 연결 + 복도 인접 + 격리 부족&#10;각 항목 0~1점, 합계 0~5점.&#10;후보 선별용 상대 점수이며 위험도 예측값은 아닙니다.">ⓘ</span></h3>
  <form id="exploreRunForm" hidden><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
@@ -5434,9 +5434,13 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  `;document.head.append(style);
  // One explicit execution control at the end of the combined workflow.
  const calculate=document.createElement('section');calculate.id='exploreCalculate';calculate.className='exploreCard';
- const engine=document.createElement('small');engine.textContent='간략 엔진 · MC';calculate.append(engine,$('exploreMC'),$('exploreMCStatus'));
- root.append(calculate);$('exploreMC').textContent='계산하기';
- $('exploreMC').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
+ calculate.innerHTML='<label>계산 방식 <select id="exploreEngine" aria-label="계산 방식"><option value="lite">간략 계산</option><option value="cfast">순정 CFAST</option></select></label><button id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><button id="exploreCalculationResult" hidden>결과 보기</button>';
+ root.append(calculate);$('exploreMC').textContent='MC 급기 탐색';
+ $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
+ let calculation={available:false},calculationPending=false;
+ $('exploreEngine').onchange=()=>sync();
+ $('exploreCalculationResult').onclick=onCalculationResult;
+ $('exploreCalculateRun').onclick=()=>onCalculate?.($('exploreEngine').value);
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
@@ -5461,9 +5465,20 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'간략 엔진으로 개구부 조합 MC 계산 · 직렬 실행 · 표본당 적분 예산 1,200초':'MC 실행 연결 없음';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
   $('exploreMCStatus').title=mcJob.error||'현재 화점 기준. 저장 결과 있음은 현재 설정과의 일치 확인을 뜻하지 않습니다.';
-  engine.textContent='간략 엔진 · MC'+(state.origin_room_id?' · '+pretty(state.origin_room_id):'');
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
+  if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
+  const fixed=store.get('buildingReview').doors?.fixed_state,kind=$('exploreEngine').value;
+  const ready=fixed?.source_room===state.origin_room_id;
+  const calculating=calculationPending||calculation.running;
+  $('exploreCalculationResult').hidden=calculation.state!=='complete'||!calculation.case_id;
+  $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
+  $('exploreEngine').disabled=calculating;
+  $('exploreCalculateRun').disabled=!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
+  $('exploreMC').disabled ||= calculating||calculation.server_busy;
+  $('exploreCalculateRun').title=kind==='cfast'?'확정 급기·화점으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
+  $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:#b8cbd8';
+  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':dirty?'가연물 변경 저장 필요':!ready?'최악 개폐 상태 적용 후 계산':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':calculation.state==='complete'&&calculation.room===state.origin_room_id?'계산 완료':kind==='cfast'?'확정 급기 · 1회 계산':'확정 급기 · 저장 MC 결과 사용';
   $('exploreOriginRun').disabled=payload?.available===false||pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;
   if(state.origin_room_id&&!payload?.score.ranked.some(r=>r.room===state.origin_room_id)&&!(state.origin_mode==='manual'&&payload?.manual_origins?.some(r=>r.room===state.origin_room_id))){$('exploreMC').disabled=true;$('exploreMC').title='수동 화점으로 지정한 뒤 실행하세요';}
   $('exploreRun').disabled=payload?.available===false||pending||!payload||Boolean(payload.progress?.running);$('exploreN').disabled=pending||Boolean(payload?.progress?.running);
@@ -5491,7 +5506,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   if(value.available===false){$('exploreStatus').textContent=first.length?`적격 ${first.length}실`:value.unavailable_reason||'화점 후보 없음';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
- return {update,previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
+ return {update,calculationState(value,pendingRequest=false){calculation=value;calculationPending=pendingRequest;sync();},previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
 }
 
 return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
@@ -5599,7 +5614,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
- const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onCalculate:engine=>runCalculation(engine),onCalculationResult:()=>openCalculation(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());$('exploreContent').append($('exploreCalculate'));
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
@@ -5614,6 +5629,30 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:selection.duration_s,seed:20261025,manual:false,floor:store.get('floor').floor_id,selection_mode:selection.origin_mode==='manual'?'candidate':'score_first'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed){explore.mcSubmitted(value,calculationKey);await refreshMC();}}
   catch(error){if(!disposed)explore.mcState({...mcJobState,room:selection.origin_room_id,available:true,error:error.message});}finally{mcStarting=false;}
  }
+ let calculationPoll=null,calculationState={available:false},calculationStarting=false;
+ async function refreshCalculation(){
+  if(calculationPoll)clearTimeout(calculationPoll);calculationPoll=null;
+  if(window.__PYROCAST_OFFLINE__){explore.calculationState({available:false});return;}
+  try{const r=await fetch('/cfbt/calculation',{signal:exploreAbort.signal});if(!r.ok)throw Error('실행 연결 없음');const value=await r.json();if(disposed)return;
+   const previous=calculationState;calculationState=value;explore.calculationState(value);
+   if(value.state==='complete'&&(previous.id!==value.id||previous.state!=='complete'))await catalog();
+   if(value.running||value.server_busy)calculationPoll=setTimeout(refreshCalculation,3000);
+  }catch(error){if(!disposed)explore.calculationState({available:false,error:error.message});}
+ }
+ async function runCalculation(engine){
+  if(calculationStarting||calculationState.running||disposed)return;calculationStarting=true;
+  const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null},true);
+  try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
+  catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
+  finally{calculationStarting=false;}
+ }
+ async function openCalculation(){
+  const id=calculationState.case_id;if(!id)return;
+  try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});const p=await r.json();if(!r.ok)throw Error(p.error||'결과 읽기 실패');if(disposed)return;await install(p,id);
+   const cell=p.rooms.find(r=>r.key===p.fire_key);if(cell){viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});select(cell.key);fitFloor(true);} $('shellTab-result').click();render();
+  }catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
+ }
+ cleanup.push(()=>{if(calculationPoll)clearTimeout(calculationPoll);});
  let catalogOrigin=null;
  cleanup.push(store.subscribe('exploration',()=>{const origin=store.get('exploration').origin_room_id;if(origin!==catalogOrigin){catalogOrigin=origin;catalog().catch(error=>{if(!disposed)explore.status('결과 목록 읽기 실패 · '+error.message);});}}));
  const ruleOptions=()=>{const row=screeningPayload?.score.ranked.find(r=>r.room===store.get('exploration').origin_room_id);if(!row)throw Error('탐색 화점을 먼저 선택하세요.');return {fire_floor:row.floor,fire_room:row.room.replace('CAD_'+row.floor+'_',''),duration_s:data.time_s.at(-1)};};
@@ -5799,7 +5838,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   store.dispatch('selection/set',v.selection);viewer.setFloor(v.floor??'all');store.dispatch('floor/set',{floor_id:v.floor});
   store.dispatch('playback/seek',{t_s:v.time_s});store.dispatch('playback/play',{playing:false});$('shellTab-'+v.tab).click();render();fitFloor(true);
  }
- await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshCalculation();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.
@@ -5833,7 +5872,7 @@ async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
  const pending=(async()=>{
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;
-  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&data.native_mapping==='wando-c11-p1-v1'))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
+  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1'].includes(data.native_mapping)))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
   document.documentElement.dataset.pyrocastUi='modern';
   return attachModern(viewer,data);
  })();attached.set(viewer.R.domElement,pending);return pending;

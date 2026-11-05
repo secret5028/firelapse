@@ -98,7 +98,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
- const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onCalculate:engine=>runCalculation(engine),onCalculationResult:()=>openCalculation(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());$('exploreContent').append($('exploreCalculate'));
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
@@ -113,6 +113,30 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   try{const response=await fetch('/cfbt/lite/mc',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({room:selection.origin_room_id,samples:selection.samples,duration_s:selection.duration_s,seed:20261025,manual:false,floor:store.get('floor').floor_id,selection_mode:selection.origin_mode==='manual'?'candidate':'score_first'})});const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);if(!disposed){explore.mcSubmitted(value,calculationKey);await refreshMC();}}
   catch(error){if(!disposed)explore.mcState({...mcJobState,room:selection.origin_room_id,available:true,error:error.message});}finally{mcStarting=false;}
  }
+ let calculationPoll=null,calculationState={available:false},calculationStarting=false;
+ async function refreshCalculation(){
+  if(calculationPoll)clearTimeout(calculationPoll);calculationPoll=null;
+  if(window.__PYROCAST_OFFLINE__){explore.calculationState({available:false});return;}
+  try{const r=await fetch('/cfbt/calculation',{signal:exploreAbort.signal});if(!r.ok)throw Error('실행 연결 없음');const value=await r.json();if(disposed)return;
+   const previous=calculationState;calculationState=value;explore.calculationState(value);
+   if(value.state==='complete'&&(previous.id!==value.id||previous.state!=='complete'))await catalog();
+   if(value.running||value.server_busy)calculationPoll=setTimeout(refreshCalculation,3000);
+  }catch(error){if(!disposed)explore.calculationState({available:false,error:error.message});}
+ }
+ async function runCalculation(engine){
+  if(calculationStarting||calculationState.running||disposed)return;calculationStarting=true;
+  const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null},true);
+  try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
+  catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
+  finally{calculationStarting=false;}
+ }
+ async function openCalculation(){
+  const id=calculationState.case_id;if(!id)return;
+  try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});const p=await r.json();if(!r.ok)throw Error(p.error||'결과 읽기 실패');if(disposed)return;await install(p,id);
+   const cell=p.rooms.find(r=>r.key===p.fire_key);if(cell){viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});select(cell.key);fitFloor(true);} $('shellTab-result').click();render();
+  }catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
+ }
+ cleanup.push(()=>{if(calculationPoll)clearTimeout(calculationPoll);});
  let catalogOrigin=null;
  cleanup.push(store.subscribe('exploration',()=>{const origin=store.get('exploration').origin_room_id;if(origin!==catalogOrigin){catalogOrigin=origin;catalog().catch(error=>{if(!disposed)explore.status('결과 목록 읽기 실패 · '+error.message);});}}));
  const ruleOptions=()=>{const row=screeningPayload?.score.ranked.find(r=>r.room===store.get('exploration').origin_room_id);if(!row)throw Error('탐색 화점을 먼저 선택하세요.');return {fire_floor:row.floor,fire_room:row.room.replace('CAD_'+row.floor+'_',''),duration_s:data.time_s.at(-1)};};
@@ -298,7 +322,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   store.dispatch('selection/set',v.selection);viewer.setFloor(v.floor??'all');store.dispatch('floor/set',{floor_id:v.floor});
   store.dispatch('playback/seek',{t_s:v.time_s});store.dispatch('playback/play',{playing:false});$('shellTab-'+v.tab).click();render();fitFloor(true);
  }
- await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshFuelRooms();
+ await catalog();await refreshScreening();await refreshDoors();await refreshMC();await refreshCalculation();await refreshFuelRooms();
  cleanup.push(store.subscribe('floor',()=>{if(ready)refreshScreening();}));
  try{if(viewer.capabilities?.frozenRules===false){$('exploreRuleMount').textContent='현재 간략 규칙 사용 · 정밀 실행 연결 전';}else if(initial.engine_kind==='cfast_native'){$('exploreRuleMount').textContent='순정 CFAST 저장 입력 · 보기 전용';}else{frozenRules=await attachFrozenRules($('exploreRuleMount'),ruleOptions);const rules=$('cfbtFrozenRules');rules.open=true;}
   // The modern presentation boundary moves descriptions to accessible info tips.

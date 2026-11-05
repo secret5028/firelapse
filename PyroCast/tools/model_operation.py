@@ -31,6 +31,9 @@ def jobs(ident, warnings=None):
     return out
 
 def playback(ident, job=None):
+    if job and job.startswith('calc-'):
+        from fixed_calculation import playback as fixed_playback
+        return fixed_playback(sim.fingerprint(ident), job)
     if job and job.startswith("modelmc-"):
         import model_mc
         return model_mc.playback(ident,job)
@@ -85,8 +88,9 @@ def handler(base, ident):
                 if path.startswith('/cfbt/lite/result/'):return self.json(playback(ident,path.rsplit('/',1)[1]))
                 if path=='/cfbt/lite/catalog.json':
                     import model_mc
+                    import fixed_calculation
                     warnings=[];rows=jobs(ident,warnings)
-                    cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과") for p,r in rows]+model_mc.cases(ident)
+                    cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과") for p,r in rows]+model_mc.cases(ident)+fixed_calculation.cases(sim.fingerprint(ident))
                     return self.json(dict(cases=cases,warnings=warnings,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
                         progress_text='저장 결과 · 추가 계산 없음',reuse_by_case={p.name:dict(case_id=p.name,label='저장 결과 재생 · 재계산 없음',equivalent=False) for p,r in rows}))
                 if path.startswith('/cfbt/reuse/lite/'):
@@ -96,6 +100,9 @@ def handler(base, ident):
                 if path=='/cfbt/lite/mc':
                     import model_mc
                     return self.json(model_mc.status(ident))
+                if path=='/cfbt/calculation':
+                    import fixed_calculation
+                    return self.json({**fixed_calculation.status(sim.fingerprint(ident)), 'server_busy':bool(sim._active)})
                 if path=='/cfbt/lite/doors':
                     raw,_=scope(ident);rows=[]
                     for v in raw['openings']:
@@ -121,6 +128,15 @@ def handler(base, ident):
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
             path=urlsplit(self.path).path
+            if path=='/cfbt/calculation':
+                if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
+                try:
+                    n=int(self.headers.get('Content-Length','0'))
+                    if not 0<n<=4096:raise ValueError('요청 크기 오류')
+                    import fixed_calculation
+                    return self.json(fixed_calculation.start_model(ident,json.loads(self.rfile.read(n))),202)
+                except RuntimeError as exc:return self.json({'error':str(exc)},409)
+                except (ValueError,TypeError,KeyError,OSError) as exc:return self.json({'error':str(exc)},400)
             if path in ('/cfbt/lite/mc','/cfbt/lite/fixed-openings'):
                 if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
                 try:

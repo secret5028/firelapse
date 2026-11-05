@@ -71,6 +71,7 @@ def build_export(origin, case, state, interval=10):
     routes['/api/jobs/'+job+'/hydraulics'] = value('/api/jobs/'+job+'/hydraulics')
     routes['/cfbt/r8/review'] = {'batch_state': None, 'comparison': None, 'progress': {}}
     routes['/cfbt/lite/mc'] = {'running': False, 'available': False, 'server_busy': False}
+    routes['/cfbt/calculation'] = {'running': False, 'available': False, 'server_busy': False}
     catalog = value('/cfbt/lite/catalog.json')
     row = next(r for r in catalog['cases'] if r['id'] == case)
     routes['/cfbt/lite/catalog.json'] = {'cases': [{'id': case, 'label': row['label']}],

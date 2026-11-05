@@ -1,3 +1,4 @@
+import {missingDoorHeaders} from './door_headers.js';
 import {wallCornerSegments,isWallMesh,isReplacedWallOutline} from './wall_corners.js';
 import {EmptyLayer,createEmptyLayers} from './empty.js';
 import {applyRenderPolicy} from '../scene/render_order.js';
@@ -6,12 +7,16 @@ import {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces} from './wall_
 export class BuildingLayer extends EmptyLayer {
  static id='building';
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();this.basementMaterials=new Map();}
+  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();this.basementMaterials=new Map();this.headerResources=new Set();this.headerSources=[];this.sourceAsset=null;}
  clearCorners(){for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
  clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;material.depthWrite=before.depthWrite;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
-  this.materialState.clear();for(const material of this.basementMaterials.keys())material.dispose();this.basementMaterials.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.openingSignature=null;this.trimmedLines=0;}
- build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
+  this.materialState.clear();for(const material of this.basementMaterials.keys())material.dispose();this.basementMaterials.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.sourceAsset=null;this.openingSignature=null;this.trimmedLines=0;for(const r of this.headerResources)r.dispose();this.headerResources.clear();for(const s of this.headerSources)s.parent=null;this.headerSources=[];}
+ build(asset){const T=this.THREE;this.clearGeometry();this.sourceAsset=asset;this.buildCount++;
+  const floors=asset.floors.map(f=>{const objects=[...f.objects],styles=[...f.styles];for(const band of missingDoorHeaders(T,f.floor||{})){
+   const shapes=band.polys.map(p=>new T.Shape(p.o.map(v=>new T.Vector2(...v)))),geometry=new T.ExtrudeGeometry(shapes,{depth:band.z1-band.z0,bevelEnabled:false}),material=new T.MeshLambertMaterial({color:'#93acb5',transparent:true,opacity:.25,depthWrite:false,side:T.DoubleSide}),source=new T.Mesh(geometry,material);
+   source.name=f.id+'_door_head';source.position.z=band.z0;source.parent=f.group;source.userData={displayHeader:true,openingId:band.opening_id};this.headerSources.push(source);this.headerResources.add(geometry);this.headerResources.add(material);objects.push(source);styles.push({color:'#b8c3cb',opacity:null});
+  }return {...f,objects,styles};});this.asset={...asset,floors};asset=this.asset;
   for(const floor of asset.floors){const g=new T.Group();g.name=floor.id;g.position.copy(floor.group.position);g.quaternion.copy(floor.group.quaternion);g.scale.copy(floor.group.scale);this.group.add(g);this.floorGroups.set(floor.id,g);
    const parents=new Map([[floor.group,g]]),basement=/^(B\d+|지하\s*\d+층)$/i.test(floor.id),floorMaterials=new Map();
    const parentFor=source=>{if(parents.has(source))return parents.get(source);if(!source)throw Error('CAD source escaped floor hierarchy');
@@ -69,14 +74,14 @@ export class BuildingLayer extends EmptyLayer {
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
   if(frame.building!==this.lastBuilding){const asset=frame.building?this.geometryFor(frame.building):null;
    if(frame.building&&(!asset||asset.source_hash!==frame.building.source_hash))throw Error('Missing/mismatched CAD geometry; no room-box fallback');
-   if(asset!==this.asset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
+   if(asset!==this.sourceAsset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.trimOpenings(frame.t_s??0);
   this.applyTransparency(frame.realView?.buildingTransparency??.7);
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
- diagnostics(){return {buildCount:this.buildCount,ownedMaterials:this.basementMaterials.size,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
+ diagnostics(){return {inferredDoorHeaders:this.headerSources.length,buildCount:this.buildCount,ownedMaterials:this.basementMaterials.size,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
  dispose(){this.clearGeometry();this.lastBuilding=null;this.lastResult=null;this.geometryFor=null;super.dispose();}
 }
 export function createBuildingLayers(THREE,options){return [new BuildingLayer(THREE,options),...createEmptyLayers(THREE).filter(layer=>layer.constructor.id!=='building')];}

@@ -3849,8 +3849,39 @@ function readLegacyOpeningsSource({building,groups,sourceHash}){
 return {readLegacyOpeningsSource};
 })();
 
-// app/web/layers/wall_opening_lines.js
+// app/web/layers/door_headers.js
 const __module33=(()=>{
+// Display-only completion: registered doors have a lintel up to floor height.
+// Subtract existing wall bands exactly in XY; do not change CAD or solver input.
+const cross=(a,b,p)=>(b[0]-a[0])*(p[1]-a[1])-(b[1]-a[1])*(p[0]-a[0]);
+const area=p=>p.reduce((s,a,i)=>{const b=p[(i+1)%p.length];return s+a[0]*b[1]-b[0]*a[1];},0)/2;
+const orient=p=>area(p)<0?[...p].reverse():p;
+function half(poly,a,b,inside){const out=[];for(let i=0;i<poly.length;i++){const p=poly[i],q=poly[(i+1)%poly.length],x=cross(a,b,p),y=cross(a,b,q),ip=inside?x>=-1e-9:x<=1e-9,iq=inside?y>=-1e-9:y<=1e-9;if(ip)out.push(p);if(ip!==iq){const t=x/(x-y);out.push(p.map((v,k)=>v+(q[k]-v)*t));}}return out;}
+function subtract(poly,triangle){let rest=poly;const out=[];for(let i=0;i<3&&rest.length>=3;i++){const a=triangle[i],b=triangle[(i+1)%3],outside=half(rest,a,b,false);if(outside.length>=3&&Math.abs(area(outside))>1e-8)out.push(outside);rest=half(rest,a,b,true);}return out;}
+const bounds=p=>[Math.min(...p.map(v=>v[0])),Math.min(...p.map(v=>v[1])),Math.max(...p.map(v=>v[0])),Math.max(...p.map(v=>v[1]))];
+const overlaps=(a,b)=>a[0]<b[2]-1e-8&&a[2]>b[0]+1e-8&&a[1]<b[3]-1e-8&&a[3]>b[1]+1e-8;
+function triangles(T,poly){const p=poly.o||poly,holes=poly.h||[],points=[...p,...holes.flat()],faces=T.ShapeUtils.triangulateShape(p.map(v=>new T.Vector2(...v)),holes.map(h=>h.map(v=>new T.Vector2(...v))));return faces.map(f=>orient(f.map(i=>points[i])));}
+function missingDoorHeaders(T,floor){
+ // Without explicit wall bands the original wall renderer already spans full height.
+ if(!floor.bands?.length)return [];
+ const height=floor.h;if(!Number.isFinite(height))return [];
+ const covering=floor.bands.filter(b=>['wall','door_head','win_low','win_head'].includes(b.kind)).map(b=>({...b,triangles:b.polys.flatMap(p=>triangles(T,p))})),added=[];
+ for(const o of floor.openings||[]){if(!['door','door_elev'].includes(o.kind)||o.superseded_by||String(o.connection_status).startsWith('superseded'))continue;
+  const head=o.door_h??floor.door_h??2.1;if(!(head<height))continue;const footprints=o.polys?.length?o.polys:o.geometry_polys||[];if(!footprints.length)continue;
+  const source=footprints.flatMap(p=>triangles(T,p));if(!source.length)continue;const levels=[head,height,...covering.flatMap(b=>[b.z0,b.z1]).filter(z=>z>head&&z<height)].sort((a,b)=>a-b);
+  for(let i=1;i<levels.length;i++){const z0=levels[i-1],z1=levels[i];if(z1-z0<1e-7)continue;let parts=source;const cover=covering.filter(b=>b.z0<z1-1e-7&&b.z1>z0+1e-7).flatMap(b=>b.triangles);
+   for(const tri of cover){const box=bounds(tri);parts=parts.flatMap(p=>overlaps(bounds(p),box)?subtract(p,tri):[p]);if(!parts.length)break;}
+   if(!parts.length)continue;const band={kind:'door_head',opening_id:o.id,z0,z1,polys:parts.map(o=>({o,h:[]})),display_inferred:true};added.push(band);covering.push({...band,triangles:parts.flatMap(p=>triangles(T,p))});
+  }
+ }
+ return added;
+}
+
+return {missingDoorHeaders};
+})();
+
+// app/web/layers/wall_opening_lines.js
+const __module34=(()=>{
 // Display-only subtraction of opening interiors from CAD wall line segments.
 // Coordinates are floor-local; opening frames and wall meshes are never edited.
 function wallOpeningVolumes(floor,time=0){
@@ -3963,8 +3994,8 @@ return {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,t
 })();
 
 // app/web/layers/wall_corners.js
-const __module34=(()=>{
-const {outsideWallOpeningIntervals}=__module33;
+const __module35=(()=>{
+const {outsideWallOpeningIntervals}=__module34;
 // Display geometry only: reject seams inside the union of touching wall pieces.
 const isWallMesh=o=>o.isMesh&&/(?:_wall|_door_head|_win_low|_win_head)$/.test(o.name||'');
 function isReplacedWallOutline(T,o,floor){
@@ -4010,21 +4041,26 @@ return {isWallMesh,isReplacedWallOutline,wallCornerSegments};
 })();
 
 // app/web/layers/building.js
-const __module35=(()=>{
-const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module34;
+const __module36=(()=>{
+const {missingDoorHeaders}=__module33;
+const {wallCornerSegments,isWallMesh,isReplacedWallOutline}=__module35;
 const {EmptyLayer,createEmptyLayers}=__module12;
 const {applyRenderPolicy}=__module8;
-const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module33;
+const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module34;
 // Borrow both CAD geometry and materials; restore install() colour overrides.
 class BuildingLayer extends EmptyLayer {
  static id='building';
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();this.basementMaterials=new Map();}
+  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();this.basementMaterials=new Map();this.headerResources=new Set();this.headerSources=[];this.sourceAsset=null;}
  clearCorners(){for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
  clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;material.depthWrite=before.depthWrite;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
-  this.materialState.clear();for(const material of this.basementMaterials.keys())material.dispose();this.basementMaterials.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.openingSignature=null;this.trimmedLines=0;}
- build(asset){const T=this.THREE;this.clearGeometry();this.asset=asset;this.buildCount++;
+  this.materialState.clear();for(const material of this.basementMaterials.keys())material.dispose();this.basementMaterials.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.sourceAsset=null;this.openingSignature=null;this.trimmedLines=0;for(const r of this.headerResources)r.dispose();this.headerResources.clear();for(const s of this.headerSources)s.parent=null;this.headerSources=[];}
+ build(asset){const T=this.THREE;this.clearGeometry();this.sourceAsset=asset;this.buildCount++;
+  const floors=asset.floors.map(f=>{const objects=[...f.objects],styles=[...f.styles];for(const band of missingDoorHeaders(T,f.floor||{})){
+   const shapes=band.polys.map(p=>new T.Shape(p.o.map(v=>new T.Vector2(...v)))),geometry=new T.ExtrudeGeometry(shapes,{depth:band.z1-band.z0,bevelEnabled:false}),material=new T.MeshLambertMaterial({color:'#93acb5',transparent:true,opacity:.25,depthWrite:false,side:T.DoubleSide}),source=new T.Mesh(geometry,material);
+   source.name=f.id+'_door_head';source.position.z=band.z0;source.parent=f.group;source.userData={displayHeader:true,openingId:band.opening_id};this.headerSources.push(source);this.headerResources.add(geometry);this.headerResources.add(material);objects.push(source);styles.push({color:'#b8c3cb',opacity:null});
+  }return {...f,objects,styles};});this.asset={...asset,floors};asset=this.asset;
   for(const floor of asset.floors){const g=new T.Group();g.name=floor.id;g.position.copy(floor.group.position);g.quaternion.copy(floor.group.quaternion);g.scale.copy(floor.group.scale);this.group.add(g);this.floorGroups.set(floor.id,g);
    const parents=new Map([[floor.group,g]]),basement=/^(B\d+|지하\s*\d+층)$/i.test(floor.id),floorMaterials=new Map();
    const parentFor=source=>{if(parents.has(source))return parents.get(source);if(!source)throw Error('CAD source escaped floor hierarchy');
@@ -4082,14 +4118,14 @@ class BuildingLayer extends EmptyLayer {
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
   if(frame.building!==this.lastBuilding){const asset=frame.building?this.geometryFor(frame.building):null;
    if(frame.building&&(!asset||asset.source_hash!==frame.building.source_hash))throw Error('Missing/mismatched CAD geometry; no room-box fallback');
-   if(asset!==this.asset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
+   if(asset!==this.sourceAsset){if(asset)this.build(asset);else this.clearGeometry();}this.lastBuilding=frame.building;}
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.trimOpenings(frame.t_s??0);
   this.applyTransparency(frame.realView?.buildingTransparency??.7);
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
- diagnostics(){return {buildCount:this.buildCount,ownedMaterials:this.basementMaterials.size,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
+ diagnostics(){return {inferredDoorHeaders:this.headerSources.length,buildCount:this.buildCount,ownedMaterials:this.basementMaterials.size,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
  dispose(){this.clearGeometry();this.lastBuilding=null;this.lastResult=null;this.geometryFor=null;super.dispose();}
 }
 function createBuildingLayers(THREE,options){return [new BuildingLayer(THREE,options),...createEmptyLayers(THREE).filter(layer=>layer.constructor.id!=='building')];}
@@ -4098,7 +4134,7 @@ return {BuildingLayer,createBuildingLayers};
 })();
 
 // app/web/layers/openings_geometry.js
-const __module36=(()=>{
+const __module37=(()=>{
 // Exact display geometry helper from frozen lite_viewer.js; no shader or simulation code.
 function exteriorWindowFace(floor, opening) {
  if(opening.kind!=='window'||(opening.connection_status!=='exterior'&&!(opening.sides||[]).includes('out')))return null;
@@ -4140,10 +4176,10 @@ return {exteriorWindowFace};
 })();
 
 // app/web/layers/openings.js
-const __module37=(()=>{
+const __module38=(()=>{
 const {EmptyLayer}=__module12;
 const {applyRenderPolicy}=__module8;
-const {exteriorWindowFace}=__module36;
+const {exteriorWindowFace}=__module37;
 
 class OpeningsLayer extends EmptyLayer {
  static id='openings';
@@ -4231,7 +4267,7 @@ return {OpeningsLayer};
 })();
 
 // app/web/layers/room_names.js
-const __module38=(()=>{
+const __module39=(()=>{
 const {EmptyLayer}=__module12;
 const {fuelPositions}=__module19;
 // CAD text only: never substitute inferred fuel/use classes for missing labels.
@@ -4257,7 +4293,7 @@ return {cadRoomNames,RoomNamesLayer};
 })();
 
 // app/web/layers/core.js
-const __module39=(()=>{
+const __module40=(()=>{
 const {EmptyLayer}=__module12;
 const {applyRenderPolicy}=__module8;
 
@@ -4357,7 +4393,7 @@ return {fallbackStairSteps,CoreLayer};
 })();
 
 // app/web/layers/real_view.js
-const __module40=(()=>{
+const __module41=(()=>{
 const {createRealView}=__external0;
 
 // One imported renderer owns interleaved smoke/flame/plume meshes. Three layer
@@ -4431,7 +4467,7 @@ return {createRealViewSession};
 })();
 
 // app/web/layers/smoke.js
-const __module41=(()=>{
+const __module42=(()=>{
 // Smoke drives the shared legacy session once per host frame.
 const createSmokeLayer=session=>session.createLayer('smoke');
 
@@ -4439,7 +4475,7 @@ return {createSmokeLayer};
 })();
 
 // app/web/layers/flame.js
-const __module42=(()=>{
+const __module43=(()=>{
 // Visibility is independent; geometry remains owned by the shared session.
 const createFlameLayer=session=>session.createLayer('flame');
 
@@ -4447,7 +4483,7 @@ return {createFlameLayer};
 })();
 
 // app/web/layers/plume.js
-const __module43=(()=>{
+const __module44=(()=>{
 // The imported renderer supplies both rising plume and ceiling hot-gas volumes.
 const createPlumeLayer=session=>session.createLayer('plume');
 
@@ -4455,11 +4491,11 @@ return {createPlumeLayer};
 })();
 
 // app/web/layers/real_view_layers.js
-const __module44=(()=>{
-const {createRealViewSession}=__module40;
-const {createSmokeLayer}=__module41;
-const {createFlameLayer}=__module42;
-const {createPlumeLayer}=__module43;
+const __module45=(()=>{
+const {createRealViewSession}=__module41;
+const {createSmokeLayer}=__module42;
+const {createFlameLayer}=__module43;
+const {createPlumeLayer}=__module44;
 function createRealViewLayers(THREE,options){
  const session=createRealViewSession(THREE,options);
  return [createSmokeLayer(session),createFlameLayer(session),createPlumeLayer(session)];
@@ -4469,7 +4505,7 @@ return {createRealViewLayers};
 })();
 
 // app/web/layers/risk.js
-const __module45=(()=>{
+const __module46=(()=>{
 const {EmptyLayer}=__module12;
 const {applyRenderPolicy}=__module8;
 const {boundarySegments,joinedSelectionRibbons,dashedRibbonVertices}=__module17;
@@ -4580,7 +4616,7 @@ return {RiskLayer};
 })();
 
 // app/web/layers/selection.js
-const __module46=(()=>{
+const __module47=(()=>{
 const {EmptyLayer}=__module12;
 const {selectionOutlineMaterials,selectionOutlineGeometry,selectionOutlineMesh}=__module18;
 const {ROOM_PICK_LAYER}=__module11;
@@ -4624,7 +4660,7 @@ return {SelectionLayer};
 })();
 
 // app/web/state/fixed_openings.js
-const __module47=(()=>{
+const __module48=(()=>{
 // Confirmed next-run inputs are separate from the currently playing result.
 function fixedOpeningsFor(building,review){
  const valid=fixed=>fixed?.building_sha256===building?.source_hash&&fixed?.states;
@@ -4638,10 +4674,10 @@ return {fixedOpeningsFor};
 })();
 
 // app/web/scene/host.js
-const __module48=(()=>{
+const __module49=(()=>{
 const {createEmptyLayers}=__module12;
 const {ROOM_PICK_LAYER}=__module11;
-const {fixedOpeningsFor}=__module47;
+const {fixedOpeningsFor}=__module48;
 const mounted=new WeakMap();
 function createSceneHost({container,THREE,store,clock={now:()=>performance.now()},
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
@@ -4717,7 +4753,7 @@ return {createSceneHost};
 })();
 
 // app/web/scene/scale_reference.js
-const __module49=(()=>{
+const __module50=(()=>{
 // Restored from the CAD reference model: 8 m truck and 1.75 m human.
 // Display scale only; not incident positions or simulation participants.
 function createScaleReference(T){
@@ -4746,7 +4782,7 @@ return {createScaleReference};
 })();
 
 // app/web/panels/legacy_lite_panel.js
-const __module50=(()=>{
+const __module51=(()=>{
 function createLitePanel(){
  const style=document.createElement('link');style.rel='stylesheet';if(!window.__PYROCAST_OFFLINE__){style.href='/cfbt/overlay.css';document.head.append(style);}
  const panel=document.createElement('section');panel.id='cfbtPanel';panel.setAttribute('aria-label','간략 엔진 v8');
@@ -4791,7 +4827,7 @@ return {createLitePanel,updateLitePanel};
 })();
 
 // app/web/panels/new_building.js
-const __module51=(()=>{
+const __module52=(()=>{
 // Shared entry point. Scan import stays on the loopback model-library service.
 function createNewBuildingButton({container,onCreated}){
  const origin='http://127.0.0.1:8841',button=document.createElement('button');button.id='shellNewBuilding';button.type='button';button.textContent='새 건물 생성하기';button.style.whiteSpace='nowrap';container.append(button);
@@ -4814,7 +4850,7 @@ return {createNewBuildingButton};
 })();
 
 // app/web/panels/timeline_risk.js
-const __module52=(()=>{
+const __module53=(()=>{
 const TYPES=[['FO','#ef4444'],['FGI','#a855f7'],['backdraft','#facc15']];
 const finite=Number.isFinite;
 const stamp=t=>`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -4875,10 +4911,10 @@ return {timelineRiskData,createTimelineRisk};
 })();
 
 // app/web/panels/shell.js
-const __module53=(()=>{
-const {createNewBuildingButton}=__module51;
+const __module54=(()=>{
+const {createNewBuildingButton}=__module52;
 const {bindResizeHandle}=__module5;
-const {createTimelineRisk}=__module52;
+const {createTimelineRisk}=__module53;
 // Stage 4 shell only: keep the working legacy panel intact in the result tab.
 function createPanelShell({panel,store,buildingFloors=[]}){
  const $=id=>document.getElementById(id),cleanups=[],moves=[];
@@ -4990,7 +5026,7 @@ return {createPanelShell};
 })();
 
 // app/web/panels/display_policy.js
-const __module54=(()=>{
+const __module55=(()=>{
 // Presentation-only switches, applied by the panel boundary after layer.tick().
 // Layer geometry, saved values, materials and risk gates remain unchanged.
 function createDisplayPolicy(store){
@@ -5023,10 +5059,10 @@ return {createDisplayPolicy};
 })();
 
 // app/web/panels/display.js
-const __module55=(()=>{
-const {createDisplayPolicy}=__module54;
+const __module56=(()=>{
+const {createDisplayPolicy}=__module55;
 const {roomFgiRollover}=__module9;
-const {fixedOpeningsFor}=__module47;
+const {fixedOpeningsFor}=__module48;
 const backdraftTip='고온연기 축적·산소부족';
 const phenomena=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
@@ -5156,7 +5192,7 @@ return {createDisplayPanel};
 })();
 
 // app/web/panels/results.js
-const __module56=(()=>{
+const __module57=(()=>{
 const {infoTip}=__module21;
 const {roomFgiRollover}=__module9;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -5268,7 +5304,7 @@ return {resultTypes,resultNumber,resultCoverage,selectedScores,worstIndexEntries
 })();
 
 // app/web/adapters/attention.js
-const __module57=(()=>{
+const __module58=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -5285,7 +5321,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module58=(()=>{
+const __module59=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -5337,9 +5373,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module59=(()=>{
-const {attentionRanking}=__module57;
-const {savedAttention}=__module58;
+const __module60=(()=>{
+const {attentionRanking}=__module58;
+const {savedAttention}=__module59;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5441,7 +5477,7 @@ return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module60=(()=>{
+const __module61=(()=>{
 const {vehicleFitsGround}=__module4;
 const {createAssistantPanel}=__module6;
 const {attachExport}=__module7;
@@ -5460,20 +5496,20 @@ const {adaptBuilding,adaptResult,adaptScreening}=__module26;
 const {readLegacyBuildingSource}=__module27;
 const {readLegacyOpeningsSource}=__module32;
 const {readLegacyCoreSource}=__module31;
-const {BuildingLayer}=__module35;
-const {OpeningsLayer}=__module37;
-const {RoomNamesLayer}=__module38;
-const {CoreLayer}=__module39;
-const {createRealViewLayers}=__module44;
-const {RiskLayer}=__module45;
-const {SelectionLayer}=__module46;
-const {createSceneHost}=__module48;
-const {createScaleReference}=__module49;
-const {createLitePanel,updateLitePanel}=__module50;
-const {createPanelShell}=__module53;
-const {createDisplayPanel}=__module55;
-const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module56;
-const {createExplorePanel}=__module59;
+const {BuildingLayer}=__module36;
+const {OpeningsLayer}=__module38;
+const {RoomNamesLayer}=__module39;
+const {CoreLayer}=__module40;
+const {createRealViewLayers}=__module45;
+const {RiskLayer}=__module46;
+const {SelectionLayer}=__module47;
+const {createSceneHost}=__module49;
+const {createScaleReference}=__module50;
+const {createLitePanel,updateLitePanel}=__module51;
+const {createPanelShell}=__module54;
+const {createDisplayPanel}=__module56;
+const {createResultsPanel,summarizeMCPlayback,resultTypes}=__module57;
+const {createExplorePanel}=__module60;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -5769,8 +5805,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module61=(()=>{
-const {attachModern}=__module60;
+const __module62=(()=>{
+const {attachModern}=__module61;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -5785,4 +5821,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module61.attach;
+export const attach=__module62.attach;

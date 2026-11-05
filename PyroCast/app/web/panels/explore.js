@@ -60,6 +60,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   $('exploreResults').disabled=!matching;
   $('exploreResults').title=matching?'선택 화점의 저장 MC 집계 보기':`선택 화점의 저장 MC 결과 없음${mcOrigin?' · 저장 화점 '+pretty(mcOrigin):''}`;
   const fuel=store.get('fuelSettings'),dirty=Object.values(fuel.draft).some(v=>v&&Object.keys(v).length),changed=!!submitted&&submitted.key!==inputKey();
+  let fuelNotice=$('exploreFuelNotice');if(!fuelNotice){fuelNotice=document.createElement('small');fuelNotice.id='exploreFuelNotice';$('exploreCandidates').closest('.exploreScroll').before(fuelNotice);}fuelNotice.hidden=!dirty&&!fuel.saving;fuelNotice.textContent=fuel.saving?'저장·순위 갱신 중…':'변경 저장 후 순위 갱신';
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id||!store.get('floor').floor_id||dirty||fuel.saving;
   $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'간략 엔진으로 개구부 조합 MC 계산 · 직렬 실행 · 표본당 적분 예산 1,200초':'MC 실행 연결 없음';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');

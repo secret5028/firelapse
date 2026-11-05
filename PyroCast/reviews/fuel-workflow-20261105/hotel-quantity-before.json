@@ -1,0 +1,71 @@
+{
+  "building_sha256": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
+  "rooms": {
+    "CAD_5F_R0": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R1": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R2": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R3": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R4": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R5": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R6": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R7": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R8": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R11": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R12": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R14": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R15": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R16": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R17": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R18": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R19": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R20": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R21": {
+      "multiplier": 1.1
+    },
+    "CAD_5F_R22": {
+      "multiplier": 1.1
+    }
+  },
+  "floors": {
+    "6F": {
+      "multiplier": 0.9,
+      "usage_class": null
+    }
+  }
+}

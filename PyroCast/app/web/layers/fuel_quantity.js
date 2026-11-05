@@ -12,7 +12,11 @@ export function fuelPositions(polys){
  }
  candidates.sort((a,b)=>b.clearance-a.clearance);const selected=[];for(const c of candidates){if(selected.every(s=>Math.hypot(c.p[0]-s.p[0],c.p[1]-s.p[1])>2.5))selected.push(c);if(selected.length===4)break;}return selected;
 }
-export function symbolSize(load,clearance,height){return Math.min(1.5,Math.max(.15,.65*Math.cbrt(Math.max(0,load)/500)),(clearance-.05)*Math.SQRT2,Math.max(0,height-.2));}
+export function symbolSize(load,clearance,height){
+ const cap=Math.max(0,Math.min(1.5,(clearance-.05)*Math.SQRT2,height-.2)),size=Math.max(.15,.65*Math.cbrt(Math.max(0,load)/500));
+ // A smooth spatial cap keeps small rooms responsive without crossing walls.
+ return cap>0?cap*(-Math.expm1(-size/cap)):0;
+}
 export class FuelQuantityLayer extends EmptyLayer{
  static id='fuelQuantity';
  constructor(T,building){super(T);this.building=building;this.floors=[];this.picks=[];this.lastData=null;this.lastDraft=null;this.revision=null;}

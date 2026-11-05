@@ -85,6 +85,33 @@ class FuelQuantityTests(unittest.TestCase):
    ctx=api.context(self.building,self.sha);self.assertIn('AI 초기 배치 대기',ctx['default_status'])
    with self.assertRaisesRegex(ValueError,'AI 초기 배치 대기'):api.initialize_defaults(dict(revision=ctx['revision']),self.building,self.sha)
   self.assertEqual(q.load(self.sha),{})
+ def test_search_is_read_only_and_uses_catalog_numbers(self):
+  import lite_ai_fuel as ai
+  with patch.object(ai,'settings',return_value=dict(base_url='https://example.invalid',model='test',api_key_env='FUEL_TEST_KEY')),patch.dict('os.environ',{'FUEL_TEST_KEY':'test-token'}):
+   ctx=api.context(self.building,self.sha);body=dict(building_sha256=self.sha,revision=ctx['revision'],search='목재 가구')
+   result=api.search_classes(body,self.building,self.sha,lambda *args:json.dumps([dict(usage_class='office',reason='사무실 용도 기준으로 대체하는 추정')]))
+   self.assertEqual(result['suggestions'][0]['mean'],ctx['classes']['office']['mean']);self.assertFalse(result['saved']);self.assertEqual(q.load(self.sha),{})
+   with self.assertRaisesRegex(ValueError,'검증 실패'):
+    api.search_classes(body,self.building,self.sha,lambda *args:'[{"usage_class":"invented","reason":"test"}]')
+   self.assertEqual(q.load(self.sha),{})
+ def test_quantity_only_override_still_gets_ai_default(self):
+  import lite_ai_fuel as ai
+  ctx=api.context(self.building,self.sha);r=next(r for r in ctx['rooms'] if r['editable'])
+  ctx=api.apply(self.payload(ctx,[dict(id=r['id'],multiplier=1.7)]),self.building,self.sha)
+  self.assertIn(r['id'],ctx['ai_pending'])
+  with patch.object(ai,'settings',return_value=dict(base_url='https://example.invalid',model='test',api_key_env='FUEL_TEST_KEY')),patch.dict('os.environ',{'FUEL_TEST_KEY':'test-token'}):
+   def reply(*args):
+    facts=json.loads(args[-1][0]['content'].split('\n',1)[1]);return json.dumps([dict(room_id=r['id'],usage_class='office',reason='시험용 추정') for r in facts['rooms']])
+   ctx=api.initialize_defaults(dict(revision=ctx['revision']),self.building,self.sha,reply)
+  row=next(x for x in ctx['rooms'] if x['id']==r['id']);self.assertEqual(row['multiplier'],1.7);self.assertEqual(row['usage_class'],'office')
+ def test_rank_refresh_after_fuel_save(self):
+  _,before=model.prepared('parkmarine','5F',self.sha);ctx=api.context(self.building,self.sha)
+  row=before['ranked'][-1];rid=row['room']
+  api.apply(self.payload(ctx,[dict(id=rid,usage_class='library',multiplier=3)]),self.building,self.sha)
+  _,after=model.prepared('parkmarine','5F',self.sha)
+  new=next(r for r in after['ranked'] if r['room']==rid)
+  self.assertNotEqual(row['score'],new['score']);self.assertNotEqual(row['rank1'],new['rank1'])
+  print('rank linkage:',rid,'score',row['score'],'->',new['score'],'rank',row['rank1'],'->',new['rank1'])
  def test_ai_transport_formats_and_invalid_response_atomic(self):
   import lite_ai_fuel as ai
   from unittest.mock import MagicMock

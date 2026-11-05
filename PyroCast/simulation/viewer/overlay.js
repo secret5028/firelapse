@@ -4781,6 +4781,7 @@ function createPanelShell({panel,store,buildingFloors=[]}){
   }).catch(()=>{});
  }
  header.insertBefore(buildingSelect,$('fbtn'));listen(buildingSelect,'change',()=>location.assign(buildingSelect.value));
+ const newBuilding=document.createElement('button');newBuilding.id='shellNewBuilding';newBuilding.type='button';newBuilding.textContent='새 건물 생성하기';newBuilding.disabled=true;newBuilding.title='새 도면 업로드 기능 연결 전';newBuilding.style.cssText='white-space:nowrap;opacity:.65;cursor:not-allowed';header.append(newBuilding);
  const tabs=[],panes=[];
  for(const [id,label] of [['building','설정·탐색'],['result','결과'],['display','표시']]){
   const tab=document.createElement('button');tab.id='shellTab-'+id;tab.type='button';tab.role='tab';tab.textContent=label;tab.setAttribute('aria-controls','shellPane-'+id);$('pyroShellTabs').append(tab);tabs.push(tab);

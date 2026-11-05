@@ -25,9 +25,9 @@ def folder(ident):
     return p
 
 def configured():
-    from lite_ai_fuel import settings
+    from lite_ai_fuel import settings, credential
     cfg = settings()
-    return bool(cfg and os.environ.get(cfg['api_key_env']))
+    return bool(cfg and credential(cfg))
 
 def status(ident):
     value = read(folder(ident) / 'manifest.json')
@@ -142,9 +142,9 @@ scale_anchor가 있으면 {"a":[x,y],"b":[x,y],"length_m":양수,"evidence":"치
 거친 전체 벽 4개만 임의 생성하지 말고 보이는 내부 구획을 빠뜨리지 않는다.'''
 
 def interpret(image_path):
-    from lite_ai_fuel import settings, completion
+    from lite_ai_fuel import settings, completion, credential
     cfg = settings()
-    if not cfg or not os.environ.get(cfg['api_key_env']):
+    if not cfg or not credential(cfg):
         raise ValueError('판독 연결 필요 — config/ai.json과 서버 키 환경변수를 설정하세요')
     encoded = base64.b64encode(image_path.read_bytes()).decode()
     from urllib.parse import urlsplit
@@ -152,7 +152,7 @@ def interpret(image_path):
         content = [dict(type='image', source=dict(type='base64', media_type='image/png', data=encoded))]
     else:
         content = [dict(type='image_url', image_url=dict(url='data:image/png;base64,' + encoded))]
-    raw = completion(cfg, os.environ[cfg['api_key_env']], [dict(role='system', content=PROMPT), dict(role='user', content=content)])
+    raw = completion(cfg, credential(cfg), [dict(role='system', content=PROMPT), dict(role='user', content=content)])
     try: return json.loads(raw)
     except ValueError: raise ValueError('판독 응답이 JSON 객체가 아닙니다') from None
 

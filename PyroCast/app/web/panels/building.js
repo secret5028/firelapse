@@ -1,3 +1,4 @@
+import {createAIConnectionControl} from './ai_connection.js';
 import {infoTip} from './explanations.js';
 const short=id=>id==='OUTSIDE'?'외기':String(id||'—').replace(/^CAD_/,'').replace('_',' ');
 const number=(v,d=0)=>Number.isFinite(v)?v.toFixed(d):'미확인';
@@ -12,6 +13,7 @@ export function buildingTable(score){
 export function openingCounts(doors,openings){const counts={confirmed:0,inferred:0,ordinary:0,window:0,unknown:0};for(const r of doors||[])counts[doorCategory(r)]++;counts.window=(openings||[]).filter(r=>r.class?.includes('window')).length;return counts;}
 export function createBuildingPanel({store}){
  const $=id=>document.getElementById(id),root=document.createElement('div');root.id='buildingContent';$('shellPane-building').prepend(root);
+ const disposeAIConnection=createAIConnectionControl($('shellPane-building'));
  root.innerHTML='<section id="buildingFuelSection" hidden><h3>2단계 · 가연물 확인</h3><div class="buildingScroll"><table><thead><tr><th>실·용도</th><th>면적<br>m²</th><th>하중<br>MJ/m²</th><th>피복률</th><th>HRRPUA<br>kW/m²</th></tr></thead><tbody id="buildingFuel"></tbody></table></div></section><p id="buildingSettingsEmpty">2단계 · 가연물 설정 없음</p>';
  const style=document.createElement('style');style.dataset.pyrocastBuildingPanel='true';style.textContent=`#buildingContent{padding:12px 16px;font-size:12px;color:#eaf3f8}#buildingContent h3{font-size:12px;color:#b8cbd8;font-weight:500;margin:14px 0 8px}.buildingScroll{overflow:auto;max-height:370px;border:1px solid #496273;border-radius:6px}#buildingContent table{width:100%;border-collapse:collapse;font-size:11px}#buildingContent th,#buildingContent td{border-bottom:1px solid #304c5e;padding:7px 4px;text-align:right}#buildingContent th:first-child,#buildingContent td:first-child{text-align:left}#buildingContent th{white-space:nowrap}#buildingContent td{vertical-align:top}#buildingContent summary{cursor:pointer}#buildingContent .buildingSource{white-space:normal;overflow-wrap:anywhere;min-width:130px;color:#b8cbd8;margin-top:7px}#buildingSettingsEmpty{color:#b8cbd8}`;document.head.append(style);
  const append=(p,tag,text)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;p.append(e);return e;};
@@ -23,5 +25,5 @@ export function createBuildingPanel({store}){
   $('buildingFuel').replaceChildren();for(const row of rows){const tr=append($('buildingFuel'),'tr');tr.dataset.room=row.id;const first=append(tr,'td'),details=append(first,'details');append(details,'summary',`${short(row.id)} · ${row.usage}`);const source=append(details,'div',`CAD 원문: ${row.name||'미제공'}`);source.className='buildingSource';source.append(infoTip(row.basis||'근거 미제공'));for(const text of [number(row.area,1),number(row.load),Number.isFinite(row.coverage)?number(row.coverage*100)+'%':'미확인',number(row.hrrpua)])append(tr,'td',text);}
  }
  const off=store.subscribe('buildingReview',render),offFuel=store.subscribe('fuelSettings',render);render();
- return {dispose(){off();offFuel();root.remove();style.remove();}};
+ return {dispose(){disposeAIConnection();off();offFuel();root.remove();style.remove();}};
 }

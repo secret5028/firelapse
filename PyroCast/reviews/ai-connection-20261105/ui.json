@@ -1,0 +1,11 @@
+{
+  "provider": "test-only localhost mock; real API unverified",
+  "connect": "PASS",
+  "reload_preserves_connection": "PASS",
+  "no_browser_storage": "PASS",
+  "key_cleared": "PASS",
+  "failed_connection": "PASS",
+  "disconnect": "PASS",
+  "foreign_origin_blocked": "PASS",
+  "errors": []
+}

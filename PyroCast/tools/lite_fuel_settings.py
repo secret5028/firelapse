@@ -34,7 +34,7 @@ def context(building,sha):
                 basis=resolved['default_reason'] or ('기존 승인값' if choice or custom else '자동 분류(추정) · '+('실 라벨' if evidence['basis']=='label' else '층 용도')),
                 position_m=r.get('c'),floor_use=f.get('use'),neighbors=sorted(set(neighbors.get(r['id'],[])))))
     import lite_ai_fuel
-    try:cfg=lite_ai_fuel.settings();available=bool(cfg and os.environ.get(cfg['api_key_env']))
+    try:cfg=lite_ai_fuel.settings();available=bool(cfg and lite_ai_fuel.credential(cfg))
     except ValueError:available=False
     pending=[r['id'] for r in rows if r['editable'] and r['origin_source']!='approved' and r['id'] not in saved.get('defaults',{}) and r['id'] not in saved.get('rooms',{}) and not saved.get('floors',{}).get(r['floor'],{}).get('usage_class')]
     return dict(editable=True,building_sha256=sha,rooms=rows,classes={k:{'label':v['label'],'mean':v['mean'],'rhrf':v['rhrf']} for k,v in table.items()},
@@ -47,7 +47,7 @@ def initialize_defaults(body,building,sha,transport=None):
     if body['revision']!=ctx['revision']:raise ValueError('입력이 변경되었습니다. 새로 불러오세요')
     pending=[r for r in ctx['rooms'] if r['id'] in ctx['ai_pending']]
     if not pending:return ctx
-    cfg=ai.settings();key=os.environ[cfg['api_key_env']];transport=transport or ai.completion;proposed=[]
+    cfg=ai.settings();key=ai.credential(cfg);transport=transport or ai.completion;proposed=[]
     # Serial bounded batches; values always come from the existing table.
     for offset in range(0,len(pending),30):
         batch=pending[offset:offset+30];facts={k:v for k,v in ctx.items() if k=='classes'};facts.update(building_use=building.get('name') or building.get('building_name') or building.get('title'),rooms=batch,

@@ -19,7 +19,7 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
    $('fuelRoomType').disabled=saving;$('fuelRoomAmount').disabled=saving||value.pending;$('fuelInherit').disabled=saving||value.scope!=='room';
   }
   $('fuelSave').disabled=saving||!dirty();$('fuelReset').disabled=saving||!dirty();$('fuelDefaultsStatus').textContent=current.ai_pending?.length&&!current.ai_available?'AI 연결 대기 · 현재는 용도별 기준량을 임시 표시':current.default_status||'';
-  $('fuelAI').hidden=!current.ai_pending?.length;$('fuelAI').disabled=saving||dirty()||!current.ai_available;$('fuelAI').title=current.ai_available?'미설정 실만 AI 배치':'config/ai.json 및 키 환경변수 설정 필요';$('fuelSettingsStatus').textContent=store.get('fuelSettings').message;
+  $('fuelAI').hidden=!current.ai_pending?.length;$('fuelAI').disabled=saving||dirty()||!current.ai_available;$('fuelAI').title=current.ai_available?'미설정 실만 AI 배치':'설정·탐색의 AI 연결 버튼으로 연결하세요';$('fuelSettingsStatus').textContent=store.get('fuelSettings').message;
  }
  function changed(){store.dispatch('realView/set',{fuelMarkers:true});update('미저장 변경 · 기존 결과 유지');render();}
  function editFloor(){draft.floors={...draft.floors,[floor]:{usage_class:$('fuelFloorType').value||null,multiplier:Number($('fuelFloorAmount').value)/100}};changed();}
@@ -36,5 +36,6 @@ export function createFuelSettingsPanel({store,onSaved,available=true}){
  }catch(e){if(!disposed)update('가연물 설정 읽기 실패');}}
  const offFloor=store.subscribe('floor',value=>{floor=value.floor_id;if(room()?.floor!==floor)selected=null;render();});
  const offSelection=store.subscribe('selection',value=>{if(!['click','touch'].includes(value.source)||!current)return;selected=value.room_id;if(!room()){selected=null;render();return;}render();});
- refresh();return {refresh,dispose(){offFloor();offSelection();disposed=true;abort.abort();root.remove();style.remove();}};
+ const connectionChanged=e=>{if(current){current={...current,ai_available:!!e.detail.connected};update();render();}};window.addEventListener('pyrocast:ai-connection',connectionChanged);
+ refresh();return {refresh,dispose(){window.removeEventListener('pyrocast:ai-connection',connectionChanged);offFloor();offSelection();disposed=true;abort.abort();root.remove();style.remove();}};
 }

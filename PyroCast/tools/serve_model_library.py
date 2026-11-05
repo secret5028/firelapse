@@ -7,6 +7,8 @@ ASSETS=ROOT/'cad-project/work/cad-web/local-resources/cad-assets'
 if not ASSETS.is_dir():
  ASSETS=ROOT/'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets'
 FILES={
+ '/models/ai':(ROOT/'app/model-library/ai.html','text/html; charset=utf-8'),
+ '/models/ai.js':(ROOT/'app/model-library/ai.js','text/javascript; charset=utf-8'),
  '/models/new':(ROOT/'app/model-library/new.html','text/html; charset=utf-8'),
  '/models/new.js':(ROOT/'app/model-library/new.js','text/javascript; charset=utf-8'),
  '/models/':(ROOT/'app/model-library/index.html','text/html; charset=utf-8'),
@@ -29,6 +31,9 @@ class Handler(BaseHTTPRequestHandler):
  def json(self,d,code=200):return self.send(json.dumps(d,ensure_ascii=False).encode(),code=code)
  def do_GET(self):
   path=urlsplit(self.path).path
+  if path in ('/models/ai/connection','/models/ai/completion'):
+   import ai_connection
+   return ai_connection.handle(self,path)
   if path.startswith('/models/imports/'):
    try:
     import model_import
@@ -61,6 +66,9 @@ class Handler(BaseHTTPRequestHandler):
   return self.json({'error':'Not found'},404)
  def do_POST(self):
   path=urlsplit(self.path).path
+  if path in ('/models/ai/connection','/models/ai/completion'):
+   import ai_connection
+   return ai_connection.handle(self,path)
   if path=='/models/imports' or path.startswith('/models/imports/'):
    if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):
     return self.json({'error':'외부 요청 차단'},403)
@@ -99,6 +107,8 @@ class Handler(BaseHTTPRequestHandler):
  def do_DELETE(self):return self.do_PUT()
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--port',type=int,default=8841);a=p.parse_args()
+ import ai_connection
+ ai_connection.HOSTING=True
  from model_operation import start_servers
  operation_servers=start_servers(Handler)
  ThreadingHTTPServer(('127.0.0.1',a.port),Handler).serve_forever()

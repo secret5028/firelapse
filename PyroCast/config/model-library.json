@@ -104,14 +104,26 @@
       "label": "아이엔테크놀로지",
       "path": "data/model-library/intech-cad/building.json",
       "source_kind": "cad",
-      "sha256": "48952a150e47c446fc370683f2ffc91653ecf2468a324d7fd97b2e63855733e2",
+      "sha256": "72a3744eaeedfb0e274ccef04961cfec7a5b4e90593c6141707b5bce0098fe8a",
       "floor_count": 2,
       "room_count": 49,
-      "simulation_enabled": false,
-      "execution_note": "CAD 모델 생성 · 연결·층고 검토 후 계산 연결",
+      "simulation_enabled": true,
+      "execution_note": "층별 계산 가능 · 추정 연결·층고 유지 · 수직 전파 미평가",
       "source_evidence": "DWG/DXF 원본 보존 · 공리 보정 · AI codex_source_review",
-      "operation_url": null,
-      "review_url": null
+      "operation_url": "http://127.0.0.1:8844/model.html",
+      "review_url": null,
+      "calculation_floors": [
+        {
+          "floor": "1F",
+          "ok": true
+        },
+        {
+          "floor": "2F",
+          "ok": true
+        }
+      ],
+      "operation_port": 8844,
+      "execution_mode": "library_lite"
     }
   ]
 }

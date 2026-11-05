@@ -133,7 +133,7 @@ def worker(ident,review_only=False):
             value['floors']=[dict(floor=f['name'],rooms=len(f['rooms']),openings=len(f['openings']),height_m=f['h']) for f in building['floors']]
             for row in loaders:
                 if not row['ok']: building['model_review']['items'].append(dict(floor=row['floor'],id='LOADER',kind='loader_failed',detail=row['error']))
-            building['model_provenance']=dict(source_kind='cad',simulation_allowed=False,import_id=ident,files=value['files'],ai_review=building['cad_completion']['ai_status'])
+            building['model_provenance']=dict(source_kind='cad',simulation_allowed=any(r['ok'] for r in loaders),import_id=ident,files=value['files'],ai_review=building['cad_completion']['ai_status'])
             building['notes']=['CAD 자동 추출 · 미확인 연결은 검토 목록 참조', '층고 출처: '+str(building.get('levels_src','미확인'))]
             atomic_json(target,building);atomic_json(dest/'graph-report.json',report);atomic_json(work/'report.json',report)
             mid='cad-'+ident
@@ -144,6 +144,8 @@ def worker(ident,review_only=False):
                     sha256=hashlib.sha256(target.read_bytes()).hexdigest(),floor_count=len(building['floors']),room_count=sum(len(f['rooms']) for f in building['floors']),
                     simulation_enabled=False,execution_note='CAD 모델 생성 · 연결·층고 검토 후 계산 연결',
                     source_evidence='DWG/DXF 원본 보존 · 공리 보정 · AI '+building['cad_completion']['ai_status'],operation_url=None,review_url=None)
+                from model_operation import register_cad, ensure_server
+                register_cad(entry,loaders,registry)
                 existing=next((e for e in registry['models'] if e['id']==mid),None)
                 if existing:
                     previous=model_library.model_path(existing)
@@ -154,7 +156,8 @@ def worker(ident,review_only=False):
                     existing.update(entry)
                 else:registry['models'].append(entry)
                 atomic_json(model_library.REGISTRY,registry)
-            value.update(state='complete',model_id=mid,url='/models/?id='+mid,message='3D 생성 완료',loaders=loaders,
+            ensure_server(entry)
+            value.update(state='complete',model_id=mid,url=entry.get('operation_url') or '/models/?id='+mid,operation_url=entry.get('operation_url'),message='3D 생성 완료 · 층별 계산 가능' if entry['simulation_enabled'] else '3D 생성 완료 · 계산 층 검토 필요',loaders=loaders,
                 unresolved=sum(len(f['simulation_graph']['isolated_rooms']) for f in building['floors']),review_count=len(building['model_review']['items']),ai_status=building['cad_completion']['ai_status'],ai_calls=building['cad_completion']['ai_calls'])
     except Exception as e: value.update(state='failed',message=str(e),errors=[str(e)])
     finally:

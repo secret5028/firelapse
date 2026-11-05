@@ -19,6 +19,7 @@ export function calculationStatus({floor,origin,job={},pending=false,dirty=false
  if(job.error&&(!job.room||job.room===origin))return '계산 실패';
  if(job.room===origin&&['failed','interrupted'].includes(job.state))return job.state==='failed'?'계산 실패':'계산 중단';
  if(changed)return '재계산 필요';
+ if(job.room===origin&&job.state==='completed'&&job.total>0&&job.failed_or_incomplete>=job.total)return '계산 실패 · 완주 0/'+job.total;
  if(job.room===origin&&job.state==='completed')return job.failed_or_incomplete?'일부 미완료':verified?'계산 완료':'저장 결과 있음';
  return saved?'저장 결과 있음':'계산 전';
 }

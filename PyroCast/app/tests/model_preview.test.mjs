@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {adaptBuilding,adaptResult} from '../web/adapters/read.js';
+import {resultListRows} from '../web/panels/result_list.js';
+import {resultCoverage} from '../web/panels/results.js';
+const polys=[{o:[[0,0],[3,0],[3,3],[0,3]],h:[]}];
+const p={engine_kind:'pyrocast_lite',model_preview:true,complete:false,building_sha256:'abc',time_s:[0],fire_key:null,rooms:[{key:'CAD_1F_R1',original_room:'CAD_1F_R1',cad_polys:polys}],solvers:{},fires:[],events:[],limits:[]};
+const scenario={rooms:[{id:'CAD_1F_R1',cad_floor:'1F',z_m:0,height_m:3,cad_polys:polys}],openings:[],cad:{building_sha256:'abc'}};
+const building=adaptBuilding({scenario,playback:p,sourceHash:'abc'});
+const result=await adaptResult({playback:p,scenario,building,resultId:'model-preview'});
+assert.deepEqual(building.errors,[]);assert.deepEqual(result.errors,[]);
+assert.equal(building.floors[0].rooms[0].cells.length,0);
+assert.deepEqual(result.index_by_cell,{});assert.deepEqual(result.cells,{});
+assert.deepEqual(resultListRows([],result,[]),[]);
+assert.equal(resultCoverage(building,result,building.floors[0].rooms[0]).status,'미평가');
+console.log('PASS: CAD geometry stays selectable; no solver values, fake zero indices, or saved-result rows');

@@ -14,3 +14,5 @@ assert.equal(calculationStatus({...done,origin:'R3'}),'계산 전','Other origin
 assert.equal(calculationStatus({...done,job:{...done.job,failed_or_incomplete:1}}),'일부 미완료');
 assert.equal(calculationStatus({...done,job:{room:'R16',state:'failed'}}),'계산 실패');
 console.log('PASS: calculation states, partial failure, stale settings and unrelated saved origins');
+
+assert.equal(calculationStatus({...done,job:{...done.job,total:2,failed_or_incomplete:2}}),'계산 실패 · 완주 0/2');

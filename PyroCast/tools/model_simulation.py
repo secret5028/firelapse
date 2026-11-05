@@ -33,6 +33,8 @@ def entry(ident):
     row = next((r for r in entries() if r['id'] == ident), None)
     if not row or row['source_kind'] != 'cad':
         raise ValueError('스캔·비 CAD 모델은 이 계산 경로를 사용할 수 없습니다')
+    if not row.get('simulation_enabled'):
+        raise ValueError('계산 가능한 CAD 층이 없습니다')
     if row.get('execution_mode') != 'library_lite':
         raise ValueError('이 건물은 전용 운영 화면의 계산 경로를 사용합니다')
     return row

@@ -168683,7 +168683,7 @@
   },
   "model_provenance": {
     "source_kind": "cad",
-    "simulation_allowed": false,
+    "simulation_allowed": true,
     "import_id": "aabf1346d0e54c94b45ad7d7db7137d4",
     "files": [
       {

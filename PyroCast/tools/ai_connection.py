@@ -70,7 +70,15 @@ def runtime_completion(messages):
 def handle(handler,path):
     # No keys in GET, responses, log messages, disk, or environment variables.
     host=handler.headers.get('Host','')
-    if handler.client_address[0]!='127.0.0.1' or host not in ('127.0.0.1:'+str(handler.server.server_port),'localhost:'+str(handler.server.server_port)) or handler.headers.get('Origin') not in (None,'http://'+host):
+    # Registered operation pages may read connection status; credential writes
+    # and completions remain strictly same-origin.
+    origin=handler.headers.get('Origin')
+    public_read=False
+    if handler.command=='GET' and path.endswith('/connection'):
+        from model_library import entries
+        public_read=origin in {urlsplit(e.get('operation_url') or '').scheme+'://'+urlsplit(e.get('operation_url') or '').netloc for e in entries()}
+
+    if handler.client_address[0]!='127.0.0.1' or host not in ('127.0.0.1:'+str(handler.server.server_port),'localhost:'+str(handler.server.server_port)) or (origin not in (None,'http://'+host) and not public_read):
         return handler.json({'error':'외부 요청 차단'},403)
     try:
         if handler.command=='GET' and path.endswith('/connection'):return handler.json(public_status())

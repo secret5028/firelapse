@@ -1,0 +1,133 @@
+{
+  "building": "cad-aabf1346d0e54c94b45ad7d7db7137d4",
+  "operation_url": "http://127.0.0.1:8844/model.html",
+  "floors": [
+    {
+      "floor": "1F",
+      "enabled": true,
+      "candidates": 20,
+      "first": "CAD_1F_R3",
+      "error": null
+    },
+    {
+      "floor": "2F",
+      "enabled": true,
+      "candidates": 26,
+      "first": "CAD_2F_R20",
+      "error": null
+    }
+  ],
+  "tests": {
+    "new_cad_registration_preview_and_api_status": 9,
+    "cad_import": 5,
+    "model_simulation_input_isolation": 5,
+    "ai_connection": 8,
+    "model_preview_js": "PASS",
+    "result_list_js": "PASS",
+    "result_scope_js": "PASS (Three module path supplied)",
+    "old_results_browser_test": "Not run: Playwright dependency unavailable; actual operational UI verified with CUA",
+    "calculation_status_js": "PASS (all failed distinct from partial failure)"
+  },
+  "engine_modified": false,
+  "shader_modified": false,
+  "scan_calculation_enabled": false,
+  "native_cfast_run": false,
+  "input_assumptions": "Existing inferred openings/heights and usage classification retained; per-floor scope, no invented vertical links",
+  "validation_run": {
+    "engine": "lite",
+    "floor": "1F",
+    "room": "CAD_1F_R3",
+    "duration_s": 1800,
+    "samples": 2,
+    "workers": 1,
+    "budget_s_per_sample": 1200
+  },
+  "source_building_sha256": "72a3744eaeedfb0e274ccef04961cfec7a5b4e90593c6141707b5bce0098fe8a",
+  "mc_test": {
+    "progress": {
+      "state": "completed",
+      "completed": 2,
+      "total": 2,
+      "failed_or_incomplete": 2,
+      "wall_s": 452.05537449999247
+    },
+    "samples": [
+      {
+        "sample_id": "S00",
+        "complete": false,
+        "safe_end_s": 280.0,
+        "failure": "Factor is exactly singular",
+        "times": {
+          "total_s": 86.70251949998783,
+          "integration_s": 85.56918950000545
+        },
+        "attempts": [
+          {
+            "solver": "BDF",
+            "complete": false,
+            "integration_s": 27.99269889999414,
+            "preprocess_s": 0.08328680001432076,
+            "postprocess_s": 0.45345450000604615,
+            "failure": "Factor is exactly singular"
+          },
+          {
+            "solver": "Radau",
+            "complete": false,
+            "integration_s": 57.57649060001131,
+            "preprocess_s": 0.060497699974803254,
+            "postprocess_s": 0.2568463000061456,
+            "failure": "Factor is exactly singular"
+          }
+        ]
+      },
+      {
+        "sample_id": "S01",
+        "complete": false,
+        "safe_end_s": 300.0,
+        "failure": "Factor is exactly singular",
+        "times": {
+          "total_s": 365.05100569999195,
+          "integration_s": 363.90565140001127
+        },
+        "attempts": [
+          {
+            "solver": "BDF",
+            "complete": false,
+            "integration_s": 333.6700884999882,
+            "preprocess_s": 0.0650655000063125,
+            "postprocess_s": 0.4675758999946993,
+            "failure": "Factor is exactly singular"
+          },
+          {
+            "solver": "Radau",
+            "complete": false,
+            "integration_s": 30.23556290002307,
+            "preprocess_s": 0.06290859999717213,
+            "postprocess_s": 0.2659038999991026,
+            "failure": "Factor is exactly singular"
+          }
+        ]
+      }
+    ]
+  },
+  "short_test": {
+    "duration_s": 60,
+    "job": "1c2466734281418e94bc2c6814352651",
+    "state": "complete",
+    "wall_s": 0.6659922999970149,
+    "integration_s": 0.40089060002355836,
+    "results_and_index_summary_exist": true,
+    "note": "Diagnostic transport/storage/playback test only, not a successful 30-minute MC"
+  },
+  "ui": {
+    "empty_model": "PASS",
+    "before_calculation_no_fake_zero": "PASS",
+    "candidate_table_and_MC_enabled": "PASS",
+    "result_click_selects_origin": "PASS",
+    "seek_to_60s": "PASS",
+    "reload_restores_selected_room_result_and_time": "PASS",
+    "console_errors": [],
+    "2F_candidate_table": "26 candidates, R20 first"
+  },
+  "remaining": "30-minute MC S00/S01 both failed with Factor is exactly singular. Root numerical cause not established; no thresholds, physics, retries beyond existing BDF/Radau fallback changed. No complete MC winner to apply; CFAST final run not performed."
+}

@@ -11,9 +11,13 @@ export function createNewBuildingButton({container,onCreated}){
  button.onclick=()=>open(origin+'/models/new');
  const review=e=>{if(/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.detail?.id||''))open(origin+'/models/?id='+encodeURIComponent(e.detail.id));};
  window.addEventListener('firelapse:review-model',review);
- const receive=e=>{if(e.origin!==origin||e.source!==frame?.contentWindow||!/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.data?.id||''))return;
+ const receive=async e=>{if(e.origin!==origin||e.source!==frame?.contentWindow||!/^(?:cad|scan)-[a-f0-9]{32}$/.test(e.data?.id||''))return;
   if(e.data.type==='pyrocast:model-created')onCreated?.();
-  if(e.data.type==='pyrocast:open-created-model')open(origin+'/models/?id='+encodeURIComponent(e.data.id));
+  if(e.data.type==='pyrocast:open-created-model'){
+   const id=e.data.id;
+   try{const r=await fetch(origin+'/models/catalog.json');if(!r.ok)throw Error('catalog');const c=await r.json(),entry=c.models.find(m=>m.id===id);const u=entry?.operation_url&&new URL(entry.operation_url);if(u&&u.protocol==='http:'&&u.hostname==='127.0.0.1'&&u.pathname==='/model.html'){location.assign(u.href);return;}}catch{}
+   open(origin+'/models/?id='+encodeURIComponent(id));
+  }
  };
  window.addEventListener('message',receive);
  return ()=>{window.removeEventListener('message',receive);window.removeEventListener('firelapse:review-model',review);dialog?.remove();button.remove();};

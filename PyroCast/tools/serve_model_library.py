@@ -27,7 +27,8 @@ class Handler(BaseHTTPRequestHandler):
   if zipped:data=gzip.compress(data,compresslevel=1,mtime=0)
   self.send_response(code);self.send_header('Content-Type',mime);self.send_header('Content-Length',str(len(data)))
   origin=self.headers.get('Origin')
-  if origin in ('http://127.0.0.1:8780','http://127.0.0.1:8832','http://127.0.0.1:8840','http://127.0.0.1:8841','http://127.0.0.1:8842','http://127.0.0.1:8843'):self.send_header('Access-Control-Allow-Origin',origin)
+  allowed_origins={urlsplit(e.get('operation_url') or '').scheme+'://'+urlsplit(e.get('operation_url') or '').netloc for e in entries()}
+  if origin in allowed_origins or origin in ('http://127.0.0.1:8780','http://127.0.0.1:8832','http://127.0.0.1:8840','http://127.0.0.1:8841','http://127.0.0.1:8842','http://127.0.0.1:8843'):self.send_header('Access-Control-Allow-Origin',origin)
   if zipped:self.send_header('Content-Encoding','gzip')
   self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff');self.end_headers();self.wfile.write(data)
  def json(self,d,code=200):return self.send(json.dumps(d,ensure_ascii=False).encode(),code=code)

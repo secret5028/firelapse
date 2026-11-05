@@ -5,6 +5,7 @@ const finite=Number.isFinite;
 export const resultNumber=(v,d=0)=>finite(v)?v.toFixed(d):'—';
 const number=resultNumber;
 export function resultCoverage(building,result,room){
+ if(result.source_refs?.model_preview)return {label:'계산 전',status:room?'미평가':'실 선택',evaluated:false};
  const floors=building.floors.filter(f=>f.rooms.some(r=>r.cells.some(c=>result.index_by_cell[c.cell_id]))).map(f=>f.floor_id);
  const origin=result.scenario.origin_room_id?.replace(/^CAD_/,'').replaceAll('_',' ')??'—';
  const evaluated=!!room?.cells.some(c=>result.index_by_cell[c.cell_id]);

@@ -26,7 +26,7 @@ export function adaptBuilding({scenario,playback,sourceHash}){
    core_kind:core,...shapes(p),floor_z_m:z,ceiling_z_m:z+h,cells:[]};
   byRoom.set(r.id,row);f.rooms.push(row);
  }
- for(const c of unique(playback.rooms,'key',errors)){
+ for(const c of unique(playback.model_preview?[]:playback.rooms,'key',errors)){
   const room=byRoom.get(c.original_room??c.key),p=polygons(c.cad_polys);
   if(!room){issue(errors,'UNMAPPED_CELL',c.key,'Explicit original_room does not exist; cell excluded');continue;}
   if(!p.length){issue(errors,'MISSING_GEOMETRY',c.key,'No cell polygons');continue;}
@@ -114,7 +114,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   // Read-only archive compatibility: old results keep their saved boundary geometry.
   const boundary=s.boundary??s.display_v8?.boundary;boundaryByCell[cid]=copy(boundary??unknown(n));if(boundary?.some(v=>v===true))boundaries.add(rid);
  }
- for(const c of p.rooms)if(!cellRoom.has(c.key))issue(errors,'UNMAPPED_CELL',c.key,'Result cell excluded because it has no building mapping');
+ for(const c of p.model_preview?[]:p.rooms)if(!cellRoom.has(c.key))issue(errors,'UNMAPPED_CELL',c.key,'Result cell excluded because it has no building mapping');
  const rooms={},conditions={};
  for(const [rid,ids] of roomCells){const present=ids.filter(id=>cells[id]);if(!present.length)continue;
   if(present.length===1){rooms[rid]=copy(cells[present[0]]);conditions[rid]=copy(cellConditions[present[0]]);continue;}
@@ -150,7 +150,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
   limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
-  fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
+  fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
 
 export function adaptScreening({score,comparison=null,selection={},buildingId,floorId,mc=null}){

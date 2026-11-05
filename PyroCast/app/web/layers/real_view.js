@@ -22,7 +22,7 @@ export function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}
   if(frame.building!==session.building||frame.resultMeta!==session.result){
    const source=frame.building&&frame.resultMeta?sourceFor(frame.building,frame.resultMeta):null;
    if(frame.building&&frame.resultMeta&&(!source||source.source_hash!==frame.building.source_hash||source.result_id!==frame.resultMeta.result_id))throw Error('Missing/mismatched raw real-view source');
-   if(source!==session.source){clear();if(source){session.source=source;
+   if(source!==session.source){clear();if(source&&!source.data.model_preview){session.source=source;
     try{
      if(fuelSymbols)for(const u of source.data.fuel_symbols||[]){const box=new THREE.BoxGeometry(.4,.4,.4),geometry=new THREE.EdgesGeometry(box);box.dispose();const g=new THREE.LineSegments(geometry,new THREE.LineBasicMaterial({color:'#a6b4ba',transparent:true,opacity:.55}));g.position.set(...u.position_m);g.raycast=()=>{};session.root.add(g);session.units.push({u,g});}
      session.renderer=createRealView({THREE,C:camera,groups:source.groups,B:source.B},source.data,session.root);gather();session.builds++;}

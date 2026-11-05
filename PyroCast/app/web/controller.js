@@ -1,3 +1,4 @@
+import {createModelReview} from './panels/model_review.js';
 import {vehicleFitsGround} from './scene/vehicle_placement.js';
 import {createAssistantPanel} from './panels/assistant.js';
 import {attachExport} from './panels/export.js';
@@ -40,6 +41,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const viewKey=viewStorageKey(location.pathname,initial.building_sha256);
  let savedView=readSavedView(viewStorage,viewKey,initial.building_sha256),viewPersistenceReady=false,viewTimer=null;
  // The unchanged lite API rejects payloads from another building before serving.
+ if(savedView?.case_id==='model-preview'&&!initial.model_preview)savedView=null;
  // Subsequent case installs must still match this initial server-validated hash.
  const legacyVisible=legacyRoot.visible,wasReady=document.body.classList.contains('cfbtReady'),panelHeight=document.documentElement.style.getPropertyValue('--cfbt-height');
  const {panel,$,selectionLabel,style}=createLitePanel();legacyRoot.visible=false;
@@ -101,6 +103,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
  const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onCalculate:engine=>runCalculation(engine),onCalculationResult:()=>openCalculation(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ if(B.model_provenance?.import_id){const review=createModelReview({container:$('shellPane-building'),building:B,onLocate:x=>{const f=B.floors.find(f=>f.name===x.floor);if(!f)return;viewer.setFloor(f.name);store.dispatch('floor/set',{floor_id:f.name});const room=f.rooms.find(r=>r.id===x.id);if(room)store.dispatch('selection/set',{room_id:`CAD_${f.name}_${room.id}`,cell_id:null,source:'click'});render();}});review.root.open=false;review.root.style.cssText='margin:12px;font-size:11px';$('shellPane-building').append(review.root);cleanup.push(()=>review.dispose());}
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());$('exploreContent').append($('exploreCalculate'));
  async function refreshMC(){
   if(mcPoll)clearTimeout(mcPoll);mcPoll=null;
@@ -262,7 +265,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   select(cell.key);$('shellTab-result').click();render();fitFloor(true);saveView();
  }
  async function install(payload,id,{focusOrigin=false}={}){
-  if(payload.schema!=='pyrocast-cad-playback-1'||!payload.complete||payload.building_sha256!==initial.building_sha256)throw Error('다른 건물 또는 미완료 계산 결과입니다. 표시하지 않습니다.');
+  if(payload.schema!=='pyrocast-cad-playback-1'||(!payload.complete&&!(payload===initial&&payload.model_preview===true&&id==='model-preview'))||payload.building_sha256!==initial.building_sha256)throw Error('다른 건물 또는 미완료 계산 결과입니다. 표시하지 않습니다.');
   const seq=store.dispatch('result/load'),byRoom=new Map();
   for(const c of payload.rooms){const key=c.original_room||c.key;if(byRoom.has(key))continue;const f=B.floors.find(f=>f.name===c.cad_floor),r=f?.rooms.find(r=>`CAD_${f.name}_${r.id}`===key);if(!r)throw Error('CAD room missing: '+key);
    byRoom.set(key,{id:key,name:r.names?.join(' / ')||key,cad_floor:c.cad_floor,cad_polys:r.polys,z_m:c.z_m,height_m:c.height_m});}
@@ -277,6 +280,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;store.dispatch('selection/set',{room_id:null,cell_id:null,source:'list'});$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   $('liteTime').step=data.output_step_s||10;
+  for(const id of ['shellPlay','shellTime','litePlay','liteTime'])$(id).disabled=!!payload.model_preview;
   lastPanel='';ruleContext();ready=true;
   if(focusOrigin)showResultOrigin();else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
  }
@@ -331,6 +335,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   await install(payload,savedView.case_id);restored=true;
  }catch{savedView=null;try{viewStorage?.removeItem(viewKey);}catch{}}}
  if(!restored)await install(initial,initial.case_id||'stage4');
+ if(data.model_preview)$('shellTab-building').click();
  viewer.setFloor('all');resize();fitFloor(true);
  if(restored){
   if(Array.isArray(savedView.vehicle)&&savedView.vehicle.length===3&&Number.isFinite(savedView.vehicle_yaw)&&vehiclePositionAllowed(savedView.vehicle,savedView.vehicle_yaw))store.dispatch('route/set',{vehicle:savedView.vehicle,vehicle_yaw:savedView.vehicle_yaw});

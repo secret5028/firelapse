@@ -22,6 +22,7 @@ export function createLitePanel(){
  return {panel,$,selectionLabel,style};
 }
 export function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionLabel,riskStatus}){
+ if(data.model_preview){selectionLabel.hidden=true;$('liteDetail').textContent='미평가';$('liteScores').replaceChildren();$('liteClock').textContent='00:00 / 00:00';return;}
  const time=data.time_s[index],stamp=t=>Math.floor(t/60).toString().padStart(2,'0')+':'+Math.floor(t%60).toString().padStart(2,'0'),name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||(r.cad_names||[]).slice(0,2).join(' / ')}`;
   selectionLabel.hidden=!(floor==='all'||selected.cad_floor===floor);
   const visibleRooms=data.rooms.filter(r=>floor==='all'||r.cad_floor===floor),visibleKeys=new Set(visibleRooms.map(r=>r.key));

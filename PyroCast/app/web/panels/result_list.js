@@ -2,7 +2,7 @@
 export function resultListRows(cases,result,floors){
  const rooms=new Map(floors.flatMap(f=>f.rooms.map(r=>[`CAD_${f.name}_${r.id}`,{floor:f.name,room:r}])));
  const roomName=source=>source.room.names?.filter(Boolean).join(' · ')||source.room.name||'';
- const current=result&&['complete','partial'].includes(result.status)?result:null;
+ const current=result&&!result.source_refs?.model_preview&&['complete','partial'].includes(result.status)?result:null;
  const rows=new Map(cases.filter(c=>c.id).map(c=>[c.id,{...c}]));
  if(current&&!rows.has(current.result_id))rows.set(current.result_id,{id:current.result_id,label:current.result_id});
  return [...rows.values()].map(row=>{

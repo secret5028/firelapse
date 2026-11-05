@@ -1,0 +1,309 @@
+{
+  "building": "cad-aabf1346d0e54c94b45ad7d7db7137d4",
+  "building_sha256": "72a3744eaeedfb0e274ccef04961cfec7a5b4e90593c6141707b5bce0098fe8a",
+  "floors": [
+    {
+      "floor": "1F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_1F_R3",
+          "label": "1F R3 · 공장",
+          "Q_origin_peak_kW": 14334.400000000001,
+          "score": 3.349212110179489
+        },
+        {
+          "id": "CAD_1F_R9",
+          "label": "1F R9 · 공장",
+          "Q_origin_peak_kW": 2897.8249999999994,
+          "score": 3.115600556288654
+        },
+        {
+          "id": "CAD_1F_R5",
+          "label": "1F R5 · 공장",
+          "Q_origin_peak_kW": 3631.675000000001,
+          "score": 3.0803056057381717
+        },
+        {
+          "id": "CAD_1F_R18",
+          "label": "1F R18 · 공장",
+          "Q_origin_peak_kW": 8499.424999999994,
+          "score": 3.0715868376933066
+        },
+        {
+          "id": "CAD_1F_R8",
+          "label": "1F R8 · 공장",
+          "Q_origin_peak_kW": 27362.5,
+          "score": 3.0701801421333927
+        },
+        {
+          "id": "CAD_1F_R6",
+          "label": "1F R6 · 공장",
+          "Q_origin_peak_kW": 3880.0661237922222,
+          "score": 3.044612564759499
+        },
+        {
+          "id": "CAD_1F_R14",
+          "label": "1F R14 · 공장",
+          "Q_origin_peak_kW": 853.575,
+          "score": 2.9411384659591153
+        },
+        {
+          "id": "CAD_1F_R15",
+          "label": "1F R15 · 공장",
+          "Q_origin_peak_kW": 2811.85,
+          "score": 2.837186847023534
+        },
+        {
+          "id": "CAD_1F_R4",
+          "label": "1F R4 · 공장",
+          "Q_origin_peak_kW": 1686.4000000000003,
+          "score": 2.5808068337194547
+        },
+        {
+          "id": "CAD_1F_R2",
+          "label": "1F R2 · 공장",
+          "Q_origin_peak_kW": 1041.1249999999995,
+          "score": 2.550532381137125
+        },
+        {
+          "id": "CAD_1F_R11",
+          "label": "1F R11 · 공장",
+          "Q_origin_peak_kW": 842.3500000000004,
+          "score": 2.5262440093758323
+        },
+        {
+          "id": "CAD_1F_R13",
+          "label": "1F R13 · 공장",
+          "Q_origin_peak_kW": 881.3500000000004,
+          "score": 2.507154479895445
+        },
+        {
+          "id": "CAD_1F_R10",
+          "label": "1F R10 · 공장",
+          "Q_origin_peak_kW": 522.5500000000004,
+          "score": 2.3961708907889134
+        },
+        {
+          "id": "CAD_1F_R17",
+          "label": "1F R17 · 공장",
+          "Q_origin_peak_kW": 5627.724999999999,
+          "score": 2.2802117593543327
+        },
+        {
+          "id": "CAD_1F_R12",
+          "label": "1F R12 · 공장",
+          "Q_origin_peak_kW": 2608.1250000000005,
+          "score": 2.227217084613022
+        },
+        {
+          "id": "CAD_1F_R30",
+          "label": "1F R30 · 공장",
+          "Q_origin_peak_kW": 1525.624999999999,
+          "score": 2.1186344950280547
+        },
+        {
+          "id": "CAD_1F_R7",
+          "label": "1F R7 · 공장",
+          "Q_origin_peak_kW": 770.3000000000001,
+          "score": 2.0772352490833836
+        },
+        {
+          "id": "CAD_1F_R1",
+          "label": "1F R1 · 공장",
+          "Q_origin_peak_kW": 1053.6999999999994,
+          "score": 2.0644544694613645
+        },
+        {
+          "id": "CAD_1F_R0",
+          "label": "1F R0 · 공장",
+          "Q_origin_peak_kW": 1400.8999999999999,
+          "score": 1.6966747113202667
+        },
+        {
+          "id": "CAD_1F_R19",
+          "label": "1F R19 · 공장",
+          "Q_origin_peak_kW": 804.2999999999995,
+          "score": 1.5990931891767433
+        }
+      ],
+      "error": null,
+      "warnings": []
+    },
+    {
+      "floor": "2F",
+      "enabled": true,
+      "rooms": [
+        {
+          "id": "CAD_2F_R20",
+          "label": "2F R20 · 사무실",
+          "Q_origin_peak_kW": 3455.9500000000007,
+          "score": 3.2251924834607095
+        },
+        {
+          "id": "CAD_2F_R15",
+          "label": "2F R15 · 사무실",
+          "Q_origin_peak_kW": 25180.950000000004,
+          "score": 2.9164661936268823
+        },
+        {
+          "id": "CAD_2F_R13",
+          "label": "2F R13 · 사무실",
+          "Q_origin_peak_kW": 1861.7249999999985,
+          "score": 2.7673811356236264
+        },
+        {
+          "id": "CAD_2F_R14",
+          "label": "2F R14 · 사무실",
+          "Q_origin_peak_kW": 1848.0749999999991,
+          "score": 2.7580642997448193
+        },
+        {
+          "id": "CAD_2F_R9",
+          "label": "2F R9 · 사무실",
+          "Q_origin_peak_kW": 4319.349999999997,
+          "score": 2.67343211848803
+        },
+        {
+          "id": "CAD_2F_R17",
+          "label": "2F R17 · 사무실",
+          "Q_origin_peak_kW": 2577.925,
+          "score": 2.5909097432683765
+        },
+        {
+          "id": "CAD_2F_R19",
+          "label": "2F R19 · 사무실",
+          "Q_origin_peak_kW": 5675.749999999998,
+          "score": 2.574327225340031
+        },
+        {
+          "id": "CAD_2F_R24",
+          "label": "2F R24 · 사무실",
+          "Q_origin_peak_kW": 12994.3,
+          "score": 2.5711501786971827
+        },
+        {
+          "id": "CAD_2F_R7",
+          "label": "2F R7 · 사무실",
+          "Q_origin_peak_kW": 6238.499999999996,
+          "score": 2.3401496795800614
+        },
+        {
+          "id": "CAD_2F_R26",
+          "label": "2F R26 · 사무실",
+          "Q_origin_peak_kW": 1935.1749999999997,
+          "score": 2.2866358665427367
+        },
+        {
+          "id": "CAD_2F_R10",
+          "label": "2F R10 · 사무실",
+          "Q_origin_peak_kW": 763.6500000000002,
+          "score": 2.1861930074220717
+        },
+        {
+          "id": "CAD_2F_R16",
+          "label": "2F R16 · 사무실",
+          "Q_origin_peak_kW": 843.1000000000005,
+          "score": 2.1561867755431545
+        },
+        {
+          "id": "CAD_2F_R2",
+          "label": "2F R2 · 사무실",
+          "Q_origin_peak_kW": 3458.224999999996,
+          "score": 2.0435561041293835
+        },
+        {
+          "id": "CAD_2F_R18",
+          "label": "2F R18 · 사무실",
+          "Q_origin_peak_kW": 867.5750000000002,
+          "score": 2.0423868394877402
+        },
+        {
+          "id": "CAD_2F_R12",
+          "label": "2F R12 · 사무실",
+          "Q_origin_peak_kW": 948.8999999999992,
+          "score": 2.0116135401162913
+        },
+        {
+          "id": "CAD_2F_R8",
+          "label": "2F R8 · 사무실",
+          "Q_origin_peak_kW": 1564.2,
+          "score": 1.9854311018599966
+        },
+        {
+          "id": "CAD_2F_R5",
+          "label": "2F R5 · 사무실",
+          "Q_origin_peak_kW": 1577.2,
+          "score": 1.8563635482732546
+        },
+        {
+          "id": "CAD_2F_R23",
+          "label": "2F R23 · 사무실",
+          "Q_origin_peak_kW": 530.149999999999,
+          "score": 1.6054685869682157
+        },
+        {
+          "id": "CAD_2F_R0",
+          "label": "2F R0 · 사무실",
+          "Q_origin_peak_kW": 466.75,
+          "score": 1.5663184483545183
+        },
+        {
+          "id": "CAD_2F_R22",
+          "label": "2F R22 · 사무실",
+          "Q_origin_peak_kW": 478.64999999999986,
+          "score": 1.5570709875493989
+        },
+        {
+          "id": "CAD_2F_R3",
+          "label": "2F R3 · 사무실",
+          "Q_origin_peak_kW": 951.1250000000005,
+          "score": 1.5198841545323598
+        },
+        {
+          "id": "CAD_2F_R1",
+          "label": "2F R1 · 사무실",
+          "Q_origin_peak_kW": 830.6750000000008,
+          "score": 1.5168304293321127
+        },
+        {
+          "id": "CAD_2F_R4",
+          "label": "2F R4 · 사무실",
+          "Q_origin_peak_kW": 869.3500000000009,
+          "score": 1.4870618270490845
+        },
+        {
+          "id": "CAD_2F_R6",
+          "label": "2F R6 · 사무실",
+          "Q_origin_peak_kW": 197.77500000000046,
+          "score": 1.3922562074224878
+        },
+        {
+          "id": "CAD_2F_R21",
+          "label": "2F R21 · 사무실",
+          "Q_origin_peak_kW": 474.8,
+          "score": 1.3673707724016795
+        },
+        {
+          "id": "CAD_2F_R11",
+          "label": "2F R11 · 사무실",
+          "Q_origin_peak_kW": 376.55000000000035,
+          "score": 1.1750768311115392
+        }
+      ],
+      "error": null,
+      "warnings": []
+    }
+  ],
+  "engine": "pyrocast_lite",
+  "budget_s": 1200,
+  "states": [
+    "open_except_confirmed",
+    "closed"
+  ],
+  "limits": [
+    "단일 층 계산. 수직 전파·창 파괴 OFF.",
+    "미확인 연결·용도는 도면 표시와 같은 추정 상태. 자동 용도 분류와 기존 연료표 사용.",
+    "강화 기존 운영 화면의 사용자 승인 연료 설정과 별개인 자동 분류 입력입니다."
+  ]
+}

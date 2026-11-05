@@ -9,6 +9,81 @@ from model_library import ROOT, model_path
 import model_simulation as sim
 
 PORTS = {'parkmarine':8842, 'showroom':8843}
+_servers = {}
+_server_lock = threading.RLock()
+_base_handler = None
+
+
+def operation_port(row):
+    return row.get('operation_port') or PORTS.get(row['id'])
+
+
+def operation_url(row):
+    return f"http://127.0.0.1:{operation_port(row)}/model.html"
+
+
+def register_cad(row, loaders, registry):
+    """Register validated floors; uncertain geometry remains explicitly inferred."""
+    if row.get('source_kind') != 'cad':
+        raise ValueError('스캔 모델은 계산 등록할 수 없습니다')
+    row['calculation_floors'] = loaders
+    row['simulation_enabled'] = any(r.get('ok') for r in loaders)
+    if not row['simulation_enabled']:
+        row.update(operation_url=None, execution_note='계산 가능한 층 없음 · 모델 검토 필요')
+        return
+    old = next((r for r in registry['models'] if r['id'] == row['id']), {})
+    port = operation_port(old) if old else None
+    if not port:
+        import socket
+        used = {operation_port(r) for r in registry['models']}
+        for candidate in range(8844, 8944):
+            if candidate in used: continue
+            try:
+                with socket.socket() as probe: probe.bind(('127.0.0.1', candidate))
+            except OSError: continue
+            port = candidate; break
+        if not port: raise ValueError('운영 포트를 확보하지 못했습니다')
+    row.update(operation_port=port, execution_mode='library_lite',
+        execution_note='층별 계산 가능 · 추정 연결·층고 유지 · 수직 전파 미평가')
+    row['operation_url'] = operation_url(row)
+
+
+def ensure_server(row):
+    if _base_handler is None: return None
+    if row.get('source_kind') != 'cad' or row.get('execution_mode') != 'library_lite' or not row.get('simulation_enabled'):
+        return None
+    with _server_lock:
+        if row['id'] in _servers: return _servers[row['id']]
+        server = ThreadingHTTPServer(('127.0.0.1', operation_port(row)), handler(_base_handler, row['id']))
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        _servers[row['id']] = server
+        return server
+
+
+def model_preview(ident):
+    """Geometry for a building with no calculation; no synthetic measurements."""
+    b = sim.read(model_path(sim.entry(ident))); rooms = []
+    for f in b['floors']:
+        for r in f.get('rooms', []):
+            key = f"CAD_{f['name']}_{r['id']}"
+            rooms.append(dict(key=key, original_room=key, solver_id=key, cad_floor=f['name'],
+                cad_room=r['id'], cad_names=r.get('names', []), cad_polys=r['polys'],
+                z_m=f['z'], height_m=f['h'], display_name=' / '.join(r.get('names', []))))
+    if not rooms: raise ValueError('표시할 실 형상이 없습니다')
+    return dict(schema='pyrocast-cad-playback-1',engine_kind='pyrocast_lite',model_preview=True,
+        complete=False,simulation_output_complete=False,case_id='model-preview',
+        building_sha256=sim.fingerprint(ident),label='계산 전 · 미평가',time_s=[0],
+        fire_key=None,rooms=rooms,solvers={},fires=[],events=[],fuel_symbols=[],fuel_units=[],
+        limits=b.get('notes',[])+['층별 계산 · 미확정 연결·층고는 추정값 유지 · 수직 전파 미평가'])
+
+
+def active_playback(ident):
+    rows = jobs(ident)
+    if rows: return playback(ident, rows[0][0].name)
+    import model_mc, fixed_calculation
+    cases = fixed_calculation.cases(sim.fingerprint(ident)) + model_mc.cases(ident)
+    return playback(ident, cases[0]['id']) if cases else model_preview(ident)
+
 
 def jobs(ident, warnings=None):
     digest = sim.fingerprint(ident)
@@ -63,6 +138,8 @@ def playback(ident, job=None):
 def scope(ident, floor=None):
     rows = jobs(ident)
     floor = floor or (rows[0][1]['floor'] if rows else None)
+    if not floor:
+        floor = next((r['floor'] for r in sim.entry(ident).get('calculation_floors', []) if r.get('ok')), None)
     if not floor: raise ValueError('계산 층을 지정하세요')
     return sim.prepared(ident, floor, sim.fingerprint(ident))
 
@@ -90,8 +167,8 @@ def handler(base, ident):
                 if path=='/operation-controls.js':
                     return self.send((ROOT/'app/model-library/operation-controls.js').read_bytes(),'text/javascript')
                 if path=='/building.json':return self.send(model_path(sim.entry(ident)).read_bytes())
-                if path=='/cfbt/model-info':return self.json(dict(building_id=ident,label=sim.entry(ident)['label'],operation_url=f'http://127.0.0.1:{PORTS[ident]}/model.html'))
-                if path=='/cfbt/lite/active.json':return self.json(playback(ident))
+                if path=='/cfbt/model-info':return self.json(dict(building_id=ident,label=sim.entry(ident)['label'],operation_url=operation_url(sim.entry(ident))))
+                if path=='/cfbt/lite/active.json':return self.json(active_playback(ident))
                 if path.startswith('/cfbt/lite/result/'):return self.json(playback(ident,path.rsplit('/',1)[1]))
                 if path=='/cfbt/lite/catalog.json':
                     import model_mc
@@ -129,8 +206,8 @@ def handler(base, ident):
                     folder=ROOT/('app/web' if path.startswith('/app/web/') else 'simulation/viewer')
                     rel=path.split('/app/web/',1)[1] if path.startswith('/app/web/') else path.split('/simulation/viewer/',1)[1] if path.startswith('/simulation/viewer/') else path[len('/cfbt/'):]
                     target=(folder/rel).resolve()
-                    if target.is_relative_to(folder.resolve()) and target.is_file() and target.suffix=='.js':
-                        return self.send(target.read_bytes(),'text/javascript; charset=utf-8')
+                    if target.is_relative_to(folder.resolve()) and target.is_file() and target.suffix in ('.js','.css'):
+                        return self.send(target.read_bytes(),('text/css' if target.suffix=='.css' else 'text/javascript')+'; charset=utf-8')
                 return super().do_GET()
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
@@ -180,8 +257,7 @@ def handler(base, ident):
     return OperationHandler
 
 def start_servers(base):
-    servers=[]
-    for ident,port in PORTS.items():
-        server=ThreadingHTTPServer(('127.0.0.1',port),handler(base,ident))
-        threading.Thread(target=server.serve_forever,daemon=True).start();servers.append(server)
-    return servers
+    global _base_handler
+    _base_handler = base
+    from model_library import entries
+    return [server for row in entries() if (server := ensure_server(row)) is not None]

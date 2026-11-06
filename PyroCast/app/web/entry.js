@@ -2,7 +2,7 @@ import {attachModern} from './controller.js';
 const attached=new WeakMap();
 export async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
- const loading=document.createElement('div');loading.id='firelapseLoading';loading.setAttribute('role','status');loading.style.cssText='position:fixed;inset:0;z-index:10000;background:#102331ed;color:#eaf3f8;display:grid;place-content:center;text-align:center;font:16px system-ui';loading.textContent='건물·저장 결과 불러오는 중…';document.body.append(loading);
+ const loading=document.createElement('div');loading.id='firelapseLoading';loading.setAttribute('role','status');loading.style.cssText='position:fixed;inset:0;z-index:10000;background:var(--compat-102331ed);color:var(--text);display:grid;place-content:center;text-align:center;font:16px system-ui';loading.textContent='건물·저장 결과 불러오는 중…';document.body.append(loading);
  const pending=(async()=>{
   try{
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;

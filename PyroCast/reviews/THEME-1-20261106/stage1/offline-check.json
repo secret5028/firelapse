@@ -1,0 +1,20 @@
+[
+  {
+    "name": "hotel",
+    "errors": [],
+    "externalRequests": [],
+    "seek": "25:00 / 60:00",
+    "theme": "#142b3b",
+    "overflow": 0,
+    "afterPlay": "25:40 / 60:00"
+  },
+  {
+    "name": "intech",
+    "errors": [],
+    "externalRequests": [],
+    "seek": "00:30 / 01:00",
+    "theme": "#142b3b",
+    "overflow": 0,
+    "afterPlay": "01:00 / 01:00"
+  }
+]

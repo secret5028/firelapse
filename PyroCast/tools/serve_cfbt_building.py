@@ -371,7 +371,7 @@ def main():
                 for part in ('baseline','ignited'):
                     if part in payload:payload[part]=present_playback(payload[part])
                 return self.json(payload)
-            if path in ('/cfbt/overlay.js','/cfbt/overlay.css','/cfbt/legacy_real_view.js','/cfbt/legacy_real_bridge.js','/cfbt/risk.js','/cfbt/gas_visual.js','/cfbt/smoke_visual.js','/cfbt/smoke_transport.js','/cfbt/ceiling_jets.js','/cfbt/frozen_rule_controls.js','/cfbt/lite_doors.js','/cfbt/screening.js'):
+            if path in ('/cfbt/theme.css','/cfbt/overlay.js','/cfbt/overlay.css','/cfbt/legacy_real_view.js','/cfbt/legacy_real_bridge.js','/cfbt/risk.js','/cfbt/gas_visual.js','/cfbt/smoke_visual.js','/cfbt/smoke_transport.js','/cfbt/ceiling_jets.js','/cfbt/frozen_rule_controls.js','/cfbt/lite_doors.js','/cfbt/screening.js'):
                 file=SIM/'viewer'/Path(path).name
                 return self.send_data(file.read_bytes(),'text/javascript' if file.suffix=='.js' else 'text/css')
             if path==prefix+'legacy-context.json':

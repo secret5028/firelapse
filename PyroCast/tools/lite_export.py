@@ -119,6 +119,9 @@ def build_export(origin, case, state, interval=10, *, model_service=False):
                         '<style>'+read('/cfbt/overlay.css').decode('utf-8')+'</style>')
     if model_service:
         html = html.replace('</head>', '<style>'+read('/cfbt/overlay.css').decode('utf-8')+'</style></head>')
+    theme_link = '<link rel="stylesheet" href="/cfbt/theme.css">'
+    theme_style = '<style>'+read('/cfbt/theme.css').decode('utf-8')+'</style>'
+    html = html.replace(theme_link, theme_style) if theme_link in html else html.replace('</head>', theme_style+'</head>')
     envelope = {'schema': 'pyrocast.offline/1', 'case_id': case, 'interval_s': interval,
         'base_path': directory, 'state': state, 'door_overrides': corrections,
         'fixed_openings': corrections.get('fixed_state'), 'route_result': state.get('route_result'),

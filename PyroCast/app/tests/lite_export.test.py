@@ -51,7 +51,7 @@ class ExportTests(unittest.TestCase):
           '/building.json':{'floors':[]},'/cfbt/lite/result/saved':playback,
           '/cfbt/lite/doors':{'fixed_state':{'source':'this-building'}},
           '/cfbt/lite/screening':{},'/cfbt/lite/fire-load-table':{},
-          '/cfbt/model-info':{'label':'새 건물'},'/cfbt/overlay.css':b'.pyroShell{color:red}',
+          '/cfbt/theme.css':b':root{--text:#eaf3f8}', '/cfbt/model-info':{'label':'새 건물'},'/cfbt/overlay.css':b'.pyroShell{color:red}',
           '/cfbt/lite/catalog.json':{'cases':[{'id':'saved','label':'저장 결과'}]}}
         requested=[]
         class Response:
@@ -67,6 +67,8 @@ class ExportTests(unittest.TestCase):
         text=html.decode()
         self.assertNotIn('src="/operation.js"',text)
         self.assertIn('.pyroShell{color:red}',text)
+        self.assertIn(':root{--text:#eaf3f8}',text)
+        self.assertNotIn('href="/cfbt/theme.css"',text)
         payload=re.search(r'id="pcOfflineData"[^>]*>([^<]+)',text)[1]
         data=json.loads(gzip.decompress(base64.b64decode(payload)))
         self.assertEqual(data['state'],state)

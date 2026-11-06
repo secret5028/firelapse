@@ -4102,8 +4102,8 @@ const {wallOpeningVolumes,trimWallLineGeometry,trimWallJambFaces}=__module35;
 class BuildingLayer extends EmptyLayer {
  static id='building';
  constructor(THREE,{geometryFor}={}){super(THREE);if(typeof geometryFor!=='function')throw Error('CAD geometry provider required');
-  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.replacedOutlines=new Set();this.basementMaterials=new Map();this.slabMaterials=new Map();this.headerResources=new Set();this.headerSources=[];this.sourceAsset=null;}
- clearCorners(){for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
+  this.geometryFor=geometryFor;this.asset=null;this.lastBuilding=undefined;this.lastResult=undefined;this.floorId=undefined;this.floorGroups=new Map();this.sourceObjects=new Map();this.materialState=new Map();this.bindings=[];this.buildCount=0;this.cornerResources=new Set();this.cornerLines=[];this.outlineOccluders=[];this.replacedOutlines=new Set();this.basementMaterials=new Map();this.slabMaterials=new Map();this.headerResources=new Set();this.headerSources=[];this.sourceAsset=null;}
+ clearCorners(){for(const {proxy} of this.outlineOccluders)proxy.removeFromParent();this.outlineOccluders=[];for(const line of this.cornerLines)line.removeFromParent();for(const r of this.cornerResources)r.dispose();this.cornerResources.clear();this.cornerLines=[];this.replacedOutlines.clear();}
  clearGeometry(){this.clearCorners();for(const [material,before] of this.materialState){material.color.copy(before.color);material.opacity=before.opacity;material.depthWrite=before.depthWrite;
    if(material.transparent!==before.transparent){material.transparent=before.transparent;material.needsUpdate=true;}}
   this.materialState.clear();for(const material of this.slabMaterials.keys())material.dispose();this.slabMaterials.clear();for(const material of this.basementMaterials.keys())material.dispose();this.basementMaterials.clear();for(const resource of this.resources)resource.dispose();this.resources.clear();this.group?.clear();this.floorGroups.clear();this.sourceObjects.clear();this.bindings=[];this.asset=null;this.sourceAsset=null;this.openingSignature=null;this.trimmedLines=0;for(const r of this.headerResources)r.dispose();this.headerResources.clear();for(const s of this.headerSources)s.parent=null;this.headerSources=[];}
@@ -4151,8 +4151,9 @@ class BuildingLayer extends EmptyLayer {
    const transparent=selected?material.opacity<1:base.transparent;
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
+  for(const {object,proxy} of this.outlineOccluders)proxy.visible=object.visible&&object.material.opacity>0;
   const dark=this.frame?.realView?.wallOutline!=='light';
-  for(const line of this.cornerLines){line.material.color.set(dark?'#101820':'#8da8b7');line.material.opacity=alpha(dark?.8:.32)*(whole&&line.userData.basement ? .8 : 1);line.renderOrder=dark?30:-1;}
+  for(const line of this.cornerLines){line.material.color.set(dark?'#101820':'#8da8b7');line.material.opacity=alpha(dark?.8:.32)*(whole&&line.userData.basement ? .8 : 1);line.renderOrder=30;}
 
  }
  trimOpenings(time){
@@ -4163,6 +4164,14 @@ class BuildingLayer extends EmptyLayer {
   floors.forEach((floor,i)=>{for(const source of floor.objects){const object=this.sourceObjects.get(source);if(!object)continue;
    const clipped=source.isMesh?trimWallJambFaces(this.THREE,source,floor.group,volumes[i]):trimWallLineGeometry(this.THREE,source,floor.group,volumes[i]);object.geometry=clipped?this.own(clipped):source.geometry;if(clipped&&source.isLineSegments)this.trimmedLines++;
   }
+   // Late depth-only pass: preserve translucent wall colour, but hide rear wall
+   // edges. Use the actual opening-trimmed mesh, never a solid room bounding box.
+   const T=this.THREE,depthMaterial=new T.MeshBasicMaterial({colorWrite:false,depthWrite:true,depthTest:true,transparent:true,side:T.DoubleSide,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});
+   this.cornerResources.add(depthMaterial);
+   for(const source of floor.objects){const object=this.sourceObjects.get(source);
+    if(!object?.isMesh||!(isWallMesh(source)||/_slab(?:_|$)/.test(source.name||'')||source.userData.floorSlab))continue;
+    const proxy=new T.Mesh(object.geometry,depthMaterial);proxy.name=source.name+'_outline_depth';proxy.position.copy(object.position);proxy.quaternion.copy(object.quaternion);proxy.scale.copy(object.scale);proxy.renderOrder=29;proxy.raycast=()=>{};object.parent.add(proxy);this.outlineOccluders.push({object,proxy});
+   }
    const points=wallCornerSegments(this.THREE,floor,volumes[i]);if(points.length){
     const T=this.THREE,geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(points,3));
     const material=new T.LineBasicMaterial({color:'#101820',transparent:true,opacity:.8,linewidth:1,depthTest:true,depthWrite:false});
@@ -4177,6 +4186,7 @@ class BuildingLayer extends EmptyLayer {
  // Newly included stairs/glass may sit inside transformed or hidden groups.
  // Preserve that hierarchy instead of flattening their local coordinates.
  syncSource(){for(const line of this.cornerLines)line.visible=line.userData.wallSources.some(s=>s.visible);for(const {source,object} of this.bindings){object.visible=source.visible&&!this.replacedOutlines.has(object);object.position.copy(source.position);object.quaternion.copy(source.quaternion);object.scale.copy(source.scale);}
+  for(const {object,proxy} of this.outlineOccluders){proxy.visible=object.visible&&object.material.opacity>0;proxy.position.copy(object.position);proxy.quaternion.copy(object.quaternion);proxy.scale.copy(object.scale);}
   for(const floor of this.asset?.floors||[]){const g=this.floorGroups.get(floor.id);g.position.copy(floor.group.position);g.quaternion.copy(floor.group.quaternion);g.scale.copy(floor.group.scale);g.visible=floor.group.visible&&(this.floorId===null||this.floorId===floor.id);}
  }
  setData(frame){if(this.state!=='mounted')throw Error('Layer is not mounted');this.frame=frame;
@@ -4189,7 +4199,7 @@ class BuildingLayer extends EmptyLayer {
   if(frame.floor?.floor_id!==this.floorId||this.appliedBuild!==this.buildCount){this.floorId=frame.floor?.floor_id??null;for(const [id,g] of this.floorGroups)g.visible=this.floorId===null||id===this.floorId;this.appliedBuild=this.buildCount;}
   this.updateVisibility();
  }
- diagnostics(){return {inferredDoorHeaders:this.headerSources.length,buildCount:this.buildCount,ownedMaterials:this.basementMaterials.size+this.slabMaterials.size,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
+ diagnostics(){return {outlineOccluders:this.outlineOccluders.length,inferredDoorHeaders:this.headerSources.length,buildCount:this.buildCount,ownedMaterials:this.basementMaterials.size+this.slabMaterials.size,borrowedMaterials:this.materialState.size,floors:this.floorGroups.size,drawObjects:this.sourceObjects.size,trimmedLines:this.trimmedLines,cornerSegments:this.cornerLines.reduce((n,l)=>n+l.geometry.attributes.position.count/2,0),ownedCornerResources:this.cornerResources.size};}
  dispose(){this.clearGeometry();this.lastBuilding=null;this.lastResult=null;this.geometryFor=null;super.dispose();}
 }
 function createBuildingLayers(THREE,options){return [new BuildingLayer(THREE,options),...createEmptyLayers(THREE).filter(layer=>layer.constructor.id!=='building')];}

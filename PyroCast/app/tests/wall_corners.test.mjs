@@ -19,8 +19,13 @@ assert(layer.cornerLines.length);assert.equal(layer.cornerLines[0].material.colo
 const outlineSettings=createStore();assert.equal(outlineSettings.get('realView').wallOutline,'dark');
 for(const mode of ['light','dark','light','dark']){
  outlineSettings.dispatch('realView/set',{wallOutline:mode});layer.setData({...frame,realView:outlineSettings.get('realView')});
- const edge=layer.cornerLines[0];assert.equal(edge.material.color.getHexString(),mode==='light'?'8da8b7':'101820');assert.equal(edge.material.opacity,mode==='light'?.32:.8);assert.equal(edge.renderOrder,mode==='light'?-1:30);assert.equal(objects[0].material.opacity,.2);
+ const edge=layer.cornerLines[0];assert.equal(edge.material.color.getHexString(),mode==='light'?'8da8b7':'101820');assert.equal(edge.material.opacity,mode==='light'?.32:.8);assert.equal(edge.renderOrder,30);assert.equal(objects[0].material.opacity,.2);
 }
 assert.throws(()=>outlineSettings.dispatch('realView/set',{wallOutline:'invalid'}));
-const first=layer.cornerLines[0];layer.setData({...frame,t_s:1});assert.equal(first,layer.cornerLines[0]);let disposed=0;for(const r of layer.cornerResources)r.addEventListener('dispose',()=>disposed++);layer.dispose();assert.equal(disposed,2);assert.equal(layer.cornerResources.size,0);
+assert(layer.outlineOccluders.length>=2);
+for(const {object,proxy} of layer.outlineOccluders){assert.equal(proxy.geometry,object.geometry);assert.equal(proxy.parent,object.parent);assert.equal(proxy.material.colorWrite,false);assert.equal(proxy.material.depthWrite,true);assert(proxy.renderOrder<layer.cornerLines[0].renderOrder);assert.deepEqual(proxy.position.toArray(),object.position.toArray());}
+layer.setData({...frame,realView:{buildingTransparency:1}});assert(layer.outlineOccluders.every(x=>!x.proxy.visible));
+layer.setData({...frame,realView:{buildingTransparency:.7}});assert(layer.outlineOccluders.every(x=>x.proxy.visible));
+
+const first=layer.cornerLines[0];layer.setData({...frame,t_s:1});assert.equal(first,layer.cornerLines[0]);let disposed=0;for(const r of layer.cornerResources)r.addEventListener('dispose',()=>disposed++);layer.dispose();assert.equal(disposed,3);assert.equal(layer.cornerResources.size,0);
 console.log('PASS wall union seams / transformed floor / jamb extensions / thin depth-tested lines / wall transparency unchanged / cached geometry / resource disposal');

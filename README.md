@@ -1,8 +1,9 @@
-> **2026-11-05 FireLapse:** 현재 앱은 [PyroCast/](PyroCast/README.md) 아래에 있습니다. **[Claude 검토·수정 인계서](PyroCast/specs/Claude-review-handoff-20261105.md)**와 [사전 내부 점검](PyroCast/reviews/prepublish-review-20261105/report.md)을 먼저 읽으세요. 아래 10월 체크포인트는 보존 기록입니다.
+> **2026-11-05 FireLapse:** 현재 앱은 [FireLapse 소스](PyroCast/README.md) 아래에 있습니다. **[Claude 검토·수정 인계서](PyroCast/specs/Claude-review-handoff-20261105.md)**와 [사전 내부 점검](PyroCast/reviews/prepublish-review-20261105/report.md)을 먼저 읽으세요. 아래 10월 체크포인트는 보존 기록입니다.
 
-> **2026-10-26 업데이트:** 최신 간략 엔진·3D 화면·저장 MC 결과는 [PyroCast](PyroCast/README.md)에 있습니다. 아래는 보존된 10월 19일 체크포인트 안내입니다.
+> **2026-10-26 업데이트:** 최신 간략 엔진·3D 화면·저장 MC 결과는 [FireLapse](PyroCast/README.md)에 있습니다. 아래는 보존된 10월 19일 체크포인트 안내입니다.
 
-# 소방 크로키 · CAD → 3D → CFAST
+# FireLapse
+-compartment fire timeline-
 
 2026-10-19 중간 저장본. 최신 적용은 v31 HTML 내보내기이며, 최신 계산은 v30 반자고·가연물 대표 묶음 결과입니다. 현장 물리 검증이 끝난 제품이 아니라 개발 중인 시나리오 시각화 앱입니다.
 
@@ -32,4 +33,4 @@ python preview.py
 
 짧게 시작하려면 다음처럼 요청하면 됩니다:
 
-> https://github.com/secret5028/3d_fire 의 최신 main에서 HANDOFF_PROMPT_KO.txt를 읽고 그 인계 기준으로 작업을 이어가 줘. 먼저 기록과 실제 코드를 확인하고 집 PC에서 현재 모델을 띄운 뒤, 기능/UI와 남은 문제를 중간점검해 줘. 기존 UI와 추출 완료 결정을 유지해 줘.
+> https://github.com/secret5028/firelapse 의 최신 main에서 HANDOFF_PROMPT_KO.txt를 읽고 그 인계 기준으로 작업을 이어가 줘. 먼저 기록과 실제 코드를 확인하고 집 PC에서 현재 모델을 띄운 뒤, 기능/UI와 남은 문제를 중간점검해 줘. 기존 UI와 추출 완료 결정을 유지해 줘.

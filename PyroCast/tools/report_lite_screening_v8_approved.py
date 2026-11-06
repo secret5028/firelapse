@@ -11,7 +11,7 @@ def table(lines,headers,rows):
 def main():
     s=read(OUT/'score.json');c=read(OUT/'comparison.json');old=read(ROOT/'simulation/results/lite_v8_screening_20261025/comparison.json')
     second={r['room']:r for r in c['rows']};uses=s['approved_input']['room_uses'];budgets=s['origin_budgets']
-    lines=['PyroCast v8 승인 용도표 적용 — 8.1절2단계 보고 (2026-10-25)','',
+    lines=['FireLapse v8 승인 용도표 적용 — 8.1절2단계 보고 (2026-10-25)','',
         '사용자 승인: 화장실40MJ/m²·250kW/m²(가정), 화장실4실 통과 공간으로 후보 제외, R14/R28 개구부 없는1m²미만으로 후보·그래프 제외. 나머지는 승인표 유지.',
         f"적격 후보 {s['eligible_count']}실, 계산 원래실 {s['all_room_count']}개(기존{s['original_room_count']}개). 셀 분할 후38존. 상위5×극단2상태=10회 직렬, 각3600초.",
         f"완주 {c['complete_scenarios']}/{c['attempted_scenarios']}, 총 {c['total_wall_s']:.3f}초. Radau 대체 {sum(r.get('solver_fallback',False) for r in c['cases'])}건.",

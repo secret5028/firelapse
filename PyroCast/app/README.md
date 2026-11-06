@@ -1,4 +1,4 @@
-# PyroCast UI — production host and contracts
+# FireLapse UI — production host and contracts
 
 Interface source: `specs/Claude계약초안-스토어·레이어·스키마-20261026.md`.
 The running viewer uses this directory's scene host by default. `?ui=legacy` selects the preserved viewer. The pure read adapters and JSON Schema draft 2020-12 contracts do not import or run either simulation engine. Historical stage notes below describe earlier checkpoints.

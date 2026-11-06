@@ -12,7 +12,7 @@ def main():
     s=read(OUT/'score.json');c=read(OUT/'comparison.json')
     old=read(ROOT/'simulation/results/lite_v7_screening_20261025/score.json')
     rank2={r['room']:r for r in c['rows']};rankold={r['room']:r['rank1'] for r in old['ranked']}
-    lines=['PyroCast v8 — 8.1절 2단계 결과 (2026-10-25)','',
+    lines=['FireLapse v8 — 8.1절 2단계 결과 (2026-10-25)','',
       '범위: 화점 연료 기준 적용 → ① 재산정 → 상위5실×극단2상태 3600초, 총10회 직렬 → 보고 후 정지.',
       '정밀 엔진·열/산소 방정식·전이 임계값·문 분류·가중치는 변경하지 않았다. MC/문 분출 연소/다음 단계 실행 없음.',
       f"완주 {c['complete_scenarios']}/{c['attempted_scenarios']}, 총 {c['total_wall_s']:.3f}초. 실행 중 소스·입력 SHA 불변: {c['code_and_input_unchanged_during_batch']}.",

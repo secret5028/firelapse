@@ -29,7 +29,22 @@ def summarize(result):
 
 def result_index(source):
     """Persist an index beside each result, invalidated by the source file stamp."""
-    source=Path(source).resolve();stat=source.stat();stamp=[stat.st_mtime_ns,stat.st_size]
+    source=Path(source).resolve()
+    if not source.exists():
+        # Results-only distributions retain the original small index, sealed to
+        # the exact saved playback. New calculations still use raw result.json.
+        portable=read(source.with_name('portable-result-index.json'),{})
+        value=portable.get('index',{})
+        playback=source.with_name('playback.json')
+        sealed=hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        if (portable.get('schema')=='firelapse.portable-result-index/1'
+                and value.get('schema')=='pyrocast.result-index/1'
+                and value.get('threshold')==70 and value.get('kinds')==list(KINDS)
+                and portable.get('index_sha256')==sealed and playback.is_file()
+                and portable.get('playback_sha256')==hashlib.sha256(playback.read_bytes()).hexdigest()):
+            return value
+        raise ValueError('저장 결과 요약의 무결성을 확인할 수 없습니다')
+    stat=source.stat();stamp=[stat.st_mtime_ns,stat.st_size]
     target=source.with_name('index-summary.json');cached=read(target,{})
     if cached.get('schema')=='pyrocast.result-index/1' and cached.get('source_stamp')==stamp and cached.get('kinds')==list(KINDS):return cached
     raw=source.read_bytes();result=json.loads(raw)

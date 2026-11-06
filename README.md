@@ -248,3 +248,5 @@ AI 키가 없으면 AI 기능만 비활성화되며 건물 열람·저장 결과
 실제 키는 `PYROCAST_AI_KEY` 환경변수로 전달합니다. `ai.json`에는 키 원문을 넣는 필드가 없습니다. 환경변수만 설정하고 API 주소·모델을 빠뜨리면 연결되지 않습니다.
 
 타사 구성요소와 버전은 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요. FireLapse 자체 라이선스는 아직 결정되지 않았습니다.
+
+라이선스: All rights reserved — LICENSE 참조. 제3자 구성요소는 THIRD_PARTY_NOTICES.md

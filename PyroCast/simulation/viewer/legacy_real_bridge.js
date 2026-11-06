@@ -69,7 +69,7 @@ export function createRealView(viewer,data,parent){
   }
  }
  return {
-  update({enabled,time,sample,floor,smokeEnabled,smokeOpacity=1,smokeGain=1,flameGain=1,flameDisplay='compact',smokeMode='current',flameStyle='current',riskMode=false,phenomenon='all',customRiskBoundaries=false,legacySmokeTexture=false,plumesEnabled=true,temperatureSmoke=false,noiseAmp=1,noiseScale=1,rampMode=0}){
+  update({enabled,time,sample,floor,selectedSmokeKeys=[],smokeEnabled,smokeOpacity=1,smokeGain=1,flameGain=1,flameDisplay='compact',smokeMode='current',flameStyle='current',riskMode=false,phenomenon='all',customRiskBoundaries=false,legacySmokeTexture=false,plumesEnabled=true,temperatureSmoke=false,noiseAmp=1,noiseScale=1,rampMode=0}){
    active=enabled;layer.visible=enabled;
    const legend=document.getElementById('cfPlumeLegend');if(legend)legend.hidden=!enabled;
    if(!enabled)return;
@@ -80,7 +80,7 @@ export function createRealView(viewer,data,parent){
    for(const jet of jetDisplay.jets)jet.q=Math.max(0,sample(jet.HRR_kW));
    combustionInputs(sample,time);
    renderer.setState({enabled:true,realView:true,time,step:data.time_s[1]-data.time_s[0],cached,
-      smokeEnabled,smokeOpacity,smokeGain,flameGain,flameDisplay,smokeMode,flameStyle,plumesEnabled,temperatureSmoke,noiseAmp,noiseScale,rampMode,darkSmoke:legacySmokeTexture,flamesEnabled:true,gasFlamesEnabled:false,q:0,h:0,
+      selectedSmokeKeys,smokeEnabled,smokeOpacity,smokeGain,flameGain,flameDisplay,smokeMode,flameStyle,plumesEnabled,temperatureSmoke,noiseAmp,noiseScale,rampMode,darkSmoke:legacySmokeTexture,flamesEnabled:true,gasFlamesEnabled:false,q:0,h:0,
       gasStates:new Map(rows.map(r=>[r.key,gasVisualState({time,times:data.time_s,
          power:r.solver.Qbulk_kW,assumption:data.ignition_assumption,room:data.rooms.find(x=>x.key===r.key).solver_id})])),
       positiveHrrOnly:data.engine_kind==='pyrocast_lite',

@@ -4548,7 +4548,9 @@ function createRealViewSession(THREE,{sourceFor,camera,fuelSymbols=false}={}){
   let lo=0,hi=times.length-1;while(lo<hi){const mid=Math.ceil((lo+hi)/2);if(times[mid]<=frame.t_s)lo=mid;else hi=mid-1;}
   const sample=a=>a?.[lo]??0;
   const enabled=settings.enabled&&(frame.layers.smoke||frame.layers.flame||frame.layers.plume);
-  session.renderer.update({enabled,time:frame.t_s,sample,floor:frame.floor.floor_id??'all',
+  const selected=frame.building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===frame.selection?.room_id);
+  const selectedSmokeKeys=frame.selection?.cell_id?[frame.selection.cell_id]:selected?[selected.room_id,...selected.cells.map(c=>c.cell_id)]:[];
+  session.renderer.update({enabled,time:frame.t_s,sample,floor:frame.floor.floor_id??'all',selectedSmokeKeys,
    smokeEnabled:frame.layers.smoke,smokeOpacity:settings.smokeOpacity,smokeGain:settings.smokeGain,flameGain:settings.flameGain,customRiskBoundaries:true,legacySmokeTexture:true,
    flameDisplay:'hrr',smokeMode:settings.smokeMode,flameStyle:settings.flameStyle,plumesEnabled:frame.layers.plume,noiseAmp:settings.temperaturePattern==='weak'?.4:1,noiseScale:1,rampMode:0,temperatureSmoke:settings.temperatureSmoke&&settings.temperaturePattern!=='off'});
   session.updates++;session.lastAnimateMs=frame.reducedMotion?0:clock_s*1000;

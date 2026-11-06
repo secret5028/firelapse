@@ -1,0 +1,7 @@
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 15.422s
+
+OK
+hotel input floors verified: 13 unavailable: [('B1', 'Opening wider than usable equivalent room: CAD_B1_R9')]
+rank linkage: CAD_5F_R8 score 1.0 -> 1.6953895671309134 rank 20 -> 17

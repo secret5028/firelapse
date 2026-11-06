@@ -1,0 +1,3 @@
+PASS: active-only highlight, current first, CAD names, unnamed rooms, fallback, deduplication, CFAST, failed exclusion
+PASS: distinct engines for same room, saved metadata, unknown never assumed lite
+PASS: distinct duration, saved date; batch retained only as metadata for otherwise identical labels

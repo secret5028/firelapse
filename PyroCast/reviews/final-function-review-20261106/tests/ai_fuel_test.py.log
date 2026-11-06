@@ -1,0 +1,1 @@
+{"passed": true, "api_calls": 0, "solver_runs": 0, "retry_once": true, "secret_echo_rejected": true, "key_file_matches": 0, "key_grep_returncode": 1, "R2_rank_before": 6, "R2_rank_after": 8, "load_after": 600.0, "hrrpua_after": 250}

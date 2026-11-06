@@ -1,0 +1,56 @@
+[
+  {
+    "id": "ganghwa",
+    "simulation_enabled": true,
+    "source_kind": "cad",
+    "url": 200,
+    "model_url": 200,
+    "operation_url": 200
+  },
+  {
+    "id": "parkmarine",
+    "simulation_enabled": true,
+    "source_kind": "cad",
+    "url": 200,
+    "model_url": 200,
+    "operation_url": 200
+  },
+  {
+    "id": "wando",
+    "simulation_enabled": false,
+    "source_kind": "reconstructed",
+    "url": 200,
+    "model_url": 200,
+    "operation_url": 200
+  },
+  {
+    "id": "showroom",
+    "simulation_enabled": true,
+    "source_kind": "cad",
+    "url": 200,
+    "model_url": 200,
+    "operation_url": 200
+  },
+  {
+    "id": "apartment-scan",
+    "simulation_enabled": false,
+    "source_kind": "scan",
+    "url": 200,
+    "model_url": 200
+  },
+  {
+    "id": "modori-scan",
+    "simulation_enabled": false,
+    "source_kind": "scan",
+    "url": 200,
+    "model_url": 200
+  },
+  {
+    "id": "cad-aabf1346d0e54c94b45ad7d7db7137d4",
+    "simulation_enabled": true,
+    "source_kind": "cad",
+    "url": 200,
+    "model_url": 200,
+    "operation_url": 200
+  }
+]

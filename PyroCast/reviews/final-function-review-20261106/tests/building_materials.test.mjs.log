@@ -1,0 +1,3 @@
+{"cycles":50,"material_identity":true,"restore_color_opacity_transparent":true,"owned_resources":0,"disposedMaterials":0,"disposedGeometry":0,"subscriptions":0}
+basement: shared-material isolation, floor restoration and 50 disposal cycles PASS
+selected slab: 92%, shared walls unchanged, whole-view restoration, slider and disposal PASS

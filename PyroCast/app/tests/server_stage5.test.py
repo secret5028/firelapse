@@ -13,6 +13,7 @@ sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'simulation')]
 from result_catalog import ResultCatalog,atomic_json,read
 from export_ui_attention import result_index,comparison_attention
 import lite_mc_service as service
+import runtime_storage
 import serve_cfbt_building as server
 
 
@@ -85,7 +86,7 @@ class Contracts(unittest.TestCase):
 
     def test_cache_excludes_server_not_engine_inputs(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'simulation/results',prefix='server_stage5_test') as directory:
-            root=Path(directory);(root/'pyrocast_cfbt').mkdir();code=root/'pyrocast_cfbt/core.py';code.write_text('a=1')
+            root=Path(directory);(root/'pyrocast_cfbt').mkdir();code=root/'pyrocast_cfbt/core.py';code.write_text('a=1');(root/'building_rules.py').write_text('rules=1')
             engine=root/'engine.exe';engine.write_bytes(b'engine');transport=root/'server.py';transport.write_text('v1')
             with patch.object(server,'SIM',root),patch.object(server,'__file__',str(transport)):
                 first=server.execution_key({'a':1},'A',engine);transport.write_text('v2')
@@ -95,7 +96,7 @@ class Contracts(unittest.TestCase):
                 code.write_text('a=1');engine.write_bytes(b'new');self.assertNotEqual(first,server.execution_key({'a':1},'A',engine))
 
     def test_validation_and_origin_input(self):
-        raw=read(service.RESULTS/'room_rule_r8_20261025/source-scenario.json');sha=raw['cad']['building_sha256']
+        raw=read(service.locate(service.RESULTS/'room_rule_r8_20261025/source-scenario.json'));sha=raw['cad']['building_sha256']
         for value in [1,0,True,2.5,1001]:
             with self.assertRaises(ValueError):service.prepare_request(dict(room='CAD_3F_R2',samples=value),sha)
         for body in [dict(room='no',samples=2),dict(room='CAD_3F_R2',samples=2,duration_s=25),dict(room='CAD_3F_R2',samples=2,seed=-1)]:
@@ -106,8 +107,8 @@ class Contracts(unittest.TestCase):
 
     def test_reserve_process_wrapper_and_interrupted_state(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'simulation/results',prefix='server_stage5_test') as directory:
-            root=Path(directory);jobs=root/'jobs';request=dict(room='R',samples=2,duration_s=1800,seed=1,building_sha256='A')
-            with patch.object(service,'JOBS',jobs),patch.object(service,'LATEST',jobs/'latest.json'):
+            root=Path(directory);jobs=root/'lite_mc_jobs';request=dict(room='R',samples=2,duration_s=1800,seed=1,building_sha256='A')
+            with patch.object(runtime_storage,'RESULTS',root),patch.object(service,'JOBS',jobs),patch.object(service,'LATEST',jobs/'latest.json'):
                 folder=service.reserve(request,{})
                 self.assertTrue(service.status('A')['running'])
                 self.assertEqual(service.status('B')['state'],'idle')

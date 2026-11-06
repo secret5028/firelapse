@@ -8,6 +8,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT/'tools'))
 import execution_evidence as e
+import runtime_storage
 from result_catalog import atomic_json, read
 from saved_case_reuse import describe
 
@@ -19,6 +20,8 @@ class Evidence(unittest.TestCase):
         self.folder = self.root/'simulation/results/lite_mc_jobs/job/S00'
         self.job = self.folder.parent
         self.root_patch = patch.object(e, 'ROOT', self.root); self.root_patch.start()
+        self.storage_patch=patch.object(runtime_storage,'LEGACY_RESULTS',self.root/'simulation/results');self.storage_patch.start()
+        self.addCleanup(self.storage_patch.stop)
         self.current = patch.object(e, '_current_matches'); self.check = self.current.start()
         self.request = dict(room='R3', samples=2, seed=1, duration_s=3600, building_sha256='building')
         self.raw = dict(openings=[dict(id='D0', door_class='fire', door_class_confidence='user')])

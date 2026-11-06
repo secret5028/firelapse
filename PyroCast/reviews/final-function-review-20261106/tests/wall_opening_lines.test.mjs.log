@@ -1,0 +1,3 @@
+{"door":true,"window":true,"diagonal":true,"transformed_floor":true,"frames_preserved":true,"schedule":true,"no_rebuild_same_fraction":true,"source_unchanged":true,"other_building_cuts":[{"floor":"B1","count":37},{"floor":"1F","count":100},{"floor":"2F","count":76},{"floor":"3F","count":65},{"floor":"4F","count":64},{"floor":"5F","count":65},{"floor":"6F","count":62},{"floor":"7F","count":62},{"floor":"PH","count":11}]}
+PASS offset window seam removed; jamb and remote structural corner retained
+PASS bevelled jamb cap cropped to window height

@@ -1,0 +1,4 @@
+{"id":"S06","status":"complete","rooms":28,"cells":38,"openings":69,"samples":361,"exact_series_values":137180,"exact_condition_values":274360,"series_max_difference":0,"multi_component_cells":1,"unaggregated_rooms":["CAD_3F_R1","CAD_3F_R2","CAD_3F_R10"],"errors":[]}
+{"id":"S09","status":"complete","rooms":28,"cells":38,"openings":69,"samples":361,"exact_series_values":137180,"exact_condition_values":274360,"series_max_difference":0,"multi_component_cells":1,"unaggregated_rooms":["CAD_3F_R1","CAD_3F_R2","CAD_3F_R10"],"errors":[]}
+{"id":"stage4","status":"complete","rooms":28,"cells":38,"openings":69,"samples":361,"exact_series_values":137180,"exact_condition_values":274360,"series_max_difference":0,"multi_component_cells":1,"unaggregated_rooms":["CAD_3F_R1","CAD_3F_R2","CAD_3F_R10"],"errors":[]}
+PASS 12 check groups; no simulation executed

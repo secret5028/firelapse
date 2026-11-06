@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "source_edges": 636,
+  "retained_edges": 636,
+  "eligible": 146,
+  "length": 106.29189979042377,
+  "hoses": 8,
+  "stairs": 2,
+  "entry": "CAD_1F_D6",
+  "moved": {
+    "entry": "CAD_1F_D7",
+    "length": 77.63859494266549
+  }
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "file": "ai_assistant_test.py",
+    "exit": 0,
+    "final_log": "ai_assistant_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 11
+  },
+  {
+    "file": "ai_connection_test.py",
+    "exit": 0,
+    "final_log": "ai_connection_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 13
+  },
+  {
+    "file": "ai_fuel_test.py",
+    "exit": 0,
+    "final_log": "ai_fuel_test.py.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "ai_tools_test.py",
+    "exit": 0,
+    "final_log": "ai_tools_test.py.retry.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "cad_completion_validation.test.py",
+    "exit": 0,
+    "final_log": "cad_completion_validation.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 10
+  },
+  {
+    "file": "cad_completion.test.py",
+    "exit": 0,
+    "final_log": "cad_completion.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 11
+  },
+  {
+    "file": "cad_import.test.py",
+    "exit": 0,
+    "final_log": "cad_import.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "cad_operation.test.py",
+    "exit": 0,
+    "final_log": "cad_operation.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 9
+  },
+  {
+    "file": "cad_pipeline.test.py",
+    "exit": 0,
+    "final_log": "cad_pipeline.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "catalog_isolation.unit.py",
+    "exit": 0,
+    "final_log": "catalog_isolation.unit.py.log",
+    "final_exit": 0,
+    "unittest_count": 1
+  },
+  {
+    "file": "execution_cache.test.py",
+    "exit": 0,
+    "final_log": "execution_cache.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 3
+  },
+  {
+    "file": "execution_evidence.test.py",
+    "exit": 1,
+    "final_log": "execution_evidence.test.py.retry.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "fixed_calculation_test.py",
+    "exit": 0,
+    "final_log": "fixed_calculation_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 7
+  },
+  {
+    "file": "fixed_openings.test.py",
+    "exit": 0,
+    "final_log": "fixed_openings.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 4
+  },
+  {
+    "file": "fixed_screening.unit.py",
+    "exit": 0,
+    "final_log": "fixed_screening.unit.py.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "fuel_quantity_test.py",
+    "exit": 0,
+    "final_log": "fuel_quantity_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 13
+  },
+  {
+    "file": "lite_export.test.py",
+    "exit": 0,
+    "final_log": "lite_export.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "manual_origin.test.py",
+    "exit": 0,
+    "final_log": "manual_origin.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 3
+  },
+  {
+    "file": "mc_display_summary_test.py",
+    "exit": 0,
+    "final_log": "mc_display_summary_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 1
+  },
+  {
+    "file": "model_import.test.py",
+    "exit": 0,
+    "final_log": "model_import.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 13
+  },
+  {
+    "file": "model_library_test.py",
+    "exit": 0,
+    "final_log": "model_library_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 7
+  },
+  {
+    "file": "model_mc_test.py",
+    "exit": 0,
+    "final_log": "model_mc_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 8
+  },
+  {
+    "file": "model_operation_test.py",
+    "exit": 0,
+    "final_log": "model_operation_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 3
+  },
+  {
+    "file": "model_simulation_test.py",
+    "exit": 0,
+    "final_log": "model_simulation_test.py.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "overnight.unit.py",
+    "exit": 0,
+    "final_log": "overnight.unit.py.log",
+    "final_exit": 0,
+    "unittest_count": 4
+  },
+  {
+    "file": "portable_result_index.test.py",
+    "exit": 0,
+    "final_log": "portable_result_index.test.py.log",
+    "final_exit": 0,
+    "unittest_count": 5
+  },
+  {
+    "file": "runtime_storage.test.py",
+    "exit": 0,
+    "final_log": "runtime_storage.test.py.retry.log",
+    "final_exit": 0,
+    "unittest_count": 14
+  },
+  {
+    "file": "server_stage5.test.py",
+    "exit": 1,
+    "final_log": "server_stage5.test.py.retry.log",
+    "final_exit": 0,
+    "unittest_count": 7
+  },
+  {
+    "file": "ui_attention.unit.py",
+    "exit": 1,
+    "final_log": "ui_attention.unit.py.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "wando_evidence.unit.py",
+    "exit": 0,
+    "final_log": "wando_evidence.unit.py.log",
+    "final_exit": 0,
+    "unittest_count": 2
+  }
+]

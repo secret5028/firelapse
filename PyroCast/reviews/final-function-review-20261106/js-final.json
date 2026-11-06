@@ -1,0 +1,282 @@
+[
+  {
+    "file": "b5_classification.mjs",
+    "exit": 0,
+    "final_log": "b5_classification.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "building_materials.test.mjs",
+    "exit": 0,
+    "final_log": "building_materials.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "building_panel.unit.mjs",
+    "exit": 1,
+    "final_log": "building_panel.unit.mjs.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "c8_defaults.unit.mjs",
+    "exit": 0,
+    "final_log": "c8_defaults.unit.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "calculation_status.test.mjs",
+    "exit": 0,
+    "final_log": "calculation_status.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "contracts.test.mjs",
+    "exit": 1,
+    "final_log": "contracts.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "core_continuity.test.mjs",
+    "exit": 0,
+    "final_log": "core_continuity.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "core_nodes.test.mjs",
+    "exit": 0,
+    "final_log": "core_nodes.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "display_gains.unit.mjs",
+    "exit": 0,
+    "final_log": "display_gains.unit.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "door_headers.test.mjs",
+    "exit": 0,
+    "final_log": "door_headers.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "door_jet_visual.test.mjs",
+    "exit": 0,
+    "final_log": "door_jet_visual.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "elevator_doors.test.mjs",
+    "exit": 0,
+    "final_log": "elevator_doors.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "explore.unit.mjs",
+    "exit": 0,
+    "final_log": "explore.unit.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "flame_hrr.test.mjs",
+    "exit": 1,
+    "final_log": "flame_hrr.test.mjs.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "flame_mask_area.test.mjs",
+    "exit": 0,
+    "final_log": "flame_mask_area.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "fuel_symbols.test.mjs",
+    "exit": 0,
+    "final_log": "fuel_symbols.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "ground_reference.test.mjs",
+    "exit": 0,
+    "final_log": "ground_reference.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "history_peaks.test.mjs",
+    "exit": 0,
+    "final_log": "history_peaks.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "model_preview.test.mjs",
+    "exit": 0,
+    "final_log": "model_preview.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "model_wall_bands.test.mjs",
+    "exit": 0,
+    "final_log": "model_wall_bands.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "openings_xray.test.mjs",
+    "exit": 0,
+    "final_log": "openings_xray.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "result_list.test.mjs",
+    "exit": 0,
+    "final_log": "result_list.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "result_scope.test.mjs",
+    "exit": 1,
+    "final_log": "result_scope.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "results.unit.mjs",
+    "exit": 0,
+    "final_log": "results.unit.mjs.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "risk_history.test.mjs",
+    "exit": 0,
+    "final_log": "risk_history.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "risk_index.test.mjs",
+    "exit": 0,
+    "final_log": "risk_index.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "room_names.test.mjs",
+    "exit": 0,
+    "final_log": "room_names.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_centered.test.mjs",
+    "exit": 0,
+    "final_log": "route_centered.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_double_action.test.mjs",
+    "exit": 0,
+    "final_log": "route_double_action.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_floor_context.test.mjs",
+    "exit": 1,
+    "final_log": "route_floor_context.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_index_text.test.mjs",
+    "exit": 0,
+    "final_log": "route_index_text.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_layer.test.mjs",
+    "exit": 1,
+    "final_log": "route_layer.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_risk.test.mjs",
+    "exit": 0,
+    "final_log": "route_risk.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route_selection.test.mjs",
+    "exit": 0,
+    "final_log": "route_selection.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "route.test.mjs",
+    "exit": 1,
+    "final_log": "route.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "saved_view.test.mjs",
+    "exit": 0,
+    "final_log": "saved_view.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "scale_reference.test.mjs",
+    "exit": 1,
+    "final_log": "scale_reference.test.mjs.retry.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "timeline_risk.unit.mjs",
+    "exit": 0,
+    "final_log": "timeline_risk.unit.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "wall_corners.test.mjs",
+    "exit": 0,
+    "final_log": "wall_corners.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  },
+  {
+    "file": "wall_opening_lines.test.mjs",
+    "exit": 0,
+    "final_log": "wall_opening_lines.test.mjs.log",
+    "final_exit": 0,
+    "unittest_count": null
+  }
+]

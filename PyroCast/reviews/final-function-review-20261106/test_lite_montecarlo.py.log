@@ -1,0 +1,14 @@
+..E....
+======================================================================
+ERROR: test_forced_and_failed_excluded_from_probability_denominator (test_lite_montecarlo.MCTests.test_forced_and_failed_excluded_from_probability_denominator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\예방\Documents\ChatGPT\PyroCast\simulation\tests\test_lite_montecarlo.py", line 60, in test_forced_and_failed_excluded_from_probability_denominator
+    self.assertEqual(a['failure_fraction'],.25);self.assertIsNone(a['condition_sample_rates_random_only']['rollover']['fraction'])
+                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'rollover'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.044s
+
+FAILED (errors=1)

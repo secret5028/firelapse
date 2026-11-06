@@ -10,7 +10,8 @@ const frame={floor:{floor_id:null},route:{vehicle_visible:true}};layer.setData(f
 assert.equal(layer.items.length,1);const vehicle=layer.items[0].object;assert(vehicle.visible);assert(vehicle.children.some(o=>o.name.startsWith('scale-person:')));
 vehicle.updateWorldMatrix(true,true);const bounds=new T.Box3().setFromObject(vehicle);assert(Math.abs(bounds.min.z-15.7)<1e-5);assert(bounds.max.z<19);
 assert.equal(layer.result,null);assert.equal(layer.items.filter(x=>x.route).length,0);
-layer.setData({...frame,floor:{floor_id:'5F'}});assert.equal(vehicle.visible,false);
+// The ground vehicle remains visible while inspecting upper floors.
+layer.setData({...frame,floor:{floor_id:'5F'}});assert.equal(vehicle.visible,true);
 layer.setData({...frame,floor:{floor_id:'1F'}});assert.equal(vehicle.visible,true);
 layer.setData({...frame,route:{vehicle_visible:false}});assert.equal(vehicle.visible,false);
 layer.setVehiclePreview([20,10,15.7],Math.PI/2,true);const ghost=layer.preview;

@@ -1,0 +1,10 @@
+test_changed_saved_files_rejected (__main__.Evidence.test_changed_saved_files_rejected) ... ok
+test_current_inputs_changed_downgrades_without_solver (__main__.Evidence.test_current_inputs_changed_downgrades_without_solver) ... ok
+test_forged_or_partial_evidence_rejected (__main__.Evidence.test_forged_or_partial_evidence_rejected) ... ok
+test_missing_proof_and_building_mismatch (__main__.Evidence.test_missing_proof_and_building_mismatch) ... ok
+test_save_uses_then_values_and_reuse_label (__main__.Evidence.test_save_uses_then_values_and_reuse_label) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.533s
+
+OK

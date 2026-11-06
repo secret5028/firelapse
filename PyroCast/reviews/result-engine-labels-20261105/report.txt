@@ -1,9 +1,0 @@
-Result engine labels
-- Each result row has a fixed badge: 간략 / CFAST 원본. Unknown metadata: 방식 미확인, never assumed lite.
-- Labels use saved request/playback engine evidence. Old requests read saved playback once per mtime (cached).
-- Same room with two engines retains separate result IDs/rows; existing click loads that saved result and highlights only current result.
-- Hotel live catalog: 34 pyrocast_lite. Wando P1 live catalog: cfast_native. Both badges checked in operating UI.
-- Mixed-engine same-room fixtures: frontend rows and backend catalogs PASS. No dual-engine hotel production result exists yet; no simulation was run to create one.
-- Result list: 3 rows retained, 11px font, engine badge does not truncate with long room name.
-- Exported standalone HTML retains engine metadata. Engines, calculations and saved results unchanged.
-- Servers restarted only after idle/server_busy false. No push.

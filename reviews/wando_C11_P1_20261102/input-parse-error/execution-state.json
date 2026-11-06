@@ -1,7 +1,0 @@
-{
-  "status": "failed",
-  "reason": "abnormal_native_exit",
-  "last_native_time_s": 0.0,
-  "requested_horizon_s": 3600,
-  "wall_seconds": 0.3129999999982829
-}

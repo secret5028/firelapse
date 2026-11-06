@@ -1,4 +1,4 @@
-"""Portable entry point for the preserved v30 scenario; writes a new output folder."""
+"""Legacy v30 runner; historical outputs are on archive/evidence-20261106. Writes new output only."""
 from pathlib import Path
 import subprocess, sys
 root=Path(__file__).resolve().parent

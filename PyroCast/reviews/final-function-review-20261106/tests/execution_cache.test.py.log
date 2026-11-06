@@ -1,8 +1,0 @@
-test_alias_read_only (__main__.CacheLookup.test_alias_read_only) ... ok
-test_direct_first (__main__.CacheLookup.test_direct_first) ... ok
-test_reject_mismatch (__main__.CacheLookup.test_reject_mismatch) ... ok
-
-----------------------------------------------------------------------
-Ran 3 tests in 0.094s
-
-OK

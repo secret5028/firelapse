@@ -1,5 +1,0 @@
-Partial effective opening display
-Shared doors/windows: blank region=open, gray fill and cross=closed region, internal divider at the effective_fraction. Existing binary-only records use open=true->1/false->0. Missing state has no inferred closure mark. Frame colors and x-ray preserved. No input, solver or physical series changes.
-Tests: openings_xray.test.mjs PASS: fractions0/.25/.5/.75/1 for actual hotel window and door geometry, area proportionality, depth policy, old binary fallback, floor/toggle scope, no rebuild, resource disposal. Bundle rebuilt.
-Operating UI: hotel5F R16 guestroom10, saved S08,12:50. W21/W22 effective_fraction=.5 display with half-width closure cross and divider. Screenshot after.jpg.
-Representation is effective-area schematic, not literal sash direction or hinge angle.

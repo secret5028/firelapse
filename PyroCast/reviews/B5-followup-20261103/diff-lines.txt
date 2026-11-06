@@ -1,6 +1,0 @@
-Added	Deleted	File
-1	1	PyroCast/app/tests/b5_display.mjs
-20	0	PyroCast/app/tests/b5_jet_diagnostic.mjs
-15	3	PyroCast/config/display.json
-31	12	PyroCast/simulation/viewer/legacy_real_view.js
-65	0	PyroCast/tools/report_b5_followup.py

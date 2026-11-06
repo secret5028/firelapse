@@ -1,9 +1,0 @@
-{
-  "default_roundtrip_changed_pixels": 0,
-  "neutral_changed_pixels": 49890,
-  "only_smoke_ramp_uniform_changed": true,
-  "smoke_temperature_unchanged": true,
-  "optical_density_unchanged": true,
-  "flame_and_gas_uniforms_unchanged": true,
-  "hud_unchanged": true
-}

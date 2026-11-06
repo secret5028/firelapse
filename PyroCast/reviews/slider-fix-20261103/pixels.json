@@ -1,8 +1,0 @@
-{
-  "before_smoke_scene_pixels": 0,
-  "before_flame_scene_pixels": 0,
-  "after_smoke_scene_pixels": 105233,
-  "after_flame_scene_pixels": 22152,
-  "default_before_after_pixels": 0,
-  "after_roundtrip_pixels": 0
-}

@@ -14,7 +14,7 @@ python -m venv .venv
 .venv\Scripts\python work/cad-web/local_app.py
 ```
 
-기본 포트는 8778이며 기존 앱이 실행 중이면 먼저 종료하거나 별도 PC에서 실행합니다. 새로운 작업 데이터는 `work/cad-web/local-data`에 생성됩니다. 이 체크포인트는 기존 앱의 작업 DB를 복사하지 않습니다. 저장 모델 보기에는 preview를 사용하세요.
+이전 화면·검증 증거는 `archive/evidence-20261106` 보존 브랜치를 참고하세요.
 
 DWG를 새로 처리하려면 별도로 LibreDWG의 Windows `dwg2dxf.exe`와 필요한 DLL을 `work/cad-web/local-resources/cad-tools`에 설치해야 합니다. 기존 PC의 바이너리는 이 체크포인트에서 제외했습니다. DXF 표본은 `sample-input`에 보존했습니다. https://github.com/LibreDWG/libredwg/releases 및 동봉 README를 참고하세요.
 
@@ -26,7 +26,7 @@ requirements는 소스 import에 근거한 의존성 목록이며 완전히 고�
 python work/restore_cad_ui.py rebuilt-viewer
 ```
 
-기존 PC 바탕화면의 legacy JS 의존성을 `work/legacy`로 복사하여 연결했습니다. 기존 설치된 model.html은 `snapshot/model.html`, 재생성 대상은 `work/cad-web/cad_engine/integrated_viewer.html`입니다.
+이전 화면·검증 증거는 `archive/evidence-20261106` 보존 브랜치를 참고하세요.
 
 ## 현재 CFAST 시나리오
 
@@ -37,9 +37,9 @@ python run_current.py --build-only
 python run_current.py
 ```
 
-`--build-only`는 native 입력 생성까지만 합니다. 출력은 `outputs/home-run`에 생성하며 보관된 v30 원시 결과를 덮어쓰지 않습니다. `--force`는 캐시를 사용하지 않고 재계산합니다. Shapely가 필요합니다. 기존 `work/run_cfast_current.ps1`과 과거 설치/검증 스크립트에는 당시 PC 경로가 남아 있으므로 무작정 실행하지 마세요. 이식된 기본 진입점은 루트 `run_current.py`입니다.
+이전 화면·검증 증거는 `archive/evidence-20261106` 보존 브랜치를 참고하세요.
 
-이식 변경은 building.json 위치와 legacy JS 위치뿐입니다. 기존 원문은 `original-machine`에 보존했습니다. CFAST native 방정식·설정·화원·높이·착화 조건은 바꾸지 않았습니다. 현재 입력 생성의 보존 결과 대조는 `CHECKPOINT-VALIDATION.json`에 기록합니다.
+이전 화면·검증 증거는 `archive/evidence-20261106` 보존 브랜치를 참고하세요.
 
 ## 제외한 파일
 

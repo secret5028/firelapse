@@ -1,2 +1,0 @@
-{"passed":true,"default":{"entry":"CAD_1F_D2","length":72.15411751398918,"hoses":5,"stairs":4},"moved":{"entry":"CAD_1F_D0","length":72.3638571527776,"hoses":5},"sourceEdges":513,"alternateRoom":"CAD_5F_R6"}
-vehicle placement: outside-only, whole footprint within displayed grid PASS

@@ -8,3 +8,12 @@ work/cad-deps/
 work/cad-web/local-data/
 outputs/home-run/
 outputs/rebuilt-viewer/
+
+# Archived evidence; kept on archive/evidence-20261106
+*.log
+outputs/
+reviews/
+PyroCast/reviews/
+preview/
+snapshot/
+original-machine/

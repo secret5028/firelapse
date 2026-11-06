@@ -3,7 +3,7 @@
 
 **3D 건물 모델에서 구획 화재의 진행과 위험 조건을 시간에 따라 살펴보는 Windows용 로컬 앱입니다.**
 
-첫 공개 배포에는 7개 건물 모델과 저장된 계산 결과를 제공합니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
+첫 공개 배포 계열의 최신 실행 패키지 `v2026.11.06-r2`에는 7개 건물 모델과 152개 최종 재생 결과가 포함됩니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
 
 **계산 대상 시간: 30분 또는 최대 60분(1시간) · 기본값: 60분**
 
@@ -211,3 +211,35 @@ FireLapse/
 - 실행 진입점: `tools/launch_firelapse.py`
 
 소스 ZIP만으로 실행 패키지의 모든 결과와 런타임이 제공되지는 않습니다. 구성요소 라이선스는 배포본의 `THIRD_PARTY_NOTICES.md`와 각 원문 고지를 따릅니다.
+
+## 소스 clone으로 실행하기
+
+Windows x64, Python **3.12**에서 검증합니다. Python 3.x 전체 버전의 호환성을 보장하지 않습니다. Node.js 22도 설치하고 PATH에 등록하면 경로·브리핑 어댑터를 사용할 수 있습니다.
+
+```powershell
+git clone --depth 1 https://github.com/secret5028/firelapse.git
+cd firelapse
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe PyroCast/start_viewer.py
+```
+
+`http://127.0.0.1:8780/model.html`로 접속합니다. 이 진입점은 소스에 포함된 강화 저장 결과를 복원·재생하며 계산을 시작하지 않습니다. 소스의 `saved_results`와 r2 실행 ZIP의 152개 결과는 동일한 묶음이 아닙니다. 7개 건물의 최신 결과를 모두 보려면 실행 ZIP을 사용하세요. 과거 화면·시험 증거는 `archive/evidence-20261106` 보존 브랜치에 있습니다.
+
+### 순정 CFAST 실행 파일
+
+소스 ZIP에는 `cfast.exe`가 포함되지 않습니다. [CFAST 공식 배포](https://github.com/firemodels/cfast/releases)에서 7.7.7을 확인하거나 해당 소스를 빌드해야 합니다. 현재 앱의 순정 경로는 `PyroCast/simulation/build/baseline/cfast-baseline.exe`를 읽습니다. 공식 설치 파일명 `cfast.exe`와 앱 내부 파일명은 다르며, 임의의 다른 버전을 덮어쓰지 마세요. 소스에서 직접 구성할 때는 해당 빌드에 필요한 DLL도 함께 제공해야 합니다.
+
+r2 실행 ZIP에는 검증에 사용한 7.7.7 기준 실행 파일과 의존 DLL이 `app/simulation/build/baseline/`에 포함되어 있습니다. 소스 정리 작업은 그 ZIP과 엔진을 변경하지 않습니다.
+
+### AI 연결과 키
+
+AI 키가 없으면 AI 기능만 비활성화되며 건물 열람·저장 결과 재생·계산은 사용할 수 있습니다. 앱의 **AI 연결**에서 주소·모델·키를 설정하거나, 로컬 `PyroCast/config/ai.json`에 주소·모델·키를 담은 환경변수 이름을 설정합니다. 이 파일은 Git 추적에서 제외됩니다.
+
+```json
+{"base_url":"https://your-provider.example/v1","model":"your-model","api_key_env":"PYROCAST_AI_KEY"}
+```
+
+실제 키는 `PYROCAST_AI_KEY` 환경변수로 전달합니다. `ai.json`에는 키 원문을 넣는 필드가 없습니다. 환경변수만 설정하고 API 주소·모델을 빠뜨리면 연결되지 않습니다.
+
+타사 구성요소와 버전은 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요. FireLapse 자체 라이선스는 아직 결정되지 않았습니다.

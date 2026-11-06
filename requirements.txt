@@ -4,3 +4,4 @@ ezdxf
 shapely
 numpy
 opencv-python
+scipy

@@ -1,6 +1,7 @@
 """Read saved screening series; export UI-only >=70 room counts. No simulation."""
 import hashlib
 import json
+import logging
 import math
 from pathlib import Path
 from result_catalog import atomic_json, read
@@ -55,18 +56,23 @@ def result_index(source):
 
 
 def comparison_attention(comparison, root=None):
-    root=Path(root or ROOT/'simulation/results').resolve();records=[]
+    root=Path(root or ROOT/'simulation/results').resolve();records=[];attention_skipped=0
     for pair in (comparison or {}).get('rows',[]):
         for case in pair.get('state_results',[]):
             if not case.get('selected_attempt'):continue
-            source=(Path(case['result_folder'])/case['selected_attempt']/'result.json').resolve()
             from runtime_storage import is_result_path
-            if not source.is_relative_to(root) and not (root==(ROOT/'simulation/results').resolve() and is_result_path(source)):raise ValueError('Result outside workspace')
+            try:
+                source=(Path(case['result_folder'])/case['selected_attempt']/'result.json').resolve()
+                if not source.is_relative_to(root) and not (root==(ROOT/'simulation/results').resolve() and is_result_path(source)):raise ValueError('Result outside workspace')
+            except ValueError:
+                attention_skipped+=1
+                logging.warning('screening attention skipped: result outside workspace: %s', 'result.json')
+                continue
             try:record=dict(result_index(source))
             except (OSError,ValueError,KeyError,TypeError):continue
             record.update(identity=[case['room'],case['state'],case['result_folder'],case['times']['total_s'],case['burning_room_count'],case['first_FO_s'],case['safe_end_s']],complete=bool(case['complete'] and record['complete']))
             records.append(record)
-    return dict(schema='pyrocast.ui-attention/1',threshold=70,kinds=list(KINDS),records=records,
+    return dict(schema='pyrocast.ui-attention/1',threshold=70,kinds=list(KINDS),records=records,attention_skipped=attention_skipped,
                 basis='union of original rooms across cells/time; any phenomenon degree*100 >=70; no simulation')
 
 

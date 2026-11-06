@@ -38,6 +38,40 @@ class Acceptance(unittest.TestCase):
             if call['tool']=='get_peak_events':expected=event_fact(ev['row'],ev['call'])['text']
             else:expected=next(f['text'] for f in facts_for(call,ev['call']) if f['evidence']['row']==ev['row'])
             self.assertEqual(re.findall(r'\d+(?:\.\d+)?',fact['text']),re.findall(r'\d+(?:\.\d+)?',expected))
+    def test_outside_comparison_keeps_response_and_valid_attention(self):
+        from copy import deepcopy
+        import lite_screening_service as service
+        import export_ui_attention as attention
+        folder=SIM/'results/publish1c-test'
+        valid=folder/'good'
+        outside=ROOT.parent/'private-outside-folder'
+        def case(path,room):
+            return dict(result_folder=str(path),selected_attempt='attempt',room=room,state='fixed',
+                        times={'total_s':1},burning_room_count=1,first_FO_s=None,safe_end_s=1,complete=True)
+        comparison={'revision':'v8_approved_screening','rows':[{'state_results':[case(valid,'GOOD'),case(outside,'OUTSIDE')]}]}
+        original=deepcopy(comparison)
+        def read(path,default=None):
+            if path==service.SAVED:return {'result_path':str(folder)}
+            if path==folder/'comparison.json':return comparison
+            return default if default is not None else {}
+        index={'complete':True,'attention_rooms':['GOOD'],'attention_room_count':1,'unknown_rooms':[]}
+        with patch.object(service,'read',side_effect=read), \
+             patch('pyrocast_lite.screening_v8_approved.score',return_value={'classified_model':{},'approved_input':{},'ranked':[]}), \
+             patch('lite_manual_origin.origins',return_value=[]), \
+             patch.object(service,'classifications',return_value={}), \
+             patch.object(service,'screening_states',return_value=['fixed']), \
+             patch('lite_ai_fuel.revision',return_value='fixture'), \
+             patch.object(attention,'result_index',return_value=index) as index_read, \
+             self.assertLogs(level='WARNING') as logs:
+            response=service.payload()
+        self.assertEqual(response['attention_skipped'],1)
+        self.assertEqual(len(response['attention']['records']),1)
+        self.assertEqual(response['attention']['records'][0]['identity'][0],'GOOD')
+        index_read.assert_called_once_with((valid/'attempt/result.json').resolve())
+        self.assertEqual(comparison,original)
+        self.assertEqual(response['comparison'],original)
+        self.assertEqual(logs.output,['WARNING:root:screening attention skipped: result outside workspace: result.json'])
+        self.assertNotIn(str(outside),json.dumps(response['attention']))
     def test_1_ranking(self):
         self.skip_original_machine_comparison()
         v=self.invoke('3층에서 불나면 제일 위험한 실 어디야',[plan(('get_ranking',{'floor':'3F'}))]);self.assertTrue(v['facts'])

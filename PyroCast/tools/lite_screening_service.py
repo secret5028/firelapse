@@ -25,6 +25,8 @@ def payload(top_n=None):
     comparison=read(destination/'comparison.json')
     legacy=comparison is not None and comparison.get('revision')!='v8_approved_screening'
     from export_ui_attention import comparison_attention
+    attention=comparison_attention(None if legacy else comparison)
+    attention_skipped=attention.pop('attention_skipped',0)
     progress=read(destination/'progress.json')
     if progress:progress={**progress,'running':progress.get('state') in ('queued','running')}
     return {'manual_origins':manual,'score':scored,'comparison':None if legacy else comparison,'legacy_comparison_not_reused':legacy,
@@ -33,7 +35,7 @@ def payload(top_n=None):
             'opening_mode':'fixed' if screening_states(raw,read(SIM/'config/lite-door-overrides.json',{}))==['fixed'] else 'extremes',
             'fuel_revision':__import__('lite_ai_fuel').revision({k:scored.get('approved_input',{}).get(k,{}) for k in ('fuel_overrides','quantity_settings')}),
             'fuel_rerun_required':any(read(destination/'score.json',{}).get('approved_input',{}).get(k,{})!=scored.get('approved_input',{}).get(k,{}) for k in ('fuel_overrides','quantity_settings')),
-            'attention':comparison_attention(None if legacy else comparison)}
+            'attention':attention,'attention_skipped':attention_skipped}
 
 def select(top_n,mc_room=None,rooms=None):
     if type(top_n) is not int:raise ValueError('N must be an integer')

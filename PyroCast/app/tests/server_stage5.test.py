@@ -82,7 +82,11 @@ class Contracts(unittest.TestCase):
             case=dict(room='R',state='open',result_folder=str(root),selected_attempt='BDF',complete=True,times={'total_s':1},burning_room_count=1,first_FO_s=None,safe_end_s=10)
             self.assertEqual(len(comparison_attention({'rows':[{'state_results':[case]}]},root)['records']),1)
             case['result_folder']=str(root.parent)
-            with self.assertRaises(ValueError):comparison_attention({'rows':[{'state_results':[case]}]},root)
+            with self.assertLogs(level='WARNING') as warning:
+                skipped=comparison_attention({'rows':[{'state_results':[case]}]},root)
+            self.assertEqual(skipped['records'],[])
+            self.assertEqual(skipped['attention_skipped'],1)
+            self.assertEqual(warning.output,['WARNING:root:screening attention skipped: result outside workspace: result.json'])
 
     def test_cache_excludes_server_not_engine_inputs(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'simulation/results',prefix='server_stage5_test') as directory:

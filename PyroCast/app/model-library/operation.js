@@ -13,9 +13,9 @@ try{
  S.add(new T.HemisphereLight(0xe4f4ff,0x50616c,2));const sun=new T.DirectionalLight(0xffffff,1.8);sun.position.set(30,-50,100);S.add(sun);
  const owned=[];const keep=x=>(owned.push(x),x);
  const shp=part=>{const p=part.o||part,s=new T.Shape(p.map(q=>new T.Vector2(q[0],q[1])));for(const h of part.h||[])s.holes.push(new T.Path(h.map(q=>new T.Vector2(q[0],q[1]))));return s;};
- function mesh(g,parts,z,h,color,opacity){if(!parts?.length||h<=0)return;const o=new T.Mesh(keep(new T.ExtrudeGeometry(parts.map(shp),{depth:h,bevelEnabled:false})),keep(new T.MeshLambertMaterial({color,transparent:true,opacity,depthWrite:false,side:T.DoubleSide})));o.position.z=z;o.name=g.name+'_wall';g.add(o);}
+ function mesh(g,parts,z,h,color,opacity,kind='wall'){if(!parts?.length||h<=0)return;const o=new T.Mesh(keep(new T.ExtrudeGeometry(parts.map(shp),{depth:h,bevelEnabled:false})),keep(new T.MeshLambertMaterial({color,transparent:true,opacity,depthWrite:false,side:T.DoubleSide})));o.position.z=z;o.name=g.name+'_'+kind;g.add(o);}
  for(const f of B.floors){const g=new T.Group();g.name=f.name;g.position.z=f.z||0;groups.push(g);S.add(g);
-  mesh(g,f.slab,-.15,.15,0x8a8a8a,.24);
+  mesh(g,f.slab,-.15,.15,0x8a8a8a,.24,'slab');
   if(f.bands?.length)for(const b of f.bands)if(['wall','door_head','win_low','win_head'].includes(b.kind))mesh(g,b.polys,b.z0,b.z1-b.z0,0x93acb5,.25);
   for(const r of f.rooms||[])for(const part of r.polys||[]){const p=part.o||part;
    const line=new T.Line(keep(new T.BufferGeometry().setFromPoints([...p,p[0]].map(q=>new T.Vector3(...q,.04)))),keep(new T.LineBasicMaterial({color:0xaab7c0,transparent:true,opacity:.42})));line.name=f.name+'_outline';g.add(line);

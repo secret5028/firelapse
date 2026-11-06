@@ -65,3 +65,23 @@ for(let i=0;i<50;i++){
 }
 assert.equal(released,50);assert.equal(disposedMaterials,0);assert.equal(disposedGeometry,0);assert.equal(subscriptions,0);
 console.log('basement: shared-material isolation, floor restoration and 50 disposal cycles PASS');
+
+// Selected slab opacity must not leak into walls, other floors or borrowed CAD materials.
+const upperSlab=new T.Mesh(geometry,shared);upperSlab.name='3F_slab';floor.add(upperSlab);
+const lowerSlab=new T.Mesh(geometry,shared);lowerSlab.name='B1_slab_R1';underground.add(lowerSlab);
+const slabs=readLegacyBuildingSource({building:both,groups:[floor,underground],sourceHash:both.source_hash});
+const layer=new BuildingLayer(T,{geometryFor:()=>slabs});layer.mount(new T.Scene(),store);
+layer.setData({building:both,floor:{floor_id:'3F'}});
+const upper=layer.sourceObjects.get(upperSlab),lower=layer.sourceObjects.get(lowerSlab);
+assert.notEqual(upper.material,shared);assert.notEqual(lower.material,shared);
+assert.equal(upper.geometry,geometry);assert.equal(lower.geometry,geometry);
+assert.equal(upper.material.opacity,.92);assert.equal(shared.opacity,.35);assert.equal(lower.material.opacity,.35);
+let slabsDisposed=0;for(const m of layer.slabMaterials.keys())m.addEventListener('dispose',()=>slabsDisposed++);
+layer.setData({building:both,floor:{floor_id:'B1'}});
+assert.equal(upper.material.opacity,.35);assert.equal(lower.material.opacity,.92);
+layer.setData({building:both,floor:{floor_id:null}});
+assert.equal(upper.material.opacity,.35);assert.equal(lower.material.opacity,.35*.8);
+layer.setData({building:both,floor:{floor_id:'3F'},realView:{buildingTransparency:1}});
+assert.equal(upper.material.opacity,0);
+layer.dispose();assert.equal(slabsDisposed,2);assert.equal(shared.opacity,.35);assert.equal(subscriptions,0);
+console.log('selected slab: 92%, shared walls unchanged, whole-view restoration, slider and disposal PASS');

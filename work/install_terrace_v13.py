@@ -1,6 +1,6 @@
 from pathlib import Path
 import json,sys,os,shutil,datetime,urllib.request,time,subprocess,hashlib
-root=Path(__file__).resolve().parent.parent;out=root/'outputs/CAD-테라스-v13';app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');job='d018b4bb75da4475b1fd75447603c1a0';built=out/'배포본/소방 크로키 업-로컬웹앱'
+root=Path(__file__).resolve().parent.parent;out=root/'outputs/CAD-테라스-v13';app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');job='d018b4bb75da4475b1fd75447603c1a0';built=out/'배포본/소방 크로키 업-로컬웹앱'
 def api(port,path,value=None):
  with urllib.request.urlopen('http://127.0.0.1:'+str(port)+path,data=None if value is None else json.dumps(value).encode(),timeout=10) as r:return json.load(r)
 # Executable startup check uses an isolated copy of the existing test data.

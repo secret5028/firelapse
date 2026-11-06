@@ -5,7 +5,7 @@ from shapely.geometry import Polygon
 from shapely.ops import unary_union
 job='d018b4bb75da4475b1fd75447603c1a0';folder=root/'work/cad-ui-test-data'/job
 b=json.loads((folder/'cad-output/building.json').read_text('utf8'))
-old=json.loads(Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data',job,'cad-output/building.json').read_text('utf8'))
+old=json.loads(Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data',job,'cad-output/building.json').read_text('utf8'))
 checks=[]
 for f,o in zip(b['floors'],old['floors']):
  assert f['openings']==o['openings'] and f['bands']==o['bands'] and f['transport']==o['transport']

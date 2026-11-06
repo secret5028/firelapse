@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil,re,json,urllib.request
 W=Path(__file__).resolve().parent;S=W/'cad-web';S.mkdir(exist_ok=True)
-OLD=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');C=Path('C:/Users/예방/Documents/Codex/2026-09-07/2/CAD3D')
+OLD=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');C=Path('C:/Users/<user>/Documents/Codex/2026-09-07/2/CAD3D')
 for p in (OLD/'개발/work').glob('*.py'):shutil.copy2(p,S/p.name)
 R=S/'local-resources';R.mkdir(exist_ok=True)
 for p in (OLD/'_internal').iterdir():

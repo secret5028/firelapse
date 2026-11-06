@@ -1,5 +1,5 @@
 import pathlib,sys,json,os,subprocess
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 root=CAD/'out/28-200-2026-00000010';env=dict(os.environ,PYTHONPATH=str(W/'cad-deps'),PYTHONIOENCODING='utf-8')
 profile=json.loads((W/'office-1F-review-v6.json').read_text(encoding='utf8'))
 profile['source_categories']=[] # wall recovery must now stand on general evidence

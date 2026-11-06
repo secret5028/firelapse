@@ -2,7 +2,7 @@
 import hashlib,json,re,shutil,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-OLD=Path('C:/Users/예방/Documents/Codex/2026-09-07/2')
+OLD=Path('C:/Users/<user>/Documents/Codex/2026-09-07/2')
 def read(p):return json.loads(p.read_text('utf8'))
 def save(p,d):p.parent.mkdir(parents=True,exist_ok=True);p.write_text(json.dumps(d,ensure_ascii=False,indent=2),'utf8')
 

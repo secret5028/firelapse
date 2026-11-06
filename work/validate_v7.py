@@ -1,5 +1,5 @@
 import pathlib,sys,json,os,subprocess,hashlib,math
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
 from cad_evidence import geometry,polygon_parts
 from fire_zone import Model
 from compare_v7 import compare

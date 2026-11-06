@@ -4,7 +4,7 @@ import csv, hashlib, json, math, subprocess, time
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'outputs/CAD-온도연기-v16'
-SOURCE = Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output/building.json')
+SOURCE = Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output/building.json')
 OUT.mkdir(exist_ok=True)
 raw = SOURCE.read_bytes()
 b = json.loads(raw)

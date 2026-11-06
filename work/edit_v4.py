@@ -1,5 +1,5 @@
 from pathlib import Path
-root=Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+root=Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 def edit(name,old,new):
     p=root/name;s=p.read_text(encoding='utf-8');assert old in s,(name,old[:80]);p.write_text(s.replace(old,new),encoding='utf-8')
 

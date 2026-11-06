@@ -3,7 +3,7 @@ import sys,json,shutil,re,sqlite3
 root=Path(__file__).resolve().parent.parent;engine=root/'work/cad-web/cad_engine'
 sys.path.insert(0,str(engine));sys.path.insert(0,str(root/'work/cad-deps'))
 from cad_model_transport import prepare_model
-home=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data');test=root/'work/cad-ui-test-data';test.mkdir(exist_ok=True)
+home=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data');test=root/'work/cad-ui-test-data';test.mkdir(exist_ok=True)
 with sqlite3.connect(home/'history.sqlite') as src,sqlite3.connect(test/'history.sqlite') as dst:src.backup(dst)
 job='d018b4bb75da4475b1fd75447603c1a0';folder=test/job;folder.mkdir(exist_ok=True)
 for name in ['files.json','result.html']:shutil.copy2(home/job/name,folder/name)

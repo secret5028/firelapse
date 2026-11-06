@@ -1,7 +1,7 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';
-const T=await import(pathToFileURL('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/개발/work/three.module.js'));
+const T=await import(pathToFileURL('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/개발/work/three.module.js'));
 const B=JSON.parse(fs.readFileSync('outputs/CAD-모델링-v10/building.json','utf8'));
-const fn=fs.readFileSync('C:/Users/예방/Documents/Codex/2026-09-07/2/CAD3D/transport_view.js','utf8');
+const fn=fs.readFileSync('C:/Users/<user>/Documents/Codex/2026-09-07/2/CAD3D/transport_view.js','utf8');
 const addTransportGeometry=new Function(fn+';return addTransportGeometry;')();
 function shp(p){const s=new T.Shape(p.o.map(q=>new T.Vector2(...q)));for(const h of p.h)s.holes.push(new T.Path(h.map(q=>new T.Vector2(...q))));return s;}
 function ext(polys,z0,z1,m){if(!polys.length||z1<=z0)return null;const g=new T.ExtrudeGeometry(polys.map(shp),{depth:z1-z0,bevelEnabled:false,curveSegments:1});g.translate(0,0,z0);return new T.Mesh(g,m);}

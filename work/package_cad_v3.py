@@ -1,5 +1,5 @@
 import pathlib,json,shutil,zipfile,hashlib,difflib,sys
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 RUN=W/'cad-v3-runs';OUT=W.parent/'outputs/CAD-자동보강-v3';OUT.mkdir(exist_ok=True)
 report=json.loads((RUN/'validation.json').read_text(encoding='utf-8'));assert len(report)==5
 names={'hotel-4F':'호텔 4층','hotel-1F':'호텔 1층','office-1F':'업무시설 1층','office-4F':'업무시설 4층','exhibition-1F':'전시시설 1층'}

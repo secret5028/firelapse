@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskOutput = Join-Path $taskRoot 'outputs/CAD-속도검증-v27'
-$taskApp = 'C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱'
+$taskApp = 'C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱'
 $taskJob = Join-Path $taskApp 'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 $taskReport = Get-Content -LiteralPath (Join-Path $taskOutput 'full-verification.json') -Raw | ConvertFrom-Json
 if (!$taskReport.approved_for_install) { throw 'Full comparison has not been accepted' }

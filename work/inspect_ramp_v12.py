@@ -2,7 +2,7 @@ from pathlib import Path
 import json,math
 from PIL import Image,ImageDraw
 root=Path(__file__).resolve().parent.parent
-job=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
+job=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
 p=json.loads((job/'B1/plan.json').read_text('utf8'));b=json.loads((job/'building.json').read_text('utf8'))
 cx,cy=13918.87980991675,-1826.6773739486591
 im=Image.new('RGB',(1000,1000),'white');d=ImageDraw.Draw(im)

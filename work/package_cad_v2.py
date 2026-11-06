@@ -1,7 +1,7 @@
 import pathlib, json, shutil, zipfile, hashlib, difflib, sys, os, subprocess
 from html import escape
 W=pathlib.Path(__file__).resolve().parent
-CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 RUN=W/'cad-v2-runs'; OUT=W.parent/'outputs/CAD-통합추출-v2'
 OUT.mkdir(parents=True,exist_ok=True)
 sys.path.insert(0,str(CAD))

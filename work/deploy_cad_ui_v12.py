@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil,datetime,json,hashlib
 root=Path(__file__).resolve().parent.parent
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 src=root/'work/cad-web/cad_engine/integrated_viewer.html'
 out=root/'outputs/CAD-인터페이스복원-v12'
 backup=app/'개발/backups'/('cad-ui-v12-'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S'))

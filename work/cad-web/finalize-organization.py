@@ -1,12 +1,12 @@
 from pathlib import Path
 import json,csv,hashlib,sqlite3,urllib.request
-root=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');work=root/'개발/work'
+root=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');work=root/'개발/work'
 changes=[]
 replacements={
- 'C:/Users/예방/Downloads/도면 (1).pdf':(root/'원본도면/도면 (1).pdf').as_posix(),
- 'C:/Users/예방/Downloads/도면.pdf':(root/'원본도면/도면.pdf').as_posix(),
- 'C:/Users/예방/Downloads/_1층 평면도.dwg':(root/'data/08e5d677fdd94630b3c967a2222bbda6/f6c33d91b35a40e6a1653b93dbc4f98c.dwg').as_posix(),
- 'C:/Users/예방/Downloads/강화역사박물관 소방도면.pdf':(root/'data/08e5d677fdd94630b3c967a2222bbda6/f6a9a150eced4327bf3414ee9aae1cda.pdf').as_posix()}
+ 'C:/Users/<user>/Downloads/도면 (1).pdf':(root/'원본도면/도면 (1).pdf').as_posix(),
+ 'C:/Users/<user>/Downloads/도면.pdf':(root/'원본도면/도면.pdf').as_posix(),
+ 'C:/Users/<user>/Downloads/_1층 평면도.dwg':(root/'data/08e5d677fdd94630b3c967a2222bbda6/f6c33d91b35a40e6a1653b93dbc4f98c.dwg').as_posix(),
+ 'C:/Users/<user>/Downloads/강화역사박물관 소방도면.pdf':(root/'data/08e5d677fdd94630b3c967a2222bbda6/f6a9a150eced4327bf3414ee9aae1cda.pdf').as_posix()}
 for rel in ['incoming-1/import.py','new-pdf/import.py','museum/add_1f.py','museum/render.py']:
  p=work/rel;s=p.read_text('utf8');new=s
  for old,target in replacements.items():new=new.replace(old,target)

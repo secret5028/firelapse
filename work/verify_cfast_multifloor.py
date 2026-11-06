@@ -26,7 +26,7 @@ for f in opened['floor_summary']:
 for f in ['4F','5F','6F','7F','PH']:assert opened['floor_summary'][f]['max_od']>0
 assert len(opened['flame_height'])==121 and opened['flame_height'][0]==0
 assert opened['flame_height'][-1]>1
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 dest=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(dest/'building.json')==opened['building_sha256']

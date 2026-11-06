@@ -1,5 +1,5 @@
 import pathlib,json,sys,os,subprocess,re,shutil,hashlib
-W=pathlib.Path(__file__).resolve().parent;C=pathlib.Path('C:/Users/예방/Documents/Codex/2026-09-07/2/CAD3D');O=W.parent/'outputs/CAD-평면연결-v9';sys.path[:0]=[str(W/'cad-deps'),str(C)]
+W=pathlib.Path(__file__).resolve().parent;C=pathlib.Path('C:/Users/<user>/Documents/Codex/2026-09-07/2/CAD3D');O=W.parent/'outputs/CAD-평면연결-v9';sys.path[:0]=[str(W/'cad-deps'),str(C)]
 from cad_stage1_report import publish
 publish(O,W/'drawing-manifest-v7.json')
 from PIL import Image,ImageDraw,ImageFont
@@ -15,7 +15,7 @@ for folder in O.glob('office-*'):
  im.thumbnail((1800,1800));im.save(folder/'코어-미리보기.png')
 page=(O/'index.html').read_text(encoding='utf8').replace('/fused.png','/코어-미리보기.png');(O/'index.html').write_text(page,encoding='utf8')
 # Syntax and artifact-link checks, without claiming browser interaction.
-node=pathlib.Path('C:/Users/예방/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe');n=0
+node=pathlib.Path('C:/Users/<user>/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe');n=0
 for page in O.rglob('*.html'):
  if 'code' in page.relative_to(O).parts:continue
  text=page.read_text(encoding='utf8')

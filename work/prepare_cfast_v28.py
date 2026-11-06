@@ -5,7 +5,7 @@ from cfast_combustion import add_combustion
 ROOT=Path(__file__).resolve().parent.parent
 OUT=ROOT/'outputs/CAD-연소표현-v28'
 BASE=ROOT/'outputs/CAD-속도검증-v27/final'
-JOB=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
+JOB=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
 OUT.mkdir(exist_ok=True); (OUT/'backup').mkdir(exist_ok=True)
 for name in ('model.html','cfast-demo.json','building.json'):
     if not (OUT/'backup'/name).exists(): shutil.copy2(JOB/name, OUT/'backup'/name)

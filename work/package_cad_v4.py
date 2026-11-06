@@ -1,5 +1,5 @@
 import pathlib,json,shutil,zipfile,hashlib,difflib,html,base64,sys
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 sys.path.insert(0,str(CAD))
 from cad_review_ui import enhance_review
 RUN=W/'cad-v4-runs';OUT=W.parent/'outputs/CAD-연결보강-v4';OUT.mkdir(exist_ok=True)

@@ -2,7 +2,7 @@ from pathlib import Path
 import sys,json,re
 sys.path.insert(0,str(Path('work/cad-deps').resolve()))
 import ezdxf
-base=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0')
+base=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0')
 doc=ezdxf.readfile(base/'4fae9163d0ab4400a82d92a6286d22e2.dxf')
 texts=[]
 for block in doc.blocks:

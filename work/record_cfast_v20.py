@@ -15,7 +15,7 @@ for r in j['rooms']:
 assert j['fires'][-1]['ignition_time'] is None
 prefix=lambda p:p.read_text('utf8').split('// Coupled CFAST results')[0]
 assert prefix(out/'model.html')==prefix(out/'before-model.html')
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');job=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');job=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(job/'building.json')==j['building_sha256']
 record={'status':'passed','preset_id':preset['preset_id'],'duration':1800,'engine_seconds':j['elapsed_seconds'],'events':{f['id']:f['ignition_time'] for f in j['fires']},'geometry_unchanged':True,'legacy_prefix_unchanged':True,'scope':'Default inheritance and calculation output checks; not material validation'}

@@ -1,5 +1,5 @@
 import json,pathlib,sys,shutil,re,hashlib
-W=pathlib.Path(__file__).resolve().parent;C=pathlib.Path('C:/Users/예방/Documents/Codex/2026-09-07/2/CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(C)]
+W=pathlib.Path(__file__).resolve().parent;C=pathlib.Path('C:/Users/<user>/Documents/Codex/2026-09-07/2/CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(C)]
 from cad_model_transport import prepare_model
 OLD=W.parent/'outputs/CAD-평면연결-v9';OUT=W.parent/'outputs/CAD-모델링-v10';OUT.mkdir(exist_ok=True)
 b=json.loads((OLD/'building.json').read_text(encoding='utf8'));plans={f['name']:json.loads((OLD/('office-'+f['name'])/'plan.json').read_text(encoding='utf8')) for f in b['floors']}

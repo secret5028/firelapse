@@ -1,9 +1,9 @@
 import pathlib,sys,json,hashlib,collections,re
-W=pathlib.Path(__file__).resolve().parent;sys.path[:0]=[str(W/'cad-deps'),r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D']
+W=pathlib.Path(__file__).resolve().parent;sys.path[:0]=[str(W/'cad-deps'),r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D']
 import ezdxf
 from cadio import load,units_to_m
-SRC=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\도면수집\28-200-2026-00000010')
-DXF=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D\out\28-200-2026-00000010\dxf')
+SRC=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\도면수집\28-200-2026-00000010')
+DXF=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D\out\28-200-2026-00000010\dxf')
 O=W/'cad-v7-inventory';O.mkdir(exist_ok=True)
 records=[]
 for f in sorted(DXF.glob('*.dxf')):
@@ -32,4 +32,4 @@ for i,p in enumerate(doc.pages):
  pages.append(rec)
  print('PDF',i+1,tx[:140].replace('\n',' '),'draw',len(draw),'images',len(p.images),flush=True)
 (O/'pdf_inventory.json').write_text(json.dumps(dict(name=pdf.name,path=str(pdf),sha256=hashlib.sha256(pdf.read_bytes()).hexdigest(),pages=pages),ensure_ascii=False,indent=2),encoding='utf8')
-subprocess.run([r'C:\Users\예방\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe','-scale-to','1600','-png',str(pdf),str(O/'fire')],check=True)
+subprocess.run([r'C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe','-scale-to','1600','-png',str(pdf),str(O/'fire')],check=True)

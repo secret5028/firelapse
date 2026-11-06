@@ -1,6 +1,6 @@
 import os, sys, json, pathlib, subprocess, time
 W=pathlib.Path(__file__).resolve().parent
-CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 env=dict(os.environ,PYTHONPATH=str(W/'cad-deps'),PYTHONIOENCODING='utf-8')
 report=[]
 for old in json.loads((W/'cad-runs/regression.json').read_text(encoding='utf-8')):

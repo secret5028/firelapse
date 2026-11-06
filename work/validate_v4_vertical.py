@@ -1,6 +1,6 @@
 import pathlib,subprocess,sys,json,shutil,os
 W=pathlib.Path(__file__).resolve().parent
-CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
 from fire_zone import Model
 import numpy as np

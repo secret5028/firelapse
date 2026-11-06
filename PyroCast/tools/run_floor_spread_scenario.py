@@ -27,7 +27,7 @@ def main():
     p.add_argument('--ventilated',action='store_true',help='All facade windows initially50% area open; stair doors open')
     p.add_argument('--build-only', action='store_true')
     a = p.parse_args()
-    project = Path(r'C:\Users\예방\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d')
+    project = Path(r'C:\Users\<user>\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d')
     options = dict(profile='practical', scope_floor='3F', fire_floor='3F', fire_room=a.primary,
                    duration_s=3600, full_floor_search=True, iteration_mode='fixed_point', window_fraction=.5,
                    window_breakage=dict(enabled=True, threshold=450, post_fraction=1),

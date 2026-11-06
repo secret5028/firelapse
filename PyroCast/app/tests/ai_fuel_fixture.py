@@ -30,5 +30,5 @@ def mock(cfg,key,messages):
 original=ai.propose
 ai.propose=lambda body,building,sha:original(body,building,sha,transport=mock)
 from serve_cfbt_building import main
-sys.argv=[sys.argv[0],str(Path('C:/Users/예방/Documents/Codex/2026-10-14/files-pasted-by-the-user-cad3d')),'--port','8821','--result',str(ROOT/'simulation/results/condition_display_v1/playback.json')]
+sys.argv=[sys.argv[0],str(Path('C:/Users/<user>/Documents/Codex/2026-10-14/files-pasted-by-the-user-cad3d')),'--port','8821','--result',str(ROOT/'simulation/results/condition_display_v1/playback.json')]
 main()

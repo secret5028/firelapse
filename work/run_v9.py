@@ -1,5 +1,5 @@
 import pathlib,sys,json,os,subprocess,concurrent.futures
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 manifest=json.loads((W/'drawing-manifest-v7.json').read_text(encoding='utf8'))
 env=dict(os.environ,PYTHONPATH=str(W/'cad-deps'),PYTHONIOENCODING='utf-8')
 OUT=W.parent/'outputs/CAD-평면연결-v9';OUT.mkdir(exist_ok=True)

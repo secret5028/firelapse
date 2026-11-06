@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-CAD = pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+CAD = pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 sys.path.insert(0, str(CAD))
 from cad_compare import render_original, b64
 from cad_plan import LayerMap

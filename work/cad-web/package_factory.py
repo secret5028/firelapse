@@ -7,7 +7,7 @@ assets={};hashes={}
 def enc(im):
     b=io.BytesIO();im.convert('RGB').save(b,'JPEG',quality=88);return 'data:image/jpeg;base64,'+base64.b64encode(b.getvalue()).decode()
 for n in [1,2,3]:
-    path=Path('C:/Users/예방/Downloads')/f'{n}층 평면도.jpg'
+    path=Path('C:/Users/<user>/Downloads')/f'{n}층 평면도.jpg'
     hashes[str(n)]=hashlib.sha256(path.read_bytes()).hexdigest()
     im=Image.open(path);w,h=im.size
     y=451 if n==3 else 447;yb=855 if n==3 else 852

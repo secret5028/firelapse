@@ -1,5 +1,5 @@
 import pathlib,sys,json,shutil,zipfile,difflib,hashlib,re,subprocess,html
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
 from cad_review_ui import enhance_review
 from cad_source_audit import write_layer_viewer
 from cadio import load,units_to_m
@@ -109,7 +109,7 @@ with zipfile.ZipFile(OUT/'CAD-전층레이어-v7.zip','w',zipfile.ZIP_DEFLATED) 
  for f in code.iterdir():z.write(f,'code/'+f.name)
  for name in ('설명과실행.txt','changes.diff','검증결과.json','office-1F-review-v7.json','office-PH-review-v7.json','도면검토목록.json'):z.write(OUT/name,name)
 # Syntax-check actual generated JavaScript, excluding import-map JSON.
-node=r'C:\Users\예방\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe';checked=0
+node=r'C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe';checked=0
 for path in OUT.rglob('*.html'):
  if 'code' in path.parts:continue
  for attrs,body in re.findall(r'<script([^>]*)>([\s\S]*?)</script>',path.read_text(encoding='utf8')):

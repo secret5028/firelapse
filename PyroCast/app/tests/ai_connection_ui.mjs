@@ -1,5 +1,5 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
-const {chromium}=createRequire(import.meta.url)('C:/Users/예방/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=createRequire(import.meta.url)('C:/Users/<user>/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'}),out='reviews/ai-connection-20261105';fs.mkdirSync(out,{recursive:true});
 try{
  const page=await browser.newPage({viewport:{width:560,height:720}}),errors=[];page.on('pageerror',e=>errors.push(e.message));

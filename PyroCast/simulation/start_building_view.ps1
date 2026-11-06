@@ -1,5 +1,5 @@
 param(
-    [string]$Project = 'C:\Users\예방\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d',
+    [string]$Project = 'C:\Users\<user>\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d',
     [int]$Port = 8780,
     [string]$Building = ''
 )

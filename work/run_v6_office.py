@@ -1,5 +1,5 @@
 import pathlib,sys,json,os,subprocess
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 old=json.loads((W.parent/'outputs/CAD-벽공리-v5/office-1F/plan.json').read_text(encoding='utf8'))
 raw=json.loads((W/'raw8-hall.json').read_text(encoding='utf8'))
 profile=dict(source_sha256=old['provenance']['source_sha256'],source_categories=[dict(handle=p['source']['handle'],expected_layer='TEX',category='wall',note='D18 아래 문틀부터 기존 하부 경계까지 원본 벽선 복구. 단차·무대 전체를 새 실로 폐합하지 않음') for p in raw if p['index']==4444],exclude_candidates=[])

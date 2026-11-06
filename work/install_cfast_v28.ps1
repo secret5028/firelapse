@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $taskRoot = Split-Path -Parent $PSScriptRoot
 $taskOut = Join-Path $taskRoot 'outputs/CAD-연소표현-v28'
-$taskApp = 'C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱'
+$taskApp = 'C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱'
 $taskJob = Join-Path $taskApp 'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 $taskTemplate = Join-Path $taskApp '_internal/cad_engine/integrated_viewer.html'
 $taskReport = Get-Content -LiteralPath (Join-Path $taskOut '검증결과.json') -Raw | ConvertFrom-Json

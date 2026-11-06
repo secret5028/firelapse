@@ -1,6 +1,6 @@
 import pathlib,sys,json,collections
 W=pathlib.Path(__file__).resolve().parent
-sys.path[:0]=[str(W/'cad-deps'),r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D']
+sys.path[:0]=[str(W/'cad-deps'),r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D']
 from cadio import load
 import cv2,numpy as np
 case=next(c for c in json.loads((W/'cad-runs/regression.json').read_text(encoding='utf8')) if c['label']=='office' and c['floor']=='1F')

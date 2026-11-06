@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil,json,datetime,hashlib
 W=Path(__file__).resolve().parent;O=W.parent/'outputs/CAD-웹앱연결-v11'
 source=(O/'배포본/소방 크로키 업-로컬웹앱').resolve()
-target=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱').resolve()
+target=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱').resolve()
 assert source.is_relative_to(O.resolve()) and target.name=='소방 크로키 업-로컬웹앱'
 assert (target/'소방 크로키 업.exe').is_file() and (source/'소방 크로키 업.exe').is_file()
 report=json.loads((W/'cad-upload-integration.json').read_text('utf8'));assert report['status']=='passed' and report.get('executable')

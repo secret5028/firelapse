@@ -1,5 +1,5 @@
 import json,pathlib,sys,re,html,shutil,subprocess
-W=pathlib.Path(__file__).resolve().parent;C=pathlib.Path('C:/Users/예방/Documents/Codex/2026-09-07/2/CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(C)]
+W=pathlib.Path(__file__).resolve().parent;C=pathlib.Path('C:/Users/<user>/Documents/Codex/2026-09-07/2/CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(C)]
 from cad_evidence import geometry
 from cad_model_transport import road_faces
 from cad_stage1_report import STYLE
@@ -33,7 +33,7 @@ for f in b['floors']:
  source=f['name']+'-source.svg';shutil.copy2(V/('office-'+f['name'])/'source.svg',O/source)
  cards.append(f'<section class="card"><h2>{f["name"]}</h2><p>빨강 점선: 종전 기호 범위 / 청록: 추출된 독립 실 경계 / 주황: 벽면 기준 차량 램프</p><div style="overflow:auto;max-height:80vh"><svg viewBox="0 0 {r["W"]} {r["H"]}" style="width:180%;min-width:900px"><image href="{source}" width="{r["W"]}" height="{r["H"]}"/>{"".join(overlay)}</svg></div></section>')
 (O/'위치대조.html').write_text(f'<!doctype html><html lang="ko"><meta charset="utf-8"><title>계단·램프 원본 대조</title><style>{STYLE}</style><header><h1>계단·램프 위치 대조</h1><a href="index.html">3D 모델</a><p>계단 기호 박스와 계단실 경계는 서로 다릅니다. 건물 좌표 변환 오차는 0.001m 미만입니다. 램프는 양쪽 벽면까지 각각 약 0.30m 넓혔으며 확인된 두 경계의 공통 곡선 구간을 표시합니다. 계단의 단수·참과 램프 경사는 시각화용 근사입니다.</p></header><main>{"".join(cards)}</main></html>',encoding='utf8')
-node=pathlib.Path('C:/Users/예방/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe')
+node=pathlib.Path('C:/Users/<user>/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe')
 s=(O/'index.html').read_text(encoding='utf8');scripts=re.findall(r'<script([^>]*)>(.*?)</script>',s,re.S)
 for i,(attr,body) in enumerate(scripts):
  if 'importmap' in attr:json.loads(body);continue

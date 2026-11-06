@@ -12,7 +12,7 @@ for name in ['cad_cfast_multifloor.py','cad_cfast_realistic.js','cad_cfast_multi
  if not p.exists():shutil.copy2(ROOT/'work'/name,p)
 old=json.loads((ROOT/'work/cfast_spread_scenario_v26.json').read_text('utf8'))
 baseline=json.loads((ROOT/'outputs/CAD-공식플룸-v29/cfast-demo.json').read_text('utf8'))
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 b=json.loads((app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output/building.json').read_text('utf8'))
 floor=next(f for f in b['floors'] if f['name']=='3F')
 manifest=json.loads((ROOT/'outputs/CAD-속도검증-v27/final/connection-manifest.json').read_text('utf8'))

@@ -1,6 +1,6 @@
 import pathlib,sys,json,math
 W=pathlib.Path(__file__).resolve().parent
-sys.path[:0]=[str(W/'cad-deps'),r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D']
+sys.path[:0]=[str(W/'cad-deps'),r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D']
 from cad_connectivity import aperture_frame
 from cad_evidence import geometry,opening_parts,polygon_parts
 from shapely.geometry import LineString,Point

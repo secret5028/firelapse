@@ -9,7 +9,7 @@
 
 ## 로컬 환경과 실행
 
-운영 루트: `C:\Users\예방\Documents\ChatGPT\PyroCast`
+운영 루트: `C:\Users\<user>\Documents\ChatGPT\PyroCast`
 
 Git 체크아웃: 운영 루트 아래 `simulation\results\github-publish-20261026\PyroCast`.
 두 폴더는 자동 동기화되지 않는다. 로컬 운영 파일에서 수정했다면 검증 후 변경 파일만 Git 체크아웃에 반영한다. 과거 결과·사용자 설정을 통째로 덮어쓰지 않는다.
@@ -17,8 +17,8 @@ Git 체크아웃: 운영 루트 아래 `simulation\results\github-publish-202610
 이 PC의 실행 예:
 
 ```powershell
-Set-Location 'C:\Users\예방\Documents\ChatGPT\PyroCast'
-& 'C:\Users\예방\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -B -X utf8 tools/serve_model_library.py --port 8841
+Set-Location 'C:\Users\<user>\Documents\ChatGPT\PyroCast'
+& 'C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe' -B -X utf8 tools/serve_model_library.py --port 8841
 ```
 
 새 PC에서는 Python 환경과 `requirements-viewer.txt`를 준비하고 프로젝트 작업 디렉터리에서 `python tools/serve_model_library.py --port 8841`을 사용한다. 이식 전체 동작은 별도 검증 필요. 기존 프로세스와 포트가 있는 상태에서 서버를 중복 실행하지 않는다.

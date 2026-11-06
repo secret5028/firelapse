@@ -1,7 +1,7 @@
 from pathlib import Path
 import os,sys,json,shutil,hashlib,datetime,urllib.request,time,subprocess
 root=Path(__file__).resolve().parent.parent;out=root/'outputs/CAD-인터페이스복원-v12';src=out/'배포본/소방 크로키 업-로컬웹앱'
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');job='d018b4bb75da4475b1fd75447603c1a0'
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');job='d018b4bb75da4475b1fd75447603c1a0'
 assert json.loads((out/'검증결과.json').read_text('utf8'))['status']=='passed'
 def api(port,path,value=None):
  data=json.dumps(value).encode() if value is not None else None

@@ -19,7 +19,7 @@ html='<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport"
 from hydraulic_embed import embed_hydraulics
 html=embed_hydraulics(html,root,'doosan-cad-8-v1','두산위브 강화2지구')
 p=Path('outputs/소방공간뷰-두산위브-CAD검토.html');p.write_text(html,encoding='utf-8')
-files=sorted(Path('C:/Users/예방/Downloads').glob('*.dwg'))
+files=sorted(Path('C:/Users/<user>/Downloads').glob('*.dwg'))
 with zipfile.ZipFile('outputs/두산위브-DXF변환결과.zip','w',zipfile.ZIP_DEFLATED) as z:
  for i,f in enumerate(files,1):z.write(root/f'cad-input/{i}.dxf',f.with_suffix('.dxf').name)
  z.writestr('변환안내.txt','DWG 8개를 LibreDWG 0.14로 로컬 DXF 변환했습니다. 원본 DWG는 변경하지 않았습니다. 외부참조는 발견되지 않았습니다. 3D 검토 모델은 별도 HTML입니다.')

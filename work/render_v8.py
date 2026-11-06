@@ -1,5 +1,5 @@
 import pathlib,sys,json,shutil,hashlib,re,subprocess,zipfile
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D');sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
 from cad_pipeline import render_fused
 from cad_swing import swing_points
 import numpy as np,cv2
@@ -57,7 +57,7 @@ note='''v8 문 호 표시 수정
 '''
 (OUT/'문호표현-수정.txt').write_text(note,encoding='utf8')
 (OUT/'문호표현-수정.json').write_text(json.dumps(dict(**provenance,unit_tests=70,floors=rows),ensure_ascii=False,indent=2),encoding='utf8')
-node=r'C:\Users\예방\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe';checked=0
+node=r'C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe';checked=0
 for f in OUT.rglob('*.html'):
  if 'code' in f.parts:continue
  for attrs,body in re.findall(r'<script([^>]*)>([\s\S]*?)</script>',f.read_text(encoding='utf8')):

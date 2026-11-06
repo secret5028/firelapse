@@ -2,7 +2,7 @@ from pathlib import Path
 import hashlib,json
 root=Path(__file__).resolve().parent.parent
 out=root/'outputs/CAD-NIST가연물-v23'
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 job=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(job/'model.html')==sha(out/'model.html')==sha(app/'_internal/cad_engine/integrated_viewer.html')

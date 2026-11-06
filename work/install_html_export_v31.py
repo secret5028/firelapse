@@ -2,7 +2,7 @@ from pathlib import Path
 import shutil,json,hashlib
 ROOT=Path(__file__).resolve().parent.parent
 OUT=ROOT/'outputs/CAD-HTML내보내기-v31'
-APP=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+APP=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 JOB=APP/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert (OUT/'검증결과.json').exists()

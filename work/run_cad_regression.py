@@ -1,7 +1,7 @@
 import sys, os, json, pathlib, subprocess, time, hashlib
 
 WORK = pathlib.Path(__file__).resolve().parent
-CAD = pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+CAD = pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 env = dict(os.environ, PYTHONPATH=str(WORK/'cad-deps'), PYTHONIOENCODING='utf-8')
 specs = [('hotel', '28-200-2018-00000088', '4F'),
          ('hotel', '28-200-2018-00000088', '1F'),

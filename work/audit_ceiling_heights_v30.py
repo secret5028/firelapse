@@ -5,7 +5,7 @@ sys.path.insert(0,str(ROOT/'work/cad-deps'))
 import ezdxf
 from shapely.geometry import Polygon,Point
 from shapely.ops import unary_union
-base=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0')
+base=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0')
 b=json.loads((base/'cad-output/building.json').read_text('utf8'))
 records={};evidence=[]
 def texts(entities):

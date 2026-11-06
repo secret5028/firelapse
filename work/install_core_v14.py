@@ -1,6 +1,6 @@
 from pathlib import Path
 import json,datetime,shutil,hashlib
-root=Path.cwd();out=root/'outputs/CAD-수직동선강조-v14';app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');src=root/'work/cad-web/cad_engine/integrated_viewer.html';job='d018b4bb75da4475b1fd75447603c1a0'
+root=Path.cwd();out=root/'outputs/CAD-수직동선강조-v14';app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');src=root/'work/cad-web/cad_engine/integrated_viewer.html';job='d018b4bb75da4475b1fd75447603c1a0'
 backup=app/'개발/backups'/('cad-core-v14-'+datetime.datetime.now().strftime('%Y%m%d-%H%M%S'));backup.mkdir(parents=True)
 paths=['_internal/cad_engine/integrated_viewer.html','소스/cad_engine/integrated_viewer.html','개발/work/cad_engine/integrated_viewer.html','data/'+job+'/cad-output/model.html']
 for rel in paths:

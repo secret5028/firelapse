@@ -1,12 +1,12 @@
 from pathlib import Path
 import shutil,hashlib,json,urllib.request,time
 root=Path.cwd().resolve();build=root/'work/hydraulic-dist/소방 크로키 업-로컬웹앱'
-targets=[root/'outputs/소방 크로키 업-로컬웹앱',Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')]
+targets=[root/'outputs/소방 크로키 업-로컬웹앱',Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')]
 def hashes(folder):
  return {str(p.relative_to(folder)):hashlib.sha256(p.read_bytes()).hexdigest() for p in folder.rglob('*') if p.is_file()} if folder.exists() else {}
 for target in targets:
  target=target.resolve()
- if target not in [root/'outputs/소방 크로키 업-로컬웹앱',Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')]:raise RuntimeError('Unexpected destination')
+ if target not in [root/'outputs/소방 크로키 업-로컬웹앱',Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')]:raise RuntimeError('Unexpected destination')
  before=hashes(target/'data');target.mkdir(exist_ok=True)
  shutil.copy2(build/'소방 크로키 업.exe',target/'소방 크로키 업.exe')
  shutil.copytree(build/'_internal',target/'_internal',dirs_exist_ok=True)
@@ -22,5 +22,5 @@ for target in targets:
  assert (target/'_internal/hydraulic-ui.js').read_bytes()==(root/'work/hydraulic-ui.js').read_bytes()
  print('Updated:',target,'· history files preserved:',len(before))
 for name in ['소방공간뷰-두산위브-CAD검토.html','소방공간뷰-강화산업단지-통합.html']:
- dest=Path('C:/Users/예방/Desktop')/name
+ dest=Path('C:/Users/<user>/Desktop')/name
  if dest.exists():shutil.copy2(root/'outputs'/name,dest)

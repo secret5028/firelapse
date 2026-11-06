@@ -4,7 +4,7 @@ root=Path(__file__).resolve().parent.parent
 sys.path[:0]=[str(root/'work/cad-deps'),str(root/'work/cad-web/cad_engine')]
 from cad_model_transport import prepare_model,geometry
 from shapely.ops import unary_union
-job=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
+job=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
 out=root/'outputs/CAD-테라스-v13';out.mkdir(exist_ok=True)
 b=json.loads((job/'building.json').read_text('utf8'));plans={f['name']:json.loads((job/f['name']/'plan.json').read_text('utf8')) for f in b['floors']}
 m,a=prepare_model(b,plans);f=next(f for f in m['floors'] if f['name']=='3F');old=next(f for f in b['floors'] if f['name']=='3F');t=f['outdoor_spaces'][0];mask=geometry(t['boundary_mask']);sky=geometry(t['open_sky_polys'])

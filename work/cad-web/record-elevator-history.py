@@ -1,6 +1,6 @@
 from pathlib import Path
 import sqlite3,json,datetime
-root=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data')
+root=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data')
 job='80fe8228ff8c4082bc8bf9f83771895b'
 now=datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
 summary='2026-09-09 수정 · 1·2층 승강기 슬라이딩문·금색 문틀·벽 개구부 반영 / 두 손가락 이동 / 송수구 선택 시 흐름 전환 / 배관 표시 최적화'

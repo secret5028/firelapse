@@ -105,6 +105,6 @@
  deck.py / exposure.py / spread.py : 초기/확정 순서로 native 화원 번호 고정. 모델 연료 목록 순서로 추가 화원이 바뀌는 문제 수정.
 
 기존 소스 위치
- C:\Users\예방\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d
+ C:\Users\<user>\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d
  현재 연결 모델은 work/cad-ui-test-data/d018b4bb75da4475b1fd75447603c1a0/cad-output/building.json 을 해시 확인해서 읽는다.
  별도의 운영 데이터나 CAD 업로드가 바뀌면 어댑터의 명시적 모델 경로를 바꾸고 다시 계산해야 한다.

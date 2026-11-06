@@ -8,7 +8,7 @@ import time
 import urllib.request
 import urllib.error
 ROOT=Path(__file__).resolve().parents[2];sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'simulation')]
-PROJECT='C:/Users/예방/Documents/Codex/2026-10-14/files-pasted-by-the-user-cad3d'
+PROJECT='C:/Users/<user>/Documents/Codex/2026-10-14/files-pasted-by-the-user-cad3d'
 
 def child(folder):
     import lite_mc_service as mc

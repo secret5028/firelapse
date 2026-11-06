@@ -1,7 +1,7 @@
 from pathlib import Path
 import json,hashlib,shutil
 ROOT=Path(__file__).resolve().parent.parent;OUT=ROOT/'outputs/CAD-가연물묶음-v30'
-APP=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+APP=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 JOB=APP/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 data=json.loads((OUT/'ceiling/cfast-demo.json').read_text('utf8'))

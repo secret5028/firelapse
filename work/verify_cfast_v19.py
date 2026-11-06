@@ -32,7 +32,7 @@ for i,q in enumerate(j['total_hrr']):assert abs(q-sum(f['hrr'][i] for f in j['fi
 assert max(j['total_hrr'])>max(ref['total_hrr'])
 r=next(r for r in j['rooms'] if r['key']==j['fire_key']);r0=next(r for r in ref['rooms'] if r['key']==j['fire_key'])
 assert max(v[1] for v in r['series'])>max(v[1] for v in r0['series'])
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱');dest=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱');dest=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(dest/'building.json')==j['building_sha256']
 prefix=lambda p:p.read_text('utf8').split('// Coupled CFAST results')[0]

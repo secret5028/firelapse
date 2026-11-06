@@ -1,6 +1,6 @@
 from pathlib import Path
 import shutil,sqlite3,datetime
-root=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+root=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 code=Path('work/water-supply-defaults.js').read_text('utf8')
 for rel in ['_internal/folder_review.html','소스/folder_review.html']:
  p=root/rel

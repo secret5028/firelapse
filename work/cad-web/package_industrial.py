@@ -22,7 +22,7 @@ assets={};hashes={}
 def enc(im):
     b=io.BytesIO();im.convert('RGB').save(b,'JPEG',quality=80);return 'data:image/jpeg;base64,'+base64.b64encode(b.getvalue()).decode()
 for k in DATA['sources']:
-    p=Path('C:/Users/예방/Downloads')/('20160524151100_'+k.zfill(3)+'.jpg');hashes[k]=hashlib.sha256(p.read_bytes()).hexdigest();im=Image.open(p)
+    p=Path('C:/Users/<user>/Downloads')/('20160524151100_'+k.zfill(3)+'.jpg');hashes[k]=hashlib.sha256(p.read_bytes()).hexdigest();im=Image.open(p)
     if k in ['17','18','19']:
         coords={'17':(297,500,1407,859),'18':(305,500,1418,859),'19':(307,500,1418,859)}[k];w,h=im.size;crop=im.crop(tuple(round(v*(w/1888 if i%2==0 else h/1334)) for i,v in enumerate(coords)));crop.thumbnail((2800,1500));assets['crop'+str(int(k)-16)]=enc(crop)
     im.thumbnail((2200,2200));assets[k]=enc(im)

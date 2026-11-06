@@ -31,7 +31,7 @@ for floor in data['floors']:
   hits=[{'key':r['key'],'name':r['name'],'upper_od':r['series'][minute*12][4],'lower_od':r['series'][minute*12][5]} for r in rr if max(r['series'][minute*12][4:6])>=.001]
   summary['floors'][floor]['at_minutes'][minute]={'count':len(hits),'rooms':hits}
 (out/'spread-summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2),'utf8')
-app=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱')
+app=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱')
 dest=app/'data/d018b4bb75da4475b1fd75447603c1a0/cad-output'
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(dest/'building.json')==data['building_sha256']

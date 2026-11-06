@@ -1,5 +1,5 @@
 import pathlib,sys,json,shutil,hashlib,base64,zipfile,re,subprocess,difflib
-W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+W=pathlib.Path(__file__).resolve().parent;CAD=pathlib.Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 sys.path[:0]=[str(W/'cad-deps'),str(CAD)]
 from cad_review_ui import enhance_review
 RUN=W/'cad-v6-runs';OUT=W.parent/'outputs/CAD-문판정-v6';OUT.mkdir(exist_ok=True)
@@ -31,7 +31,7 @@ for row in report:
  assert len(items)==len(row['excluded'])
  scripts=re.findall(r'<script[^>]*>([\s\S]*?)</script>',(dst/'index.html').read_text(encoding='utf8'))
  check=W/f'v6-{name}-ui-check.js';check.write_text('\n'.join(scripts),encoding='utf8')
- subprocess.run([r'C:\Users\예방\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe','--check',str(check)],check=True,capture_output=True)
+ subprocess.run([r'C:\Users\<user>\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe','--check',str(check)],check=True,capture_output=True)
  cards.append(f'<a class="card" href="{name}/index.html"><h2>{names[name]}</h2><img src="{name}/fused.png" alt="{names[name]} 추출 결과"><p>확인 대상 {len(items)}개 · 공간 {len(p["rooms"])}개</p></a>')
 code=OUT/'code';code.mkdir(exist_ok=True)
 files={f.name for f in (W.parent/'outputs/CAD-벽공리-v5/code').iterdir() if f.is_file()}|{'cad_door_rules.py','cad_review_rules.py','test_cad_door_rules.py'}

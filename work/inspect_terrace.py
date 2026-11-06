@@ -3,7 +3,7 @@ import json,sys
 sys.path.insert(0,str(Path('work/cad-deps').resolve()))
 from PIL import Image,ImageDraw
 from shapely.geometry import Polygon
-j=Path('C:/Users/예방/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
+j=Path('C:/Users/<user>/Desktop/소방 크로키 업-로컬웹앱/data/d018b4bb75da4475b1fd75447603c1a0/cad-output')
 b=json.loads((j/'building.json').read_text('utf8'));f=next(f for f in b['floors'] if f['name']=='3F');p=json.loads((j/'3F/plan.json').read_text('utf8'))
 print('floor',f.keys());print('bands',[(x['kind'],x['z0'],x['z1'],len(x['polys'])) for x in f['bands']]);print('provenance',p['provenance'])
 print('rooms',[(r['id'],r.get('name'),Polygon(r['polys'][0]['o']).centroid.coords[:]) for r in f['rooms']]);print('plan source',p['src'])

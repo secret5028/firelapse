@@ -14,7 +14,7 @@ sys.dont_write_bytecode=True
 sys.path.insert(0,str(ROOT/'simulation/deps'))
 sys.path.insert(0,str(ROOT/'simulation'))
 OUT=ROOT/'simulation/results/lite_l1_20261025'
-SOURCE=Path(r'C:\Users\예방\Documents\Codex\2026-09-07\2\CAD3D')
+SOURCE=Path(r'C:\Users\<user>\Documents\Codex\2026-09-07\2\CAD3D')
 
 
 def save(path,value):

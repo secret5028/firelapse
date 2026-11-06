@@ -13,7 +13,7 @@ def fill(service,args):
     calls=[]
     def get(name,**kw):
         r=service.call(name,{**args,**kw});calls.append(r);return r['data']
-    summary=get('get_case_summary');origin=summary['origin']
+    summary=get('get_case_summary');origin=summary.get('origin_room') or summary['origin']
     route=get('get_route',origin=service.case(args).get('route_target_room_id') or origin)
     route_ids=list(dict.fromkeys(r['id'] for seg in route['hose_segments'] for r in seg['rooms'] if r['id']))
     wins={}
@@ -22,6 +22,7 @@ def fill(service,args):
     rules=get('get_tactic_rules')
     building=get('get_building')
     names={r['id']:display_label(r['id'],r.get('name')) for r in building['rooms']}
+    names.update({r['room']:r['label'] for r in (route.get('risk') or {}).get('rows',[]) if r.get('room')})
     def label(rid):return names.get(rid,display_label(rid))
     timelines={}
     for rid in dict.fromkeys([*route_ids,origin]):

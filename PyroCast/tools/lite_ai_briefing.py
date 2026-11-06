@@ -40,7 +40,8 @@ def facts_for(call,i):
 
 def briefing(service,a):
     from d5_briefing import fill
-    value=fill(service,a)
+    from d5_polish import polish
+    value=polish(fill(service,a))
     token=uuid.uuid4().hex;value['briefing_id']=token
     with LOCK:
         for k in list(REPORTS):

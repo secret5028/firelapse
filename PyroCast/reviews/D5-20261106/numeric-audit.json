@@ -1,0 +1,96 @@
+{
+  "hotel": {
+    "numeric_tokens": 427,
+    "numeric_mismatches": [],
+    "rule_mismatches": [],
+    "forbidden_units": [],
+    "hose_count_matches": true,
+    "call_count": 38,
+    "rule_codes": [
+      "B-1",
+      "B-2",
+      "C-1",
+      "E-2",
+      "E-3",
+      "G-0",
+      "G-2",
+      "O-1",
+      "O-2",
+      "V-1",
+      "V-2"
+    ],
+    "case": "modelmc-mc-1793838045078030100-57e5a0b2-S08",
+    "time_s": 2770,
+    "polishing": "offline deterministic",
+    "route_length_m": 72.15411751398918,
+    "hose_count": 5,
+    "stairs": 4
+  },
+  "intech": {
+    "numeric_tokens": 271,
+    "numeric_mismatches": [],
+    "rule_mismatches": [],
+    "forbidden_units": [],
+    "hose_count_matches": true,
+    "call_count": 33,
+    "rule_codes": [
+      "B-2",
+      "C-1",
+      "E-2",
+      "E-3",
+      "G-0",
+      "G-2",
+      "O-1",
+      "O-2",
+      "V-1"
+    ],
+    "case": "modelmc-mc-1793866167503118800-d936ebef-S04",
+    "time_s": 1800,
+    "polishing": "offline deterministic",
+    "route_length_m": 56.343956634500046,
+    "hose_count": 4,
+    "stairs": 0
+  },
+  "wando": {
+    "numeric_tokens": 241,
+    "numeric_mismatches": [],
+    "rule_mismatches": [],
+    "forbidden_units": [],
+    "hose_count_matches": true,
+    "call_count": 14,
+    "rule_codes": [
+      "B-1",
+      "B-2",
+      "B-3",
+      "E-3",
+      "G-0",
+      "G-2",
+      "O-1",
+      "O-2",
+      "V-2"
+    ],
+    "case": "wando-P1",
+    "time_s": 1800,
+    "polishing": "offline deterministic",
+    "route_length_m": 34.20817799370651,
+    "hose_count": 3,
+    "stairs": 0,
+    "cut_transition": [
+      {
+        "code": "B-3",
+        "t_start": 1330,
+        "t_end": 2090
+      },
+      {
+        "code": "B-1",
+        "t_start": 540,
+        "t_end": 1320
+      },
+      {
+        "code": "B-3",
+        "t_start": 1320,
+        "t_end": 2250
+      }
+    ]
+  }
+}

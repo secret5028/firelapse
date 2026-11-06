@@ -1,5 +1,12 @@
 """Building-bound read-only assistant for the existing library viewer."""
 import hashlib
+from functools import lru_cache
+
+@lru_cache(maxsize=8)
+def saved_case(ident,case,stamp):
+    import model_operation
+    return model_operation.playback(ident,case)
+
 from lite_ai_tools import Tools,read
 
 
@@ -10,20 +17,29 @@ class ModelTools(Tools):
         import model_simulation as sim
         from model_library import model_path
         row=sim.entry(ident);path=model_path(row)
-        self.ident=ident;self._case_cache={}
+        self.ident=ident;self._case_cache={};self._paths=None;self._geometry=read(path)
         self.buildings={ident:dict(id=ident,label=row['label'],path=path,sha=hashlib.sha256(path.read_bytes()).hexdigest())}
+    def building(self,key):
+        meta=self.buildings[self.ident]
+        if key not in (meta['id'],meta['sha']):raise ValueError('등록되지 않은 건물')
+        return meta,self._geometry
     def cases(self,key):
         meta,_=self.building(key)
+        if self._paths is not None:return self._paths
         import model_operation,model_mc,fixed_calculation
         out={p.name:p/'playback.json' for p,_ in model_operation.jobs(self.ident)}
         for row in model_mc.cases(self.ident):out[row['id']]=model_mc.case_folder(self.ident,row['id'])/'playback.json'
         for folder in fixed_calculation.paths(meta['sha']):
             if read(folder/'status.json',{}).get('state')=='complete':out[folder.name]=folder/'playback.json'
+        self._paths=out
         return out
     def case(self,a):
         self.building(a['building'])
         import model_operation
-        return model_operation.playback(self.ident,a['case'])
+        path=self.cases(a['building']).get(a['case'])
+        if path is None:raise ValueError('현재 건물에 없는 사례')
+        stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in (path,path.with_name('sample.json'),path.with_name('input.json')))
+        return saved_case(self.ident,a['case'],stamps)
     def get_building(self,a):
         # Parent enriches current geometry with the selected case's saved input.
         result=super().get_building(a)

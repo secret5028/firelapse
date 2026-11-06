@@ -157,7 +157,6 @@ def screening(ident, floor=None):
 
 def handler(base, ident):
     from model_ai_tools import ModelTools
-    assistant_tools=ModelTools(ident)
     class OperationHandler(base):
         def do_GET(self):
             path=urlsplit(self.path).path; query=parse_qs(urlsplit(self.path).query)
@@ -265,7 +264,7 @@ def handler(base, ident):
                 except (ValueError,TypeError,KeyError,OSError) as exc:return self.json({'error':str(exc)},400)
             if path.startswith('/cfbt/lite/ai/'):
                 from lite_ai_http import handle
-                return handle(self,path,assistant_tools)
+                return handle(self,path,ModelTools(ident))
             if path=='/models/simulation/run':
                 if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
                 try:

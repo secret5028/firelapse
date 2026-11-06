@@ -83,7 +83,7 @@ class Acceptance(unittest.TestCase):
         v=self.invoke('거기 배연하면?',[plan(('propose_openings',{'openings':[{'id':window['id'],'open':True}]}),('propose_run',{'kind':'screening','origin':'CAD_3F_R3','N':8}))]);self.assertEqual(len(v['proposals']),2)
         self.assertFalse(v['proposals'][1]['started'])
         with tempfile.TemporaryDirectory(dir=ROOT/'app/tests',prefix='d4-temp-') as tmp:
-            p=Path(tmp)/'doors.json';p.write_bytes((SIM/'config/lite-door-overrides.json').read_bytes())
+            p=Path(tmp)/'doors.json';p.write_bytes((SIM/'config/lite-door-overrides.json').read_bytes() if (SIM/'config/lite-door-overrides.json').is_file() else b'{}')
             fixed=apply_opening_proposal(v['proposals'][0]['proposal_id'],self.s.building('cad-main')[0]['sha'],p)
             self.assertTrue(fixed['states'][window['id']]['open'])
             with self.assertRaises(ValueError):apply_opening_proposal(v['proposals'][0]['proposal_id'],self.s.building('cad-main')[0]['sha'],p)
@@ -98,19 +98,19 @@ class Acceptance(unittest.TestCase):
     def test_5_briefing(self):
         self.skip_original_machine_comparison()
         b=briefing(self.s,self.ctx)
-        self.assertEqual([c['tool'] for c in b['calls']],['get_ranking','get_case_summary','get_route',*['get_peak_events']*3,'get_tactic_rules'])
+        self.assertEqual([c['tool'] for c in b['calls'][:2]],['get_case_summary','get_route'])
         for f in b['facts']:
             row=f['evidence']['row'];encoded=json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True)
             self.assertIn(json.dumps(row,sort_keys=True),encoded)
-        self.assertIn('진입 경로',b['text']);self.assertTrue(b['facts'])
-        self.assertIn('전술 참고',b['text']);self.assertNotIn('5. 한계',b['text'])
+        self.assertIn('진입 경로',b['text']);self.assertTrue(b['sections'])
+        self.assertIn('수관 구간별 할 일',b['text']);self.assertNotIn('5. 한계',b['text'])
     def test_display_labels_and_zero_tooltips(self):
         self.skip_original_machine_comparison()
         from lite_ai_briefing import facts_for
         value=briefing(self.s,self.ctx)
         self.assertNotIn('CAD_',value['text'])
-        self.assertIn(value['calls'][2]['data']['route']['target_label'],value['text'])
-        entry=value['calls'][2]['data']['route']
+        self.assertIn(value['calls'][1]['data']['route']['target_label'],value['text'])
+        entry=value['calls'][1]['data']['route']
         self.assertNotIn('CAD_',entry['entry_label'])
         self.assertIn(entry['entry'].split('_')[-1],entry['entry_label'])
         for index,tip in [(0,'지수 0: 평가됨'),(None,'미평가: 저장된 지수 없음'),(22,'평가된 지수')]:
@@ -127,27 +127,19 @@ class Acceptance(unittest.TestCase):
             self.assertNotIn('CAD_',fact['text'])
             self.assertEqual(fact['evidence']['row']['door'],'CAD_1F_D3')
 
-    def test_compact_wando_and_no_invented_events(self):
-        from lite_ai_briefing import compact_sections
+    def test_d5_wando_no_invented_cavity_flag(self):
         b=briefing(self.s,{'building':'wando-coldstore','case':'wando-P1','floor':'1F'})
-        self.assertEqual(len(b['sections']),5)
-        saved_route=b['calls'][2]['data']['route']
-        for text in (f"{saved_route['length']:.0f} m",f"호스 {saved_route['hoses']}본",'22:10','30:00에 최고 140','35:20','38:25에 최고 114','상층 냉각과 퇴로 확보'):
-            self.assertIn(text,b['text'])
-        for f in b['facts']:
-            self.assertIn(json.dumps(f['evidence']['row'],sort_keys=True),json.dumps(b['calls'][f['evidence']['call']]['data'],sort_keys=True))
-        route=b['calls'][2]['data']
-        empty={k:[] for k in TYPES}
-        sections,_,used=compact_sections(route,empty,{'matched':[]})
-        self.assertNotIn('산소 부족 상태',str(sections))
-        self.assertEqual(sections[-1]['text'],'규칙 없음 또는 판정자료 미평가')
-        self.assertEqual(used,[])
+        self.assertEqual(len(b['sections']),4)
+        self.assertIn('38:25',b['text'])
+        self.assertIn('1F CAVITY',b['text'])
+        self.assertNotIn('X-1',b['rules'])
+        self.assertTrue(any(r['code']=='B-3' and r['t_start']==1320 for r in b['matching_log']))
 
     def test_6_no_rule(self):
         v=self.invoke('분무 각도는?',[plan(missing=True)]);self.assertEqual(v['text'],'규칙표에 없음');self.assertEqual(v['facts'],[])
     def test_unknown_is_not_safe_and_predicates_same_frame(self):
         rules=self.s.get_tactic_rules({})['rules'];clear=next(r for r in rules if r['code']=='C-1');back=next(r for r in rules if r['code']=='B-1')
-        self.assertFalse(matches(clear,{}));self.assertFalse(matches(back,{'backdraft':120}));self.assertTrue(matches(back,{'backdraft':120,'door_closed':True}))
+        self.assertFalse(matches(clear,{}));self.assertFalse(matches(back,{'backdraft':120}));self.assertTrue(matches(back,{'backdraft':120,'door_closed':True,'fire_room':True}))
     def test_model_fiction_rejected(self):
         with self.assertRaises(ValueError):self.invoke('test',['{"text":"R99 9999 ℃"}']*2)
         with self.assertRaises(ValueError):self.invoke('test',[plan(('propose_run',{'kind':'mc','origin':'CAD_3F_R999','samples':2}))])

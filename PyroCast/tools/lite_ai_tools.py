@@ -170,7 +170,7 @@ class Tools:
         events={k:self.get_peak_events({**a,'phenomenon':k,'threshold':100}) for k in TYPES}
         path=self.cases(a['building'])[a['case']];sample=read(path.with_name('sample.json'),{})
         origin=p.get('fire_key');cell=next((c for c in p['rooms'] if c['key']==origin),{})
-        return {'origin':origin,'origin_label':display_label(origin,cell.get('display_name')),'engine':p.get('engine_kind'),'end_s':p['time_s'][-1],'complete':p.get('complete'),'opening_state':p.get('opening_states') or sample.get('openings'),'burning_rooms':sorted(burning),'burning_basis':'저장된 실제 화원 HRR > 0 표본이 있는 원래 방','events':events,
+        return {'origin':origin,'origin_room':cell.get('original_room') or origin,'origin_label':display_label(origin,cell.get('display_name')),'engine':p.get('engine_kind'),'end_s':p['time_s'][-1],'complete':p.get('complete'),'opening_state':p.get('opening_states') or sample.get('openings'),'burning_rooms':sorted(burning),'burning_basis':'저장된 실제 화원 HRR > 0 표본이 있는 원래 방','events':events,
             'first_100':{k:min((e for e in rows if e['first_s'] is not None),key=lambda e:e['first_s'],default=None) for k,rows in events.items()},
             'worst':{k:next((e for e in rows if e['peak'] is not None),None) for k,rows in events.items()},'limits':p.get('limits',[])}
     def get_route(self,a):
@@ -183,7 +183,10 @@ class Tools:
         if c:origin=c.get('original_room') or c['key']
         if a.get('vehicle') is not None and (not isinstance(a['vehicle'],list) or len(a['vehicle'])!=3 or not all(finite(x) for x in a['vehicle'])):raise ValueError('차량 좌표 오류')
         result=node({'kind':'route','building':b,'playback':p,'case':a['case'],'origin':origin,'vehicle':a.get('vehicle'),'time_s':a.get('time_s',0),'history':a.get('history',False),'settings':a.get('route_settings',{})})
-        names={c.get('original_room') or c['key']:c.get('display_name') for c in p['rooms']}
+        names={'CAD_'+f['name']+'_'+r['id']:' / '.join(r.get('names',[])) for f in b['floors'] for r in f['rooms']}
+        for c in p['rooms']:
+            label=c.get('display_name') or ' / '.join(c.get('cad_names',[]))
+            if label:names[c.get('original_room') or c['key']]=label
         route=result['route'];route['entry_label']=display_label(route.get('entry'));route['target_label']=display_label(route.get('target'),names.get(route.get('target')))
         for row in (result.get('risk') or {}).get('rows',[]):row['label']=display_label(row.get('room'),names.get(row.get('room')))
         from d5_tools import hose_segments

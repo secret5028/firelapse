@@ -1,0 +1,72 @@
+[
+  {
+    "name": "hotel",
+    "status": 200,
+    "sections": 4,
+    "calls": 38,
+    "rules": [
+      "B-1",
+      "B-2",
+      "C-1",
+      "E-2",
+      "E-3",
+      "G-0",
+      "G-2",
+      "O-1",
+      "O-2",
+      "V-1",
+      "V-2"
+    ],
+    "errors": [],
+    "httpErrors": [],
+    "briefingHTTP": 200,
+    "buttonBriefing": true,
+    "displayedSections": 4,
+    "offline_file": "hotel-D5-offline.html (local verification artifact; not committed)",
+    "exportButton": true
+  },
+  {
+    "name": "intech",
+    "status": 200,
+    "sections": 4,
+    "calls": 33,
+    "rules": [
+      "B-2",
+      "C-1",
+      "E-2",
+      "E-3",
+      "G-0",
+      "G-2",
+      "O-1",
+      "O-2",
+      "V-1"
+    ],
+    "errors": [],
+    "httpErrors": [],
+    "briefingHTTP": 200,
+    "buttonBriefing": true,
+    "displayedSections": 4
+  },
+  {
+    "name": "wando",
+    "status": 200,
+    "sections": 4,
+    "calls": 14,
+    "rules": [
+      "B-1",
+      "B-2",
+      "B-3",
+      "E-3",
+      "G-0",
+      "G-2",
+      "O-1",
+      "O-2",
+      "V-2"
+    ],
+    "errors": [],
+    "httpErrors": [],
+    "briefingHTTP": 200,
+    "buttonBriefing": true,
+    "displayedSections": 4
+  }
+]

@@ -1,19 +1,413 @@
 {
-  "revision": "D4-20261103-draft",
-  "status": "초안 · 사용자(CFBT) 검수 필요",
+  "schema": "firelapse.tactic-rules/2",
+  "status": "user-approved-20261106",
   "notice": "참고이며 현장 지휘관 판단 우선",
-  "missing": "규칙 없음 또는 판정자료 미평가",
+  "abbreviations": {
+    "EF": "Enclosure Fires (Bengtsson)",
+    "FV": "Fire Ventilation (Svensson)",
+    "GC": "3D Gas Cooling (Grimwood)"
+  },
   "rules": [
-    {"code":"B-1","all":[["backdraft",">=",100],["door_closed","==",true]],"text":"문 개방 전 상부(천장 가까운) 개구 배연, 개방은 측면에서, 개방 직후 상층 냉각 주수","basis":"사용자 제공 초안 · CFBT 백드래프트 대응"},
-    {"code":"B-2","all":[["backdraft",">=",70],["backdraft","<",100]],"text":"개방 전 연기 색·맥동 관찰, 열화상 확인 후 진입","basis":"사용자 제공 초안 · CFBT 백드래프트 대응"},
-    {"code":"F-1","all":[["FGI",">=",100]],"text":"천장층 펜슬링(짧은 분무) 냉각, 상층 교란 최소, 자세 낮춤","basis":"사용자 제공 초안 · CFBT 가스 냉각"},
-    {"code":"F-2","all":[["FGI",">=",70],["FGI","<",100],["temperature_rising","==",true]],"text":"진입 전 상층 냉각 주수 후 재평가","basis":"사용자 제공 초안 · CFBT 가스 냉각"},
-    {"code":"R-1","all":[["FGI",">=",100],["rollover_active","==",true]],"text":"천장면 화염 예상, 냉각 주수 즉시, 퇴로 확보","basis":"사용자 제공 초안 · CFBT 가스 냉각"},
-    {"code":"O-1","any":[["FO",">=",100],["Tu",">=",600]],"text":"진입 보류, 외부 주수 전환(transitional), 급기 통제","basis":"사용자 제공 초안 · CFBT 가스 냉각"},
-    {"code":"O-2","all":[["FO",">=",70],["FO","<",100]],"text":"진입 시 즉시 주수 가능 상태, 퇴로 2개","basis":"사용자 제공 초안 · CFBT 가스 냉각"},
-    {"code":"V-1","all":[["h","<=",1.8],["on_route","==",true]],"text":"호스 라인 따라 포복, 시계 상실 대비","basis":"사용자 제공 초안 · 완도 사례"},
-    {"code":"V-2","all":[["entry_count","==",1]],"text":"진입 인원 최소, RIT 대기, 출입구 표식","basis":"사용자 제공 초안 · 완도 사례"},
-    {"code":"S-1","all":[["external_water","==",true],["inside_personnel","==",true],["Tu",">=",300]],"text":"증기 노출 경고, 주수 조정","basis":"사용자 제공 초안 · 증기 팽창"},
-    {"code":"C-1","all":[["FO","<",70],["FGI","<",70],["backdraft","<",70]],"text":"경로 유지, 10 s마다 재평가","basis":"사용자 제공 초안"}
+    {
+      "code": "G-1",
+      "when": {
+        "scope": "route_room",
+        "all": [
+          [
+            "FGI",
+            ">=",
+            70
+          ],
+          [
+            "FGI",
+            "<",
+            100
+          ],
+          [
+            "temperature_rising",
+            "==",
+            true
+          ]
+        ]
+      },
+      "condition": "경로 실 FGI 70–99, 상층 T 상승",
+      "text": "커플링에서 열화상 확인, 천장층 향해 숏 펄스 1–2회, 연기층 상승·온도 하강 확인 후 전진",
+      "ref": {
+        "doc": "GC p.4–7, EF 3.2",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "G-2",
+      "when": {
+        "scope": "route_room",
+        "all": [],
+        "any": [
+          [
+            "FGI",
+            ">=",
+            100
+          ],
+          [
+            "Tu",
+            ">=",
+            300
+          ]
+        ]
+      },
+      "condition": "경로 실 FGI ≥100 또는 상층 ≥300 ℃",
+      "text": "전진 전 롱 펄스/반복 펄스로 상층 냉각, 연기층이 올라가는지 확인 후 이동. 천장·벽 직사 금지(증기 역류)",
+      "ref": {
+        "doc": "GC p.5–8",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "R-1",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "rollover_active",
+            "==",
+            true
+          ]
+        ]
+      },
+      "condition": "롤오버 ≥100",
+      "text": "즉시 펄스 냉각, 자세 낮춤, 퇴로(수관) 확인. 가스냉각은 시간 버는 용도 — 지속되면 후퇴",
+      "ref": {
+        "doc": "GC p.9 각주",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "O-1",
+      "when": {
+        "scope": null,
+        "all": [],
+        "any": [
+          [
+            "FO",
+            ">=",
+            100
+          ],
+          [
+            "Tu",
+            ">=",
+            600
+          ]
+        ]
+      },
+      "condition": "FO ≥100 또는 상층 ≥600 ℃",
+      "text": "진입 보류, 외부 주수 전환, 급기 통제. 화점실 개구 추가 금지(격화)",
+      "ref": {
+        "doc": "EF 4.4.3, FV p.109–110",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "O-2",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "FO",
+            ">=",
+            70
+          ],
+          [
+            "FO",
+            "<",
+            100
+          ]
+        ]
+      },
+      "condition": "FO 70–99",
+      "text": "즉시 주수 가능 자세, 퇴로 2개, 전조(상층 화염·중립면 급강하·유속 증가) 보이면 즉시 후퇴. 접근로 길수록 위험",
+      "ref": {
+        "doc": "EF p.102–105",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "B-1",
+      "when": {
+        "scope": "fire_room",
+        "all": [
+          [
+            "door_closed",
+            "==",
+            true
+          ],
+          [
+            "backdraft",
+            ">=",
+            100
+          ]
+        ]
+      },
+      "condition": "화점실 문 닫힘 & BD ≥100 (시간창 표기)",
+      "text": "이 시간창에 개방 필요 시 도어 엔트리: ① 가능하면 상부 외기 배연 먼저 ② 문 측면, 문 온도·틈새 맥동·기름 응축 확인 ③ 문 빠르게 열고 → 상층 펄스 → 빠르게 닫기, 온도·압력 내릴 때까지 반복 ④ 문간에 머물지 않음 ⑤ 송풍기 금지(냉각 전)",
+      "ref": {
+        "doc": "EF 6.6.2 p.141–143",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "B-2",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "backdraft",
+            ">=",
+            70
+          ],
+          [
+            "backdraft",
+            "<",
+            100
+          ]
+        ]
+      },
+      "condition": "BD 70–99",
+      "text": "개방 전 징후(맥동·뜨거운 문·휘파람) 관찰, 열화상 확인 후 결정. 개구 작을수록 압력 상승 큼",
+      "ref": {
+        "doc": "EF p.138–139, 145",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "B-3",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "door_closed",
+            "==",
+            false
+          ],
+          [
+            "backdraft",
+            ">=",
+            100
+          ]
+        ]
+      },
+      "condition": "문 열림 & BD ≥100",
+      "text": "이미 공기 유입 — 개구부 정면 피함, 상층 냉각 후 접근, 배연 경로(상부) 확보",
+      "ref": {
+        "doc": "EF p.141, 144",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "V-1",
+      "when": {
+        "scope": "route_room",
+        "all": [
+          [
+            "h",
+            "<=",
+            1.8
+          ]
+        ]
+      },
+      "condition": "경로 실 연기층 ≤1.8 m",
+      "text": "수관 따라 포복, 시계 상실 대비, 커플링 번호 교신",
+      "ref": {
+        "doc": "완도 사례",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "V-2",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "entry_count",
+            "==",
+            1
+          ]
+        ]
+      },
+      "condition": "단일 출입구 실",
+      "text": "진입 인원 최소, RIT 대기, 출입구 표식",
+      "ref": {
+        "doc": "완도 사례",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "E-1",
+      "when": {
+        "scope": "stairwell",
+        "all": [
+          [
+            "Tu",
+            ">=",
+            100
+          ]
+        ]
+      },
+      "condition": "계단실 상층 T ≥100 ℃",
+      "text": "천창/상부 개구 자연 배연. 지상 송풍기는 소화와 조율 전 금지(상층 세대로 연기 밀어넣음). 화점 세대 문 닫아 계단실 오염 최소",
+      "ref": {
+        "doc": "FV p.113–115",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "E-2",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "closed_majority",
+            "==",
+            true
+          ]
+        ],
+        "any": [
+          [
+            "FGI",
+            ">=",
+            70
+          ],
+          [
+            "backdraft",
+            ">=",
+            70
+          ]
+        ]
+      },
+      "condition": "급기 닫힘 다수 & FGI 또는 BD ≥70 (환기지배)",
+      "text": "냉각 전 개구 금지. 피어싱 노즐 등 비개방 냉각 고려, 인접실 먼저 확보",
+      "ref": {
+        "doc": "FV p.111–112, EF p.141",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "E-3",
+      "when": {
+        "scope": "route_room",
+        "all": [
+          [
+            "after_origin_FO",
+            "==",
+            true
+          ],
+          [
+            "adjacent",
+            "==",
+            true
+          ]
+        ]
+      },
+      "condition": "화점실 FO ≥100 이후 인접 경로 실",
+      "text": "화점실 개구 추가 금지, 인접 경로 실만 배연. 급기구 ≥ 배출구 1–2배(자연), 가압 시 배출구 ≥ 급기구",
+      "ref": {
+        "doc": "FV p.108–110",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "X-1",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "cavity",
+            "==",
+            true
+          ],
+          [
+            "FGI",
+            ">=",
+            70
+          ]
+        ]
+      },
+      "condition": "벽체 공동·은폐 공간 인접 실 FGI ≥70 (완도형)",
+      "text": "연기 폭발 가능 — 스파크 없이 조기 배연 또는 가압, 절단 개구 전 냉각. 차가운 가스는 물분무 불활성화 어려움",
+      "ref": {
+        "doc": "EF 7.3 p.155–157",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "S-1",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "external_water",
+            "==",
+            true
+          ],
+          [
+            "inside_personnel",
+            "==",
+            true
+          ],
+          [
+            "Tu",
+            ">=",
+            300
+          ]
+        ]
+      },
+      "condition": "외부 주수 중 내부 인원 & 상층 ≥300 ℃",
+      "text": "증기 노출 경고, 주수 조정",
+      "ref": {
+        "doc": "증기 팽창",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "C-1",
+      "when": {
+        "scope": null,
+        "all": [
+          [
+            "FO",
+            "<",
+            70
+          ],
+          [
+            "FGI",
+            "<",
+            70
+          ],
+          [
+            "backdraft",
+            "<",
+            70
+          ]
+        ]
+      },
+      "condition": "모든 지수 <70",
+      "text": "전진, 10 s 재평가",
+      "ref": {
+        "doc": "—",
+        "page": "요약 문서 기준"
+      }
+    },
+    {
+      "code": "G-0",
+      "when": {
+        "scope": "always",
+        "all": []
+      },
+      "condition": "공통(항상)",
+      "text": "가스냉각은 천장층 향해 짧게·소량, 면 직사 금지 · 배연 전 냉각 · 송풍기는 냉각 전 금지 · 퇴로는 수관 따라",
+      "ref": {
+        "doc": "GC, EF 6.6",
+        "page": "요약 문서 기준"
+      }
+    }
   ]
 }

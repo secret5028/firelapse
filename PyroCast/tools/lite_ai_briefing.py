@@ -5,38 +5,10 @@ from result_catalog import atomic_json
 REPORTS={}
 LOCK=threading.RLock()
 
-def matches(rule,values):
-    def one(c):
-        key,op,b=c;a=values.get(key)
-        if a is None:return False
-        if op=='==':return type(a)==type(b) and a==b or finite(a) and finite(b) and a==b
-        if not finite(a) or not finite(b):return False
-        return {'>=':a>=b,'<=':a<=b,'<':a<b,'>':a>b}[op]
-    return all(one(c) for c in rule.get('all',[])) and (any(one(c) for c in rule['any']) if 'any' in rule else True)
+from d5_match import matches, match_case
 
 def stamp(t):return '미평가' if not finite(t) else f'{int(t//60):02}:{t%60:05.2f}'.rstrip('0').rstrip('.')
 def number(v):return '미평가' if not finite(v) else f'{v:.2f}'.rstrip('0').rstrip('.')
-
-def match_case(service,a,route,rules):
-    p=service.case(a);building=service.get_building(a);on_route={r['room'] for r in (route.get('risk') or {}).get('rows',[])}
-    path=service.cases(a['building'])[a['case']];sample=read(path.with_name('sample.json'),{})
-    openings=sample.get('openings',[]);output=[];seen=set()
-    # Evaluate predicates together at one saved cell/time, never combine independent peaks.
-    for c in p['rooms']:
-        rid=c.get('original_room') or c['key'];s=p['solvers'][c['solver_id']]
-        doors=[d for d in building['openings'] if rid in d.get('sides',[]) and 'door' in d.get('kind','')]
-        known=[o for o in openings if o.get('id') in {d['id'] for d in doors}]
-        closed=any(o.get('open') is False for o in known) if known else None
-        for i,t in enumerate(p['time_s']):
-            values={k:(v*100 if (v:=at(s.get('conditions',{}).get(k,{}).get('scores',{}).get('degree'),i)) is not None else None) for k in TYPES}
-            temp=at(s.get('Tu'),i);prev=at(s.get('Tu'),i-1) if i else None
-            values['rollover_active']=rollover_at(s,i)
-            values.update(Tu=temp,h=at(s.get('h'),i),door_closed=closed,on_route=rid in on_route,entry_count=len(doors) if doors else None,temperature_rising=temp>prev if temp is not None and prev is not None else None,external_water=None,inside_personnel=None)
-            for rule in rules['rules']:
-                key=(rid,rule['code'])
-                if key not in seen and matches(rule,values):
-                    seen.add(key);output.append({'room':rid,'cell':c['key'],'label':display_label(rid,c.get('display_name')),'time_s':t,'code':rule['code'],'text':rule['text'],'notice':rules['notice'],'values':values})
-    return output
 
 def event_fact(e,tool_index):
     label=display_label(e['room'],e.get('name'))

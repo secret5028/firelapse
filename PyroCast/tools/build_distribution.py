@@ -81,9 +81,19 @@ def main():
     portable_indices=0
     for results in result_sources:
         if not results.exists():continue
+        # Some approved final cases live in historic ui_* experiment folders.
+        # Keep only catalog-validated final-result directories, never UI captures/fixtures.
+        known_hashes={e.get('sha256') for e in registry_source['models']}
+        catalog=results/'playback-catalog.json'
+        indexed=json.loads(catalog.read_text('utf8')).get('files',{}) if catalog.exists() else {}
+        ui_finals={(results/rel).resolve().parent for rel,row in indexed.items()
+                   if row.get('valid') and row.get('building_sha256') in known_hashes
+                   and Path(rel).parts[0].startswith('ui_') and (results/rel).resolve().is_relative_to(results.resolve())}
         for top in sorted(results.iterdir()):
-            if not top.is_dir() or top.name.startswith(('github-publish','ui_')) or top.name in ('unit_tmp','verification'):continue
+            if not top.is_dir() or top.name.startswith('github-publish') or top.name in ('unit_tmp','verification'):continue
+            if top.name.startswith('ui_') and not any(d.is_relative_to(top.resolve()) for d in ui_finals):continue
             for f in files(top):
+                if top.name.startswith('ui_') and f.parent.resolve() not in ui_finals:continue
                 rel=Path('simulation/results')/f.relative_to(results)
                 if f.name.endswith(('.lock','.pid')):continue
                 # Final playback and small settings/summaries only. Raw solver matrices,

@@ -358,8 +358,9 @@ def main():
                     return self.json(public)
                 chosen=cfg.get('active_path') if path.endswith('active.json') else next((x['path'] for x in cfg.get('cases',[]) if x['id']==path.rsplit('/',1)[-1]),None)
                 if not chosen:return self.json({'error':'Unknown lite case'},404)
-                file=Path(chosen).resolve()
-                if not file.is_relative_to((SIM/'results').resolve()) or not file.is_file():return self.json({'error':'Invalid lite path'},404)
+                from runtime_storage import playback_path
+                try:file=playback_path(chosen)
+                except ValueError:return self.json({'error':'Invalid lite path'},404)
                 payload=json.loads(file.read_text('utf-8'))
                 if payload.get('building_sha256')!=sha:return self.json({'error':'Different building'},400)
                 return self.json(payload)

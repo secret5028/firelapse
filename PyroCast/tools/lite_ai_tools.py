@@ -56,20 +56,23 @@ class Tools:
         return row,read(row['path'])
     def cases(self,key):
         meta,_=self.building(key);out={}
-        stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in [SIM/'config/lite-viewer.json',SIM/'results/playback-catalog.json',ROOT/'data/wando-coldstore'])
+        from runtime_storage import result_roots, is_result_path
+        roots=result_roots()
+        stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in [SIM/'config/lite-viewer.json',*[r/'playback-catalog.json' for r in roots],ROOT/'data/wando-coldstore'])
         cached=self._case_cache.get(meta['id'])
         if cached and cached[0]==stamps:return cached[1]
         cfg=read(SIM/'config/lite-viewer.json',{})
         index=read(SIM/'results/playback-catalog.json',{}).get('files',{})
         for r in cfg.get('cases',[]):
             p=Path(r['path']).resolve()
-            if p.is_relative_to(ROOT) and p.is_file():
+            if (p.is_relative_to(ROOT) or is_result_path(p)) and p.is_file():
                 rel=p.relative_to(SIM/'results').as_posix() if p.is_relative_to(SIM/'results') else ''
                 d=index.get(rel) or playback(str(p),p.stat().st_mtime_ns)
                 if d.get('building_sha256')==meta['sha']:out[r['id']]=p
-        for rel,r in index.items():
-            p=(SIM/'results'/rel).resolve()
-            if p.is_relative_to(SIM/'results') and r.get('building_sha256')==meta['sha'] and r.get('valid') and p.is_file() and p not in out.values():out['case-'+hashlib.sha256(rel.encode()).hexdigest()[:20]]=p
+        for root in reversed(roots):
+            for rel,r in read(root/'playback-catalog.json',{}).get('files',{}).items():
+                p=(root/rel).resolve()
+                if p.is_relative_to(root.resolve()) and r.get('building_sha256')==meta['sha'] and r.get('valid') and p.is_file() and p not in out.values():out['case-'+hashlib.sha256(rel.encode()).hexdigest()[:20]]=p
         if meta['id']=='wando-coldstore':
             for p in (ROOT/'data/wando-coldstore').glob('*-playback.json'):
                 d=read(p)
@@ -181,7 +184,8 @@ class Tools:
         job=a.get('job')
         import re
         if not isinstance(job,str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,120}',job):raise ValueError('작업 ID 오류')
-        roots=[SIM/'results'/job,SIM/'results/lite_mc_jobs'/job]
+        from runtime_storage import result_roots
+        roots=[p for r in result_roots() for p in (r/job,r/'lite_mc_jobs'/job)]
         meta,_=self.building(a['building'])
         for root in roots:
             for name in ('summary.json','mc-summary.json'):

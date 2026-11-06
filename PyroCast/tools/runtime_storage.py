@@ -36,3 +36,11 @@ def result_relative(path):
 def is_result_path(path, subdir=''):
     p=Path(path).resolve()
     return any(p.is_relative_to((r/subdir).resolve()) for r in result_roots())
+
+
+def playback_path(path):
+    """Accept only an existing final replay in either managed result tree."""
+    p=locate(path).resolve()
+    if p.name!='playback.json' or not is_result_path(p) or not p.is_file():
+        raise ValueError('Invalid lite path')
+    return p

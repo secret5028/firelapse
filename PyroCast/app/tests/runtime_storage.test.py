@@ -61,6 +61,21 @@ class StorageTests(unittest.TestCase):
    atomic_json(root/'lite_mc_jobs/models/hotel'/name/'request.json',{'building_sha256':'abc'})
   with patch.object(model_mc,'JOBS',self.new/'lite_mc_jobs/models'),patch.object(model_mc.sim,'fingerprint',return_value='abc'):
    self.assertEqual([p.name for p in model_mc.folders('hotel')],['mc-200-bb','mc-100-aa'])
+ def test_external_playback_read_and_escape(self):
+  d=self.case();self.assertEqual(storage.playback_path(d/'playback.json'),d/'playback.json')
+  old=self.case(self.old);self.assertEqual(storage.playback_path(self.new/'model-library/hotel/a/playback.json'),d/'playback.json')
+  with self.assertRaises(ValueError):storage.playback_path(d/'input.json')
+  outside=self.case(self.base/'outside')
+  with self.assertRaises(ValueError):storage.playback_path(outside/'playback.json')
+ def test_ai_reads_external_catalog_and_mc(self):
+  from lite_ai_tools import Tools
+  d=self.case();root=self.new
+  atomic_json(root/'playback-catalog.json',{'files':{'model-library/hotel/a/playback.json':{'valid':True,'building_sha256':'abc'}}})
+  atomic_json(root/'lite_mc_jobs/mc-1-a/mc-summary.json',{'building_sha256':'abc','completed':2})
+  service=Tools()
+  with patch.object(service,'building',return_value=({'id':'fixture','sha':'abc'},{})):
+   self.assertIn(d/'playback.json',service.cases('fixture').values())
+   self.assertEqual(service.get_mc_summary({'building':'fixture','job':'mc-1-a'})['completed'],2)
  def test_unreadable_raw_is_not_deleted(self):
   d=self.case();(d/'result.json').write_text('{}');self.assertEqual(cleanup.preview()['files'],0)
  def test_mc_ranking_is_identical_after_cleanup(self):

@@ -10,7 +10,8 @@ from execution_evidence import write_mc, rule_dependency_hashes
 
 def run_batch(request_path, out):
     request=read(request_path);out=Path(out).resolve()
-    if not out.is_relative_to((adopted.ROOT/'simulation/results').resolve()):raise ValueError('Output outside results')
+    from runtime_storage import is_result_path, result_relative
+    if not is_result_path(out):raise ValueError('Output outside results')
     if (out/'started.json').exists():raise RuntimeError('Already attempted; no automatic rerun')
     raw=read(out/'input.json');count=request['samples'];seed=request['seed'];room=request['room']
     samples=adopted.make_samples(raw,seed=seed,count=count,fixed_states=sample_fixed_states(raw))
@@ -48,7 +49,7 @@ def run_batch(request_path, out):
     summary=dict(completed=a['completed'],wall_s=a['wall_s'],source_room=room,building_sha256=request['building_sha256'],
         rates=a['condition_sample_rates_random_only'],rows=[])
     for s in rows:
-        rel=(out/s['sample_id']/'playback.json').relative_to(root).as_posix()
+        rel=result_relative(out/s['sample_id']/'playback.json').as_posix()
         summary['rows'].append(dict(id='case-'+hashlib.sha256(rel.encode()).hexdigest()[:20],complete=bool(s.get('complete')),
             burning=len(s.get('burning_original_rooms',[])),smoke_risk=len(s.get('smoke_risk_rooms',[]))))
     atomic_json(out/'mc-summary.json',summary)

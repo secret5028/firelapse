@@ -88,7 +88,7 @@ def active_playback(ident):
 def jobs(ident, warnings=None):
     digest = sim.fingerprint(ident)
     out = []
-    for p in sorted((sim.RESULTS/ident).glob('*/status.json'), key=lambda p:p.stat().st_mtime, reverse=True):
+    for p in sorted(sim.result_glob(sim.RESULTS/ident,'*/status.json'), key=lambda p:p.stat().st_mtime, reverse=True):
         try:
             status = json.loads(p.read_text('utf-8-sig'))
             if not isinstance(status, dict) or status.get('state') != 'complete': continue
@@ -218,6 +218,9 @@ def handler(base, ident):
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
             path=urlsplit(self.path).path
+            if path.startswith('/cfbt/storage/'):
+                from storage_cleanup import handle
+                if handle(self,path):return
             if path.startswith('/cfbt/lite/export/'):
                 if self.client_address[0]!='127.0.0.1' or self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):return self.json({'error':'외부 요청 차단'},403)
                 try:

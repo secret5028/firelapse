@@ -8,7 +8,8 @@ import time
 import uuid
 from result_catalog import read, atomic_json
 
-ROOT=Path(__file__).resolve().parents[1];RESULTS=ROOT/'simulation/results'
+ROOT=Path(__file__).resolve().parents[1]
+from runtime_storage import RESULTS, locate, result_glob, is_result_path
 JOBS=RESULTS/'lite_mc_jobs';LATEST=JOBS/'latest.json'
 
 
@@ -30,9 +31,9 @@ def process_alive(pid):
 
 
 def status(building_sha):
-    ref=read(LATEST,{})
-    folder=JOBS/ref.get('id','missing')
-    if not folder.resolve().is_relative_to(JOBS.resolve()):return {'state':'idle','running':False}
+    ref=read(locate(LATEST),{})
+    folder=locate(JOBS/ref.get('id','missing'))
+    if not is_result_path(folder,'lite_mc_jobs'):return {'state':'idle','running':False}
     req=read(folder/'request.json',{})
     if req.get('building_sha256')!=building_sha:return {'state':'idle','running':False}
     progress=read(folder/'progress.json',{'state':'queued','completed':0,'total':req['samples']})
@@ -49,7 +50,7 @@ def prepare_request(body, building_sha):
     if type(count) is not int or not 2<=count<=1000:raise ValueError('MC 표본 수는 필수 2표본을 포함한 2~1000 정수입니다')
     if type(duration) is not int or duration not in (1800,3600):raise ValueError('MC 시간은 30분 또는 1시간입니다')
     if type(seed) is not int or not 0<=seed<2**32:raise ValueError('seed 범위 오류')
-    raw=read(RESULTS/'room_rule_r8_20261025/source-scenario.json')
+    raw=read(locate(RESULTS/'room_rule_r8_20261025/source-scenario.json'))
     if raw['cad']['building_sha256']!=building_sha:raise ValueError('이 건물의 간략 입력이 없습니다')
     from pyrocast_lite.screening_v8_approved import score,scenario
     config=read(ROOT/'simulation/config/lite-door-overrides.json',{})
@@ -100,7 +101,7 @@ def compute(folder):
 
 
 def summary(building_sha, room=None):
-    for folder in sorted(JOBS.glob('mc-*'),reverse=True):
+    for folder in sorted(result_glob(JOBS,'mc-*'),key=lambda p:p.name,reverse=True):
         if folder.is_symlink():continue
         data=read(folder/'mc-summary.json')
         if data and data.get('building_sha256')==building_sha and (room is None or data.get('source_room')==room):

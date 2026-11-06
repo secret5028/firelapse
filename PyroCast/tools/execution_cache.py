@@ -28,13 +28,17 @@ class ExecutionCache:
 
     def lookup(self,kind,new_key,building_sha):
         # A current key is always tried before its migrated legacy alias.
-        direct=self.root/KINDS[kind][0]/new_key
+        from runtime_storage import locate
+        direct=locate(self.root/KINDS[kind][0]/new_key)
         records=[read(direct/'cache-completed.json',{})]
-        records+=read(self.path,{}).get('aliases',{}).get(kind+':'+new_key,[])
+        records+=read(locate(self.path),{}).get('aliases',{}).get(kind+':'+new_key,[])
         for record in records:
             if record.get('kind')!=kind or record.get('new_key')!=new_key or record.get('building_sha256')!=building_sha:continue
-            folder=(self.root/record.get('folder','')).resolve()
-            if not folder.is_relative_to(self.root/KINDS[kind][0]):continue
+            folder=locate(self.root/record.get('folder','')).resolve()
+            from runtime_storage import RESULTS, is_result_path
+            if self.root==RESULTS.resolve():
+                if not is_result_path(folder,KINDS[kind][0]):continue
+            elif not folder.is_relative_to(self.root/KINDS[kind][0]):continue
             try:
                 if not record.get('files') or any(Path(n).name!=n or digest(folder/n)!=h for n,h in record['files'].items()):continue
                 if not self.completed(folder,kind,building_sha):continue

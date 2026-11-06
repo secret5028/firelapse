@@ -90,7 +90,7 @@ class FixedOpenings(unittest.TestCase):
      real_exists=__import__('os').path.exists
      exists.side_effect=lambda p:p.name=='lite-door-overrides.json' or real_exists(p)
      batch.run_batch(1,Path(tmp),rooms)
-  self.assertEqual(len(captured),4)
+  self.assertEqual(len(captured),2) # One fixed state per request; no duplicate open/closed calculation.
   for data in captured:
    self.assertEqual({v['id']:v['schedule'][0][1] for v in data['openings']},{k:v['effective_fraction'] for k,v in fixed['states'].items()})
 

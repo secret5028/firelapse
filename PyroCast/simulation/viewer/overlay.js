@@ -5387,8 +5387,33 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
 return {createDisplayPanel};
 })();
 
-// app/web/panels/results.js
+// app/web/panels/storage.js
 const __module59=(()=>{
+// Cleanup is deliberately a two-step action; rendering/export never deletes data.
+function createStoragePanel(host){
+ const root=document.createElement('details');root.id='resultStorage';
+ if(location.protocol==='file:'||document.getElementById('pcOfflineData'))return {dispose(){}};
+ root.innerHTML='<summary>저장공간 · 계산 과정 정리</summary><div style="font-size:11px;color:var(--text-muted);line-height:1.5;margin:8px 0">이 PC의 전체 계산 · 입력·최종 결과·MC 집계 보존</div><div class="storagePath" style="font-size:11px;overflow-wrap:anywhere"></div><button type="button" class="storagePreview">정리 가능 용량 확인</button> <button type="button" class="storageApply" hidden>계산 과정 정리</button><div class="storageStatus" role="status" style="margin-top:8px;font-size:11px;line-height:1.5"></div>';
+ host.append(root);const preview=root.querySelector('.storagePreview'),apply=root.querySelector('.storageApply'),status=root.querySelector('.storageStatus');let token=null,disposed=false,busy=false;
+ const size=n=>n>=1024**3?(n/1024**3).toFixed(2)+' GB':n>=1024**2?(n/1024**2).toFixed(1)+' MB':(n/1024).toFixed(1)+' KB';
+ async function request(action,body){const response=await fetch('/cfbt/storage/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});if(!response.headers.get('Content-Type')?.includes('application/json'))throw Error('앱 서버에서 사용할 수 있습니다.');const value=await response.json();if(!response.ok)throw Error(value.error||'정리 실패');return value;}
+ async function run(action){if(busy||disposed)return;busy=true;preview.disabled=true;apply.disabled=true;status.textContent=action==='preview'?'완료된 계산의 정리 가능 용량 확인 중…':'계산 과정 정리 중…';status.className='storageStatus status-busy';
+  try{const v=await request(action,action==='preview'?{}:{token});if(disposed)return;
+   if(action==='preview'){token=v.token;root.querySelector('.storagePath').textContent='새 계산 저장 위치: '+v.data_path;apply.hidden=!v.files;apply.textContent='계산 과정 정리 · '+size(v.bytes);status.textContent=`확보 가능 ${size(v.bytes)} · ${v.calculations}건 / ${v.files}파일. 실행 중·미완료·보존 검증 불가 ${v.skipped}건 제외. 원시 출력과 상세 로그는 정리됩니다.`;}
+   else{token=null;apply.hidden=true;status.textContent=`${size(v.bytes)} 정리 완료 · ${v.files}파일${v.errors.length?' · 삭제하지 못한 파일 '+v.errors.length+'개':''}. 입력과 최종 결과는 유지됩니다.`;}
+   status.className='storageStatus status-ok';
+  }catch(e){token=null;apply.hidden=true;status.className='storageStatus status-error';status.textContent=e.message;}finally{busy=false;preview.disabled=false;apply.disabled=false;}
+ }
+ const inspect=()=>run('preview'),clean=()=>run('cleanup');preview.addEventListener('click',inspect);apply.addEventListener('click',clean);
+ return {dispose(){disposed=true;preview.removeEventListener('click',inspect);apply.removeEventListener('click',clean);root.remove();}};
+}
+
+return {createStoragePanel};
+})();
+
+// app/web/panels/results.js
+const __module60=(()=>{
+const {createStoragePanel}=__module59;
 const {infoTip}=__module22;
 const {roomFgiRollover}=__module10;
 const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -5445,6 +5470,7 @@ function createResultsPanel({panel,store}){
  const state=document.createElement('small');state.id='resultEvaluation';state.style.cssText='font-size:11px;color:var(--text-muted)';$('resultRoomTitle').before(state);
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';
  $('resultTools').remove();
+ const storage=createStoragePanel($('resultCase'));
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
  #resultCase #nativeOutputNotice{display:none!important}
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
@@ -5494,14 +5520,14 @@ function createResultsPanel({panel,store}){
   $('resultMCStatus').className=summary?.rows.some(r=>!r.complete)?'status-error':summary?'status-ok':'';$('resultMCStatus').textContent=summary?`저장 ${summary.completed}/${summary.rows.length}표본 · 필수 ${summary.rows.slice(0,2).filter(r=>r.complete).length} + 무작위 ${summary.rows.slice(2).filter(r=>r.complete).length}`:'저장 MC 집계 없음';$('resultMCLoad').disabled=!summary;
  }
  mc(null);
- return {update,mc,dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
+ return {update,mc,dispose(){storage.dispose();for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
 }
 
 return {resultTypes,resultNumber,resultCoverage,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMCPlayback,createResultsPanel};
 })();
 
 // app/web/adapters/attention.js
-const __module60=(()=>{
+const __module61=(()=>{
 // Presentation ranking only. Never substitute legacy smoke counts for indices.
 function attentionRanking(comparison,saved){
  const key=r=>[-r.burning_room_count,-r.attention_room_count,r.first_FO_s??Infinity];
@@ -5518,7 +5544,7 @@ return {attentionRanking};
 })();
 
 // app/web/data/saved_attention.js
-const __module61=(()=>{
+const __module62=(()=>{
 // Generated by tools/export_ui_attention.py from saved results only.
 const savedAttention = {
   "schema": "pyrocast.ui-attention/1",
@@ -5570,9 +5596,9 @@ return {savedAttention};
 })();
 
 // app/web/panels/explore.js
-const __module62=(()=>{
-const {attentionRanking}=__module60;
-const {savedAttention}=__module61;
+const __module63=(()=>{
+const {attentionRanking}=__module61;
+const {savedAttention}=__module62;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5702,7 +5728,7 @@ return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
 })();
 
 // app/web/controller.js
-const __module63=(()=>{
+const __module64=(()=>{
 const {createModelReview}=__module0;
 const {vehicleFitsGround}=__module5;
 const {createAssistantPanel}=__module7;
@@ -5734,8 +5760,8 @@ const {createScaleReference}=__module51;
 const {createLitePanel,updateLitePanel}=__module52;
 const {createPanelShell}=__module56;
 const {createDisplayPanel}=__module58;
-const {createResultsPanel,resultTypes}=__module59;
-const {createExplorePanel}=__module62;
+const {createResultsPanel,resultTypes}=__module60;
+const {createExplorePanel}=__module63;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -6071,8 +6097,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module64=(()=>{
-const {attachModern}=__module63;
+const __module65=(()=>{
+const {attachModern}=__module64;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -6090,4 +6116,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module64.attach;
+export const attach=__module65.attach;

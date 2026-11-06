@@ -60,7 +60,7 @@ class Handler(BaseHTTPRequestHandler):
     sim.entry(ident)
     if path.endswith('/capabilities'):return self.json(sim.capabilities(ident))
     if path.endswith('/jobs'):
-     folders=sorted((sim.RESULTS/ident).glob('*/status.json'),key=lambda p:p.stat().st_mtime,reverse=True)[:50]
+     folders=sorted(sim.result_glob(sim.RESULTS/ident,'*/status.json'),key=lambda p:p.stat().st_mtime,reverse=True)[:50]
      return self.json({'jobs':[dict(job=p.parent.name,**{k:v for k,v in sim.read(p).items() if k!='job'},request=sim.read(p.parent/'request.json')) for p in folders]})
     folder=sim.job_path(ident,query.get('job',[''])[0])
     if path.endswith('/status'):return self.json(sim.read(folder/'status.json'))
@@ -74,6 +74,9 @@ class Handler(BaseHTTPRequestHandler):
   return self.json({'error':'Not found'},404)
  def do_POST(self):
   path=urlsplit(self.path).path
+  if path.startswith('/cfbt/storage/'):
+   from storage_cleanup import handle
+   if handle(self,path):return
   if path in ('/models/ai/connection','/models/ai/completion'):
    import ai_connection
    return ai_connection.handle(self,path)

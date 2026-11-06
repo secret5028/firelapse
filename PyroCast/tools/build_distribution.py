@@ -74,36 +74,41 @@ def main():
     site=bundle/'runtime/python/Lib/site-packages';site.mkdir(parents=True,exist_ok=True)
     (site/'firelapse.pth').write_text('../../../../app/simulation/deps\n../../../../app/simulation/plot_deps\n','utf8')
     # Original result bytes are copied unchanged; temporary UI fixtures and nested Git checkouts are excluded.
-    results=root/'simulation/results';archive=[];playbacks=0;excluded_bytes=0
-    for top in sorted(results.iterdir()):
-        if not top.is_dir() or top.name.startswith(('github-publish','ui_')) or top.name in ('unit_tmp','verification'):continue
-        for f in files(top):
-            rel=f.relative_to(root)
-            if f.name.endswith(('.lock','.pid')):continue
-            # Final playback and small settings/summaries only. Raw solver matrices,
-            # CSV/logs/plots, retries and intermediate attempts are not distributed.
-            include=f.name=='playback.json' or (f.suffix=='.json' and f.stat().st_size<2*1024*1024
-                and f.name not in ('result.json','execution-evidence.json','started.json','build.json','worker.json','control.json')
-                and not any(s in f.name for s in ('before','backup','trace','debug')))
-            if include:copy(f,app/rel);playbacks+=int(f.name=='playback.json')
-            else:excluded_bytes+=f.stat().st_size
-    # A sealed, small result index keeps MC ordering usable without raw matrices.
     sys.path.insert(0,str(root/'tools'))
-    from export_ui_attention import summarize,KINDS
+    from runtime_storage import RESULTS as external_results
+    result_sources=[root/'simulation/results',external_results]
+    archive=[];playbacks=0;excluded_bytes=0
     portable_indices=0
-    for source in results.rglob('index-summary.json'):
-        rel=source.relative_to(root)
-        if not (app/rel).is_file():continue
-        raw_path=source.with_name('result.json');pb=source.with_name('playback.json')
-        if not raw_path.exists() or not pb.exists() or not (app/pb.relative_to(root)).exists():continue
-        cached=json.loads(source.read_text('utf8'));st=raw_path.stat()
-        if cached.get('source_stamp')!=[st.st_mtime_ns,st.st_size] or cached.get('kinds')!=list(KINDS):
-            raw=raw_path.read_bytes();v=json.loads(raw)
-            cached={'schema':'pyrocast.result-index/1','threshold':70,'kinds':list(KINDS),**summarize(v),
-                    'complete':bool(v['ok']),'source_stamp':[st.st_mtime_ns,st.st_size],'source_sha256':hashlib.sha256(raw).hexdigest()}
-        sealed={'schema':'firelapse.portable-result-index/1','playback_sha256':sha(pb),'index':cached,
-                'index_sha256':hashlib.sha256(json.dumps(cached,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
-        dest=app/rel.parent/'portable-result-index.json';dest.write_text(json.dumps(sealed,ensure_ascii=False,indent=2),'utf8');portable_indices+=1
+    for results in result_sources:
+        if not results.exists():continue
+        for top in sorted(results.iterdir()):
+            if not top.is_dir() or top.name.startswith(('github-publish','ui_')) or top.name in ('unit_tmp','verification'):continue
+            for f in files(top):
+                rel=Path('simulation/results')/f.relative_to(results)
+                if f.name.endswith(('.lock','.pid')):continue
+                # Final playback and small settings/summaries only. Raw solver matrices,
+                # CSV/logs/plots, retries and intermediate attempts are not distributed.
+                include=f.name=='playback.json' or (f.suffix=='.json' and f.stat().st_size<2*1024*1024
+                    and f.name not in ('result.json','execution-evidence.json','started.json','build.json','worker.json','control.json')
+                    and not any(s in f.name for s in ('before','backup','trace','debug')))
+                if include:copy(f,app/rel);playbacks+=int(f.name=='playback.json')
+                else:excluded_bytes+=f.stat().st_size
+        # A sealed, small result index keeps MC ordering usable without raw matrices.
+        sys.path.insert(0,str(root/'tools'))
+        from export_ui_attention import summarize,KINDS
+        for source in results.rglob('index-summary.json'):
+            rel=Path('simulation/results')/source.relative_to(results)
+            if not (app/rel).is_file():continue
+            raw_path=source.with_name('result.json');pb=source.with_name('playback.json')
+            if not raw_path.exists() or not pb.exists() or not (app/'simulation/results'/pb.relative_to(results)).exists():continue
+            cached=json.loads(source.read_text('utf8'));st=raw_path.stat()
+            if cached.get('source_stamp')!=[st.st_mtime_ns,st.st_size] or cached.get('kinds')!=list(KINDS):
+                raw=raw_path.read_bytes();v=json.loads(raw)
+                cached={'schema':'pyrocast.result-index/1','threshold':70,'kinds':list(KINDS),**summarize(v),
+                        'complete':bool(v['ok']),'source_stamp':[st.st_mtime_ns,st.st_size],'source_sha256':hashlib.sha256(raw).hexdigest()}
+            sealed={'schema':'firelapse.portable-result-index/1','playback_sha256':sha(pb),'index':cached,
+                    'index_sha256':hashlib.sha256(json.dumps(cached,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
+            dest=app/rel.parent/'portable-result-index.json';dest.write_text(json.dumps(sealed,ensure_ascii=False,indent=2),'utf8');portable_indices+=1
     # Operational model registry gets portable paths, without changing model JSON hashes.
     registry=app/'config/model-library.json';data=json.loads(registry.read_text('utf8'))
     for entry in data['models']:
@@ -111,7 +116,7 @@ def main():
         entry.pop('source_path',None)
     registry.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n','utf8')
     # Packaging never copies API connection secrets. Custom CAD converter remains optional.
-    meta={'name':'FireLapse','version':'2026.11.06','source_root':str(root),'platform':'Windows x64',
+    meta={'name':'FireLapse','version':'2026.11.06','source_root':str(root),'source_data_root':str(external_results.parent),'platform':'Windows x64',
           'models':[{k:e.get(k) for k in ('id','label','source_kind','floor_count','room_count','simulation_enabled')} for e in data['models']],
           'playback_count':playbacks,'new_simulations':0,'portable_indices':portable_indices,'excluded_bytes':excluded_bytes,
           'excluded':['Raw solver matrices/CSV/logs/intermediate attempts','API keys and connection secrets','nested Git checkout','UI test captures and temporary unit fixtures'],

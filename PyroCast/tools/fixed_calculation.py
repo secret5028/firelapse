@@ -12,7 +12,8 @@ from result_catalog import read, atomic_json
 from lite_mc_service import process_alive
 
 ROOT = Path(__file__).resolve().parents[1]
-JOBS = ROOT/'simulation/results/fixed-calculations'
+from runtime_storage import RESULTS, locate, result_glob
+JOBS = RESULTS/'fixed-calculations'
 ENGINE = ROOT/'simulation/build/baseline/cfast-baseline.exe'
 
 
@@ -34,7 +35,7 @@ def context(sha, ident=None):
     job, sample = fixed.get('job_id', ''), fixed.get('sample_id', '')
     if not re.fullmatch(r'mc-\d+-[a-f0-9]+', job) or not re.fullmatch(r'S\d+', sample):
         raise ValueError('확정 급기 출처 오류')
-    folder = jobs/job/sample
+    folder = locate(jobs/job/sample)
     saved = read(folder/'sample.json')
     if not saved or not read(folder/'summary.json', {}).get('complete'):
         raise ValueError('완료된 MC 표본이 없습니다')
@@ -84,7 +85,7 @@ def prepare(sha, body, ident=None):
 
 
 def paths(sha):
-    return sorted((JOBS/sha).glob('calc-*'), reverse=True)
+    return sorted(result_glob(JOBS/sha,'calc-*'), key=lambda p:p.name, reverse=True)
 
 
 def status(sha):
@@ -109,7 +110,7 @@ def cases(sha):
 def playback(sha, case):
     if not re.fullmatch(r'calc-\d+-[a-f0-9]+', case or ''):
         raise ValueError('계산 사례 ID 오류')
-    folder = JOBS/sha/case
+    folder = locate(JOBS/sha/case)
     if read(folder/'status.json', {}).get('state') != 'complete':
         raise ValueError('완료되지 않은 계산')
     value = read(folder/'playback.json')

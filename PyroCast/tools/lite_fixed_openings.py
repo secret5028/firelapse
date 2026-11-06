@@ -11,7 +11,8 @@ from result_catalog import read, atomic_json
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT/'simulation/config/lite-door-overrides.json'
-JOBS = ROOT/'simulation/results/lite_mc_jobs'
+from runtime_storage import RESULTS, locate
+JOBS = RESULTS/'lite_mc_jobs'
 
 
 def classifications(value):
@@ -105,6 +106,7 @@ def ranked_samples(folder, building_sha):
 def apply_worst(job_id, building_sha, config_path=CONFIG, jobs=JOBS):
     if not isinstance(job_id, str) or not re.fullmatch(r'mc-\d+-[a-f0-9]+', job_id):
         raise ValueError('MC 작업 ID 오류')
+    jobs = locate(Path(jobs)/job_id).parent
     folder = (Path(jobs)/job_id).resolve()
     if folder.parent != Path(jobs).resolve():
         raise ValueError('MC 작업 경로 오류')

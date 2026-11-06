@@ -1,3 +1,4 @@
+import {createStoragePanel} from './storage.js';
 import {infoTip} from './explanations.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
 export const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
@@ -54,6 +55,7 @@ export function createResultsPanel({panel,store}){
  const state=document.createElement('small');state.id='resultEvaluation';state.style.cssText='font-size:11px;color:var(--text-muted)';$('resultRoomTitle').before(state);
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';
  $('resultTools').remove();
+ const storage=createStoragePanel($('resultCase'));
  const style=document.createElement('style');style.dataset.pyrocastResults='true';style.textContent=`
  #resultCase #nativeOutputNotice{display:none!important}
  #resultContent #pyroMenuReview{position:static;inset:auto;width:auto;height:auto;max-height:none;overflow:visible;padding:8px 0;border:0;box-shadow:none;z-index:auto;font-size:11px}#resultContent #pyroMenuReview header{display:none}#resultContent #pyroMenuReview .reviewSection{overflow:auto}
@@ -103,5 +105,5 @@ export function createResultsPanel({panel,store}){
   $('resultMCStatus').className=summary?.rows.some(r=>!r.complete)?'status-error':summary?'status-ok':'';$('resultMCStatus').textContent=summary?`저장 ${summary.completed}/${summary.rows.length}표본 · 필수 ${summary.rows.slice(0,2).filter(r=>r.complete).length} + 무작위 ${summary.rows.slice(2).filter(r=>r.complete).length}`:'저장 MC 집계 없음';$('resultMCLoad').disabled=!summary;
  }
  mc(null);
- return {update,mc,dispose(){for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
+ return {update,mc,dispose(){storage.dispose();for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
 }

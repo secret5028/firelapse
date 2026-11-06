@@ -4,6 +4,7 @@ from lite_fixed_openings import classifications, screening_states
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
+from runtime_storage import RESULTS, is_result_path
 DEFAULT=SIM/'results/lite_v8_approved_screening_20261025'
 SAVED=SIM/'config/lite-screening-selection.json'
 
@@ -20,7 +21,7 @@ def payload(top_n=None):
     manual=origins(scored)
     scored.pop('classified_model')
     destination=Path(selection.get('result_path',str(DEFAULT))).resolve()
-    if not destination.is_relative_to((SIM/'results').resolve()):raise ValueError('Invalid result directory')
+    if not is_result_path(destination):raise ValueError('Invalid result directory')
     comparison=read(destination/'comparison.json')
     legacy=comparison is not None and comparison.get('revision')!='v8_approved_screening'
     from export_ui_attention import comparison_attention
@@ -47,7 +48,7 @@ def select(top_n,mc_room=None,rooms=None):
 
 def compute(top_n,rooms=None):
     # One serial process; never launches MC or replaces completed 3D playback.
-    out=SIM/'results'/('lite_screening_ui_'+str(time.time_ns()))
+    out=RESULTS/('lite_screening_ui_'+str(time.time_ns()))
     selection={**read(SAVED,{}),'top_n':top_n,'result_path':str(out)}
     SAVED.write_text(json.dumps(selection,ensure_ascii=False,indent=2),'utf-8')
     out.mkdir(parents=True)

@@ -6,7 +6,8 @@ from result_catalog import read, atomic_json
 from lite_fixed_openings import ranked_samples, apply_worst
 from lite_mc_service import process_alive
 ROOT=sim.ROOT
-JOBS=ROOT/'simulation/results/lite_mc_jobs/models'
+from runtime_storage import RESULTS, locate, result_glob
+JOBS=RESULTS/'lite_mc_jobs/models'
 
 def config_path(ident):
     return ROOT/'simulation/config/model-fixed-openings'/(sim.fingerprint(ident)+'.json')
@@ -14,7 +15,7 @@ def config_path(ident):
 def folder_for(ident, job):
     sim.entry(ident)
     if not isinstance(job,str) or not re.fullmatch(r'mc-\d+-[a-f0-9]+',job):raise ValueError('MC 작업 ID 오류')
-    return JOBS/ident/job
+    return locate(JOBS/ident/job)
 
 def case_id(folder,sample):return 'modelmc-'+folder.name+'-'+sample
 
@@ -29,7 +30,7 @@ def case_folder(ident,case):
 
 def folders(ident):
     sha=sim.fingerprint(ident)
-    return [p for p in sorted((JOBS/ident).glob('mc-*'),reverse=True) if read(p/'request.json',{}).get('building_sha256')==sha]
+    return [p for p in sorted(result_glob(JOBS/ident,'mc-*'),key=lambda p:p.name,reverse=True) if read(p/'request.json',{}).get('building_sha256')==sha]
 
 def status(ident):
     rows=folders(ident)
@@ -109,7 +110,7 @@ def apply(ident,body):
     folder_for(ident,body['job_id'])
     with sim._lock:
         if sim._active:raise RuntimeError('계산 중에는 적용할 수 없습니다')
-        fixed=apply_worst(body['job_id'],sim.fingerprint(ident),config_path(ident),JOBS/ident)
+        fixed=apply_worst(body['job_id'],sim.fingerprint(ident),config_path(ident),folder_for(ident,body['job_id']).parent)
     return dict(rows=[],fixed_state=fixed,case_id=case_id(folder_for(ident,body['job_id']),fixed['sample_id']))
 
 def playback(ident,case):

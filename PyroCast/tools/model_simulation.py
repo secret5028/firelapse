@@ -13,7 +13,8 @@ from functools import lru_cache
 from model_library import ROOT, entries, model_path
 
 sys.path[:0] = [str(ROOT/'simulation'), str(ROOT/'simulation/deps')]
-RESULTS = ROOT/'simulation/results/model-library'
+from runtime_storage import RESULTS as DATA_RESULTS, locate, result_glob
+RESULTS = DATA_RESULTS/'model-library'
 PARAMS = dict(remove_cumulative_state=True, smooth_state_bounds=True,
               upper_combustion_enabled=True, door_jet_enabled=True)
 STATES = ('open_except_confirmed', 'closed')
@@ -136,7 +137,7 @@ def job_path(ident, job):
     entry(ident)
     if not isinstance(job, str) or len(job)!=32 or any(c not in '0123456789abcdef' for c in job):
         raise ValueError('잘못된 작업 ID')
-    path = RESULTS/ident/job
+    path = locate(RESULTS/ident/job)
     if not path.is_dir(): raise ValueError('작업 없음')
     return path
 

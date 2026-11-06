@@ -49,7 +49,8 @@ def execute(data,folder):
 
 def run_batch(top_n=3,out=DEFAULT_OUT,rooms=None):
     out=Path(out).resolve()
-    if not out.is_relative_to((base.ROOT/'simulation/results').resolve()):raise ValueError('Output outside results')
+    from runtime_storage import is_result_path
+    if not is_result_path(out):raise ValueError('Output outside results')
     if (out/'started.json').exists():raise RuntimeError('Already attempted; no automatic rerun')
     raw=read(base.inputs()['3F']);overrides=base.ROOT/'simulation/config/lite-door-overrides.json'
     config=read(overrides) if overrides.exists() else {}

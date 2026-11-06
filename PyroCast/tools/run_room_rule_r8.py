@@ -59,7 +59,8 @@ def ranges(reports):
 def run_batch(raw,destination,options=None,compare=False):
  if not isinstance(compare,bool):raise ValueError('compare_aggressive must be boolean')
  destination=Path(destination).resolve()
- if not destination.is_relative_to(RESULTS.resolve()):raise ValueError('Result folder must stay inside simulation/results')
+ from runtime_storage import is_result_path
+ if not is_result_path(destination):raise ValueError('Result folder must stay inside managed results')
  resolve(options) # every setting rejected before any execution
  configurations={'selected':options or {}}
  if compare:configurations['aggressive']=comparison_options(options or {})

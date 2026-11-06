@@ -26,6 +26,9 @@ def prepare_paths():
         if isinstance(value, list): return [move(v) for v in value]
         if isinstance(value, str):
             path = value.replace('\\','/')
+            data_prefix=str(meta.get('source_data_root','')).replace('\\','/').rstrip('/')
+            if data_prefix and path.lower().startswith(data_prefix.lower()+'/results/'):
+                return str(ROOT/'simulation/results'/path[len(data_prefix)+9:])
             for prefix in prefixes:
                 if path.lower().startswith(prefix.lower()+'/'):
                     tail=path[len(prefix)+1:]
@@ -88,7 +91,8 @@ def main():
     if args.check:return
     occupied=[p for p in PORTS if not available(p)]
     if occupied:raise RuntimeError('이미 실행 중인 프로그램의 포트입니다: '+str(occupied)+'\n기존 FireLapse 실행 창을 종료한 뒤 다시 실행하세요. 다른 프로세스를 강제 종료하지 않습니다.')
-    logs=ROOT.parent/'logs';logs.mkdir(exist_ok=True)
+    from runtime_storage import DATA_ROOT
+    logs=DATA_ROOT/'logs';logs.mkdir(parents=True,exist_ok=True)
     children=[];streams=[]
     try:
         for name in ('library','wando','ganghwa'):

@@ -15,6 +15,7 @@ from urllib.parse import urlsplit,unquote,parse_qs
 
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
+from runtime_storage import RESULTS as DATA_RESULTS
 sys.path.insert(0,str(SIM))
 from pyrocast_cfbt.cad import adapt,resolve_building
 from pyrocast_cfbt.playback import package
@@ -125,12 +126,12 @@ def main():
     engine=SIM/'build/mixture_r2/cfbt/cfast-cfbt.exe'
     lock=threading.Lock();pool=ThreadPoolExecutor(max_workers=1)
     r8_folder=SIM/'results/room_rule_r8_20261025'
-    from result_catalog import ResultCatalog
+    from result_catalog import CombinedResultCatalog as ResultCatalog
     catalog_index=ResultCatalog(SIM/'results', SIM/'config/native-case-aliases.json')
     import lite_mc_service as mc_service
     from execution_cache import ExecutionCache
     from result_catalog import atomic_json
-    execution_cache=ExecutionCache(SIM/'results')
+    execution_cache=ExecutionCache(DATA_RESULTS)
     from saved_case_reuse import describe as describe_reuse
     def reuse_info(row,kind):
         return describe_reuse(row,kind,sha,execution_cache,lambda kind,options,building:execution_key(options,building,engine))
@@ -151,7 +152,7 @@ def main():
             except (OSError,ValueError):return None
             return path
     def compute(options,identity):
-        destination=SIM/'results/cad_interactive'/identity
+        destination=DATA_RESULTS/'cad_interactive'/identity
         try:
             scenario=adapt(project,{**options,'building_path':str(source)});destination.mkdir(parents=True,exist_ok=True)
             atomic_json(destination/'execution-request.json',{'options':options,'building_sha256':sha})
@@ -169,7 +170,7 @@ def main():
 
     def compute_r8(options,rule_options,compare,identity):
         nonlocal r8_folder
-        destination=SIM/'results/cad_r8_review'/identity
+        destination=DATA_RESULTS/'cad_r8_review'/identity
         try:
             from run_room_rule_r8 import run_batch
             raw=adapt(project,{**options,'building_path':str(source)})
@@ -188,7 +189,7 @@ def main():
             base=json.loads(base_path.read_text('utf-8'))
             if base['scenario']['cad']['building_sha256']!=sha:raise ValueError('다른 건물의 비교는 할 수 없습니다.')
             key=comparison_key(base,options['room'],options['time_s'],engine,options.get('duration_s',30),options.get('rate_s_inv',.2))
-            destination=SIM/'results/cad_ignition_comparisons'/key[:24]
+            destination=DATA_RESULTS/'cad_ignition_comparisons'/key[:24]
             for file in (destination/'comparison.json',SIM/'results/cad_exterior_ignition_demo_v4_ceiling_250/comparison.json'):
                 if file.is_file() and json.loads(file.read_text('utf-8')).get('cache_key')==key:
                     with lock:state.update(comparison_path=str(file),folder=file.parent,cache_hit=True)
@@ -400,6 +401,9 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
+            if request_path.startswith('/cfbt/storage/'):
+                from storage_cleanup import handle
+                if handle(self,request_path):return
             if request_path in (RUN_PATHS|{'/cfbt/calculation'}) and not model_execution['allowed']:
                 return self.json({'error':model_execution['reason'],'simulation_started':False},403)
             if request_path.startswith('/cfbt/lite/ai/') and request_path!='/cfbt/lite/ai/fuel':
@@ -519,7 +523,7 @@ def main():
                             r8_folder,record=cached
                             state.update(cache_hit=True,folder=r8_folder,request_id=identity)
                             return self.json({'request_id':identity,'review_only':True,'already_attempted':True,'cache_hit':True,'legacy_key':record.get('old_key'),'solver_runs':0},200)
-                        destination=SIM/'results/cad_r8_review'/identity
+                        destination=DATA_RESULTS/'cad_r8_review'/identity
                         if (destination/'batch-state.json').exists():
                             r8_folder=destination
                             return self.json({'request_id':identity,'review_only':True,'already_attempted':True},200)

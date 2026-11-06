@@ -63,7 +63,8 @@ def user_doors(model):
 
 def _inputs(folder):
     folder = Path(folder).resolve()
-    if not folder.is_relative_to((ROOT/'simulation/results/lite_mc_jobs').resolve()):
+    from runtime_storage import is_result_path
+    if not is_result_path(folder,'lite_mc_jobs'):
         raise ValueError('Not a server MC job result')
     job = folder.parent
     request = read(job/'request.json')

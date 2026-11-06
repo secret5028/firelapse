@@ -70,3 +70,16 @@ class ResultCatalog:
                 'engine_kind':row.get('engine_kind')})
         order={r['id']:i for i,r in enumerate(configured)}
         return sorted(result,key=lambda r:(order.get(r['id'],len(order)),r['id']))
+
+class CombinedResultCatalog:
+    """Read bundled history and external runs without changing legacy case identifiers."""
+    def __init__(self, root, aliases):
+        from runtime_storage import RESULTS
+        self.catalogs=[ResultCatalog(root,aliases),ResultCatalog(RESULTS,aliases)]
+    def scan(self, force=False):
+        return [c.scan(force=force) for c in self.catalogs]
+    def cases(self, building_sha, kind, configured=()):
+        found={}
+        for c in self.catalogs:
+            for row in c.cases(building_sha,kind,configured):found[row['id']]=row
+        return list(found.values())

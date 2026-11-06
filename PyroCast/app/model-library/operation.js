@@ -31,7 +31,7 @@ try{
   const center=bounds.getCenter(new T.Vector3()),radius=bounds.getSize(new T.Vector3()).length()/2,vertical=C.fov*Math.PI/180,horizontal=2*Math.atan(Math.tan(vertical/2)*C.aspect),distance=radius/Math.sin(Math.min(vertical,horizontal)/2)*1.1;O.target.copy(center);C.position.copy(center).addScaledVector(top?new T.Vector3(0,-.001,1).normalize():new T.Vector3(1,-1,1.1).normalize(),distance);O.update();}
  C.aspect=Math.max(1,$('v').clientWidth)/Math.max(1,$('v').clientHeight);C.updateProjectionMatrix();fit();
  $('top').onclick=()=>fit(true);$('iso').onclick=()=>fit();$('resetView').onclick=()=>fit();$('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
- const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor,getScreeningFloor:()=>floor==='all'?null:floor,capabilities:{frozenRules:false,assistant:false,exportPost:true}};
+ const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor,getScreeningFloor:()=>floor==='all'?null:floor,capabilities:{frozenRules:false,assistant:true,exportPost:true}};
  const app=await attach(viewer);
  let frame;function loop(){frame=requestAnimationFrame(loop);O.update();R.render(S,C);}loop();
  window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);app.dispose();O.dispose();for(const r of owned)r.dispose();R.dispose();},{once:true});

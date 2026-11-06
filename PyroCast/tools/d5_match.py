@@ -32,13 +32,13 @@ def match_timelines(timelines, building, route, rules, origin):
             active = {}; previous = None
             for row in cell['rows']:
                 t = row['time_s']
-                states = [state_at(d,t,times) for d in openings]
+                states = [state_at(d,t,times) for d in openings if d['id'] in building.get('supply_opening_ids',[o['id'] for o in openings])]
                 values = {**row['indices'], 'Tu':row['Tu'], 'h':row['h'],
                     'rollover_active':row.get('rollover_active'),
                     'temperature_rising': row['Tu']>previous if finite(row['Tu']) and finite(previous) else None,
                     'route_room':rid in onroute,'on_route':rid in onroute,'fire_room':rid == origin,
                     'stairwell':meta.get(rid,{}).get('stairwell') is True,
-                    'entry_count':len(doors) if doors else None,
+                    'entry_count':sum(d.get('route_door') is not False for d in doors) if doors else None,
                     'closed_majority':states.count('closed')>states.count('open') if states and 'unknown' not in states else None,
                     'after_origin_FO':origin_first is not None and t>=origin_first,
                     'adjacent':rid in adjacent,'cavity':meta.get(rid,{}).get('cavity') is True,

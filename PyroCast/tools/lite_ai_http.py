@@ -3,7 +3,8 @@ import json
 from lite_ai_tools import Tools
 service=Tools()
 
-def handle(handler,path):
+def handle(handler,path,tool_service=None):
+    service=tool_service or globals()['service']
     def send(value,code=200):
         data=json.dumps(value,ensure_ascii=False,allow_nan=False).encode()
         handler.send_response(code);handler.send_header('Content-Type','application/json; charset=utf-8');handler.send_header('Cache-Control','no-store');handler.send_header('Content-Length',str(len(data)));handler.end_headers();handler.wfile.write(data)

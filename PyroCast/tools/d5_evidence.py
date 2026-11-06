@@ -42,6 +42,7 @@ def enrich(service, args, result):
     for key, opening in raw_openings.items():
         if key not in graph and key.startswith('CAD_'):
             graph[key] = dict(id=key, kind=opening.get('kind'), sides=[opening.get('cad_a', opening.get('a')), opening.get('cad_b', opening.get('b'))])
+    supplied_ids = set(saved) | set(sample_states) | set(raw_openings)
     for key, opening in graph.items():
         source = saved.get(key) or sample_states.get(key) or raw_openings.get(key) or {}
         source = {k: deepcopy(v) for k, v in source.items() if k in ('schedule', 'fraction', 'effective_fraction', 'open')}
@@ -61,6 +62,7 @@ def enrich(service, args, result):
                 graph[target['id']] = target
         if target is not None:
             target.update(deepcopy(value), state=state_at(value, args.get('time_s', 0), p.get('time_s', [])), state_basis='saved native schedule')
+            supplied_ids.add(target['id'])
     # Explicit confirmed supply wins only when its case matches this saved result.
     fixed = result.get('fixed_state')
     for opening in graph.values():
@@ -70,6 +72,9 @@ def enrich(service, args, result):
             opening.pop('schedule', None); opening.pop('fraction', None)
             opening.update(state=state_at(override, args.get('time_s', 0)), state_basis='confirmed supply')
     result['openings'] = list(graph.values())
+    result['supply_opening_ids'] = sorted(set(graph) & supplied_ids)
+    supply = [graph[key]['state'] for key in result['supply_opening_ids']]
+    result['supply_counts'] = {state:supply.count(state) for state in ('closed','open','unknown')}
     result.update(time_s=args.get('time_s', 0), sample_times=p.get('time_s', []),
                   supply_basis='MC '+str(sample.get('id')) if sample else '확정' if fixed else '저장 입력',
                   saved_input_available=bool(raw))

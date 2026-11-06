@@ -38,71 +38,9 @@ def facts_for(call,i):
         facts.append({'text':display_text(json.dumps(d,ensure_ascii=False,indent=2)),'evidence':{'call':i,'row':d}})
     return facts
 
-def compact_sections(route,peaks,rules):
-    """Short display text; original tool rows remain attached as evidence."""
-    sections=[];facts=[]
-    def add(title,text,fact=None):
-        sections.append({'title':title,'text':text})
-        if fact is not None:facts.append({**fact,'text':text})
-    r=route['route'];target=r.get('target')
-    if r.get('error'):
-        add('진입 경로','미평가')
-    else:
-        label=r.get('target_label') or display_label(target)
-        add('진입 경로',f"외부에서 {label}까지 약 {r['length']:.0f} m, 호스 {r['hoses']}본이 필요합니다.",
-            {'room':target,'evidence':{'call':2,'row':r}})
-    rooms={row['room'] for row in (route.get('risk') or {}).get('rows',[])}
-    if target:rooms.add(target)
-    selected={}
-    titles={'backdraft':'산소 부족 상태 — BD','FGI':'가연성 연기 점화 조건 — FGI','FO':'플래시오버 조건 — FO'}
-    for k in ('backdraft','FGI','FO'):
-        candidates=[e for e in peaks[k] if e['room'] in rooms and finite(e.get('peak')) and finite(e.get('first_s'))]
-        if not candidates:continue
-        # Prefer the route destination; otherwise report the highest route-room event.
-        e=max(candidates,key=lambda e:(e['room']==target,e['peak']))
-        selected[k]=e
-        prefix='' if e['room']==target else display_label(e['room'],e.get('name'))+'은 '
-        text=f"{prefix}{stamp(e['first_s'])}부터 조건을 충족합니다."
-        if k=='FGI' and finite(e.get('rollover_first_s')):
-            text+=(' 같은 시각부터' if e['rollover_first_s']==e['first_s'] else f" {stamp(e['rollover_first_s'])}부터")+' 롤오버 조건 충족으로 표시됩니다.'
-        text+=f" {stamp(e['peak_s'])}에 최고 {e['peak']:.0f}에 도달합니다."
-        add(titles[k],text,{'room':e['room'],'cell':e.get('source_cell'),'time_s':e['peak_s'],
-            'evidence':{'call':3+TYPES.index(k),'row':e}})
-    bd=selected.get('backdraft');fgi=selected.get('FGI')
-    if bd and fgi and bd['room']==fgi['room'] and bd['first_s']<fgi['first_s']:
-        flow='초반에는 고온 연기 축적과 산소 부족이 두드러집니다. 이후에는 가연성 연기의 점화 조건이 강해집니다.'
-    elif selected:
-        ordered=sorted(selected.items(),key=lambda kv:kv[1]['first_s'])
-        flow='조건 충족 시작: '+' → '.join(LABELS[k]+' '+stamp(e['first_s']) for k,e in ordered)+'.'
-    else:
-        flow='경로에서 기준 도달이 확인된 현상이 없습니다. 미평가 자료는 안전 판정이 아닙니다.'
-    add('시간에 따른 변화',flow)
-    matched=[m for m in rules['matched'] if m['room'] in rooms]
-    codes={m['code'] for m in matched};advice=[];used=set()
-    if 'O-1' in codes:
-        advice.append(next(m['text'] for m in matched if m['code']=='O-1'));used.add('O-1')
-    if codes & {'F-1','F-2','B-1'}:
-        advice.append('상층 냉각');used.update(codes & {'F-1','F-2','B-1'})
-    if 'R-1' in codes:advice.append('퇴로 확보');used.add('R-1')
-    if not advice and matched:
-        # Keep one actual matched rule, never manufacture a recommendation.
-        m=matched[0];advice.append(m['text']);used.add(m['code'])
-    add('전술 참고','과 '.join(advice)+'.' if advice else '규칙 없음 또는 판정자료 미평가')
-    return sections,facts,sorted(used)
-
-
 def briefing(service,a):
-    calls=[]
-    def get(name,**kwargs):
-        result=service.call(name,{**a,**kwargs});calls.append(result);return result['data']
-    ranking=get('get_ranking');summary=get('get_case_summary');route=get('get_route')
-    peaks={k:get('get_peak_events',phenomenon=k,threshold=100) for k in TYPES}
-    rules=get('get_tactic_rules');rules['matched']=match_case(service,a,route,rules)
-    sections,facts,used=compact_sections(route,peaks,rules)
-    value={'building':a['building'],'case':a['case'],
-           'text':'\n\n'.join(x['title']+'\n'+x['text'] for x in sections),
-           'sections':sections,'facts':facts,'calls':calls,'rules':used,
-           'proposals':[],'status':''}
+    from d5_briefing import fill
+    value=fill(service,a)
     token=uuid.uuid4().hex;value['briefing_id']=token
     with LOCK:
         for k in list(REPORTS):
@@ -118,7 +56,7 @@ def save_report(service,token):
         v=item['value'];path=service.cases(v['building'])[v['case']]
         if __import__('hashlib').sha256(path.read_bytes()).hexdigest()!=item['source_sha']:raise ValueError('사례가 바뀌었습니다. 브리핑을 다시 생성하세요')
         root=path.parent/'assistant-reports';root.mkdir(exist_ok=True)
-        report={'id':token,'case':v['case'],'building':v['building'],'created':datetime.datetime.now(datetime.timezone.utc).isoformat(),'markdown':v['text'],'rules':v['rules'],'source_sha256':item['source_sha'],'calls':v['calls']}
+        report={'id':token,'case':v['case'],'building':v['building'],'created':datetime.datetime.now(datetime.timezone.utc).isoformat(),'markdown':v['text'],'rules':v['rules'],'source_sha256':item['source_sha'],'calls':v['calls'],'matching_log':v.get('matching_log',[]),'template_version':v.get('template_version')}
         atomic_json(root/(token+'.json'),report);(root/(token+'.md')).write_text(v['text']+'\n','utf-8');return {'id':token,'case':v['case'],'saved':True}
 
 def list_reports(service,a):

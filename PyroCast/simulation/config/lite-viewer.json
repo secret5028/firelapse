@@ -1,60 +1,60 @@
 {
-  "active_path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S06\\playback.json",
+  "active_path": "simulation/results/lite_v8_mc_R2_10_20261026/S06/playback.json",
   "cases": [
     {
       "id": "stage4",
       "label": "R2 화점 · 승인 연료 · 확정 방화문 닫힘/나머지 열림 · 1시간",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_stage4_R2_20261026\\playback.json"
+      "path": "simulation/results/lite_v8_stage4_R2_20261026/playback.json"
     },
     {
       "id": "S00",
       "label": "R2 S00 · 방화문 모두 열림 · 연소 2 / 연기 위험 2실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S00\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S00/playback.json"
     },
     {
       "id": "S01",
       "label": "R2 S01 · 모두 닫힘 · 연소 1 / 연기 위험 0실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S01\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S01/playback.json"
     },
     {
       "id": "S02",
       "label": "R2 S02 · 무작위 · 연소 2 / 연기 위험 3실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S02\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S02/playback.json"
     },
     {
       "id": "S03",
       "label": "R2 S03 · 무작위 · 연소 2 / 연기 위험 2실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S03\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S03/playback.json"
     },
     {
       "id": "S04",
       "label": "R2 S04 · 무작위 · 연소 3 / 연기 위험 1실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S04\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S04/playback.json"
     },
     {
       "id": "S05",
       "label": "R2 S05 · 무작위 · 연소 2 / 연기 위험 1실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S05\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S05/playback.json"
     },
     {
       "id": "S06",
       "label": "R2 S06 · 무작위 · 연소 6 / 연기 위험 2실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S06\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S06/playback.json"
     },
     {
       "id": "S07",
       "label": "R2 S07 · 무작위 · 연소 5 / 연기 위험 0실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S07\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S07/playback.json"
     },
     {
       "id": "S08",
       "label": "R2 S08 · 무작위 · 연소 5 / 연기 위험 3실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S08\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S08/playback.json"
     },
     {
       "id": "S09",
       "label": "R2 S09 · 무작위 · 연소 5 / 연기 위험 1실",
-      "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_v8_mc_R2_10_20261026\\S09\\playback.json"
+      "path": "simulation/results/lite_v8_mc_R2_10_20261026/S09/playback.json"
     }
   ],
   "progress_text": "R2 MC10 직렬 종료 · 완주 10/10 · 실패/미완료 0 · 실제 발생확률 아님",

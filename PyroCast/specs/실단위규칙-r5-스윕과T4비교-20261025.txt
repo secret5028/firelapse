@@ -18,7 +18,7 @@ R1 peak/창 | 완주 | R1 최고℃/600℃ 첫 구간 | R2/R3 착화초 | R2/R3 
 4000kW/closed | True | 1473.7/[235.0, 240.0] | 244.6/304.4 | 955.0/895.0 | 223.4 | False
 4000kW/small | True | 1042.3/[250.0, 255.0] | 256.2/328.3 | 940.0/870.0 | 242.2 | False
 4000kW/large | True | 1608.5/[265.0, 270.0] | 266.7/345.4 | 930.0/850.0 | 134.0 | False
-선정: {"B2": {"sweep_case": "P2000_large", "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\fixtures\\room_rule_benchmark_3room_b2.json", "sha256": "13b95e7e84b5fc4cc552f64de5a4b318eb857fbf11eff41d126b667b3ff6dbee", "reference_search_complete": false, "condition_consistent": false}, "B3": {"sweep_case": "P2000_closed", "path": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\fixtures\\room_rule_benchmark_3room_b3.json", "sha256": "221fbfff0cc010808250784f43f5635dc6079700666ab1073b90ef391bc70ffd", "reference_search_complete": false, "condition_consistent": false}}
+선정: {"B2": {"sweep_case": "P2000_large", "path": "C:\\Users\\<원본PC>\\Documents\\ChatGPT\\PyroCast\\fixtures\\room_rule_benchmark_3room_b2.json", "sha256": "13b95e7e84b5fc4cc552f64de5a4b318eb857fbf11eff41d126b667b3ff6dbee", "reference_search_complete": false, "condition_consistent": false}, "B3": {"sweep_case": "P2000_closed", "path": "C:\\Users\\<원본PC>\\Documents\\ChatGPT\\PyroCast\\fixtures\\room_rule_benchmark_3room_b3.json", "sha256": "221fbfff0cc010808250784f43f5635dc6079700666ab1073b90ef391bc70ffd", "reference_search_complete": false, "condition_consistent": false}}
 R1 온도는 최종 전이 계산의 결과이므로 추가 화원의 피드백을 포함한다. 이 최고온도를 초기 화원만 있는 기준 실행의 값으로 읽으면 안 된다.
 T0 자기일관성이 False인 경우 착화 일정은 참조값이며 수렴한 물리적 정답이 아니다. B2/B3는 전이가 발생하는 입력 확보 목적이다.
 
@@ -61,4 +61,4 @@ r4 공급 상한(외기 우선, 외기 없으면 내부 최대×0.5)은 수치 �
 실제 source HRR>0, 양수 공급이나 HRR0, 개구부 연소를 구분한다. 추가 반응 항은 OFF. T4 전이 사건은 FO 사건 목록에 넣지 않는다.
 단일 실행은 외부 재실행을 제거하지만 다화원 산소 제한 구간의 native 계산 비용 자체를 없애지 않는다. 전이 결과가 다르면 소요 시간 차이를 동등 정확도의 가속률로 표현할 수 없다.
 
-근거 폴더: C:\Users\예방\Documents\ChatGPT\PyroCast\simulation\results\room_rule_r5_20261025
+근거 폴더: C:\Users\<원본PC>\Documents\ChatGPT\PyroCast\simulation\results\room_rule_r5_20261025

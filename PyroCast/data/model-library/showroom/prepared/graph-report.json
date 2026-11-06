@@ -1,5 +1,5 @@
 {
-  "source": "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\data\\model-library\\showroom\\building.json",
+  "source": "building.json",
   "source_sha256": "56f439777f91e39cf51f3b2069bd3bc9729598fb3ed2e89c8547b291fde5f6d9",
   "rules_revision": "building_rules_v1_preserve_20261103",
   "floors": [

@@ -21,7 +21,8 @@ def core_digest(p):
 def main():
     review=ROOT/'reviews/B5-20261103';review.mkdir(parents=True,exist_ok=True)
     cfg=read(ROOT/'simulation/config/lite-viewer.json')
-    paths=sorted({Path(c['path']) for c in cfg['cases']}|{ROOT/'data/wando-coldstore/P1-playback.json'})
+    from runtime_storage import app_path
+    paths=sorted({app_path(c['path']) for c in cfg['cases']}|{ROOT/'data/wando-coldstore/P1-playback.json'})
     report=[]
     for path in paths:
         p=read(path);before=core_digest(p);source=path.parent/'result.json';native=path.name=='P1-playback.json'

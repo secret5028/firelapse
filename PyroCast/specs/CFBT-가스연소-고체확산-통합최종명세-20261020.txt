@@ -536,7 +536,7 @@ v43 단열·개방 사례, v44/v45 독립 간이 모델과 27조건 순위 결�
 - NIST SP1018, Sixth Edition, Volume1: 혼합 제한·유한 반응 모델의 기술 참고.
   https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.1018e6.pdf
 - 기존 조사 기록: research/cfbt-precedents-20261020/APPLICATION_REVIEW.txt
-- 원본 코드·결과 위치: C:\Users\예방\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d
+- 원본 코드·결과 위치: C:\Users\<원본PC>\Documents\Codex\2026-10-14\files-pasted-by-the-user-cad3d
 
 여기서 논문은 구조·기술 근거다. 임계값·성장률·반응계수가 모든 실내 연기에 보편적으로 적용된다는 근거로 사용하지 않는다.
 

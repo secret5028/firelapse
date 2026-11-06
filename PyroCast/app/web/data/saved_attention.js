@@ -34,7 +34,7 @@ export const savedAttention = {
       "identity": [
         "CAD_3F_R3",
         "fixed",
-        "C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\results\\lite_screening_ui_1793597384213006900\\CAD_3F_R3\\fixed",
+        "simulation/results/lite_screening_ui_1793597384213006900/CAD_3F_R3/fixed",
         675.941614899999,
         11,
         260.0,

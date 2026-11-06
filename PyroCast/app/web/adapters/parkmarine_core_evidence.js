@@ -6,85 +6,85 @@ export const parkmarineCoreEvidence = {
   "sources": [
     {
       "floor": "B3",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\B3.json",
+      "file": "B3.json",
       "sha256": "2e7487bc1fe1735ada1bafc4b81f941b3e9274b521398e7af58d43dccb36f799",
       "dxf": "A-301 지하3층평면도.dxf"
     },
     {
       "floor": "B2",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\B2.json",
+      "file": "B2.json",
       "sha256": "f6b2fabb447ad44d812e5d1333855fdf11aca1d43f6585a527bc67f5c03c4c46",
       "dxf": "A-302 지하2층평면도.dxf"
     },
     {
       "floor": "B1",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\B1.json",
+      "file": "B1.json",
       "sha256": "bd98d3dd9cc768c2f49210bae5239a784ae3015295a0ae46bbd6a712298b9caa",
       "dxf": "A-303 지하1층평면도.dxf"
     },
     {
       "floor": "1F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\1F.json",
+      "file": "1F.json",
       "sha256": "d1ef0b1e4e50584589d4d63c33603847b3084df12dbee18160127f22cf6ecefd",
       "dxf": "A-304 지상1층평면도.dxf"
     },
     {
       "floor": "2F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\2F.json",
+      "file": "2F.json",
       "sha256": "9b425df47743c28936bffa9878952de815369a1088475bafa00c307f5a99bd84",
       "dxf": "A-305 지상2층평면도.dxf"
     },
     {
       "floor": "3F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\3F.json",
+      "file": "3F.json",
       "sha256": "9aa047bb04ff9ca1b88f80c6a4cda4881de9e4455fc0f15b6689812a3034adcd",
       "dxf": "A-306 지상3층평면도.dxf"
     },
     {
       "floor": "4F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\4F.json",
+      "file": "4F.json",
       "sha256": "dfae863fc717cbb4dc9e929deb40c3ff94c860ab920d4d52f70659c69388a6df",
       "dxf": "A-307 지상4층평면도.dxf"
     },
     {
       "floor": "5F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\5F.json",
+      "file": "5F.json",
       "sha256": "8d32e266680b2d0f4543475262a5e07f6136eba1d28ddadd77f1b9c7399b8a03",
       "dxf": "A-308 지상5층평면도.dxf"
     },
     {
       "floor": "6F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\6F.json",
+      "file": "6F.json",
       "sha256": "4e1a12743dc896b83cadcf05f9fd0f6ff229712902add02fbcc386cac225020f",
       "dxf": "A-309 지상6층평면도.dxf"
     },
     {
       "floor": "7F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\7F.json",
+      "file": "7F.json",
       "sha256": "8ab35d4048f0eddd89d876db800fbb69378cd465dadfaeec667a28643faaff8c",
       "dxf": "A-310 지상7층평면도.dxf"
     },
     {
       "floor": "8F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\8F.json",
+      "file": "8F.json",
       "sha256": "d6ebf316ac414abcc4328b05227921dd1bb0ee96ceedbb190a527656b8837ca6",
       "dxf": "A-311 지상8층평면도.dxf"
     },
     {
       "floor": "9F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\9F.json",
+      "file": "9F.json",
       "sha256": "8d2d347556d8545937cad4fe597748909f73f40d757f36e59a248f8316f5cc41",
       "dxf": "A-312 지상9층평면도.dxf"
     },
     {
       "floor": "10F",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\10F.json",
+      "file": "10F.json",
       "sha256": "61c739fec2741c834d86eba7c368c0a6cd20f65c49af875fe542fcabe3df639c",
       "dxf": "A-313 지상10층평면도.dxf"
     },
     {
       "floor": "PH",
-      "file": "C:\\Users\\예방\\Documents\\Codex\\2026-09-07\\2\\CAD3D\\out\\28-200-2018-00000088\\PH.json",
+      "file": "PH.json",
       "sha256": "0bd36d982f7aa2e2c86e0c69b99638cc3ffa456c03f9f4128a98d59363d28f42",
       "dxf": "A-314 지붕,옥탑,옥탑지붕평면도.dxf"
     }

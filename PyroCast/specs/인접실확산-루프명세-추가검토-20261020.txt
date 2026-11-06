@@ -1,6 +1,6 @@
 인접실 화재 확산 루프 명세 추가 검토
 검토일: 2026-10-20
-대상: C:\Users\예방\Downloads\인접실확산-루프명세-20261020.md
+대상: C:\Users\<원본PC>\Downloads\인접실확산-루프명세-20261020.md
 상태: 검토 의견. 기존 최종 명세를 자동으로 대체하거나 구현 승인을 뜻하지 않는다.
 수행 범위: 문서·기존 코드·공식 CFAST 소스 대조. 원본 코드 수정, 입력 변경, 시뮬레이션 재실행 없음.
 
@@ -188,7 +188,7 @@ https://raw.githubusercontent.com/firemodels/cfast/CFAST-7.7.7/Source/CFAST/fire
 https://pages.nist.gov/cfast/manuals.html
 
 앞선 최종 요구 명세:
-C:\Users\예방\Documents\ChatGPT\PyroCast\specs\CFBT-조건부화재거동-최종명세-20261020.txt
+C:\Users\<원본PC>\Documents\ChatGPT\PyroCast\specs\CFBT-조건부화재거동-최종명세-20261020.txt
 
 첨부가 인용하는 별도 ‘검수-문너머복사-v41-20261020.md’는 현재 Downloads에서 확인하지 못했다. 따라서 그 문서의 F1~F11 검증 결과, 0.31kW/m² 오차, 1℃ 재현 등은 이번 검토에서 새로 검증한 수치로 취급하지 않았다. 기존 코드에서 확인한 사실과 첨부의 검증 주장을 구분했다.
 

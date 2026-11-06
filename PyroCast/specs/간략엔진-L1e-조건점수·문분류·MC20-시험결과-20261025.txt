@@ -95,7 +95,7 @@ S01 개방 시 위험 시간 구간은 mc/S01/summary.json의 opening_risk. 실�
 
 6. 파일·화면·검증
 공통 조건표: simulation/pyrocast_cfbt/conditions.py. native 엔진/솔버/r8 전이 계산은 불변.
-기존 source guard 63파일 중 변경 ['C:\\Users\\예방\\Documents\\ChatGPT\\PyroCast\\simulation\\pyrocast_cfbt\\conditions.py'] (사용자 승인된 표시용 공통 조건표).
+기존 source guard 63파일 중 변경 ['C:\\Users\\<원본PC>\\Documents\\ChatGPT\\PyroCast\\simulation\\pyrocast_cfbt\\conditions.py'] (사용자 승인된 표시용 공통 조건표).
 29개 lite 검사 통과. 원본 fire_zone.py 및 CFAST 실행파일 수정/새 native 실행 없음.
 3D에는 문 분류 목록·근거·저장 정정 UI를 추가했다. 재생 시뮬레이션은 기존 저장 결과를 유지한다.
 새 MC20 결과를 기존 3D 화재 재생으로 바꿨다고 표시하지 않는다.

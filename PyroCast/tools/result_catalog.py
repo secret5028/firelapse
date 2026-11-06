@@ -59,7 +59,8 @@ class ResultCatalog:
         if kind=='native':
             for key,row in aliases.items():bypath[(self.root/row['relative_path']).resolve()]={'id':key,'label':row['label']}
         else:
-            for row in configured:bypath[Path(row['path']).resolve()]=row
+            from runtime_storage import app_path
+            for row in configured:bypath[app_path(row['path']).resolve()]=row
         result=[]
         for rel,row in index.items():
             if not row.get('valid') or row['kind']!=kind or row['building_sha256']!=building_sha:continue

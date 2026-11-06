@@ -16,7 +16,7 @@ def main():
             else:save(path,imported)
         b=read(path);floors=b.get('floors',[])
         note='기존 운영 화면에서 실행' if enabled else ('스캔 기반 · 개구부 미검증 · 시뮬레이션 금지' if kind=='scan' else '저장 모델 열람 · 계산 실행 연결 없음')
-        models.append(dict(id=id,label=label,path=path.relative_to(ROOT).as_posix(),source_path=str(source),
+        models.append(dict(id=id,label=label,path=path.relative_to(ROOT).as_posix(),source_name=source.name,
             source_kind=kind,source_evidence=proof,sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             original_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),floor_count=len(floors),
             room_count=sum(len(f.get('rooms',[])) for f in floors) if kind!='scan' else None,

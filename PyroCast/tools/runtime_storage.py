@@ -38,9 +38,15 @@ def is_result_path(path, subdir=''):
     return any(p.is_relative_to((r/subdir).resolve()) for r in result_roots())
 
 
+def app_path(path):
+    """Resolve portable configuration paths against the application, not cwd."""
+    p=Path(path)
+    return p if p.is_absolute() else ROOT/p
+
+
 def playback_path(path):
     """Accept only an existing final replay in either managed result tree."""
-    p=locate(path).resolve()
+    p=locate(app_path(path)).resolve()
     if p.name!='playback.json' or not is_result_path(p) or not p.is_file():
         raise ValueError('Invalid lite path')
     return p

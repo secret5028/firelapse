@@ -56,7 +56,7 @@ class Tools:
         return row,read(row['path'])
     def cases(self,key):
         meta,_=self.building(key);out={}
-        from runtime_storage import result_roots, is_result_path
+        from runtime_storage import result_roots, is_result_path, app_path
         roots=result_roots()
         stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in [SIM/'config/lite-viewer.json',*[r/'playback-catalog.json' for r in roots],ROOT/'data/wando-coldstore'])
         cached=self._case_cache.get(meta['id'])
@@ -64,7 +64,7 @@ class Tools:
         cfg=read(SIM/'config/lite-viewer.json',{})
         index=read(SIM/'results/playback-catalog.json',{}).get('files',{})
         for r in cfg.get('cases',[]):
-            p=Path(r['path']).resolve()
+            p=app_path(r['path']).resolve()
             if (p.is_relative_to(ROOT) or is_result_path(p)) and p.is_file():
                 rel=p.relative_to(SIM/'results').as_posix() if p.is_relative_to(SIM/'results') else ''
                 d=index.get(rel) or playback(str(p),p.stat().st_mtime_ns)

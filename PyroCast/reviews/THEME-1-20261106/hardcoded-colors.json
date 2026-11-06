@@ -1,0 +1,605 @@
+[
+  {
+    "file": "app/web/adapters/legacy_building.js",
+    "line": 7,
+    "colors": [
+      "#aab7c0"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/adapters/legacy_building.js",
+    "line": 8,
+    "colors": [
+      "#b8c3cb"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/adapters/legacy_building.js",
+    "line": 9,
+    "colors": [
+      "#bdcbd5"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/building.js",
+    "line": 17,
+    "colors": [
+      "#93acb5"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/building.js",
+    "line": 18,
+    "colors": [
+      "#b8c3cb"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/building.js",
+    "line": 61,
+    "colors": [
+      "#8da8b7"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/core.js",
+    "line": 58,
+    "colors": [
+      "#2563eb",
+      "#55baff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/fuel_quantity.js",
+    "line": 23,
+    "colors": [
+      "#d5ae75"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/openings.js",
+    "line": 15,
+    "colors": [
+      "#62dcb0",
+      "#e6bd68"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/openings.js",
+    "line": 16,
+    "colors": [
+      "#80d1ff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/openings.js",
+    "line": 19,
+    "colors": [
+      "#c0cbd3"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/openings.js",
+    "line": 24,
+    "colors": [
+      "#c0cbd3"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/openings.js",
+    "line": 57,
+    "colors": [
+      "#62dcb0"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/real_view.js",
+    "line": 27,
+    "colors": [
+      "#a6b4ba"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/real_view.js",
+    "line": 44,
+    "colors": [
+      "#ff8a3d",
+      "#a6b4ba"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 6,
+    "colors": [
+      "#ef4444",
+      "#a855f7",
+      "#facc15"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 19,
+    "colors": [
+      "#ffffff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 21,
+    "colors": [
+      "#fff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 23,
+    "colors": [
+      "#e7f2fa"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 25,
+    "colors": [
+      "#d8e9f5"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 40,
+    "colors": [
+      "#9ca3af"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 49,
+    "colors": [
+      "#f97316"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 91,
+    "colors": [
+      "#9ca3af"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 97,
+    "colors": [
+      "#9ca3af"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/risk.js",
+    "line": 98,
+    "colors": [
+      "#fff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/room_names.js",
+    "line": 14,
+    "colors": [
+      "#f2f7fa",
+      "#102331",
+      "#102331",
+      "#102331"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/route.js",
+    "line": 13,
+    "colors": [
+      "#07131d"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/route.js",
+    "line": 18,
+    "colors": [
+      "#ffffff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/route.js",
+    "line": 33,
+    "colors": [
+      "#17384d",
+      "#ffffff",
+      "#fff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/route.js",
+    "line": 64,
+    "colors": [
+      "#75deef",
+      "#f26464"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/selection.js",
+    "line": 13,
+    "colors": [
+      "#ffffff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/layers/selection_outline.js",
+    "line": 21,
+    "colors": [
+      "#10212d",
+      "#ffffff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 5,
+    "colors": [
+      "#ef4444",
+      "#a855f7",
+      "#facc15"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 23,
+    "colors": [
+      "#62dcb0"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 28,
+    "colors": [
+      "#aab7c0",
+      "#ffffff",
+      "#9ca3af",
+      "#ffa824",
+      "#b38ae6",
+      "#ef4444"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 29,
+    "colors": [
+      "#e6bd68",
+      "#62dcb0"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 30,
+    "colors": [
+      "#e8f2f8"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 31,
+    "colors": [
+      "#2563eb"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 32,
+    "colors": [
+      "#62dcb0"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 33,
+    "colors": [
+      "#9ca3af"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 34,
+    "colors": [
+      "#c8b794"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 35,
+    "colors": [
+      "#38bdf8"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 36,
+    "colors": [
+      "#d33"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 37,
+    "colors": [
+      "#9ca3af"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 38,
+    "colors": [
+      "#dce8ef"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 59,
+    "colors": [
+      "#9ca3af",
+      "#dce8ef",
+      "#9ca3af",
+      "#aab7c0",
+      "#9ca3af",
+      "#ffa824",
+      "#ffffff",
+      "#38bdf8",
+      "#62dcb0",
+      "#e6bd68",
+      "#2563eb",
+      "#c8b794",
+      "#9ca3af",
+      "#9ca3af",
+      "#e7f2fa"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 64,
+    "colors": [
+      "#c41f05",
+      "#ffae23",
+      "#fffad9",
+      "#8c0800"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 67,
+    "colors": [
+      "#f97316"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/display.js",
+    "line": 97,
+    "colors": [
+      "#e6bd68",
+      "#62dcb0",
+      "#c0cbd3"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/legacy_lite_panel.js",
+    "line": 7,
+    "colors": [
+      "#2563eb",
+      "#55baff"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/legacy_lite_panel.js",
+    "line": 11,
+    "colors": [
+      "#ef4444",
+      "#a855f7",
+      "#f97316",
+      "#facc15"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/legacy_lite_panel.js",
+    "line": 13,
+    "colors": [
+      "#ff7a14",
+      "#ffa824",
+      "#fff08c",
+      "#ff3b09"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/model_review.js",
+    "line": 11,
+    "colors": [
+      "#9eb2c4"
+    ],
+    "classification": "separate CAD review UI; outside operational shell"
+  },
+  {
+    "file": "app/web/panels/model_review.js",
+    "line": 26,
+    "colors": [
+      "#7bd6c4",
+      "#edbf75"
+    ],
+    "classification": "separate CAD review UI; outside operational shell"
+  },
+  {
+    "file": "app/web/panels/results.js",
+    "line": 3,
+    "colors": [
+      "#ef4444",
+      "#a855f7",
+      "#facc15"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/results.js",
+    "line": 86,
+    "colors": [
+      "#f97316"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/panels/timeline_risk.js",
+    "line": 1,
+    "colors": [
+      "#ef4444",
+      "#a855f7",
+      "#facc15"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/route/risk.js",
+    "line": 5,
+    "colors": [
+      "#38bdf8"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/render_order.js",
+    "line": 10,
+    "colors": [
+      "#ef4444",
+      "#a855f7",
+      "#facc15",
+      "#9ca3af"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 10,
+    "colors": [
+      "#35444e",
+      "#bd2435",
+      "#d73542"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 11,
+    "colors": [
+      "#315a70",
+      "#315a70",
+      "#f3eee2",
+      "#fff3bc",
+      "#a4b0b7",
+      "#677781"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 12,
+    "colors": [
+      "#17232b",
+      "#aebac1"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 13,
+    "colors": [
+      "#aebac1",
+      "#458ce4"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 14,
+    "colors": [
+      "#e9e9dd",
+      "#e9e9dd"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 16,
+    "colors": [
+      "#354956",
+      "#202a33"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 17,
+    "colors": [
+      "#e4ac36",
+      "#dca640"
+    ],
+    "classification": "index / 3D / matching legend"
+  },
+  {
+    "file": "app/web/scene/scale_reference.js",
+    "line": 18,
+    "colors": [
+      "#d8ac83",
+      "#efd267"
+    ],
+    "classification": "index / 3D / matching legend"
+  }
+]

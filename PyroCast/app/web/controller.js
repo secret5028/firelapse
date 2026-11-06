@@ -301,7 +301,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    await refreshScreening();await catalog();
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
   }catch(error){
-   if(!disposed){store.dispatch('buildingReview/set',{status:'확정 급기 저장 실패 · '+error.message});$('resultMCStatus').textContent=error.message;}
+   if(!disposed){store.dispatch('buildingReview/set',{status:'확정 급기 저장 실패 · '+error.message});$('resultMCStatus').className='status-error';$('resultMCStatus').textContent=error.message;}
   }finally{
    if(!disposed){store.dispatch('buildingReview/set',{saving:false});$('resultMCApplyWorst').disabled=!mcSummary?.worst;}
   }
@@ -313,8 +313,8 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
   if(!disposed&&serial===catalogSerial)explore.catalog(c,mcSummary?.source_room??null);
  }
- handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;$('resultMCLoad').disabled=true;
-  try{await catalog();}catch(error){if(!disposed)$('resultMCStatus').textContent='집계 읽기 실패 · '+error.message;}
+ handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;$('resultMCLoad').disabled=true;$('resultMCStatus').className='status-busy';
+  try{await catalog();}catch(error){if(!disposed){$('resultMCStatus').className='status-error';$('resultMCStatus').textContent='집계 읽기 실패 · '+error.message;}}
   finally{if(!disposed)$('resultMCLoad').disabled=!mcSummary;}
  });
  let loadSerial=0;

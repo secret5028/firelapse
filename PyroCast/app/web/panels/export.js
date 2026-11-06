@@ -10,16 +10,16 @@ export function attachExport({store,viewer,getCase,getRoute,render}){
   ['route',{...store.get('route'),vehicle:route?.vehicle??store.get('route').vehicle,placing:false}],
   ['route_result',route],['camera',{position:viewer.C.position.toArray(),up:viewer.C.up.toArray(),target:viewer.O.target.toArray()}]
  ]);}
- button.onclick=async()=>{const caseId=getCase();button.disabled=true;status.textContent=' 묶는 중…';try{
+ button.onclick=async()=>{const caseId=getCase();button.disabled=true;status.textContent=' 묶는 중…';status.className='status-busy';try{
   const payload={state:snapshot(),interval:Number(root.querySelector('select').value)},post=viewer.capabilities?.exportPost;
   const query=new URLSearchParams({state:JSON.stringify(payload.state),interval:payload.interval});
   const response=await fetch('/cfbt/lite/export/'+encodeURIComponent(caseId)+(post?'':'?'+query),post?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}:undefined);
   if(!response.ok){const error=await response.json().catch(()=>null);throw Error(error?.error||'내보내기 실패 · HTTP '+response.status);}
-  const blob=await response.blob(),large=blob.size>50*1024*1024;
+  status.className='status-ok';const blob=await response.blob(),large=blob.size>50*1024*1024;
   root.querySelector('label').hidden=!large&&root.querySelector('select').value==='10';
   const link=document.createElement('a'),url=URL.createObjectURL(blob);link.href=url;link.download=`FireLapse-${caseId}-${payload.interval}s.html`;link.click();setTimeout(()=>URL.revokeObjectURL(url),60000);
   if(getCase()===caseId)status.textContent=` ${(blob.size/1024/1024).toFixed(2)} MiB`+(large?' · 50 MiB 초과: 20 s 선택 후 다시 내보내기 가능':'');
- }catch(e){status.textContent=' '+e.message;}finally{button.disabled=false;}};
+ }catch(e){status.className='status-error';status.textContent=' '+e.message;}finally{button.disabled=false;}};
  const offline=window.__PYROCAST_OFFLINE__,cleanups=[];
  if(!offline)cleanups.push(store.subscribe('result',()=>{status.textContent='';}));
  if(offline){

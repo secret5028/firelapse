@@ -2,7 +2,7 @@
 export function createAIFuelPanel({onApplied,onRooms}){
  const root=document.createElement('details');root.id='aiFuel';root.innerHTML='<summary>AI 배치</summary><div id="aiFuelStatus" role="status"></div><div id="aiFuelConversation"></div><form id="aiFuelForm"><label for="aiFuelMessage">배치 설명</label><textarea id="aiFuelMessage" maxlength="4000" rows="3" placeholder="1층은 소매점이고 2층은 타이어창고" required></textarea><button id="aiFuelSend" disabled>제안 요청</button></form><div class="buildingScroll"><table><thead><tr><th>선택</th><th>실</th><th>현재 용도</th><th>제안 용도</th><th>MJ/m²</th><th>근거</th></tr></thead><tbody id="aiFuelRows"></tbody></table></div><button id="aiFuelApply" disabled>선택 적용</button>';
  document.getElementById('buildingContent').append(root);
- const style=document.createElement('style');style.textContent='#aiFuel{margin-top:18px}#aiFuel textarea{box-sizing:border-box;width:100%;background:var(--bg-card);color:var(--compat-eef5fa)}#aiFuelStatus,#aiFuelConversation{font-size:11px;margin:8px 0;white-space:pre-wrap}#aiFuel td{min-width:60px}#aiFuel td:last-child{min-width:150px;white-space:normal}';document.head.append(style);
+ const style=document.createElement('style');style.textContent='#aiFuel{margin-top:18px}#aiFuel textarea{box-sizing:border-box;width:100%;background:var(--bg-card);color:var(--text)}#aiFuelStatus,#aiFuelConversation{font-size:11px;margin:8px 0;white-space:pre-wrap}#aiFuel td{min-width:60px}#aiFuel td:last-child{min-width:150px;white-space:normal}';document.head.append(style);
  const $=id=>root.querySelector('#'+id),abort=new AbortController(),history=[];
  let configured=false,busy=false,proposal=null,disposed=false;
  const offline=Boolean(window.__PYROCAST_OFFLINE__);

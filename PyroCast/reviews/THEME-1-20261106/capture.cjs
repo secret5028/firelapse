@@ -39,7 +39,7 @@ async function shot(p,name,canvas=false){await settle(p);
   await p.evaluate(()=>__restoreTheme());
  }
  await (canvas?p.locator('#v canvas'):p).screenshot({path:path.join(out,name+'.png')});
- const row=await p.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,tab:document.querySelector('#pyroShellTabs [aria-selected=true]')?.id,floor:__themeUI.store.get('floor'),case:__themeUI.diagnostics().case_id,selection:__themeUI.store.get('selection'),time:__themeUI.store.get('playback').t_s}));report.scenes.push({name,canvas,...row});if(phase==='stage1-paired')await p.evaluate(()=>__resumeRAF());console.log(name);}
+ const row=await p.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,tab:document.querySelector('#pyroShellTabs [aria-selected=true]')?.id,floor:__themeUI.store.get('floor'),case:__themeUI.diagnostics().case_id,selection:__themeUI.store.get('selection'),time:__themeUI.store.get('playback').t_s,theme:getComputedStyle(document.documentElement).getPropertyValue('--bg-panel').trim(),status:[...document.querySelectorAll('.status-ok,.status-busy,.status-error')].map(e=>({id:e.id,class:e.className,color:getComputedStyle(e).color})),smallText:[...document.querySelectorAll('#pyroShellSidebar *,#pyroShellHeader *,#sceneResultList *')].filter(e=>e.getClientRects().length&&e.textContent.trim()&&parseFloat(getComputedStyle(e).fontSize)<11).map(e=>({id:e.id,cls:e.className,size:getComputedStyle(e).fontSize}))}));report.scenes.push({name,canvas,...row});if(phase==='stage1-paired')await p.evaluate(()=>__resumeRAF());console.log(name);}
 for(const [building,url] of [['hotel','http://127.0.0.1:8842/model.html'],['intech','http://127.0.0.1:8844/model.html'],['wando','http://127.0.0.1:8832/data/wando-coldstore/model.html']]){
  for(const width of [1440,375]){
   const p=await pageFor(url,width,width===375?844:1000);
@@ -49,8 +49,11 @@ for(const [building,url] of [['hotel','http://127.0.0.1:8842/model.html'],['inte
    await p.locator('#shellTab-'+tab).click();await shot(p,building+'-'+width+'-'+tab);
   }
   if(building==='hotel'&&width===1440&&phase==='stage2'){
+   const state=()=>p.evaluate(()=>Object.fromEntries(['layers','realView','openings','risk','displayDetails'].map(k=>[k,__themeUI.store.get(k)])));const beforeState=await state();
    const boxes=p.locator('#shellPane-display input[type=checkbox]');const n=await boxes.count();
    for(let i=0;i<n;i++){const box=boxes.nth(i),id=await box.getAttribute('id'),before=await box.isChecked();await box.evaluate(e=>e.click());await box.evaluate(e=>e.click());const after=await box.isChecked();report.toggles.push({id,before,after});}
+   report.toggleStateIdentical=JSON.stringify(beforeState)===JSON.stringify(await state());
+   report.light=await p.evaluate(()=>{document.documentElement.setAttribute('data-theme','light');const v=getComputedStyle(document.documentElement);const colors=Object.fromEntries(['--bg-panel','--bg-card','--text','--accent'].map(k=>[k,v.getPropertyValue(k).trim()]));document.documentElement.removeAttribute('data-theme');return colors;});
   }
   await p.close();
  }

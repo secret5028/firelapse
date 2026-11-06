@@ -2,7 +2,7 @@
 export async function attachOperationControls({app,info,initial}){
  const root=document.createElement('section');root.id='modelSingleRun';root.className='exploreCard';root.style.cssText='margin:12px;padding:12px;border:1px solid var(--border)';
  root.innerHTML='<h3>단일 화점 실행</h3><label>계산 층 <select id="opFloor"></select></label><label>화점 <select id="opRoom"></select></label><label>계산 시간 <select id="opDuration"><option value="60">1분 · 연결 확인</option><option value="1800">30분</option><option value="3600" selected>60분</option></select></label><label>급기 <select id="opState"><option value="open_except_confirmed">확정 방화문 제외 열림</option><option value="closed">전부 닫힘 · 누설만</option></select></label><button id="opRun">시뮬레이션 실행</button><div id="opStatus" role="status"></div><button id="opResult" hidden>완료 결과 보기</button>';
- const style=document.createElement('style');style.textContent='#modelSingleRun label{display:block;margin:8px 0}#modelSingleRun select{width:100%}#opStatus{margin:8px 0;font-size:12px}';root.append(style);document.getElementById('shellPane-explore').prepend(root);
+ const style=document.createElement('style');style.textContent='#modelSingleRun label{display:block;margin:8px 0}#modelSingleRun select{width:100%}#opStatus{margin:8px 0;font-size:13px}';root.append(style);document.getElementById('shellPane-explore').prepend(root);
  const $=id=>document.getElementById(id),abort=new AbortController();let poll=null,job=null,disposed=false;
  const api=async(path,options={})=>{const r=await fetch(path,{...options,signal:abort.signal}),v=await r.json();if(!r.ok)throw Error(v.error||'요청 실패');return v;};
  const cap=await api('/models/simulation/capabilities?building='+info.building_id);

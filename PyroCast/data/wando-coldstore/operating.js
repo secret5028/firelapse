@@ -48,7 +48,7 @@ try{
  const exterior=createExteriorLayer(T,S,await(await fetch('./exterior.json')).json(),$('shellPane-display'));
  const offFloor=app.store.subscribe('floor',()=>incident.setFloor(app.store.get('floor').floor_id));
  window.addEventListener('pagehide',()=>{offFloor();incident.dispose();exterior.dispose();},{once:true});
- const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:var(--compat-ffd18a);font-size:12px';$('resultCase').prepend(endpoint);
+ const endpoint=document.createElement('div');endpoint.id='nativeOutputNotice';endpoint.textContent='순정 CFAST · 마지막 5 s 미출력 · 종료 59:55';endpoint.style.cssText='padding:8px;color:var(--busy);font-size:13px';$('resultCase').prepend(endpoint);
  for(const id of ['exploreRun','exploreOriginRun','exploreMC','resultMCApplyWorst','exportHTML']){const el=$(id);if(el){el.disabled=true;el.title='P1 저장 결과 보기 전용';}}
  for(const el of document.querySelectorAll('#buildingDoors button')){el.disabled=true;el.title='P1 입력 고정';}
  function loop(){requestAnimationFrame(loop);O.update();R.render(S,C);

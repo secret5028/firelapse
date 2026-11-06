@@ -1,150 +1,67 @@
-/* THEME-1 stage 1: exact original CSS values; compatibility aliases are intentional. */
+/* THEME-1: palette values only; dark is default. Semantic 3D/index colors stay in their source. */
 :root{
   --bg-scene:#102331;
-  --bg-panel:#142b3b;
-  --bg-card:#163345;
-  --bg-control:#1d4158;
-  --bg-control-hover:#254353;
-  --bg-selected:#1c3e52;
-  --border:#496273;
-  --border-strong:#577487;
-  --text:#eaf3f8;
+  --bg-panel:#0d141c;
+  --bg-card:#1a2733;
+  --bg-control:#223240;
+  --bg-control-hover:#2b3d4d;
+  --bg-selected:#173a4f;
+  --border:#2e3f4e;
+  --border-strong:#44586a;
+  --text:#d8e2ea;
   --text-strong:#fff;
-  --text-muted:#b8cbd8;
-  --accent:#42c4e8;
-  --accent-fg:#102331;
+  --text-muted:#8fa3b5;
+  --accent:#8fd3ff;
+  --accent-fg:#0b1a26;
   --ok:#5fd39a;
   --busy:#f5b84a;
   --error:#ff8c6b;
-  --compat-0002:#0002;
-  --compat-0008:#0008;
-  --compat-018fa96a:white;
-  --compat-07131d:#07131d;
-  --compat-082633:#082633;
-  --compat-0a1c29:#0a1c29;
-  --compat-0b1e2d:#0b1e2d;
-  --compat-102331ed:#102331ed;
-  --compat-102838ed:#102838ed;
-  --compat-102838f5:#102838f5;
-  --compat-10283af5:#10283af5;
-  --compat-132c3bdd:#132c3bdd;
-  --compat-142b3bcc:#142b3bcc;
-  --compat-142b3be8:#142b3be8;
-  --compat-142b3bf2:#142b3bf2;
-  --compat-153f64:#153f64;
-  --compat-16364c:#16364c;
-  --compat-17181a:#17181a;
-  --compat-17384d:#17384d;
-  --compat-182d3de8:#182d3de8;
-  --compat-193648:#193648;
-  --compat-19384e:#19384e;
-  --compat-19394d:#19394d;
-  --compat-1c3545:#1c3545;
-  --compat-1d1d1f:#1d1d1f;
-  --compat-1d4f75:#1d4f75;
-  --compat-222428ee:#222428ee;
-  --compat-234357:#234357;
-  --compat-235e79:#235e79;
-  --compat-245166:#245166;
-  --compat-2563eb:#2563eb;
-  --compat-26628e:#26628e;
-  --compat-2a4d63:#2a4d63;
-  --compat-2b6cb0:#2b6cb0;
-  --compat-2baed4:#2baed4;
-  --compat-2c73bc:#2c73bc;
-  --compat-2f7fb8:#2f7fb8;
-  --compat-304c5e:#304c5e;
-  --compat-304d60:#304d60;
-  --compat-345c6a:#345c6a;
-  --compat-34c1df:#34c1df;
-  --compat-355468:#355468;
-  --compat-36516455:#36516455;
-  --compat-365268:#365268;
-  --compat-38bdf8:#38bdf8;
-  --compat-3a3c40:#3a3c40;
-  --compat-3f93cc:#3f93cc;
-  --compat-416275:#416275;
-  --compat-426278:#426278;
-  --compat-428ac0:#428ac0;
-  --compat-42c4e855:#42c4e855;
-  --compat-42cce7:#42cce7;
-  --compat-42e8ff:#42e8ff;
-  --compat-436072:#436072;
-  --compat-46ede2:#46ede2;
-  --compat-486678:#486678;
-  --compat-55baff:#55baff;
-  --compat-5793bd:#5793bd;
-  --compat-59798d:#59798d;
-  --compat-5a839c:#5a839c;
-  --compat-617786:#617786;
-  --compat-62dcb0:#62dcb0;
-  --compat-698493:#698493;
-  --compat-6a8d9f:#6a8d9f;
-  --compat-6d8796:#6d8796;
-  --compat-7292a3:#7292a3;
-  --compat-7296aa:#7296aa;
-  --compat-72e3f7:#72e3f7;
-  --compat-7f9cae:#7f9cae;
-  --compat-7fb0e6:#7fb0e6;
-  --compat-8099aa:#8099aa;
-  --compat-86a4b7:#86a4b7;
-  --compat-8eacbc:#8eacbc;
-  --compat-93a7bb:#93a7bb;
-  --compat-9af3ff:#9af3ff;
-  --compat-9b1337:#9b1337;
-  --compat-9bd3ff:#9bd3ff;
-  --compat-9c223a:#9c223a;
-  --compat-9cdcff:#9cdcff;
-  --compat-a2efff:#a2efff;
-  --compat-a8d5dc:#a8d5dc;
-  --compat-a9bfcd:#a9bfcd;
-  --compat-a9cfdf:#a9cfdf;
-  --compat-afc6d4:#afc6d4;
-  --compat-b6c9d8:#b6c9d8;
-  --compat-b6cedb:#b6cedb;
-  --compat-bfd3df:#bfd3df;
-  --compat-c1d2dd:#c1d2dd;
-  --compat-c4d8e4:#c4d8e4;
-  --compat-c8dbe7:#c8dbe7;
-  --compat-c9d9e4:#c9d9e4;
-  --compat-cbe2ed:#cbe2ed;
-  --compat-ced9df:#ced9df;
-  --compat-d6d6d2:#d6d6d2;
-  --compat-d6e8f3:#d6e8f3;
-  --compat-dcebf3:#dcebf3;
-  --compat-e0ccfa:#e0ccfa;
-  --compat-e4edf4:#e4edf4;
-  --compat-e5f3ff:#e5f3ff;
-  --compat-e64b26:#e64b26;
-  --compat-e6bd68:#e6bd68;
-  --compat-e7be66:#e7be66;
-  --compat-e8e8e6:#e8e8e6;
-  --compat-e9f8ff:#e9f8ff;
-  --compat-ebf5ff:#ebf5ff;
-  --compat-eea746:#eea746;
-  --compat-eef5fa:#eef5fa;
-  --compat-eff7fb:#eff7fb;
-  --compat-f0d18e:#f0d18e;
-  --compat-f3b441:#f3b441;
-  --compat-f4d38b:#f4d38b;
-  --compat-f4f4f2:#f4f4f2;
-  --compat-ff3b09:#ff3b09;
-  --compat-ff7a14:#ff7a14;
-  --compat-ffa824:#ffa824;
-  --compat-ffb5a6:#ffb5a6;
-  --compat-ffb6a7:#ffb6a7;
-  --compat-ffbd85:#ffbd85;
-  --compat-ffbf57:#ffbf57;
-  --compat-ffc1b0:#ffc1b0;
-  --compat-ffc959:#ffc959;
-  --compat-ffd174:#ffd174;
-  --compat-ffd18a:#ffd18a;
-  --compat-ffd35b:#ffd35b;
-  --compat-ffe098:#ffe098;
-  --compat-ffe0a5:#ffe0a5;
-  --compat-fff08c:#fff08c;
-  --compat-ffffff12:#ffffff12;
-  --compat-ffffff1f:#ffffff1f;
-  --compat-ffffff30:#ffffff30;
-  --compat-ffffffee:#ffffffee;
+  --shadow:#0002;
 }
+[data-theme=light]{
+  --bg-scene:#dfe7ee;
+  --bg-panel:#f4f7f9;
+  --bg-card:#ffffff;
+  --bg-control:#e9eef3;
+  --bg-control-hover:#dde5ec;
+  --bg-selected:#d6ecfa;
+  --border:#c5d0da;
+  --border-strong:#9fb0bf;
+  --text:#1b2630;
+  --text-strong:#0b1118;
+  --text-muted:#5d6f80;
+  --accent:#0a6fb8;
+  --accent-fg:#ffffff;
+  --ok:#1e8f5a;
+  --busy:#b86e00;
+  --error:#c43c1a;
+  --shadow:#0002;
+}
+
+/* Existing elements only: typography and control colors, no layout changes. */
+#pyroShellHeader,#pyroShellSidebar,#pyroShellTimeline{font-size:13px;font-variant-numeric:tabular-nums}
+#pyroShellSidebar :is(#resultContent,#exploreContent,#fuelSettings,#shellPane-display){font-size:13px;color:var(--text)}
+#pyroShellSidebar .workflowStep>h3{font-size:14px;color:var(--text-strong)}
+#pyroShellSidebar :is(#resultContent,#routeRiskSummary)>h3,#pyroShellSidebar #resultContent section>h3,#shellPane-display h3{font-size:14px;color:var(--text-strong)}
+#pyroShellHeader .brand strong,#resultRoomTitle{font-size:20px;color:var(--text-strong)}
+#pyroShellSidebar .resultPeakValue,#sceneResultList .resultDetail,#sceneResultList .resultEngine,.aiEvidence,.timelineRiskLabel{font-size:11px;color:var(--text-muted)}
+#pyroShellSidebar :is(th,td){font-size:13px;font-variant-numeric:tabular-nums}
+#pyroShellSidebar #pyroShellTabs button[aria-selected=true]{background:var(--bg-selected);color:var(--accent)}
+#pyroShellSidebar :is(button,select):not(#exploreCalculateRun):not(#aiSend):not([aria-selected=true]){background:var(--bg-control)}
+#pyroShellSidebar :is(#exploreCalculateRun,#aiSend){background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+#pyroShellSidebar :is(#exploreCalculateRun,#aiSend):not(:disabled){background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+#pyroShellSidebar #resultMCWorst{border:0;border-top:1px solid var(--border)}
+#pyroShellSidebar #resultMCWorst strong{color:var(--text-strong)}
+#sceneResultList button,#sceneResultList .resultEngine{border:0;border-top:1px solid var(--border)}
+#sceneResultList button[aria-current=true]{border-color:var(--accent)}
+#pyroShellSidebar .status-ok{color:var(--ok)!important}
+#pyroShellSidebar .status-busy{color:var(--busy)!important}
+#pyroShellSidebar .status-error{color:var(--error)!important}
+
+/* Dynamic panel style tags are inserted later; these selectors keep the type scale stable. */
+body.pyroShell #pyroShellSidebar .workflowStep>h3,
+body.pyroShell #pyroShellSidebar #resultContent h3,
+body.pyroShell #pyroShellSidebar #routeRiskSummary h3,
+body.pyroShell #pyroShellSidebar #shellPane-display h3{font-size:14px;color:var(--text-strong)}
+body.pyroShell #pyroShellSidebar .aiEvidence,body.pyroShell #pyroShellTimeline .timelineRiskLabel{font-size:11px;color:var(--text-muted)}
+body.pyroShell #pyroShellSidebar .exploreEngineButtons button[aria-pressed=true]{background:var(--bg-selected);border-color:var(--accent);color:var(--text-strong)}

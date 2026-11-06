@@ -43,7 +43,7 @@ def node(a):
 def playback(path,stamp):return read(path)
 
 class Tools:
-    names=('list_buildings','get_building','get_ranking','get_case_summary','get_room_timeline','get_peak_events','get_route','get_mc_summary','propose_fuel','propose_openings','propose_run','get_tactic_rules')
+    names=('list_buildings','get_building','get_ranking','get_case_summary','get_room_timeline','get_index_windows','get_peak_events','get_route','get_mc_summary','propose_fuel','propose_openings','propose_run','get_tactic_rules')
     def __init__(self):
         candidates=[('cad-main','기존 CAD 건물',ROOT/'cad-project/building.json'),('cad-main','기존 CAD 건물',SIM/'results/github-publish-20261026/PyroCast/cad-project/building.json'),('wando-coldstore','완도 저온창고',ROOT/'data/wando-coldstore/operating-building.json')]
         self.buildings={}
@@ -106,8 +106,9 @@ class Tools:
         for f in b['floors']:
             for e in f.get('simulation_graph',{}).get('connections',[]):
                 key='CAD_'+f['name']+'_'+e['id']
-                doors.append({'id':key,'floor':f['name'],'sides':['OUTSIDE' if s=='out' else 'CAD_'+f['name']+'_'+s for s in e.get('sides',[])],'kind':e.get('kind'),'dimensions':e.get('dimensions'),**byid.get(key,{})})
-        return {'name':meta['label'],'rooms':rows,'openings':doors,'fixed_state':report.get('fixed_state'),'obstacles':b.get('obstacles',[])}
+                doors.append({'id':key,'floor':f['name'],'sides':['OUTSIDE' if s in ('out','OUTSIDE') else 'CAD_'+f['name']+'_'+s for s in e.get('sides',[])],'kind':e.get('kind'),'dimensions':e.get('dimensions'),**byid.get(key,{})})
+        from d5_evidence import enrich
+        return enrich(self,a,{'name':meta['label'],'rooms':rows,'openings':doors,'fixed_state':report.get('fixed_state'),'obstacles':b.get('obstacles',[])})
     def get_ranking(self,a):
         meta,_=self.building(a['building'])
         if meta['id']!='cad-main':return {'first':[],'second':[],'status':'미평가'}
@@ -154,6 +155,12 @@ class Tools:
                 frames.append(r)
             out.append({'cell':c['key'],'rows':frames})
         return {'room':a['room'],'aggregation':'single' if len(cells)==1 else 'none','cells':out,'sampling':'10 s exact saved samples; absent samples null; no interpolation','source_end_s':p['time_s'][-1]}
+    def get_index_windows(self,a):
+        from d5_tools import windows
+        p=self.case(a)
+        if not self.cells(p,a.get('room')):
+            return {'room':a.get('room'),'phenomenon':a.get('phenomenon'),'threshold':a.get('threshold',100),'windows':[],'evaluated':False,'partial':True}
+        return windows(self.get_room_timeline(a),a.get('phenomenon'),a.get('threshold',100))
     def get_case_summary(self,a):
         p=self.case(a);burning=set()
         for f in p.get('fires',[]):
@@ -179,6 +186,8 @@ class Tools:
         names={c.get('original_room') or c['key']:c.get('display_name') for c in p['rooms']}
         route=result['route'];route['entry_label']=display_label(route.get('entry'));route['target_label']=display_label(route.get('target'),names.get(route.get('target')))
         for row in (result.get('risk') or {}).get('rows',[]):row['label']=display_label(row.get('room'),names.get(row.get('room')))
+        from d5_tools import hose_segments
+        result['hose_segments']=hose_segments(result,self.get_building(a),settings.get('hose_m',15))
         return result
     def get_mc_summary(self,a):
         job=a.get('job')

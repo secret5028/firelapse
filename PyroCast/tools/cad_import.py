@@ -8,7 +8,7 @@ ROOT=model_library.ROOT
 STAGING=ROOT/'data/cad-imports'
 MAX_BODY=90*1024*1024
 LOCK=threading.Lock()
-PIPELINE_REVISION='cad-auto-20261105'
+PIPELINE_REVISION='cad-auto-20261106'
 
 def read(p): return json.loads(Path(p).read_text('utf-8-sig'))
 def folder(ident):
@@ -115,7 +115,7 @@ def worker(ident,review_only=False):
     try:
         value['pipeline']=[]
         value['pipeline_revision']=PIPELINE_REVISION
-        progress(dest,value,'extract','1/5 · CAD 형상·원본 문 호 추출 중…')
+        progress(dest,value,'extract','1/6 · CAD 형상·원본 문 호 추출 중…')
         env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','PYTHONUTF8':'1'}
         with (dest/'conversion.log').open('w',encoding='utf8') as log:
             process=subprocess.run([sys.executable,'-B','-X','utf8',str(Path(__file__)), '--arcs' if review_only else '--convert',str(dest)],
@@ -123,7 +123,7 @@ def worker(ident,review_only=False):
                 creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         if process.returncode: raise ValueError('CAD 형상 추출 실패 · conversion.log 확인')
         source=dest/'extraction/building.json'; building=read(source)
-        progress(dest,value,'validate','2/5 · 층 누락·형상 결측 검사 중…')
+        progress(dest,value,'validate','2/6 · 층 누락·형상 결측 검사 중…')
         errors,rows=geometry_checks(building,value['expected'])
         value.update(floors=rows,errors=errors)
         if errors:
@@ -131,14 +131,18 @@ def worker(ident,review_only=False):
         else:
             from cad_completion import complete
             from apply_hotel_autocorrect import check
-            progress(dest,value,'correct','3/5 · 층 정렬·연결 공리 자동보정·AI 검토 중…')
+            progress(dest,value,'correct','3/6 · 층 정렬·연결 공리 자동보정·AI 검토 중…')
             work=dest/'completion'/str(time.time_ns());work.mkdir(parents=True)
             for image in (dest/'extraction').glob('source-*.png'):shutil.copyfile(image,work/image.name)
             decisions=read(dest/'codex-review.json') if (dest/'codex-review.json').exists() else None
             building,report=complete(source,work,arc_evidence=read(dest/'arcs.json'),recorded_review=decisions)
+            validation=report.get('completion',{}).get('validation',{})
+            progress(dest,value,'verify','4/6 · 보정 후 원본·기하·연결 검증 중…',validation=validation)
             # A successful AI response is not a successful model. Validate its
             # final geometry before replacing a model or publishing a URL.
             errors,rows=geometry_checks(building,value['expected'])
+            if validation.get('geometry_error_count',0):
+                errors.append('보정 후 독립 기하 검증 실패 · 원본 유지')
             if errors:
                 atomic_json(work/'rejected-building.json',building)
                 atomic_json(work/'report.json',report)
@@ -150,7 +154,7 @@ def worker(ident,review_only=False):
             target=dest/'building.json'
             if target.exists():shutil.copyfile(target,work/'previous-generated-building.json')
             atomic_json(target,building)
-            progress(dest,value,'load','4/5 · 층별 계산 입력 검사 중…')
+            progress(dest,value,'load','5/6 · 층별 계산 입력 검사 중…')
             loaders=check(target)
             value['floors']=[dict(floor=f['name'],rooms=len(f['rooms']),openings=len(f['openings']),height_m=f['h']) for f in building['floors']]
             for row in loaders:
@@ -159,7 +163,7 @@ def worker(ident,review_only=False):
             building['notes']=['CAD 자동 추출 · 미확인 연결은 검토 목록 참조', '층고 출처: '+str(building.get('levels_src','미확인'))]
             atomic_json(target,building);atomic_json(dest/'graph-report.json',report);atomic_json(work/'report.json',report)
             mid='cad-'+ident
-            progress(dest,value,'register','5/5 · 건물 목록·운영 화면 등록 중…')
+            progress(dest,value,'register','6/6 · 건물 목록·운영 화면 등록 중…')
             from model_import import PUBLISH_LOCK
             with PUBLISH_LOCK:
                 registry=read(model_library.REGISTRY)

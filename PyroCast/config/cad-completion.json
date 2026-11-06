@@ -1,5 +1,5 @@
 {
-  "revision": "cad-completion-20261105",
+  "revision": "cad-completion-20261106",
   "column_tolerance_m": 0.05,
   "alignment_min_columns": 6,
   "alignment_min_match_fraction": 0.8,

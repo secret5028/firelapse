@@ -56,7 +56,7 @@ export class BuildingLayer extends EmptyLayer {
    const transparent=selected?material.opacity<1:base.transparent;
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
-  for(const line of this.cornerLines)line.material.opacity=alpha(.32)*(whole&&line.userData.basement ? .8 : 1);
+  for(const line of this.cornerLines)line.material.opacity=alpha(.8)*(whole&&line.userData.basement ? .8 : 1);
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
@@ -68,8 +68,9 @@ export class BuildingLayer extends EmptyLayer {
   }
    const points=wallCornerSegments(this.THREE,floor,volumes[i]);if(points.length){
     const T=this.THREE,geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(points,3));
-    const material=new T.LineBasicMaterial({color:'#8da8b7',transparent:true,opacity:.32,linewidth:1,depthTest:true,depthWrite:false});
-    const line=new T.LineSegments(geometry,material);line.name=floor.id+'_wall_corners';line.userData.basement=/^(B\d+|지하\s*\d+층)$/i.test(floor.id);line.userData.wallSources=floor.objects.filter(isWallMesh);line.renderOrder=-1;line.raycast=()=>{};
+    const material=new T.LineBasicMaterial({color:'#101820',transparent:true,opacity:.8,linewidth:1,depthTest:true,depthWrite:false});
+    const line=new T.LineSegments(geometry,material);line.name=floor.id+'_wall_corners';line.userData.basement=/^(B\d+|지하\s*\d+층)$/i.test(floor.id);line.userData.wallSources=floor.objects.filter(isWallMesh);// Draw real wall edges after smoke, before risk/selection; keep depth occlusion.
+    line.renderOrder=30;line.raycast=()=>{};
     this.floorGroups.get(floor.id).add(line);this.cornerLines.push(line);this.cornerResources.add(geometry);this.cornerResources.add(material);
     // Existing per-piece wireframes would double the edge and expose seams again.
     for(const source of floor.objects)if(isReplacedWallOutline(this.THREE,source,floor)){const object=this.sourceObjects.get(source);object.visible=false;this.replacedOutlines.add(object);}

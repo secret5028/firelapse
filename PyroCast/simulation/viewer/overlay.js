@@ -4150,7 +4150,7 @@ class BuildingLayer extends EmptyLayer {
    const transparent=selected?material.opacity<1:base.transparent;
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
-  for(const line of this.cornerLines)line.material.opacity=alpha(.32)*(whole&&line.userData.basement ? .8 : 1);
+  for(const line of this.cornerLines)line.material.opacity=alpha(.8)*(whole&&line.userData.basement ? .8 : 1);
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
@@ -4162,8 +4162,9 @@ class BuildingLayer extends EmptyLayer {
   }
    const points=wallCornerSegments(this.THREE,floor,volumes[i]);if(points.length){
     const T=this.THREE,geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(points,3));
-    const material=new T.LineBasicMaterial({color:'#8da8b7',transparent:true,opacity:.32,linewidth:1,depthTest:true,depthWrite:false});
-    const line=new T.LineSegments(geometry,material);line.name=floor.id+'_wall_corners';line.userData.basement=/^(B\d+|지하\s*\d+층)$/i.test(floor.id);line.userData.wallSources=floor.objects.filter(isWallMesh);line.renderOrder=-1;line.raycast=()=>{};
+    const material=new T.LineBasicMaterial({color:'#101820',transparent:true,opacity:.8,linewidth:1,depthTest:true,depthWrite:false});
+    const line=new T.LineSegments(geometry,material);line.name=floor.id+'_wall_corners';line.userData.basement=/^(B\d+|지하\s*\d+층)$/i.test(floor.id);line.userData.wallSources=floor.objects.filter(isWallMesh);// Draw real wall edges after smoke, before risk/selection; keep depth occlusion.
+    line.renderOrder=30;line.raycast=()=>{};
     this.floorGroups.get(floor.id).add(line);this.cornerLines.push(line);this.cornerResources.add(geometry);this.cornerResources.add(material);
     // Existing per-piece wireframes would double the edge and expose seams again.
     for(const source of floor.objects)if(isReplacedWallOutline(this.THREE,source,floor)){const object=this.sourceObjects.get(source);object.visible=false;this.replacedOutlines.add(object);}
@@ -4480,14 +4481,14 @@ class CoreLayer extends EmptyLayer {
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.updateVisibility();
  }
- // Core visibility follows the toggle in both whole-building and single-floor views.
- updateVisibility(){if(this.group)this.group.visible=this.visible!==false;}
+ // The toggle controls context/x-ray cores; the selected floor always retains its own cores.
+ updateVisibility(){if(this.group)this.group.visible=this.visible!==false||this.frame?.floor?.floor_id!=null;}
  tick(){const floor=this.frame?.floor?.floor_id??null;
   const selectedZ=this.views.find(v=>v.row.id===floor)?.row.group.position.z;
   const context=new Set(this.frame?.layers?.route!==false?this.contextFloorsFor():[]);
   for(const {row,group} of this.views){group.position.copy(row.group.position);
    const below=floor!==null&&Number.isFinite(selectedZ)&&row.group.position.z<selectedZ;
-   group.visible=(row.group.visible&&(floor===null||row.id===floor))||(below&&context.has(row.id));
+   group.visible=(floor!==null&&row.id===floor)||(this.visible!==false&&((floor===null&&row.group.visible)||(below&&context.has(row.id))));
    for(const object of group.children){const material=object.material;if(!material)continue;
     material.userData.coreOpacity??=material.opacity;
     material.opacity=material.userData.coreOpacity*(below?.35:1);
@@ -5278,7 +5279,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#ffffff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
  toggle($('displayLayers'),'displayRoomNames','도면 방 이름','#e8f2f8',()=>store.get('layers').roomNames,visible=>store.dispatch('layers/toggle',{id:'roomNames',visible}),false,'원본 CAD에 기록된 실 이름을 표시합니다. 이름이 없는 실은 임의로 만들지 않습니다.');
- toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'선택 층 위는 숨기고, 아래쪽 경로의 계단·승강기는 흐리게 표시합니다. 전체 보기에서는 전층을 표시합니다.');
+ toggle($('displayLayers'),'liteCores','계단·승강기 투시','#2563eb',()=>store.get('layers').core,null,true,'꺼도 선택 층의 계단·승강기는 유지합니다. 켜면 아래쪽 경로의 코어도 흐리게 표시하며, 전체 보기에서는 전층을 표시합니다.');
  toggle($('displayLayers'),'displayFixedOpenings','급기 상태 보기','#62dcb0',()=>store.get('openings').fixed,fixed=>store.dispatch('openings/set',{fixed}),false,'확정 입력이 있으면 다음 계산의 상태를, 없으면 저장된 재생 사례의 입력 상태를 표시합니다. 두 상태는 다를 수 있습니다. 사각형은 열림, ×는 닫힘(누설 포함). 외부 창은 기존 강조 필터와 카메라 방향을 따릅니다.');
  for(const [key,id,label] of [['cellOutline','displayCellOutline','셀 점선'],['floorTint','displayFloorTint','바닥 틴트'],['smokeInterface','displaySmokeInterface','연기 경계면'],['boundaryDots','displayBoundaryDots','경계 ±30 ℃ 점선']])toggle($('displayLayers'),id,label,'#9ca3af',()=>store.get('displayDetails')[key],visible=>store.dispatch('displayDetails/set',{[key]:visible}));
  toggle($('displayLayers'),'liteFuel','연료 기호','#c8b794',()=>store.get('realView').fuelMarkers,null,true);

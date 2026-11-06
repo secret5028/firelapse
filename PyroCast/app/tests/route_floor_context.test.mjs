@@ -27,7 +27,8 @@ assert(groups.filter(g=>g.visible).every(g=>g.name==='7F'),'lower architectural 
 for(const v of core.views)for(const o of v.group.children)assert.equal(o.material.opacity,o.material.userData.coreOpacity*(v.row.group.position.z<groups.find(g=>g.name==='7F').position.z?.35:1));
 target='CAD_9F_R15';route.setData(frame);core.tick();assert(core.views.filter(v=>['8F','9F','10F','PH'].includes(v.row.id)).every(v=>!v.group.visible),'above selected floor hidden even when route target is higher');
 core.setData({...frame,layers:{route:false}});core.tick();assert.deepEqual(core.views.filter(v=>v.group.visible).map(v=>v.row.id),['7F']);
-core.setVisible(false);assert.equal(core.group.visible,false);core.setVisible(true);
+core.setData(frame);core.setVisible(false);core.tick();assert.equal(core.group.visible,true);assert.deepEqual(core.views.filter(v=>v.group.visible).map(v=>v.row.id),['7F']);
+core.setVisible(true);core.tick();assert.deepEqual(core.views.filter(v=>v.group.visible).map(v=>v.row.id),visible);
 route.setData({...frame,route:{...frame.route,vehicle_visible:false}});assert.equal(route.getVehiclePickPlanes().length,0);
 assert(route.items.filter(x=>x.route).every(x=>x.object.visible));
 target='CAD_7F_R6';route.setData(frame);assert.equal(route.result.target,target);assert(!route.result.error);

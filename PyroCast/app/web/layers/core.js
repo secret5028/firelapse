@@ -83,14 +83,14 @@ export class CoreLayer extends EmptyLayer {
   if(frame.resultMeta!==this.lastResult)this.lastResult=frame.resultMeta;
   this.updateVisibility();
  }
- // Core visibility follows the toggle in both whole-building and single-floor views.
- updateVisibility(){if(this.group)this.group.visible=this.visible!==false;}
+ // The toggle controls context/x-ray cores; the selected floor always retains its own cores.
+ updateVisibility(){if(this.group)this.group.visible=this.visible!==false||this.frame?.floor?.floor_id!=null;}
  tick(){const floor=this.frame?.floor?.floor_id??null;
   const selectedZ=this.views.find(v=>v.row.id===floor)?.row.group.position.z;
   const context=new Set(this.frame?.layers?.route!==false?this.contextFloorsFor():[]);
   for(const {row,group} of this.views){group.position.copy(row.group.position);
    const below=floor!==null&&Number.isFinite(selectedZ)&&row.group.position.z<selectedZ;
-   group.visible=(row.group.visible&&(floor===null||row.id===floor))||(below&&context.has(row.id));
+   group.visible=(floor!==null&&row.id===floor)||(this.visible!==false&&((floor===null&&row.group.visible)||(below&&context.has(row.id))));
    for(const object of group.children){const material=object.material;if(!material)continue;
     material.userData.coreOpacity??=material.opacity;
     material.opacity=material.userData.coreOpacity*(below?.35:1);

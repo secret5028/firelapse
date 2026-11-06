@@ -36,7 +36,8 @@ for(const f of b.floors){
  layer.setData({...frame,floor:{floor_id:f.name}});layer.tick();assert.equal(layer.group.visible,true);
  assert.deepEqual(layer.views.filter(v=>v.group.visible).map(v=>v.row.id),[f.name]);
 }
-layer.setVisible(false);assert.equal(layer.group.visible,false);layer.setVisible(true);assert.equal(layer.group.visible,true);
+layer.setVisible(false);layer.tick();assert.equal(layer.group.visible,true);assert.deepEqual(layer.views.filter(v=>v.group.visible).map(v=>v.row.id),[b.floors.at(-1).name]);
+layer.setData(frame);layer.tick();assert.equal(layer.group.visible,false);layer.setVisible(true);assert.equal(layer.group.visible,true);
 layer.setData(frame);layer.tick();assert.equal(layer.views.filter(v=>v.group.visible).length,b.floors.length);
 assert.equal(layer.buildCount,1);layer.dispose();assert.equal(layer.resources.size,0);assert.equal(JSON.stringify(b),before);
 const old=JSON.parse(fs.readFileSync('simulation/results/github-publish-20261026/PyroCast/cad-project/building.json','utf8'));for(const f of old.floors)assert.equal(coreTransport(old,f),f.transport);

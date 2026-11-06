@@ -53,6 +53,7 @@ class ArcTests(unittest.TestCase):
         apply_arc_doors(f,P);self.assertEqual(len(f['openings']),1)
     def test_r17_real_mixed_bundle(self):
         root=Path(__file__).resolve().parents[2]
+        if not (root/'reviews/cad-interior-arcs-20261104/building-before.json').is_file():self.skipTest('SKIP: evidence folder missing')
         b=json.loads((root/'reviews/cad-interior-arcs-20261104/building-before.json').read_text('utf-8'))
         f=next(f for f in b['floors'] if f['name']=='5F');apply_arc_doors(f,P)
         o=next(o for o in f['openings'] if o['id']=='D0_ARC1')
@@ -60,6 +61,7 @@ class ArcTests(unittest.TestCase):
         self.assertEqual(o['connection_confidence'],'inferred')
     def test_15_degree_frame_line_is_not_assumed_open(self):
         root=Path(__file__).resolve().parents[2]
+        if not (root/'reviews/cad-interior-arcs-20261104/building-before.json').is_file():self.skipTest('SKIP: evidence folder missing')
         b=json.loads((root/'reviews/cad-interior-arcs-20261104/building-before.json').read_text('utf-8'))
         f=next(f for f in b['floors'] if f['name']=='5F')
         f['cad_arcs']=[dict(id='TEST_INSPECTION',inside_building=True,center=[12.420007,53.740081],radius_m=.74,start=[11.680007,53.740081],end=[11.705222,53.548555],radial_line_support=[True,False])]

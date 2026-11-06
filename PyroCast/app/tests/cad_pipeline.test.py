@@ -21,7 +21,7 @@ def building():
 
 class PipelineTest(unittest.TestCase):
     def run_import(self,*,expected=None,corrected=None,valid=True,review=False,completion_report=None):
-        with tempfile.TemporaryDirectory(dir=ROOT/'reviews') as tmp,ExitStack() as stack:
+        with tempfile.TemporaryDirectory() as tmp,ExitStack() as stack:
             root=Path(tmp);ident='b'*32;dest=root/'imports'/ident
             (dest/'extraction').mkdir(parents=True)
             def save(p,v):p.write_text(json.dumps(v),encoding='utf8')

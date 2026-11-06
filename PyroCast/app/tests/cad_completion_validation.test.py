@@ -49,20 +49,20 @@ class ValidationTests(unittest.TestCase):
   self.assertEqual([len(x) for x in bs],[2,2,2,2])
  def test_postcheck_missing_ids_are_unconfirmed(self):
   f=floor();b=dict(floors=[f],model_review={'items':[]})
-  with tempfile.TemporaryDirectory(dir=ROOT/'reviews') as tmp:
+  with tempfile.TemporaryDirectory() as tmp:
    source=Path(tmp)/'building.json';source.write_text('{}')
    v=c.post_validate(b,source,tmp,lambda ms:json.dumps({'accept':[],'uncertain':[]}),True)
   self.assertIn('incomplete_response',v['ai_status'])
   self.assertTrue(any(x['id']=='A' for x in b['model_review']['items']))
  def test_unconnected_api_never_reports_reviewed(self):
   b=dict(floors=[floor()],model_review={'items':[]})
-  with tempfile.TemporaryDirectory(dir=ROOT/'reviews') as tmp,patch('lite_ai_fuel.settings',return_value=None):
+  with tempfile.TemporaryDirectory() as tmp,patch('lite_ai_fuel.settings',return_value=None):
    source=Path(tmp)/'building.json';source.write_text('{}')
    v=c.post_validate(b,source,tmp,None,True)
   self.assertEqual(v['api_calls'],0);self.assertEqual(v['ai_status'],'not_connected')
  def test_postcheck_cannot_mutate_model(self):
   b=dict(floors=[floor()],model_review={'items':[]});before=deepcopy(b['floors'])
-  with tempfile.TemporaryDirectory(dir=ROOT/'reviews') as tmp:
+  with tempfile.TemporaryDirectory() as tmp:
    source=Path(tmp)/'building.json';source.write_text('{}')
    v=c.post_validate(b,source,tmp,lambda ms:json.dumps({'accept':['invented'],'uncertain':[]}),True)
   self.assertEqual(b['floors'],before);self.assertIn('failed_or_invalid_response',v['ai_status'])

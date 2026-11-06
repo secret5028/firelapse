@@ -15,7 +15,7 @@ class CADImportTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'헤더'):
             imp.upload({'files':[dict(name='scan.dwg',data=base64.b64encode(b'not cad').decode())]})
     def test_cad_saved_with_original_hash(self):
-        with tempfile.TemporaryDirectory(dir=ROOT/'reviews') as d, patch.object(imp,'STAGING',Path(d)), patch.object(imp,'runtime',return_value={}):
+        with tempfile.TemporaryDirectory() as d, patch.object(imp,'STAGING',Path(d)), patch.object(imp,'runtime',return_value={}):
             v=imp.upload({'files':[dict(name='floor.dwg',data=base64.b64encode(b'AC1027test').decode())]})
             self.assertEqual(v['state'],'uploaded')
             self.assertEqual((Path(d)/v['id']/'source/floor.dwg').read_bytes(),b'AC1027test')

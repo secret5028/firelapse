@@ -71,7 +71,7 @@ class CompletionTests(unittest.TestCase):
         f=floor();f['cad_arc_provenance']=dict(source_sha256='other')
         with self.assertRaisesRegex(ValueError,'source mismatch'):c.apply_merge(f,merge(),'api_ai')
     def test_recorded_review_requires_exact_source(self):
-        with tempfile.TemporaryDirectory(dir=ROOT/'reviews') as d:
+        with tempfile.TemporaryDirectory() as d:
             source=Path(d)/'source.json';source.write_text('{"floors":[]}',encoding='utf8')
             with self.assertRaisesRegex(ValueError,'source mismatch'):
                 c.complete(source,Path(d)/'out',recorded_review=dict(source_sha256='wrong'))

@@ -3,7 +3,7 @@ import {infoTip} from './explanations.js';
 import {roomFgiRollover} from '../adapters/fgi_rollover.js';
 export const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','BD','#facc15']];
 const finite=Number.isFinite;
-export const resultNumber=(v,d=0)=>finite(v)?v.toFixed(d):'—';
+export const resultNumber=(v,d=0)=>{if(!finite(v))return '—';const text=v.toFixed(d);return Number(text)===0?Math.abs(Number(text)).toFixed(d):text;};
 const number=resultNumber;
 export function resultCoverage(building,result,room){
  if(result.source_refs?.model_preview)return {label:'계산 전',status:room?'미평가':'실 선택',evaluated:false};

@@ -3,13 +3,13 @@
 
 **3D 건물 모델에서 구획 화재의 진행과 위험 조건을 시간에 따라 살펴보는 Windows용 로컬 앱입니다.**
 
-첫 공개 배포 계열의 최신 실행 패키지 `v2026.11.06-r2`에는 7개 건물 모델과 152개 최종 재생 결과가 포함됩니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
+첫 공개 배포 계열의 최신 실행 패키지 `v2026.11.06-r3`에는 7개 건물 모델과 152개 최종 재생 결과가 포함됩니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
 
 **계산 대상 시간: 30분 또는 최대 60분(1시간) · 기본값: 60분**
 
 이는 시뮬레이션 속 화재 진행 시간입니다. PC에서 실제 계산을 완료하는 데 걸리는 시간은 건물과 엔진에 따라 달라집니다.
 
-[배포 파일 확인](https://github.com/secret5028/firelapse/releases) · [소스 코드](https://github.com/secret5028/firelapse)
+[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.06-r3) · [소스 코드](https://github.com/secret5028/firelapse)
 
 ## 화면 미리보기
 
@@ -50,7 +50,7 @@
 
 ## 내려받아 실행하기
 
-1. [Releases](https://github.com/secret5028/firelapse/releases)에서 Windows x64용 **FireLapse 실행 패키지 ZIP**을 내려받습니다.
+1. [Releases](https://github.com/secret5028/firelapse/releases/tag/v2026.11.06-r3)에서 Windows x64용 **FireLapse 실행 패키지 ZIP**을 내려받습니다.
 2. ZIP 전체를 쓰기 가능한 폴더에 압축 해제합니다. 예: `D:\FireLapse`. 압축 파일 안에서 바로 실행하지 마세요.
 3. `FireLapse.cmd`를 더블클릭합니다.
 4. 준비가 끝나면 브라우저에 모델이 열립니다. 상단 목록에서 건물을 선택합니다.
@@ -229,13 +229,13 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe PyroCast/start_viewer.py
 ```
 
-`http://127.0.0.1:8780/model.html`로 접속합니다. 이 진입점은 소스에 포함된 강화 저장 결과를 복원·재생하며 계산을 시작하지 않습니다. 소스의 `saved_results`와 r2 실행 ZIP의 152개 결과는 동일한 묶음이 아닙니다. 7개 건물의 최신 결과를 모두 보려면 실행 ZIP을 사용하세요. 과거 화면·시험 증거는 `archive/evidence-20261106` 보존 브랜치에 있습니다.
+`http://127.0.0.1:8780/model.html`로 접속합니다. 이 진입점은 소스에 포함된 강화 저장 결과를 복원·재생하며 계산을 시작하지 않습니다. 소스의 `saved_results`와 r3 실행 ZIP의 152개 결과는 동일한 묶음이 아닙니다. 7개 건물의 최신 결과를 모두 보려면 실행 ZIP을 사용하세요. 과거 화면·시험 증거는 `archive/evidence-20261106` 보존 브랜치에 있습니다.
 
 ### 순정 CFAST 실행 파일
 
 소스 ZIP에는 `cfast.exe`가 포함되지 않습니다. [CFAST 공식 배포](https://github.com/firemodels/cfast/releases)에서 7.7.7을 확인하거나 해당 소스를 빌드해야 합니다. 현재 앱의 순정 경로는 `PyroCast/simulation/build/baseline/cfast-baseline.exe`를 읽습니다. 공식 설치 파일명 `cfast.exe`와 앱 내부 파일명은 다르며, 임의의 다른 버전을 덮어쓰지 마세요. 소스에서 직접 구성할 때는 해당 빌드에 필요한 DLL도 함께 제공해야 합니다.
 
-r2 실행 ZIP에는 검증에 사용한 7.7.7 기준 실행 파일과 의존 DLL이 `app/simulation/build/baseline/`에 포함되어 있습니다. 소스 정리 작업은 그 ZIP과 엔진을 변경하지 않습니다.
+r3 실행 ZIP에는 검증에 사용한 7.7.7 기준 실행 파일과 의존 DLL이 `app/simulation/build/baseline/`에 포함되어 있습니다. 소스 정리 작업은 그 ZIP과 엔진을 변경하지 않습니다.
 
 ### AI 연결과 키
 

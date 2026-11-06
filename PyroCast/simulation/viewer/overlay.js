@@ -1044,7 +1044,7 @@ const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},bu
  route:{vehicle:null,vehicle_yaw:0,target_room_id:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,buildingTransparency:.7,smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
+ realView:{enabled:true,buildingTransparency:.7,wallOutline:'dark',smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{roomNames:true,building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
@@ -1092,6 +1092,7 @@ function createStore({validators={},seriesCache=createSeriesCache()}={}){
      if(p.smokeOpacity!==undefined&&(!Number.isFinite(p.smokeOpacity)||p.smokeOpacity<0||p.smokeOpacity>1))throw Error('Invalid smoke opacity');
       for(const [key,min,max] of [['smokeGain',.3,1.5],['flameGain',.5,2]])if(p[key]!==undefined&&(!Number.isFinite(p[key])||p[key]<min||p[key]>max))throw Error('Invalid display gain');
      if(p.temperaturePattern!==undefined&&!['current','weak','off'].includes(p.temperaturePattern))throw Error('Invalid temperature pattern');
+     if(p.wallOutline!==undefined&&!['light','dark'].includes(p.wallOutline))throw Error('Invalid wall outline');
      if(p.smokeColor!==undefined&&p.smokeColor!=='current')throw Error('Invalid smoke color');
      if(p.smokeMode!==undefined&&!['current','soot'].includes(p.smokeMode))throw Error('Invalid smoke mode');
      if(p.flameStyle!==undefined&&!['current','four_stage'].includes(p.flameStyle))throw Error('Invalid flame style');
@@ -4150,7 +4151,9 @@ class BuildingLayer extends EmptyLayer {
    const transparent=selected?material.opacity<1:base.transparent;
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
-  for(const line of this.cornerLines)line.material.opacity=alpha(.8)*(whole&&line.userData.basement ? .8 : 1);
+  const dark=this.frame?.realView?.wallOutline!=='light';
+  for(const line of this.cornerLines){line.material.color.set(dark?'#101820':'#8da8b7');line.material.opacity=alpha(dark?.8:.32)*(whole&&line.userData.basement ? .8 : 1);line.renderOrder=dark?30:-1;}
+
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));
@@ -5275,6 +5278,8 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const buildingSlider=document.createElement('label');buildingSlider.className='gainControl';buildingSlider.title='0% 불투명 · 70% 기존 투시 · 100% 숨김. 문·창 강조와 코어 투시는 유지합니다.';
  buildingSlider.innerHTML='건물 투명도 <input id="displayBuildingTransparency" aria-label="건물 투명도" type="range" min="0" max="100" step="1" value="70"><output for="displayBuildingTransparency">70%</output>';
  $('displayViewSettings').append(buildingSlider);
+ const wallOutline=document.createElement('label');wallOutline.className='gainControl';wallOutline.htmlFor='displayWallOutline';wallOutline.innerHTML='벽 외곽선 <select id="displayWallOutline"><option value="light">기존 밝은 선</option><option value="dark">짙은 선</option></select>';$('displayViewSettings').append(wallOutline);
+ listen($('displayWallOutline'),'change',()=>store.dispatch('realView/set',{wallOutline:$('displayWallOutline').value}));
  listen($('displayBuildingTransparency'),'input',()=>store.dispatch('realView/set',{buildingTransparency:$('displayBuildingTransparency').valueAsNumber/100}));
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#ffffff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');
  for(const [id,label,color,key] of [['liteDoors','실내 문 위치','#e6bd68','interior'],['liteExterior','외부 창','#62dcb0','exterior']])toggle($('displayLayers'),id,label,color,()=>store.get('openings')[key],null,true,'문틀·창 위치 표시이며 시뮬레이션 개폐 조건은 바뀌지 않습니다.');
@@ -5338,6 +5343,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  @media(max-width:860px){#displayView{font-size:11px}#displayView button{padding:4px}.hudValues{gap:8px}#displayLegend{bottom:6px;left:8px}.legendChip{font-size:13px;padding:2px 5px}}
  `;document.head.append(style);
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
+  $('displayWallOutline').value=rv.wallOutline;
   const transparency=Math.round(rv.buildingTransparency*100);$('displayBuildingTransparency').value=transparency;buildingSlider.querySelector('output').textContent=transparency+'%';
    const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
    $('displayFixedOpenings').disabled=!fixed;

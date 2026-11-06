@@ -56,7 +56,9 @@ export class BuildingLayer extends EmptyLayer {
    const transparent=selected?material.opacity<1:base.transparent;
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
-  for(const line of this.cornerLines)line.material.opacity=alpha(.8)*(whole&&line.userData.basement ? .8 : 1);
+  const dark=this.frame?.realView?.wallOutline!=='light';
+  for(const line of this.cornerLines){line.material.color.set(dark?'#101820':'#8da8b7');line.material.opacity=alpha(dark?.8:.32)*(whole&&line.userData.basement ? .8 : 1);line.renderOrder=dark?30:-1;}
+
  }
  trimOpenings(time){
   const floors=this.asset?.floors||[],signature=JSON.stringify(floors.flatMap(f=>(f.floor?.openings||[]).filter(o=>o.display_schedule).map(o=>{let value=0;for(const [t,v] of o.display_schedule)if(t<=time)value=v;return value;})));

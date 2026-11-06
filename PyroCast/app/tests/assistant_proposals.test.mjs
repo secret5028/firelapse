@@ -6,13 +6,14 @@ const browser=await chromium.launch({headless:true,executablePath:'C:/Program Fi
 try{
  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const module=fs.readFileSync(new URL('../web/panels/assistant.js',import.meta.url),'utf8');
- await page.route('http://assistant.test/**',r=>r.fulfill({contentType:r.request().url().endsWith('/assistant.js')?'text/javascript':'text/html',body:r.request().url().endsWith('/assistant.js')?module:'<div id="pyroShellSidebar"><div id="resultCase"></div></div><div id="displayViewSettings"></div>'}));
+ await page.route('http://assistant.test/**',r=>r.fulfill({contentType:r.request().url().endsWith('.js')?'text/javascript':'text/html',body:r.request().url().endsWith('/resize_handle.js')?fs.readFileSync(new URL('../web/panels/resize_handle.js',import.meta.url),'utf8'):r.request().url().endsWith('/assistant.js')?module:'<div id="pyroShellSidebar"><div id="resultCase"></div></div><div id="displayViewSettings"></div>'}));
  await page.goto('http://assistant.test/');
  await page.evaluate(async()=>{
   const {createAssistantPanel}=await import('/assistant.js');window.ctx={building:'test',case:'S09'};window.applied=[];window.nextProposals=[];window.failApply=false;
   window.fetch=async()=>({ok:true,json:async()=>({text:'제안 확인',case:ctx.case,building:ctx.building,proposals:nextProposals,calls:[]})});
   window.ui=createAssistantPanel({store:{subscribe:(key,fn)=>{window.changeResult=fn;return ()=>{};},get:()=>null},getContext:()=>ctx,onNavigate:()=>{},onSaved:()=>{},onProposal:async(p,rooms)=>{if(failApply)throw Error('적용 실패');applied.push({id:p.proposal_id,rooms});}});
  });
+ await page.locator('#aiAssistant>summary').click();
  assert(await page.locator('#aiPending').isHidden());assert.equal(await page.locator('#aiLegacyFuel,#aiFuel').count(),0);
  const ask=async()=>{await page.locator('#aiMessage').fill('용도 변경');await page.locator('#aiSend').click();await page.waitForFunction(()=>!document.getElementById('aiSend').disabled);};
  await ask();assert(await page.locator('#aiPending').isHidden());

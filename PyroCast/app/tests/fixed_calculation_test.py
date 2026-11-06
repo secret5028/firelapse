@@ -18,6 +18,8 @@ class FixedCalculationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.sha=model_mc.sim.fingerprint('parkmarine')
+        if not read(model_mc.config_path('parkmarine'),{}).get('fixed_state'):
+            raise unittest.SkipTest('SKIP: evidence folder missing (saved MC opening selection)')
         cls.source,cls.fixed,cls.req,cls.raw=calc.context(cls.sha,'parkmarine')
         cls.original=read(cls.source.parent/'input.json')
 

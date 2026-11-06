@@ -7,6 +7,7 @@ import {adaptBuilding,adaptResult,indexHistoryExtrema} from '../web/adapters/rea
 const vendor='cad-project/work/cad-web/local-resources/cad-assets/three.module.js';
 const THREE=await import(pathToFileURL(process.env.PYROCAST_THREE||[vendor,'simulation/results/github-publish-20261026/PyroCast/'+vendor].find(p=>fs.existsSync(p))).href);
 const read=p=>JSON.parse(fs.readFileSync(p,'utf8').replace(/^\uFEFF/,''));
+if (!fs.existsSync('simulation/results/lite_v8_mc_R2_10_20261026/S09/sample.json')) {console.log('SKIP: evidence folder missing');process.exit(0);}
 const dir='simulation/results/lite_v8_mc_R2_10_20261026/S09',playback=read(dir+'/playback.json'),scenario=read(dir+'/sample.json').scenario;
 const building=adaptBuilding({scenario,playback,sourceHash:playback.building_sha256});
 const result=await adaptResult({playback,scenario,building,resultId:'S09'}),store=createStore(),layer=new RiskLayer(THREE),scene=new THREE.Scene();

@@ -7,6 +7,7 @@ sys.path.insert(0,str(ROOT/'tools'))
 import model_operation as op
 class OperationTest(unittest.TestCase):
  def test_existing_results_and_isolation(self):
+  if not all(op.jobs(i) for i in ('parkmarine','showroom')): self.skipTest('SKIP: evidence folder missing')
   hotel=op.playback('parkmarine');showroom=op.playback('showroom')
   self.assertNotEqual(hotel['building_sha256'],showroom['building_sha256'])
   self.assertTrue(hotel['complete']);self.assertGreater(hotel['time_s'][-1],0)
@@ -15,6 +16,7 @@ class OperationTest(unittest.TestCase):
  def test_display_does_not_run(self):
   with patch.object(op.sim,'start',side_effect=AssertionError('simulation forbidden')):
    for ident,floor in [('parkmarine','5F'),('showroom','2F')]:
+    if not op.jobs(ident): self.skipTest('SKIP: evidence folder missing')
     self.assertTrue(op.jobs(ident));self.assertTrue(op.playback(ident)['rooms'])
     v=op.screening(ident,floor)
     self.assertFalse(v['available']);self.assertIsNone(v['comparison'])

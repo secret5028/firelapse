@@ -1,3 +1,5 @@
+import {existsSync as evidenceExists} from 'node:fs';
+if (["simulation/results/lite_v8_mc_R2_10_20261026/S06/result.json", "simulation/results/lite_v8_mc_R2_10_20261026/S09/result.json", "simulation/results/lite_v8_stage4_R2_20261026/result.json"].some(p=>!evidenceExists(new URL('../../'+p,import.meta.url)))) {console.log('SKIP: evidence folder missing');process.exit(0);}
 // Saved-data validation only. Never imports or launches a simulation engine.
 import fs from 'node:fs';
 import path from 'node:path';

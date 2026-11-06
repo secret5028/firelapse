@@ -1,3 +1,5 @@
+import {existsSync as evidenceExists} from 'node:fs';
+if (["simulation/results/ui_refactor_stage4_item5_20261028/previous-overlay.js"].some(p=>!evidenceExists(new URL('../../'+p,import.meta.url)))) {console.log('SKIP: evidence folder missing');process.exit(0);}
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PYROCAST_PLAYWRIGHT||'playwright');
 const out=path.resolve('simulation/results/ui_refactor_stage4_item5_20261028');fs.mkdirSync(out,{recursive:true});

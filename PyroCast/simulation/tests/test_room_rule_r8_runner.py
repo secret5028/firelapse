@@ -15,6 +15,7 @@ class R8RunnerTests(unittest.TestCase):
   self.assertEqual(row['not_observed_in'],[])
   self.assertEqual(row['unevaluated_in'],['aggressive'])
 
+ @unittest.skipUnless((ROOT/'simulation/build/baseline/cfast-baseline.exe').is_file(), 'CFAST executable not bundled in source clone')
  def test_single_default_or_exact_two_parallel_no_retry(self):
   raw=json.loads((ROOT/'fixtures/room_rule_benchmark_3room.json').read_text('utf-8'))
   for compare in (False,True):

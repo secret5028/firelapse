@@ -46,7 +46,7 @@ def exercise():
                 if f.is_file():assert key.encode() not in f.read_bytes()
             assert key not in json.dumps(proposal)
             # grep the ephemeral key through stdin: no key in argv or captured output.
-            grep=subprocess.run(['rg','--fixed-strings','--files-with-matches','--file','-',str(d),str(ROOT/'tools/lite_ai_fuel.py'),str(ROOT/'app/web/panels/ai_fuel.js'),str(ROOT/'simulation/results/ui_C7_20261102')],input=key+'\n',text=True,capture_output=True)
+            grep=subprocess.run(['rg','--fixed-strings','--files-with-matches','--file','-',str(d),str(ROOT/'tools/lite_ai_fuel.py'),str(ROOT/'app/web/panels/ai_fuel.js'),*([str(ROOT/'simulation/results/ui_C7_20261102')] if (ROOT/'simulation/results/ui_C7_20261102').exists() else [])],input=key+'\n',text=True,capture_output=True)
             assert grep.returncode==1, 'Credential found or grep failed'
 
             return {'passed':True,'api_calls':0,'solver_runs':0,'retry_once':True,'secret_echo_rejected':True,'key_file_matches':0,'key_grep_returncode':grep.returncode,'R2_rank_before':rank_before['CAD_3F_R2'],'R2_rank_after':rank_after['CAD_3F_R2'],'load_after':use['load_MJ_m2'],'hrrpua_after':use['hrrpua_kW_m2']}

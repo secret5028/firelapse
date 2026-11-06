@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {pathToFileURL} from 'node:url';
 import {readLegacyCoreSource,coreTransport} from '../web/adapters/legacy_core.js';
 import {CoreLayer,fallbackStairSteps} from '../web/layers/core.js';
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const b=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json','utf8')),before=JSON.stringify(b),hash='a'.repeat(64),groups=b.floors.map(f=>{const g=new T.Group();g.name=f.name;g.position.z=f.z;return g;});
 const shape=p=>{const s=new T.Shape(p.o.map(q=>new T.Vector2(...q)));for(const h of p.h||[])s.holes.push(new T.Path(h.map(q=>new T.Vector2(...q))));return s;};
 const asset=readLegacyCoreSource({building:b,groups,sourceHash:hash,shapeFor:shape}),rows=asset.floors.flatMap(f=>f.floor.transport);
@@ -40,5 +40,5 @@ layer.setVisible(false);layer.tick();assert.equal(layer.group.visible,true);asse
 layer.setData(frame);layer.tick();assert.equal(layer.group.visible,false);layer.setVisible(true);assert.equal(layer.group.visible,true);
 layer.setData(frame);layer.tick();assert.equal(layer.views.filter(v=>v.group.visible).length,b.floors.length);
 assert.equal(layer.buildCount,1);layer.dispose();assert.equal(layer.resources.size,0);assert.equal(JSON.stringify(b),before);
-const old=JSON.parse(fs.readFileSync('simulation/results/github-publish-20261026/PyroCast/cad-project/building.json','utf8'));for(const f of old.floors)assert.equal(coreTransport(old,f),f.transport);
+const old=JSON.parse(fs.readFileSync('cad-project/building.json','utf8'));for(const f of old.floors)assert.equal(coreTransport(old,f),f.transport);
 console.log(JSON.stringify({hotelVisible:rows.length,stairs:rows.filter(r=>r.kind==='stair').length,elevators:rows.filter(r=>r.kind==='elev').length,treads:generated.flat().length,unconfirmedExcluded:10,factoryTransportUnchanged:true,buildingDataUnchanged:true}));

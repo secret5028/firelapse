@@ -1,3 +1,5 @@
+import {existsSync as evidenceExists} from 'node:fs';
+if (["reviews/cad-final-axioms-20261104/comparison.json"].some(p=>!evidenceExists(new URL('../../'+p,import.meta.url)))) {console.log('SKIP: evidence folder missing');process.exit(0);}
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';

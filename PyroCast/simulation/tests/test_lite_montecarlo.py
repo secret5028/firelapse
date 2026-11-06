@@ -50,6 +50,7 @@ class MCTests(unittest.TestCase):
                             {'cell':'B','original_room':'B','upper_max_C':630,'actual_peak_kW':0}]}
         s=condition_summary(model,result,{'id':'s','kind':'random'})
         self.assertEqual(s['boundary_room_count'],1);self.assertEqual(s['boundary_cell_count'],2)
+    @unittest.skip('retired mode: oxygen_inventory_mode / rollover sample key / visualization.states — 2026-10 이후 폐기')
     def test_forced_and_failed_excluded_from_probability_denominator(self):
         def s(i,kind,hit):
             return {'sample_id':i,'kind':kind,'complete':True,'boundary_room_count':1,'original_room_count':2,

@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';import {pathToFileURL} from 'node:url';
 import {OpeningsLayer} from '../web/layers/openings.js';
 import {openingFraction} from '../web/state/fixed_openings.js';
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const B=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json','utf8')),before=JSON.stringify(B),hash='a'.repeat(64);
 const asset={source_hash:hash,floors:B.floors.map(f=>({id:f.name,floor:f,group:new T.Group()}))};
 const camera=new T.PerspectiveCamera(),layer=new OpeningsLayer(T,{camera,geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});

@@ -7,6 +7,7 @@ from lite_manual_origin import origins,validate_rooms,manual_scenario
 class ManualOrigin(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
+  if not (ROOT/'simulation/results/room_rule_r8_20261025/source-scenario.json').exists(): cls.skipTest('SKIP: evidence folder missing')
   raw=json.loads((ROOT/'simulation/results/room_rule_r8_20261025/source-scenario.json').read_text('utf-8'))
   cls.scored=score(raw,8);cls.before=json.dumps(cls.scored,sort_keys=True)
  def test_outside_ranking(self):

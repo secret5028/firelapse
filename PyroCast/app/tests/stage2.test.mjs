@@ -2,7 +2,7 @@
 import fs from 'node:fs';import path from 'node:path';import {fileURLToPath} from 'node:url';import {createRequire} from 'node:module';import {createHash} from 'node:crypto';
 const require=createRequire(import.meta.url);let playwright;try{playwright=require('playwright');}catch(e){if(!process.env.PYROCAST_PLAYWRIGHT)throw e;playwright=require(process.env.PYROCAST_PLAYWRIGHT);}
 const root=fileURLToPath(new URL('../../',import.meta.url)),app=path.join(root,'app');
-const three=process.env.PYROCAST_THREE||path.join(root,'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js');
+const three=process.env.PYROCAST_THREE||path.join(root,'cad-project/work/cad-web/local-resources/cad-assets/three.module.js');
 const output=path.join(root,'simulation/results/ui_refactor_stage2_20261026');fs.mkdirSync(output,{recursive:true});
 const files=[];function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,entry.name);if(entry.isDirectory())walk(p);else if(p.endsWith('.js'))files.push(p);}}
 walk(path.join(app,'web/state'));walk(path.join(app,'web/scene'));walk(path.join(app,'web/layers'));

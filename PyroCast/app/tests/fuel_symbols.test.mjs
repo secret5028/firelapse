@@ -6,7 +6,7 @@ import {createStore} from '../web/state/store.js';
 import {pathToFileURL} from 'node:url';
 const poly=[{o:[[0,0],[8,0],[8,3],[3,3],[3,8],[0,8]],h:[[[.5,.5],[1.5,.5],[1.5,1.5],[.5,1.5]]]}];
 for(const u of fuelPositions(poly)){const size=symbolSize(1500,u.clearance,3);for(const dx of [-size/2,size/2])for(const dy of [-size/2,size/2])assert(contains([u.p[0]+dx,u.p[1]+dy],poly));}
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const data={revision:'1',classes:{hotel_room:{mean:500,rhrf:250},office:{mean:600,rhrf:300}},quantity_settings:{rooms:{CAD_5F_A:{usage_class:'office',multiplier:1}}},rooms:[{id:'CAD_5F_A',floor:'5F',editable:true,baseline_class:'hotel_room',baseline_load:500}],ai_pending:[]};
 assert.equal(resolveFuel(data,{floors:{'5F':{usage_class:'hotel_room',multiplier:3}}},data.rooms[0]).load,600);
 assert.equal(createStore().get('realView').fuelMarkers,true);

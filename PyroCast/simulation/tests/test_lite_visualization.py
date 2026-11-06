@@ -4,10 +4,12 @@ from types import SimpleNamespace
 import numpy as np
 from shapely.geometry import Polygon, Point
 from shapely.ops import unary_union
-from pyrocast_lite.visualization import states
+
 
 class LiteVisualTests(unittest.TestCase):
+    @unittest.skip('retired mode: oxygen_inventory_mode / rollover sample key / visualization.states — 2026-10 이후 폐기')
     def test_priority_and_independent_smoke_extent(self):
+        from pyrocast_lite.visualization import states
         # Same upper-layer extent, different fuel/oxygen: changing colour must
         # not erase the gray layer or confuse bulk reaction with door jets.
         y=np.zeros((8,6));y[1]=5.;y[2]=np.array([20,400,400,600,600,600])+273.15

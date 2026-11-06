@@ -115,6 +115,7 @@ class ConditionTests(unittest.TestCase):
         self.assertEqual(p['actual_quantities']['Q_bulk_kW'],[1,2,3])
 
     def test_existing_fgi_screening_preserved_on_completed_case(self):
+        if not (ROOT/'results/cad_exterior_risk_demo_v4_ceiling/result.json').exists(): self.skipTest('SKIP: evidence folder missing')
         r=json.loads((ROOT/'results/cad_exterior_risk_demo_v4_ceiling/result.json').read_text('utf-8'))
         conditions=evaluate(r['scenario'],r)
         for rid in r['rooms']:
@@ -125,6 +126,7 @@ class ConditionTests(unittest.TestCase):
         json.dumps(conditions,allow_nan=False)
 
     def test_fo_unknown_flux_does_not_override_true_temperature(self):
+        if not (ROOT/'results/cad_exterior_risk_demo_v4_ceiling/result.json').exists(): self.skipTest('SKIP: evidence folder missing')
         r=json.loads((ROOT/'results/cad_exterior_risk_demo_v4_ceiling/result.json').read_text('utf-8'))
         model=deepcopy(r['scenario']);model['flashover']['criterion']='temperature_or_flux'
         for p in r['phenomena'].values():p['floor_incident_flux_kW_m2']=None
@@ -134,6 +136,7 @@ class ConditionTests(unittest.TestCase):
             self.assertEqual(record['all_met'][i],True if temp>=model['criteria']['fo_temperature_C'] else None)
 
     def test_forced_ignition_keeps_separate_oxygen_threshold_and_time_window(self):
+        if not (ROOT/'results/cad_exterior_ignition_demo_v4_ceiling_250/result.json').exists(): self.skipTest('SKIP: evidence folder missing')
         r=json.loads((ROOT/'results/cad_exterior_ignition_demo_v4_ceiling_250/result.json').read_text('utf-8'))
         model=r['scenario'];force=model['ignition_assumption'];record=evaluate(model,r)[force['room']]['upper_gas']
         oxygen=next(x for x in record['terms'] if x['key']=='O2')

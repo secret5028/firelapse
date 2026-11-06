@@ -1,6 +1,6 @@
 import fs from 'node:fs';import path from 'node:path';import {createRequire} from 'node:module';import assert from 'node:assert/strict';
 const require=createRequire(import.meta.url),{chromium}=require(process.env.PYROCAST_PLAYWRIGHT||'playwright'),out=path.resolve('reviews/ganghwa-opening-check-20261103');fs.mkdirSync(out,{recursive:true});
-const dir='simulation/results/github-publish-20261026/PyroCast/cad-project/',B=JSON.parse(fs.readFileSync(dir+'building.json','utf8')),model=fs.readFileSync(dir+'model.html','utf8'),code=model.slice(model.indexOf('const mat='),model.indexOf('// ---- 문짝'));
+const dir='cad-project/',B=JSON.parse(fs.readFileSync(dir+'building.json','utf8')),model=fs.readFileSync(dir+'model.html','utf8'),code=model.slice(model.indexOf('const mat='),model.indexOf('// ---- 문짝'));
 const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});const errors=[];
 try{const p=await browser.newPage({viewport:{width:1100,height:800}});p.on('pageerror',e=>errors.push(e.message));
 await p.route('**/wall-lines-test.html',r=>r.fulfill({contentType:'text/html',body:'<html><body style="margin:0"><div id="fl" hidden></div><div id="ck" hidden></div></body></html>'}));

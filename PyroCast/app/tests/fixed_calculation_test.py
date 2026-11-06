@@ -74,6 +74,7 @@ class FixedCalculationTests(unittest.TestCase):
         from pyrocast_cfbt.native import read_native_csv
         from fixed_native_playback import package
         folder=ROOT/'simulation/results/hotel-native-compare-20261105/5F'
+        if not (folder/'case_compartments.csv').exists(): self.skipTest('SKIP: evidence folder missing')
         native={}
         for key,suffix in [('zone','zone'),('compartments','compartments'),('native_vents','vents')]:
             native[key],native[key+'_ids'],native[key+'_units']=read_native_csv(folder/('case_'+suffix+'.csv'))

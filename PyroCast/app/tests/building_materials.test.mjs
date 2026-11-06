@@ -5,7 +5,7 @@ import {BuildingLayer} from '../web/layers/building.js';
 import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
 import {createStore} from '../web/state/store.js';
 const root=fileURLToPath(new URL('../../',import.meta.url));
-const T=await import(pathToFileURL(process.env.PYROCAST_THREE||path.join(root,'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js')));
+const T=await import(pathToFileURL(process.env.PYROCAST_THREE||path.join(root,'cad-project/work/cad-web/local-resources/cad-assets/three.module.js')));
 const floor=new T.Group();floor.name='3F';
 const shared=new T.MeshBasicMaterial({color:0x7fc8ff,transparent:true,opacity:.35});
 const fallback=new T.MeshBasicMaterial({color:0x8a8a8a,opacity:.8});

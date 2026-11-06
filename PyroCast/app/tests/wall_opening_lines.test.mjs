@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {wallOpeningVolumes,outsideOpeningIntervals,outsideWallOpeningIntervals,trimWallLineGeometry,trimWallJambFaces} from '../web/layers/wall_opening_lines.js';
 import {BuildingLayer} from '../web/layers/building.js';
 import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const floor={name:'2F',door_h:2.1,openings:[{id:'D',kind:'door',leaves:[{hinge:[2,0],closed:[4,0]}]}]};
 const cuts=wallOpeningVolumes(floor),kept=outsideOpeningIntervals([0,0,1],[6,0,1],cuts);
 assert.equal(kept.length,2);assert(Math.abs(kept[0][1]*6-2.005)<1e-8);assert(Math.abs(kept[1][0]*6-3.995)<1e-8);
@@ -37,7 +37,7 @@ const layer=new BuildingLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene
 const frame={building:{source_hash:asset.source_hash},floor:{floor_id:'2F'},resultMeta:null,t_s:0};layer.setData(frame);assert.equal(layer.resources.size,0);
 layer.setData({...frame,t_s:10});const half=layer.sourceObjects.get(source).geometry;half.addEventListener('dispose',()=>disposed++);
 layer.setData({...frame,t_s:11});assert.equal(layer.sourceObjects.get(source).geometry,half);layer.setData({...frame,t_s:20});assert.equal(disposed,1);assert.equal(layer.sourceObjects.get(source).material,source.material);layer.dispose();assert.equal(source.material.opacity,.42);
-const cad=JSON.parse(fs.readFileSync('simulation/results/github-publish-20261026/PyroCast/cad-project/building.json','utf8'));
+const cad=JSON.parse(fs.readFileSync('cad-project/building.json','utf8'));
 console.log(JSON.stringify({door:true,window:true,diagonal:true,transformed_floor:true,frames_preserved:true,schedule:true,no_rebuild_same_fraction:true,source_unchanged:true,other_building_cuts:cad.floors.map(f=>({floor:f.name,count:wallOpeningVolumes(f).length}))}));
 
 // Hotel W0: wall mesh is 2 cm outside the CAD window footprint.

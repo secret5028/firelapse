@@ -5,6 +5,7 @@ import numpy as np
 from pyrocast_lite.adapter import prepare
 from pyrocast_lite.core import H_O2
 
+@unittest.skip('retired mode: oxygen_inventory_mode / rollover sample key / visualization.states — 2026-10 이후 폐기')
 class RoomOxygenTests(unittest.TestCase):
     def model(self,upper=False):
         raw=json.loads((Path(__file__).resolve().parents[2]/'fixtures/room_rule_benchmark_3room_b3.json').read_text('utf-8'))

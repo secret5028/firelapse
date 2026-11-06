@@ -41,6 +41,8 @@ class R8SettingsTests(unittest.TestCase):
   raw['openings'][0]['schedule']=[[0,1]]
   _,_,m=prepare(raw);self.assertEqual(m['parents']['R2']['delay_s'],60);self.assertEqual(m['initially_open_fire_doors'],['D12'])
  def test_default_matches_frozen_r7_item_deck(self):
+  if not (ROOT/'simulation/results/mixture_r3f_cache_20261023/floor60/scenario.json').exists(): self.skipTest('SKIP: evidence folder missing')
+  if not (ROOT/'simulation/results/room_rule_r7_20261025/C/item_peak/case.in').exists(): self.skipTest('SKIP: evidence folder missing')
   raw=json.loads((ROOT/'simulation/results/mixture_r3f_cache_20261023/floor60/scenario.json').read_text('utf-8'))
   m,t,_=prepare(raw)
   self.assertEqual(make_deck(m,[],t),(ROOT/'simulation/results/room_rule_r7_20261025/C/item_peak/case.in').read_text('ascii'))

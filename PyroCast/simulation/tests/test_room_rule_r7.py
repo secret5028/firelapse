@@ -44,6 +44,7 @@ class R7Tests(unittest.TestCase):
   self.assertEqual(sibling['parent_transition']['delay_s'],200)
   self.assertTrue(sibling['room_rule_trigger']['target_id'].startswith('FC_'))
  def test_fallback_and_native_only(self):
+  if not (ROOT/'simulation/results/mixture_r3f_cache_20261023/floor60/scenario.json').exists(): self.skipTest('SKIP: evidence folder missing')
   raw=json.loads((ROOT/'simulation/results/mixture_r3f_cache_20261023/floor60/scenario.json').read_text('utf-8'))
   m,t,manifest=prepare(raw)
   self.assertEqual(set(manifest['fallback_sensors']),{'CAD_3F_R13','CAD_3F_R19','CAD_3F_R20'})

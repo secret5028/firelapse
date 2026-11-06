@@ -1,3 +1,5 @@
+import {existsSync as evidenceExists} from 'node:fs';
+if (["simulation/results/ui_refactor_stage4_item5_20261028/screening-fixture.json", "simulation/results/ui_refactor_stage4_item5_20261028/doors-fixture.json"].some(p=>!evidenceExists(new URL('../../'+p,import.meta.url)))) {console.log('SKIP: evidence folder missing');process.exit(0);}
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildingTable,doorCategory,openingCounts} from '../web/panels/building.js';

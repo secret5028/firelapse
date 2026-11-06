@@ -5,7 +5,7 @@ import {wallOpeningVolumes,outsideWallOpeningIntervals} from '../web/layers/wall
 import {createStore} from '../web/state/store.js';
 import {BuildingLayer} from '../web/layers/building.js';
 import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const group=new T.Group(),objects=[];group.name='1F';group.position.set(5,8,10);group.rotation.z=.3;
 function wall(x,z,w,h){const m=new T.Mesh(new T.BoxGeometry(w,.2,h),new T.MeshBasicMaterial({color:'#93acb5',transparent:true,opacity:.2}));m.name='1F_wall';m.position.set(x,0,z);group.add(m);objects.push(m);return m;}
 wall(1,1.5,2,3);wall(3,1.5,2,3); // adjoining pieces: no x=2 internal verticals

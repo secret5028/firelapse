@@ -1,6 +1,6 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';
 import {BuildingLayer} from '../web/layers/building.js';import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const code=fs.readFileSync('app/model-library/operation.js','utf8'),B=JSON.parse(fs.readFileSync('data/parkmarine-hotel/building.json','utf8')),S=new T.Scene();
 const create=new Function('T','B','S',"const groups=[];"+code.slice(code.indexOf(' const owned=[]'),code.indexOf(' let floor='))+'return {groups,owned};');const {groups,owned}=create(T,B,S);
 const hash='a'.repeat(64),asset=readLegacyBuildingSource({building:B,groups,sourceHash:hash}),layer=new BuildingLayer(T,{geometryFor:()=>asset});layer.mount(new T.Scene(),{subscribe:()=>()=>{}});layer.setData({building:{source_hash:hash},floor:{floor_id:'5F'},t_s:0});

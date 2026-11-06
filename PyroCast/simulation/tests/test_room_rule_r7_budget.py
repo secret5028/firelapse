@@ -5,6 +5,7 @@ ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools'))
 import run_room_rule_r7 as runner
 from pyrocast_cfbt.native import NativeRunInterrupted
 class R7BudgetTests(unittest.TestCase):
+ @unittest.skipUnless((ROOT/'simulation/build/baseline/cfast-baseline.exe').is_file(), 'CFAST executable not bundled in source clone')
  def test_full_budget_without_legacy_stall_watchdog_or_retry(self):
   with tempfile.TemporaryDirectory(dir=ROOT/'simulation/results') as tmp:
    folder=Path(tmp)/'case'

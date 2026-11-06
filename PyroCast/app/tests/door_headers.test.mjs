@@ -1,7 +1,7 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';
 import {missingDoorHeaders} from '../web/layers/door_headers.js';
 import {BuildingLayer} from '../web/layers/building.js';import {readLegacyBuildingSource} from '../web/adapters/legacy_building.js';
-const T=await import(pathToFileURL(process.cwd()+'/simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
+const T=await import(pathToFileURL(process.cwd()+'/cad-project/work/cad-web/local-resources/cad-assets/three.module.js'));
 const poly=(x0,x1)=>({o:[[x0,0],[x1,0],[x1,.2],[x0,.2]],h:[]}),f={h:3,bands:[{kind:'wall',z0:0,z1:3,polys:[poly(0,1)]}],openings:[{id:'D',kind:'door',door_h:2,polys:[poly(0,2).o]}]};
 const area=p=>Math.abs(p.o.reduce((s,a,i)=>{const b=p.o[(i+1)%p.o.length];return s+a[0]*b[1]-b[0]*a[1];},0)/2);
 const patch=missingDoorHeaders(T,f);assert(Math.abs(patch.flatMap(b=>b.polys).reduce((n,p)=>n+area(p),0)-.2)<1e-8);assert.equal(missingDoorHeaders(T,{...f,bands:[...f.bands,...patch]}).length,0);assert.equal(missingDoorHeaders(T,{...f,openings:[{...f.openings[0],kind:'open_passage'}]}).length,0);

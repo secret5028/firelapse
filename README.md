@@ -13,6 +13,11 @@
 
 ## 화면 미리보기
 
+서버 없이 열리는 결과 샘플(다운로드 후 브라우저에서 열기):
+
+- [호텔 · 5F R16](docs/samples/FireLapse-parkmarine-5F-R16.html)
+- [아이엔테크 · 1F R3](docs/samples/FireLapse-intech-1F-R3.html)
+
 실행 중인 앱에서 직접 캡처한 화면입니다. 호텔은 간략 엔진 저장 결과, 완도는 전용 CFAST P1 결과입니다.
 
 ### 호텔 · 층별 결과와 위험 지수

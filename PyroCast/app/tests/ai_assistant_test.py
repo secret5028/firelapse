@@ -12,6 +12,15 @@ def plan(*calls,finish=True,missing=False):return json.dumps({'calls':[{'name':n
 class Acceptance(unittest.TestCase):
     @classmethod
     def setUpClass(cls):cls.s=Tools();cls.ctx={'building':'cad-main','case':'S09','floor':'3F','time_s':1420}
+    def skip_original_machine_comparison(self):
+        from lite_screening_service import SAVED, DEFAULT, read
+        from runtime_storage import is_result_path
+        selection=read(SAVED,{})
+        comparison=read(Path(selection.get('result_path',str(DEFAULT)))/'comparison.json',{})
+        for pair in comparison.get('rows',[]):
+            for case in pair.get('state_results',[]):
+                if case.get('selected_attempt') and not is_result_path(Path(case['result_folder'])/case['selected_attempt']/'result.json'):
+                    self.skipTest('saved comparison references original-machine result folder')
     def invoke(self,text,replies):
         values=iter(replies);secret=uuid.uuid4().hex;env={'D4_TEST_KEY':secret}
         with patch.dict(os.environ,env),patch.object(chat,'settings',return_value={'base_url':'http://127.0.0.1:1/v1','model':'test','api_key_env':'D4_TEST_KEY'}):
@@ -30,10 +39,12 @@ class Acceptance(unittest.TestCase):
             else:expected=next(f['text'] for f in facts_for(call,ev['call']) if f['evidence']['row']==ev['row'])
             self.assertEqual(re.findall(r'\d+(?:\.\d+)?',fact['text']),re.findall(r'\d+(?:\.\d+)?',expected))
     def test_1_ranking(self):
+        self.skip_original_machine_comparison()
         v=self.invoke('3층에서 불나면 제일 위험한 실 어디야',[plan(('get_ranking',{'floor':'3F'}))]);self.assertTrue(v['facts'])
     def test_2_route_peak(self):
         v=self.invoke('R3 진입 경로상 백드래프트 최고 실과 시각',[plan(('get_route',{'origin':'CAD_3F_R3'}),('get_peak_events',{'phenomenon':'backdraft','threshold':100}))]);self.assertTrue(v['facts'])
     def test_3_ventilation_proposals_no_run(self):
+        self.skip_original_machine_comparison()
         rows=self.s.get_building(self.ctx)['openings'];window=next(r for r in rows if 'window' in r.get('kind','') and 'CAD_3F_R2' in r['sides'])
         v=self.invoke('거기 배연하면?',[plan(('propose_openings',{'openings':[{'id':window['id'],'open':True}]}),('propose_run',{'kind':'screening','origin':'CAD_3F_R3','N':8}))]);self.assertEqual(len(v['proposals']),2)
         self.assertFalse(v['proposals'][1]['started'])
@@ -51,6 +62,7 @@ class Acceptance(unittest.TestCase):
             v=self.invoke('2층은 타이어창고로 바꿔',[plan(('propose_fuel',{}))])
         self.assertTrue(v['proposals'][0]['rows']);self.assertTrue(all(r['room_id'].startswith('CAD_2F_') for r in v['proposals'][0]['rows']))
     def test_5_briefing(self):
+        self.skip_original_machine_comparison()
         b=briefing(self.s,self.ctx)
         self.assertEqual([c['tool'] for c in b['calls']],['get_ranking','get_case_summary','get_route',*['get_peak_events']*3,'get_tactic_rules'])
         for f in b['facts']:
@@ -59,6 +71,7 @@ class Acceptance(unittest.TestCase):
         self.assertIn('진입 경로',b['text']);self.assertTrue(b['facts'])
         self.assertIn('전술 참고',b['text']);self.assertNotIn('5. 한계',b['text'])
     def test_display_labels_and_zero_tooltips(self):
+        self.skip_original_machine_comparison()
         from lite_ai_briefing import facts_for
         value=briefing(self.s,self.ctx)
         self.assertNotIn('CAD_',value['text'])
@@ -105,6 +118,7 @@ class Acceptance(unittest.TestCase):
         with self.assertRaises(ValueError):self.invoke('test',['{"text":"R99 9999 ℃"}']*2)
         with self.assertRaises(ValueError):self.invoke('test',[plan(('propose_run',{'kind':'mc','origin':'CAD_3F_R999','samples':2}))])
     def test_report_explicit_save_only(self):
+        self.skip_original_machine_comparison()
         b=briefing(self.s,self.ctx)
         with tempfile.TemporaryDirectory(dir=ROOT/'app/tests',prefix='d4-temp-') as tmp:
             source=self.s.cases(self.ctx['building'])['S09'];p=Path(tmp)/'playback.json';p.write_bytes(source.read_bytes())

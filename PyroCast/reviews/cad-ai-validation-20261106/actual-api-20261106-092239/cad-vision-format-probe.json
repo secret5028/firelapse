@@ -1,0 +1,8 @@
+[
+  {
+    "name": "vision",
+    "http_status": 400,
+    "error": "AI API 연결 또는 응답 형식 오류",
+    "elapsed_s": 180.2
+  }
+]

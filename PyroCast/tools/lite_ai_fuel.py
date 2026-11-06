@@ -83,7 +83,7 @@ class NoRedirect(HTTPRedirectHandler):
 def completion(cfg,key,messages):
     if cfg.get('_runtime'):
         from ai_connection import runtime_completion
-        return runtime_completion(messages)
+        return runtime_completion(messages,purpose='cad_review') if cfg.get('_cad_review') else runtime_completion(messages)
     native=urlsplit(cfg['base_url']).hostname=='api.anthropic.com'
     body=dict(model=cfg['model'],messages=messages,max_tokens=32 if cfg.get("_probe") else 16000)
     headers={'Content-Type':'application/json','Authorization':'Bearer '+key}
@@ -96,11 +96,12 @@ def completion(cfg,key,messages):
     payload=json.dumps(body,ensure_ascii=False).encode()
     req=Request(cfg['base_url'].rstrip('/')+('/messages' if native else '/chat/completions'),data=payload,headers=headers,method='POST')
     try:
-        with build_opener(NoRedirect).open(req,timeout=90) as response:
+        with build_opener(NoRedirect).open(req,timeout=300 if cfg.get('_cad_review') else 90) as response:
             raw=response.read(2_000_001)
         if len(raw)>2_000_000:raise ValueError('size')
         value=json.loads(raw)
         return ''.join(c['text'] for c in value['content'] if c['type']=='text') if native else value['choices'][0]['message']['content']
+    except TimeoutError:raise ValueError('AI 응답 시간 초과') from None
     except HTTPError as exc:raise ValueError('AI API HTTP '+str(exc.code)) from None
     except Exception:raise ValueError('AI API 연결 또는 응답 형식 오류') from None
 

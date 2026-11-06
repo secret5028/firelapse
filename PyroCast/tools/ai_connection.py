@@ -42,13 +42,16 @@ def disconnect():
     with _lock:_session=None
     return public_status()
 
-def complete(messages):
+def complete(messages, purpose="general"):
+    if purpose not in ("general","cad_review"):raise ValueError("AI 요청 목적 오류")
     with _lock:s=dict(_session) if _session else None
     if not s:raise ValueError('AI 연결이 해제되었습니다')
     if not isinstance(messages,list) or not 1<=len(messages)<=100 or any(not isinstance(m,dict) or m.get('role') not in ('system','user','assistant') or not isinstance(m.get('content'),(str,list)) for m in messages):
         raise ValueError('AI 메시지 형식 오류')
     from lite_ai_fuel import completion
-    value=completion({k:v for k,v in s.items() if k!='key'},s['key'],messages)
+    cfg={k:v for k,v in s.items() if k!='key'}
+    if purpose=='cad_review':cfg['_cad_review']=True
+    value=completion(cfg,s['key'],messages)
     if not isinstance(value,str) or s['key'] in value:raise ValueError('AI 응답 형식 오류')
     return value
 
@@ -56,7 +59,7 @@ def remote(path='',body=None):
     data=None if body is None else json.dumps(body,ensure_ascii=False).encode()
     req=Request(URL+path,data=data,headers={'Content-Type':'application/json'})
     try:
-        with urlopen(req,timeout=100 if body else .6) as r:return json.loads(r.read(2_000_001))
+        with urlopen(req,timeout=(320 if body.get('purpose')=='cad_review' else 100) if body else .6) as r:return json.loads(r.read(2_000_001))
     except Exception:raise ValueError('AI 연결 서버에 접속할 수 없습니다') from None
 
 def runtime_settings():
@@ -64,8 +67,9 @@ def runtime_settings():
     except ValueError:return None
     return {**s,'_runtime':True,'api_key_env':'PYROCAST_AI_KEY'} if s.get('connected') else None
 
-def runtime_completion(messages):
-    return complete(messages) if HOSTING else remote('/completion',{'messages':messages})['text']
+def runtime_completion(messages, purpose='general'):
+    if purpose not in ('general','cad_review'):raise ValueError('AI 요청 목적 오류')
+    return complete(messages,purpose) if HOSTING else remote('/completion',{'messages':messages,'purpose':purpose})['text']
 
 def handle(handler,path):
     # No keys in GET, responses, log messages, disk, or environment variables.
@@ -87,7 +91,7 @@ def handle(handler,path):
         if handler.headers.get('Content-Type','').split(';')[0]!='application/json':raise ValueError('JSON 요청이 필요합니다')
         body=json.loads(handler.rfile.read(size))
         if not isinstance(body,dict):raise ValueError('요청 형식 오류')
-        if path.endswith('/completion'):return handler.json({'text':complete(body.get('messages'))})
+        if path.endswith('/completion'):return handler.json({'text':complete(body.get('messages'),body.get('purpose','general'))})
         if body.get('action')=='disconnect':return handler.json(disconnect())
         if body.get('action')=='connect':return handler.json(connect(body))
         raise ValueError('지원하지 않는 동작')

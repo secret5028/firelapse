@@ -1,0 +1,38 @@
+[
+  {
+    "call": 1,
+    "floor": "1F",
+    "stage": "correction",
+    "candidates": 12,
+    "image": true,
+    "error_type": "ValueError",
+    "elapsed_s": 90.17
+  },
+  {
+    "call": 2,
+    "floor": "2F",
+    "stage": "correction",
+    "candidates": 26,
+    "image": true,
+    "error_type": "ValueError",
+    "elapsed_s": 90.14
+  },
+  {
+    "call": 3,
+    "floor": "1F",
+    "stage": "post_validation",
+    "candidates": 30,
+    "image": true,
+    "error_type": "ValueError",
+    "elapsed_s": 90.16
+  },
+  {
+    "call": 4,
+    "floor": "2F",
+    "stage": "post_validation",
+    "candidates": 37,
+    "image": true,
+    "error_type": "ValueError",
+    "elapsed_s": 90.98
+  }
+]

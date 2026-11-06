@@ -214,6 +214,7 @@ def ai_decisions(context,candidates,transport=None):
         from lite_ai_fuel import settings,credential,completion
         try:
             cfg=settings()
+            if cfg:cfg={**cfg,'_cad_review':True}
             if not cfg or not credential(cfg):return dict(status='not_connected',accepted=[],reviews=[],calls=0)
         except Exception:return dict(status='failed_configuration',accepted=[],reviews=[],calls=0)
         def transport(messages):

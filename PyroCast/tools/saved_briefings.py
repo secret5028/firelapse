@@ -5,7 +5,7 @@ import json
 import logging
 import os
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
 from lite_ai_briefing import briefing_value
@@ -61,21 +61,23 @@ def playback_files(root):
             yield path
 
 
+def backfill_one(path):
+    try:
+        return ensure(path)['template_version']
+    except Exception as exc:
+        LOG.warning('%s: %s', path.relative_to(ROOT), exc)
+        return 'skipped'
+
+
 def backfill():
     paths = [*playback_files(LEGACY_RESULTS), *(ROOT/'data/wando-coldstore').glob('*-playback.json')]
-
-    def one(path):
-        try:
-            return ensure(path)['template_version']
-        except Exception as exc:
-            LOG.warning('%s: %s', path.relative_to(ROOT), exc)
-            return 'skipped'
-
     counts = {}
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        for kind in pool.map(one, paths):
+    with ProcessPoolExecutor(max_workers=min(6, os.cpu_count() or 1)) as pool:
+        for kind in pool.map(backfill_one, paths):
             counts[kind] = counts.get(kind, 0) + 1
     print(json.dumps(counts, ensure_ascii=False), flush=True)
+    if counts.get('skipped'):
+        raise SystemExit(1)
 
 
 def watch():

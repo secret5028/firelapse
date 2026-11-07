@@ -95,7 +95,7 @@ def package(model, native, template, folder):
         dict(time_s=t, opening_states=opening_states))
     for r, state in rollover.items(): solvers[r]['conditions']['FGI']['rollover'] = state
     from fixed_calculation import ENGINE
-    return _finite(dict(schema='pyrocast-cad-playback-1', engine_kind='cfast_native',
+    playback = _finite(dict(schema='pyrocast-cad-playback-1', engine_kind='cfast_native',
         native_mapping='fixed-r8-native-v2', condition_version='shared_condition_indices', complete=True,
         building_sha256=model['cad']['building_sha256'], time_s=t, fire_key=template['fire_key'],
         rooms=deepcopy(template['rooms']), fuel_symbols=deepcopy(template.get('fuel_symbols', [])),
@@ -105,3 +105,7 @@ def package(model, native, template, folder):
                 '조건 충족 지수이며 발생 확률 아님.'],
         provenance=dict(engine_sha256=digest(ENGINE), final_input_sha256=digest(folder/'case.in'),
             mapping='stock compartments CSV: C, mol_frac, W/1000, OD converted to 1/m, TUHC/upper gas mass')))
+
+    from pyrocast_cfbt.validation import validate_native, protect_playback
+    protect_playback(playback,validate_native(native,model,folder))
+    return playback

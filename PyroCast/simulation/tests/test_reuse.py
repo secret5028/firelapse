@@ -41,8 +41,9 @@ class ReuseTests(unittest.TestCase):
                 (source/'case_compartments.csv').write_text('corrupt','ascii')
                 with self.assertRaisesRegex(ValueError,'output changed'):
                     prime_completed(source,folder/'corrupt',engine,side,180.)
-            with patch('pyrocast_cfbt.native.subprocess.Popen',side_effect=RuntimeError('Would launch new native calculation')),patch('pyrocast_cfbt.native.load_result',return_value='reused') as loader:
-                self.assertEqual(execute(engine,folder/'copy','exact deck\n',side,180.,60.),'reused')
+            with patch('pyrocast_cfbt.native.subprocess.Popen',side_effect=RuntimeError('Would launch new native calculation')),patch('pyrocast_cfbt.native.load_result',return_value={'reused':True}) as loader, patch('pyrocast_cfbt.validation.validate_native',return_value={'passed':False,'status':'physically_invalid'}) as validator:
+                self.assertEqual(execute(engine,folder/'copy','exact deck\n',side,180.,60.),{'reused':True,'physical_validation':{'passed':False,'status':'physically_invalid'}})
+                validator.assert_called_once()
                 self.assertTrue(loader.call_args.args[2]['cache_hit'])
                 with self.assertRaisesRegex(RuntimeError,'Would launch'):
                     execute(engine,folder/'copy','different deck\n',side,180.,60.)

@@ -180,7 +180,7 @@ def status(sha):
 def cases(sha):
     rows = []
     for p in paths(sha):
-        if read(p/'status.json', {}).get('state') != 'complete' or not (p/'playback.json').is_file(): continue
+        if read(p/'status.json', {}).get('state') not in ('complete','physically_invalid') or not (p/'playback.json').is_file(): continue
         data = read(p/'playback.json')
         rows.append(dict(id=p.name, label=data['label'], engine_kind=data.get('engine_kind'),
                          origin_room_id=playback_origin(data), complete=data.get('complete') is True,
@@ -194,7 +194,7 @@ def playback_file(sha, case):
     if not re.fullmatch(r'calc-\d+-[a-f0-9]+', case or ''):
         raise ValueError('계산 사례 ID 오류')
     folder = locate(JOBS/sha/case)
-    if read(folder/'status.json', {}).get('state') != 'complete':
+    if read(folder/'status.json', {}).get('state') not in ('complete','physically_invalid'):
         raise ValueError('완료되지 않은 계산')
     return folder/'playback.json'
 
@@ -213,6 +213,11 @@ def playback(sha, case):
     if 'fire_input' not in value:
         value['fire_input']=fire_details(read(file.with_name('input.json'),{}),
                                          read(file.with_name('rule_manifest.json'),{}),value)
+    if value.get('engine_kind')=='cfast_native' and (file.parent/'scenario.json').is_file():
+        from pyrocast_cfbt.native import load_result
+        from pyrocast_cfbt.validation import validate_native, protect_playback
+        native=load_result(file.parent,value['time_s'][-1],dict(folder=str(file.parent)))
+        protect_playback(value,validate_native(native,read(file.parent/'scenario.json'),file.parent))
     return value
 
 
@@ -270,7 +275,7 @@ def compute(folder):
             atomic_json(folder/'execution-evidence.json', dict(**req, engine_sha256=digest(ENGINE),
                 rule_settings=model.get('rule_settings'), fixed_openings=read(folder/'fixed-state.json'),
                 native_budget_s=1800, trigger='native r8 plate sensor'))
-            native = execute(ENGINE, folder, deck, '', model['duration_s'], 1800, stall_timeout_s=0)
+            native = execute(ENGINE, folder, deck, '', model['duration_s'], 1800, stall_timeout_s=90, validation_model=model)
             pb = package(model, native, read(source/'playback.json'), folder)
             runs = 1
         boundary_model = locals().get('model',raw)
@@ -284,7 +289,7 @@ def compute(folder):
         pb['display_opening_state'] = dict(building_sha256=req['building_sha256'], case_id=folder.name,
             basis='saved_case_input', states=fixed['states'])
         atomic_json(folder/'playback.json', pb)
-        atomic_json(folder/'status.json', dict(state='complete', id=folder.name, **req,
+        atomic_json(folder/'status.json', dict(state=pb.get('status','complete'), physical_validation=pb.get('physical_validation'), id=folder.name, **req,
             wall_s=time.monotonic()-started, solver_runs=runs, case_id=folder.name))
     except Exception as exc:
         atomic_json(folder/'status.json', dict(state='failed', id=folder.name, **req,

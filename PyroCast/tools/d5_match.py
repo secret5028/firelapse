@@ -68,6 +68,7 @@ def match_timelines(timelines, building, route, rules, origin):
 
 def match_case(service,args,route,rules):
     p=service.case(args)
+    if p.get('physical_validation',{}).get('status')=='physically_invalid':return []
     ids={c.get('original_room') or c['key'] for c in p['rooms']}
     timelines={rid:service.get_room_timeline({**args,'room':rid}) for rid in ids}
     return match_timelines(timelines,service.get_building(args),route,rules,p.get('fire_key'))

@@ -5620,6 +5620,7 @@ function createResultsPanel({panel,store}){
  function update({building,result,series,index,selection,fireInput}){
   let boundary=document.getElementById('resultBoundaryNotice');if(!boundary){boundary=document.createElement('div');boundary.id='resultBoundaryNotice';boundary.style.cssText='padding:10px;background:#533d12;color:#fff';root.prepend(boundary);}
   boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('최소 누기 가정 적용:')).join(' · ');boundary.hidden=!boundary.textContent;
+  const invalid=(result.limits_text||[]).filter(s=>s.startsWith('물리 타당성 검사 실패:'));if(invalid.length){boundary.textContent=invalid.join(' · ');boundary.style.background='#9d1515';boundary.hidden=false;}else boundary.style.background='#533d12';
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   const info=roomDisplayInfo(room,cell,values?.interface_m?.[index]);

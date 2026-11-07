@@ -37,3 +37,31 @@ class Leakage(unittest.TestCase):
     def test_invalid_area_is_rejected(self):
         m=sealed();m['leakage_defaults']={'fallback_area_m2':0}
         with self.assertRaises(ValueError):apply_minimum_leakage(m)
+
+
+class PhysicalValidation(unittest.TestCase):
+    def test_pressure_fuel_and_combustion_failures_suppress_indices(self):
+        import numpy as np
+        from unittest.mock import patch
+        from pyrocast_cfbt.validation import SPECIES, validate_native, protect_playback
+        t=np.array([0.,1.]);mass={'Time':t};units={}
+        for layer in ('UL','LL'):
+            for species in SPECIES:
+                k=f'{layer}M{species}_1';mass[k]=np.zeros(2);units[k]='kg'
+        mass['ULMN2_1']=np.array([1.,1.]);mass['ULMTUHC_1']=np.array([0.,4.])
+        c=dict(Time=t,PRS_1=np.array([0.,45000.]),HRR_1=np.array([0.,100.]),HRR_E1=np.array([0.,1000.]),PYROL_1=np.array([0.,8.]))
+        model=dict(rooms=[dict(id='A',leak_area_ratio=[0,0])],openings=[])
+        with patch('pyrocast_cfbt.native.read_native_csv',return_value=(mass,{},units)):
+            v=validate_native(dict(compartments=c),model,'.')
+        self.assertEqual(v['status'],'physically_invalid')
+        self.assertEqual({r['check'] for r in v['reasons']},{'max_abs_pressure_Pa','max_upper_fuel_fraction','burned_fraction'})
+        self.assertEqual(v['metrics']['mass_balance_error'],0)
+        pb=dict(time_s=t.tolist(),solvers={'A':{'conditions':{'FO':{'scores':{'degree':[1,2]}}}}})
+        protect_playback(pb,v)
+        self.assertEqual(pb['solvers']['A']['conditions']['FO']['scores']['degree'],[None,None])
+
+    def test_mass_ledger_missing_is_not_pass(self):
+        import numpy as np
+        from pyrocast_cfbt.validation import validate_native
+        v=validate_native(dict(compartments={'Time':np.array([0,1]),'PRS_1':np.zeros(2)}),{},'nonexistent-p0-fixture')
+        self.assertFalse(v['passed']);self.assertEqual(v['status'],'unverified')

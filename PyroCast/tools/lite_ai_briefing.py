@@ -41,6 +41,9 @@ def facts_for(call,i):
 def briefing_value(service,a):
     from d5_briefing import fill
     playback=service.case(a)
+    if playback.get('physical_validation',{}).get('status')=='physically_invalid':
+        text='\n'.join(v for v in playback.get('limits',[]) if v.startswith('물리 타당성 검사 실패:'))
+        return dict(building=a['building'],case=a['case'],text=text,sections=[dict(title='물리적으로 무효인 계산',text=text)],facts=[],calls=[],rules=[],proposals=[],status='physically_invalid',template_version='invalid/1')
     if playback.get('complete') is not True or playback.get('building_sha256')!=service.building(a['building'])[0]['sha']:
         raise ValueError('완료된 저장 결과를 선택하세요.')
     try:

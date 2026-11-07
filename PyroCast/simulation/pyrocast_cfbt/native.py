@@ -96,7 +96,7 @@ def read_diagnostic(path,until_s=None):
     return result
 
 
-def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=90., *, preserve_input_files=False):
+def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=90., *, preserve_input_files=False, validation_model=None):
     exe=Path(exe).resolve(); folder=Path(folder).resolve(); folder.mkdir(parents=True,exist_ok=True)
     if preserve_input_files:
         if (folder/'case.in').read_text('ascii')!=deck or (folder/'case.cfbt').read_text('ascii')!=sidecar:
@@ -114,7 +114,10 @@ def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=9
             if saved.get('files'):
                 native_log=folder/'case.log'
                 if native_log.exists() and 'NORMAL EXIT' in native_log.read_text(errors='replace').upper():
-                    return load_result(folder,duration_s,dict(saved['run'],cache_hit=True))
+                    result=load_result(folder,duration_s,dict(saved['run'],cache_hit=True))
+                    from .validation import validate_native, model_from_deck
+                    result['physical_validation']=validate_native(result,validation_model or model_from_deck(deck),folder)
+                    return result
     cache.unlink(missing_ok=True)
     # A retry must not treat the previous run's final status as new progress.
     (folder/'case.status').unlink(missing_ok=True)
@@ -159,9 +162,11 @@ def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=9
     try:result=load_result(folder,duration_s,run)
     except (ValueError,OSError,StopIteration):
         state('failed','invalid_native_output');raise
-    last_time=float(duration_s);state('completed')
+    from .validation import validate_native, model_from_deck
+    result['physical_validation']=validate_native(result,validation_model or model_from_deck(deck),folder)
+    last_time=float(duration_s);state(result['physical_validation']['status'])
     files=[p for p in folder.glob('case*.csv')]+[folder/'execution.log',folder/'case.log']
-    payload={'signature':signature,'run':run,'files':{p.name:digest(p) for p in files}}
+    payload={'signature':signature,'run':run,'physical_validation':result['physical_validation'],'files':{p.name:digest(p) for p in files}}
     temporary=folder/'completed.json.tmp'
     temporary.write_text(json.dumps(payload,indent=2),encoding='utf-8'); temporary.replace(cache)
     return result

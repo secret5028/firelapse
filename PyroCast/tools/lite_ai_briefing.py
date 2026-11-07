@@ -47,6 +47,10 @@ def briefing_value(service,a):
         return fill(service,a)
     except (ValueError,KeyError,TypeError,IndexError,OSError,subprocess.SubprocessError) as exc:
         logging.getLogger(__name__).warning('Detailed briefing unavailable for %s (%s)',a['case'],type(exc).__name__)
+        return basic_briefing(service,a)
+
+
+def basic_briefing(service,a):
     call=service.call('get_case_summary',a)
     summary=call['data']
     facts=facts_for(call,0)

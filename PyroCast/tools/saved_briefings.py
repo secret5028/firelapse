@@ -8,7 +8,7 @@ import time
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-from lite_ai_briefing import briefing_value
+from lite_ai_briefing import basic_briefing, briefing_value
 from lite_ai_tools import ROOT, finite
 from model_ai_tools import service_for_hash
 from result_catalog import atomic_json, read
@@ -36,8 +36,15 @@ def ensure(path, context=None):
         raise ValueError('완료된 저장 결과를 선택하세요.')
     building = playback['building_sha256']
     case = (context or {}).get('case') or playback.get('case_id') or path.parent.name
-    service = service_for_hash(building).bind_saved_case(case, path)
-    value = briefing_value(service, dict(building=building, case=case, time_s=timeline[-1]))
+    service = service_for_hash(building).bind_saved_case(building, case, path)
+    args = dict(building=building, case=case, time_s=timeline[-1])
+    try:
+        service.building(building)
+    except ValueError:
+        # Historical validation models can still be summarized from their own arrays.
+        value = basic_briefing(service, args)
+    else:
+        value = briefing_value(service, args)
     public = {key: value[key] for key in ('case', 'building', 'text', 'sections', 'template_version')}
     public['time_s'] = timeline[-1]
     public['tool_count'] = len(value['calls'])

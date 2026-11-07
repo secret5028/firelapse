@@ -84,15 +84,15 @@ class Tools:
                 if d.get('building_sha256')==meta['sha']:out['wando-'+p.name.removesuffix('-playback.json')]=p
         self._case_cache[meta['id']]=(stamps,out)
         return out
-    def bind_saved_case(self, case, path):
-        self._saved_case = (case, path)
+    def bind_saved_case(self, building, case, path):
+        self._saved_case = (building, case, path)
         return self
 
     def case_path(self,a):
         case=a.get('case')
         if self._saved_case is not None:
-            self.building(a['building'])
-            if case==self._saved_case[0]:return self._saved_case[1]
+            building,ident,path=self._saved_case
+            if a['building']==building and case==ident:return path
         path=self.cases(a['building']).get(case)
         if path is None and isinstance(case,str) and case.startswith('calc-'):
             from fixed_calculation import playback_file

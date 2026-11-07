@@ -6,7 +6,7 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
  windowTarget=window,requestFrame=fn=>requestAnimationFrame(fn),cancelFrame=id=>cancelAnimationFrame(id),
  scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,10000),
  rendererFactory=()=>new THREE.WebGLRenderer({antialias:true,alpha:true}),layers=createEmptyLayers(THREE),seriesAt=()=>null,
- adoptedRenderer=null,legendContainer=null,groundPick=null,vehiclePick=null}){
+ adoptedRenderer=null,legendContainer=null,groundPick=null,vehiclePick=null,onRoomPick=null}){
  if(!container||mounted.has(container)||(container.querySelector('canvas')&&container.querySelector('canvas')!==adoptedRenderer?.domElement))throw Error('Container already owns a canvas/host');
  const ids=layers.map(l=>l.constructor.id);if(new Set(ids).size!==ids.length)throw Error('Duplicate layer IDs');
  let disposed=false,running=false,raf=null,lastTime=null,renderer=null,legendAnchor=null;const cleanups=[];
@@ -39,7 +39,12 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
    const floorId=store.get('floor').floor_id,planes=layers.flatMap(l=>l.getPickPlanes?.()||[]).filter(p=>{
     if(floorId!==null&&p.userData.floorId!==floorId)return false;for(let node=p;node;node=node.parent)if(!node.visible)return false;return true;
    });
-   const hit=ray.intersectObjects(planes,false)[0];if(hit)store.dispatch('selection/set',{room_id:hit.object.userData.roomId,cell_id:hit.object.userData.liteRoom,source:start.source});
+   const hit=ray.intersectObjects(planes,false)[0];
+   if(hit){
+    const selection={room_id:hit.object.userData.roomId,cell_id:hit.object.userData.liteRoom,source:start.source};
+    store.dispatch('selection/set',selection);
+    onRoomPick?.(selection);
+   }
   });
   cleanups.push(()=>{pointers.clear();down=null;});
  }

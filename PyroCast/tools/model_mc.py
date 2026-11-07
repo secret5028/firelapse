@@ -123,6 +123,6 @@ def cases(ident):
     rows=[]
     for folder in folders(ident):
         for p in sorted(folder.glob('S*/summary.json')):
-            if re.fullmatch(r'S\d+',p.parent.name) and read(p,{}).get('complete'):
-                req=read(folder/'request.json');rows.append(dict(id=case_id(folder,p.parent.name),label=f"{req['floor']} {req['room'].split('_')[-1]} · MC {p.parent.name}",engine_kind="pyrocast_lite",duration_s=req.get("duration_s"),saved_at_ms=int(p.stat().st_mtime*1000),run_id=folder.name))
+            if re.fullmatch(r'S\d+',p.parent.name) and read(p,{}).get('complete') and (p.parent/'playback.json').is_file():
+                req=read(folder/'request.json');rows.append(dict(id=case_id(folder,p.parent.name),label=f"{req['floor']} {req['room'].split('_')[-1]} · MC {p.parent.name}",origin_room_id=req['room'],complete=True,engine_kind="pyrocast_lite",duration_s=req.get("duration_s"),saved_at_ms=int(p.stat().st_mtime*1000),run_id=folder.name))
     return rows

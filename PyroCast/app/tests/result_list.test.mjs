@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {resultListRows} from '../web/panels/result_list.js';
+import {latestRoomCases,resultListRows} from '../web/panels/result_list.js';
 const floors=[{name:'5F',rooms:[{id:'R16',names:['객실-10']}]},{name:'B3',rooms:[{id:'R6',names:[]}]}];
 const result={result_id:'S08',status:'complete',engine:{kind:'lite'},scenario:{origin_room_id:'CAD_5F_R16'}};
 const cases=[{id:'S07',label:'5F R16 · MC S07'},{id:'S08',label:'5F R16 · MC S08'},{id:'b',label:'B3 R6 · 저장 결과'}];
@@ -26,3 +26,14 @@ console.log('PASS: distinct engines for same room, saved metadata, unknown never
 const runs=resultListRows([{id:'a',label:'5F R16 · MC S00',engine_kind:'pyrocast_lite',duration_s:60,saved_at_ms:1793866167503,run_id:'mc-one-123abc'},{id:'b',label:'5F R16 · MC S00',engine_kind:'pyrocast_lite',duration_s:3600,saved_at_ms:1793867167503,run_id:'mc-two-456def'}],null,floors);
 assert.match(runs[0].detail,/1분/);assert.match(runs[1].detail,/60분/);assert.notEqual(runs[0].detail,runs[1].detail);assert.doesNotMatch(runs[1].detail,/456def/);assert.equal(runs[1].run_id,'mc-two-456def');
 console.log('PASS: distinct duration, saved date; batch retained only as metadata for otherwise identical labels');
+
+const selected=latestRoomCases([
+ {id:'first',origin_room_id:'CAD_5F_R16',complete:true,saved_at_ms:5},
+ {id:'running',origin_room_id:'CAD_5F_R16',complete:false,saved_at_ms:20},
+ {id:'newest',origin_room_id:'CAD_5F_R16',complete:true,saved_at_ms:10},
+ {id:'other-floor',origin_room_id:'CAD_7F_R16',complete:true,saved_at_ms:11},
+ {id:'ambiguous',label:'5F R16',complete:true,saved_at_ms:99},
+]);
+assert.equal(selected.get('CAD_5F_R16').id,'newest');
+assert.equal(selected.get('CAD_7F_R16').id,'other-floor');
+assert.equal(selected.size,2,'Case labels cannot substitute for an exact saved origin');

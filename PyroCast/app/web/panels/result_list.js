@@ -1,4 +1,14 @@
 // Saved playback navigation only: selecting a row never starts a calculation.
+export function latestRoomCases(cases){
+ const result=new Map();
+ for(const entry of cases){
+  if(entry.complete!==true||!entry.id||!entry.origin_room_id)continue;
+  const previous=result.get(entry.origin_room_id);
+  if(!previous||(entry.saved_at_ms??0)>(previous.saved_at_ms??0))result.set(entry.origin_room_id,entry);
+ }
+ return result;
+}
+
 export function resultListRows(cases,result,floors){
  const rooms=new Map(floors.flatMap(f=>f.rooms.map(r=>[`CAD_${f.name}_${r.id}`,{floor:f.name,room:r}])));
  const roomName=source=>source.room.names?.filter(Boolean).join(' · ')||source.room.name||'';

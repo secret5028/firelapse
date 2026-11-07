@@ -30,6 +30,7 @@ import {createLitePanel,updateLitePanel} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
 import {createDisplayPanel} from './panels/display.js';
 import {createResultsPanel,resultTypes} from './panels/results.js';
+import {latestRoomCases} from './panels/result_list.js';
 import {createExplorePanel} from './panels/explore.js';
 import {attachFrozenRules} from '/cfbt/frozen_rule_controls.js';
 
@@ -48,7 +49,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  const cache=createSeriesCache(),store=createStore({seriesCache:cache,validators:{building:v=>v.schema==='pyrocast.building/1'&&!v.errors.length,result:v=>v.schema==='pyrocast.result/1'&&!v.errors.length,screening:v=>v.schema==='pyrocast.screening/1'&&!v.errors.length}});
  const displayFloors=[...B.floors].sort((a,b)=>(b.z??0)-(a.z??0));
  const shell=createPanelShell({panel,store,buildingFloors:displayFloors,onShowResult:async id=>{
-  if(id===chosen)showResultOrigin();else await loadSavedCase(id);
+  if(id===chosen){cancelCaseLoad();showResultOrigin();}else await loadSavedCase(id);
  }});
  const display=createDisplayPanel({store,selectionLabel,isOriginAllowed:room=>screeningPayload?.manual_origins?.some(r=>r.room===room),onOrigin:room=>{if(!screeningPayload?.manual_origins?.some(r=>r.room===room))return;store.dispatch('exploration/set',{origin_room_id:room,origin_mode:'manual'});$('shellTab-explore').click();}});
  const results=createResultsPanel({panel,store});
@@ -193,7 +194,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   if(!vehiclePositionAllowed(position,previewYaw)){store.dispatch('route/set',{message:'차량 전체가 지상 그리드 안·건물 밖에 놓이도록 선택하세요'});return;}
   if(!vehicleAnchor){vehicleAnchor=[...p];store.dispatch('route/set',{message:'마우스로 방향 조절 · 클릭하여 확정 · Esc 취소'});}
   else store.dispatch('route/set',{vehicle:[...vehicleAnchor],vehicle_yaw:previewYaw,placing:false,message:''});
- }},vehiclePick:position=>routeUI?.showVehicleMenu(position),seriesAt:()=>cache.get(store.get('result')?.result_id)});
+ }},vehiclePick:position=>routeUI?.showVehicleMenu(position),onRoomPick:openPickedRoom,seriesAt:()=>cache.get(store.get('result')?.result_id)});
  const on=(node,event,fn)=>{node.addEventListener(event,fn);cleanup.push(()=>node.removeEventListener(event,fn));};
  const handler=(node,event,fn)=>{const old=node[event];node[event]=fn;cleanup.push(()=>{node[event]=old;});};
  const name=r=>`${r.cad_floor} ${r.cad_room} · ${r.display_name||'용도 미확인'}`;
@@ -257,15 +258,19 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  handler($('liteFold'),'onclick',()=>{$('liteBody').hidden=!$('liteBody').hidden;$('liteFold').textContent=$('liteBody').hidden?'펼치기':'접기';});
  // Every explicit result-open path selects that result's own origin. A CAD
  // room selected while browsing another floor must never leak into this action.
- function showResultOrigin(){
+ function showResultOrigin(keepView=false){
   const cell=data?.rooms.find(r=>r.key===data.fire_key);
   if(!cell)throw Error('계산 결과의 화점실 정보가 없습니다.');
-  viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
+  if(!keepView){viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});}
   store.dispatch('layers/toggle',{id:'selection',visible:true});
-  select(cell.key);$('shellTab-result').click();render();fitFloor(true);saveView();
+  select(cell.key);shell.showResults();render();if(!keepView)fitFloor(true);saveView();
  }
- async function install(payload,id,{focusOrigin=false}={}){
+ async function install(payload,id,{focusOrigin=false,keepView=false,expectedRoom=null,isCurrent=()=>true}={}){
   if(payload.schema!=='pyrocast-cad-playback-1'||(!payload.complete&&!(payload===initial&&payload.model_preview===true&&id==='model-preview'))||payload.building_sha256!==initial.building_sha256)throw Error('다른 건물 또는 미완료 계산 결과입니다. 표시하지 않습니다.');
+  if(expectedRoom){
+   const origin=payload.rooms.find(room=>room.key===payload.fire_key);
+   if((origin?.original_room||origin?.key)!==expectedRoom)throw Error('선택한 방과 계산 결과의 화점실이 다릅니다.');
+  }
   const seq=store.dispatch('result/load'),byRoom=new Map();
   for(const c of payload.rooms){const key=c.original_room||c.key;if(byRoom.has(key))continue;const f=B.floors.find(f=>f.name===c.cad_floor),r=f?.rooms.find(r=>`CAD_${f.name}_${r.id}`===key);if(!r)throw Error('CAD room missing: '+key);
    byRoom.set(key,{id:key,name:r.names?.join(' / ')||key,cad_floor:c.cad_floor,cad_polys:r.polys,z_m:c.z_m,height_m:c.height_m});}
@@ -275,14 +280,14 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    if(!byRoom.has(key))byRoom.set(key,{id:key,name:r.names?.join(' / ')||key,cad_floor:f.name,cad_polys:r.polys,z_m:f.z,height_m:f.h});}
   const scenario={rooms:[...byRoom.values()],openings:[],cad:{building_sha256:payload.building_sha256}};
   const building=adaptBuilding({scenario,playback:payload,sourceHash:payload.building_sha256}),result=await adaptResult({playback:payload,scenario,building,resultId:id});
-  if(seq!==store.get('request').seq)return false;
+  if(!isCurrent()||seq!==store.get('request').seq)return false;
   ready=false;data=payload;chosen=id;store.dispatch('buildingReview/set',{playbackOpenings:payload.display_opening_state??null});rawSource={source_hash:payload.building_sha256,result_id:id,data:payload,B,groups};store.dispatch('building/set',building);store.dispatch('result/receive',{seq,result});
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;store.dispatch('selection/set',{room_id:null,cell_id:null,source:'list'});$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   $('liteTime').step=data.output_step_s||10;
   for(const id of ['shellPlay','shellTime','litePlay','liteTime'])$(id).disabled=!!payload.model_preview;
   lastPanel='';ruleContext();ready=true;
-  if(focusOrigin)showResultOrigin();else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
+  if(focusOrigin)showResultOrigin(keepView);else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
  }
  let mcSummary=null;
  async function saveFixed(body,playWorst=false){
@@ -308,9 +313,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  }
  handler($('resultMCApplyWorst'),'onclick',()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id});});
  const reuseByCase=new Map();
+ let casesByRoom=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
+ async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;casesByRoom=latestRoomCases(c.cases||[]);shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
   if(!disposed&&serial===catalogSerial)explore.catalog(c,mcSummary?.source_room??null);
  }
  handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;$('resultMCLoad').disabled=true;$('resultMCStatus').className='status-busy';
@@ -318,9 +324,24 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   finally{if(!disposed)$('resultMCLoad').disabled=!mcSummary;}
  });
  let loadSerial=0;
- async function loadSavedCase(id){const serial=++loadSerial;$('resultReplay').disabled=true;
+ function cancelCaseLoad(){loadSerial++;$('resultReplay').disabled=false;}
+ async function openPickedRoom({room_id}){
+  if(!room_id||!ready||disposed)return;
+  cancelCaseLoad();
+  const completed=calculationState.state==='complete'&&calculationState.room===room_id?calculationState.case_id:null;
+  const caseId=completed||casesByRoom.get(room_id)?.id;
+  if(caseId&&caseId!==chosen){
+   const serial=loadSerial+1;
+   try{await loadSavedCase(caseId,{expectedRoom:room_id,keepView:true});}
+   catch(error){if(!disposed&&serial===loadSerial){shell.showResults();$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}}
+  }else if(caseId||(!data.model_preview&&data.rooms.some(room=>(room.original_room||room.key)===room_id))){
+   shell.showResults();
+  }
+ }
+ async function loadSavedCase(id,{expectedRoom=null,keepView=false}={}){const serial=++loadSerial;$('resultReplay').disabled=true;
+  const isCurrent=()=>!disposed&&serial===loadSerial;
   try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});if(!r.ok)throw Error('HTTP '+r.status);const payload=await r.json();if(disposed||serial!==loadSerial)return false;
-   const installed=await install(payload,id,{focusOrigin:true});if(installed){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
+   const installed=await install(payload,id,{focusOrigin:true,expectedRoom,keepView,isCurrent});if(installed&&isCurrent()){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
   }finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}
  }
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',()=>loadSavedCase($('liteCase').value).catch(error=>{if(!disposed)$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}));

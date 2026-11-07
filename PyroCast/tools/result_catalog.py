@@ -22,6 +22,13 @@ def atomic_json(path, value):
     finally: tmp.unlink(missing_ok=True)
 
 
+def playback_origin(data):
+    """Map the fire cell back to the exact CAD room used by the scene picker."""
+    key = data.get('fire_key')
+    return next((room.get('original_room') or room['key']
+                 for room in data.get('rooms', []) if key and room.get('key') == key), None)
+
+
 class ResultCatalog:
     def __init__(self, root, aliases):
         self.root=Path(root).resolve();self.aliases=Path(aliases)
@@ -41,13 +48,14 @@ class ResultCatalog:
                 except OSError:continue
                 rel=path.relative_to(self.root).as_posix();stamp=[stat.st_mtime_ns,stat.st_size]
                 old=previous.get(rel)
-                if old and old.get('stamp')==stamp and 'engine_kind' in old:found[rel]=old;continue
+                if old and old.get('stamp')==stamp and 'origin_room_id' in old:found[rel]=old;continue
                 data=read(path)
-                record={'stamp':stamp,'valid':False,'engine_kind':None}
+                record={'stamp':stamp,'valid':False,'engine_kind':None,'origin_room_id':None}
                 if isinstance(data,dict) and data.get('schema')=='pyrocast-cad-playback-1' and data.get('building_sha256') and data.get('time_s'):
                     record.update(valid=True,building_sha256=data['building_sha256'],engine_kind=data.get('engine_kind'),
                         kind='lite' if data.get('engine_kind')=='pyrocast_lite' else 'native',
-                        label=data.get('label') or Path(rel).parent.as_posix(),complete=bool(data.get('complete')))
+                        label=data.get('label') or Path(rel).parent.as_posix(),complete=bool(data.get('complete')),
+                        origin_room_id=playback_origin(data))
                 # Cache parse failures only until the file changes; partial writes never enter cases.
                 found[rel]=record
             self.index={'schema':'pyrocast.playback-catalog/1','files':found}
@@ -68,7 +76,8 @@ class ResultCatalog:
             path=self.root/rel;old=bypath.get(path,{})
             result.append({'id':old.get('id','case-'+hashlib.sha256(rel.encode()).hexdigest()[:20]),
                 'label':old.get('label',row['label']),'path':str(path),'complete':row['complete'],
-                'engine_kind':row.get('engine_kind')})
+                'engine_kind':row.get('engine_kind'),'origin_room_id':row.get('origin_room_id'),
+                'saved_at_ms':row['stamp'][0]//1_000_000})
         order={r['id']:i for i,r in enumerate(configured)}
         return sorted(result,key=lambda r:(order.get(r['id'],len(order)),r['id']))
 

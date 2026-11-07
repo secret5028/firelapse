@@ -1,7 +1,44 @@
 {
   "basis": "CODEX_HANDOFF P0 project assumptions; leakage areas reuse Lite shaft_floor_leak/elev_leak, not measured building leakage",
-  "leakage": {"stair_area_m2": 0.02, "elevator_area_m2": 0.06, "fallback_area_m2": 0.02, "height_m": 2.1},
-  "validation": {"max_pressure_Pa": 1000, "max_mass_balance_error": 0.05, "min_burned_fraction": 0.5, "max_upper_fuel_fraction": 0.3},
-  "ventilation": {"suggested_parking_ach": 6, "cutoffs_Pa": [200, 300]},
-  "criteria": {"min_layer_depth_m": 0.3, "ambient_oxygen_vol_percent": 20.9, "oxygen_deficient_vol_percent": 10, "fuel_rich_mass_fraction": 0.1, "fo_temperature_C": 600, "fo_flux_kW_m2": 20, "gas_ignition_C": 520, "window_s": 30, "q_min_kW": 1, "lfl_heat_J_kg": 1400000, "ufl_heat_J_kg": 7500000, "lfl_reference_K": 293, "lfl_temperature_span_K": 1300, "lfl_min_factor": 0.2, "oxygen_molar_mass": 32, "background_molar_mass": 28.97}
+  "leakage": {
+    "stair_area_m2": 0.02,
+    "elevator_area_m2": 0.06,
+    "fallback_area_m2": 0.02,
+    "height_m": 2.1
+  },
+  "validation": {
+    "max_pressure_Pa": 1000,
+    "max_mass_balance_error": 0.05,
+    "min_burned_fraction": 0.5,
+    "max_upper_fuel_fraction": 0.3
+  },
+  "ventilation": {
+    "suggested_parking_ach": 6,
+    "cutoffs_Pa": [
+      200,
+      300
+    ],
+    "area_m2": 1.0,
+    "supply_height_m": 0.3,
+    "exhaust_ceiling_offset_m": 0.2,
+    "ramp_height_m": 2.1
+  },
+  "criteria": {
+    "min_layer_depth_m": 0.3,
+    "ambient_oxygen_vol_percent": 20.9,
+    "oxygen_deficient_vol_percent": 10,
+    "fuel_rich_mass_fraction": 0.1,
+    "fo_temperature_C": 600,
+    "fo_flux_kW_m2": 20,
+    "gas_ignition_C": 520,
+    "window_s": 30,
+    "q_min_kW": 1,
+    "lfl_heat_J_kg": 1400000,
+    "ufl_heat_J_kg": 7500000,
+    "lfl_reference_K": 293,
+    "lfl_temperature_span_K": 1300,
+    "lfl_min_factor": 0.2,
+    "oxygen_molar_mass": 32,
+    "background_molar_mass": 28.97
+  }
 }

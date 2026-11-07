@@ -5799,7 +5799,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const fireInputs=document.createElement('fieldset');
  fireInputs.style.cssText='display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--border)';
- fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><label>최소 누기 면적 (m²/경로) <input id="exploreLeakArea" type="number" min="0.0001" step="any" placeholder="계단 0.02 · 승강로 0.06"></label><small>빈칸은 저장 MC 입력을 사용합니다. 값을 바꾸면 기존 개폐 조합으로 해당 엔진을 새로 계산합니다.</small>';
+ fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><label>최소 누기 면적 (m²/경로) <input id="exploreLeakArea" type="number" min="0.0001" step="any" placeholder="계단 0.02 · 승강로 0.06"></label><label>급기·배기 각각 (ACH) <input id="exploreACH" type="number" min="0.01" step="any" placeholder="예시 6 · 미지정"></label><label>외기 연결 램프 폭 (m) <input id="exploreRampWidth" type="number" min="0.01" step="any"></label><label>램프 입구 높이 (m) <input id="exploreRampHeight" type="number" min="0.01" step="any"></label><small>빈칸은 저장 MC 입력을 사용합니다. 값을 바꾸면 기존 개폐 조합으로 해당 엔진을 새로 계산합니다.</small>';
  calculate.insertBefore(fireInputs,$('exploreCalculateRun'));
  let fireInputRoom;
  fireInputs.addEventListener('input',sync);
@@ -5821,6 +5821,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   if(inputs.some(([,input])=>!input.reportValidity()))return;
   const fire=Object.fromEntries(inputs.filter(([,input])=>input.value!=='').map(([key,input])=>[key,input.valueAsNumber*1000]));
   if($('exploreLeakArea').value!==''){if(!$('exploreLeakArea').reportValidity())return;fire.leakage_area_m2=$('exploreLeakArea').valueAsNumber;}
+  for(const [key,id] of [['ventilation_ach','exploreACH'],['ramp_width_m','exploreRampWidth'],['ramp_height_m','exploreRampHeight']]){const input=$(id);if(input.value!==''){if(!input.reportValidity())return;fire[key]=input.valueAsNumber;}}
   onCalculate?.(selectedEngine,savedCalculationInput(store.get('exploration')).job,fire);
  };
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);

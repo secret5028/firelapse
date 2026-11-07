@@ -316,6 +316,13 @@ class Model:
         sq = dp / np.sqrt(np.hypot(dp, 0.01))                   # sign·sqrt(|dp|) 정칙화
         m = P['Cd'] * vw[:, None] * self.dZ * np.sqrt(2 * rs) * sq   # +: i→j
 
+        # User-specified volumetric fan flow with native-style adverse pressure cutoff.
+        for index,vent in getattr(self,'mechanical_flows',{}).items():
+            supply=vent.get('direction','supply')=='supply'
+            adverse=dp[index] if supply else -dp[index]
+            low,high=vent['cutoffs'];factor=np.clip((high-adverse)/(high-low),0.,1.)
+            density=rj[index] if supply else ri[index]
+            m[index]=( -1 if supply else 1)*vent['flow_m3_s']*density*factor/m.shape[1]
         mi = np.maximum(m, 0); mj = np.maximum(-m, 0)           # i→j, j→i
         dmu = np.zeros(N); dml = np.zeros(N); hu = np.zeros(N); hlw = np.zeros(N)
         inu = np.zeros(N); inl = np.zeros(N)                    # 유입 질량

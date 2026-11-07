@@ -17,7 +17,7 @@ from runtime_storage import RESULTS, locate, result_glob
 JOBS = RESULTS/'fixed-calculations'
 ENGINE = ROOT/'simulation/build/baseline/cfast-baseline.exe'
 FIRE_INPUT_KEYS = {'fire_peak_kW', 'fuel_energy_MJ'}
-BOUNDARY_INPUT_KEYS = {'leakage_area_m2'}
+BOUNDARY_INPUT_KEYS = {'leakage_area_m2','ventilation_ach','ramp_width_m','ramp_height_m'}
 
 
 def fingerprint(value):
@@ -102,9 +102,30 @@ def prepare(sha, body, ident=None):
         if type(area) not in (int,float) or not math.isfinite(area) or area<=0:
             raise ValueError('최소 누기 면적은 양수여야 합니다')
         raw['leakage_defaults'] = dict(stair_area_m2=area,elevator_area_m2=area,fallback_area_m2=area)
+    set_ventilation_input(raw,body)
     if FIRE_INPUT_KEYS & body.keys():
         set_fire_input(raw,body)
     return folder, fixed, req, raw
+
+
+def set_ventilation_input(raw,body):
+    from pyrocast_cfbt.physics_config import defaults
+    cfg=defaults('ventilation')
+    room=next(r for r in raw['rooms'] if r['id']==body['room'])
+    for key in ('ventilation_ach','ramp_width_m','ramp_height_m'):
+        if key in body and (type(body[key]) not in (int,float) or not math.isfinite(body[key]) or body[key]<=0):
+            raise ValueError('환기량과 램프 치수는 양수여야 합니다')
+    if 'ventilation_ach' in body:
+        flow=body['ventilation_ach']*math.prod(room['size_m'])/3600
+        raw['mechanical_vents']=[v for v in raw.get('mechanical_vents',[]) if v['comp']!=room['id']]
+        for direction,height in [('supply',min(cfg['supply_height_m'],room['size_m'][2])),('exhaust',max(0,room['size_m'][2]-cfg['exhaust_ceiling_offset_m']))]:
+            raw['mechanical_vents'].append(dict(id='FAN_'+direction+'_'+room['id'],comp=room['id'],flow_m3_s=flow,area=cfg['area_m2'],height=height,direction=direction))
+        raw.setdefault('limits',[]).append(f"사용자 환기 가정: {room['id']} 급기·배기 각각 {body['ventilation_ach']:g} ACH ({flow:g} m³/s)")
+    if 'ramp_width_m' in body or 'ramp_height_m' in body:
+        if not {'ramp_width_m','ramp_height_m'}<=body.keys():raise ValueError('램프 폭과 높이를 함께 입력하세요')
+        if body['ramp_width_m']>room['size_m'][0] or body['ramp_height_m']>room['size_m'][2]:raise ValueError('램프가 구획 치수보다 큽니다')
+        raw.setdefault('openings',[]).insert(0,dict(id='RAMP_USER_'+room['id'],type='WALL',a=room['id'],b='OUTSIDE',kind='ramp',face='FRONT',offset_m=0.,bottom_m=0.,top_m=body['ramp_height_m'],width_m=body['ramp_width_m'],schedule=[[0,1]]))
+        raw.setdefault('limits',[]).append('사용자가 지정한 램프의 외기 연결을 등가 WALL 개구부로 계산')
 
 
 def set_fire_input(raw, body):

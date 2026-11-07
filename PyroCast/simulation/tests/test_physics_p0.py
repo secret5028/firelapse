@@ -65,3 +65,30 @@ class PhysicalValidation(unittest.TestCase):
         from pyrocast_cfbt.validation import validate_native
         v=validate_native(dict(compartments={'Time':np.array([0,1]),'PRS_1':np.zeros(2)}),{},'nonexistent-p0-fixture')
         self.assertFalse(v['passed']);self.assertEqual(v['status'],'unverified')
+
+
+class Ventilation(unittest.TestCase):
+    def test_native_and_lite_use_same_explicit_flow(self):
+        import json
+        from pathlib import Path
+        from pyrocast_lite.adapter import prepare
+        from pyrocast_cfbt.deck import make_deck
+        raw=json.loads((Path(__file__).resolve().parents[2]/'fixtures/room_rule_benchmark_3room.json').read_text('utf-8'))
+        room=raw['rooms'][0]
+        raw['mechanical_vents']=[dict(id='Supply',comp=room['id'],flow_m3_s=1.5,area=1.,height=.3)]
+        model,_=prepare(raw)
+        vents=model.input_model['mechanical_vents']
+        self.assertAlmostEqual(sum(v['flow_m3_s'] for v in vents),1.5)
+        self.assertEqual(len(model.mechanical_flows),len(vents))
+        deck=make_deck(model.input_model,[],[])
+        self.assertIn("TYPE='MECHANICAL'",deck)
+        self.assertIn("ORIENTATIONS='VERTICAL','VERTICAL'",deck)
+        self.assertIn('CUTOFFS=200,300',deck)
+        from pyrocast_lite.runner import run
+        run(model,10,5,30)
+        self.assertTrue(model.integration['complete'])
+
+    def test_bad_fan_cutoff_rejected(self):
+        from pyrocast_cfbt.ventilation import validate_ventilation
+        m=sealed();m['mechanical_vents']=[dict(id='Fan',comp='Fire',flow_m3_s=1,area=1,height=2,cutoffs=[300,200])]
+        with self.assertRaises(ValueError):validate_ventilation(m)

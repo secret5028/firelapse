@@ -257,7 +257,7 @@ def adapt(project, options=None):
                 'schedule':[[0,fraction]],'cad_floor':f['name'],'cad_opening':conn['id'],
                 'topology_correction':conn.get('topology_correction'),
                 'raw_geometry':originals.get(conn['id'],{'id':conn['id']})})
-    if not selected_floor and vertical_feature_allowed(building,'ramp'):
+    if vertical_feature_allowed(building,'ramp'):
         # Preserve the established ramp-to-exterior approximation.
         for f in building['floors']:
             for ramp in f.get('model_ramps',[]):
@@ -266,10 +266,12 @@ def adapt(project, options=None):
                 if not candidates:continue
                 distance,parking=min(candidates)
                 if distance>15:continue
-                vertical.append({'id':key(f['name'],'RAMP'),'type':'FLOOR','a':'OUTSIDE','b':parking,
-                    'area_m2':ramp['width_m']*3.,'kind':'ramp','schedule':[[0,1]],'cad_floor':f['name'],
-                    'cad_geometry':{'center_m':[*end,rooms[parking]['z_m']+rooms[parking]['height_m']],
-                        'normal_a_to_b':[0,0,-1],'tangent':[1,0,0]},'assumed':'equivalent outdoor ceiling vent; not resolved sloping flow'})
+                horizontal.append({'id':key(f['name'],'RAMP'),'type':'WALL','a':parking,'b':'OUTSIDE',
+                    'width_m':ramp['width_m'],'bottom_m':0.,'top_m':min(ramp.get('height_m',__import__('pyrocast_cfbt.physics_config',fromlist=['defaults']).defaults('ventilation')['ramp_height_m']),rooms[parking]['height_m']),
+                    'kind':'ramp','schedule':[[0,1]],'cad_floor':f['name'],
+                    'cad_geometry':{'center_m':[*end,rooms[parking]['z_m']],
+                        'normal_a_to_b':[0,-1,0],'tangent':[1,0,0]},
+                    'assumed':'equivalent exterior WALL opening at ramp entrance; not resolved sloping flow'})
     # Reachability ignores closed windows; no invented links for unresolved isolated rooms.
     adj=defaultdict(set)
     for v in horizontal+vertical:

@@ -130,6 +130,15 @@ def partition(model, split_initial=False):
                         'normal_a_to_b':[1,0,0] if axis==0 else [0,1,0]}
                     v['graph_position_basis']='inverse affine CAD bounds map; virtual boundary, not a detected physical door'
                 openings.append(v);virtual.append(v['id'])
+    mechanical=[]
+    for vent in m.get('mechanical_vents',[]):
+        cells=parts.get(vent['comp'])
+        if not cells:mechanical.append(vent);continue
+        volume=sum(math.prod(c['size_m']) for c in cells)
+        for index,c in enumerate(cells):
+            fraction=math.prod(c['size_m'])/volume
+            mechanical.append({**vent,'id':vent['id']+'_C'+str(index),'comp':c['id'],'flow_m3_s':vent['flow_m3_s']*fraction,'area':vent['area']*fraction})
+    m['mechanical_vents']=mechanical
     m['rooms']=rooms;m['fuel_groups']=groups;m['openings']=sorted(openings,key=lambda v:v.get('type')=='FLOOR')
     m.pop('explicit_candidates',None)
     assert math.isclose(sum(g['energy_MJ'] for g in groups),sum(g['energy_MJ'] for g in model['fuel_groups']),rel_tol=1e-10)

@@ -108,6 +108,11 @@ class LiteModel(Model):
             self.vents.append([i,self.N,leak['width'],self.zfa[i]+leak['bottom'],
                 self.zfa[i]+leak['top'],'LEAK_'+leak['kind']+'_'+leak['room'],
                 'native_compartment_leak',1.,0.])
+        self.mechanical_flows={}
+        for vent in model.get('mechanical_vents',[]):
+            i=self.rmap[vent['comp']];index=len(self.vents)
+            self.mechanical_flows[index]=vent
+            self.vents.append([i,self.N,1.,self.zfa[i],self.zfa[i]+1.,vent['id'],'mechanical',1.,0.])
         V = self.vents
         self.vi = np.array([v[0] for v in V], int)
         self.vj = np.array([v[1] for v in V], int)
@@ -137,6 +142,8 @@ class LiteModel(Model):
         ns = self.P['n_slab']; fraction = (np.arange(ns)+.5)/ns
         self.Z = bottom[:,None]+(top-bottom)[:,None]*fraction[None,:]
         self.dZ = (top-bottom)[:,None]/ns*np.ones((1,ns))
+        for index,vent in self.mechanical_flows.items():
+            self.Z[index,:]=self.zfa[self.vi[index]]+vent['height']
         self.groups = deepcopy(model['fuel_groups'])
         if len({g['room'] for g in self.groups}) != len(self.groups):
             raise ValueError('L1 requires at most one fire per solver room')

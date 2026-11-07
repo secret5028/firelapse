@@ -218,6 +218,8 @@ def normalize(raw):
     if model.get('execution_profile')=='practical':
         from .practical import bound_execution
         model['spread']=bound_execution(model['spread'], model['duration_s'])
+    from .ventilation import validate_ventilation
+    validate_ventilation(model)
     from .leakage import apply_minimum_leakage
     apply_minimum_leakage(model)
     return model

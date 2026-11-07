@@ -139,6 +139,8 @@ def make_deck(model, committed, targets, transitions=None):
             control=(f"CRITERION='{p['criterion']}' DEVC_ID='{window['id']}' SETPOINT={p['threshold']:.12g} "
                      f"PRE_FRACTION={p['pre_fraction']:.12g} POST_FRACTION={p['post_fraction']:.12g}")
         lines.append(f"&VENT TYPE='WALL' ID='{opening['id']}' COMP_IDS='{opening['a']}','{opening['b']}' WIDTH={opening['width_m']:g} BOTTOM={opening.get('bottom_m',0):g} TOP={opening['top_m']:g} FACE='{opening['face']}' OFFSET={opening.get('offset_m',0):g} {control} /")
+    from .ventilation import deck_lines
+    lines.extend(deck_lines(model))
     for i,target in enumerate(targets,1):
         mat=target["material"]; pos=np.array(target.get('solver_xyz',target["xyz"]))-rooms[target["room"]]["origin_m"]
         normal=target.get('solver_normal',target['normal'])

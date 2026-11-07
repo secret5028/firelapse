@@ -43,6 +43,12 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
  style.textContent+=`#exploreContent .exploreEngineButtons{display:flex;gap:6px}#exploreContent .exploreEngineButtons button{flex:1;padding:9px 4px}#exploreContent .exploreEngineButtons button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:700}#exploreCalculateRun:not(:disabled){background:var(--bg-control);border-color:var(--accent)}#exploreCalculationProgress:not([hidden]){display:flex;align-items:center;gap:7px;margin-top:8px;color:var(--accent);font-variant-numeric:tabular-nums}.calculationSpinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:calculationSpin .9s linear infinite}@keyframes calculationSpin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.calculationSpinner{animation:none}}`;
  root.append(calculate);$('exploreMC').textContent='MC 급기 탐색';
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
+ const fireInputs=document.createElement('fieldset');
+ fireInputs.style.cssText='display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--border)';
+ fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><small>빈칸은 저장 MC 입력을 사용합니다. 값을 바꾸면 기존 개폐 조합으로 해당 엔진을 새로 계산합니다.</small>';
+ calculate.insertBefore(fireInputs,$('exploreCalculateRun'));
+ let fireInputRoom;
+ fireInputs.addEventListener('input',sync);
  let calculation={available:false},calculationPending=false,selectedEngine=null,calculationTimer=null,calculationStarted=0;
  for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']])$(id).onclick=()=>{selectedEngine=engine;calculation={...calculation,error:null};sync();};
  function updateElapsed(){const seconds=Math.max(0,Math.floor((Date.now()-calculationStarted)/1000));$('exploreCalculationElapsed').textContent=`경과 ${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
@@ -55,7 +61,13 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
    return {ready:true,job:summary.job_id,sample:summary.worst.sample_id};
   return {ready:false};
  }
- $('exploreCalculateRun').onclick=()=>{if(selectedEngine&&!$('exploreCalculateRun').disabled)onCalculate?.(selectedEngine,savedCalculationInput(store.get('exploration')).job);};
+ $('exploreCalculateRun').onclick=()=>{
+  if(!selectedEngine||$('exploreCalculateRun').disabled)return;
+  const inputs=[['fuel_energy_MJ',$('exploreFuelEnergy')],['fire_peak_kW',$('exploreFirePeak')]];
+  if(inputs.some(([,input])=>!input.reportValidity()))return;
+  const fire=Object.fromEntries(inputs.filter(([,input])=>input.value!=='').map(([key,input])=>[key,input.valueAsNumber*1000]));
+  onCalculate?.(selectedEngine,savedCalculationInput(store.get('exploration')).job,fire);
+ };
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
@@ -86,6 +98,11 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
   const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
+  if(fireInputRoom!==state.origin_room_id){
+   fireInputRoom=state.origin_room_id;$('exploreFuelEnergy').value='';$('exploreFirePeak').value='';
+  }
+  const customFire=$('exploreFuelEnergy').value!==''||$('exploreFirePeak').value!=='';
+  fireInputs.disabled=!!calculating||!calculation.available;
   $('exploreCalculationResult').hidden=calculating||!!calculation.error||calculation.state!=='complete'||!calculation.case_id;
   $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
   for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']]){$(id).disabled=calculating;$(id).setAttribute('aria-pressed',String(kind===engine));}
@@ -96,10 +113,10 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   else if(calculationTimer){clearInterval(calculationTimer);calculationTimer=null;}
   $('exploreCalculateRun').disabled=!kind||!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
   $('exploreMC').disabled ||= calculating||calculation.server_busy;
-  $('exploreCalculateRun').title=kind==='cfast'?'선택한 급기 조합으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
+  $('exploreCalculateRun').title=kind==='cfast'?'선택한 급기 조합으로 순정 CFAST 1회':customFire?'수정한 화원 입력으로 간략 엔진 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:var(--text-muted)';
   const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:'확정 급기';
-  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'?' · 1회 계산':' · 간략 결과 불러오기');
+  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):!customFire&&calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'||customFire?' · 1회 계산':' · 간략 결과 불러오기');
   $('exploreCalculateStatus').className=calculation.error?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
   $('exploreMCStatus').className=/실패|시간초과|차단|미완료|오류/.test($('exploreMCStatus').textContent)?'status-error':(mcJob.running||mcPending)?'status-busy':/완료/.test($('exploreMCStatus').textContent)?'status-ok':'';
   $('exploreEstimate').className=estimate===null?'':'status-busy';

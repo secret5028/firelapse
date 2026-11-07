@@ -26,6 +26,16 @@ class FixedCalculationTests(unittest.TestCase):
     def body(self, **kw):
         return dict(engine='cfast',room=self.req['room'],floor='5F',duration_s=self.req['duration_s'],**kw)
 
+    def test_native_smoke_uses_validation_csv_units(self):
+        import numpy as np
+        from fixed_native_playback import smoke_optics
+        columns={'Time':np.array([0.,10.]),'ULOD_1':np.array([0.,264.6903])}
+        upper,lower=smoke_optics(columns,{'ULOD_1':'R1'},{'ULOD_1':'mg/m^3'},'R1',1)
+        np.testing.assert_allclose(upper,[0.,1.])
+        self.assertEqual(lower,[None,None])
+        with self.assertRaisesRegex(ValueError,'room identity'):
+            smoke_optics(columns,{'ULOD_1':'R2'},{'ULOD_1':'mg/m^3'},'R1',1)
+
     def test_frozen_input_no_change(self):
         with patch.object(model_mc,'prepare_request',return_value=({},copy.deepcopy(self.original))):
             _,_,_,raw=calc.prepare(self.sha,self.body(),'parkmarine')

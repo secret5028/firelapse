@@ -52,6 +52,7 @@ export function createResultsPanel({panel,store}){
  root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase" hidden>사례</label><div id="resultCaseControls" hidden></div><div id="resultMetadata" hidden></div><div id="resultReuse" role="status" hidden></div><button id="resultReplay" hidden type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><div id="resultRoomTitle"></div><div id="resultAtmosphere"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><section aria-label="계산값"><h3>계산값</h3><div id="resultQuantities"></div></section></div><section id="resultMCSection" hidden><h3>MC 개폐 조합 비교 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCWorst"></div><div id="resultMCStatus" role="status"></div><div class="mcActions"><button id="resultMCApplyWorst" disabled title="선정된 조합의 문·창 상태를 이후 계산 입력에 적용합니다. 현재 재생 결과는 유지합니다.">이 조합의 급기 적용</button><button id="resultMCLoad">집계 다시 읽기</button></div><table><thead><tr><th>현상</th><th title="한 실이라도 지수 100에 도달한 무작위 조합 수">조건 충족<br>조합</th><th title="한 조합에서 시간 전체에 걸쳐 지수 100에 도달한 실 수의 최대. 동시 충족 실 수가 아닙니다.">최대 충족<br>실</th><th>최고<br>지수</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div></section><details id="resultLimits" hidden><summary>가정과 한계</summary><ul></ul></details>';
  const riskHeading=$('resultCase').nextElementSibling,riskCard=riskHeading.nextElementSibling;root.prepend(riskHeading,riskCard);
  const scope=document.createElement('div');scope.id='resultScope';scope.style.cssText='font-size:11px;color:var(--text-muted);margin:4px 0 12px';scope.title='현재 선택과 별개인 저장 결과의 계산 범위·화점';root.prepend(scope);
+ const source=document.createElement('div');source.id='resultFireInput';source.className='resultCard';source.style.cssText='font-size:12px;line-height:1.6';scope.after(source);
  const state=document.createElement('small');state.id='resultEvaluation';state.style.cssText='font-size:11px;color:var(--text-muted)';$('resultRoomTitle').before(state);
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';
  $('resultTools').remove();
@@ -65,11 +66,21 @@ export function createResultsPanel({panel,store}){
  `;document.head.append(style);
  const append=(parent,tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;parent.append(e);return e;};
  let previous=null,roomKey=null;
- function update({building,result,series,index,selection}){
+ function update({building,result,series,index,selection,fireInput}){
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   const info=roomDisplayInfo(room,cell,values?.interface_m?.[index]);
-  const coverage=resultCoverage(building,result,room);scope.textContent=coverage.label;state.textContent=coverage.status;state.className=coverage.evaluated?'status-ok':'';state.hidden=!room;
+  const coverage=resultCoverage(building,result,room),time=result.time_s?.[index];scope.textContent=coverage.label+(finite(time)?` · 재생 ${stamp(time)}`:'');state.textContent=coverage.status;state.className=coverage.evaluated?'status-ok':'';state.hidden=!room;
+  source.hidden=!fireInput;
+  source.replaceChildren();
+  if(fireInput){
+   const quantity=(v,unit)=>finite(v)?`${number(v/1000,2)} ${unit}`:'—';
+   const fireRoom=fireInput.room_id?.replace(/^CAD_/,'').replaceAll('_',' ')??'—';
+   append(source,'strong',`화점 입력 · ${fireRoom}${fireInput.vehicle_count?` · 차량 ${fireInput.vehicle_count}대`:''}`);
+   append(source,'div',`화점실 가연물 총량 ${quantity(fireInput.fuel_energy_MJ,'GJ')}`);
+   append(source,'div',`화점 셀 최대 발열률 · 입력 ${quantity(fireInput.prescribed_peak_kW,'MW')} · 계산 ${quantity(fireInput.actual_peak_kW,'MW')}`);
+   if(finite(fireInput.requested_peak_kW))append(source,'small',`직접 지정 ${quantity(fireInput.requested_peak_kW,'MW')}`);
+  }
   $('resultRoomTitle').title=room?info.name:'';
   $('resultRoomTitle').textContent=room?info.name:`${store.get('floor').floor_id??'전체'} · 실 선택`;
   const dimension=v=>finite(v)?number(v,2)+' m':'—';
@@ -88,6 +99,11 @@ export function createResultsPanel({panel,store}){
    if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 조건 충족':'롤오버 조건 충족 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
   }
   $('resultQuantities').replaceChildren();for(const [label,key,unit] of [['상층 온도','T_upper_C','℃'],['하층 온도','T_lower_C','℃'],['상층 산소','O2_upper_volfrac','%'],['하층 산소','O2_lower_volfrac','%'],['연기층 경계 높이','interface_m','m'],['화원 발열','HRR_actual_kW','kW'],['문 분출 연소','HRR_doorjet_kW','kW'],['상층 연소','HRR_upperburn_kW','kW']]){const v=values?.[key]?.[index],noLower=['T_lower_C','O2_lower_volfrac'].includes(key)&&finite(values?.interface_m?.[index])&&values.interface_m[index]<.05;append($('resultQuantities'),'span',label);const shown=append($('resultQuantities'),'b',!noLower&&finite(v)?number(v*(unit==='%'?100:1),1)+' '+unit:'—');if(noLower)shown.title='하층 두께 0.05 m 미만 · 구획 평균값 표시 생략';}
+  if(result.engine?.kind==='cfast'){
+   const od=values?.legacy_optical?.ODu?.[index];
+   append($('resultQuantities'),'span','상층 연기 광학밀도');
+   append($('resultQuantities'),'b',finite(od)?number(od,2)+' m⁻¹':'미평가');
+  }
   if(previous!==result){const list=$('resultLimits').querySelector('ul');list.replaceChildren();for(const text of [...result.limits_text,'지수는 저장된 조건값 × 100이며 실제 발생 확률이 아닙니다. 여러 셀로 나뉜 방은 평균을 만들지 않습니다.','MC 집계는 저장된 완주 표본만 읽습니다. 미완료·읽기 실패·미평가 값은 안전으로 세지 않습니다.','연기 무늬와 화염·플룸은 표시 효과입니다. 온도 입력은 변경하지 않습니다.'])append(list,'li',text);previous=result;}
  }
  function mc(summary,full=null){$('resultMCSection').hidden=!summary;const host=$('resultMCRows');host.replaceChildren();for(const [key,name] of resultTypes){const r=summary?.rates?.[key],q=full?.[key],tr=append(host,'tr');tr.dataset.type=key;for(const text of [name,r?`${r.numerator} / ${r.denominator_completed_random}건`:'—',q?(q.unknown?'최소 ':'')+q.rooms+'실':'—',r&&finite(r.maximum_score)?number(r.maximum_score*100):'미평가'])append(tr,'td',text);if(q?.unknown)tr.title='일부 값이 미평가여서 확인된 실 수만 표시합니다. 실제 충족 실 수는 더 많을 수 있습니다.';}

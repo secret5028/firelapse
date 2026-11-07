@@ -1,6 +1,7 @@
 """One calculation of an explicitly fixed MC input, never another MC search."""
 from copy import deepcopy
 import hashlib
+import math
 import os
 from pathlib import Path
 import re
@@ -15,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 from runtime_storage import RESULTS, locate, result_glob
 JOBS = RESULTS/'fixed-calculations'
 ENGINE = ROOT/'simulation/build/baseline/cfast-baseline.exe'
+FIRE_INPUT_KEYS = {'fire_peak_kW', 'fuel_energy_MJ'}
 
 
 def fingerprint(value):
@@ -61,7 +63,7 @@ def context(sha, ident=None, job_id=None, room=None):
 
 
 def prepare(sha, body, ident=None):
-    if not isinstance(body, dict) or set(body)-{'mc_job_id'} != {'engine', 'room', 'floor', 'duration_s'}:
+    if not isinstance(body, dict) or set(body)-({'mc_job_id'}|FIRE_INPUT_KEYS) != {'engine', 'room', 'floor', 'duration_s'}:
         raise ValueError('계산 방식·화점·층·시간을 지정하세요')
     if body['engine'] not in ('lite', 'cfast'):
         raise ValueError('지원하지 않는 계산 방식')
@@ -93,7 +95,66 @@ def prepare(sha, body, ident=None):
         raise ValueError('누기 경계 조건이 바뀌었습니다. MC를 다시 실행하세요')
     if body['engine'] == 'cfast' and not ENGINE.is_file():
         raise ValueError('순정 CFAST 실행 파일 없음')
-    return folder, fixed, req, deepcopy(model)
+    raw=deepcopy(model)
+    if FIRE_INPUT_KEYS & body.keys():
+        set_fire_input(raw,body)
+    return folder, fixed, req, raw
+
+
+def set_fire_input(raw, body):
+    from pyrocast_cfbt.room_rule_r8 import prepare as native_prepare
+    room=body['room']
+    source=next((g for g in raw['fuel_groups'] if g['room']==room and 'initial_time_s' in g),None)
+    if source is None:
+        raise ValueError('선택한 실의 초기 화원 입력이 없습니다.')
+    values={}
+    for key,maximum in (('fuel_energy_MJ',1e9),('fire_peak_kW',1e6)):
+        if key not in body:
+            continue
+        value=body[key]
+        if type(value) not in (int,float) or not math.isfinite(value) or not 0<value<=maximum:
+            raise ValueError('가연물 총량과 화원 최대 발열률은 양수여야 합니다.')
+        values[key]=value
+    energy=values.get('fuel_energy_MJ',source['energy_MJ'])
+    peak=values.get('fire_peak_kW')
+    if peak is not None:
+        _,_,manifest=native_prepare(raw)
+        source['peak_kW']=peak/manifest['initial_source']['area_fraction']
+    source['energy_MJ']=energy
+    for unit in source.get('fuel_units',[]):
+        unit['energy_MJ']=energy*unit['budget_fraction']
+    use=raw.get('approved_input',{}).get('room_uses',{}).get(room)
+    if use:
+        load=energy/use['area_m2']
+        use['load_MJ_m2']=load
+        if 'fuel_setting' in use:
+            use['fuel_setting']['load']=load
+        comp=next(r for r in raw['rooms'] if r['id']==room)
+        comp['fuel_default']['load_MJ_m2']=load
+        budget=raw.get('screening_source',{}).get('origin_budget')
+        if budget:
+            budget.update(energy_MJ=energy,fuel_load_MJ_m2=load,classification=use)
+            if peak is not None:
+                budget.update(Q_origin_peak_kW=source['peak_kW'],input_peak_used=True)
+    if peak is not None:
+        _,_,manifest=native_prepare(raw)
+        cell=manifest['initial_source']['room']
+        applied=manifest['supplies'][cell]['scaled_peak_kW']
+        if not math.isclose(peak,applied,rel_tol=1e-8):
+            raise ValueError(f'이 가연물과 화원 면적에서 적용 가능한 최대 발열률은 {applied/1000:.2f} MW입니다.')
+    raw['fire_input']=dict(room_id=room,fuel_energy_MJ=energy,requested_peak_kW=peak)
+
+
+def fire_details(raw, manifest, playback):
+    cell=playback['fire_key']
+    room=playback_origin(playback)
+    input_values=raw.get('fire_input',{})
+    fuel=next((g for g in raw.get('fuel_groups',[]) if g['room']==room and 'initial_time_s' in g),{})
+    actual=[q for q in playback['solvers'].get(cell,{}).get('Qsolid_kW',[]) if q is not None]
+    return dict(room_id=room,cell_id=cell,fuel_energy_MJ=fuel.get('energy_MJ'),
+                requested_peak_kW=input_values.get('requested_peak_kW'),
+                prescribed_peak_kW=manifest.get('supplies',{}).get(cell,{}).get('scaled_peak_kW'),
+                actual_peak_kW=max(actual,default=None),vehicle_count=input_values.get('vehicle_count'))
 
 
 def paths(sha):
@@ -133,9 +194,19 @@ def playback_file(sha, case):
 
 
 def playback(sha, case):
-    value = read(playback_file(sha, case))
+    file=playback_file(sha,case)
+    value = read(file)
     if value['building_sha256'] != sha:
         raise ValueError('다른 건물의 결과')
+    if value.get('native_mapping')=='fixed-r8-native-v1':
+        from fixed_native_playback import restore_smoke
+        try:
+            restore_smoke(value,file.parent)
+        except (OSError,ValueError,KeyError):
+            value.setdefault('limits',[]).append('저장된 CFAST 원본 CSV의 연기 광학밀도를 확인할 수 없습니다.')
+    if 'fire_input' not in value:
+        value['fire_input']=fire_details(read(file.with_name('input.json'),{}),
+                                         read(file.with_name('rule_manifest.json'),{}),value)
     return value
 
 
@@ -158,11 +229,25 @@ def compute(folder):
     source = Path(req['source_path'])
     try:
         atomic_json(folder/'status.json', dict(state='running', id=folder.name, **req))
-        if req['engine'] == 'lite':
+        if req['engine'] == 'lite' and FIRE_INPUT_KEYS.isdisjoint(req):
             pb = read(source/'playback.json')
             if not pb or not pb.get('complete'):
                 raise ValueError('확정 표본의 완료 결과 없음')
             runs = 0
+        elif req['engine']=='lite':
+            from model_simulation import PARAMS
+            from pyrocast_lite.adapter import prepare as lite_prepare
+            from pyrocast_lite.runner import run, results
+            from pyrocast_lite.visualization import package
+            model,manifest=lite_prepare(raw,PARAMS)
+            atomic_json(folder/'rule_manifest.json',manifest)
+            run(model,req['duration_s'],10,1200,method='BDF')
+            if not model.integration['complete']:
+                raise ValueError(model.integration['failure'])
+            result=results(model)
+            atomic_json(folder/'result.json',result)
+            pb=package(model,result,raw,'간략 계산')
+            runs=1
         else:
             from pyrocast_cfbt.room_rule_r8 import prepare as native_prepare
             from pyrocast_cfbt.deck import make_deck, window_targets
@@ -184,6 +269,8 @@ def compute(folder):
             runs = 1
         pb['case_id'] = folder.name
         pb['label'] = f"{req['floor']} {req['room'].split('_')[-1]} · {'순정 CFAST' if req['engine']=='cfast' else '간략 계산'} · 확정 급기"
+        manifest=read(folder/'rule_manifest.json') or read(source/'BDF/rule_manifest.json') or {}
+        pb['fire_input']=fire_details(raw,manifest,pb)
         fixed = read(folder/'fixed-state.json')
         pb['display_opening_state'] = dict(building_sha256=req['building_sha256'], case_id=folder.name,
             basis='saved_case_input', states=fixed['states'])

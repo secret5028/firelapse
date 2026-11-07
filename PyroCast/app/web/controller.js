@@ -129,10 +129,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
    if(value.running||value.server_busy)calculationPoll=setTimeout(refreshCalculation,3000);
   }catch(error){if(!disposed)explore.calculationState({available:false,error:error.message});}
  }
- async function runCalculation(engine,mcJobId){
+ async function runCalculation(engine,mcJobId,fire){
   if(calculationStarting||calculationState.running||disposed)return;calculationStarting=true;
   const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null,started_at_ms:Date.now()},true);
-  try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s,mc_job_id:mcJobId})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
+  try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s,mc_job_id:mcJobId,...fire})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
   catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
   finally{calculationStarting=false;}
  }
@@ -208,7 +208,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const parts=store.get('openings');openings.setPartVisible('window',parts.exterior);openings.setPartVisible('door',parts.interior);
   host.render();
   const signature=JSON.stringify([index(),selected?.key,store.get('selection'),clicked,store.get('playback').playing,f,store.get('realView'),store.get('layers'),store.get('openings'),store.get('risk')]);
-  if(signature!==lastPanel){$('liteReal').setAttribute('aria-pressed',String(store.get('realView').enabled));updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection')};display.hud(context);results.update(context);lastPanel=signature;}
+  if(signature!==lastPanel){$('liteReal').setAttribute('aria-pressed',String(store.get('realView').enabled));updateLitePanel({data,index:index(),selected,clicked,playing:store.get('playback').playing,floor:f,$,selectionLabel,riskStatus:risk.summary()});const context={building:store.get('building'),result:store.get('result'),series:cache.get(store.get('result').result_id),index:index(),selection:store.get('selection'),fireInput:data.fire_input};display.hud(context);results.update(context);lastPanel=signature;}
  }finally{busy=false;}}
  // Display controls must update the GPU on input, including paused/throttled
  // animation loops in embedded or background viewers. Dispose owns this listener.
@@ -263,6 +263,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   if(!cell)throw Error('계산 결과의 화점실 정보가 없습니다.');
   viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
   store.dispatch('layers/toggle',{id:'selection',visible:true});
+  if(data.native_mapping?.startsWith('fixed-r8-native-')){
+   showPickedResult({room_id:cell.original_room||cell.key,cell_id:cell.key,source:'list'});
+   fitFloor(true);saveView();return;
+  }
   select(cell.key);shell.showResults();render();fitFloor(true);saveView();
  }
  function showPickedResult(selection){

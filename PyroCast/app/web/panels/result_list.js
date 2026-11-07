@@ -1,10 +1,13 @@
 // Saved playback navigation only: selecting a row never starts a calculation.
-export function latestRoomCases(cases){
+export function latestRoomCases(cases,roomsForCase=entry=>[entry.origin_room_id]){
  const result=new Map();
  for(const entry of cases){
-  if(entry.complete!==true||!entry.id||!entry.origin_room_id)continue;
-  const previous=result.get(entry.origin_room_id);
-  if(!previous||(entry.saved_at_ms??0)>(previous.saved_at_ms??0))result.set(entry.origin_room_id,entry);
+  if(entry.complete!==true||!entry.id)continue;
+  for(const room of roomsForCase(entry)){
+   if(!room)continue;
+   const previous=result.get(room);
+   if(!previous||(entry.saved_at_ms??0)>(previous.saved_at_ms??0))result.set(room,entry);
+  }
  }
  return result;
 }

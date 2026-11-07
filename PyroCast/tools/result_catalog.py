@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+from functools import lru_cache
 from pathlib import Path
 import threading
 import time
@@ -29,6 +30,29 @@ def playback_origin(data):
                  for room in data.get('rooms', []) if key and room.get('key') == key), None)
 
 
+def playback_coverage(data):
+    if data.get('complete') is not True or len(data.get('time_s') or []) < 2:
+        return []
+    solvers = data.get('solvers') or {}
+    return sorted({room.get('original_room') or room['key'] for room in data.get('rooms', [])
+                   if room.get('key') and solvers.get(room.get('solver_id'))})
+
+
+def playback_metadata(path):
+    stat = path.stat()
+    return _playback_metadata(path, stat.st_mtime_ns, stat.st_size)
+
+
+@lru_cache(maxsize=512)
+def _playback_metadata(path, mtime_ns, size):
+    data = read(path)
+    if not isinstance(data, dict):
+        data = {}
+    return dict(origin_room_id=playback_origin(data), covered_room_ids=playback_coverage(data),
+                engine_kind=data.get('engine_kind'), complete=data.get('complete') is True,
+                saved_at_ms=mtime_ns//1_000_000)
+
+
 class ResultCatalog:
     def __init__(self, root, aliases):
         self.root=Path(root).resolve();self.aliases=Path(aliases)
@@ -48,14 +72,14 @@ class ResultCatalog:
                 except OSError:continue
                 rel=path.relative_to(self.root).as_posix();stamp=[stat.st_mtime_ns,stat.st_size]
                 old=previous.get(rel)
-                if old and old.get('stamp')==stamp and 'origin_room_id' in old:found[rel]=old;continue
+                if old and old.get('stamp')==stamp and 'covered_room_ids' in old:found[rel]=old;continue
                 data=read(path)
-                record={'stamp':stamp,'valid':False,'engine_kind':None,'origin_room_id':None}
+                record={'stamp':stamp,'valid':False,'engine_kind':None,'origin_room_id':None,'covered_room_ids':[]}
                 if isinstance(data,dict) and data.get('schema')=='pyrocast-cad-playback-1' and data.get('building_sha256') and data.get('time_s'):
                     record.update(valid=True,building_sha256=data['building_sha256'],engine_kind=data.get('engine_kind'),
                         kind='lite' if data.get('engine_kind')=='pyrocast_lite' else 'native',
                         label=data.get('label') or Path(rel).parent.as_posix(),complete=bool(data.get('complete')),
-                        origin_room_id=playback_origin(data))
+                        origin_room_id=playback_origin(data),covered_room_ids=playback_coverage(data))
                 # Cache parse failures only until the file changes; partial writes never enter cases.
                 found[rel]=record
             self.index={'schema':'pyrocast.playback-catalog/1','files':found}
@@ -77,6 +101,7 @@ class ResultCatalog:
             result.append({'id':old.get('id','case-'+hashlib.sha256(rel.encode()).hexdigest()[:20]),
                 'label':old.get('label',row['label']),'path':str(path),'complete':row['complete'],
                 'engine_kind':row.get('engine_kind'),'origin_room_id':row.get('origin_room_id'),
+                'covered_room_ids':row.get('covered_room_ids',[]),
                 'saved_at_ms':row['stamp'][0]//1_000_000})
         order={r['id']:i for i,r in enumerate(configured)}
         return sorted(result,key=lambda r:(order.get(r['id'],len(order)),r['id']))

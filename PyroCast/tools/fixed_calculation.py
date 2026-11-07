@@ -8,7 +8,7 @@ import sys
 import threading
 import time
 import uuid
-from result_catalog import read, atomic_json, playback_origin
+from result_catalog import read, atomic_json, playback_origin, playback_coverage
 from lite_mc_service import process_alive
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -105,6 +105,7 @@ def cases(sha):
         data = read(p/'playback.json')
         rows.append(dict(id=p.name, label=data['label'], engine_kind=data.get('engine_kind'),
                          origin_room_id=playback_origin(data), complete=data.get('complete') is True,
+                         covered_room_ids=playback_coverage(data),
                          duration_s=(data.get('time_s') or [None])[-1],
                          saved_at_ms=int((p/'playback.json').stat().st_mtime*1000), run_id=p.name))
     return rows

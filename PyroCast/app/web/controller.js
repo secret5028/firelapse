@@ -29,7 +29,7 @@ import {createScaleReference} from './scene/scale_reference.js';
 import {createLitePanel,updateLitePanel} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
 import {createDisplayPanel} from './panels/display.js';
-import {createResultsPanel,resultTypes} from './panels/results.js';
+import {createResultsPanel,resultTypes,worstIndexEntries} from './panels/results.js';
 import {latestRoomCases} from './panels/result_list.js';
 import {createExplorePanel} from './panels/explore.js';
 import {attachFrozenRules} from '/cfbt/frozen_rule_controls.js';
@@ -258,19 +258,30 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  handler($('liteFold'),'onclick',()=>{$('liteBody').hidden=!$('liteBody').hidden;$('liteFold').textContent=$('liteBody').hidden?'펼치기':'접기';});
  // Every explicit result-open path selects that result's own origin. A CAD
  // room selected while browsing another floor must never leak into this action.
- function showResultOrigin(keepView=false){
+ function showResultOrigin(){
   const cell=data?.rooms.find(r=>r.key===data.fire_key);
   if(!cell)throw Error('계산 결과의 화점실 정보가 없습니다.');
-  if(!keepView){viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});}
+  viewer.setFloor(cell.cad_floor);store.dispatch('floor/set',{floor_id:cell.cad_floor});
   store.dispatch('layers/toggle',{id:'selection',visible:true});
-  select(cell.key);shell.showResults();render();if(!keepView)fitFloor(true);saveView();
+  select(cell.key);shell.showResults();render();fitFloor(true);saveView();
  }
- async function install(payload,id,{focusOrigin=false,keepView=false,expectedRoom=null,isCurrent=()=>true}={}){
+ function showPickedResult(selection){
+  const {room_id,cell_id}=selection;
+  const result=store.get('result'),series=cache.get(result.result_id);
+  const cells=series?.rooms[room_id]?.source_cells;
+  if(result.source_refs?.model_preview||!cells?.length)return false;
+  const peaks=worstIndexEntries(result,cells).filter(p=>p.value>0&&Number.isFinite(p.time));
+  peaks.sort((a,b)=>b.value-a.value||a.time-b.time);
+  const peak=peaks[0],fallback=cells.includes(cell_id)?cell_id:cells[0];
+  store.dispatch('playback/play',{playing:false});
+  store.dispatch('playback/seek',{t_s:peak?.time??result.time_s.find(t=>t>0)??0});
+  store.dispatch('selection/set',{...selection,cell_id:peak?.source??fallback});
+  store.dispatch('layers/toggle',{id:'selection',visible:true});
+  shell.showResults();render();saveView();
+  return true;
+ }
+ async function install(payload,id,{focusOrigin=false,pick=null,isCurrent=()=>true}={}){
   if(payload.schema!=='pyrocast-cad-playback-1'||(!payload.complete&&!(payload===initial&&payload.model_preview===true&&id==='model-preview'))||payload.building_sha256!==initial.building_sha256)throw Error('다른 건물 또는 미완료 계산 결과입니다. 표시하지 않습니다.');
-  if(expectedRoom){
-   const origin=payload.rooms.find(room=>room.key===payload.fire_key);
-   if((origin?.original_room||origin?.key)!==expectedRoom)throw Error('선택한 방과 계산 결과의 화점실이 다릅니다.');
-  }
   const seq=store.dispatch('result/load'),byRoom=new Map();
   for(const c of payload.rooms){const key=c.original_room||c.key;if(byRoom.has(key))continue;const f=B.floors.find(f=>f.name===c.cad_floor),r=f?.rooms.find(r=>`CAD_${f.name}_${r.id}`===key);if(!r)throw Error('CAD room missing: '+key);
    byRoom.set(key,{id:key,name:r.names?.join(' / ')||key,cad_floor:c.cad_floor,cad_polys:r.polys,z_m:c.z_m,height_m:c.height_m});}
@@ -281,13 +292,17 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const scenario={rooms:[...byRoom.values()],openings:[],cad:{building_sha256:payload.building_sha256}};
   const building=adaptBuilding({scenario,playback:payload,sourceHash:payload.building_sha256}),result=await adaptResult({playback:payload,scenario,building,resultId:id});
   if(!isCurrent()||seq!==store.get('request').seq)return false;
+  if(pick&&!result.rooms[pick.room_id]?.source_cells.length)throw Error('선택한 실의 저장 계산값이 없습니다.');
   ready=false;data=payload;chosen=id;store.dispatch('buildingReview/set',{playbackOpenings:payload.display_opening_state??null});rawSource={source_hash:payload.building_sha256,result_id:id,data:payload,B,groups};store.dispatch('building/set',building);store.dispatch('result/receive',{seq,result});
   $('liteRoom').replaceChildren();for(const r of data.rooms)$('liteRoom').add(new Option(name(r),r.key));
   selected=data.rooms.find(r=>r.key===data.fire_key)||data.rooms[0];clicked=false;store.dispatch('selection/set',{room_id:null,cell_id:null,source:'list'});$('liteTime').max=data.time_s.at(-1);$('liteTime').value=0;$('liteLimits').textContent=data.limits.join(' ');
   $('liteTime').step=data.output_step_s||10;
   for(const id of ['shellPlay','shellTime','litePlay','liteTime'])$(id).disabled=!!payload.model_preview;
   lastPanel='';ruleContext();ready=true;
-  if(focusOrigin)showResultOrigin(keepView);else{viewer.setFloor(selected.cad_floor);render();fitFloor();}return true;
+  if(pick)showPickedResult(pick);
+  else if(focusOrigin)showResultOrigin();
+  else{viewer.setFloor(selected.cad_floor);render();fitFloor();}
+  return true;
  }
  let mcSummary=null;
  async function saveFixed(body,playWorst=false){
@@ -313,10 +328,10 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  }
  handler($('resultMCApplyWorst'),'onclick',()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id});});
  const reuseByCase=new Map();
- let casesByRoom=new Map();
+ let casesByRoom=new Map(),coverageByRoom=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;casesByRoom=latestRoomCases(c.cases||[]);shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
+ async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;casesByRoom=latestRoomCases(c.cases||[]);coverageByRoom=latestRoomCases(c.cases||[],entry=>entry.covered_room_ids||[]);shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
   if(!disposed&&serial===catalogSerial)explore.catalog(c,mcSummary?.source_room??null);
  }
  handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;$('resultMCLoad').disabled=true;$('resultMCStatus').className='status-busy';
@@ -325,23 +340,23 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  });
  let loadSerial=0;
  function cancelCaseLoad(){loadSerial++;$('resultReplay').disabled=false;}
- async function openPickedRoom({room_id}){
+ async function openPickedRoom(pick){
+  const {room_id}=pick;
   if(!room_id||!ready||disposed)return;
   cancelCaseLoad();
   const completed=calculationState.state==='complete'&&calculationState.room===room_id?calculationState.case_id:null;
-  const caseId=completed||casesByRoom.get(room_id)?.id;
-  if(caseId&&caseId!==chosen){
-   const serial=loadSerial+1;
-   try{await loadSavedCase(caseId,{expectedRoom:room_id,keepView:true});}
-   catch(error){if(!disposed&&serial===loadSerial){shell.showResults();$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}}
-  }else if(caseId||(!data.model_preview&&data.rooms.some(room=>(room.original_room||room.key)===room_id))){
-   shell.showResults();
-  }
+  let caseId=completed||casesByRoom.get(room_id)?.id;
+  if((!caseId||caseId===chosen)&&showPickedResult(pick))return;
+  if(!caseId||caseId===chosen)caseId=coverageByRoom.get(room_id)?.id;
+  if(!caseId||caseId===chosen)return;
+  const serial=loadSerial+1;
+  try{await loadSavedCase(caseId,{pick});}
+  catch(error){if(!disposed&&serial===loadSerial){shell.showResults();$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}}
  }
- async function loadSavedCase(id,{expectedRoom=null,keepView=false}={}){const serial=++loadSerial;$('resultReplay').disabled=true;
+ async function loadSavedCase(id,{pick=null}={}){const serial=++loadSerial;$('resultReplay').disabled=true;
   const isCurrent=()=>!disposed&&serial===loadSerial;
   try{const r=await fetch('/cfbt/lite/result/'+encodeURIComponent(id),{signal:exploreAbort.signal});if(!r.ok)throw Error('HTTP '+r.status);const payload=await r.json();if(disposed||serial!==loadSerial)return false;
-   const installed=await install(payload,id,{focusOrigin:true,expectedRoom,keepView,isCurrent});if(installed&&isCurrent()){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
+   const installed=await install(payload,id,{focusOrigin:true,pick,isCurrent});if(installed&&isCurrent()){$('liteCase').value=id;showReuse(reuseByCase.get(id));}return installed;
   }finally{if(!disposed&&serial===loadSerial)$('resultReplay').disabled=false;}
  }
  handler($('liteRefresh'),'onclick',catalog);handler($('liteCase'),'onchange',()=>loadSavedCase($('liteCase').value).catch(error=>{if(!disposed)$('resultReuse').textContent='결과 읽기 실패 · '+error.message;}));

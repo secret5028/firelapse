@@ -2,10 +2,10 @@
 import json
 import logging
 import threading
-from functools import lru_cache
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit, parse_qs
 from model_library import ROOT, model_path
+from result_catalog import playback_metadata
 import model_simulation as sim
 
 PORTS = {'parkmarine':8842, 'showroom':8843}
@@ -111,12 +111,6 @@ def jobs(ident, warnings=None):
         out.append((p.parent, request))
     return out
 
-@lru_cache(maxsize=256)
-def saved_engine(path, mtime_ns):
-    # Old requests omitted engine; use saved playback evidence, never its label.
-    return sim.read(path).get('engine_kind')
-
-
 def playback(ident, job=None):
     if job and job.startswith('calc-'):
         from fixed_calculation import playback as fixed_playback
@@ -186,7 +180,12 @@ def handler(base, ident):
                     import model_mc
                     import fixed_calculation
                     warnings=[];rows=jobs(ident,warnings)
-                    cases=[dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과",origin_room_id=r['room'],complete=True,duration_s=r.get('duration_s'),saved_at_ms=int((p/'playback.json').stat().st_mtime*1000),run_id=p.name,engine_kind=r.get('engine') or saved_engine(p/'playback.json',(p/'playback.json').stat().st_mtime_ns)) for p,r in rows]+model_mc.cases(ident)+fixed_calculation.cases(sim.fingerprint(ident))
+                    cases=[]
+                    for p,r in rows:
+                        meta=playback_metadata(p/'playback.json')
+                        cases.append(dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과",
+                                          duration_s=r.get('duration_s'),run_id=p.name,**meta))
+                    cases+=model_mc.cases(ident)+fixed_calculation.cases(sim.fingerprint(ident))
                     return self.json(dict(cases=cases,warnings=warnings,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
                         progress_text='저장 결과 · 추가 계산 없음',reuse_by_case={p.name:dict(case_id=p.name,label='저장 결과 재생 · 재계산 없음',equivalent=False) for p,r in rows}))
                 if path.startswith('/cfbt/reuse/lite/'):

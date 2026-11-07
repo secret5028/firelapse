@@ -2,7 +2,7 @@
 import hashlib, os, re, subprocess, sys, threading, time, uuid
 from pathlib import Path
 import model_simulation as sim
-from result_catalog import read, atomic_json
+from result_catalog import read, atomic_json, playback_metadata
 from lite_fixed_openings import ranked_samples, apply_worst
 from lite_mc_service import process_alive
 ROOT=sim.ROOT
@@ -124,5 +124,7 @@ def cases(ident):
     for folder in folders(ident):
         for p in sorted(folder.glob('S*/summary.json')):
             if re.fullmatch(r'S\d+',p.parent.name) and read(p,{}).get('complete') and (p.parent/'playback.json').is_file():
-                req=read(folder/'request.json');rows.append(dict(id=case_id(folder,p.parent.name),label=f"{req['floor']} {req['room'].split('_')[-1]} · MC {p.parent.name}",origin_room_id=req['room'],complete=True,engine_kind="pyrocast_lite",duration_s=req.get("duration_s"),saved_at_ms=int(p.stat().st_mtime*1000),run_id=folder.name))
+                req=read(folder/'request.json')
+                rows.append(dict(id=case_id(folder,p.parent.name),label=f"{req['floor']} {req['room'].split('_')[-1]} · MC {p.parent.name}",
+                                 duration_s=req.get('duration_s'),run_id=folder.name,**playback_metadata(p.parent/'playback.json')))
     return rows

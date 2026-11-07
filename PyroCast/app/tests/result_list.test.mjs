@@ -37,3 +37,13 @@ const selected=latestRoomCases([
 assert.equal(selected.get('CAD_5F_R16').id,'newest');
 assert.equal(selected.get('CAD_7F_R16').id,'other-floor');
 assert.equal(selected.size,2,'Case labels cannot substitute for an exact saved origin');
+
+const coverage=latestRoomCases([
+ {id:'older',covered_room_ids:['CAD_5F_R1'],complete:true,saved_at_ms:5},
+ {id:'newest',origin_room_id:'CAD_5F_R16',covered_room_ids:['CAD_5F_R1','CAD_5F_R16'],complete:true,saved_at_ms:10},
+ {id:'unfinished',covered_room_ids:['CAD_5F_R1','CAD_6F_R1'],complete:false,saved_at_ms:20},
+ {id:'legacy',origin_room_id:'CAD_7F_R1',complete:true},
+], entry=>entry.covered_room_ids||[]);
+assert.equal(coverage.get('CAD_5F_R1').id,'newest');
+assert.equal(coverage.get('CAD_5F_R16').id,'newest');
+assert.equal(coverage.size,2);

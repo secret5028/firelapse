@@ -70,7 +70,7 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  }
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand"><strong>FireLapse</strong><small>-compartment fire timeline-</small></span>';
- const resultList=createResultList({container:$('v'),store,floors:buildingFloors,onSelect:async id=>{await onShowResult?.(id);activate('result');if(sidebar.hidden)toggle.click();if(innerWidth<=860&&!document.body.classList.contains('shellExpanded'))$('shellMobileToggle').click();}});
+ const resultList=createResultList({container:$('v'),store,floors:buildingFloors,onSelect:async id=>{await onShowResult?.(id);activate('result');revealSidebar();}});
  cleanups.push(()=>resultList.dispose());
  const oldTitle=document.title;document.title=oldTitle.includes("PyroCast")?oldTitle.replaceAll("PyroCast","FireLapse"):"FireLapse · compartment fire timeline";cleanups.push(()=>{document.title=oldTitle;});
  const sidebar=document.createElement('aside');sidebar.id='pyroShellSidebar';sidebar.setAttribute('aria-label','프로그램 패널');sidebar.innerHTML='<button id="shellMobileToggle" aria-expanded="false" aria-controls="pyroShellTabs">결과 패널 펼치기</button><div id="pyroShellTabs" role="tablist" aria-label="프로그램 메뉴"></div>';
@@ -110,6 +110,10 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  const explorePane=document.createElement('div');explorePane.id='shellPane-explore';$('shellPane-building').append(explorePane);
  const exploreAlias=document.createElement('button');exploreAlias.id='shellTab-explore';exploreAlias.hidden=true;exploreAlias.onclick=()=>activate('building');sidebar.append(exploreAlias);
  function activate(id){if(id==='explore')id='building';tabs.forEach(t=>{const active=t.id==='shellTab-'+id;t.setAttribute('aria-selected',String(active));t.tabIndex=active?0:-1;});panes.forEach(p=>p.hidden=p.id!=='shellPane-'+id);}
+ function revealSidebar(){
+  if(sidebar.hidden)toggle.click();
+  if(innerWidth<=860&&!document.body.classList.contains('shellExpanded'))$('shellMobileToggle').click();
+ }
  move(panel,$('shellPane-result'));activate('result');
  listen($('shellMobileToggle'),'click',()=>{const expanded=document.body.classList.toggle('shellExpanded');$('shellMobileToggle').setAttribute('aria-expanded',String(expanded));$('shellMobileToggle').textContent=expanded?'패널 접기':'결과 패널 펼치기';});
  listen($('shellPlay'),'click',()=>store.dispatch('playback/play',{playing:!store.get('playback').playing}));
@@ -141,5 +145,5 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  cleanups.push(store.subscribe('playback',sync),store.subscribe('result',marks),store.subscribe('floor',floors));sync();marks();floors();
  const sizes=()=>{document.body.style.setProperty('--shell-top',header.getBoundingClientRect().height+'px');document.body.style.setProperty('--shell-bottom',timeline.getBoundingClientRect().height+'px');};
  let sizeFrame=null;const ro=new ResizeObserver(()=>{if(sizeFrame===null)sizeFrame=requestAnimationFrame(()=>{sizeFrame=null;sizes();});});ro.observe(header);ro.observe(timeline);sizes();cleanups.push(()=>{ro.disconnect();if(sizeFrame!==null)cancelAnimationFrame(sizeFrame);});
- return {setResults:resultList.setCases,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded','shellHidden');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
+ return {setResults:resultList.setCases,revealSidebar,dispose(){for(const off of cleanups.reverse())off();for(const undo of moves.reverse())undo();header.remove();sidebar.remove();timeline.remove();style.remove();document.body.classList.remove('pyroShell','shellExpanded','shellHidden');document.body.style.removeProperty('--shell-top');document.body.style.removeProperty('--shell-bottom');}};
 }

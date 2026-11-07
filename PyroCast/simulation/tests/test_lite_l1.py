@@ -32,6 +32,27 @@ class EventToy:
 class LiteTests(unittest.TestCase):
     def setUp(self):
         self.raw=json.loads((ROOT/'fixtures/room_rule_benchmark_3room.json').read_text('utf-8'))
+
+    def test_sealed_pressure_reference_keeps_differential_and_balances(self):
+        for room in self.raw['rooms']:
+            room['cad_floor']='B3'
+        self.raw['openings']=[v for v in self.raw['openings'] if 'OUTSIDE' not in (v['a'],v['b'])]
+        model,_=prepare(self.raw)
+        self.assertFalse(any(v[1]==model.N for v in model.vents))
+        self.assertTrue(model.sealed_pressure_rooms)
+        y=model.y0()
+        y[:model.N]+=np.arange(model.N)*.05
+        groups=model.sealed_pressure_rooms
+        referenced=model.rhs(100.,y)
+        model.sealed_pressure_rooms=[]
+        absolute=model.rhs(100.,y)
+        np.testing.assert_array_equal(referenced[model.N:],absolute[model.N:])
+        model.sealed_pressure_rooms=groups
+        for rooms,reference in groups:
+            self.assertEqual(referenced[reference],0.)
+            np.testing.assert_allclose(referenced[rooms],absolute[rooms]-absolute[reference])
+            y[rooms]+=25.
+        np.testing.assert_allclose(model.rhs(100.,y),referenced,atol=1e-9)
     def test_root_event_continues_state_and_grid(self):
         toy=EventToy();sol=run(toy,700,10,10)
         self.assertTrue(sol.success)

@@ -88,6 +88,11 @@ def normalize(raw):
     for room in model["rooms"]:
         if len(room["origin_m"]) != 3 or len(room["size_m"]) != 3 or min(room["size_m"]) <= 0 or min(room['size_m'][:2])<=.6:
             raise ValueError("Invalid room box")
+        floor = str(room.get('cad_floor', '')).strip()
+        if re.fullmatch(r'(?:B|지하)\s*[1-9]\d*\s*(?:F|층)?', floor, re.IGNORECASE):
+            # Native default leakage connects directly to ambient air. A
+            # basement needs explicit openings or a documented leak override.
+            room.setdefault('leak_area_ratio', [0., 0.])
     if len(identifiers)>100:
         raise ValueError('CFAST supports at most 100 interior compartments; reduce the selected scope')
     force=model.get('ignition_assumption')

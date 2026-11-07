@@ -117,6 +117,21 @@ class LiteModel(Model):
         physical={v['id'] for v in model['openings'] if v.get('type','WALL')=='WALL'
                   and v['b']!='OUTSIDE' and not v.get('virtual_cell_boundary',False)}
         self.door_jet_eligible=np.array([v[5] in physical for v in V],bool)
+        # Only open paths fix a component's pressure reference to the exterior.
+        from scipy.sparse import coo_matrix
+        from scipy.sparse.csgraph import connected_components
+        active = (self.vw*self.vp0+(1-self.vp0)*self.vl)>0
+        graph = coo_matrix((np.ones(active.sum()),(self.vi[active],self.vj[active])),
+                           shape=(self.N+1,self.N+1))
+        _, component = connected_components(graph, directed=False)
+        degree = np.asarray((graph+graph.T).tocsr().getnnz(axis=1))
+        self.sealed_pressure_rooms = []
+        for i in np.unique(component[:self.N]):
+            if i==component[self.N]:
+                continue
+            rooms = np.flatnonzero(component==i)
+            reference = rooms[np.argmin(degree[rooms])]
+            self.sealed_pressure_rooms.append((rooms,reference))
         self.wb = np.array([], int); self.nb = 0; self.Tb = 0.
         bottom = np.array([v[3] for v in V]); top = np.array([v[4] for v in V])
         ns = self.P['n_slab']; fraction = (np.arange(ns)+.5)/ns
@@ -175,6 +190,8 @@ class LiteModel(Model):
 
     def y0(self):
         gas=super().y0()
+        for rooms,reference in self.sealed_pressure_rooms:
+            gas[rooms] -= gas[reference]
         if self.P.get('remove_cumulative_state'):gas=np.delete(gas,8*self.N)
         return np.concatenate([gas,np.full(3*self.N,self.P['T_in'])])
 
@@ -200,16 +217,20 @@ class LiteModel(Model):
                 for w in walls:
                     matrix[w,w]=True
                     for g in gas:matrix[w,g]=True;matrix[g,w]=True
-            return matrix.tocsr()
-        base=super().sparsity();off=8*self.N+1
-        matrix=lil_matrix((off+3*self.N,off+3*self.N),dtype=bool)
-        matrix[:off,:off]=base
-        for i in range(self.N):
-            gas=[a*self.N+i for a in range(8)]+[8*self.N]
-            walls=list(range(off+3*i,off+3*i+3))
-            for w in walls:
-                matrix[w,w]=True
-                for g in gas:matrix[w,g]=True;matrix[g,w]=True
+        else:
+            base=super().sparsity();off=8*self.N+1
+            matrix=lil_matrix((off+3*self.N,off+3*self.N),dtype=bool)
+            matrix[:off,:off]=base
+            for i in range(self.N):
+                gas=[a*self.N+i for a in range(8)]+[8*self.N]
+                walls=list(range(off+3*i,off+3*i+3))
+                for w in walls:
+                    matrix[w,w]=True
+                    for g in gas:matrix[w,g]=True;matrix[g,w]=True
+        for rooms,reference in self.sealed_pressure_rooms:
+            columns=matrix.rows[reference][:]
+            for room in rooms:
+                matrix[room,columns]=True
         return matrix.tocsr()
 
     def fire_sources(self, t, E):

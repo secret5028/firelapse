@@ -14,8 +14,9 @@ def react(fuel_u,fuel_l,source_K,to,eligible,lower_mass,lower_Yo,plume_o2_rate,p
     n=len(lower_mass);hoc=p['dHc'];s=hoc/H_O2
     total=np.bincount(to,weights=demand,minlength=n)
     available=np.maximum(lower_mass*np.maximum(lower_Yo,0.)/p['door_jet_mixing_time_s']-plume_o2_rate,0.)
-    scale=np.ones(n);positive=total>0
-    scale[positive]=np.minimum(1.,available[positive]/(s*total[positive]))
+    required=s*total
+    scale=np.ones(n);limited=required>available
+    scale[limited]=available[limited]/required[limited]
     xi=demand*scale[to]
     fraction=np.divide(fuel_u,fuel,out=np.zeros_like(fuel),where=fuel>0)
     burn_u=xi*fraction;burn_l=xi-burn_u

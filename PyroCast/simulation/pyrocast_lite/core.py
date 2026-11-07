@@ -310,7 +310,7 @@ class Model:
         dp = pi_ - pj_
         fwd = 0.5 * (1 + np.tanh(dp / 1e-3))
         rs = fwd * ri + (1 - fwd) * rj
-        sq = dp / (dp * dp + 1e-4) ** 0.25                       # sign·sqrt(|dp|) 정칙화
+        sq = dp / np.sqrt(np.hypot(dp, 0.01))                   # sign·sqrt(|dp|) 정칙화
         m = P['Cd'] * vw[:, None] * self.dZ * np.sqrt(2 * rs) * sq   # +: i→j
 
         mi = np.maximum(m, 0); mj = np.maximum(-m, 0)           # i→j, j→i
@@ -467,6 +467,11 @@ class Model:
             ri = self.vi[self.wb]
             db = 0.2 * 0.5 * (1 + np.tanh((Tu[ri] - self.Tb) / 10.0)) * (1 - bk)
         cumulative=[] if P.get('remove_cumulative_state') else [Qp_total]
+        # Airflow within a sealed component uses only pressure differences.
+        # Drop its common pressure drift from the integrated pressure state
+        # after the physical energy and volume balances have used raw dP.
+        for rooms,reference in getattr(self, 'sealed_pressure_rooms', ()):
+            dP[rooms] -= dP[reference]
         return np.concatenate([dP, dVu, dTu, dTl, dou, dol, dfu, dfl, cumulative, db, wall_rhs])
 
     def sparsity(self):

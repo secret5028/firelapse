@@ -22,6 +22,11 @@ class DoorJetTests(unittest.TestCase):
         for oxygen,temperature,enabled in [(0,900,True),(.2,p['T_in']+200,True),(.2,900,False)]:
             z=react(fu,fl,np.ones(2)*temperature,to,np.ones(2,bool)*enabled,np.array([10.]),np.array([oxygen]),np.array([0.]),p)
             np.testing.assert_array_equal(z['reaction_kg_s'],0.)
+        trace=np.array([1e-310])
+        with np.errstate(over='raise',invalid='raise',divide='raise'):
+            z=react(trace,np.zeros(1),np.array([900.]),np.zeros(1,int),np.ones(1,bool),
+                    np.array([10.]),np.array([.2]),np.array([0.]),p)
+        np.testing.assert_array_equal(z['reaction_kg_s'],trace)
     def test_rhs_no_duplicate_mass_heat_fuel_oxygen(self):
         a=self.model(True);b=self.model(False);n=a.N
         for m in (a,b):m.pending.clear();m.activation.clear()

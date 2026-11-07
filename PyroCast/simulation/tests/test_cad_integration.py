@@ -21,6 +21,24 @@ class CadIntegrationTests(unittest.TestCase):
     def setUp(self):
         self.model=normalize(json.loads((ROOT/'examples/three_rooms.json').read_text()))
 
+    def test_basement_uses_explicit_connections_without_default_outdoor_leakage(self):
+        raw=deepcopy(self.model)
+        raw['rooms'][0]['cad_floor']='B3'
+        raw['rooms'][1]['cad_floor']='1F'
+        raw['rooms'][2].update(cad_floor='지하 2층',leak_area_ratio=[.0001,0.])
+        model=normalize(raw)
+        rooms=model['rooms']
+        self.assertEqual(rooms[0]['leak_area_ratio'],[0.,0.])
+        self.assertNotIn('leak_area_ratio',rooms[1])
+        self.assertEqual(rooms[2]['leak_area_ratio'],[.0001,0.])
+        self.assertEqual(model['openings'],self.model['openings'])
+        from pyrocast_lite.shared_inputs import read_shared
+        model['fuel_groups']=[g for g in model['fuel_groups'] if 'initial_time_s' in g]
+        leak_rooms={leak['room'] for leak in read_shared(model)['leak_vents']}
+        self.assertNotIn(rooms[0]['id'],leak_rooms)
+        self.assertIn(rooms[1]['id'],leak_rooms)
+        self.assertIn(rooms[2]['id'],leak_rooms)
+
     def test_uniform_fuel_cells_stay_inside_concave_room_and_preserve_budget_weights(self):
         geometry_dependencies(Path.home()/'Documents/Codex/2026-10-14/files-pasted-by-the-user-cad3d')
         from pyrocast_cfbt.fuel_layout import layout

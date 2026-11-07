@@ -171,7 +171,10 @@ def results(model, post_started=None):
             'jet heat enters receiving upper layer; no additional entrained mass, separate species-resolved products, exterior jet or virtual-cell jet',
             'door-jet heat is separate from solid-source HRR and upper-layer reaction; does not itself count as a new burning room'])
     result['rollover_state_source']='shared_conditions.rooms.<cell>.FGI.rollover'
-    result['numerical_bounds']={'softplus':model.P.get('smooth_state_bounds',False),'width':'10 times state atol; not a physical parameter'}
+    result['numerical_bounds']={'softplus':model.P.get('smooth_state_bounds',False),
+        'width':'10 times state atol; not a physical parameter',
+        'flow_pressure_band_Pa':.01,
+        'sealed_pressure_references':[model.nodes[ref]['id'] for _,ref in model.sealed_pressure_rooms]}
     if model.P.get('remove_cumulative_state'):
         # Reporting only: these sums never feed back into prescribed curves.
         def accumulated(key):

@@ -395,11 +395,41 @@ function createAssistantPanel({store,revealSidebar,available=true,getContext,onN
   try{const value=await api(brief?'briefing':'chat',{context:ctx,message,session});if(disposed||key!==ctxKey)return;session=value.session??session;answer(value);status(value.status||'완료');if(!brief)$('aiMessage').value='';}catch(e){if(!disposed)status(e.message);}finally{busy=false;if(!disposed)buttons();}
  }
  $('aiChat').onsubmit=e=>{e.preventDefault();request();};$('aiBrief').onclick=()=>request(true);
+ const summaryCard=document.createElement('details');
+ summaryCard.id='resultSavedSummary';
+ summaryCard.className='resultCard';
+ summaryCard.open=true;
+ summaryCard.hidden=true;
+ summaryCard.innerHTML='<summary>결과 요약</summary><div role="status"></div>';
+ const summaryBody=summaryCard.lastElementChild;
+ Object.assign(summaryBody.style,{maxHeight:'220px',overflow:'auto',whiteSpace:'pre-wrap',overflowWrap:'anywhere'});
+ $('resultContent').prepend(summaryCard);
+ let summaryCase=null;
+ async function loadSummary(){
+  const ctx=getContext();
+  if(ctx.case===summaryCase)return;
+  summaryCase=ctx.case;
+  const embedded=window.__PYROCAST_OFFLINE__?.saved_summary;
+  summaryCard.hidden=!hasCase(ctx)||(offline&&!embedded);
+  summaryBody.textContent='';
+  if(summaryCard.hidden)return;
+  summaryBody.textContent='저장 결과 요약을 불러오는 중…';
+  try{
+   const value=offline?embedded:await api('saved-summary',{context:{building:ctx.building,case:ctx.case}});
+   if(disposed||summaryCase!==ctx.case)return;
+   summaryBody.replaceChildren();
+   for(const section of value.sections){
+    const block=document.createElement('section'),heading=document.createElement('h3'),text=document.createElement('div');
+    heading.textContent=section.title;text.textContent=section.text;block.append(heading,text);summaryBody.append(block);
+   }
+   summaryBody.scrollTop=0;
+  }catch(e){if(!disposed&&summaryCase===ctx.case)summaryBody.textContent=e.message;}
+ }
  const saved=document.createElement('details');saved.id='aiSavedReports';saved.hidden=true;saved.innerHTML='<summary>AI 브리핑 보고서</summary><div></div>';$('resultCase').append(saved);
  async function reports(){const c=getContext();if(!hasCase(c)||reportCase===c.case)return;reportCase=c.case;try{const value=offline?(window.__PYROCAST_OFFLINE__.assistant_reports||[]):(await api('reports/list',{context:c})).reports;if(disposed)return;saved.hidden=!offline||value.length===0;saved.querySelector('div').replaceChildren();for(const r of value){const item=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('pre');s.textContent=r.case+' · '+r.created;p.textContent=readable(r.markdown);item.append(s,p);saved.querySelector('div').append(item);}}catch(e){if(!disposed)status(e.message);}}
- const off=store.subscribe('result',()=>{resetContext();if(store.get('result'))reports();});resetContext();buttons();
+ const off=store.subscribe('result',()=>{resetContext();if(store.get('result')){loadSummary();reports();}});resetContext();buttons();
  if(offline)status('보기 전용');
- return {refreshReports(){reportCase=null;return reports();},dispose(){disposed=true;abort.abort();off();tabObserver.disconnect();sidebarObserver.disconnect();resizeLimit.disconnect();unbindResize();openButton.remove();root.remove();style.remove();saved.remove();}};
+ return {refreshReports(){reportCase=null;return reports();},dispose(){disposed=true;abort.abort();off();tabObserver.disconnect();sidebarObserver.disconnect();resizeLimit.disconnect();unbindResize();openButton.remove();root.remove();style.remove();saved.remove();summaryCard.remove();}};
 }
 
 return {createAssistantPanel};
@@ -1064,7 +1094,7 @@ const initial=()=>({fuelSettings:{data:null,draft:{},saving:false,message:''},bu
  route:{vehicle:null,vehicle_yaw:0,target_room_id:null,placing:false,vehicle_visible:true,hose_m:15,stair_factor:1.5,message:''},
  camera:{mode:'floor',target:null,pose:null},selection:{room_id:null,cell_id:null,source:'list'},floor:{floor_id:null},
  playback:{t_s:0,playing:false,speed:1,t_end_s:0},
- realView:{enabled:true,buildingTransparency:.7,wallOutline:'dark',smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
+ realView:{enabled:true,buildingTransparency:.7,wallOutline:'light',smokeOpacity:.7,smokeGain:1,flameGain:1,temperatureSmoke:true,temperaturePattern:'weak',smokeColor:'current',smokeMode:'current',flameStyle:'current',flameDisplay:'hrr',fuelMarkers:true},
  openings:{exterior:true,interior:true,fixed:true},
  displayDetails:{cellOutline:false,floorTint:false,smokeInterface:false,boundaryDots:false},
  layers:{roomNames:true,building:true,openings:true,core:true,smoke:true,flame:true,plume:false,risk:true,selection:true,route:true},
@@ -4172,7 +4202,7 @@ class BuildingLayer extends EmptyLayer {
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
   for(const {object,proxy} of this.outlineOccluders)proxy.visible=object.visible&&object.material.opacity>0;
-  const dark=this.frame?.realView?.wallOutline!=='light';
+  const dark=this.frame?.realView?.wallOutline==='dark';
   for(const line of this.cornerLines){line.material.color.set(dark?'#101820':'#8da8b7');line.material.opacity=alpha(dark?.8:.32)*(whole&&line.userData.basement ? .8 : 1);line.renderOrder=30;}
 
  }
@@ -5314,7 +5344,7 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  const buildingSlider=document.createElement('label');buildingSlider.className='gainControl';buildingSlider.title='0% 불투명 · 70% 기존 투시 · 100% 숨김. 문·창 강조와 코어 투시는 유지합니다.';
  buildingSlider.innerHTML='건물 투명도 <input id="displayBuildingTransparency" aria-label="건물 투명도" type="range" min="0" max="100" step="1" value="70"><output for="displayBuildingTransparency">70%</output>';
  $('displayViewSettings').append(buildingSlider);
- const wallOutline=document.createElement('label');wallOutline.className='gainControl';wallOutline.htmlFor='displayWallOutline';wallOutline.innerHTML='벽 외곽선 <select id="displayWallOutline"><option value="light">기존 밝은 선</option><option value="dark">짙은 선</option></select>';$('displayViewSettings').append(wallOutline);
+ const wallOutline=document.createElement('label');wallOutline.className='gainControl';wallOutline.htmlFor='displayWallOutline';wallOutline.innerHTML='벽 외곽선 <select id="displayWallOutline"><option value="light">밝은선</option><option value="dark">짙은 선</option></select>';$('displayViewSettings').append(wallOutline);
  listen($('displayWallOutline'),'change',()=>store.dispatch('realView/set',{wallOutline:$('displayWallOutline').value}));
  listen($('displayBuildingTransparency'),'input',()=>store.dispatch('realView/set',{buildingTransparency:$('displayBuildingTransparency').valueAsNumber/100}));
  for(const [id,label,color,layer] of [['displayBuilding','건물','#aab7c0','building'],['displaySelection','선택 실','#ffffff','selection'],['liteSmoke','연기','#9ca3af','smoke'],['displayFlame','화염','#ffa824','flame'],['litePlumes','상승 플룸·천장 가스','#b38ae6','plume'],['displayRisk','위험 테두리','#ef4444','risk']])toggle($('displayLayers'),id,label,color,()=>store.get('layers')[layer],visible=>store.dispatch('layers/toggle',{id:layer,visible}),id.startsWith('lite'),'저장된 결과의 표시만 전환합니다.');

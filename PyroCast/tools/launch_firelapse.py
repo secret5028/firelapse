@@ -70,6 +70,8 @@ def serve(name):
         script=ROOT/'tools/serve_model_library.py';args=['--port','8841']
     elif name=='wando':
         script=ROOT/'tools/serve_wando_c11.py';args=['--port','8832']
+    elif name=='briefings':
+        script=ROOT/'tools/saved_briefings.py';args=[]
     else:
         script=ROOT/'tools/serve_cfbt_building.py'
         args=[str(ROOT/'cad-project'),'--building',str(ROOT/'cad-project/building.json'),'--port','8780']
@@ -83,7 +85,7 @@ def available(port):
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true')
-    parser.add_argument('--no-browser',action='store_true');parser.add_argument('--serve',choices=['library','wando','ganghwa'])
+    parser.add_argument('--no-browser',action='store_true');parser.add_argument('--serve',choices=['library','wando','ganghwa','briefings'])
     args=parser.parse_args()
     os.chdir(ROOT)
     if args.serve:return serve(args.serve)
@@ -95,7 +97,7 @@ def main():
     logs=DATA_ROOT/'logs';logs.mkdir(parents=True,exist_ok=True)
     children=[];streams=[]
     try:
-        for name in ('library','wando','ganghwa'):
+        for name in ('library','wando','ganghwa','briefings'):
             stream=(logs/(name+'.log')).open('a',encoding='utf8');streams.append(stream)
             children.append(subprocess.Popen([sys.executable,'-B','-X','utf8',str(Path(__file__).resolve()),'--serve',name],
                 cwd=ROOT,env=environment(),stdout=stream,stderr=subprocess.STDOUT,

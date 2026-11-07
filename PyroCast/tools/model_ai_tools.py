@@ -34,10 +34,8 @@ class ModelTools(Tools):
         self._paths=out
         return out
     def case(self,a):
-        self.building(a['building'])
-        import model_operation
-        path=self.cases(a['building']).get(a['case'])
-        if path is None:raise ValueError('현재 건물에 없는 사례')
+        if self._saved_case is not None:return super().case(a)
+        path=self.case_path(a)
         stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in (path,path.with_name('sample.json'),path.with_name('input.json')))
         return saved_case(self.ident,a['case'],stamps)
     def get_building(self,a):

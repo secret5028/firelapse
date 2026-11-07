@@ -18,6 +18,9 @@ def handle(handler,path,tool_service=None):
         from lite_ai_briefing import briefing,save_report,list_reports
         if path.endswith('/reports/list'):return send({'reports':list_reports(service,args['context'])})
         if path.endswith('/reports/save'):return send(save_report(service,args['briefing_id']))
+        if path.endswith('/saved-summary'):
+            from saved_briefings import for_case
+            return send(for_case(service,args['context']))
         if path.endswith('/briefing'):return send(briefing(service,args['context']))
         if path.endswith('/chat'):
             from lite_ai_chat import chat

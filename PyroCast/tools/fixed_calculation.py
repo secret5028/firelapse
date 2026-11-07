@@ -107,13 +107,17 @@ def cases(sha):
     return rows
 
 
-def playback(sha, case):
+def playback_file(sha, case):
     if not re.fullmatch(r'calc-\d+-[a-f0-9]+', case or ''):
         raise ValueError('계산 사례 ID 오류')
     folder = locate(JOBS/sha/case)
     if read(folder/'status.json', {}).get('state') != 'complete':
         raise ValueError('완료되지 않은 계산')
-    value = read(folder/'playback.json')
+    return folder/'playback.json'
+
+
+def playback(sha, case):
+    value = read(playback_file(sha, case))
     if value['building_sha256'] != sha:
         raise ValueError('다른 건물의 결과')
     return value

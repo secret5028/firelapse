@@ -10,7 +10,7 @@ def enrich(service, args, result):
     geo_rooms = {'CAD_'+f['name']+'_'+r['id']: (f, r)
                  for f in geometry['floors'] for r in f['rooms']}
     p = service.case(args) if args.get('case') else {}
-    path = service.cases(args['building']).get(args.get('case')) if p else None
+    path = service.case_path(args) if p else None
     raw = {}; sample = {}
     if path:
         # Only siblings of an already authorized saved result, never a path in a request.

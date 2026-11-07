@@ -47,7 +47,8 @@ def fill(service,args):
     worst=max((e for e in summary['worst'].values() if e is not None and finite(e.get('peak'))),key=lambda e:e['peak'],default=None)
     risks=sorted((e for es in summary['events'].values() for e in es if e['room'] in route_ids and finite(e['peak']) and e['peak']>=70),key=lambda e:-e['peak'])
     smoke=min(((r['time_s'],rid,c['cell']) for rid in route_ids for c in timelines[rid]['cells'] for r in c['rows'] if finite(r['h']) and r['h']<=1.8),default=None)
-    head=f"[{label(origin)} · 사례 {args['case']} · {summary['engine']} · 브리핑]"
+    case_label=service.case(args).get('label') or args['case']
+    head=f"[{label(origin)} · 사례 {case_label} · {summary['engine']} · 브리핑]"
     lines=[head,
         f"화점: {label(origin)} ({use.get('usage') or '용도 미평가'}, 연료 {number(use.get('load'))} MJ/m²) · 급기: 닫힘 {states['closed']}/열림 {states['open']}/미확인 {states['unknown']} · {building['supply_basis']}",
         '진행: '+' → '.join(first),

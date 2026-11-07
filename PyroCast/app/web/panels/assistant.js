@@ -63,9 +63,39 @@ export function createAssistantPanel({store,revealSidebar,available=true,getCont
   try{const value=await api(brief?'briefing':'chat',{context:ctx,message,session});if(disposed||key!==ctxKey)return;session=value.session??session;answer(value);status(value.status||'완료');if(!brief)$('aiMessage').value='';}catch(e){if(!disposed)status(e.message);}finally{busy=false;if(!disposed)buttons();}
  }
  $('aiChat').onsubmit=e=>{e.preventDefault();request();};$('aiBrief').onclick=()=>request(true);
+ const summaryCard=document.createElement('details');
+ summaryCard.id='resultSavedSummary';
+ summaryCard.className='resultCard';
+ summaryCard.open=true;
+ summaryCard.hidden=true;
+ summaryCard.innerHTML='<summary>결과 요약</summary><div role="status"></div>';
+ const summaryBody=summaryCard.lastElementChild;
+ Object.assign(summaryBody.style,{maxHeight:'220px',overflow:'auto',whiteSpace:'pre-wrap',overflowWrap:'anywhere'});
+ $('resultContent').prepend(summaryCard);
+ let summaryCase=null;
+ async function loadSummary(){
+  const ctx=getContext();
+  if(ctx.case===summaryCase)return;
+  summaryCase=ctx.case;
+  const embedded=window.__PYROCAST_OFFLINE__?.saved_summary;
+  summaryCard.hidden=!hasCase(ctx)||(offline&&!embedded);
+  summaryBody.textContent='';
+  if(summaryCard.hidden)return;
+  summaryBody.textContent='저장 결과 요약을 불러오는 중…';
+  try{
+   const value=offline?embedded:await api('saved-summary',{context:{building:ctx.building,case:ctx.case}});
+   if(disposed||summaryCase!==ctx.case)return;
+   summaryBody.replaceChildren();
+   for(const section of value.sections){
+    const block=document.createElement('section'),heading=document.createElement('h3'),text=document.createElement('div');
+    heading.textContent=section.title;text.textContent=section.text;block.append(heading,text);summaryBody.append(block);
+   }
+   summaryBody.scrollTop=0;
+  }catch(e){if(!disposed&&summaryCase===ctx.case)summaryBody.textContent=e.message;}
+ }
  const saved=document.createElement('details');saved.id='aiSavedReports';saved.hidden=true;saved.innerHTML='<summary>AI 브리핑 보고서</summary><div></div>';$('resultCase').append(saved);
  async function reports(){const c=getContext();if(!hasCase(c)||reportCase===c.case)return;reportCase=c.case;try{const value=offline?(window.__PYROCAST_OFFLINE__.assistant_reports||[]):(await api('reports/list',{context:c})).reports;if(disposed)return;saved.hidden=!offline||value.length===0;saved.querySelector('div').replaceChildren();for(const r of value){const item=document.createElement('details'),s=document.createElement('summary'),p=document.createElement('pre');s.textContent=r.case+' · '+r.created;p.textContent=readable(r.markdown);item.append(s,p);saved.querySelector('div').append(item);}}catch(e){if(!disposed)status(e.message);}}
- const off=store.subscribe('result',()=>{resetContext();if(store.get('result'))reports();});resetContext();buttons();
+ const off=store.subscribe('result',()=>{resetContext();if(store.get('result')){loadSummary();reports();}});resetContext();buttons();
  if(offline)status('보기 전용');
- return {refreshReports(){reportCase=null;return reports();},dispose(){disposed=true;abort.abort();off();tabObserver.disconnect();sidebarObserver.disconnect();resizeLimit.disconnect();unbindResize();openButton.remove();root.remove();style.remove();saved.remove();}};
+ return {refreshReports(){reportCase=null;return reports();},dispose(){disposed=true;abort.abort();off();tabObserver.disconnect();sidebarObserver.disconnect();resizeLimit.disconnect();unbindResize();openButton.remove();root.remove();style.remove();saved.remove();summaryCard.remove();}};
 }

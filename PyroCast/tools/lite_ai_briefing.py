@@ -1,5 +1,5 @@
 """Server-only rule matching and fixed briefing; no tactical text from an LLM."""
-import json,time,uuid,datetime,threading
+import json,time,uuid,datetime,threading,logging,subprocess
 from lite_ai_tools import ROOT,SIM,TYPES,LABELS,read,finite,at,display_label,display_text,rollover_at
 from result_catalog import atomic_json
 REPORTS={}
@@ -38,29 +38,52 @@ def facts_for(call,i):
         facts.append({'text':display_text(json.dumps(d,ensure_ascii=False,indent=2)),'evidence':{'call':i,'row':d}})
     return facts
 
-def briefing(service,a):
+def briefing_value(service,a):
     from d5_briefing import fill
+    playback=service.case(a)
+    if playback.get('complete') is not True or playback.get('building_sha256')!=service.building(a['building'])[0]['sha']:
+        raise ValueError('완료된 저장 결과를 선택하세요.')
+    try:
+        return fill(service,a)
+    except (ValueError,KeyError,TypeError,IndexError,OSError,subprocess.SubprocessError) as exc:
+        logging.getLogger(__name__).warning('Detailed briefing unavailable for %s (%s)',a['case'],type(exc).__name__)
+    call=service.call('get_case_summary',a)
+    summary=call['data']
+    facts=facts_for(call,0)
+    lines=[fact['text'] for fact in facts]
+    for key in TYPES:
+        if summary['worst'][key] is None:lines.append(LABELS[key]+' 지수 · 미평가')
+    sections=[
+        {'title':'화재 위험 요약','text':'\n'.join(lines)},
+        {'title':'자료 범위','text':'완료된 저장 결과의 계산값입니다. 수관 경로와 전술에 필요한 세부 자료는 미평가입니다.'},
+    ]
+    return dict(building=a['building'],case=a['case'],text='\n\n'.join(s['text'] for s in sections),
+                sections=sections,facts=facts,calls=[call],rules=[],proposals=[],status='저장 결과 기본 요약',
+                template_version='saved-basic/1',polishing='offline deterministic')
+
+
+def briefing(service,a):
     from d5_polish import polish
-    value=polish(fill(service,a))
+    value=briefing_value(service,a)
+    if value.get('template_version')=='D5/1':value=polish(value)
     token=uuid.uuid4().hex;value['briefing_id']=token
     with LOCK:
         for k in list(REPORTS):
             if REPORTS[k]['expires']<time.monotonic():del REPORTS[k]
         if len(REPORTS)>=100:del REPORTS[next(iter(REPORTS))]
-        REPORTS[token]={'value':value,'expires':time.monotonic()+3600,'source_sha':__import__('hashlib').sha256(service.cases(a['building'])[a['case']].read_bytes()).hexdigest()}
+        REPORTS[token]={'value':value,'expires':time.monotonic()+3600,'source_sha':__import__('hashlib').sha256(service.case_path(a).read_bytes()).hexdigest()}
     return value
 
 def save_report(service,token):
     with LOCK:
         item=REPORTS.get(token)
         if not item or item['expires']<time.monotonic():raise ValueError('브리핑이 만료되었습니다')
-        v=item['value'];path=service.cases(v['building'])[v['case']]
+        v=item['value'];path=service.case_path(v)
         if __import__('hashlib').sha256(path.read_bytes()).hexdigest()!=item['source_sha']:raise ValueError('사례가 바뀌었습니다. 브리핑을 다시 생성하세요')
         root=path.parent/'assistant-reports';root.mkdir(exist_ok=True)
         report={'id':token,'case':v['case'],'building':v['building'],'created':datetime.datetime.now(datetime.timezone.utc).isoformat(),'markdown':v['text'],'rules':v['rules'],'source_sha256':item['source_sha'],'calls':v['calls'],'matching_log':v.get('matching_log',[]),'template_version':v.get('template_version')}
         atomic_json(root/(token+'.json'),report);(root/(token+'.md')).write_text(v['text']+'\n','utf-8');return {'id':token,'case':v['case'],'saved':True}
 
 def list_reports(service,a):
-    path=service.cases(a['building']).get(a['case'])
-    if not path:raise ValueError('사례 없음')
+    path=service.case_path(a)
     return [{'id':r['id'],'case':r['case'],'created':r['created'],'markdown':r['markdown']} for p in sorted((path.parent/'assistant-reports').glob('*.json')) if (r:=read(p)).get('case')==a['case']]

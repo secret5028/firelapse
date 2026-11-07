@@ -57,7 +57,7 @@ export class BuildingLayer extends EmptyLayer {
    if(material.transparent!==transparent){material.transparent=transparent;material.needsUpdate=true;}
   }
   for(const {object,proxy} of this.outlineOccluders)proxy.visible=object.visible&&object.material.opacity>0;
-  const dark=this.frame?.realView?.wallOutline!=='light';
+  const dark=this.frame?.realView?.wallOutline==='dark';
   for(const line of this.cornerLines){line.material.color.set(dark?'#101820':'#8da8b7');line.material.opacity=alpha(dark?.8:.32)*(whole&&line.userData.basement ? .8 : 1);line.renderOrder=30;}
 
  }

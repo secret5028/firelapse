@@ -43,6 +43,7 @@ def node(a):
 def playback(path,stamp):return read(path)
 
 class Tools:
+    _saved_case = None
     names=('list_buildings','get_building','get_ranking','get_case_summary','get_room_timeline','get_index_windows','get_peak_events','get_route','get_mc_summary','propose_fuel','propose_openings','propose_run','get_tactic_rules')
     def __init__(self):
         candidates=[('cad-main','기존 CAD 건물',ROOT/'cad-project/building.json'),('cad-main','기존 CAD 건물',SIM/'results/github-publish-20261026/PyroCast/cad-project/building.json'),('wando-coldstore','완도 저온창고',ROOT/'data/wando-coldstore/operating-building.json')]
@@ -58,7 +59,8 @@ class Tools:
         meta,_=self.building(key);out={}
         from runtime_storage import result_roots, is_result_path, app_path
         roots=result_roots()
-        stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in [SIM/'config/lite-viewer.json',*[r/'playback-catalog.json' for r in roots],ROOT/'data/wando-coldstore'])
+        aliases=SIM/'config/native-case-aliases.json'
+        stamps=tuple(p.stat().st_mtime_ns if p.exists() else 0 for p in [SIM/'config/lite-viewer.json',aliases,*[r/'playback-catalog.json' for r in roots],ROOT/'data/wando-coldstore'])
         cached=self._case_cache.get(meta['id'])
         if cached and cached[0]==stamps:return cached[1]
         cfg=read(SIM/'config/lite-viewer.json',{})
@@ -73,15 +75,33 @@ class Tools:
             for rel,r in read(root/'playback-catalog.json',{}).get('files',{}).items():
                 p=(root/rel).resolve()
                 if p.is_relative_to(root.resolve()) and r.get('building_sha256')==meta['sha'] and r.get('valid') and p.is_file() and p not in out.values():out['case-'+hashlib.sha256(rel.encode()).hexdigest()[:20]]=p
+        for ident,row in read(aliases,{}).items():
+            path=(SIM/'results'/row['relative_path']).resolve()
+            if path in out.values():out[ident]=path
         if meta['id']=='wando-coldstore':
             for p in (ROOT/'data/wando-coldstore').glob('*-playback.json'):
                 d=read(p)
                 if d.get('building_sha256')==meta['sha']:out['wando-'+p.name.removesuffix('-playback.json')]=p
         self._case_cache[meta['id']]=(stamps,out)
         return out
-    def case(self,a):
-        path=self.cases(a['building']).get(a.get('case'))
+    def bind_saved_case(self, case, path):
+        self._saved_case = (case, path)
+        return self
+
+    def case_path(self,a):
+        case=a.get('case')
+        if self._saved_case is not None:
+            self.building(a['building'])
+            if case==self._saved_case[0]:return self._saved_case[1]
+        path=self.cases(a['building']).get(case)
+        if path is None and isinstance(case,str) and case.startswith('calc-'):
+            from fixed_calculation import playback_file
+            meta,_=self.building(a['building'])
+            path=playback_file(meta['sha'],case)
         if path is None:raise ValueError('현재 건물에 없는 사례')
+        return path
+    def case(self,a):
+        path=self.case_path(a)
         return playback(str(path),path.stat().st_mtime_ns)
     def call(self,name,a):
         if name not in self.names or not isinstance(a,dict):raise ValueError('도구/입력 오류')
@@ -168,7 +188,7 @@ class Tools:
                 c=next((c for c in p['rooms'] if c['key']==f.get('cad_key')),None)
                 if c:burning.add(c.get('original_room') or c['key'])
         events={k:self.get_peak_events({**a,'phenomenon':k,'threshold':100}) for k in TYPES}
-        path=self.cases(a['building'])[a['case']];sample=read(path.with_name('sample.json'),{})
+        path=self.case_path(a);sample=read(path.with_name('sample.json'),{})
         origin=p.get('fire_key');cell=next((c for c in p['rooms'] if c['key']==origin),{})
         return {'origin':origin,'origin_room':cell.get('original_room') or origin,'origin_label':display_label(origin,cell.get('display_name')),'engine':p.get('engine_kind'),'end_s':p['time_s'][-1],'complete':p.get('complete'),'opening_state':p.get('opening_states') or sample.get('openings'),'burning_rooms':sorted(burning),'burning_basis':'저장된 실제 화원 HRR > 0 표본이 있는 원래 방','events':events,
             'first_100':{k:min((e for e in rows if e['first_s'] is not None),key=lambda e:e['first_s'],default=None) for k,rows in events.items()},

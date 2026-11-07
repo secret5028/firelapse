@@ -130,7 +130,11 @@ def build_export(origin, case, state, interval=10, *, model_service=False):
     envelope['assistant_reports']=[]
     from model_ai_tools import service_for_hash
     from lite_ai_briefing import list_reports
-    envelope['assistant_reports']=list_reports(service_for_hash(playback['building_sha256']),{'building':playback['building_sha256'],'case':case})
+    from saved_briefings import for_case
+    service=service_for_hash(playback['building_sha256'])
+    context={'building':playback['building_sha256'],'case':case}
+    envelope['assistant_reports']=list_reports(service,context)
+    if playback.get('complete') is True:envelope['saved_summary']=for_case(service,context)
     pako = (VIEWER/'vendor/pako_inflate.min.js').read_text('utf-8')
     license_text = (VIEWER/'vendor/pako-LICENSE.txt').read_text('utf-8').replace('--', '—')
     boot = (VIEWER/'offline_bootstrap.js').read_text('utf-8')

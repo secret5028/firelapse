@@ -3,8 +3,10 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import time
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 from lite_ai_briefing import briefing_value
 from lite_ai_tools import ROOT, finite
@@ -20,6 +22,10 @@ def ensure(path, context=None):
     raw = path.read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
     target = path.with_name(path.stem + '-briefing.json')
+    if os.name == 'nt':
+        absolute = str(target.resolve())
+        extended = '\\\\?\\UNC\\' + absolute[2:] if absolute.startswith('\\\\') else '\\\\?\\' + absolute
+        target = Path(extended)
     saved = read(target, {})
     if saved.get('version') == VERSION and saved.get('source_sha256') == digest:
         return saved['briefing']
@@ -80,9 +86,12 @@ def watch():
             try:
                 stat = path.stat()
                 stamp = stat.st_mtime_ns, stat.st_size
-                current[path] = stamp
                 if seen.get(path) != stamp:
                     ensure(path)
+                current[path] = stamp
+            except ValueError as exc:
+                current[path] = stamp
+                LOG.warning('Saved briefing for %s: %s', path.name, exc)
             except Exception as exc:
                 LOG.warning('Saved briefing for %s: %s', path.name, exc)
         seen = current

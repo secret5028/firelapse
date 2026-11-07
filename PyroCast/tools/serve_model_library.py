@@ -21,19 +21,27 @@ FILES={
 for name in ('legacy_real_bridge.js','legacy_real_view.js','risk.js','gas_visual.js','smoke_visual.js'):
  FILES['/cfbt/'+name]=(ROOT/'simulation/viewer'/name,'text/javascript; charset=utf-8')
 FILES['/cfbt/lite/fire-load-table']=(ROOT/'simulation/pyrocast_lite/fire_load_table.json','application/json; charset=utf-8')
+APP_CONTROL = '/models/firelapse-control'
+
+def app_origins():
+ return {p.scheme+'://'+p.netloc for e in entries() if (p:=urlsplit(e.get('operation_url') or '')).netloc} | {
+  'http://127.0.0.1:'+str(port) for port in (8780,8832,8840,8841,8842,8843,8844)}
+
 class Handler(BaseHTTPRequestHandler):
  def send(self,data,mime='application/json; charset=utf-8',code=200):
   zipped=len(data)>65536 and 'gzip' in self.headers.get('Accept-Encoding','')
   if zipped:data=gzip.compress(data,compresslevel=1,mtime=0)
   self.send_response(code);self.send_header('Content-Type',mime);self.send_header('Content-Length',str(len(data)))
   origin=self.headers.get('Origin')
-  allowed_origins={urlsplit(e.get('operation_url') or '').scheme+'://'+urlsplit(e.get('operation_url') or '').netloc for e in entries()}
-  if origin in allowed_origins or origin in ('http://127.0.0.1:8780','http://127.0.0.1:8832','http://127.0.0.1:8840','http://127.0.0.1:8841','http://127.0.0.1:8842','http://127.0.0.1:8843'):self.send_header('Access-Control-Allow-Origin',origin)
+  if origin and origin in app_origins():self.send_header('Access-Control-Allow-Origin',origin)
   if zipped:self.send_header('Content-Encoding','gzip')
   self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff');self.end_headers();self.wfile.write(data)
  def json(self,d,code=200):return self.send(json.dumps(d,ensure_ascii=False).encode(),code=code)
  def do_GET(self):
   path=urlsplit(self.path).path
+  if path==APP_CONTROL:
+   from app_control import signal_path
+   return self.json({'managed': signal_path() is not None})
   if path in ('/models/ai/connection','/models/ai/completion'):
    import ai_connection
    return ai_connection.handle(self,path)
@@ -77,6 +85,16 @@ class Handler(BaseHTTPRequestHandler):
   if path.startswith('/cfbt/storage/'):
    from storage_cleanup import handle
    if handle(self,path):return
+  if path==APP_CONTROL:
+   from app_control import request_shutdown
+   from model_operation import active_operation_ports
+   local=f'127.0.0.1:{self.server.server_port}'
+   ports=active_operation_ports()
+   origins={f'http://127.0.0.1:{port}' for port in (self.server.server_port,8780,8832,*ports)}
+   if self.client_address[0]!='127.0.0.1' or self.headers.get('Host')!=local or self.headers.get('Origin') not in origins:
+    return self.json({'error':'외부 요청 차단'},403)
+   result,code=request_shutdown([8780,*ports])
+   return self.json(result,code)
   if path in ('/models/ai/connection','/models/ai/completion'):
    import ai_connection
    return ai_connection.handle(self,path)
@@ -118,6 +136,8 @@ class Handler(BaseHTTPRequestHandler):
    except RuntimeError as exc:return self.json({'error':str(exc)},409)
    except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
   if urlsplit(self.path).path=='/models/simulation/run':
+   from app_control import stopping
+   if stopping():return self.json({'error':'FireLapse 종료 처리 중입니다.'},409)
    if self.headers.get('Origin') not in (None,'http://'+self.headers.get('Host','')):
     return self.json({'error':'외부 요청 차단','simulation_started':False},403)
    try:

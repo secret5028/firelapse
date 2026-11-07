@@ -402,6 +402,9 @@ def main():
         def do_POST(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
+            if request_path in (RUN_PATHS|{'/cfbt/calculation'}):
+                from app_control import stopping
+                if stopping():return self.json({'error':'FireLapse 종료 처리 중입니다.'},409)
             if request_path.startswith('/cfbt/storage/'):
                 from storage_cleanup import handle
                 if handle(self,request_path):return

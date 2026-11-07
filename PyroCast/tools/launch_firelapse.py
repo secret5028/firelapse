@@ -1,9 +1,12 @@
 """Portable Windows launcher. Starts only local web servers, never a calculation."""
 from pathlib import Path
 import argparse, json, os, socket, subprocess, sys, time, webbrowser
+from contextlib import redirect_stderr, redirect_stdout
+from tempfile import TemporaryDirectory
 
 ROOT = Path(__file__).resolve().parents[1]
 PORTS = (8780, 8832, 8841, 8842, 8843, 8844)
+URL = 'http://127.0.0.1:8842/model.html'
 
 def environment():
     env = os.environ.copy()
@@ -83,9 +86,57 @@ def available(port):
         return True
     except OSError:return False
 
+
+def shutdown_requested(path):
+    try:
+        return path.read_text('ascii') == 'stop'
+    except FileNotFoundError:
+        return False
+
+
+def background():
+    import ctypes
+    from ctypes import wintypes
+    from urllib.request import ProxyHandler, build_opener
+    from runtime_storage import DATA_ROOT
+
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateMutexW.argtypes = (wintypes.LPVOID, wintypes.BOOL, wintypes.LPCWSTR)
+    kernel.CreateMutexW.restype = wintypes.HANDLE
+    kernel.CloseHandle.argtypes = (wintypes.HANDLE,)
+    kernel.CloseHandle.restype = wintypes.BOOL
+    mutex = kernel.CreateMutexW(None, False, r'Local\FireLapse-Background')
+    if not mutex:
+        raise ctypes.WinError(ctypes.get_last_error())
+    existing = ctypes.get_last_error() == 183
+    try:
+        if existing:
+            try:
+                with build_opener(ProxyHandler({})).open(
+                    'http://127.0.0.1:8841/models/firelapse-control', timeout=1,
+                ) as response:
+                    if json.load(response).get('managed') and '--no-browser' not in sys.argv:
+                        webbrowser.open(URL)
+            except (OSError, ValueError):
+                pass  # The first instance may still be opening.
+            return
+        logs = DATA_ROOT/'logs'
+        logs.mkdir(parents=True,exist_ok=True)
+        with (logs/'launcher.log').open('a',encoding='utf8') as log, redirect_stdout(log), redirect_stderr(log):
+            try:
+                main()
+            except Exception:
+                import traceback
+                traceback.print_exc()
+                raise
+    finally:
+        kernel.CloseHandle(mutex)
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--check',action='store_true')
     parser.add_argument('--no-browser',action='store_true');parser.add_argument('--serve',choices=['library','wando','ganghwa','briefings'])
+    parser.add_argument('--background',action='store_true')
     args=parser.parse_args()
     os.chdir(ROOT)
     if args.serve:return serve(args.serve)
@@ -94,24 +145,32 @@ def main():
     occupied=[p for p in PORTS if not available(p)]
     if occupied:raise RuntimeError('이미 실행 중인 프로그램의 포트입니다: '+str(occupied)+'\n기존 FireLapse 실행 창을 종료한 뒤 다시 실행하세요. 다른 프로세스를 강제 종료하지 않습니다.')
     from runtime_storage import DATA_ROOT
+    from app_control import SIGNAL_ENV
     logs=DATA_ROOT/'logs';logs.mkdir(parents=True,exist_ok=True)
+    session=TemporaryDirectory(prefix='.session-',dir=logs)
+    stop_file=Path(session.name)/'shutdown'
+    env={**environment(),SIGNAL_ENV:str(stop_file)}
+    executable=Path(sys.executable).with_name('python.exe') if args.background else sys.executable
+    flags=(subprocess.CREATE_NO_WINDOW if args.background else getattr(subprocess,'CREATE_NEW_PROCESS_GROUP',0))
     children=[];streams=[]
     try:
         for name in ('library','wando','ganghwa','briefings'):
             stream=(logs/(name+'.log')).open('a',encoding='utf8');streams.append(stream)
-            children.append(subprocess.Popen([sys.executable,'-B','-X','utf8',str(Path(__file__).resolve()),'--serve',name],
-                cwd=ROOT,env=environment(),stdout=stream,stderr=subprocess.STDOUT,
-                creationflags=getattr(subprocess,'CREATE_NEW_PROCESS_GROUP',0)))
+            children.append(subprocess.Popen([executable,'-B','-X','utf8',str(Path(__file__).resolve()),'--serve',name],
+                cwd=ROOT,env=env,stdout=stream,stderr=subprocess.STDOUT,creationflags=flags))
         deadline=time.monotonic()+90
         while time.monotonic()<deadline:
             if any(p.poll() is not None for p in children):raise RuntimeError('서버 시작 실패. logs 폴더를 확인하세요.')
             if all(not available(p) for p in PORTS):break
             time.sleep(.25)
         else:raise TimeoutError('서버 준비 시간 초과. logs 폴더를 확인하세요.')
-        url='http://127.0.0.1:8842/model.html'
-        print('\nFireLapse 실행 중: '+url+'\n이 창을 유지하세요. 종료는 Ctrl+C. 계산 중에는 종료하지 마세요.',flush=True)
-        if not args.no_browser:webbrowser.open(url)
-        while all(p.poll() is None for p in children):time.sleep(1)
+        print('\nFireLapse 실행 중: '+URL+'\n종료는 브라우저 상단의 종료 버튼을 사용하세요.',flush=True)
+        if not args.no_browser:webbrowser.open(URL)
+        while all(p.poll() is None for p in children):
+            if shutdown_requested(stop_file):
+                time.sleep(.5)  # Let the shutdown response reach the browser first.
+                return
+            time.sleep(.5)
         raise RuntimeError('서버가 종료되었습니다. logs 폴더를 확인하세요.')
     except KeyboardInterrupt:print('\nFireLapse 종료',flush=True)
     finally:
@@ -121,8 +180,16 @@ def main():
             try:child.wait(timeout=8)
             except subprocess.TimeoutExpired:child.kill();child.wait()
         for stream in streams:stream.close()
+        session.cleanup()
 
 if __name__=='__main__':
-    try:main()
+    is_background='--background' in sys.argv
+    try:
+        background() if is_background else main()
     except Exception as exc:
-        print('실행 실패: '+str(exc),file=sys.stderr,flush=True);sys.exit(1)
+        if is_background:
+            import ctypes
+            ctypes.windll.user32.MessageBoxW(None, str(exc), 'FireLapse 실행 실패', 0x10)
+        else:
+            print('실행 실패: '+str(exc),file=sys.stderr,flush=True)
+        sys.exit(1)

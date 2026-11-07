@@ -5198,6 +5198,9 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  #pyroShellHeader :is(button,select),#pyroShellSidebar :is(button,select,input,textarea),#pyroShellTimeline :is(#shellPlay,#shellSpeed){font:inherit;font-size:13px;box-sizing:border-box}
  #pyroShellHeader :is(button,select),#pyroShellSidebar :is(button,select,input[type=number],input[type=text]),#pyroShellTimeline :is(#shellPlay,#shellSpeed){height:32px;padding:0 10px;border-radius:5px}
  #pyroShellHeader :is(button,select):not([aria-pressed=true]),#pyroShellSidebar :is(button,select,input[type=number],input[type=text]):not([aria-pressed=true]):not([aria-selected=true]),#pyroShellTimeline :is(#shellPlay,#shellSpeed):not([aria-pressed=true]){background:var(--bg-control);border:1px solid var(--border-strong);color:var(--text)}
+ #pyroShellHeader #shellQuit{white-space:nowrap;background:#b42318;border-color:#912018;color:white}
+ #pyroShellHeader #shellQuit:hover:not(:disabled){background:#912018}
+ #pyroShellHeader #shellQuit:disabled{opacity:.7;cursor:default}
  #pyroShellSidebar #pyroShellTabs button{height:40px;border-width:0 0 2px;border-radius:0;border-bottom-color:transparent;color:var(--text-muted)}
  #pyroShellSidebar #pyroShellTabs button[aria-selected=true]{background:var(--bg-selected);color:var(--accent);border-bottom-color:var(--accent)}
  #pyroShellSidebar #shellMobileToggle{height:40px}
@@ -5220,6 +5223,29 @@ function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
  }
  `;document.head.append(style);document.body.classList.add('pyroShell');
  const header=document.createElement('header');header.id='pyroShellHeader';header.innerHTML='<span class="brand"><strong>FireLapse</strong><small>-compartment fire timeline-</small></span>';
+ if(!window.__PYROCAST_OFFLINE__&&location.protocol==='http:'){
+  const endpoint='http://127.0.0.1:8841/models/firelapse-control';
+  const control=new AbortController();cleanups.push(()=>control.abort());
+  const quit=document.createElement('button');
+  quit.id='shellQuit';quit.type='button';quit.textContent='종료';quit.hidden=true;
+  quit.setAttribute('aria-label','FireLapse 종료');header.append(quit);
+  fetch(endpoint,{signal:control.signal}).then(response=>response.ok?response.json():null)
+   .then(value=>{quit.hidden=value?.managed!==true;}).catch(()=>{});
+  listen(quit,'click',async()=>{
+   if(!window.confirm('FireLapse를 종료할까요?'))return;
+   quit.disabled=true;
+   try{
+    const response=await fetch(endpoint,{method:'POST',signal:control.signal});
+    const value=await response.json();
+    if(!response.ok||value.stopping!==true)throw Error(value.error||'종료 요청 실패');
+    quit.textContent='종료됨';quit.setAttribute('aria-label','FireLapse 종료됨');
+    window.alert('FireLapse를 종료했습니다. 다시 열려면 바탕화면의 FireLapse 아이콘을 누르세요.');
+   }catch(error){
+    if(control.signal.aborted)return;
+    quit.disabled=false;window.alert(error.message);
+   }
+  });
+ }
  const resultList=createResultList({container:$('v'),store,floors:buildingFloors,onSelect:async id=>{await onShowResult?.(id);activate('result');revealSidebar();}});
  cleanups.push(()=>resultList.dispose());
  const oldTitle=document.title;document.title=oldTitle.includes("PyroCast")?oldTitle.replaceAll("PyroCast","FireLapse"):"FireLapse · compartment fire timeline";cleanups.push(()=>{document.title=oldTitle;});

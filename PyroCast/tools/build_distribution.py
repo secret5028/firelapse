@@ -133,7 +133,7 @@ def main():
           'cad_import':'External DWG/DXF extraction toolchain must be configured separately; existing 7 models are bundled'}
     (bundle/'distribution.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n','utf8')
     cmd='@echo off\r\nchcp 65001 >nul\r\ncd /d "%~dp0"\r\n"%~dp0runtime\\python\\python.exe" -B -X utf8 "%~dp0app\\tools\\launch_firelapse.py" %*\r\nif errorlevel 1 pause\r\n'
-    (bundle/'FireLapse.cmd').write_bytes(cmd.encode('utf8'))
+    copy(root/'distribution/FireLapse.cmd',bundle/'FireLapse.cmd')
     (bundle/'Check-FireLapse.cmd').write_bytes(cmd.replace('%*','--check').replace('if errorlevel 1 pause','pause').encode('utf8'))
     for name in ('README.md','THIRD_PARTY_NOTICES.md'):
         source=root/name if name=='README.md' and (root/name).exists() else root/'distribution'/name

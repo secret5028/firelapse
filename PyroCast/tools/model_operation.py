@@ -14,6 +14,11 @@ _server_lock = threading.RLock()
 _base_handler = None
 
 
+def active_operation_ports():
+    with _server_lock:
+        return [server.server_port for server in _servers.values()]
+
+
 def operation_port(row):
     return row.get('operation_port') or PORTS.get(row['id'])
 
@@ -219,6 +224,9 @@ def handler(base, ident):
             except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
         def do_POST(self):
             path=urlsplit(self.path).path
+            if path in ('/cfbt/calculation','/cfbt/lite/mc','/models/simulation/run'):
+                from app_control import stopping
+                if stopping():return self.json({'error':'FireLapse 종료 처리 중입니다.'},409)
             if path.startswith('/cfbt/storage/'):
                 from storage_cleanup import handle
                 if handle(self,path):return

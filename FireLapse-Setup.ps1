@@ -85,17 +85,21 @@ try {
     }
     finally { $mutex.Dispose() }
 
+    $shellTarget = $launcher
+    try { $shellTarget = Resolve-ShellTarget $launcher } catch { }
+    $shellDirectory = Split-Path -Parent $shellTarget
+    $windowless = Join-Path $shellDirectory 'runtime\python\pythonw.exe'
+    $entry = Join-Path $shellDirectory 'app\tools\launch_firelapse.py'
+    $launchArguments = '-B -X utf8 "' + $entry + '" --background'
     try {
         $icon = Join-Path $installDir 'FireLapse.ico'
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'FireLapse.ico') -Destination $icon -Force
-        $shellTarget = $launcher
-        try { $shellTarget = Resolve-ShellTarget $launcher } catch { }
-        $shellDirectory = Split-Path -Parent $shellTarget
         $shellIcon = Join-Path $shellDirectory 'FireLapse.ico'
         $desktop = [Environment]::GetFolderPath('DesktopDirectory')
         $shell = New-Object -ComObject WScript.Shell
         $shortcut = $shell.CreateShortcut((Join-Path $desktop 'FireLapse.lnk'))
-        $shortcut.TargetPath = $shellTarget
+        $shortcut.TargetPath = $windowless
+        $shortcut.Arguments = $launchArguments
         $shortcut.WorkingDirectory = $shellDirectory
         $shortcut.Description = 'FireLapse - compartment fire timeline'
         $shortcut.IconLocation = "$shellIcon,0"
@@ -103,8 +107,8 @@ try {
     }
     catch { Write-Warning "Could not create the desktop shortcut. $($_.Exception.Message)" }
 
-    & $launcher
-    exit $LASTEXITCODE
+    Start-Process -FilePath $windowless -ArgumentList $launchArguments -WorkingDirectory $shellDirectory -WindowStyle Hidden
+    exit 0
 }
 catch {
     [Console]::Error.WriteLine("FireLapse setup failed. $($_.Exception.Message)")

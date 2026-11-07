@@ -1,9 +1,9 @@
 $ErrorActionPreference = 'Stop'
 
-$version = 'v2026.11.07-r7'
-$archiveName = 'FireLapse-Windows-x64-2026.11.07-r7.zip'
+$version = 'v2026.11.07-r8'
+$archiveName = 'FireLapse-Windows-x64-2026.11.07-r8.zip'
 $releaseUrl = "https://github.com/secret5028/firelapse/releases/download/$version/$archiveName"
-$expectedHash = '99b669f9235c573dfff36d7e707b55696690aa5b33cd85f3a9d0864be0b15c98'
+$expectedHash = '876c31d24876fc5164419985ac9f6323b919bb2b0ebe5ed60d25f46318791305'
 $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\releases'))
 $installDir = Join-Path $releaseRoot $version
 $launcher = Join-Path $installDir 'FireLapse.cmd'

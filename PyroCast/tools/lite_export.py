@@ -87,9 +87,9 @@ def build_export(origin, case, state, interval=10, *, model_service=False):
     config = ROOT/'simulation/config/lite-door-overrides.json'
     corrections = routes['/cfbt/lite/doors'] if model_service else json.loads(config.read_text('utf-8')) if config.exists() else {}
     if model_service and 'fixed_by_room' in corrections:
-        origin = playback_origin(playback)
-        fixed = corrections['fixed_by_room'].get(origin)
-        corrections['fixed_by_room'] = {origin:fixed} if fixed else {}
+        origin_room = playback_origin(playback)
+        fixed = corrections['fixed_by_room'].get(origin_room)
+        corrections['fixed_by_room'] = {origin_room:fixed} if fixed else {}
         corrections['fixed_state'] = fixed
     modules = {}
     def resolve(spec, parent):

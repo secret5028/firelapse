@@ -87,6 +87,10 @@ def prepare(sha, body, ident=None):
     for key in ('approved_input', 'fuel_groups'):
         if current.get(key) != previous.get(key):
             raise ValueError('가연물 설정이 바뀌었습니다. MC를 다시 실행하세요')
+    def leakage(inputs):
+        return {r['id']:tuple(r.get('leak_area_ratio',(.00017,.000052))) for r in inputs['rooms']}
+    if leakage(current)!=leakage(previous):
+        raise ValueError('누기 경계 조건이 바뀌었습니다. MC를 다시 실행하세요')
     if body['engine'] == 'cfast' and not ENGINE.is_file():
         raise ValueError('순정 CFAST 실행 파일 없음')
     return folder, fixed, req, deepcopy(model)
@@ -123,7 +127,17 @@ def playback_file(sha, case):
     if not re.fullmatch(r'calc-\d+-[a-f0-9]+', case or ''):
         raise ValueError('계산 사례 ID 오류')
     folder = locate(JOBS/sha/case)
-    if read(folder/'status.json', {}).get('state') != 'complete':
+    status_path=folder/'status.json'
+    state=read(status_path)
+    # Windows can briefly hide or lock a file just after atomic replacement.
+    pending = (None,'queued','running')
+    if os.name=='nt' and folder.is_dir() and (state or {}).get('state') in pending:
+        for _ in range(4):
+            time.sleep(.05)
+            state=read(status_path)
+            if (state or {}).get('state') not in pending:
+                break
+    if (state or {}).get('state') != 'complete':
         raise ValueError('완료되지 않은 계산')
     return folder/'playback.json'
 

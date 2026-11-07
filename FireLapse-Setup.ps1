@@ -8,6 +8,37 @@ $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\re
 $installDir = Join-Path $releaseRoot $version
 $launcher = Join-Path $installDir 'FireLapse.cmd'
 
+function Resolve-ShellTarget($path) {
+    # Explorer runs outside the installer and needs the physical file path.
+    if (-not ('FireLapseShellPath' -as [type])) {
+        Add-Type -TypeDefinition @'
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using Microsoft.Win32.SafeHandles;
+
+public static class FireLapseShellPath {
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern uint GetFinalPathNameByHandle(
+        SafeFileHandle file, StringBuilder path, uint capacity, uint flags);
+
+    public static string Resolve(string name) {
+        using (var file = File.OpenRead(name)) {
+            var path = new StringBuilder(32768);
+            var length = GetFinalPathNameByHandle(file.SafeFileHandle, path, (uint)path.Capacity, 0);
+            if (length == 0 || length >= path.Capacity) return name;
+            var resolved = path.ToString();
+            if (resolved.StartsWith(@"\\?\UNC\")) return @"\\" + resolved.Substring(8);
+            if (resolved.StartsWith(@"\\?\")) return resolved.Substring(4);
+            return resolved;
+        }
+    }
+}
+'@
+    }
+    [FireLapseShellPath]::Resolve($path)
+}
+
 function Install-FireLapse {
     if (Test-Path -LiteralPath $launcher -PathType Leaf) { return }
 
@@ -57,13 +88,17 @@ try {
     try {
         $icon = Join-Path $installDir 'FireLapse.ico'
         Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'FireLapse.ico') -Destination $icon -Force
+        $shellTarget = $launcher
+        try { $shellTarget = Resolve-ShellTarget $launcher } catch { }
+        $shellDirectory = Split-Path -Parent $shellTarget
+        $shellIcon = Join-Path $shellDirectory 'FireLapse.ico'
         $desktop = [Environment]::GetFolderPath('DesktopDirectory')
         $shell = New-Object -ComObject WScript.Shell
         $shortcut = $shell.CreateShortcut((Join-Path $desktop 'FireLapse.lnk'))
-        $shortcut.TargetPath = $launcher
-        $shortcut.WorkingDirectory = $installDir
+        $shortcut.TargetPath = $shellTarget
+        $shortcut.WorkingDirectory = $shellDirectory
         $shortcut.Description = 'FireLapse - compartment fire timeline'
-        $shortcut.IconLocation = "$icon,0"
+        $shortcut.IconLocation = "$shellIcon,0"
         $shortcut.Save()
     }
     catch { Write-Warning "Could not create the desktop shortcut. $($_.Exception.Message)" }

@@ -50,15 +50,14 @@
 
 ## 내려받아 실행하기
 
-1. [Releases](https://github.com/secret5028/firelapse/releases/tag/v2026.11.06-r3)에서 Windows x64용 **FireLapse 실행 패키지 ZIP**을 내려받습니다.
-2. ZIP 전체를 쓰기 가능한 폴더에 압축 해제합니다. 예: `D:\FireLapse`. 압축 파일 안에서 바로 실행하지 마세요.
-3. `FireLapse.cmd`를 더블클릭합니다.
-4. 준비가 끝나면 브라우저에 모델이 열립니다. 상단 목록에서 건물을 선택합니다.
-5. 사용하는 동안 실행 창을 유지합니다. 종료할 때는 계산이 끝난 뒤 실행 창에서 **Ctrl+C**를 누릅니다.
+1. 이 페이지에서 **Code → Download ZIP**을 누릅니다.
+2. ZIP을 **모두 압축 풀기**한 뒤 최상위 폴더의 `FireLapse.cmd`를 더블클릭합니다.
+3. 첫 실행 때 실행 패키지(약 380 MB)를 내려받아 `%LOCALAPPDATA%\FireLapse\releases`에 풀고, 바탕화면에 **FireLapse** 바로가기를 만듭니다. 이후에는 그 바로가기로 실행할 수 있습니다.
+4. 브라우저에서 모델이 열리면 상단 목록에서 건물을 선택합니다. 실행 창은 사용하는 동안 유지하고, 종료할 때는 계산이 끝난 뒤 **Ctrl+C**를 누릅니다.
+
+오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.06-r3)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
 
 실행 패키지에는 Python·Node·필수 라이브러리와 계산 실행 파일이 포함됩니다. 저장된 모델과 결과를 보는 데 별도 API 키나 AI 계정은 필요하지 않습니다.
-
-**GitHub의 `Code → Download ZIP`은 소스 코드입니다.** 모델 결과와 실행 환경을 함께 받으려면 Releases의 실행 패키지를 사용하세요. 배포 파일이 아직 표시되지 않으면 업로드가 완료되지 않은 상태입니다.
 
 ### 실행 환경
 
@@ -217,7 +216,7 @@ FireLapse/
 
 소스 ZIP만으로 실행 패키지의 모든 결과와 런타임이 제공되지는 않습니다. 구성요소 라이선스는 배포본의 `THIRD_PARTY_NOTICES.md`와 각 원문 고지를 따릅니다.
 
-## 소스 clone으로 실행하기
+## 개발용 소스 뷰어 실행하기
 
 Windows x64, Python **3.12**에서 검증합니다. Python 3.x 전체 버전의 호환성을 보장하지 않습니다. Node.js 22도 설치하고 PATH에 등록하면 경로·브리핑 어댑터를 사용할 수 있습니다.
 

@@ -49,11 +49,24 @@ class WorkflowTests(unittest.TestCase):
   with patch.object(mc.sim,'_active',None),patch.object(mc,'apply_worst',return_value=fixed) as apply:
    value=mc.apply('parkmarine',{'job_id':job})
    self.assertEqual(value['case_id'],'modelmc-'+job+'-S01')
-   self.assertEqual(apply.call_args.args[2],mc.config_path('parkmarine'))
+   self.assertEqual(apply.call_args.args[2],mc.config_path('parkmarine',for_write=True))
    self.assertEqual(apply.call_args.args[3],mc.JOBS/'parkmarine')
  def test_evidence_path_allowed(self):
   from execution_evidence import _inputs
   with self.assertRaisesRegex(ValueError,'Missing job provenance'):_inputs(mc.JOBS/'parkmarine'/'mc-0-abcd'/'S00')
+ def test_fixed_state_read_fallback_and_writable_override(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   base=Path(tmp);app=base/'app';data=base/'data'
+   name=self.sha+'.json'
+   bundled=app/'simulation/config/model-fixed-openings'/name
+   writable=data/'config/model-fixed-openings'/name
+   mc.atomic_json(bundled,{'fixed_state':{'sample_id':'S00'}})
+   with patch.object(mc,'ROOT',app),patch.object(mc,'DATA_ROOT',data):
+    self.assertEqual(mc.config_path('parkmarine'),bundled)
+    self.assertEqual(mc.config_path('parkmarine',for_write=True),writable)
+    mc.atomic_json(writable,{'fixed_state':{'sample_id':'S01'}})
+    self.assertEqual(mc.config_path('parkmarine'),writable)
+    self.assertEqual(mc.read(bundled)['fixed_state']['sample_id'],'S00')
  def test_saved_winner_roundtrip_without_simulation(self):
   with tempfile.TemporaryDirectory(dir=ROOT/'app/tests') as tmp:
    jobs=Path(tmp);folder=jobs/'parkmarine'/'mc-123-abcd'

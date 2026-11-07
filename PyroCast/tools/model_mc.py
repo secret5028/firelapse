@@ -6,11 +6,16 @@ from result_catalog import read, atomic_json, playback_metadata
 from lite_fixed_openings import ranked_samples, apply_worst
 from lite_mc_service import process_alive
 ROOT=sim.ROOT
-from runtime_storage import RESULTS, locate, result_glob
+from runtime_storage import DATA_ROOT, RESULTS, locate, result_glob
 JOBS=RESULTS/'lite_mc_jobs/models'
 
-def config_path(ident):
-    return ROOT/'simulation/config/model-fixed-openings'/(sim.fingerprint(ident)+'.json')
+def config_path(ident, *, for_write=False):
+    name = sim.fingerprint(ident)+'.json'
+    writable = DATA_ROOT/'config/model-fixed-openings'/name
+    bundled = ROOT/'simulation/config/model-fixed-openings'/name
+    if not for_write and not writable.exists() and bundled.is_file():
+        return bundled
+    return writable
 
 def folder_for(ident, job):
     sim.entry(ident)
@@ -110,7 +115,7 @@ def apply(ident,body):
     folder_for(ident,body['job_id'])
     with sim._lock:
         if sim._active:raise RuntimeError('계산 중에는 적용할 수 없습니다')
-        fixed=apply_worst(body['job_id'],sim.fingerprint(ident),config_path(ident),folder_for(ident,body['job_id']).parent)
+        fixed=apply_worst(body['job_id'],sim.fingerprint(ident),config_path(ident,for_write=True),folder_for(ident,body['job_id']).parent)
     return dict(rows=[],fixed_state=fixed,case_id=case_id(folder_for(ident,body['job_id']),fixed['sample_id']))
 
 def playback(ident,case):

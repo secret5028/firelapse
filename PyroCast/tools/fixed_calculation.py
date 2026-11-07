@@ -127,17 +127,7 @@ def playback_file(sha, case):
     if not re.fullmatch(r'calc-\d+-[a-f0-9]+', case or ''):
         raise ValueError('계산 사례 ID 오류')
     folder = locate(JOBS/sha/case)
-    status_path=folder/'status.json'
-    state=read(status_path)
-    # Windows can briefly hide or lock a file just after atomic replacement.
-    pending = (None,'queued','running')
-    if os.name=='nt' and folder.is_dir() and (state or {}).get('state') in pending:
-        for _ in range(4):
-            time.sleep(.05)
-            state=read(status_path)
-            if (state or {}).get('state') not in pending:
-                break
-    if (state or {}).get('state') != 'complete':
+    if read(folder/'status.json', {}).get('state') != 'complete':
         raise ValueError('완료되지 않은 계산')
     return folder/'playback.json'
 

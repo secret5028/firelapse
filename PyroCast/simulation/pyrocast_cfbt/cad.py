@@ -142,6 +142,7 @@ def adapt(project, options=None):
         if 'z' not in f:
             f['z']=assumed_z;warnings.append('층 표고 미확인 → 입력 층 순서로 누적: '+str(f['name']))
         assumed_z=f['z']+f['h']
+    grade = building.get('grade_m', next((f['z'] for f in building['floors'] if f.get('is_ground') or f['name']=='1F'), 0.))
     floors = {f['name']: f for f in building['floors']}
     fire_floor = options.get('fire_floor', '3F' if '3F' in floors else next(iter(floors)))
     if fire_floor not in floors:raise ValueError('선택한 화점 층이 도면에 없습니다.')
@@ -169,7 +170,7 @@ def adapt(project, options=None):
                 excluded.append({'key':k,'reason':'invalid_or_tiny_footprint'})
                 warnings.append('구획 형상 미확인: '+k);continue
             point = shape.representative_point()
-            item = {'id': k, 'cad_floor': f['name'], 'cad_room': r['id'],
+            item = {'id': k, 'below_grade': f.get('below_grade', f['z'] < grade), 'cad_floor': f['name'], 'cad_room': r['id'],
                     'cad_polys': r['polys'], 'cad_center_m': [point.x, point.y],
                     'area_m2': float(shape.area), 'z_m': f.get('z',0.), 'height_m': f.get('ceil_h') or f.get('h',3.),
                     'structural_height_m': f.get('h',3.), 'core_kind': dedicated_core_kind(r),

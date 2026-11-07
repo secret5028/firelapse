@@ -33,26 +33,18 @@ class LiteTests(unittest.TestCase):
     def setUp(self):
         self.raw=json.loads((ROOT/'fixtures/room_rule_benchmark_3room.json').read_text('utf-8'))
 
-    def test_sealed_pressure_reference_keeps_differential_and_balances(self):
+    def test_closed_fire_component_gets_shared_leakage(self):
         for room in self.raw['rooms']:
-            room['cad_floor']='B3'
+            room.update(cad_floor='B3',below_grade=True,leak_area_ratio=[0,0])
         self.raw['openings']=[v for v in self.raw['openings'] if 'OUTSIDE' not in (v['a'],v['b'])]
         model,_=prepare(self.raw)
-        self.assertFalse(any(v[1]==model.N for v in model.vents))
-        self.assertTrue(model.sealed_pressure_rooms)
-        y=model.y0()
-        y[:model.N]+=np.arange(model.N)*.05
-        groups=model.sealed_pressure_rooms
-        referenced=model.rhs(100.,y)
-        model.sealed_pressure_rooms=[]
-        absolute=model.rhs(100.,y)
-        np.testing.assert_array_equal(referenced[model.N:],absolute[model.N:])
-        model.sealed_pressure_rooms=groups
-        for rooms,reference in groups:
-            self.assertEqual(referenced[reference],0.)
-            np.testing.assert_allclose(referenced[rooms],absolute[rooms]-absolute[reference])
-            y[rooms]+=25.
-        np.testing.assert_allclose(model.rhs(100.,y),referenced,atol=1e-9)
+        self.assertTrue(any(v[1]==model.N for v in model.vents))
+        self.assertTrue(model.input_model['minimum_leakage'])
+        self.assertFalse(model.sealed_pressure_rooms)
+        run(model,60,5,30)
+        self.assertTrue(model.integration['complete'])
+        self.assertLess(np.max(np.abs(model.sol.y[:model.N])),1000)
+        self.assertLess(np.min(model.sol.y[4*model.N+model.ig]),model.y0()[4*model.N+model.ig])
     def test_root_event_continues_state_and_grid(self):
         toy=EventToy();sol=run(toy,700,10,10)
         self.assertTrue(sol.success)

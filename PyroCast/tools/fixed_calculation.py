@@ -17,6 +17,7 @@ from runtime_storage import RESULTS, locate, result_glob
 JOBS = RESULTS/'fixed-calculations'
 ENGINE = ROOT/'simulation/build/baseline/cfast-baseline.exe'
 FIRE_INPUT_KEYS = {'fire_peak_kW', 'fuel_energy_MJ'}
+BOUNDARY_INPUT_KEYS = {'leakage_area_m2'}
 
 
 def fingerprint(value):
@@ -63,7 +64,7 @@ def context(sha, ident=None, job_id=None, room=None):
 
 
 def prepare(sha, body, ident=None):
-    if not isinstance(body, dict) or set(body)-({'mc_job_id'}|FIRE_INPUT_KEYS) != {'engine', 'room', 'floor', 'duration_s'}:
+    if not isinstance(body, dict) or set(body)-({'mc_job_id'}|FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS) != {'engine', 'room', 'floor', 'duration_s'}:
         raise ValueError('계산 방식·화점·층·시간을 지정하세요')
     if body['engine'] not in ('lite', 'cfast'):
         raise ValueError('지원하지 않는 계산 방식')
@@ -96,6 +97,11 @@ def prepare(sha, body, ident=None):
     if body['engine'] == 'cfast' and not ENGINE.is_file():
         raise ValueError('순정 CFAST 실행 파일 없음')
     raw=deepcopy(model)
+    if 'leakage_area_m2' in body:
+        area = body['leakage_area_m2']
+        if type(area) not in (int,float) or not math.isfinite(area) or area<=0:
+            raise ValueError('최소 누기 면적은 양수여야 합니다')
+        raw['leakage_defaults'] = dict(stair_area_m2=area,elevator_area_m2=area,fallback_area_m2=area)
     if FIRE_INPUT_KEYS & body.keys():
         set_fire_input(raw,body)
     return folder, fixed, req, raw
@@ -229,7 +235,7 @@ def compute(folder):
     source = Path(req['source_path'])
     try:
         atomic_json(folder/'status.json', dict(state='running', id=folder.name, **req))
-        if req['engine'] == 'lite' and FIRE_INPUT_KEYS.isdisjoint(req):
+        if req['engine'] == 'lite' and (FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS).isdisjoint(req) and not raw.get('minimum_leakage'):
             pb = read(source/'playback.json')
             if not pb or not pb.get('complete'):
                 raise ValueError('확정 표본의 완료 결과 없음')
@@ -267,6 +273,9 @@ def compute(folder):
             native = execute(ENGINE, folder, deck, '', model['duration_s'], 1800, stall_timeout_s=0)
             pb = package(model, native, read(source/'playback.json'), folder)
             runs = 1
+        boundary_model = locals().get('model',raw)
+        if not isinstance(boundary_model,dict): boundary_model=boundary_model.input_model
+        pb['limits'] = list(dict.fromkeys(pb.get('limits',[])+boundary_model.get('limits',[])))
         pb['case_id'] = folder.name
         pb['label'] = f"{req['floor']} {req['room'].split('_')[-1]} · {'순정 CFAST' if req['engine']=='cfast' else '간략 계산'} · 확정 급기"
         manifest=read(folder/'rule_manifest.json') or read(source/'BDF/rule_manifest.json') or {}

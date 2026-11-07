@@ -62,7 +62,7 @@ def package(model,result,raw,label):
         cell_settings={'cell_mode':'legacy'},
         scene_geometry_basis='solver rectangular cells affinely mapped to original CAD bounds, then clipped to actual polygons; display approximation',
         smoke_basis='calculated upper-layer extent; constant gray opacity for display only; no soot or optical-density calculation',
-        limits=['조건 충족 단계이며 발생 예측 아님','회색 연기: 계산된 상층 범위의 표시용 농도. 실제 광학밀도·연기 전면은 미계산.',
+        limits=model.input_model.get('limits',[])+['조건 충족 단계이며 발생 예측 아님','회색 연기: 계산된 상층 범위의 표시용 농도. 실제 광학밀도·연기 전면은 미계산.',
             '문 분출 연소는 받는 실 하층 산소를 소비하는 근사이며 롤오버와 별도.',
             '셀 배치는 계산 직사각형을 CAD 경계 안에 대응한 근사. 화염·연료 큐브는 표시 기호.',
             '창 파괴·수직 전파 OFF. 실제 HRR가 양수인 곳만 고체 화염 표시.'],

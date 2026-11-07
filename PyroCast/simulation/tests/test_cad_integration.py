@@ -23,7 +23,7 @@ class CadIntegrationTests(unittest.TestCase):
 
     def test_basement_uses_explicit_connections_without_default_outdoor_leakage(self):
         raw=deepcopy(self.model)
-        raw['rooms'][0]['cad_floor']='B3'
+        raw['rooms'][0].update(cad_floor='B3',below_grade=True)
         raw['rooms'][1]['cad_floor']='1F'
         raw['rooms'][2].update(cad_floor='지하 2층',leak_area_ratio=[.0001,0.])
         model=normalize(raw)

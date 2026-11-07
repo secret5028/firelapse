@@ -22,13 +22,16 @@ from shapely.ops import unary_union
 G = 9.81; RG = 287.0; CP = 1012.0; GAM = 1.4; P0 = 101325.0
 Y_O2_AIR = 0.232; H_O2 = 13.1e6          # J/kg-O2 (Huggett)
 
+from pyrocast_cfbt.physics_config import defaults as physics_defaults
+_LEAKAGE = physics_defaults('leakage')
+
 PRM = dict(
     pyro_feedback=True,                # legacy compatibility; L1 adapter sets False
     oxygen_limit_model='legacy_volume_linear',
     T_in=293.15, T_out=273.15,           # 실내·외기 온도 (겨울 기본 → 연돌 효과)
     Cd=0.68, n_slab=10,
     door_leak=0.02, win_leak=0.003,      # 닫힌 문·창 틈새 면적 ㎡
-    elev_leak=0.06, shaft_floor_leak=0.02, shaft_top_vent=0.10,
+    elev_leak=_LEAKAGE['elevator_area_m2'], shaft_floor_leak=_LEAKAGE['stair_area_m2'], shaft_top_vent=0.10,
     chi_r=0.30, dHc=20.0e6,              # 복사 분율, 연료 유효 연소열 J/kg
     lol_lo=0.10, lol_hi=0.15,            # 하한 산소(부피분율) 연소 소멸~완전
     kpc=1.35e6,                          # 벽 kρc — EN1991-1-2 표준 구획 b≈1160 (콘크리트+경량 칸막이 혼합)

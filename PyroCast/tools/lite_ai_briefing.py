@@ -51,6 +51,7 @@ def briefing_value(service,a):
 
 
 def basic_briefing(service,a):
+    from d5_briefing import LIMITS
     call=service.call('get_case_summary',a)
     summary=call['data']
     facts=facts_for(call,0)
@@ -58,18 +59,20 @@ def basic_briefing(service,a):
     for key in TYPES:
         if summary['worst'][key] is None:lines.append(LABELS[key]+' 지수 · 미평가')
     sections=[
-        {'title':'화재 위험 요약','text':'\n'.join(lines)},
-        {'title':'자료 범위','text':'완료된 저장 결과의 계산값입니다. 수관 경로와 전술에 필요한 세부 자료는 미평가입니다.'},
+        {'title':'■ 1. 화재 위험 요약','text':'\n'.join(lines)},
+        {'title':'■ 2. 수관 구간별 할 일','text':'진입 경로: 미평가\n상태: 경로 실 미평가\n할 일: 판정자료 미평가'},
+        {'title':'■ 3. 공통','text':LIMITS},
     ]
     return dict(building=a['building'],case=a['case'],text='\n\n'.join(s['text'] for s in sections),
                 sections=sections,facts=facts,calls=[call],rules=[],proposals=[],status='저장 결과 기본 요약',
-                template_version='saved-basic/1',polishing='offline deterministic')
+                template_version='saved-basic/2',polishing='offline deterministic')
 
 
 def briefing(service,a):
+    from d5_briefing import TEMPLATE_VERSION
     from d5_polish import polish
     value=briefing_value(service,a)
-    if value.get('template_version')=='D5/1':value=polish(value)
+    if value.get('template_version')==TEMPLATE_VERSION:value=polish(value)
     token=uuid.uuid4().hex;value['briefing_id']=token
     with LOCK:
         for k in list(REPORTS):

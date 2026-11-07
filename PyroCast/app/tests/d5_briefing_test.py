@@ -12,7 +12,8 @@ class BriefingTests(unittest.TestCase):
             with self.subTest(name=name):
                 before=hashlib.sha256(s.path.read_bytes()).hexdigest()
                 result=briefing(s,{**a,'time_s':2770 if name=='hotel' else 1800})
-                self.assertEqual(len(result['sections']),4)
+                self.assertEqual([section['title'] for section in result['sections']],
+                                 ['■ 1. 화재 위험 요약','■ 2. 수관 구간별 할 일','■ 3. 공통'])
                 self.assertEqual([r['tool'] for r in result['calls'][:2]],['get_case_summary','get_route'])
                 self.assertIn('수관 구간별 할 일',result['text'])
                 self.assertIn('발생 확정 아님',result['text'])
@@ -20,7 +21,8 @@ class BriefingTests(unittest.TestCase):
                 actual={r['code']:r for r in s.get_tactic_rules(a)['rules']}
                 for r in result['rendered_rules']:
                     self.assertEqual(r['text'],actual[r['code']]['text'])
-                    self.assertIn(r['text']+' · '+r['notice'],result['text'])
+                    self.assertIn(r['text'],result['text'])
+                    self.assertIn(r['notice'],result['sections'][2]['text'])
                 for unit in ('lpm','초간',' mm'):self.assertNotIn(unit,result['text'])
                 self.assertEqual(before,hashlib.sha256(s.path.read_bytes()).hexdigest())
                 if name=='wando':

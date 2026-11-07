@@ -1,6 +1,6 @@
 """Expose saved input/geometry facts to briefing tools without changing inputs."""
 from copy import deepcopy
-from d5_tools import state_at
+from d5_tools import fraction_at, finite, state_at
 
 
 def enrich(service, args, result):
@@ -72,6 +72,10 @@ def enrich(service, args, result):
             opening.pop('schedule', None); opening.pop('fraction', None)
             opening.update(state=state_at(override, args.get('time_s', 0)), state_basis='confirmed supply')
     result['openings'] = list(graph.values())
+    for opening in result['openings']:
+        fraction = fraction_at(opening, 0, p.get('time_s', []))
+        opening['initial_percent'] = fraction * 100 if finite(fraction) else None
+        opening['initial_state'] = state_at(opening, 0, p.get('time_s', []))
     result['supply_opening_ids'] = sorted(set(graph) & supplied_ids)
     supply = [graph[key]['state'] for key in result['supply_opening_ids']]
     result['supply_counts'] = {state:supply.count(state) for state in ('closed','open','unknown')}

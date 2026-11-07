@@ -109,8 +109,8 @@ class Acceptance(unittest.TestCase):
         from lite_ai_briefing import facts_for
         value=briefing(self.s,self.ctx)
         self.assertNotIn('CAD_',value['text'])
-        self.assertIn(value['calls'][1]['data']['route']['target_label'],value['text'])
         entry=value['calls'][1]['data']['route']
+        self.assertIn(entry['target'].removeprefix('CAD_').replace('_',' '),value['text'])
         self.assertNotIn('CAD_',entry['entry_label'])
         self.assertIn(entry['entry'].split('_')[-1],entry['entry_label'])
         for index,tip in [(0,'지수 0: 평가됨'),(None,'미평가: 저장된 지수 없음'),(22,'평가된 지수')]:
@@ -129,9 +129,8 @@ class Acceptance(unittest.TestCase):
 
     def test_d5_wando_no_invented_cavity_flag(self):
         b=briefing(self.s,{'building':'wando-coldstore','case':'wando-P1','floor':'1F'})
-        self.assertEqual(len(b['sections']),4)
-        self.assertIn('38:25',b['text'])
-        self.assertIn('1F CAVITY',b['text'])
+        self.assertEqual(len(b['sections']),3)
+        self.assertIn('화점실 문 앞',b['text'])
         self.assertNotIn('X-1',b['rules'])
         self.assertTrue(any(r['code']=='B-3' and r['t_start']==1320 for r in b['matching_log']))
 

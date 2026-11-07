@@ -14,7 +14,7 @@ from model_ai_tools import service_for_hash
 from result_catalog import atomic_json, read
 from runtime_storage import LEGACY_RESULTS, RESULTS
 
-VERSION = 1
+VERSION = 2
 LOG = logging.getLogger(__name__)
 
 

@@ -36,8 +36,8 @@ def windows(timeline, phenomenon, threshold=100):
                 sampling=timeline['sampling'], end_convention='exclusive; null = through last saved 10 s sample')
 
 
-def state_at(opening, t, times=()):
-    """Saved right-hand schedule, or saved sample at/before t. No interpolation."""
+def fraction_at(opening, t, times=()):
+    """Read a saved opening fraction without inferring one from an open flag."""
     value = None
     schedule = opening.get('schedule')
     if isinstance(schedule, list):
@@ -48,7 +48,14 @@ def state_at(opening, t, times=()):
         i = bisect_right(times, t) - 1
         if 0 <= i < len(opening['fraction']): value = opening['fraction'][i]
     elif finite(opening.get('effective_fraction')): value = opening['effective_fraction']
-    elif type(opening.get('open')) is bool: value = int(opening['open'])
+    return value
+
+
+def state_at(opening, t, times=()):
+    """Saved right-hand schedule, or saved sample at/before t. No interpolation."""
+    value = fraction_at(opening, t, times)
+    if value is None and not any(isinstance(opening.get(k), list) for k in ('schedule', 'fraction')):
+        if type(opening.get('open')) is bool: value = int(opening['open'])
     return 'unknown' if not finite(value) else 'open' if value > 0 else 'closed'
 
 

@@ -13,10 +13,10 @@
 
 ## 화면 미리보기
 
-서버 없이 열리는 결과 샘플(다운로드 후 브라우저에서 열기):
+아래 링크를 누르면 HTML 파일이 바로 다운로드됩니다. 받은 파일은 서버 없이 브라우저에서 열 수 있습니다.
 
-- [호텔 · 5F R16](docs/samples/FireLapse-parkmarine-5F-R16.html)
-- [아이엔테크 · 1F R3](docs/samples/FireLapse-intech-1F-R3.html)
+- [호텔 · 5F R16 HTML 다운로드](https://github.com/secret5028/firelapse/releases/download/v2026.11.07-r7/FireLapse-parkmarine-5F-R16.html)
+- [아이엔테크 · 1F R3 HTML 다운로드](https://github.com/secret5028/firelapse/releases/download/v2026.11.07-r7/FireLapse-intech-1F-R3.html)
 
 실행 중인 앱에서 직접 캡처한 화면입니다. 호텔은 간략 엔진 저장 결과, 완도는 전용 CFAST P1 결과입니다.
 

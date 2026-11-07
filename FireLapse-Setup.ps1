@@ -1,9 +1,9 @@
 $ErrorActionPreference = 'Stop'
 
-$version = 'v2026.11.06-r3'
-$archiveName = 'FireLapse-Windows-x64-2026.11.06-r3.zip'
+$version = 'v2026.11.07-r4'
+$archiveName = 'FireLapse-Windows-x64-2026.11.07-r4.zip'
 $releaseUrl = "https://github.com/secret5028/firelapse/releases/download/$version/$archiveName"
-$expectedHash = 'a1ffbc45fe9a0354440b4586dcfaba8fe0fc1fccc1c3d9b7e1ce339312b55d89'
+$expectedHash = '9ded49ff011735ba0dedcf6ec8edce9c24b3d076777b9cab4a3d73adc32c2c3a'
 $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\releases'))
 $installDir = Join-Path $releaseRoot $version
 $launcher = Join-Path $installDir 'FireLapse.cmd'
@@ -16,7 +16,7 @@ function Install-FireLapse {
     [void][IO.Directory]::CreateDirectory($stage)
     try {
         $archive = Join-Path $stage $archiveName
-        Write-Host "Downloading FireLapse $version (380 MB)..."
+        Write-Host "Downloading FireLapse $version (418 MB)..."
         & "$env:SystemRoot\System32\curl.exe" --fail --location --retry 2 --progress-bar --output $archive $releaseUrl
         if ($LASTEXITCODE -ne 0) { throw 'Download failed. Check your internet connection and try again.' }
         $sha256 = [Security.Cryptography.SHA256]::Create()

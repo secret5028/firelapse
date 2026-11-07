@@ -3,13 +3,13 @@
 
 **3D 건물 모델에서 구획 화재의 진행과 위험 조건을 시간에 따라 살펴보는 Windows용 로컬 앱입니다.**
 
-첫 공개 배포 계열의 최신 실행 패키지 `v2026.11.06-r3`에는 7개 건물 모델과 152개 최종 재생 결과가 포함됩니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
+최신 실행 패키지 `v2026.11.07-r4`에는 7개 건물 모델과 153개 완료 재생 파일의 요약이 포함됩니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
 
 **계산 대상 시간: 30분 또는 최대 60분(1시간) · 기본값: 60분**
 
 이는 시뮬레이션 속 화재 진행 시간입니다. PC에서 실제 계산을 완료하는 데 걸리는 시간은 건물과 엔진에 따라 달라집니다.
 
-[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.06-r3) · [소스 코드](https://github.com/secret5028/firelapse)
+[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.07-r4) · [소스 코드](https://github.com/secret5028/firelapse)
 
 ## 화면 미리보기
 
@@ -52,10 +52,10 @@
 
 1. 이 페이지에서 **Code → Download ZIP**을 누릅니다.
 2. ZIP을 **모두 압축 풀기**한 뒤 최상위 폴더의 `FireLapse.cmd`를 더블클릭합니다.
-3. 첫 실행 때 실행 패키지(약 380 MB)를 내려받아 `%LOCALAPPDATA%\FireLapse\releases`에 풀고, 바탕화면에 **FireLapse** 바로가기를 만듭니다. 이후에는 그 바로가기로 실행할 수 있습니다.
+3. 첫 실행 때 실행 패키지(약 418 MB)를 내려받아 `%LOCALAPPDATA%\FireLapse\releases`에 풀고, 바탕화면에 **FireLapse** 바로가기를 만듭니다. 이후에는 그 바로가기로 실행할 수 있습니다.
 4. 브라우저에서 모델이 열리면 상단 목록에서 건물을 선택합니다. 실행 창은 사용하는 동안 유지하고, 종료할 때는 계산이 끝난 뒤 **Ctrl+C**를 누릅니다.
 
-오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.06-r3)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
+오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.07-r4)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
 
 실행 패키지에는 Python·Node·필수 라이브러리와 계산 실행 파일이 포함됩니다. 저장된 모델과 결과를 보는 데 별도 API 키나 AI 계정은 필요하지 않습니다.
 
@@ -231,13 +231,13 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe PyroCast/start_viewer.py
 ```
 
-`http://127.0.0.1:8780/model.html`로 접속합니다. 이 진입점은 소스에 포함된 강화 저장 결과를 복원·재생하며 계산을 시작하지 않습니다. 소스의 `saved_results`와 r3 실행 ZIP의 152개 결과는 동일한 묶음이 아닙니다. 7개 건물의 최신 결과를 모두 보려면 실행 ZIP을 사용하세요. 과거 화면·시험 증거는 `archive/evidence-20261106` 보존 브랜치에 있습니다.
+`http://127.0.0.1:8780/model.html`로 접속합니다. 이 진입점은 소스에 포함된 강화 저장 결과를 복원·재생하며 계산을 시작하지 않습니다. 7개 건물의 배포용 결과와 요약은 실행 ZIP에서 볼 수 있습니다. 과거 화면·시험 증거는 `archive/evidence-20261106` 보존 브랜치에 있습니다.
 
 ### 순정 CFAST 실행 파일
 
 소스 ZIP에는 `cfast.exe`가 포함되지 않습니다. [CFAST 공식 배포](https://github.com/firemodels/cfast/releases)에서 7.7.7을 확인하거나 해당 소스를 빌드해야 합니다. 현재 앱의 순정 경로는 `PyroCast/simulation/build/baseline/cfast-baseline.exe`를 읽습니다. 공식 설치 파일명 `cfast.exe`와 앱 내부 파일명은 다르며, 임의의 다른 버전을 덮어쓰지 마세요. 소스에서 직접 구성할 때는 해당 빌드에 필요한 DLL도 함께 제공해야 합니다.
 
-r3 실행 ZIP에는 검증에 사용한 7.7.7 기준 실행 파일과 의존 DLL이 `app/simulation/build/baseline/`에 포함되어 있습니다. 소스 정리 작업은 그 ZIP과 엔진을 변경하지 않습니다.
+Windows 실행 ZIP에는 검증에 사용한 7.7.7 기준 실행 파일과 의존 DLL이 `app/simulation/build/baseline/`에 포함되어 있습니다.
 
 ### AI 연결과 키
 

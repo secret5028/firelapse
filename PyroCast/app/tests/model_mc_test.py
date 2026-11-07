@@ -32,6 +32,10 @@ class WorkflowTests(unittest.TestCase):
   self.assertEqual(request['room'],candidates[2]['room']);self.assertEqual(request['selection_mode'],'candidate')
   self.assertEqual(model['cad']['fire_key'],candidates[2]['room']);self.assertNotIn('fixed_openings',model)
   self.assertEqual(request['origin_score'],candidates[2]['score'])
+  again,_=mc.prepare_request('parkmarine',body)
+  other,_=mc.prepare_request('parkmarine',self.body())
+  self.assertEqual(request['seed'],again['seed'])
+  self.assertNotEqual(request['seed'],other['seed'])
   for changes in [{'floor':'6F'},{'room':'CAD_5F_R99'},{'selection_mode':'unsupported'}]:
    with self.assertRaises(ValueError):mc.prepare_request('parkmarine',{**body,**changes})
   with self.assertRaises(ValueError):mc.prepare_request('parkmarine',{**body,'selection_mode':'score_first'})
@@ -45,12 +49,18 @@ class WorkflowTests(unittest.TestCase):
     mc.compute(folder);self.assertIsNone(mc.sim._active)
     cmd=run.call_args.args[0];self.assertIn(str(ROOT/'tools/run_lite_mc.py'),cmd);self.assertIn('--request',cmd)
  def test_apply_uses_building_scoped_config(self):
-  job='mc-123-abcd';fixed={'sample_id':'S01','states':{'D':{'open':False}}}
-  with patch.object(mc.sim,'_active',None),patch.object(mc,'apply_worst',return_value=fixed) as apply:
-   value=mc.apply('parkmarine',{'job_id':job})
-   self.assertEqual(value['case_id'],'modelmc-'+job+'-S01')
-   self.assertEqual(apply.call_args.args[2],mc.config_path('parkmarine',for_write=True))
-   self.assertEqual(apply.call_args.args[3],mc.JOBS/'parkmarine')
+  job='mc-123-abcd'
+  with tempfile.TemporaryDirectory() as tmp:
+   config=Path(tmp)/'fixed.json'
+   with patch.object(mc.sim,'_active',None),patch.object(mc,'config_path',return_value=config),patch.object(mc,'worst_state') as apply:
+    first={'source_room':'CAD_B3_R6','sample_id':'S01','states':{'D':{'open':False}}}
+    second={'source_room':'CAD_B3_R4','sample_id':'S00','states':{'D':{'open':True}}}
+    apply.side_effect=[first,second]
+    value=mc.apply('parkmarine',{'job_id':job})
+    self.assertEqual(value['case_id'],'modelmc-'+job+'-S01')
+    self.assertEqual(apply.call_args.args[2],mc.JOBS/'parkmarine')
+    mc.apply('parkmarine',{'job_id':'mc-124-bcde'})
+    self.assertEqual(mc.fixed_inputs('parkmarine'),{first['source_room']:first,second['source_room']:second})
  def test_evidence_path_allowed(self):
   from execution_evidence import _inputs
   with self.assertRaisesRegex(ValueError,'Missing job provenance'):_inputs(mc.JOBS/'parkmarine'/'mc-0-abcd'/'S00')
@@ -86,6 +96,6 @@ class WorkflowTests(unittest.TestCase):
     self.assertEqual(applied['case_id'],summary['worst']['case_id'])
     pb=mc.playback('parkmarine',applied['case_id'])
     self.assertFalse(pb['display_opening_state']['states']['D']['open'])
-    self.assertFalse(mc.read(config)['fixed_state']['states']['D']['open'])
+    self.assertFalse(mc.fixed_inputs('parkmarine')[self.winner]['states']['D']['open'])
     self.assertEqual(len(mc.cases('parkmarine')),2)
 if __name__=='__main__':unittest.main()

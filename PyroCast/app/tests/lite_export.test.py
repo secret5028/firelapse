@@ -43,13 +43,14 @@ class ExportTests(unittest.TestCase):
         with self.assertRaises(ValueError):sample_playback({},15)
 
     def test_model_service_external_entry_and_offline_assets(self):
-        playback={'complete':True,'building_sha256':'b','time_s':[0,10], 'rooms':[], 'solvers':{},'fires':[]}
+        playback={'complete':True,'building_sha256':'b','time_s':[0,10], 'fire_key':'cell',
+                  'rooms':[{'key':'cell','original_room':'room'}], 'solvers':{},'fires':[]}
         routes={'/':(ROOT/'app/model-library/operation.html').read_bytes(),
           '/operation.js':b"import * as T from 'three'; import {attach} from '/app/web/entry.js';",
           '/vendor/three.module.js':b'export const Scene=1;',
           '/app/web/entry.js':b'export const attach=1;',
           '/building.json':{'floors':[]},'/cfbt/lite/result/saved':playback,
-          '/cfbt/lite/doors':{'fixed_state':{'source':'this-building'}},
+          '/cfbt/lite/doors':{'fixed_by_room':{'room':{'source':'this-building'},'other':{'source':'other-room'}}},
           '/cfbt/lite/screening':{},'/cfbt/lite/fire-load-table':{},
           '/cfbt/theme.css':b':root{--text:#eaf3f8}', '/cfbt/model-info':{'label':'새 건물'},'/cfbt/overlay.css':b'.pyroShell{color:red}',
           '/cfbt/lite/catalog.json':{'cases':[{'id':'saved','label':'저장 결과'}]}}
@@ -62,7 +63,9 @@ class ExportTests(unittest.TestCase):
                 value=routes[self.path]
                 return value if isinstance(value,bytes) else json.dumps(value).encode()
         state={'route':{'vehicle':[1,2,0]},'route_result':{'length':23},'fuelSettings':{'data':{'revision':'saved'}}}
-        with patch('lite_export.urlopen',side_effect=lambda url,**kw:Response(url)):
+        with patch('lite_export.urlopen',side_effect=lambda url,**kw:Response(url)), \
+             patch('lite_ai_briefing.list_reports',return_value=[]), \
+             patch('saved_briefings.for_case',return_value={'text':'저장 요약'}):
             html,info=build_export('http://127.0.0.1:1','saved',state,model_service=True)
         text=html.decode()
         self.assertNotIn('src="/operation.js"',text)
@@ -73,6 +76,7 @@ class ExportTests(unittest.TestCase):
         data=json.loads(gzip.decompress(base64.b64decode(payload)))
         self.assertEqual(data['state'],state)
         self.assertEqual(data['fixed_openings'],{'source':'this-building'})
+        self.assertEqual(set(data['routes']['/cfbt/lite/doors']['fixed_by_room']),{'room'})
         self.assertEqual(data['routes']['/cfbt/model-info']['label'],'새 건물')
         self.assertIn('/vendor/three.module.js',data['modules'])
         self.assertTrue(data['scripts']);self.assertEqual(info['modules'],2)

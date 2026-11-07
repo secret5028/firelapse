@@ -103,7 +103,7 @@ def ranked_samples(folder, building_sha):
         math.inf if x['first_FO_s'] is None else x['first_FO_s'], x['sample_id']))
 
 
-def apply_worst(job_id, building_sha, config_path=CONFIG, jobs=JOBS):
+def worst_state(job_id, building_sha, jobs=JOBS):
     if not isinstance(job_id, str) or not re.fullmatch(r'mc-\d+-[a-f0-9]+', job_id):
         raise ValueError('MC 작업 ID 오류')
     jobs = locate(Path(jobs)/job_id).parent
@@ -120,14 +120,20 @@ def apply_worst(job_id, building_sha, config_path=CONFIG, jobs=JOBS):
     if len(states) != len(sample['openings']):
         raise ValueError('중복 개구부 ID')
     from execution_evidence import digest
+    request = read(folder/'request.json')
     fixed = dict(building_sha256=building_sha, job_id=job_id,
-        sample_id=winner['sample_id'], source_room=read(folder/'request.json')['room'],
+        sample_id=winner['sample_id'], source_room=request['room'], duration_s=request.get('duration_s'),
         states=states, ranking=ranking, sample_sha256=digest(sample),
         priority='burning desc, attention>=70 desc, first FO asc; sample ID tie break')
     fixed_for(sample['scenario'], {'fixed_state': fixed})
     for vent in sample['scenario']['openings']:
         if vent['schedule'] != [[0., states[vent['id']]['effective_fraction']]]:
             raise ValueError('저장 표본 개방률과 입력 일정 불일치')
+    return fixed
+
+
+def apply_worst(job_id, building_sha, config_path=CONFIG, jobs=JOBS):
+    fixed = worst_state(job_id, building_sha, jobs)
     config = read(config_path, {})
     config['fixed_state'] = fixed
     atomic_json(config_path, config)

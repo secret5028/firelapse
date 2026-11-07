@@ -1,5 +1,6 @@
 import {attentionRanking} from '../adapters/attention.js';
 import {savedAttention} from '../data/saved_attention.js';
+import {fixedInputFor} from '../state/fixed_openings.js';
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 export function screeningRows(payload){
@@ -46,7 +47,15 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
  for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']])$(id).onclick=()=>{selectedEngine=engine;calculation={...calculation,error:null};sync();};
  function updateElapsed(){const seconds=Math.max(0,Math.floor((Date.now()-calculationStarted)/1000));$('exploreCalculationElapsed').textContent=`경과 ${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
  $('exploreCalculationResult').onclick=onCalculationResult;
- $('exploreCalculateRun').onclick=()=>{if(selectedEngine&&!$('exploreCalculateRun').disabled)onCalculate?.(selectedEngine);};
+ function savedCalculationInput(state){
+  const fixed=fixedInputFor(store.get('buildingReview'),state.origin_room_id);
+  if(fixed&&fixed.source_room===state.origin_room_id&&(!fixed.duration_s||fixed.duration_s===state.duration_s))return {ready:true};
+  if(calculation.saved_mc_input&&summary?.job_id&&summary.worst&&
+    summary.source_room===state.origin_room_id&&summary.duration_s===state.duration_s)
+   return {ready:true,job:summary.job_id,sample:summary.worst.sample_id};
+  return {ready:false};
+ }
+ $('exploreCalculateRun').onclick=()=>{if(selectedEngine&&!$('exploreCalculateRun').disabled)onCalculate?.(selectedEngine,savedCalculationInput(store.get('exploration')).job);};
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
@@ -75,8 +84,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
-  const fixed=store.get('buildingReview').doors?.fixed_state,kind=selectedEngine;
-  const ready=fixed?.source_room===state.origin_room_id;
+  const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
   $('exploreCalculationResult').hidden=calculating||!!calculation.error||calculation.state!=='complete'||!calculation.case_id;
   $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
@@ -88,9 +96,10 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   else if(calculationTimer){clearInterval(calculationTimer);calculationTimer=null;}
   $('exploreCalculateRun').disabled=!kind||!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
   $('exploreMC').disabled ||= calculating||calculation.server_busy;
-  $('exploreCalculateRun').title=kind==='cfast'?'확정 급기·화점으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
+  $('exploreCalculateRun').title=kind==='cfast'?'선택한 급기 조합으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:var(--text-muted)';
-  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':!ready?'최악 개폐 상태 적용 후 계산':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':kind==='cfast'?'확정 급기 · 1회 계산':'확정 급기 · 저장 MC 결과 사용';
+  const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:'확정 급기';
+  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'?' · 1회 계산':' · 간략 결과 불러오기');
   $('exploreCalculateStatus').className=calculation.error?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
   $('exploreMCStatus').className=/실패|시간초과|차단|미완료|오류/.test($('exploreMCStatus').textContent)?'status-error':(mcJob.running||mcPending)?'status-busy':/완료/.test($('exploreMCStatus').textContent)?'status-ok':'';
   $('exploreEstimate').className=estimate===null?'':'status-busy';

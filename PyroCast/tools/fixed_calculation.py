@@ -21,7 +21,7 @@ def fingerprint(value):
     return hashlib.sha256(__import__('json').dumps(value, sort_keys=True).encode()).hexdigest()
 
 
-def context(sha, ident=None):
+def context(sha, ident=None, job_id=None, room=None):
     if ident:
         import model_mc
         config = model_mc.config_path(ident)
@@ -29,7 +29,13 @@ def context(sha, ident=None):
     else:
         from lite_fixed_openings import CONFIG, JOBS as mc_jobs
         config, jobs = CONFIG, mc_jobs
-    fixed = read(config, {}).get('fixed_state')
+    if job_id is not None:
+        from lite_fixed_openings import worst_state
+        fixed = worst_state(job_id, sha, jobs)
+    elif ident and room is not None:
+        fixed = model_mc.fixed_inputs(ident).get(room)
+    else:
+        fixed = read(config, {}).get('fixed_state')
     if not fixed or fixed.get('building_sha256') != sha:
         raise ValueError('MC 최악 개폐 상태를 먼저 적용하세요')
     job, sample = fixed.get('job_id', ''), fixed.get('sample_id', '')
@@ -55,11 +61,13 @@ def context(sha, ident=None):
 
 
 def prepare(sha, body, ident=None):
-    if not isinstance(body, dict) or set(body) != {'engine', 'room', 'floor', 'duration_s'}:
+    if not isinstance(body, dict) or set(body)-{'mc_job_id'} != {'engine', 'room', 'floor', 'duration_s'}:
         raise ValueError('계산 방식·화점·층·시간을 지정하세요')
     if body['engine'] not in ('lite', 'cfast'):
         raise ValueError('지원하지 않는 계산 방식')
-    folder, fixed, req, model = context(sha, ident)
+    if 'mc_job_id' in body and (not ident or not isinstance(body['mc_job_id'], str)):
+        raise ValueError('저장 MC 작업 ID 오류')
+    folder, fixed, req, model = context(sha, ident, body.get('mc_job_id'), body['room'])
     if body['room'] != req['room'] or body['room'] != fixed['source_room']:
         raise ValueError('화점이 변경되었습니다. 해당 화점의 MC 급기를 확정하세요')
     if not isinstance(body['floor'], str) or not body['room'].startswith('CAD_'+body['floor']+'_'):

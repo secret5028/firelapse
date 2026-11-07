@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {calculationStatus} from '../web/panels/explore.js';
+import {fixedInputFor,fixedOpeningsFor} from '../web/state/fixed_openings.js';
 const base={floor:'5F',origin:'R16',job:{available:true}};
 assert.equal(calculationStatus(base),'계산 전');
 assert.equal(calculationStatus({...base,floor:null}),'층 선택 필요');
@@ -16,3 +17,10 @@ assert.equal(calculationStatus({...done,job:{room:'R16',state:'failed'}}),'계�
 console.log('PASS: calculation states, partial failure, stale settings and unrelated saved origins');
 
 assert.equal(calculationStatus({...done,job:{...done.job,total:2,failed_or_incomplete:2}}),'계산 실패 · 완주 0/2');
+const first={building_sha256:'building',source_room:'R6',states:{D:{open:false}}};
+const other={building_sha256:'building',source_room:'R4',states:{D:{open:true}}};
+const review={doors:{fixed_by_room:{R6:first,R4:other}},playbackOpenings:other};
+assert.equal(fixedInputFor(review,'R6'),first);
+assert.equal(fixedInputFor(review,'R4'),other);
+assert.equal(fixedInputFor(review,'R5'),undefined);
+assert.equal(fixedOpeningsFor({source_hash:'building'},review,'R6'),other);

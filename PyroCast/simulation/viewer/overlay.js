@@ -4325,15 +4325,20 @@ function openingFraction(state){
  if(Number.isFinite(state.effective_fraction))return Math.max(0,Math.min(1,state.effective_fraction));
  return typeof state.open==='boolean'?(state.open?1:0):null;
 }
-function fixedOpeningsFor(building,review){
+function fixedInputFor(review,room){
+ const doors=review?.doors;
+ return doors?.fixed_by_room?doors.fixed_by_room[room]:doors?.fixed_state;
+}
+function fixedOpeningsFor(building,review,room){
  const valid=fixed=>fixed?.building_sha256===building?.source_hash&&fixed?.states;
- const fixed=review?.doors?.fixed_state;
- if(valid(fixed))return fixed;
  const saved=review?.playbackOpenings;
+ if(review?.doors?.fixed_by_room&&valid(saved))return saved;
+ const fixed=fixedInputFor(review,room);
+ if(valid(fixed))return fixed;
  return valid(saved)?saved:null;
 }
 
-return {openingFraction,fixedOpeningsFor};
+return {openingFraction,fixedInputFor,fixedOpeningsFor};
 })();
 
 // app/web/layers/openings.js
@@ -4912,7 +4917,8 @@ function createSceneHost({container,THREE,store,clock={now:()=>performance.now()
   const playback=store.get('playback');if(running&&playback.playing){store.dispatch('playback/seek',{t_s:playback.t_s+dt*playback.speed});if(store.get('playback').t_s>=playback.t_end_s)store.dispatch('playback/play',{playing:false});}
   const t=store.get('playback').t_s,frame={building:store.get('building'),resultMeta:store.get('result'),series:seriesAt(t),t_s:t,selection:store.get('selection'),floor:store.get('floor'),route:store.get('route'),risk:store.get('risk'),layers:store.get('layers'),realView:store.get('realView'),reducedMotion:windowTarget.matchMedia?.('(prefers-reduced-motion: reduce)').matches??false};
   frame.fuelSettings=store.get('fuelSettings');
-  frame.fixedOpenings=store.get('openings').fixed?fixedOpeningsFor(frame.building,store.get('buildingReview')):null;
+  const origin=frame.resultMeta?.scenario?.origin_room_id??store.get('exploration').origin_room_id;
+  frame.fixedOpenings=store.get('openings').fixed?fixedOpeningsFor(frame.building,store.get('buildingReview'),origin):null;
   const visible=store.get('layers');for(const layer of layers){layer.setData(frame);layer.setVisible(visible[layer.constructor.id]!==false);layer.tick?.(dt,now/1000);}
   renderer.render(scene,camera);
  }
@@ -5473,7 +5479,8 @@ function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowed}){
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
   $('displayWallOutline').value=rv.wallOutline;
   const transparency=Math.round(rv.buildingTransparency*100);$('displayBuildingTransparency').value=transparency;buildingSlider.querySelector('output').textContent=transparency+'%';
-   const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
+   const origin=store.get('result')?.scenario?.origin_room_id??store.get('exploration').origin_room_id;
+   const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'),origin);
    $('displayFixedOpenings').disabled=!fixed;
    const stateLabel=fixed?.basis==='saved_case_input'?'재생 사례 급기':'확정 급기 · 다음 실행';
    const fractions=fixed?Object.values(fixed.states).map(openingFraction):[];
@@ -5727,6 +5734,7 @@ return {savedAttention};
 const __module63=(()=>{
 const {attentionRanking}=__module61;
 const {savedAttention}=__module62;
+const {fixedInputFor}=__module39;
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5773,7 +5781,15 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']])$(id).onclick=()=>{selectedEngine=engine;calculation={...calculation,error:null};sync();};
  function updateElapsed(){const seconds=Math.max(0,Math.floor((Date.now()-calculationStarted)/1000));$('exploreCalculationElapsed').textContent=`경과 ${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
  $('exploreCalculationResult').onclick=onCalculationResult;
- $('exploreCalculateRun').onclick=()=>{if(selectedEngine&&!$('exploreCalculateRun').disabled)onCalculate?.(selectedEngine);};
+ function savedCalculationInput(state){
+  const fixed=fixedInputFor(store.get('buildingReview'),state.origin_room_id);
+  if(fixed&&fixed.source_room===state.origin_room_id&&(!fixed.duration_s||fixed.duration_s===state.duration_s))return {ready:true};
+  if(calculation.saved_mc_input&&summary?.job_id&&summary.worst&&
+    summary.source_room===state.origin_room_id&&summary.duration_s===state.duration_s)
+   return {ready:true,job:summary.job_id,sample:summary.worst.sample_id};
+  return {ready:false};
+ }
+ $('exploreCalculateRun').onclick=()=>{if(selectedEngine&&!$('exploreCalculateRun').disabled)onCalculate?.(selectedEngine,savedCalculationInput(store.get('exploration')).job);};
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
  $('exploreFloor').onchange=()=>onFloor?.($('exploreFloor').value);
@@ -5802,8 +5818,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
-  const fixed=store.get('buildingReview').doors?.fixed_state,kind=selectedEngine;
-  const ready=fixed?.source_room===state.origin_room_id;
+  const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
   $('exploreCalculationResult').hidden=calculating||!!calculation.error||calculation.state!=='complete'||!calculation.case_id;
   $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
@@ -5815,9 +5830,10 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   else if(calculationTimer){clearInterval(calculationTimer);calculationTimer=null;}
   $('exploreCalculateRun').disabled=!kind||!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
   $('exploreMC').disabled ||= calculating||calculation.server_busy;
-  $('exploreCalculateRun').title=kind==='cfast'?'확정 급기·화점으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
+  $('exploreCalculateRun').title=kind==='cfast'?'선택한 급기 조합으로 순정 CFAST 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:var(--text-muted)';
-  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':!ready?'최악 개폐 상태 적용 후 계산':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':kind==='cfast'?'확정 급기 · 1회 계산':'확정 급기 · 저장 MC 결과 사용';
+  const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:'확정 급기';
+  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'?' · 1회 계산':' · 간략 결과 불러오기');
   $('exploreCalculateStatus').className=calculation.error?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
   $('exploreMCStatus').className=/실패|시간초과|차단|미완료|오류/.test($('exploreMCStatus').textContent)?'status-error':(mcJob.running||mcPending)?'status-busy':/완료/.test($('exploreMCStatus').textContent)?'status-ok':'';
   $('exploreEstimate').className=estimate===null?'':'status-busy';
@@ -5962,7 +5978,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    const path=p.kind==='openings'?'/cfbt/lite/fixed-openings':'/cfbt/lite/fuel-overrides',body=p.kind==='openings'?{assistant_proposal:p.proposal_id}:{proposal_id:p.proposal_id,rooms};const response=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const v=await response.json();if(!response.ok)throw Error(v.error||'적용 실패');await refreshDoors();await refreshScreening();await refreshFuelRooms();await fuelPanel.refresh();},onSaved:()=>assistant.refreshReports()});cleanup.push(()=>assistant.dispose());
  async function refreshDoors(){try{const response=await fetch('/cfbt/lite/doors',{signal:exploreAbort.signal});if(!response.ok)throw Error('HTTP '+response.status);const value=await response.json();if(!disposed)store.dispatch('buildingReview/set',{doors:value,status:''});}catch(e){if(!disposed)store.dispatch('buildingReview/set',{status:'문 목록 읽기 실패 · '+e.message});}}
 
- const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onCalculate:engine=>runCalculation(engine),onCalculationResult:()=>openCalculation(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
+ const explore=createExplorePanel({store,floors:displayFloors,onCandidate:row=>{store.dispatch('layers/toggle',{id:'selection',visible:true});store.dispatch('selection/set',{room_id:row.room,cell_id:null,source:'click'});},onFloor:id=>{if(id){viewer.setFloor(id);store.dispatch('floor/set',{floor_id:id});render();}},onApplyWorst:()=>{if(mcSummary?.worst)saveFixed({job_id:mcSummary.job_id},true);},onRun:()=>runScreening(),onRunOrigin:()=>runScreening(true),onRefresh:()=>{refreshScreening();refreshMC();},onMC:()=>runMC(),onCalculate:runCalculation,onCalculationResult:()=>openCalculation(),onResults:()=>{$('shellTab-result').click();$('resultMCLoad').scrollIntoView({block:'center'});if(!$('resultMCLoad').disabled)$('resultMCLoad').click();}});
  if(B.model_provenance?.import_id){const review=createModelReview({container:$('shellPane-building'),building:B,onLocate:x=>{const f=B.floors.find(f=>f.name===x.floor);if(!f)return;viewer.setFloor(f.name);store.dispatch('floor/set',{floor_id:f.name});const room=f.rooms.find(r=>r.id===x.id);if(room)store.dispatch('selection/set',{room_id:`CAD_${f.name}_${room.id}`,cell_id:null,source:'click'});render();}});review.root.open=false;review.root.style.cssText='margin:12px;font-size:11px';$('shellPane-building').append(review.root);cleanup.push(()=>review.dispose());}
  routeUI=createRoutePanel({store,graph:routeGraph});cleanup.push(()=>routeUI.dispose());$('exploreContent').append($('exploreCalculate'));
  async function refreshMC(){
@@ -5988,10 +6004,10 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    if(value.running||value.server_busy)calculationPoll=setTimeout(refreshCalculation,3000);
   }catch(error){if(!disposed)explore.calculationState({available:false,error:error.message});}
  }
- async function runCalculation(engine){
+ async function runCalculation(engine,mcJobId){
   if(calculationStarting||calculationState.running||disposed)return;calculationStarting=true;
   const choice=store.get('exploration');explore.calculationState({...calculationState,engine,error:null,started_at_ms:Date.now()},true);
-  try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
+  try{const r=await fetch('/cfbt/calculation',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({engine,room:choice.origin_room_id,floor:store.get('floor').floor_id,duration_s:choice.duration_s,mc_job_id:mcJobId})});const value=await r.json();if(!r.ok)throw Error(value.error||'계산 요청 실패');await refreshCalculation();await refreshMC();}
   catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
   finally{calculationStarting=false;}
  }
@@ -6001,8 +6017,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   }catch(error){if(!disposed)explore.calculationState({...calculationState,error:error.message});}
  }
  cleanup.push(()=>{if(calculationPoll)clearTimeout(calculationPoll);});
- let catalogOrigin=null;
- cleanup.push(store.subscribe('exploration',()=>{const origin=store.get('exploration').origin_room_id;if(origin!==catalogOrigin){catalogOrigin=origin;catalog().catch(error=>{if(!disposed)explore.status('결과 목록 읽기 실패 · '+error.message);});}}));
+ let catalogSelection=null;
+ cleanup.push(store.subscribe('exploration',()=>{const {origin_room_id,duration_s}=store.get('exploration');const key=JSON.stringify([origin_room_id,duration_s]);if(key!==catalogSelection){catalogSelection=key;catalog().catch(error=>{if(!disposed)explore.status('결과 목록 읽기 실패 · '+error.message);});}}));
  const ruleOptions=()=>{const row=screeningPayload?.score.ranked.find(r=>r.room===store.get('exploration').origin_room_id);if(!row)throw Error('탐색 화점을 먼저 선택하세요.');return {fire_floor:row.floor,fire_room:row.room.replace('CAD_'+row.floor+'_',''),duration_s:data.time_s.at(-1)};};
  function ruleContext(){try{const o=ruleOptions();$('exploreRuleContext').textContent=`정밀 검토 · ${o.fire_floor} ${o.fire_room} · ${o.duration_s/60}분 · 문·창: 서버 기본값`;}catch{$('exploreRuleContext').textContent='탐색 화점 선택 대기';}}
  cleanup.push(store.subscribe('exploration',ruleContext));
@@ -6173,7 +6189,8 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
    const response=await fetch('/cfbt/lite/fixed-openings',{method:'POST',signal:exploreAbort.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
    const value=await response.json();if(!response.ok)throw Error(value.error||'HTTP '+response.status);
    if(disposed)return;
-   store.dispatch('buildingReview/set',{doors:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
+   const rows=store.get('buildingReview').doors?.rows;
+   store.dispatch('buildingReview/set',{doors:value.fixed_by_room?{...value,rows:rows??value.rows}:value,status:'이후 실행 입력 적용 · 현재 결과 유지'});
    if(value.fixed_state)store.dispatch('openings/set',{fixed:true});
    if(playWorst){const caseId=value.case_id||worstCase;if(!caseId)throw Error('최악 사례 ID 없음');const result=await fetch('/cfbt/lite/result/'+encodeURIComponent(caseId),{signal:exploreAbort.signal});if(!result.ok)throw Error('최악 재생 결과 읽기 실패');await install(await result.json(),caseId,{focusOrigin:true});}
    $('resultMCStatus').textContent=value.fixed_state?`표본 ${value.fixed_state.sample_id} 적용 완료`:'확정 급기 해제';
@@ -6190,7 +6207,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
  let casesByRoom=new Map(),coverageByRoom=new Map();
  const showReuse=value=>{$('resultReuse').dataset.caseId=value?.case_id||chosen;$('resultReuse').textContent=value?.label||'과거 결과 재사용';$('resultReuse').title=value?.equivalent?'저장 입력·엔진·계산 의존성 검증 일치':'현재 계산과의 동등성이 증명되지 않은 저장 결과';};
  handler($('resultReplay'),'onclick',async()=>{const id=chosen;$('resultReplay').disabled=true;try{const r=await fetch('/cfbt/reuse/lite/'+encodeURIComponent(id),{signal:exploreAbort.signal});const value=await r.json();if(!r.ok)throw Error(value.error||'재사용 실패');if(!disposed&&id===chosen){reuseByCase.set(id,value);showReuse(value);}}catch(e){if(!disposed)$('resultReuse').textContent='재사용 확인 실패 · '+e.message;}finally{if(!disposed)$('resultReplay').disabled=false;}});
- async function catalog(){const serial=++catalogSerial,originRequested=store.get('exploration').origin_room_id;const r=await fetch('/cfbt/lite/catalog.json'+(originRequested?'?mc_room='+encodeURIComponent(originRequested):''),{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;casesByRoom=latestRoomCases(c.cases||[]);coverageByRoom=latestRoomCases(c.cases||[],entry=>entry.covered_room_ids||[]);shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
+ async function catalog(){const serial=++catalogSerial,{origin_room_id,duration_s}=store.get('exploration');const query=origin_room_id?'?'+new URLSearchParams({mc_room:origin_room_id,mc_duration_s:duration_s}):'';const r=await fetch('/cfbt/lite/catalog.json'+query,{signal:exploreAbort.signal});if(!r.ok)return;const c=await r.json();if(disposed||serial!==catalogSerial)return;mcSummary=c.mc_summary??null;casesByRoom=latestRoomCases(c.cases||[]);coverageByRoom=latestRoomCases(c.cases||[],entry=>entry.covered_room_ids||[]);shell.setResults(c.cases);$('liteCase').replaceChildren();for(const entry of c.cases||[])$('liteCase').add(new Option(entry.label,entry.id));$('liteCase').value=chosen;for(const [id,value] of Object.entries(c.reuse_by_case||{}))reuseByCase.set(id,value);showReuse(reuseByCase.get(chosen));$('liteMC').textContent=c.progress_text||'';results.mc(mcSummary,mcSummary?.rooms_max);
   if(!disposed&&serial===catalogSerial)explore.catalog(c,mcSummary?.source_room??null);
  }
  handler($('resultMCLoad'),'onclick',async()=>{if(!mcSummary)return;$('resultMCLoad').disabled=true;$('resultMCStatus').className='status-busy';

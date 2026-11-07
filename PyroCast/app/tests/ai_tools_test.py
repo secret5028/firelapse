@@ -33,10 +33,12 @@ class ReadTools(unittest.TestCase):
         self.assertFalse(p['started']);self.assertTrue(p['requires_user_apply'])
     def test_three_indices_and_subsidiary_rule(self):
         from lite_ai_briefing import matches
+        from lite_ai_tools import rollover_at
         self.assertEqual(TYPES,('FO','FGI','backdraft'))
         rule=next(r for r in self.t.get_tactic_rules({})['rules'] if r['code']=='R-1')
         self.assertTrue(matches(rule,{'FGI':100,'rollover_active':True}))
-        for values in ({'FGI':99,'rollover_active':True},{'FGI':150,'rollover_active':False},{'FGI':150}):
+        low={'conditions':{'FGI':{'scores':{'degree':[.99]},'rollover':{'ignition':[True],'excluded_origin':False}}}}
+        for values in ({'FGI':99,'rollover_active':rollover_at(low,0)},{'FGI':150,'rollover_active':False},{'FGI':150}):
             self.assertFalse(matches(rule,values))
         events=self.t.get_peak_events({'building':'wando-coldstore','case':'wando-P1','phenomenon':'FGI','threshold':100})
         r5=next(e for e in events if e['room']=='CAD_1F_R5')

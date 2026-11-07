@@ -91,7 +91,8 @@ export function createDisplayPanel({store,selectionLabel,onOrigin,isOriginAllowe
  function sync(){bindings.forEach(f=>f());const r=store.get('risk'),l=store.get('layers'),d=store.get('displayDetails'),rv=store.get('realView'),o=store.get('openings'),t=r.threshold;
   $('displayWallOutline').value=rv.wallOutline;
   const transparency=Math.round(rv.buildingTransparency*100);$('displayBuildingTransparency').value=transparency;buildingSlider.querySelector('output').textContent=transparency+'%';
-   const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'));
+   const origin=store.get('result')?.scenario?.origin_room_id??store.get('exploration').origin_room_id;
+   const fixed=fixedOpeningsFor(store.get('building'),store.get('buildingReview'),origin);
    $('displayFixedOpenings').disabled=!fixed;
    const stateLabel=fixed?.basis==='saved_case_input'?'재생 사례 급기':'확정 급기 · 다음 실행';
    const fractions=fixed?Object.values(fixed.states).map(openingFraction):[];

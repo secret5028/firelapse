@@ -186,7 +186,9 @@ def handler(base, ident):
                         cases.append(dict(id=p.name,label=f"{r['floor']} {r['room'].split('_')[-1]} · 저장 결과",
                                           duration_s=r.get('duration_s'),run_id=p.name,**meta))
                     cases+=model_mc.cases(ident)+fixed_calculation.cases(sim.fingerprint(ident))
-                    return self.json(dict(cases=cases,warnings=warnings,mc_summary=model_mc.summary(ident,query.get('mc_room',[None])[0]),
+                    duration=query.get('mc_duration_s',[None])[0]
+                    return self.json(dict(cases=cases,warnings=warnings,mc_summary=model_mc.summary(
+                        ident,query.get('mc_room',[None])[0],int(duration) if duration else None),
                         progress_text='저장 결과 · 추가 계산 없음',reuse_by_case={p.name:dict(case_id=p.name,label='저장 결과 재생 · 재계산 없음',equivalent=False) for p,r in rows}))
                 if path.startswith('/cfbt/reuse/lite/'):
                     value=playback(ident,path.rsplit('/',1)[1])
@@ -197,15 +199,15 @@ def handler(base, ident):
                     return self.json(model_mc.status(ident))
                 if path=='/cfbt/calculation':
                     import fixed_calculation
-                    return self.json({**fixed_calculation.status(sim.fingerprint(ident)), 'server_busy':bool(sim._active)})
+                    return self.json({**fixed_calculation.status(sim.fingerprint(ident)), 'server_busy':bool(sim._active),
+                                      'saved_mc_input':True})
                 if path=='/cfbt/lite/doors':
                     raw,_=scope(ident);rows=[]
                     for v in raw['openings']:
                         if 'door' not in v.get('kind',''):continue
                         rows.append(dict(id=v['id'],a=v['a'],b=v['b'],door_class=v.get('door_class','external' if v['b']=='OUTSIDE' else 'ordinary'),confidence=v.get('door_class_confidence','inferred'),connected_names=[v['a'],v['b']],reason=v.get('door_class_reason','자동 연결망 분류 · 미확인 표시 유지'),read_only=True))
                     import model_mc
-                    fixed=sim.read(model_mc.config_path(ident)).get('fixed_state') if model_mc.config_path(ident).exists() else None
-                    return self.json(dict(rows=rows,fixed_state=fixed))
+                    return self.json(dict(rows=rows,fixed_by_room=model_mc.fixed_inputs(ident)))
                 if path=='/cfbt/lite/fuel-settings':
                     from lite_fuel_settings import context
                     return self.json(context(sim.read(model_path(sim.entry(ident))),sim.fingerprint(ident)))

@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'tools'))
 import runtime_storage as storage
 import storage_cleanup as cleanup
-from result_catalog import atomic_json,CombinedResultCatalog
+from result_catalog import atomic_json,read,CombinedResultCatalog
 from export_ui_attention import result_index
 
 class StorageTests(unittest.TestCase):
@@ -15,6 +15,14 @@ class StorageTests(unittest.TestCase):
   for p in self.patches:p.start()
   self.addCleanup(self.temp.cleanup)
   for p in self.patches:self.addCleanup(p.stop)
+ def test_atomic_json_long_temporary_name(self):
+  parent=self.new/'nested'
+  path=parent/('x'*(238-len(str(parent))-6)+'.json')
+  self.assertGreater(len(str(path))+37,260)
+  atomic_json(path,{'version':1})
+  atomic_json(path,{'version':2})
+  self.assertEqual(read(path),{'version':2})
+  self.assertEqual(list(parent.iterdir()),[path])
  def case(self,root=None,name='model-library/hotel/a'):
   d=(root or self.new)/name
   atomic_json(d/'input.json',{'fuel':'preserve','openings':[.5]})

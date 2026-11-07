@@ -3,7 +3,7 @@ import hashlib, os, re, subprocess, sys, threading, time, uuid
 from pathlib import Path
 import model_simulation as sim
 from result_catalog import read, atomic_json, playback_metadata
-from lite_fixed_openings import ranked_samples, apply_worst
+from lite_fixed_openings import ranked_samples, worst_state
 from lite_mc_service import process_alive
 ROOT=sim.ROOT
 from runtime_storage import DATA_ROOT, RESULTS, locate, result_glob
@@ -16,6 +16,12 @@ def config_path(ident, *, for_write=False):
     if not for_write and not writable.exists() and bundled.is_file():
         return bundled
     return writable
+
+def fixed_inputs(ident):
+    config=read(config_path(ident),{})
+    legacy=config.get('fixed_state') or {}
+    previous={legacy['source_room']:legacy} if legacy.get('source_room') else {}
+    return {**previous, **config.get('fixed_by_room',{})}
 
 def folder_for(ident, job):
     sim.entry(ident)
@@ -63,12 +69,14 @@ def prepare_request(ident,body):
     if chosen is None:raise ValueError('선택 층의 적격 후보실을 선택하세요')
     winner=chosen['room']
     if body.get('room')!=winner:raise ValueError('후보 순위가 변경되었습니다. 새로고침 후 실행하세요')
+    # Keep a reproducible stream for each fire room, even on the same floor.
+    room_seed=int.from_bytes(hashlib.sha256(f'{sha}:{winner}:{seed}'.encode()).digest()[:4],'big')
     from pyrocast_lite.screening_v8_approved import scenario
     model=scenario(score,winner,'open_except_confirmed',duration)
     model['cad']['fire_key']=winner
     # MC explores new combinations; a prior winner must not lock all openings.
     model.pop('fixed_openings',None)
-    request=dict(building=ident,building_sha256=sha,floor=floor,room=winner,samples=count,duration_s=duration,seed=seed,
+    request=dict(building=ident,building_sha256=sha,floor=floor,room=winner,samples=count,duration_s=duration,seed=room_seed,seed_base=seed,
                  selection_mode=mode,origin_score=chosen['score'],owner_pid=os.getpid())
     return request,model
 
@@ -93,14 +101,15 @@ def compute(folder):
     finally:
         with sim._lock:sim._active=None
 
-def summary(ident,room=None):
+def summary(ident,room=None,duration_s=None):
     for folder in folders(ident):
         req=read(folder/'request.json');value=read(folder/'mc-summary.json',{})
-        if not value or (room and room!=req['room']):continue
+        if not value or (room and room!=req['room']) or (duration_s is not None and req.get('duration_s')!=duration_s):continue
         value['job_id']=folder.name
         from mc_display_summary import rooms_max
         value['rooms_max']=rooms_max(folder,value['rows'],req['building_sha256'])
         value['source_room']=req['room']
+        value['duration_s']=req.get('duration_s')
         for i,row in enumerate(value['rows']):row.update(id=case_id(folder,f'S{i:02d}'),sample_id=f'S{i:02d}')
         try:
             ranking=ranked_samples(folder,req['building_sha256'])
@@ -112,11 +121,16 @@ def summary(ident,room=None):
 
 def apply(ident,body):
     if not isinstance(body,dict) or set(body)!={'job_id'}:raise ValueError('MC 작업을 지정하세요')
-    folder_for(ident,body['job_id'])
+    folder=folder_for(ident,body['job_id'])
     with sim._lock:
         if sim._active:raise RuntimeError('계산 중에는 적용할 수 없습니다')
-        fixed=apply_worst(body['job_id'],sim.fingerprint(ident),config_path(ident,for_write=True),folder_for(ident,body['job_id']).parent)
-    return dict(rows=[],fixed_state=fixed,case_id=case_id(folder_for(ident,body['job_id']),fixed['sample_id']))
+        fixed=worst_state(folder.name,sim.fingerprint(ident),folder.parent)
+        config=read(config_path(ident),{})
+        by_room=fixed_inputs(ident)
+        by_room[fixed['source_room']]=fixed
+        config['fixed_by_room']=by_room
+        atomic_json(config_path(ident,for_write=True),config)
+    return dict(rows=[],fixed_state=fixed,fixed_by_room=by_room,case_id=case_id(folder,fixed['sample_id']))
 
 def playback(ident,case):
     path=case_folder(ident,case);value=read(path/'playback.json');sample=read(path/'sample.json')

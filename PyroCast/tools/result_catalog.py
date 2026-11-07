@@ -9,14 +9,28 @@ import time
 import uuid
 
 
+def _io_path(path):
+    path=Path(path)
+    if os.name!='nt':
+        return path
+    absolute=os.path.abspath(path)
+    if len(absolute)<240 or absolute.startswith('\\\\?\\'):
+        return path
+    if absolute.startswith('\\\\'):
+        return Path('\\\\?\\UNC\\'+absolute[2:])
+    return Path('\\\\?\\'+absolute)
+
+
 def read(path, default=None):
-    try: return json.loads(Path(path).read_text('utf-8'))
+    try: return json.loads(_io_path(path).read_text('utf-8'))
     except (OSError, ValueError): return default
 
 
 def atomic_json(path, value):
-    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
-    tmp=path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp')
+    path=Path(path)
+    tmp=_io_path(path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp'))
+    path=_io_path(path)
+    tmp.parent.mkdir(parents=True,exist_ok=True)
     try:
         tmp.write_text(json.dumps(value,ensure_ascii=False,indent=2,allow_nan=False)+'\n','utf-8')
         tmp.replace(path)

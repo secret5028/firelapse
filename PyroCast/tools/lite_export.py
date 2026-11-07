@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit, quote
 from urllib.request import urlopen
+from result_catalog import playback_origin
 
 ROOT = Path(__file__).resolve().parents[1]
 VIEWER = ROOT / 'simulation/viewer'
@@ -85,6 +86,11 @@ def build_export(origin, case, state, interval=10, *, model_service=False):
         'progress_text': '단독 HTML · 보기 전용', 'reuse_by_case': {}}
     config = ROOT/'simulation/config/lite-door-overrides.json'
     corrections = routes['/cfbt/lite/doors'] if model_service else json.loads(config.read_text('utf-8')) if config.exists() else {}
+    if model_service and 'fixed_by_room' in corrections:
+        origin = playback_origin(playback)
+        fixed = corrections['fixed_by_room'].get(origin)
+        corrections['fixed_by_room'] = {origin:fixed} if fixed else {}
+        corrections['fixed_state'] = fixed
     modules = {}
     def resolve(spec, parent):
         if spec == 'three': return '/vendor/three.module.js' if model_service else '/cad-assets/three.module.js'

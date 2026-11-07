@@ -1,12 +1,15 @@
 """Portable Windows launcher. Starts only local web servers, never a calculation."""
 from pathlib import Path
-import argparse, json, os, socket, subprocess, sys, time, webbrowser
+import argparse, json, os, socket, subprocess, sys, time
 from contextlib import redirect_stderr, redirect_stdout
 from tempfile import TemporaryDirectory
+from urllib.request import ProxyHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 PORTS = (8780, 8832, 8841, 8842, 8843, 8844)
 URL = 'http://127.0.0.1:8842/model.html'
+CONTROL_URL = 'http://127.0.0.1:8841/models/firelapse-control'
+OPEN_LOCAL = build_opener(ProxyHandler({}))
 
 def environment():
     env = os.environ.copy()
@@ -97,7 +100,6 @@ def shutdown_requested(path):
 def background():
     import ctypes
     from ctypes import wintypes
-    from urllib.request import ProxyHandler, build_opener
     from runtime_storage import DATA_ROOT
 
     kernel = ctypes.WinDLL('kernel32', use_last_error=True)
@@ -109,18 +111,16 @@ def background():
     if not mutex:
         raise ctypes.WinError(ctypes.get_last_error())
     existing = ctypes.get_last_error() == 183
+    logs = DATA_ROOT/'logs'
     try:
         if existing:
             try:
-                with build_opener(ProxyHandler({})).open(
-                    'http://127.0.0.1:8841/models/firelapse-control', timeout=1,
-                ) as response:
+                with OPEN_LOCAL.open(CONTROL_URL, timeout=1) as response:
                     if json.load(response).get('managed') and '--no-browser' not in sys.argv:
-                        webbrowser.open(URL)
+                        (logs/'open-browser').touch()
             except (OSError, ValueError):
                 pass  # The first instance may still be opening.
             return
-        logs = DATA_ROOT/'logs'
         logs.mkdir(parents=True,exist_ok=True)
         with (logs/'launcher.log').open('a',encoding='utf8') as log, redirect_stdout(log), redirect_stderr(log):
             try:
@@ -146,13 +146,17 @@ def main():
     if occupied:raise RuntimeError('이미 실행 중인 프로그램의 포트입니다: '+str(occupied)+'\n기존 FireLapse 실행 창을 종료한 뒤 다시 실행하세요. 다른 프로세스를 강제 종료하지 않습니다.')
     from runtime_storage import DATA_ROOT
     from app_control import SIGNAL_ENV
+    import desktop_browser
+    browser_exe = None if args.no_browser else desktop_browser.executable()
     logs=DATA_ROOT/'logs';logs.mkdir(parents=True,exist_ok=True)
+    open_request=logs/'open-browser'
+    open_request.unlink(missing_ok=True)
     session=TemporaryDirectory(prefix='.session-',dir=logs)
     stop_file=Path(session.name)/'shutdown'
     env={**environment(),SIGNAL_ENV:str(stop_file)}
     executable=Path(sys.executable).with_name('python.exe') if args.background else sys.executable
     flags=(subprocess.CREATE_NO_WINDOW if args.background else getattr(subprocess,'CREATE_NEW_PROCESS_GROUP',0))
-    children=[];streams=[]
+    children=[];streams=[];browser=None
     try:
         for name in ('library','wando','ganghwa','briefings'):
             stream=(logs/(name+'.log')).open('a',encoding='utf8');streams.append(stream)
@@ -164,22 +168,55 @@ def main():
             if all(not available(p) for p in PORTS):break
             time.sleep(.25)
         else:raise TimeoutError('서버 준비 시간 초과. logs 폴더를 확인하세요.')
-        print('\nFireLapse 실행 중: '+URL+'\n종료는 브라우저 상단의 종료 버튼을 사용하세요.',flush=True)
-        if not args.no_browser:webbrowser.open(URL)
+        print('\nFireLapse 실행 중: '+URL+'\n전용 창을 닫거나 상단 종료 버튼을 누르면 종료합니다.',flush=True)
+        if browser_exe:
+            browser=desktop_browser.start(browser_exe,DATA_ROOT/'browser-profile',URL)
+        visible_deadline=time.monotonic()+30
+        window_seen=False;missing_since=None;next_shutdown_check=0
         while all(p.poll() is None for p in children):
             if shutdown_requested(stop_file):
                 time.sleep(.5)  # Let the shutdown response reach the browser first.
                 return
-            time.sleep(.5)
+            if browser is not None:
+                handles=desktop_browser.windows(browser.pid) if browser.poll() is None else []
+                now=time.monotonic()
+                if handles:
+                    window_seen=True;missing_since=None
+                elif window_seen and missing_since is None:
+                    missing_since=now
+                if open_request.exists():
+                    open_request.unlink(missing_ok=True)
+                    if handles:
+                        desktop_browser.focus(handles)
+                    elif window_seen:
+                        desktop_browser.close(browser)
+                        browser=desktop_browser.start(browser_exe,DATA_ROOT/'browser-profile',URL)
+                        visible_deadline=now+30;window_seen=False;missing_since=None
+                if not window_seen and (browser.poll() is not None or now>=visible_deadline):
+                    raise RuntimeError('FireLapse 전용 브라우저 창을 시작할 수 없습니다.')
+                if missing_since is not None and now-missing_since>=1 and now>=next_shutdown_check:
+                    next_shutdown_check=now+2
+                    try:
+                        request=Request(CONTROL_URL,method='POST',headers={'Origin':URL.split('/model.html',1)[0]})
+                        with OPEN_LOCAL.open(request,timeout=15):
+                            pass
+                    except OSError:
+                        pass  # The existing shutdown guard protects in-flight calculations.
+            time.sleep(.25)
         raise RuntimeError('서버가 종료되었습니다. logs 폴더를 확인하세요.')
     except KeyboardInterrupt:print('\nFireLapse 종료',flush=True)
     finally:
+        try:
+            desktop_browser.close(browser)
+        except (OSError,subprocess.TimeoutExpired) as exc:
+            print('전용 창 종료 실패: '+str(exc),file=sys.stderr,flush=True)
         for child in children:
             if child.poll() is None:child.terminate()
         for child in children:
             try:child.wait(timeout=8)
             except subprocess.TimeoutExpired:child.kill();child.wait()
         for stream in streams:stream.close()
+        open_request.unlink(missing_ok=True)
         session.cleanup()
 
 if __name__=='__main__':

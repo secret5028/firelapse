@@ -88,8 +88,7 @@ export function createPanelShell({panel,store,buildingFloors=[],onShowResult}){
     const response=await fetch(endpoint,{method:'POST',signal:control.signal});
     const value=await response.json();
     if(!response.ok||value.stopping!==true)throw Error(value.error||'종료 요청 실패');
-    quit.textContent='종료됨';quit.setAttribute('aria-label','FireLapse 종료됨');
-    window.alert('FireLapse를 종료했습니다. 다시 열려면 바탕화면의 FireLapse 아이콘을 누르세요.');
+    quit.textContent='종료 중…';quit.setAttribute('aria-label','FireLapse 종료 중');
    }catch(error){
     if(control.signal.aborted)return;
     quit.disabled=false;window.alert(error.message);

@@ -1311,7 +1311,7 @@ function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:
 }
 
 async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,building,resultId,sourceRefs={}}){
- const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1'].includes(p.native_mapping);
+ const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2'].includes(p.native_mapping);
  if(p.engine_kind!=='pyrocast_lite'&&!native)throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
  const errors=[],notes=[],n=p.time_s.length;
  if(!n||p.time_s.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=p.time_s[i-1])))throw Error('Time axis must be finite and strictly increasing');
@@ -6324,7 +6324,7 @@ async function attach(viewer){
  const pending=(async()=>{
   try{
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;
-  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1'].includes(data.native_mapping)))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
+  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2'].includes(data.native_mapping)))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
   document.documentElement.dataset.pyrocastUi='modern';
   const app=await attachModern(viewer,data);loading.remove();return app;
   }catch(error){loading.textContent='불러오기 실패 · '+error.message;throw error;}

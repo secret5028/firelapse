@@ -82,7 +82,7 @@ function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:
 }
 
 export async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,building,resultId,sourceRefs={}}){
- const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1'].includes(p.native_mapping);
+ const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2'].includes(p.native_mapping);
  if(p.engine_kind!=='pyrocast_lite'&&!native)throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
  const errors=[],notes=[],n=p.time_s.length;
  if(!n||p.time_s.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=p.time_s[i-1])))throw Error('Time axis must be finite and strictly increasing');

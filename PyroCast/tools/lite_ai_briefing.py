@@ -38,12 +38,15 @@ def facts_for(call,i):
         facts.append({'text':display_text(json.dumps(d,ensure_ascii=False,indent=2)),'evidence':{'call':i,'row':d}})
     return facts
 
+def invalid_briefing(playback,a):
+    text='\n'.join(v for v in playback.get('limits',[]) if v.startswith('물리 타당성 검사 실패:'))
+    return dict(building=a['building'],case=a['case'],text=text,sections=[dict(title='물리적으로 무효인 계산',text=text)],facts=[],calls=[],rules=[],proposals=[],status='physically_invalid',template_version='invalid/1')
+
 def briefing_value(service,a):
     from d5_briefing import fill
     playback=service.case(a)
     if playback.get('physical_validation',{}).get('status')=='physically_invalid':
-        text='\n'.join(v for v in playback.get('limits',[]) if v.startswith('물리 타당성 검사 실패:'))
-        return dict(building=a['building'],case=a['case'],text=text,sections=[dict(title='물리적으로 무효인 계산',text=text)],facts=[],calls=[],rules=[],proposals=[],status='physically_invalid',template_version='invalid/1')
+        return invalid_briefing(playback,a)
     if playback.get('complete') is not True or playback.get('building_sha256')!=service.building(a['building'])[0]['sha']:
         raise ValueError('완료된 저장 결과를 선택하세요.')
     try:
@@ -54,6 +57,8 @@ def briefing_value(service,a):
 
 
 def basic_briefing(service,a):
+    playback=service.case(a)
+    if playback.get('physical_validation',{}).get('status')=='physically_invalid':return invalid_briefing(playback,a)
     from d5_briefing import LIMITS
     call=service.call('get_case_summary',a)
     summary=call['data']

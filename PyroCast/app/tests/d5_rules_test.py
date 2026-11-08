@@ -8,17 +8,18 @@ class RulesTests(unittest.TestCase):
     def rule(self,code):return next(r for r in RULES['rules'] if r['code']==code)
     def test_threshold_boundaries_and_scope(self):
         r=self.rule('G-1')
-        self.assertTrue(matches(r,dict(route_room=True,FGI=70,temperature_rising=True)))
-        for v in (dict(FGI=80,temperature_rising=True),dict(route_room=True,FGI=100,temperature_rising=True),dict(route_room=True,FGI=80)):
+        self.assertTrue(matches(r,dict(route_room=True,FGI_proximity=.7,temperature_rising=False)))
+        for v in (dict(FGI_proximity=.8),dict(route_room=True,FGI_proximity=1),dict(route_room=True,FGI_proximity=.69)):
             self.assertFalse(matches(r,v))
         self.assertFalse(matches(self.rule('B-1'),dict(backdraft=120,door_closed=True)))
         self.assertTrue(matches(self.rule('B-1'),dict(backdraft=120,door_closed=True,fire_room=True)))
     def test_missing_not_clear_or_cavity(self):
         self.assertFalse(matches(self.rule('C-1'),{}))
         self.assertFalse(matches(self.rule('C-1'),dict(FO=0,FGI=0)))
-        self.assertTrue(matches(self.rule('C-1'),dict(FO=0,FGI=0,backdraft=0)))
+        self.assertFalse(matches(self.rule('C-1'),dict(FO=0,FGI=0,backdraft=0)))
+        self.assertTrue(matches(self.rule('C-1'),dict(FO=0,FGI=0,backdraft=0,BD_potential=0,FGI_proximity=0,validity_passed=True,active_fire=False,bd_raw_hazard=False)))
         self.assertFalse(matches(self.rule('X-1'),dict(FGI=90)))
-        self.assertTrue(matches(self.rule('X-1'),dict(FGI=90,cavity=True)))
+        self.assertTrue(matches(self.rule('X-1'),dict(FGI_proximity=.9,cavity=True)))
         self.assertFalse(matches(self.rule('S-1'),dict(Tu=800,external_water=True)))
     def test_or_and_adjacency(self):
         self.assertTrue(matches(self.rule('O-1'),dict(Tu=600)))
@@ -36,7 +37,7 @@ class RulesTests(unittest.TestCase):
         rows=match_timelines(timeline,building,route,RULES,'R')
         self.assertFalse(any(r['code']=='B-1' and r['t_start']>=20 for r in rows))
     def test_approved_rule_set_and_no_extra_units(self):
-        self.assertEqual(len(RULES['rules']),17)
+        self.assertEqual(len(RULES['rules']),18)
         self.assertEqual(RULES['notice'],'참고이며 현장 지휘관 판단 우선')
         for r in RULES['rules']:
             self.assertTrue(r['ref']['doc'])

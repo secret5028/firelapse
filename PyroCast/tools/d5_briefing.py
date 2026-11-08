@@ -7,7 +7,7 @@ from d5_tools import finite
 LIMITS = '지수 100은 계산상 조건 충족이며 현상 발생 확정 아님. 실 상태는 저장된 표본 기준.'
 SIGNS = '화재실 상층 화염·중성대 급강하·개구부 유속 증가 = FO 전조 / 맥동·뜨거운 문·기름 응축 = BD 전조'
 PHENOMENA = (('FO', 'FO'), ('FGI', 'FGI'), ('BD', 'backdraft'))
-TEMPLATE_VERSION = 'D5/2'
+TEMPLATE_VERSION = 'D5/3'
 SMOKE_HEIGHT_M = 1.8
 DOOR_STATES = {'open': '열림', 'closed': '닫힘', 'unknown': '미확인'}
 

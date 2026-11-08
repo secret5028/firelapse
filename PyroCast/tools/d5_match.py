@@ -3,6 +3,7 @@ from d5_tools import finite, state_at
 
 
 def matches(rule, values):
+    if values.get('physically_invalid') is True:return False
     when = rule.get('when', rule)
     scope = when.get('scope')
     if scope and scope != 'always' and values.get(scope) is not True: return False
@@ -33,7 +34,10 @@ def match_timelines(timelines, building, route, rules, origin):
             for row in cell['rows']:
                 t = row['time_s']
                 states = [state_at(d,t,times) for d in openings if d['id'] in building.get('supply_opening_ids',[o['id'] for o in openings])]
-                values = {**row['indices'], 'Tu':row['Tu'], 'h':row['h'],
+                validity=row.get('physical_validation',{})
+                values = {**row['indices'], 'physically_invalid':validity.get('status')=='physically_invalid',
+                    'validity_passed':validity.get('passed') is True,
+                    **{k:row.get(k) for k in ('active_fire','BD_potential','FGI_proximity','bd_raw_hazard')}, 'Tu':row['Tu'], 'h':row['h'],
                     'rollover_active':row.get('rollover_active'),
                     'temperature_rising': row['Tu']>previous if finite(row['Tu']) and finite(previous) else None,
                     'route_room':rid in onroute,'on_route':rid in onroute,'fire_room':rid == origin,

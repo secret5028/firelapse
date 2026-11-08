@@ -1,6 +1,6 @@
 {
   "schema": "firelapse.tactic-rules/2",
-  "status": "user-approved-20261106",
+  "status": "user-directed-physics-p0",
   "notice": "참고이며 현장 지휘관 판단 우선",
   "abbreviations": {
     "EF": "Enclosure Fires (Bengtsson)",
@@ -9,29 +9,43 @@
   },
   "rules": [
     {
-      "code": "G-1",
+      "code": "B-0",
       "when": {
-        "scope": "route_room",
+        "scope": null,
         "all": [
           [
-            "FGI",
-            ">=",
-            70
-          ],
-          [
-            "FGI",
-            "<",
-            100
-          ],
-          [
-            "temperature_rising",
+            "bd_raw_hazard",
             "==",
             true
           ]
         ]
       },
-      "condition": "경로 실 FGI 70–99, 상층 T 상승",
-      "text": "커플링에서 열화상 확인, 천장층 향해 숏 펄스 1–2회, 연기층 상승·온도 하강 확인 후 전진",
+      "condition": "연료 질량분율 ≥설정값, 산소 <결핍 설정값 · 온도 무관",
+      "text": "각별한 주의 / BD 잠재. 공기 유입 시 급격한 연소 가능. 진입·개방 방법은 현장 지휘관 판단",
+      "ref": {
+        "doc": "CODEX_HANDOFF P0-5 사용자 지정 경고",
+        "page": "온도와 독립적인 연료·산소 조건"
+      }
+    },
+    {
+      "code": "G-1",
+      "when": {
+        "scope": "route_room",
+        "all": [
+          [
+            "FGI_proximity",
+            ">=",
+            0.7
+          ],
+          [
+            "FGI_proximity",
+            "<",
+            1
+          ]
+        ]
+      },
+      "condition": "경로 실 FGI 근접도 0.7–1 미만 · 온도 상승 조건 없음",
+      "text": "냉각·전진 여부를 지수만으로 결정하지 않음. 연기 축적과 점화원 유입을 확인하고 개구 변경 전 현장 지휘관 판단",
       "ref": {
         "doc": "GC p.4–7, EF 3.2",
         "page": "요약 문서 기준"
@@ -272,18 +286,18 @@
         ],
         "any": [
           [
-            "FGI",
+            "FGI_proximity",
             ">=",
-            70
+            0.7
           ],
           [
-            "backdraft",
+            "BD_potential",
             ">=",
-            70
+            0.7
           ]
         ]
       },
-      "condition": "급기 닫힘 다수 & FGI 또는 BD ≥70 (환기지배)",
+      "condition": "급기 닫힘 다수 · FGI 근접도 또는 BD 잠재 ≥0.7",
       "text": "냉각 전 개구 금지. 피어싱 노즐 등 비개방 냉각 고려, 인접실 먼저 확보",
       "ref": {
         "doc": "FV p.111–112, EF p.141",
@@ -325,13 +339,13 @@
             true
           ],
           [
-            "FGI",
+            "FGI_proximity",
             ">=",
-            70
+            0.7
           ]
         ]
       },
-      "condition": "벽체 공동·은폐 공간 인접 실 FGI ≥70 (완도형)",
+      "condition": "공동·은폐 공간의 FGI 근접도 ≥0.7 · 온도와 독립",
       "text": "연기 폭발 가능 — 스파크 없이 조기 배연 또는 가압, 절단 개구 전 냉각. 차가운 가스는 물분무 불활성화 어려움",
       "ref": {
         "doc": "EF 7.3 p.155–157",
@@ -386,10 +400,35 @@
             "backdraft",
             "<",
             70
+          ],
+          [
+            "BD_potential",
+            "<",
+            1
+          ],
+          [
+            "FGI_proximity",
+            "<",
+            1
+          ],
+          [
+            "validity_passed",
+            "==",
+            true
+          ],
+          [
+            "active_fire",
+            "==",
+            false
+          ],
+          [
+            "bd_raw_hazard",
+            "==",
+            false
           ]
         ]
       },
-      "condition": "모든 지수 <70",
+      "condition": "유효성 검사 통과 · 연소 없음 · 모든 지수 <70 · BD/FGI 근접도 <1 · 연료 과다·산소 결핍 아님",
       "text": "전진, 10 s 재평가",
       "ref": {
         "doc": "—",
@@ -409,5 +448,6 @@
         "page": "요약 문서 기준"
       }
     }
-  ]
+  ],
+  "criteria_revision": "physics_p0_v2"
 }

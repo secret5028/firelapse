@@ -41,7 +41,14 @@ def node(a):
     return json.loads(p.stdout)
 
 @lru_cache(maxsize=8)
-def playback(path,stamp):return read(path)
+def playback(path,stamp):
+    p=read(path);folder=Path(path).parent
+    if p.get('engine_kind')=='cfast_native' and (folder/'case_compartments.csv').is_file() and (folder/'scenario.json').is_file():
+        from pyrocast_cfbt.native import load_result
+        from pyrocast_cfbt.validation import validate_native,protect_playback
+        native=load_result(folder,p['time_s'][-1],dict(folder=str(folder)))
+        protect_playback(p,validate_native(native,read(folder/'scenario.json'),folder))
+    return p
 
 class Tools:
     _saved_case = None
@@ -173,6 +180,14 @@ class Tools:
                     r['indices'][key]=v*100 if v is not None else None
                     weak=scores.get('weakest',[]);r['bottleneck'][key]=weak[i] if i is not None and i<len(weak) else None
                 r['rollover_active']=rollover_at(s,i)
+                r['physical_validation']=p.get('physical_validation',{})
+                r['criteria_revision']=p.get('condition_version')
+                r['active_fire']=any((at(p['solvers'][cc['solver_id']].get('Qsolid_kW'),i) or 0)>0 for cc in cells) if i is not None else None
+                r['BD_potential']=at(s.get('conditions',{}).get('backdraft',{}).get('potential'),i) if i is not None else None
+                r['FGI_proximity']=at(s.get('conditions',{}).get('FGI',{}).get('proximity'),i) if i is not None else None
+                from pyrocast_cfbt.physics_config import defaults
+                thresholds={**defaults('criteria'),**s.get('conditions',{}).get('backdraft',{}).get('thresholds',{})}
+                r['bd_raw_hazard']=(r['fuel']>=thresholds['fuel_rich_mass_fraction'] and r['Ou']*100<thresholds['oxygen_deficient_vol_percent']) if finite(r['fuel']) and finite(r['Ou']) else None
                 frames.append(r)
             out.append({'cell':c['key'],'rows':frames})
         return {'room':a['room'],'aggregation':'single' if len(cells)==1 else 'none','cells':out,'sampling':'10 s exact saved samples; absent samples null; no interpolation','source_end_s':p['time_s'][-1]}

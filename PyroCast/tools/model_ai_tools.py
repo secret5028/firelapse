@@ -30,7 +30,7 @@ class ModelTools(Tools):
         out={p.name:p/'playback.json' for p,_ in model_operation.jobs(self.ident)}
         for row in model_mc.cases(self.ident):out[row['id']]=model_mc.case_folder(self.ident,row['id'])/'playback.json'
         for folder in fixed_calculation.paths(meta['sha']):
-            if read(folder/'status.json',{}).get('state')=='complete':out[folder.name]=folder/'playback.json'
+            if read(folder/'status.json',{}).get('state') in ('complete','physically_invalid'):out[folder.name]=folder/'playback.json'
         self._paths=out
         return out
     def case(self,a):

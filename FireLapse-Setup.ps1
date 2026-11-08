@@ -6,6 +6,21 @@ $archiveName = 'FireLapse-Windows-x64-2026.11.07-r13.zip'
 $releaseUrl = "https://github.com/secret5028/firelapse/releases/download/$version/$archiveName"
 $expectedHash = '876c31d24876fc5164419985ac9f6323b919bb2b0ebe5ed60d25f46318791305'
 $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\releases'))
+$selectionFile = Join-Path (Split-Path -Parent $releaseRoot) 'config\current-release.json'
+# An older downloaded source ZIP must not downgrade a newer verified local install.
+try {
+    $selection = Get-Content -LiteralPath $selectionFile -Raw | ConvertFrom-Json
+    if ($selection.version -match '^v(\d{4}\.\d{2}\.\d{2})-r(\d+)$') {
+        $selectedKey = $Matches[1] + ('{0:D8}' -f [int]$Matches[2])
+        [void]($version -match '^v(\d{4}\.\d{2}\.\d{2})-r(\d+)$')
+        $bundledKey = $Matches[1] + ('{0:D8}' -f [int]$Matches[2])
+        $selectedDir = Join-Path $releaseRoot $selection.version
+        if ($selectedKey -gt $bundledKey -and (Test-Path -LiteralPath (Join-Path $selectedDir 'FireLapse.cmd'))) {
+            $meta = Get-Content -LiteralPath (Join-Path $selectedDir 'distribution.json') -Raw | ConvertFrom-Json
+            if ($meta.name -eq 'FireLapse' -and ('v'+$meta.version) -eq $selection.version) { $version = $selection.version }
+        }
+    }
+} catch { } # No valid selection: use the version shipped with this installer.
 $installDir = Join-Path $releaseRoot $version
 $launcher = Join-Path $installDir 'FireLapse.cmd'
 
@@ -88,6 +103,9 @@ try {
             $python = Join-Path $physicalInstall 'runtime\python\python.exe'
             & $python -B -X utf8 (Join-Path $physicalInstall 'app\tools\launch_firelapse.py') --check
             if ($LASTEXITCODE -ne 0) { throw 'Installation check failed; previous releases have been preserved.' }
+            [void][IO.Directory]::CreateDirectory((Split-Path -Parent $selectionFile))
+            @{version=$version} | ConvertTo-Json | Set-Content -LiteralPath ($selectionFile+'.tmp') -Encoding UTF8
+            Move-Item -LiteralPath ($selectionFile+'.tmp') -Destination $selectionFile -Force
             try {
                 Remove-FireLapseOldReleases -ReleaseRoot (Split-Path -Parent $physicalInstall) -CurrentVersion $version |
                     ForEach-Object { Write-Host "Removed old FireLapse installation: $_" }

@@ -1,4 +1,5 @@
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'FireLapse-Retention.ps1')
 
 $version = 'v2026.11.07-r13'
 $archiveName = 'FireLapse-Windows-x64-2026.11.07-r13.zip'
@@ -76,11 +77,22 @@ function Install-FireLapse {
 }
 
 try {
-    $mutex = New-Object System.Threading.Mutex($false, "Local\FireLapse-Setup-$version")
+    $mutex = New-Object System.Threading.Mutex($false, 'Local\FireLapse-Setup')
     try {
         try { [void]$mutex.WaitOne() }
         catch [System.Threading.AbandonedMutexException] { }
-        try { Install-FireLapse }
+        try {
+            Install-FireLapse
+            $physicalLauncher = Resolve-ShellTarget $launcher
+            $physicalInstall = Split-Path -Parent $physicalLauncher
+            $python = Join-Path $physicalInstall 'runtime\python\python.exe'
+            & $python -B -X utf8 (Join-Path $physicalInstall 'app\tools\launch_firelapse.py') --check
+            if ($LASTEXITCODE -ne 0) { throw 'Installation check failed; previous releases have been preserved.' }
+            try {
+                Remove-FireLapseOldReleases -ReleaseRoot (Split-Path -Parent $physicalInstall) -CurrentVersion $version |
+                    ForEach-Object { Write-Host "Removed old FireLapse installation: $_" }
+            } catch { Write-Warning "Old release cleanup deferred: $($_.Exception.Message)" }
+        }
         finally { $mutex.ReleaseMutex() }
     }
     finally { $mutex.Dispose() }

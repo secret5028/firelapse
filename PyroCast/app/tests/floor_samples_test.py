@@ -2,9 +2,17 @@ import sys,unittest
 from copy import deepcopy
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'))
-from recalculate_floor_samples import apply_openings
+from recalculate_floor_samples import apply_openings,registered_digest,BUILDINGS
 
 class FloorOpeningTests(unittest.TestCase):
+ def test_bundled_floor_models_match_registered_identity(self):
+  from model_library import entries,model_path
+  for entry in entries():
+   if entry['id'] in BUILDINGS:
+    self.assertEqual(registered_digest(model_path(entry),entry),entry['sha256'])
+ def test_model_identity_mismatch_fails_before_calculation(self):
+  with self.assertRaisesRegex(ValueError,'registered building'):
+   registered_digest(Path(__file__),dict(id='test',sha256='wrong'))
  def data(self):
   return {'cad':{'building_sha256':'building'},'screening_source':{'state':'open_except_confirmed'},
    'openings':[{'id':'W','a':'R','b':'OUTSIDE','schedule':[[0,.5]]}]}

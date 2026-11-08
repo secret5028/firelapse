@@ -17,6 +17,13 @@ BUILDINGS=('parkmarine','ganghwa','cad-aabf1346d0e54c94b45ad7d7db7137d4')
 def sha(p):
     with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
 
+
+def registered_digest(path,entry):
+    digest=sha(path)
+    if entry.get('sha256') and entry['sha256']!=digest:
+        raise ValueError('Model bytes differ from the registered building: '+entry['id'])
+    return digest
+
 def apply_openings(data,config,room):
     """Only this origin's confirmed state; no other room/floor's MC is reused."""
     from copy import deepcopy
@@ -54,7 +61,7 @@ def prepare(plan_path):
     approved=read(ROOT/'simulation/pyrocast_lite/approved_uses_v8.json');rows=[]
     registry={e['id']:e for e in entries()}
     for ident in BUILDINGS:
-        path=model_path(registry[ident]);digest=sha(path)
+        path=model_path(registry[ident]);digest=registered_digest(path,registry[ident])
         if ident=='ganghwa':
             from lite_fixed_openings import CONFIG
             config=read(CONFIG,{})

@@ -45,6 +45,20 @@ def pressure_prefix(path, model):
     except (OSError,StopIteration,IndexError):return None
 
 
+def request_status(folder):
+    """Publish a closed query file: native CFAST deletes it after each reply.
+
+    Touching the visible file can hold a Windows handle during CFAST's
+    close(status='delete'), producing delete_output_files status 13.
+    Rename a closed sibling instead; leave a pending request untouched.
+    """
+    query=folder/'case.query'
+    if query.exists() or not (folder/'case.status').exists():return
+    pending=folder/'case.query.pending'
+    pending.write_bytes(b'')
+    pending.replace(query)
+
+
 def interruption_status(exc):
     return 'solver_stalled' if getattr(exc,'reason',None)=='native_progress_stalled' else 'time_budget'
 
@@ -195,7 +209,7 @@ def _execute_once(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeo
                     # Stock CFAST otherwise refreshes status only at output
                     # intervals. Query each poll; T is rounded to 3 significant
                     # digits, so accepted step count is the progress heartbeat.
-                    (folder/'case.query').touch(exist_ok=True)
+                    request_status(folder)
                     header=(folder/'case.status').read_text(errors='replace').splitlines()[0]
                     match=re.search(r'T\s*=\s*([0-9.Ee+\-]+)',header)
                     value=float(match[1]) if match else last_time

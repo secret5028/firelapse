@@ -2,10 +2,27 @@ import json,tempfile,unittest
 from pathlib import Path
 from unittest.mock import patch
 import numpy as np
-from pyrocast_cfbt.native import execute,NativeRunInterrupted
+from pyrocast_cfbt.native import execute,NativeRunInterrupted,request_status
 
 
 class Heartbeat(unittest.TestCase):
+    def test_query_published_closed_and_pending_request_untouched(self):
+        with tempfile.TemporaryDirectory() as name:
+            folder=Path(name);query=folder/'case.query'
+            request_status(folder)
+            self.assertFalse(query.exists())
+            (folder/'case.status').write_text('ready')
+            request_status(folder)
+            self.assertTrue(query.exists())
+            self.assertFalse((folder/'case.query.pending').exists())
+            query.write_text('existing request')
+            before=query.stat().st_mtime_ns
+            request_status(folder)
+            self.assertEqual(query.read_text(),'existing request')
+            self.assertEqual(query.stat().st_mtime_ns,before)
+            query.unlink()  # Native consumer can delete the published file.
+            request_status(folder)
+            self.assertTrue(query.exists())
     def run_fake(self,advancing):
         with tempfile.TemporaryDirectory() as name:
             folder=Path(name);clock=[0.]

@@ -78,7 +78,7 @@ class PhysicalValidation(unittest.TestCase):
                     result=validate_native(dict(compartments=c,native_vents=vents,native_vents_ids={k:'V' for k in vents}),model,'.')
                 self.assertTrue(result['passed'],(prefix,reference,result))
 
-    def test_pressure_fuel_and_combustion_failures_suppress_indices(self):
+    def test_pressure_failure_suppresses_indices_but_rich_fuel_is_review(self):
         import numpy as np
         from unittest.mock import patch
         from pyrocast_cfbt.validation import SPECIES, validate_native, protect_playback
@@ -92,7 +92,9 @@ class PhysicalValidation(unittest.TestCase):
         with patch('pyrocast_cfbt.native.read_native_csv',return_value=(mass,{},units)):
             v=validate_native(dict(compartments=c),model,'.')
         self.assertEqual(v['status'],'physically_invalid')
-        self.assertEqual({r['check'] for r in v['reasons']},{'max_abs_pressure_Pa','max_upper_fuel_fraction','burned_fraction'})
+        self.assertEqual({r['check'] for r in v['reasons']},{'max_abs_pressure_Pa'})
+        self.assertEqual(v['review_required'][0]['check'],'upper_fuel_accumulation')
+        self.assertEqual(v['warnings'][0]['check'],'low_source_hrr_energy_ratio')
         self.assertEqual(v['metrics']['mass_balance_error'],0)
         pb=dict(time_s=t.tolist(),solvers={'A':{'conditions':{'FO':{'scores':{'degree':[1,2]}}}}})
         protect_playback(pb,v)

@@ -5,7 +5,7 @@ import numpy as np
 from .physics_config import defaults
 
 SPECIES = ('N2','O2','CO2','CO','HCN','HCL','TUHC','H2O','OD')
-VALIDATION_REVISION = 'native_physical_validation_v3'
+VALIDATION_REVISION = 'native_physical_validation_v4'
 
 
 def model_from_deck(deck):
@@ -32,7 +32,7 @@ def validate_native(result, model, folder=None):
         raise ValueError('Physical acceptance limits must be finite and positive')
     c = result['compartments']; t = np.asarray(c['Time']); n=len(t)
     folder = Path(folder or result['run']['folder'])
-    reasons=[]; unknown=[]; metrics={}
+    reasons=[]; unknown=[]; metrics={}; warnings=[]; review=[]
     def check(name, value, limit, lower=False):
         metrics[name]=float(value)
         if (value < limit if lower else value > limit):
@@ -46,10 +46,10 @@ def validate_native(result, model, folder=None):
         metrics['pressure_peak_room']=model.get('rooms',[])[index]['id'] if index<len(model.get('rooms',[])) else key
     else: unknown.append('pressure_missing')
     try:
-        masses,_,units=read_native_csv(folder/'case_masses.csv',float(t[-1]))
+        masses,mass_ids,units=read_native_csv(folder/'case_masses.csv',float(t[-1]))
         if not np.array_equal(masses['Time'],t):raise ValueError('Mass timestamps differ')
         indices=sorted({k.split('_')[-1] for k in masses if k.startswith('ULMN2_')})
-        total=np.zeros(n); ratios=[]
+        total=np.zeros(n); peaks=[]
         for i in indices:
             upper=sum(masses[f'ULM{s}_{i}'] for s in SPECIES)
             shaft = int(i)<=len(model.get('rooms',[])) and model['rooms'][int(i)-1].get('shaft',False)
@@ -57,9 +57,31 @@ def validate_native(result, model, folder=None):
             if any(units.get(f'{layer}M{s}_{i}','kg' if shaft and layer=='LL' else None)!='kg' for s in SPECIES for layer in ('UL','LL')):
                 raise ValueError('Mass units must be kg')
             total+=upper+lower
-            ratios.append(np.divide(masses[f'ULMTUHC_{i}'],upper,out=np.zeros(n),where=upper>0))
+            # CFAST solve.f90 normalizes species to the nine mass species;
+            # soot is included once, its components and the tracer are excluded.
+            # This denominator is upper-layer mixture mass, NOT initial solid fuel.
+            fuel=masses[f'ULMTUHC_{i}']
+            ratio=np.divide(fuel,upper,out=np.zeros(n),where=upper>0)
+            j=int(np.argmax(ratio))
+            room=mass_ids.get(f'ULMTUHC_{i}') or (model['rooms'][int(i)-1]['id'] if int(i)<=len(model.get('rooms',[])) else i)
+            peak=dict(room=room,time_s=float(t[j]),fraction=float(ratio[j]),
+                      fuel_mass_kg=float(fuel[j]),upper_mixture_mass_kg=float(upper[j]),
+                      species_mass_kg={s:float(masses[f'ULM{s}_{i}'][j]) for s in SPECIES})
+            for key,name,scale in ((f'ULT_{i}','temperature_C',1),(f'ULO2_{i}','oxygen_vol_percent',100),(f'VOL_{i}','upper_volume_m3',1)):
+                if key in c:peak[name]=float(c[key][j])*scale
+            peaks.append(peak)
         if not indices:raise ValueError('Missing species ledger')
-        check('max_upper_fuel_fraction',max(np.max(a) for a in ratios),cfg['max_upper_fuel_fraction'])
+        peak=max(peaks,key=lambda p:p['fraction'])
+        metrics['max_upper_fuel_fraction']=peak['fraction']
+        metrics['upper_fuel_peak']=peak
+        # NIST CFAST: prescribed pyrolysate continues to enter the upper layer
+        # when oxygen-limited combustion is reduced (fire.f90 do_fire).
+        # A fuel-rich mixture is not a conservation failure. Keep the historical
+        # 30% threshold as an INPUT REVIEW trigger, never a physical upper bound.
+        # Extremely rich prescribed-fire results are not automatically certified.
+        if peak['fraction']>cfg['max_upper_fuel_fraction']:
+            review.append(dict(check='upper_fuel_accumulation',**peak,limit=cfg['max_upper_fuel_fraction'],
+                message=f"입력 가정 검토 필요: {peak['room']} {peak['time_s']/60:.2f}분 · 상층 미연소 연료 {peak['fuel_mass_kg']:.5f} kg / 상층 총질량 {peak['upper_mixture_mass_kg']:.5f} kg ({peak['fraction']*100:.2f}%) · 산소 부족 시에도 지속되는 지정 연료 방출 조건을 확인하세요."))
         # OD is total soot mass; ODF/ODS are its components, TS is a tracer.
         # Do not sum them again. External OUTflow must be subtracted as well.
         pyro=sum((a for k,a in c.items() if k.startswith('PYROL_')),np.zeros(n))
@@ -124,19 +146,35 @@ def validate_native(result, model, folder=None):
     actual=sum((a for k,a in c.items() if re.fullmatch(r'HRR_\d+',k)),np.zeros(n))
     expected=sum((a for k,a in c.items() if re.fullmatch(r'HRR_E_?\d+',k)),np.zeros(n))
     denominator=float(np.trapezoid(expected,t))
-    if denominator>0:check('burned_fraction',float(np.trapezoid(actual,t))/denominator,cfg['min_burned_fraction'],True)
+    if denominator>0:
+        actual_energy=float(np.trapezoid(actual,t))
+        jet_energy=float(np.trapezoid(sum((a for k,a in c.items() if re.fullmatch(r'DJET_\d+',k)),np.zeros(n)),t))
+        fraction=actual_energy/denominator
+        metrics.update(source_hrr_energy_ratio=fraction,source_actual_energy_J=actual_energy,
+                       source_prescribed_energy_J=denominator,vent_jet_energy_J=jet_energy)
+        # HRR_n is source/plume combustion, DJET_n is separate vent combustion.
+        # The old 'burned_fraction' was neither a fuel mass fraction nor total HRR.
+        # Oxygen limitation can legitimately reduce this energy ratio below 50%.
+        if fraction<cfg['min_burned_fraction']:
+            warnings.append(dict(check='low_source_hrr_energy_ratio',value=fraction,limit=cfg['min_burned_fraction'],
+                message=f"연소 진단: 화원 실제 발열량 / 지정 발열량 {fraction*100:.1f}% · 산소 제한 연소에서는 낮아질 수 있으며, 연료 질량의 연소율이 아닙니다. 문 분출 연소 발열량은 별도 집계합니다."))
     else:unknown.append('prescribed_hrr_unavailable_or_zero')
     boundary=dict(external_openings=sum('OUTSIDE' in (v['a'],v['b']) for v in model.get('openings',[])),
                   mechanical_vents=len(model.get('mechanical_vents',[])),minimum_leakage=model.get('minimum_leakage',[]),
                   boundary_revision=model.get('boundary_revision'))
-    return dict(revision=VALIDATION_REVISION,status='physically_invalid' if reasons else 'unverified' if unknown else 'valid',boundary=boundary,
-                passed=not reasons and not unknown,reasons=reasons,unknown=unknown,metrics=metrics,thresholds=cfg)
+    return dict(revision=VALIDATION_REVISION,status='physically_invalid' if reasons else 'unverified' if unknown or review else 'valid',boundary=boundary,
+                passed=not reasons and not unknown and not review,reasons=reasons,unknown=unknown,metrics=metrics,thresholds=cfg,
+                warnings=warnings,review_required=review,
+                threshold_roles=dict(max_pressure_Pa='rejection',max_mass_balance_error='rejection',
+                    max_upper_fuel_fraction='input_review',min_burned_fraction='diagnostic'))
 
 
 def protect_playback(playback, validation):
     """Keep computed quantities for diagnosis; remove tactical screening of invalid runs."""
     playback['physical_validation']=validation
-    if validation['status']=='unverified':
+    for entry in validation.get('warnings',[])+validation.get('review_required',[]):
+        playback.setdefault('limits',[]).append(entry['message'])
+    if validation['status']=='unverified' and validation.get('unknown'):
         playback.setdefault('limits',[]).append('물리 타당성 일부 미확인: '+', '.join(validation.get('unknown',[]))+' · 검증 통과 결과가 아닙니다.')
     if validation['status']=='physically_invalid':
         playback['status']='physically_invalid'

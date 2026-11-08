@@ -20,7 +20,8 @@ def summarize_batch(rows):
     value.pop('known_bias',None);value.pop('bias_scope',None)
     value.update(attempted=len(rows),completed=sum(bool(s.get('complete')) for s in rows),
         failed_or_incomplete=sum(not s.get('complete') for s in rows),
-        excluded_physically_invalid=sum(s.get('complete',False) and not s.get('ranking_eligible',True) for s in rows),
+        excluded_physically_invalid=sum(s.get('complete',False) and not s.get('ranking_eligible',True) and s.get('physical_validation',{}).get('status','physically_invalid')=='physically_invalid' for s in rows),
+        excluded_unverified=sum(s.get('complete',False) and not s.get('ranking_eligible',True) and s.get('physical_validation',{}).get('status')=='unverified' for s in rows),
         eligible_completed=len(eligible),engine_kind='cfast_native',
         random_attempted=sum(s['kind']=='random' for s in rows),
         failure_fraction=sum(not s.get('complete') for s in rows)/len(rows) if rows else None)
@@ -59,7 +60,7 @@ def run_batch(request_path,out):
     for item in a['worst_including_mandatory'].values():
         if item and item.get('sample_id'):item['openings']=next(s['openings'] for s in samples if s['id']==item['sample_id'])
     atomic_json(out/'aggregate.json',a)
-    summary=dict(completed=a['completed'],eligible_completed=a['eligible_completed'],excluded_physically_invalid=a['excluded_physically_invalid'],
+    summary=dict(completed=a['completed'],eligible_completed=a['eligible_completed'],excluded_physically_invalid=a['excluded_physically_invalid'],excluded_unverified=a['excluded_unverified'],
         wall_s=a['wall_s'],source_room=request['room'],building_sha256=request['building_sha256'],engine_kind='cfast_native',rates=a['condition_sample_rates_random_only'],rows=[])
     for row in rows:
         rel=result_relative(out/row['sample_id']/'playback.json').as_posix()

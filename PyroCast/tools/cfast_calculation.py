@@ -103,7 +103,7 @@ def report(playback,model,sample=None):
     result=dict(ok=True,engine_kind='cfast_native',t=t.tolist(),room_summary=summary_rows,
         shared_conditions={'rooms':{rid:s['conditions'] for rid,s in rooms.items()}},
         physical_validation=playback['physical_validation'],condition_version=playback['condition_version'])
-    summary=dict(complete=True,ranking_eligible=not invalid,engine_kind='cfast_native',
+    summary=dict(complete=True,ranking_eligible=playback.get('physical_validation',{}).get('status')=='valid',engine_kind='cfast_native',
         sample_id=(sample or {}).get('id'),kind=(sample or {}).get('kind','single'),
         selected_attempt='CFAST',original_room_count=len(rooms),burning_original_rooms=burning,
         burning_room_count=len(burning),smoke_caution_rooms=sorted(caution),smoke_risk_rooms=sorted(risk),

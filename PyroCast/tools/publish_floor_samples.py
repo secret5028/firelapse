@@ -12,6 +12,9 @@ def sha(data):return hashlib.sha256(data).hexdigest()
 
 def main(plan_path):
     from saved_briefings import ensure
+    from model_library import entries,model_path
+    from recalculate_floor_samples import registered_digest,BUILDINGS
+    building_hashes={e['id']:registered_digest(model_path(e),e) for e in entries() if e['id'] in BUILDINGS}
     plan=read(plan_path);rows=[];inventory=[]
     if len(plan['rows'])!=25:raise ValueError('Expected 25 distinct floors')
     seen=set()
@@ -21,6 +24,10 @@ def main(plan_path):
         seen.add(key);folder=Path(row['folder']);status=read(folder/'status.json')
         if status.get('state') not in ('complete','physically_invalid'):raise ValueError('Incomplete floor: '+str(key))
         pb=read(folder/'playback.json');summary=read(folder/'summary.json');evidence=read(folder/'cfast-evidence.json')
+        expected=building_hashes[row['building']]
+        assert pb['building_sha256']==expected
+        assert read(folder/'request.json')['building_sha256']==expected
+        assert read(folder/'input.json')['cad']['building_sha256']==expected
         assert pb['engine_kind']=='cfast_native' and pb['complete'] and pb['time_s'][-1]==3600
         assert pb['fire_key']==row['room'] and pb['condition_version']=='physics_p0_v3'
         from pyrocast_cfbt.floor_flux import gauges
@@ -57,6 +64,7 @@ def main(plan_path):
         print(row['building'],row['floor'],status['state'],maxima,flush=True)
     target=ROOT/'saved_results/floor-samples-20261108';target.mkdir(exist_ok=True)
     report=dict(schema='firelapse.floor-samples-published/1',date='2026-11-08',count=len(rows),duration_s=3600,
+                batch_wall_s=plan.get('finished_at',0)-plan.get('created_at',0),building_hashes=building_hashes,
                 engine='CFAST 7.7.7',origin_floor_gauges=64,display_decimal_places=5,mc=False,
                 valid_count=sum(r['physical_validation']['status']=='valid' for r in rows),
                 invalid_count=sum(r['physical_validation']['status']=='physically_invalid' for r in rows),

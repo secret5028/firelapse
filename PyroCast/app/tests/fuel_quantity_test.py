@@ -117,10 +117,13 @@ class FuelQuantityTests(unittest.TestCase):
   ctx=api.context(self.building,self.sha);rid='CAD_5F_R19'
   _,baseline=model.prepared('parkmarine','5F',self.sha)
   before=next(r for r in baseline['ranked'] if r['room']==rid)
-  for amount,rank in [(1.5,5),(2,1)]:
+  previous_score=before['score']
+  for amount in (1.5,2):
    payload={**self.payload(ctx,[dict(id=rid,multiplier=amount)]),'preview_floor':'5F'}
    preview=api.apply(payload,self.building,self.sha);row=next(r for r in preview['score']['ranked'] if r['room']==rid)
-   self.assertEqual(row['rank1'],rank);self.assertGreater(row['fuel_energy_MJ'],before['fuel_energy_MJ'])
+   self.assertGreater(row['score'],previous_score);previous_score=row['score']
+   self.assertEqual(row['rank1'],1+sum(r['score']>row['score'] for r in preview['score']['ranked']))
+   self.assertAlmostEqual(row['fuel_energy_MJ'],before['fuel_energy_MJ']*amount)
    self.assertFalse(preview['saved']);self.assertFalse(preview['simulation_started']);self.assertEqual(q.load(self.sha),{})
    self.assertEqual(list(q.DIRECTORY.glob('*')),[])
   _,unchanged=model.prepared('parkmarine','5F',self.sha)

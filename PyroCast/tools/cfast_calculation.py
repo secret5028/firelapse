@@ -24,7 +24,7 @@ def runtime_settings():
 
 def execution_dependencies():
     from execution_evidence import rule_dependency_hashes,file_hash
-    paths=[ROOT/'config/physics_defaults.json',Path(__file__),ROOT/'tools/fixed_native_playback.py',ROOT/'tools/run_cfast_mc.py',ROOT/'tools/display_playback.py',ROOT/'tools/result_catalog.py']
+    paths=[ROOT/'config/physics_defaults.json',ROOT/'config/building-rules.json',ROOT/'simulation/building_rules.py',ROOT/'simulation/pyrocast_lite/fire_load_table.json',ROOT/'simulation/pyrocast_lite/screening_v8_approved.py',ROOT/'tools/model_simulation.py',Path(__file__),ROOT/'tools/fixed_native_playback.py',ROOT/'tools/run_cfast_mc.py',ROOT/'tools/display_playback.py',ROOT/'tools/result_catalog.py']
     return {**rule_dependency_hashes(),**{p.relative_to(ROOT).as_posix():file_hash(p) for p in paths}}
 
 
@@ -136,6 +136,9 @@ def run_case(raw,folder,label='CFAST',budget_s=None,sample=None):
     pb.update(label=label,case_id=folder.name,boundary_revision=model.get('boundary_revision'),
         minimum_leakage=model.get('minimum_leakage',[]),ventilation_assumptions=model.get('ventilation_assumptions',{}))
     pb['fire_input']=fire_details(raw,manifest,pb)
+    from pyrocast_cfbt.input_basis import describe
+    pb['input_basis']=describe(raw)
+    pb['fire_input']['input_basis']=pb['input_basis']
     for r in pb['rooms']:
         use=raw.get('approved_input',{}).get('room_uses',{}).get(r['original_room'],{})
         if use:r.update(display_name=use.get('label'),approved_fuel_class=use.get('usage_class'))

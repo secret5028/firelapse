@@ -65,10 +65,10 @@ def prepare(raw, *, supply_coverage_fraction=None, cell_partitioner=None):
         'scaled_peak_kW':scaled_peak,'area_fraction':first['room_rule_curve']['area_fraction'],
         'covered_area_m2':first['fuel_area_m2'],'hrrpua_kW_m2':first['hrrpua_kW_m2'],
         'energy_MJ':first['energy_MJ'],'numerical_vent_cap':initial_cap,'cap_applied':False}
-    if unpartitioned_peak>initial_cap['cap_kW']:
+    if initial_cap['applicable'] and unpartitioned_peak>initial_cap['cap_kW']:
         warnings.append({'room':root,'message':'Unpartitioned initial input exceeds this cell numerical cap; split by area before use',
             'unpartitioned_peak_kW':unpartitioned_peak,'scaled_peak_kW':scaled_peak,'cap':initial_cap})
-    if max(first['room_rule_curve']['q'])>initial_cap['cap_kW']:
+    if initial_cap['applicable'] and max(first['room_rule_curve']['q'])>initial_cap['cap_kW']:
         warnings.append({'room':root,'message':'Initial cell peak exceeds numerical cap; area-scaled input shape retained','cap':initial_cap})
     targets=[];invalid={};by_room={g['room']:g for g in groups}
     for rid,r in rooms.items():

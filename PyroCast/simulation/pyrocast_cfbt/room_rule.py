@@ -76,6 +76,8 @@ def ventilation_cap(model,room,k=1.5,external_priority=False):
     from .openings import policy
     choices=[]
     for opening in model['openings']:
+        # Pressure-relief assumptions are not observed fuel/oxygen supply apertures.
+        if opening.get('minimum_leakage'):continue
         if room not in (opening['a'],opening['b']) or opening.get('type')=='FLOOR':continue
         p=policy(model,opening)
         fraction=p['post_fraction'] if p else max(row[1] for row in opening.get('schedule',[[0,1]]))
@@ -83,14 +85,19 @@ def ventilation_cap(model,room,k=1.5,external_priority=False):
         area=opening['width_m']*height*fraction
         choices.append({'opening_id':opening['id'],'exterior':'OUTSIDE' in (opening['a'],opening['b']),'effective_area_m2':area,'height_m':height,
                         'fraction':fraction,'A_sqrt_H':area*np.sqrt(height)})
+    # A closed window is not a supply path and must not suppress an open door.
+    choices=[v for v in choices if v['A_sqrt_H']>0]
     external=[v for v in choices if v['exterior']]
-    discount=.5 if external_priority and not external else 1.
+    from .physics_config import defaults
+    cfg=defaults('source_input')
+    discount=cfg['internal_opening_factor'] if external_priority and not external else 1.
     if external_priority and external:choices=external
     best=max(choices,key=lambda c:c['A_sqrt_H']) if choices else None
     return {'room':room,'opening':best,'k':k,'internal_discount':discount,
-            'policy':'external_first_r4' if external_priority else 'single_opening_r3',
-            'cap_kW':k*1500*best['A_sqrt_H']*discount if best else 0.,
-            'basis':'numerical supply cap; exterior opening first in r4, otherwise internal factor 0.5; future maximum/post-breakage fraction; not solved oxygen availability'}
+            'policy':'positive_external_then_internal_v2' if external_priority else 'positive_single_opening_v2',
+            'cap_kW':k*cfg['opening_coefficient_kW']*best['A_sqrt_H']*discount if best else 0.,
+            'applicable':best is not None,
+            'basis':'positive effective aperture only; no available aperture means no numerical supply cap, not zero fuel; native oxygen limitation retained'}
 
 def supply_curve(group, floor_area, rule):
     """Finite linear ramp/hold/decay. Integral is exactly the allocated kJ."""
@@ -98,7 +105,7 @@ def supply_curve(group, floor_area, rule):
     area=min(floor_area,group.get('fuel_area_m2',floor_area))
     caps={'configured_peak_kW':group['peak_kW'],'area_hrrpua_kW':area*group['hrrpua_kW_m2'],
           'finite_energy_ramp_kW':2*(1-fraction)*energy/ramp}
-    if rule.get('vent_cap_enabled'):
+    if rule.get('vent_cap_enabled') and group['room_vent_cap'].get('applicable',True):
         caps['numerical_vent_cap_kW']=group['room_vent_cap']['cap_kW']
     peak=min(caps.values())
     if peak==0:
@@ -133,7 +140,7 @@ def prepare(raw):
     warnings=[]
     if r4:
         initial_cap=ventilation_cap(model,initial_room,rule['vent_cap_k'],True)
-        if initial[0]['peak_kW']>initial_cap['cap_kW']:
+        if initial_cap['applicable'] and initial[0]['peak_kW']>initial_cap['cap_kW']:
             warnings.append('최초 화원 입력 peak가 r4 수치 공급 상한을 넘음: 초기 곡선은 변경하지 않음')
     for room in model['rooms']:
         fuels=[g for g in model['fuel_groups'] if g['room']==room['id'] and 'initial_time_s' not in g]

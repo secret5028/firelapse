@@ -1,5 +1,14 @@
 {
   "basis": "CODEX_HANDOFF P0 project assumptions; leakage areas reuse Lite shaft_floor_leak/elev_leak, not measured building leakage",
+  "source_input": {
+    "revision": "source_input_v2_20261108",
+    "coverage": 0.5,
+    "opening_coefficient_kW": 1500,
+    "internal_opening_factor": 0.5,
+    "reference_growth_kW": 1000,
+    "fallback_growth_time_s": 300,
+    "basis": "Coverage and aperture coefficients retain the existing project supply prescription, not measured fuel inventory or solved oxygen flow. Growth uses each class t_alpha in fire_load_table.json (1000/t_alpha^2). Unknown classes retain explicitly labelled provisional table values. Zero effective apertures do not prescribe zero pyrolysis; native oxygen limitation handles actual burning."
+  },
   "leakage": {
     "stair_area_m2": 0.02,
     "elevator_area_m2": 0.06,

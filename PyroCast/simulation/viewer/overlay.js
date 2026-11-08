@@ -5566,6 +5566,15 @@ const resultTypes=[['FO','FO','#ef4444'],['FGI','FGI','#a855f7'],['backdraft','B
 const finite=Number.isFinite;
 const resultNumber=(v,d=0)=>{if(!finite(v))return '—';const text=v.toFixed(d);return Number(text)===0?Math.abs(Number(text)).toFixed(d):text;};
 const number=resultNumber;
+function inputBasisLines(basis,room){
+ if(!basis)return [];
+ const lines=[basis.ventilation,basis.source_basis];
+ if(finite(basis.growth_kW_s2)&&basis.growth_kW_s2>0)lines.push(`화점 성장 기준 · 1 MW까지 ${number(Math.sqrt(1000/basis.growth_kW_s2))}초 · ${basis.growth_basis}`);
+ for(const r of basis.review_rooms||[])if(r.room===room)lines.push(`선택 실 입력 확인 · ${r.detail}`);
+ const count=new Set((basis.review_rooms||[]).map(r=>r.room)).size;
+ if(count)lines.push(`계산 범위 중 ${count}개 실에 용도·연료량 확인 필요`);
+ return lines.filter(Boolean);
+}
 function resultCoverage(building,result,room){
  if(result.source_refs?.model_preview)return {label:'계산 전',status:room?'미평가':'실 선택',evaluated:false};
  const floors=building.floors.filter(f=>f.rooms.some(r=>r.cells.some(c=>result.index_by_cell[c.cell_id]))).map(f=>f.floor_id);
@@ -5644,6 +5653,8 @@ function createResultsPanel({panel,store}){
    append(source,'div',`화점실 가연물 총량 ${quantity(fireInput.fuel_energy_MJ,'GJ')}`);
    append(source,'div',`화점 셀 최대 발열률 · 입력 ${quantity(fireInput.prescribed_peak_kW,'MW')} · 계산 ${quantity(fireInput.actual_peak_kW,'MW')}`);
    if(finite(fireInput.requested_peak_kW))append(source,'small',`직접 지정 ${quantity(fireInput.requested_peak_kW,'MW')}`);
+   for(const line of inputBasisLines(fireInput.input_basis,selection.room_id))append(source,'div',line);
+   if(!fireInput.input_basis)append(source,'small','저장 당시 입력 · 새 기본 입력 적용 전 결과');
   }
   $('resultRoomTitle').title=room?info.name:'';
   $('resultRoomTitle').textContent=room?info.name:`${store.get('floor').floor_id??'전체'} · 실 선택`;
@@ -5688,7 +5699,7 @@ function createResultsPanel({panel,store}){
  return {update,mc,dispose(){storage.dispose();for(const undo of moves.reverse())undo();panel.hidden=false;root.remove();style.remove();}};
 }
 
-return {resultTypes,resultNumber,resultCoverage,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMCPlayback,createResultsPanel};
+return {resultTypes,resultNumber,inputBasisLines,resultCoverage,selectedScores,worstIndexEntries,roomDisplayInfo,summarizeMCPlayback,createResultsPanel};
 })();
 
 // app/web/adapters/attention.js

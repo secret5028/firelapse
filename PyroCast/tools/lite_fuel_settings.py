@@ -31,7 +31,7 @@ def context(building,sha):
             rows.append(dict(id=rid,floor=f['name'],name=' / '.join(r.get('names',[])) or table[cls]['label'],area=area,
                 baseline_class=cls,baseline_load=base,**resolved,usage=table[resolved['usage_class']]['label'],energy_MJ=resolved['load']*area if isinstance(area,(float,int)) else None,
                 coverage=approved.get('coverage',.5),editable=bool(editable),origin_source=default_source,
-                basis=resolved['default_reason'] or ('기존 승인값' if choice or custom else '자동 분류(추정) · '+('실 라벨' if evidence['basis']=='label' else '층 용도')),
+                basis=resolved['default_reason'] or ('기존 승인값' if choice or custom else '자동 분류(추정) · '+(evidence.get('reason') or ('실 라벨' if evidence['basis']=='label' else '층 용도'))),
                 position_m=r.get('c'),floor_use=f.get('use'),neighbors=sorted(set(neighbors.get(r['id'],[])))))
     import lite_ai_fuel
     try:cfg=lite_ai_fuel.settings();available=bool(cfg and lite_ai_fuel.credential(cfg))

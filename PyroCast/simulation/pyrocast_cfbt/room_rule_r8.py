@@ -15,7 +15,7 @@ def prepare(raw, *, cell_partitioner=None):
  m['room_rule_r7']={**settings['values'],'room_supply':settings['room_supply']}
  model,targets,manifest=prepare_r7(m,supply_coverage_fraction=settings['values']['coverage_default'] if settings['room_supply']=='room_involvement' else None,cell_partitioner=cell_partitioner)
  model['room_rule_r8']=deepcopy(raw.get('room_rule_r8',{}));model['rule_settings']=settings
- manifest.update(revision='room_rule_r8_frozen',frozen_structure='r7',rule_settings=settings,
+ manifest.update(revision='room_rule_r8_positive_apertures_v2',frozen_structure='r7',rule_settings=settings,
                  initially_open_fire_doors=opened_fire_doors)
  manifest['limits']=[line for line in manifest['limits'] if not line.startswith(('within-room 300','passages require'))]+[
   settings['assumption'],'single static parent: other heated/burning neighbours do not override the selected parent',
@@ -27,9 +27,12 @@ def prepare(raw, *, cell_partitioner=None):
 
 def prepare_native(raw):
     from .physics_config import defaults
+    from .input_basis import describe
     from .native_rooms import coalesce
     from .native_apertures import prepare as prepare_apertures
     model,targets,manifest=prepare(prepare_apertures(raw))
+    manifest['input_basis']=describe(raw)
+    model['input_basis']=manifest['input_basis']
     if model.get('equivalent_apertures'):
         manifest['equivalent_apertures']=deepcopy(model['equivalent_apertures'])
     if defaults('native_compartments')['merge_virtual_cells']:

@@ -15,9 +15,16 @@ def vertical_feature_allowed(building,kind):
 def usage_class(names, floor_use):
     policy = load_rules()['usage']
     text = ' / '.join(names)
-    for cls, pattern in policy['names']:
-        if re.search(pattern, text, re.I):
-            return cls, {'basis': 'label', 'pattern': pattern}
+    matches = [(cls, pattern) for cls, pattern in policy['names'] if re.search(pattern, text, re.I)]
+    classes = list(dict.fromkeys(cls for cls, _ in matches))
+    if len(classes) > 1:
+        # CAD labels may span several uses in one polygon. Do not let regex order
+        # classify an entire mixed room as a low-load toilet and omit its fire.
+        return policy['ambiguous_class'], {'basis': 'mixed_labels', 'matched_classes': classes,
+            'review_required': True, 'reason': '여러 용도 라벨 혼재 · 미분류 기준량 임시 적용'}
+    if matches:
+        cls, pattern = matches[0]
+        return cls, {'basis': 'label', 'pattern': pattern}
     cls = policy['floor_use'].get(floor_use, 'default')
     return cls, {'basis': 'floor_use' if floor_use in policy['floor_use'] else 'default',
                  'floor_use': floor_use, 'label_unmapped': True}

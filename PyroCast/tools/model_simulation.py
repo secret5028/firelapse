@@ -77,12 +77,19 @@ def prepare_floor(path, floor, digest, quantity_json):
         values = table[cls]; core = bool(r.get('core_kind')); area = r['area_m2']
         from pyrocast_lite.fuel_quantity import resolve
         setting=resolve(json.loads(quantity_json),rid,floor,cls,values['mean'],table)
+        quantities=json.loads(quantity_json)
+        override=quantities.get('rooms',{}).get(rid,quantities.get('floors',{}).get(floor,{}))
+        if override.get('usage_class'):
+            evidence={'basis':'user','original_classification':evidence}
+        elif quantities.get('defaults',{}).get(rid,{}).get('usage_class'):
+            evidence={'basis':'ai','reason':setting['default_reason'],'original_classification':evidence}
         if not core:cls=setting['usage_class'];values=table[cls]
         load = r['fuel_default']['load_MJ_m2'] if core else setting['load']
         hrrpua = r['fuel_default']['hrrpua_kW_m2'] if core else values['rhrf']
         records[rid] = dict(room=rid, usage_class=cls, label=values['label'],
             classification_basis=evidence, area_m2=area, load_MJ_m2=load,
-            hrrpua_kW_m2=hrrpua, coverage=.5, automatic=True, fuel_setting=setting)
+            hrrpua_kW_m2=hrrpua, coverage=.5, automatic=True, fuel_setting=setting,
+            table_basis=values.get('basis'),growth_time_s=values.get('t_alpha'))
         if core: continue
         r['fuel_default'].update(usage='passage' if cls=='transport' else cls,
             load_MJ_m2=load, hrrpua_kW_m2=hrrpua, occupancy_fraction=.5,
@@ -97,7 +104,7 @@ def prepare_floor(path, floor, digest, quantity_json):
     for g in adjusted['fuel_groups']: g['peak_kW'] = budgets[g['room']]['Q_origin_peak_kW']
     scored = v7.score(adjusted, 1)
     scored['classified_model']['fuel_groups'] = deepcopy(raw['fuel_groups'])
-    scored.update(origin_budgets=budgets, revision='model_library_automatic_v1')
+    scored.update(origin_budgets=budgets, revision='model_library_automatic_v2_usage_growth')
     for r in scored['ranked']: r['origin_budget'] = budgets[r['room']]
     return raw, scored
 

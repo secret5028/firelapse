@@ -37,7 +37,7 @@ class ApprovedInputsTests(unittest.TestCase):
         s=score(self.raw(),5);d=scenario(s,'CAD_3F_R1','open_except_confirmed');m,manifest=prepare(d)
         g=next(g for g in d['fuel_groups'] if g['room']=='CAD_3F_R1');t,q,_=fire_curve(g,s['origin_budgets']['CAD_3F_R1']['area_m2'])
         self.assertAlmostEqual(np.trapezoid(q,t)/1000,g['energy_MJ'],places=5)
-        self.assertEqual(g['growth_kW_s2'],.047)
+        self.assertEqual(g['growth_kW_s2'],s['origin_budgets']['CAD_3F_R1']['growth_kW_s2'])
         nodes={r['id'] for r in m.input_model['rooms']};fires={g['room'] for g in m.input_model['fuel_groups']}
         for rid in ('R11','R16','R17','R24'):
             self.assertIn('CAD_3F_'+rid,nodes);self.assertNotIn('CAD_3F_'+rid,fires)

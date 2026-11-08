@@ -112,10 +112,11 @@ class RoomRuleTests(unittest.TestCase):
         cap=ventilation_cap(model,'R2');self.assertEqual(cap['opening']['fraction'],.8)
         self.assertAlmostEqual(cap['cap_kW'],2250*1.5*.8*np.sqrt(1.5))
 
-    def test_zero_cap_does_not_release_energy_or_divide_by_zero(self):
+    def test_no_aperture_keeps_prescribed_fuel_for_native_oxygen_limit(self):
         raw=self.raw();raw['openings']=[];raw['room_fire_rule']['vent_cap_enabled']=True
         model,_=prepare(raw);curve=model['fuel_groups'][1]['room_rule_curve']
-        self.assertEqual(curve['Q_max_kW'],0);self.assertEqual(np.trapezoid(curve['q'],curve['t']),0)
+        self.assertGreater(curve['Q_max_kW'],0)
+        self.assertAlmostEqual(np.trapezoid(curve['q'],curve['t'])/1000,model['fuel_groups'][1]['energy_MJ'])
 
     def test_explicit_candidate_id_validation(self):
         raw=self.raw();raw['room_fire_rule'].update(trigger_mode='fuel_r3',candidate_ids={'R2':'missing'})

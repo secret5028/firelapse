@@ -10,7 +10,7 @@ from . import screening_v7 as v7
 from .screening_v8 import summarize,compare_pairs
 
 HERE=Path(__file__).parent
-REVISION='v8_approved_screening'
+REVISION='v9_usage_growth_20261108'
 
 def prepare_inputs(raw,quantity_settings=None):
     cfg=json.loads((HERE/'approved_uses_v8.json').read_text('utf-8'))
@@ -73,6 +73,9 @@ def prepare_inputs(raw,quantity_settings=None):
     return m
 
 def origin_budgets(m):
+    from pyrocast_cfbt.physics_config import defaults
+    from pyrocast_cfbt.input_basis import growth_for
+    cfg=defaults('source_input')
     ids={r['id'] for r in m['rooms']};out={}
     for r in m['rooms']:
         rid=r['id'];a=v7.area(r);groups=[g for g in m['fuel_groups'] if g['room']==rid]
@@ -85,14 +88,19 @@ def origin_budgets(m):
             ah=v['width_m']*max(v['top_m']-v.get('bottom_m',0),0)**1.5
             (inside if (v['b'] if v['a']==rid else v['a']) in ids else ext).append((v['id'],ah))
         external=sum(v for _,v in ext);internal=max((v for _,v in inside),default=0.)
-        cap=1500*external if external>0 else 750*internal;potential=.5*a*h
+        potential=cfg['coverage']*a*h
+        cap=cfg['opening_coefficient_kW']*(external if external>0 else cfg['internal_opening_factor']*internal)
+        # Absence of an aperture cannot erase the initial fuel source. Actual
+        # burning is constrained by native oxygen, not a zero preprocessing cap.
+        if cap<=0:cap=potential
+        use=m['approved_input']['room_uses'].get(rid,{})
         out[rid]={'room':rid,'origin_fire_basis':'fuel_based','Q_origin_peak_kW':min(potential,cap),
-            'area_m2':a,'coverage':.5,'hrrpua_kW_m2':h,'energy_MJ':energy,'fuel_load_MJ_m2':energy/a,
+            'area_m2':a,'coverage':cfg['coverage'],'hrrpua_kW_m2':h,'energy_MJ':energy,'fuel_load_MJ_m2':energy/a,
             'fuel_surface_peak_kW':potential,'ventilation_cap_kW':cap,'external_A_sqrtH':external,
-            'internal_max_A_sqrtH':internal,'cap_basis':'external sum' if external>0 else '0.5 × internal maximum',
+            'internal_max_A_sqrtH':internal,'cap_basis':'external sum' if external>0 else 'internal maximum × configured factor' if internal>0 else 'fuel surface; no geometric aperture cap',
             'external_opening_ids':[i for i,_ in ext],
             'internal_max_opening_ids':[i for i,v in inside if v==internal],
-            'vent_cap_k':1.,'growth_kW_s2':.047,'input_peak_used':False,
+            'vent_cap_k':1.,**growth_for(use),'input_peak_used':False,
             'classification':m['approved_input']['room_uses'].get(rid),
             'opening_basis':'gross geometric aperture, same source curve across both states; actual oxygen limitation preserved'}
     return out
@@ -116,9 +124,9 @@ def scenario(scored,rid,state,duration=3600):
     d=v7.scenario(scored,rid,state,duration);b=scored['origin_budgets'][rid]
     if b['Q_origin_peak_kW']<=0:raise ValueError('Zero source cap')
     g=next(g for g in d['fuel_groups'] if g['room']==rid)
-    g.update(peak_kW=b['Q_origin_peak_kW'],growth_kW_s2=.047,
-             coverage_fraction=.5,fuel_area_m2=.5*b['area_m2'])
+    g.update(peak_kW=b['Q_origin_peak_kW'],growth_kW_s2=b['growth_kW_s2'],
+             coverage_fraction=b['coverage'],fuel_area_m2=b['coverage']*b['area_m2'])
     d['origin_fire_basis']='fuel_based'
-    d['room_rule_r8'].update(coverage_default=.5,vent_cap_k=1.)
+    d['room_rule_r8'].update(coverage_default=b['coverage'],vent_cap_k=1.)
     d['screening_source'].update(revision=REVISION,initial_curve='fuel_based',origin_budget=deepcopy(b))
     return d

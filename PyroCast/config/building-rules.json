@@ -1,6 +1,7 @@
 {
-  "revision": "building_rules_v1_preserve_20261103",
+  "revision": "building_rules_v2_mixed_labels_20261108",
   "usage": {
+    "ambiguous_class": "default",
     "names": [
       [
         "toilet",
@@ -8,7 +9,7 @@
       ],
       [
         "shaft_room",
-        "^(EPS|TPS|AV|AD|DS|PD|PS)\\b|EPS|TPS|AV/PS|AD/PS|파이프\\s*샤프트|덕트\\s*샤프트"
+        "^(EPS|TPS|AV|AD|DA|DS|PD|PS)\\b|EPS|TPS|AV/PS|AD/PS|파이프\\s*샤프트|덕트\\s*샤프트"
       ],
       [
         "hotel_room",

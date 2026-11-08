@@ -39,7 +39,12 @@ def main(plan_path):
             assert sha((folder/name).read_bytes())==digest,name
         rel=Path('model-library')/row['building']/row['job'];dest=ROOT/'saved_results'/rel
         dest.mkdir(parents=True,exist_ok=True)
-        for name in FILES:
+        optional=('operator-runtime-extension.json',) if (folder/'operator-runtime-extension.json').is_file() else ()
+        if optional:
+            extension=read(folder/optional[0])
+            assert extension['status']=='native_exited' and extension['native_exit_code']==0
+            assert extension['input_sha256']==evidence['input_sha256']
+        for name in FILES+optional:
             src=folder/name;data=src.read_bytes();out=dest/(name+'.gz');out.parent.mkdir(parents=True,exist_ok=True)
             if out.exists():
                 if gzip.decompress(out.read_bytes())!=data:raise ValueError('Refusing to replace a published sample')
@@ -60,7 +65,7 @@ def main(plan_path):
             upper_temperature_max_C=max(origin['Tu']),opening_state=row['opening_state'],
             geometry_correction_count=len(row.get('width_corrections',[])),
             equivalent_apertures=row.get('geometry_notes'),input_sha256=evidence['files']['input.json'],
-            physical_validation=summary['physical_validation']))
+            physical_validation=summary['physical_validation'],runtime_extension=read(folder/'operator-runtime-extension.json')))
         print(row['building'],row['floor'],status['state'],maxima,flush=True)
     target=ROOT/'saved_results/floor-samples-20261108';target.mkdir(exist_ok=True)
     report=dict(schema='firelapse.floor-samples-published/1',date='2026-11-08',count=len(rows),duration_s=3600,

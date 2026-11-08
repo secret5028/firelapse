@@ -53,9 +53,9 @@
     "max_attempts": 5
   },
   "native_execution": {
-    "max_wall_s": 3600,
+    "max_wall_s": 4200,
     "progress_stall_s": 90,
-    "basis": "A wall-time budget, not a physical constant. Low-ventilation native runs can require more than the previous 1800 s; accepted steps prove progress even when rounded simulation time is unchanged."
+    "basis": "A wall-time budget, not a physical constant. The 60-minute factory 7F sample exceeded 3600 wall seconds; allow 4200 while retaining the accepted-step stall guard. Accepted steps prove progress even when rounded simulation time is unchanged."
   },
   "native_floor_flux": {
     "grid_side": 2,

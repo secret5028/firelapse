@@ -4,9 +4,25 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import argparse
 import json
+import hashlib
 from urllib.parse import urlsplit, unquote
 
 ROOT=Path(__file__).resolve().parents[1]
+
+def empty_playback(data_dir):
+    """Keep the building usable after the user deletes its bundled sample."""
+    path=data_dir/'operating-building.json';building=json.loads(path.read_text('utf-8'))
+    rooms=[]
+    for floor in building['floors']:
+        for room in floor.get('rooms',[]):
+            key=f"CAD_{floor['name']}_{room['id']}"
+            rooms.append(dict(key=key,original_room=key,solver_id=key,cad_floor=floor['name'],
+                cad_room=room['id'],cad_names=room.get('names',[]),cad_polys=room['polys'],
+                z_m=floor['z'],height_m=floor['h']))
+    return dict(schema='pyrocast-cad-playback-1',engine_kind='pyrocast_lite',model_preview=True,
+        complete=False,simulation_output_complete=False,case_id='model-preview',
+        building_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),label='계산 전 · 미평가',
+        time_s=[0],fire_key=None,rooms=rooms,solvers={},fires=[],events=[],fuel_symbols=[],fuel_units=[],limits=[])
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -30,8 +46,13 @@ class Handler(SimpleHTTPRequestHandler):
         read=lambda name:json.loads((data_dir/name).read_text(encoding='utf-8'))
         if path=='/':
             self.send_response(302);self.send_header('Location','/data/wando-coldstore/model.html');self.end_headers();return
-        if path in ('/cfbt/lite/active.json','/cfbt/lite/result/wando-P1'):return self.json(read('P1-playback.json'))
+        if path=='/cfbt/lite/active.json':
+            return self.json(read('P1-playback.json') if (data_dir/'P1-playback.json').is_file() else empty_playback(data_dir))
+        if path=='/cfbt/lite/result/wando-P1':
+            return self.json(read('P1-playback.json')) if (data_dir/'P1-playback.json').is_file() else self.json({'error':'삭제된 저장 결과'},404)
         if path=='/cfbt/lite/catalog.json':
+            if not (data_dir/'P1-playback.json').is_file():
+                return self.json({'cases':[],'progress_text':'저장 결과 없음 · 건물 보기','reuse_by_case':{}})
             from result_catalog import playback_origin, playback_coverage
             payload=read('P1-playback.json')
             return self.json({'cases':[{'id':'wando-P1','label':'완도 P1 · 순정 CFAST · 59:55','engine_kind':'cfast_native','complete':payload.get('complete') is True,'origin_room_id':playback_origin(payload),'covered_room_ids':playback_coverage(payload)}],'progress_text':'마지막 5 s 미출력','reuse_by_case':{'wando-P1':{'label':'P1 원본 CSV 재생 · 재계산 없음','equivalent':False}}})

@@ -60,7 +60,7 @@ def check():
         json.loads(path.read_text('utf8'))
         rows.append(entry['label'])
     required=['simulation/viewer/overlay.js','simulation/viewer/theme.css',
-              'cad-project/model.html','data/wando-coldstore/P1-playback.json',
+              'cad-project/model.html','data/wando-coldstore/operating-building.json',
               'cad-project/work/cad-web/local-resources/cad-assets/three.module.js',
               'simulation/build/baseline/cfast-baseline.exe']
     for name in required:

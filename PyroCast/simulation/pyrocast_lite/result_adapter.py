@@ -86,9 +86,6 @@ def shared_conditions(model,result):
             if rec['status']=='not_evaluated':
                 rec['scores']={'factors':{k:[None]*size for k in ('temperature','fuel','oxygen')},
                     'degree':[None]*size,'weakest':[None]*size,'strongest':[None]*size}
-        if records['FGI']['status']=='not_evaluated':
-            records['FGI']['rollover']['active']=[None]*size
-            records['FGI']['rollover']['status']='not_evaluated'
         records['opening_combustion']={'label':'개구부 분출 연소(간략 계산)',
             'status':'evaluated' if model.P.get('door_jet_enabled',False) else 'not_evaluated',
             'HRR_kW':result['rooms'][i].get('door_jet_HRR_kW',[0.]*size),

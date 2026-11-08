@@ -188,5 +188,7 @@ def results(model, post_started=None):
         result['lite_revision']='v5_cumulative_removed_trial'
     from .result_adapter import shared_conditions
     result['shared_conditions']=shared_conditions(model,result)
+    from pyrocast_cfbt.criteria import CONDITION_VERSION
+    result['condition_version']=CONDITION_VERSION
     result['postprocess_wall_seconds']=time.perf_counter()-start
     return result

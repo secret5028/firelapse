@@ -334,6 +334,7 @@ def simulate_room_rule(raw,exe,output_folder):
          'iteration':{'mode':'native_room_rule','passes':1,'external_event_reruns':0},
          'execution_profile':model.get('execution_profile','legacy'),'limitations':LIMITATIONS+[WINDOW_LIMITATION],
          'input_warnings':model.get('cad',{}).get('warnings',[]),'wall_seconds':time.monotonic()-started}
+    out['physical_validation']=native.get('physical_validation')
     out['conditions']=evaluate(model,out)
     out['conditions']['_room_rule']=out['room_fire_rule']
     from .conditions import term,phenomenon,_finite

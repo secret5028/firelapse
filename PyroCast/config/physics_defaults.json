@@ -27,6 +27,7 @@
     "min_layer_depth_m": 0.3,
     "ambient_oxygen_vol_percent": 20.9,
     "oxygen_deficient_vol_percent": 10,
+    "fgi_oxygen_vol_percent": 10,
     "fuel_rich_mass_fraction": 0.1,
     "fo_temperature_C": 600,
     "fo_flux_kW_m2": 20,

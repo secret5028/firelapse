@@ -125,7 +125,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   if(window.__PYROCAST_OFFLINE__){explore.calculationState({available:false});return;}
   try{const r=await fetch('/cfbt/calculation',{signal:exploreAbort.signal});if(!r.ok)throw Error('실행 연결 없음');const value=await r.json();if(disposed)return;
    const previous=calculationState;calculationState=value;explore.calculationState(value);
-   if(value.state==='complete'&&(previous.id!==value.id||previous.state!=='complete'))await catalog();
+   if(['complete','physically_invalid'].includes(value.state)&&(previous.id!==value.id||previous.state!==value.state))await catalog();
    if(value.running||value.server_busy)calculationPoll=setTimeout(refreshCalculation,3000);
   }catch(error){if(!disposed)explore.calculationState({available:false,error:error.message});}
  }
@@ -349,7 +349,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   const {room_id}=pick;
   if(!room_id||!ready||disposed)return;
   cancelCaseLoad();
-  const completed=calculationState.state==='complete'&&calculationState.room===room_id?calculationState.case_id:null;
+  const completed=['complete','physically_invalid'].includes(calculationState.state)&&calculationState.room===room_id?calculationState.case_id:null;
   let caseId=completed||casesByRoom.get(room_id)?.id;
   if((!caseId||caseId===chosen)&&showPickedResult(pick))return;
   if(!caseId||caseId===chosen)caseId=coverageByRoom.get(room_id)?.id;

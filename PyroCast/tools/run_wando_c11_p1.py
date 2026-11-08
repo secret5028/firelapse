@@ -15,8 +15,8 @@ import numpy as np
 from pyrocast_cfbt.model import DEFAULTS, merge
 from pyrocast_cfbt.deck import fire_curve, make_deck
 from pyrocast_cfbt.native import execute, read_native_csv
-from pyrocast_cfbt.conditions import screening_scores, screening_lfl, fo_required_hrr
-from pyrocast_cfbt.fo_hrr import apply_fo_hrr
+from pyrocast_cfbt.native_criteria import evaluate_native
+from pyrocast_cfbt.criteria import CONDITION_VERSION
 
 OUT = ROOT / 'simulation/results/wando_C11_P1_20261102'
 EXE = ROOT / 'simulation/build/baseline/cfast-baseline.exe'
@@ -128,7 +128,9 @@ def analyze(scenario='P1', fan_on=False):
     assert immutable_hashes_match(unchanged) and sha(OUT/'case.in')==evidence['deck_sha256']
     states={};series={'time_s':t.tolist()};scores={};summaries={};shared_states={}
     def peak(a):
-        j=int(np.argmax(a));return {'value':float(a[j]),'time_s':float(t[j])}
+        a=np.asarray(a,dtype=float);valid=np.isfinite(a)
+        if not valid.any():return None
+        j=np.flatnonzero(valid)[np.argmax(a[valid])];return {'value':float(a[j]),'time_s':float(t[j])}
     def first(a,value,lower=False):
         hits=np.flatnonzero(np.asarray(a)<=value if lower else np.asarray(a)>=value)
         return float(t[hits[0]]) if len(hits) else None
@@ -136,6 +138,7 @@ def analyze(scenario='P1', fan_on=False):
     for i,op in enumerate(model['openings'],1):
         key=next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])
         opening_states[op['id']]={'fraction':v[key]}
+    shared=evaluate_native(model,c,m,opening_states)
     for i,room in enumerate(model['rooms'],1):
         rid=room['id'];T=c[f'ULT_{i}'];O=c[f'ULO2_{i}']*100;Ol=c[f'LLO2_{i}']*100
         # Native ns_mass=9: count soot once; exclude soot subcategories, trace,
@@ -144,20 +147,12 @@ def analyze(scenario='P1', fan_on=False):
         assert np.all(total>0)
         yf=m[f'ULMTUHC_{i}']/total
         g=model['gas'];cr=model['criteria'];q=c['HRR_1']/1000 if rid=='CAVITY' else np.zeros(n)
-        required=fo_required_hrr(model,{'time_s':t,'opening_states':opening_states},room,t)
-        records={
-            'FO':screening_scores((T,cr['fo_temperature_C'],False),(q,required,False),(Ol,g['oxygen_min_vol_percent'],False),n),
-            'FGI':screening_scores((T,g['hot_C'],False),(yf,screening_lfl(model,T),False),(O,cr['fgi_oxygen_vol_percent'],False),n),
-            'BD':screening_scores((T,cr['hot_C'],False),(yf,cr['fuel_rich_mass_fraction'],False),(O,cr['oxygen_deficient_vol_percent'],True),n)}
-        fo_record={'scores':records['FO']}
-        apply_fo_hrr(fo_record,q,c[f'DJET_{i}']/1000,required)
-        records['FO']=fo_record['scores']
+        records={label:shared[rid][key]['scores'] for label,key in [('FO','FO'),('FGI','FGI'),('BD','backdraft')]}
         scores[rid]=records
         idx={k:100*np.asarray(r['degree'],dtype=float) for k,r in records.items()}
-        assert all(np.isfinite(a).all() for a in idx.values())
         states[rid]={'T_upper_C':T,'O2_upper_vol_percent':O,'fuel_upper_mass_fraction':yf,
                      'interface_m':c[f'HGT_{i}'],'source_HRR_kW':q,'door_jet_kW':c[f'DJET_{i}']/1000,**idx}
-        shared_states[rid]={'T_upper_C':T,'o2_upper_vol':O/100,'o2_lower_vol':Ol/100,
+        shared_states[rid]={'interface_m':c[f'HGT_{i}'],'T_upper_C':T,'o2_upper_vol':O/100,'o2_lower_vol':Ol/100,
             'upper_mass_kg':total,'fuel_upper_kg':m[f'ULMTUHC_{i}'],
             'fuel_upper_J':m[f'ULMTUHC_{i}']*25e6,'bulk_HRR_W':np.zeros(n),'received_door_jet_HRR_W':c[f'DJET_{i}']}
         summaries[rid]={'temperature_peak_C':peak(T),'source_HRR_peak_kW':peak(q),
@@ -184,12 +179,12 @@ def analyze(scenario='P1', fan_on=False):
         series[rid]['rollover_active']=common[rid]['fgi']['rollover']['active']
         summaries[rid]['rollover_first_active_s']=common[rid]['fgi']['rollover']['first_active_s']
         for label,key in {'FO':'fo','FGI':'fgi','BD':'backdraft'}.items():
-            assert np.array_equal(scores[rid][label]['degree'],common[rid][key]['scores']['degree'])
+            assert np.allclose(np.asarray(scores[rid][label]['degree'],float),np.asarray(common[rid][key]['scores']['degree'],float),equal_nan=True)
     save('timeseries.json',series);save('condition-scores.json',scores)
     run_summary=json.loads((OUT/'execution-state.json').read_text(encoding='utf-8'))
     run_summary.update(native_normal_exit=True,requested_end_s=3600,last_csv_s=float(t[-1]),
                        endpoint_sample_missing=bool(t[-1]<3600),rerun=False)
-    summary={'scenario':scenario,'run':run_summary,'rooms':summaries,'unchanged':unchanged,
+    summary={'condition_version':CONDITION_VERSION,'scenario':scenario,'run':run_summary,'rooms':summaries,'unchanged':unchanged,
              'door_jet_outside_peak_kW':peak(c['DJET_Outside']/1000),
              'threshold_time_basis':'first 5 s native sample; no interpolation',
              'input_parser_failures_before_integration':int((OUT/'input-parse-error').exists()),'integration_runs':1,
@@ -198,8 +193,8 @@ def analyze(scenario='P1', fan_on=False):
              'cut_first_observed_full_s':first(opening_states['CUT']['fraction'],1.),
              'door_jet_by_individual_opening':None,
              'door_jet_scope':'native DJET receiving-room sum; gaps and cut not independently available',
-             'scores_scope':'shared FO own plus received door jet revision; T/O2 and other indices unchanged; not occurrence probabilities',
-             'FO_ROOM_note':'Shared FO fuel factor includes own HRR plus receiving-compartment DJET once; temperature and oxygen factors unchanged',
+             'scores_scope':'criteria.py shared FO/FGI/BD proximity; not occurrence probabilities',
+             'FO_ROOM_note':'Ambient-relative temperature OR incident floor flux; active parent-room fire or receiving jet required',
              'times':{str(at):{'sample_s':float(t[np.argmin(abs(t-at))]),**{k:float(a[np.argmin(abs(t-at))]) for k,a in states['ROOM'].items()}} for at in (780,1320,1500,2100)}}
     save('summary.json',summary)
     with (OUT/'room-timeseries.csv').open('w',encoding='utf-8-sig',newline='') as f:

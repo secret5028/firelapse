@@ -234,7 +234,7 @@ def playback(sha, case):
     if 'fire_input' not in value:
         value['fire_input']=fire_details(read(file.with_name('input.json'),{}),
                                          read(file.with_name('rule_manifest.json'),{}),value)
-    if value.get('engine_kind')=='cfast_native' and (file.parent/'scenario.json').is_file():
+    if value.get('engine_kind')=='cfast_native' and (file.parent/'scenario.json').is_file() and (file.parent/'case_compartments.csv').is_file():
         from pyrocast_cfbt.native import load_result
         from pyrocast_cfbt.validation import validate_native, protect_playback
         native=load_result(file.parent,value['time_s'][-1],dict(folder=str(file.parent)))
@@ -261,7 +261,7 @@ def compute(folder):
     source = Path(req['source_path'])
     try:
         atomic_json(folder/'status.json', dict(state='running', id=folder.name, **req))
-        if req['engine'] == 'lite' and (FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS).isdisjoint(req) and not raw.get('minimum_leakage'):
+        if req['engine'] == 'lite' and (FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS).isdisjoint(req) and not raw.get('minimum_leakage') and read(source/'playback.json',{}).get('condition_version')=='physics_p0_v2':
             pb = read(source/'playback.json')
             if not pb or not pb.get('complete'):
                 raise ValueError('확정 표본의 완료 결과 없음')

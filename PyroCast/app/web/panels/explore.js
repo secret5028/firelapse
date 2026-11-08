@@ -101,11 +101,11 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
   if(fireInputRoom!==state.origin_room_id){
-   fireInputRoom=state.origin_room_id;$('exploreFuelEnergy').value='';$('exploreFirePeak').value='';
+   fireInputRoom=state.origin_room_id;$('exploreFuelEnergy').value='';$('exploreFirePeak').value='';for(const id of ['exploreLeakArea','exploreACH','exploreRampWidth','exploreRampHeight'])$(id).value='';
   }
-  const customFire=$('exploreFuelEnergy').value!==''||$('exploreFirePeak').value!=='';
+  const customFire=['exploreFuelEnergy','exploreFirePeak','exploreLeakArea','exploreACH','exploreRampWidth','exploreRampHeight'].some(id=>$(id).value!=='');
   fireInputs.disabled=!!calculating||!calculation.available;
-  $('exploreCalculationResult').hidden=calculating||!!calculation.error||calculation.state!=='complete'||!calculation.case_id;
+  $('exploreCalculationResult').hidden=calculating||!!calculation.error||!['complete','physically_invalid'].includes(calculation.state)||!calculation.case_id;
   $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
   for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']]){$(id).disabled=calculating;$(id).setAttribute('aria-pressed',String(kind===engine));}
   calculate.setAttribute('aria-busy',String(!!calculating));
@@ -118,8 +118,8 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   $('exploreCalculateRun').title=kind==='cfast'?'선택한 급기 조합으로 순정 CFAST 1회':customFire?'수정한 화원 입력으로 간략 엔진 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:var(--text-muted)';
   const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:'확정 급기';
-  $('exploreCalculateStatus').textContent=calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):!customFire&&calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'||customFire?' · 1회 계산':' · 간략 결과 불러오기');
-  $('exploreCalculateStatus').className=calculation.error?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
+  $('exploreCalculateStatus').textContent=calculation.state==='physically_invalid'?'물리 타당성 검사 실패 · 진단 결과를 확인하세요':calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):!customFire&&calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'||customFire?' · 1회 계산':' · 간략 결과 불러오기');
+  $('exploreCalculateStatus').className=calculation.error||calculation.state==='physically_invalid'?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
   $('exploreMCStatus').className=/실패|시간초과|차단|미완료|오류/.test($('exploreMCStatus').textContent)?'status-error':(mcJob.running||mcPending)?'status-busy':/완료/.test($('exploreMCStatus').textContent)?'status-ok':'';
   $('exploreEstimate').className=estimate===null?'':'status-busy';
   $('exploreOriginRun').disabled=payload?.available===false||pending||!payload?.manual_origins?.some(r=>r.room===state.origin_room_id)||Boolean(payload?.progress?.running)||mcJob.server_busy;

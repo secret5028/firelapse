@@ -524,7 +524,7 @@ class Model:
         Q = np.array([d['Q'] for d in dg]); Lf = np.array([d['Lf'] for d in dg])
         lfl = P['LFL0_hrr'] / P['dHc'] * np.clip(1 - (Tu - 293) / 1300, 0.2, 1)
         deep = (self.Ha[:, None] - np.minimum(hl, self.Ha[:, None])) >= P['d_min']   # 얇은 연기층은 조성 판정 제외
-        from pyrocast_cfbt.criteria import evaluate_cell
+        from pyrocast_cfbt.criteria import evaluate_cell, opening_increases
         source=getattr(self,'input_model',dict(ambient_C=P['T_in']-273.15,
             rooms=[dict(id=n['id'],size_m=[1,n['A'],n['H']]) for n in self.nodes],
             fuel_groups=[dict(room=self.nodes[self.ig]['id'],initial_time_s=0,heat_of_combustion_kJ_kg=P['dHc']/1000)] if self.ig is not None else [],
@@ -535,7 +535,8 @@ class Model:
             heat=np.array([d.get('room_Q',np.eye(1,N,self.ig or 0)[0]*d['Q'])[i]/1000 for d in dg])
             bulk=np.array([d.get('upper_HRR_W',np.zeros(N))[i]/1000 for d in dg])
             jet=np.array([d.get('door_jet_room_HRR_W',np.zeros(N))[i]/1000 for d in dg])
-            records.append(evaluate_cell(source,room,sol.t,Tu[i]-273.15,hl[i],Xo_u[i]*100,Yf_u[i],heat,bulk,jet))
+            records.append(evaluate_cell(source,room,sol.t,Tu[i]-273.15,hl[i],Xo_u[i]*100,Yf_u[i],heat,bulk,jet,
+                opening_increased=opening_increases(source,room,sol.t)))
         flash=np.array([[v is True for v in r['FO']['occurred']] for r in records])
         backdraft=np.array([[v is True for v in r['backdraft']['occurred']] for r in records])
         fgi=np.array([[v is True for v in r['FGI']['occurred']] for r in records])

@@ -102,7 +102,7 @@ def condition_summary(model,result,sample):
     if 'shared_conditions' in result:
         for name in ('FO','FGI','backdraft','untenable'):
             records=result['shared_conditions']['rooms']
-            if any(records[r['cell']][name]['status']=='not_evaluated' for r in result['room_summary']):
+            if all(records[r['cell']][name]['status']=='not_evaluated' for r in result['room_summary']):
                 phenomena[name]={'status':'not_evaluated','ever_room_count':None,'first_s':None,'score_median':None,'score_max':None}
                 continue
             by_room={};scores=[]
@@ -118,7 +118,7 @@ def condition_summary(model,result,sample):
                 'rooms':hit,'first_s':min(hit.values(),default=None),
                 'max_simultaneous_room_count':int(np.stack(list(by_room.values())).sum(axis=0).max()),
                 'score_median':float(np.median(scores)) if scores else None,'score_max':max(scores,default=None),
-                'score_basis':'finite cell-time T/F/O scores; missing factor stays unknown'}
+                'score_basis':'criteria.py gated proximity; missing inputs stay unknown'}
     threshold=model.manifest['rule_settings']['values']['temperature_C']
     room_rows=[]
     for room,ix in mapping.items():
@@ -128,7 +128,7 @@ def condition_summary(model,result,sample):
     cell_rows=[{'cell':r['cell'],'original_room':r['original_room'],'upper_max_C':r['upper_max_C'],
                 'boundary':abs(r['upper_max_C']-threshold)<=30} for r in result['room_summary']]
     opening_risk=None
-    if sample['kind']=='all_openings_closed' and result.get('gas_conditions_evaluable',False):
+    if sample['kind']=='all_openings_closed' and 'shared_conditions' in result:
         records=result['shared_conditions']['rooms']
         flags=np.array([[v is not None and v>=1 for v in records[row['cell']]['backdraft'].get('potential',[])] for row in result['room_summary']])
         opening_risk={'status':'evaluated','basis':'criteria.py BD potential; no temperature gate',

@@ -79,7 +79,10 @@ def package(result):
     from .mixture import package_jets
     data['ceiling_jets']=package_jets(config,result.get('ceiling_jets',[]),t)
     data['gas_model']='mixture_v1' if config['gas'].get('mixture_enabled') else 'legacy_fuel_bulk'
-    data['condition_version']='common_table_v2'
+    from .criteria import CONDITION_VERSION
+    data['condition_version']=CONDITION_VERSION
+    data['minimum_leakage']=config.get('minimum_leakage',[])
+    data['limits']=list(config.get('limits',[]))
     data['execution_profile']=result.get('execution_profile','legacy')
     data['limitations']=result.get('limitations',[])
     if result.get('spread_model'):
@@ -225,4 +228,6 @@ def package(result):
         if isinstance(value,(list,tuple)):return [plain(v) for v in value]
         if isinstance(value,float):return round(value,7)
         return value
+    from .validation import protect_playback
+    protect_playback(data,result.get('physical_validation') or dict(status='unverified',passed=False,reasons=[],unknown=['validation_missing']))
     return plain(data)

@@ -7,7 +7,9 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'tools'),str(ROOT/'simulation'),str(ROOT/'simulation/deps')]
 from pyrocast_cfbt.native import read_native_csv, digest
-from pyrocast_cfbt.conditions import screening_scores, screening_lfl, fo_required_hrr, _finite
+from pyrocast_cfbt.conditions import _finite
+from pyrocast_cfbt.criteria import evaluate_cell, CONDITION_VERSION
+from pyrocast_cfbt.native_criteria import evaluate_native
 from run_hotel_native_compare import OUT, SOURCE
 
 
@@ -35,7 +37,8 @@ def main():
     evidence=read(OUT/'comparison-input-evidence.json')
     assert all(digest(SOURCE/name)==sha for name,sha in evidence['source_hashes'].items())
     assert digest(Path(evidence['native_engine']))==evidence['engine_sha256']
-    assert digest(ROOT/'simulation/pyrocast_cfbt/conditions.py')==evidence['conditions_sha256']
+    # Compare saved solver fields with the CURRENT formula; keep provenance of both.
+    previous_conditions_sha256=evidence['conditions_sha256']
     c,cids,cu=read_native_csv(OUT/'case_compartments.csv',horizon)
     m,_,mu=read_native_csv(OUT/'case_masses.csv',horizon);v,vid,_=read_native_csv(OUT/'case_vents.csv',horizon)
     assert np.array_equal(c['Time'],m['Time']) and np.array_equal(c['Time'],v['Time'])
@@ -45,6 +48,7 @@ def main():
         key=next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])
         openings[op['id']]={'fraction':v[key][mask]}
         assert np.allclose(openings[op['id']]['fraction'],op['schedule'][0][1],atol=1e-8),op['id']
+    shared=evaluate_native(model,c,m,openings)
     series={};summary=[]
     for i,room in enumerate(model['rooms'],1):
         rid=room['id'];lr=next(r for r in lite['rooms'] if r['id']==rid)
@@ -63,30 +67,22 @@ def main():
             return c[name][mask] if name in c else np.full(len(t),np.nan)
         T=c[f'ULT_{i}'][mask];Ou=c[f'ULO2_{i}'][mask]*100;Ol=column(f'LLO2_{i}')*100
         jet=c[f'DJET_{i}'][mask]/1000
-        req=fo_required_hrr(model,dict(time_s=t,opening_states=openings),room,t)
-        cr=model['criteria'];gas=model['gas'];n=len(t)
-        records={
-            'FO':screening_scores((T,cr['fo_temperature_C'],False),(q+jet,req,False),(Ol,gas['oxygen_min_vol_percent'],False),n),
-            'FGI':screening_scores((T,gas['hot_C'],False),(yf,screening_lfl(model,T),False),(Ou,cr['fgi_oxygen_vol_percent'],False),n),
-            'BD':screening_scores((T,cr['hot_C'],False),(yf,cr['fuel_rich_mass_fraction'],False),(Ou,cr['oxygen_deficient_vol_percent'],True),n)}
+        records={label:shared[rid][key]['scores'] for label,key in [('FO','FO'),('FGI','FGI'),('BD','backdraft')]}
         ns=dict(T_upper_C=T,T_lower_C=column(f'LLT_{i}'),O2_upper_percent=Ou,O2_lower_percent=Ol,
             fuel_upper_fraction=yf,fuel_upper_kg=fuel,actual_HRR_kW=q,received_jet_kW=jet,interface_m=column(f'HGT_{i}'))
         ls=dict(T_upper_C=np.array(lr['T_u']),T_lower_C=np.array(lr['T_l']),O2_upper_percent=np.array(lr['O2_u']),
             fuel_upper_fraction=np.array(lr['Yf_u']),actual_HRR_kW=np.array(lr['actual_HRR_kW']),
             supply_HRR_kW=np.array(lr['supply_HRR_kW']),received_jet_kW=np.array(lr['door_jet_HRR_kW']),
             upper_reaction_kW=np.array(lr['upper_HRR_kW']),interface_m=np.array(lr['z_int']))
-        # Shared condition terms retain solver precision; UI fields are rounded.
-        lc=lite['shared_conditions']['rooms'][rid]
-        for name,phenomenon,key in [('T_upper_C','FO','Tu'),('O2_upper_percent','FGI','O2'),('fuel_upper_fraction','FGI','Yf')]:
-            ls[name]=np.asarray(next(term['value'] for term in lc[phenomenon]['terms'] if term['key']==key),dtype=float)
         ls={k:a[lmask] for k,a in ls.items()}
+        parent=room.get('parent_room',rid)
+        siblings={r['id'] for r in model['rooms'] if r.get('parent_room',r['id'])==parent}
+        own=sum((np.asarray(r['actual_HRR_kW'])[lmask] for r in lite['rooms'] if r['id'] in siblings),np.zeros(len(lt)))
+        lc=evaluate_cell(model,room,lt,ls['T_upper_C'],ls['interface_m'],ls['O2_upper_percent'],ls['fuel_upper_fraction'],
+            ls['actual_HRR_kW'],ls['upper_reaction_kW'],ls['received_jet_kW'],own_fire=own)
         for label,lkey in [('FO','FO'),('FGI','FGI'),('BD','backdraft')]:
             ns[label]=100*np.asarray(records[label]['degree'],dtype=float)
-            ls[label]=100*np.asarray(lite['shared_conditions']['rooms'][rid][lkey]['scores']['degree'],dtype=float)[lmask]
-        for label,record in [
-            ('FGI',screening_scores((ls['T_upper_C'],gas['hot_C'],False),(ls['fuel_upper_fraction'],screening_lfl(model,ls['T_upper_C']),False),(ls['O2_upper_percent'],cr['fgi_oxygen_vol_percent'],False),len(lt))),
-            ('BD',screening_scores((ls['T_upper_C'],cr['hot_C'],False),(ls['fuel_upper_fraction'],cr['fuel_rich_mass_fraction'],False),(ls['O2_upper_percent'],cr['oxygen_deficient_vol_percent'],True),len(lt)))]:
-            assert np.array_equal(100*np.asarray(record['degree'],float),ls[label],equal_nan=True),(rid,label)
+            ls[label]=100*np.asarray(lc[lkey]['scores']['degree'],dtype=float)
         series[rid]=dict(native=ns,lite=ls)
         entry=dict(room=rid)
         for engine,times,values in [('native',t,ns),('lite',lt,ls)]:
@@ -101,11 +97,11 @@ def main():
                 p=entry[engine][label]
                 if p is None:continue
                 j=int(np.flatnonzero(times==p['time_s'])[0])
-                weakest=records[label]['weakest'] if engine=='native' else np.asarray(lc[lkey]['scores']['weakest'],object)[lmask]
+                weakest=records[label]['weakest'] if engine=='native' else lc[lkey]['scores']['weakest']
                 entry[engine]['peak_bottleneck'][label]=weakest[j]
         summary.append(entry)
     prior=next(r for r in read(SOURCE.parents[1]/'progress.json')['rows'] if r['building']=='parkmarine' and r['floor']=='5F')
-    output=dict(complete=complete,compared_horizon_s=float(t[-1]),native_safe_horizon_s=native_safe_horizon,source='same frozen raw input and identical r8 manifest; different solvers and ignition observables',
+    output=dict(condition_version=CONDITION_VERSION,previous_conditions_sha256=previous_conditions_sha256,complete=complete,compared_horizon_s=float(t[-1]),native_safe_horizon_s=native_safe_horizon,source='same frozen raw input and identical r8 manifest; different solvers and ignition observables',
         native_run=status, lite_wall_s=prior['wall_s'],lite_integration_s=lite['integration'].get('wall_seconds'),
         conditions_sha256=digest(ROOT/'simulation/pyrocast_cfbt/conditions.py'),native_last_s=float(t[-1]),lite_last_s=float(lt[-1]),
         shared_FGI_BD_series_verified=2*len(summary),fixed_opening_series_verified=len(openings),

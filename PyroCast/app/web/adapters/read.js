@@ -148,7 +148,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v1'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v2'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }

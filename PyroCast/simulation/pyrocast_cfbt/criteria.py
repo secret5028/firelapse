@@ -6,7 +6,7 @@ BD is a potential; an opening increase is additionally required for occurred.
 import numpy as np
 from .physics_config import defaults
 
-CONDITION_VERSION = 'physics_p0_v1'
+CONDITION_VERSION = 'physics_p0_v2'
 
 
 def settings(model):
@@ -15,7 +15,11 @@ def settings(model):
     c['gas_ignition_C']=model.get('criteria',{}).get('gas_ignition_C',gas.get('gas_ignition_C',c['gas_ignition_C']))
     y=gas.get('native_lower_oxygen_limit_mass_fraction',.15)
     # Convert solver oxygen mass fraction to mole fraction using configured molar masses.
-    c['oxygen_loc_vol_percent']=100*(y/c['oxygen_molar_mass'])/(y/c['oxygen_molar_mass']+(1-y)/c['background_molar_mass'])
+    c['native_oxygen_limit_vol_percent']=100*(y/c['oxygen_molar_mass'])/(y/c['oxygen_molar_mass']+(1-y)/c['background_molar_mass'])
+    # Native LOL limits the solver's combustion rate; it is not a measured LOC
+    # for the effective smoke mixture. Preserve the separately declared FGI
+    # screening assumption (user correction after the Wando R5 comparison).
+    c['oxygen_loc_vol_percent']=c['fgi_oxygen_vol_percent']
     if c['oxygen_loc_vol_percent']<=0 or c['fo_temperature_C']<=model.get('ambient_C',20):
         raise ValueError('Invalid screening oxygen/temperature reference')
     return c
@@ -66,13 +70,13 @@ def evaluate_cell(model,room,t,temperature,interface,oxygen,fuel,solid_kW,
         known=deep&np.isfinite(proximity);value=np.where(gate&known,proximity,np.nan)
         met=gate&known&(proximity>=1) if occurred is None else gate&known&occurred
         def values(a):return [float(x) if np.isfinite(x) else None for x in a]
-        flags=[bool(x) if d else None for x,d in zip(met,deep)]
+        flags=[bool(x) if d and (not g or k) else None for x,d,g,k in zip(met,deep,gate,known)]
         hits=np.flatnonzero(met)
         keys=list(factors);weak=[];strong=[]
         for i in range(n):
             valid={k:float(a[i]) for k,a in factors.items() if np.isfinite(a[i])}
             weak.append(min(valid,key=valid.get) if valid else None);strong.append(max(valid,key=valid.get) if valid else None)
-        return dict(revision=CONDITION_VERSION,status='evaluated',label=label,gate=gate.tolist(),proximity=values(value),occurred=flags,
+        return dict(revision=CONDITION_VERSION,status='evaluated',label=label,gate=[bool(g) if d else None for g,d in zip(gate,deep)],proximity=values(value),occurred=flags,
                     all_met=flags,first_met_s=float(t[hits[0]]) if len(hits) else None,terms=[],
                     scores=dict(degree=values(value),all_met=flags,factors={k:values(a) for k,a in factors.items()},weakest=weak,strongest=strong),
                     limits=['condition proximity, not occurrence probability'])
@@ -81,8 +85,10 @@ def evaluate_cell(model,room,t,temperature,interface,oxygen,fuel,solid_kW,
         'FGI':record(fgi_gate,np.minimum(pF,pO),{'fuel':pF,'oxygen':pO},label='FGI'),
         'backdraft':record(deep,bd,{'fuel':np.maximum(yf,0)/c['fuel_rich_mass_fraction'],'oxygen':np.maximum(0,(c['ambient_oxygen_vol_percent']-o2)/(c['ambient_oxygen_vol_percent']-c['oxygen_deficient_vol_percent']))},occurred=(bd>=1)&opened,label='BD 잠재(개방 시)')}
     out['FGI'].update(too_rich=too_rich.tolist(),fuel_lfl=arr(lfl).tolist(),fuel_ufl=arr(ufl).tolist(),remote_ignition=(jet>0).tolist())
+    out['FGI']['thresholds']=dict(oxygen_vol_percent=c['oxygen_loc_vol_percent'],native_combustion_limit_vol_percent=c['native_oxygen_limit_vol_percent'],basis='configured FGI screening assumption, not a measured mixture LOC; independent of native combustion LOL')
     out['backdraft']['thresholds']={k:c[k] for k in ('fuel_rich_mass_fraction','oxygen_deficient_vol_percent')}
     out['backdraft']['potential']=out['backdraft']['proximity'];out['backdraft']['opening_increased']=opened.tolist()
     rollover=deep&((bulk>c['q_min_kW'])|(arr(flame_height_m)>=room['size_m'][2])|((temp>=c['gas_ignition_C'])&(yf>=lfl)&(yf<=ufl)&(o2>=c['oxygen_loc_vol_percent'])))
-    out['rollover']=dict(revision=CONDITION_VERSION,label='롤오버 조건',active=[bool(x) if d else None for x,d in zip(rollover,deep)],status='evaluated')
+    hits=np.flatnonzero(rollover)
+    out['rollover']=dict(revision=CONDITION_VERSION,label='롤오버 조건',active=[bool(x) if d else None for x,d in zip(rollover,deep)],status='evaluated',first_active_s=float(t[hits[0]]) if len(hits) else None)
     return out

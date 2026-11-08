@@ -8,7 +8,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'simulation'), str(ROOT/'simulation/deps')]
 from pyrocast_cfbt.native import read_native_csv
 from pyrocast_cfbt.conditions import fo_required_hrr, rollover_states, ROLLOVER_REVISION
-from pyrocast_cfbt.fo_hrr import apply_fo_hrr, REVISION
+from pyrocast_cfbt.criteria import CONDITION_VERSION
+from pyrocast_cfbt.native_criteria import evaluate_native
+from pyrocast_cfbt.validation import validate_native, protect_playback
 from copy import deepcopy
 
 DATA = ROOT/'data/wando-coldstore'
@@ -56,6 +58,9 @@ def main():
     # Retain exact native time separately; labels snap floating-point solver
     # print noise (<0.0001 s) to the requested five-second output grid.
     grid=[round(t/5)*5 for t in times];assert max(abs(a-b) for a,b in zip(times,grid))<.001
+    masses,_,_=read_native_csv(SRC/'case_masses.csv')
+    openings={op['id']:{'fraction':v[next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])]} for op in model['openings']}
+    shared=evaluate_native(model,c,masses,openings)
     mapped=[];solvers={}
     for i,(native,cad) in enumerate([('ROOM','R5'),('CAVITY','CAVITY')],1):
         r=next(r for r in rooms if r['id']==cad);key='CAD_1F_'+cad
@@ -68,22 +73,10 @@ def main():
         s.update(height_m=6.405,ODu=z[f'ULOD_{i}'].tolist(),ODl=z[f'LLOD_{i}'].tolist(),
                  Fu=saved[native]['fuel_upper_mass_fraction'],Qsolid_kW=saved[native]['source_HRR_kW'],
                  Qvent_kW=saved[native]['door_jet_kW'],Qbulk_kW=[0]*len(grid))
-        s['conditions']={key:{'scores':scores[native][old],'status':'evaluated'} for old,key in [('FO','FO'),('FGI','FGI'),('BD','backdraft')]}
-        s['conditions']['FO']={
-            'scores':deepcopy(scores[native]['FO']),
-            'status':'evaluated',
-            'legacy_combustion_support_scores':scores[native]['FO'],
-            'scope':'shared three-factor FO; own HRR plus receiving door jet; no ignition feedback'}
-        openings={op['id']:{'fraction':v[next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])]} for op in model['openings']}
-        required=fo_required_hrr(model,{'time_s':c['Time'],'opening_states':openings},model['rooms'][i-1],c['Time'])
-        apply_fo_hrr(s['conditions']['FO'],s['Qsolid_kW'],s['Qvent_kW'],required)
+        s['conditions']=shared[native]
         solvers[native]=s
-    rollover=rollover_states(model,times,{r:s['conditions']['FGI'] for r,s in solvers.items()},
-        {r:s['Qsolid_kW'] for r,s in solvers.items()},{r:s['Qvent_kW'] for r,s in solvers.items()},
-        {'time_s':times,'opening_states':openings})
-    for r,record in rollover.items():solvers[r]['conditions']['FGI']['rollover']=record
     p=dict(schema='pyrocast-cad-playback-1',engine_kind='cfast_native',case_id='wando-P1',
-        native_mapping='wando-c11-p1-v1',building_sha256=bsha,label='완도 P1 · 순정 CFAST · 마지막 5 s 미출력',
+        native_mapping='wando-c11-p1-v1',condition_version=CONDITION_VERSION,building_sha256=bsha,label='완도 P1 · 순정 CFAST · 마지막 5 s 미출력',
         complete=True,simulation_output_complete=False,requested_end_s=3600,t_end_s=3595,
         output_step_s=5,time_s=grid,native_time_s=times,rooms=mapped,solvers=solvers,
         fire_key='CAD_1F_CAVITY',route_target_room_id='CAD_1F_R5',events=[],
@@ -94,21 +87,23 @@ def main():
                 '순정 CFAST P1 저장 CSV 재생. R5·공동만 계산; 나머지 실은 미평가.',
                 '0.1 m 공동의 2존 근사. 위험 지수는 발생 확률이 아님.',
                 'CAVITY는 R5 자체 벽의 강판 뒤 우레탄 연소 공간을 분리한 계산 구획이며 외부 화재가 아님.',
-                'FO는 온도·연료·산소 세 요인의 최솟값. 연료 항 = (자체 HRR + 수신 문 분출 HRR)/Thomas 필요 발열량. 발생 확률·실제 FO 확정 아님.',
+                '공통 criteria.py의 조건 근접도. 발생 확률·현상 발생 확정 아님.',
                 '공동의 FO 지수는 얇은 벽체 공간의 온도 진단이며 R5 전체 플래시오버를 뜻하지 않음.',
                 '문 분출 발열은 ROOM 합계이며 틈과 절단 개구별로 분리 불가.',
                 '3D 절단 표시는 입력 일정의 우측값. native CSV는 다음 5 s 표본부터 반영.',
                 '경로는 등록 장애물 평면 외곽 0.5 m 회피. 미등록 적재물·호스 굴곡 미반영.'],
         provenance={'rollover_revision':ROLLOVER_REVISION,'engine_sha256':sha(ROOT/'simulation/build/baseline/cfast-baseline.exe'),
                     'source_files':{f:sha(SRC/f) for f in ['case.in','case_zone.csv','case_compartments.csv','case_vents.csv','condition-scores.json']},
-                    'mapping':{'temperature':'C','O2':'mol_frac (volume fraction)','OD':'case_zone.csv 1/m','HRR':'case_compartments W / 1000','indices':'FO: fo_own_plus_received_door_jet_v1; FGI/BD: saved condition-scores.json unchanged; FGI.rollover: fgi_rollover_state_v2'},
-                    'fo_display':{'revision':REVISION,'threshold_C':model['criteria']['fo_temperature_C'],
-                        'module_sha256':sha(ROOT/'simulation/pyrocast_cfbt/fo_hrr.py'),
+                    'mapping':{'temperature':'C','O2':'mol_frac (volume fraction)','OD':'case_zone.csv 1/m','HRR':'case_compartments W / 1000','indices':CONDITION_VERSION},
+                    'fo_display':{'revision':CONDITION_VERSION,'threshold_C':model['criteria']['fo_temperature_C'],
+                        'module_sha256':sha(ROOT/'simulation/pyrocast_cfbt/criteria.py'),
                         'old_score_preserved':'solvers.*.conditions.FO.legacy_combustion_support_scores','floor_flux':'not_evaluated'},'simulation_runs':0},
         opening_states={op['id']:{'schedule':op['schedule'],
             'fraction':v[next(k for k in v if k.startswith('WF_') and vid[k]==op['id'])].tolist()} for op in model['openings']})
     from wando_jet_visual import add_jet_visuals
     add_jet_visuals(p,model,v)
+    native=dict(compartments=c,native_vents=v,native_vents_ids=vid)
+    protect_playback(p,validate_native(native,model,SRC))
     write(DATA/'P1-playback.json',p)
     write(DATA/'playback-evidence.json',dict(building_sha256=bsha,playback_sha256=sha(DATA/'P1-playback.json'),
         samples=len(grid),last_sample_s=grid[-1],native_time_snap_max_s=max(abs(a-b) for a,b in zip(times,grid)),

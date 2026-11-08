@@ -17,9 +17,10 @@ def model_from_deck(deck):
             leak=re.search(r'LEAK_AREA_RATIO\s*=\s*([\d.Ee+,-]+)',body,re.I)
             model['rooms'].append(dict(id=ident[1],shaft=bool(re.search(r'SHAFT\s*=\s*\.TRUE\.',body,re.I)),leak_area_ratio=[float(v) for v in leak[1].split(',')] if leak else [0,0]))
         else:
-            if "'MECHANICAL'" in body.upper():model['mechanical_vents'].append(dict(id=ident[1]));continue
             sides=re.search(r"COMP_IDS\s*=\s*'([^']+)'\s*,\s*'([^']+)'",body,re.I)
-            if sides:model['openings'].append(dict(id=ident[1],a=sides[1],b=sides[2]))
+            if sides and "'MECHANICAL'" in body.upper():
+                model['mechanical_vents'].append(dict(id=ident[1],comp=sides[2] if sides[1]=='OUTSIDE' else sides[1],direction='supply' if sides[1]=='OUTSIDE' else 'exhaust'));continue
+            if sides:model['openings'].append(dict(id=ident[1],a=sides[1],b=sides[2],type='FLOOR' if "'CEILING'" in body.upper() or "'FLOOR'" in body.upper() else 'WALL'))
     return model
 
 
@@ -59,13 +60,17 @@ def validate_native(result, model, folder=None):
         inflow=np.zeros(n);outflow=np.zeros(n)
         vents=result.get('native_vents',{}); ids=result.get('native_vents_ids',{})
         external=[v for v in model.get('openings',[]) if 'OUTSIDE' in (v['a'],v['b'])]
-        flows_known=not model.get('mechanical_vents') and all(not any(r.get('leak_area_ratio',[.00017,.000052])) for r in model.get('rooms',[]))
+        flows_known=all(not any(r.get('leak_area_ratio',[.00017,.000052])) for r in model.get('rooms',[]))
+        for v in model.get('mechanical_vents',[]):
+            external.append(dict(id=v['id'],a='OUTSIDE' if v.get('direction','supply')=='supply' else v['comp'],b=v['comp'] if v.get('direction','supply')=='supply' else 'OUTSIDE',mechanical=True))
         for v in external:
-            keys=[k for k in vents if ids.get(k)==v['id'] and k.startswith('WT_')]
+            keys=[k for k in vents if ids.get(k)==v['id'] and k.startswith('MT_' if v.get('mechanical') else 'CFT_' if v.get('type')=='FLOOR' else 'WT_')]
             if len(keys)!=4:flows_known=False;continue
             for k in keys:
                 incoming='inflow' in k
-                if v['a']=='OUTSIDE':incoming=not incoming
+                # CFAST labels flows relative to room1 for WALL/MECHANICAL,
+                # room2 (bottom) for FLOOR. The CSV key identifies that endpoint.
+                if k.split('_')[1].lower()=='outside':incoming=not incoming
                 if incoming:inflow+=np.abs(vents[k])
                 else:outflow+=np.abs(vents[k])
         if flows_known:
@@ -90,6 +95,8 @@ def validate_native(result, model, folder=None):
 def protect_playback(playback, validation):
     """Keep computed quantities for diagnosis; remove tactical screening of invalid runs."""
     playback['physical_validation']=validation
+    if validation['status']=='unverified':
+        playback.setdefault('limits',[]).append('물리 타당성 일부 미확인: '+', '.join(validation.get('unknown',[]))+' · 검증 통과 결과가 아닙니다.')
     if validation['status']=='physically_invalid':
         playback['status']='physically_invalid'
         message='물리 타당성 검사 실패: '+', '.join(f"{r['check']}={r['value']:.4g}" for r in validation['reasons'])

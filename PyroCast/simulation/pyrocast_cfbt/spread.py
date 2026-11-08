@@ -387,6 +387,7 @@ def simulate(raw,exe,output_folder):
         result['iteration']={'mode':'earliest_single' if not prescribed else 'prescribed_smoke','passes':len(runs),
                              'terminated':terminated,'native_seconds':[0 if r.get('cache_hit') else r.get('wall_seconds',0) for r in runs]}
     from .conditions import evaluate
+    result['physical_validation']=current.get('physical_validation')
     result['conditions']=evaluate(model,result)
     result['effective_engine_gates']={'extended_temperature_scope':['vent_jet'] if model['gas']['enabled'] and model['gas']['vent_gate_enabled'] else [],
         'native_oxygen_rate_limit_mass_fraction':model['gas']['native_lower_oxygen_limit_mass_fraction'],

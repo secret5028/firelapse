@@ -23,3 +23,15 @@ def prepare(raw, *, cell_partitioner=None):
   'native strict threshold exceedance, 5s observation resolution; no probability interpretation',
   'room_involvement coverage controls standby supply only; initial source curve and total fuel energy remain area allocated']
  return model,targets,manifest
+
+
+def prepare_native(raw):
+    from .physics_config import defaults
+    from .native_rooms import coalesce
+    from .native_apertures import prepare as prepare_apertures
+    model,targets,manifest=prepare(prepare_apertures(raw))
+    if model.get('equivalent_apertures'):
+        manifest['equivalent_apertures']=deepcopy(model['equivalent_apertures'])
+    if defaults('native_compartments')['merge_virtual_cells']:
+        return coalesce(model,targets,manifest)
+    return model,targets,manifest

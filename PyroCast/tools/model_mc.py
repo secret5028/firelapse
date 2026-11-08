@@ -1,4 +1,4 @@
-"""Building-scoped MC boundary. Uses the existing serial runner unchanged."""
+"""Building-scoped MC boundary. Executes each opening sample with stock CFAST."""
 import hashlib, os, re, subprocess, sys, threading, time, uuid
 from pathlib import Path
 import model_simulation as sim
@@ -50,8 +50,10 @@ def status(ident):
     running=value.get('state') in ('queued','running')
     if running and not process_alive(req.get('owner_pid')):
         value={**value,'state':'interrupted','error':'실행 프로세스 종료 · 자동 재실행 없음'};running=False
+    if running and re.fullmatch(r'S\d+',str(value.get('current',''))):
+        value={**value,'native_progress':read(folder/value['current']/'CFAST/execution-state.json',{})}
     return {**value,'available':True,'running':running,'server_busy':bool(sim._active) and sim._active!=folder.name,
-            'id':folder.name,'room':req['room'],'floor':req['floor'],'workers':1,'budget_s_per_sample':1200}
+            'id':folder.name,'room':req['room'],'floor':req['floor'],'workers':1,'budget_s_per_sample':__import__('cfast_calculation').runtime_settings()['max_wall_s']}
 
 def prepare_request(ident,body):
     if not isinstance(body,dict) or set(body)-{'room','samples','duration_s','seed','manual','floor','selection_mode'}:raise ValueError('MC 요청 형식 오류')
@@ -77,7 +79,7 @@ def prepare_request(ident,body):
     # MC explores new combinations; a prior winner must not lock all openings.
     model.pop('fixed_openings',None)
     request=dict(building=ident,building_sha256=sha,floor=floor,room=winner,samples=count,duration_s=duration,seed=room_seed,seed_base=seed,
-                 selection_mode=mode,origin_score=chosen['score'],owner_pid=os.getpid())
+                 engine='cfast',selection_mode=mode,origin_score=chosen['score'],owner_pid=os.getpid())
     return request,model
 
 def start(ident,body):
@@ -89,12 +91,12 @@ def start(ident,body):
         atomic_json(folder/'progress.json',dict(state='queued',completed=0,total=req['samples']))
         sim._active=folder.name
         threading.Thread(target=compute,args=(folder,),daemon=True).start()
-    return dict(started=True,id=folder.name,room=req['room'],workers=1,budget_s_per_sample=1200)
+    return dict(started=True,id=folder.name,room=req['room'],workers=1,budget_s_per_sample=__import__('cfast_calculation').runtime_settings()['max_wall_s'])
 
 def compute(folder):
     try:
         with (folder/'console.txt').open('w',encoding='utf8') as log:
-            subprocess.run([sys.executable,'-B','-X','utf8',str(ROOT/'tools/run_lite_mc.py'),'--request',str(folder/'request.json'),'--out',str(folder)],
+            subprocess.run([sys.executable,'-B','-X','utf8',str(ROOT/'tools/run_cfast_mc.py'),'--request',str(folder/'request.json'),'--out',str(folder)],
                 cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,check=True,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         if read(folder/'progress.json',{}).get('state')!='completed':raise RuntimeError('완료 기록 없음')
     except Exception as exc:atomic_json(folder/'progress.json',{**read(folder/'progress.json',{}),'state':'failed','error':str(exc)})

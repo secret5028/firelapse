@@ -33,7 +33,15 @@ export function updateLitePanel({data,index,selected,clicked,playing,floor,$,sel
   const s=data.solvers[selected.solver_id],event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
   const quantity=(key,unit,digits=1,scale=1)=>{const v=s[key]?.[index];return Number.isFinite(v)?(v*scale).toFixed(digits)+unit:'미평가';};
   $('liteDetail').textContent=clicked?`${name(selected)} · 저장 조건 지수 · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${quantity('Tu','℃')} / 하층 ${quantity('Tl','℃')} · 상/하층 O₂ ${quantity('Ou','%',1,100)}/${quantity('Ol','%',1,100)} · 경계 ${quantity('h','m',2)} · 고체 ${quantity('Qsolid_kW','kW')} / 문 분출 ${quantity('Qvent_kW','kW')} / 상층 ${quantity('Qbulk_kW','kW')}`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
-  $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','BD']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
+  $('liteScores').replaceChildren();if(clicked){
+   if(data.status==='physically_invalid'||data.physical_validation?.status==='physically_invalid'){
+    $('liteScores').textContent='물리 타당성 검사 실패 · 위험 지수 표시 제외';
+   }else for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','BD']]){
+    const condition=s.conditions?.[key];if(condition?.status==='physically_invalid')continue;
+    const q=condition?.scores,degree=q?.degree?.[index],p=document.createElement('div');
+    p.textContent=`${title} 지수 ${Number.isFinite(degree)?(degree*100).toFixed(0):'미평가'} (100=조건 기준, 확률 아님) · 병목 ${q?.weakest?.[index]||'미평가'} · 우세 ${q?.strongest?.[index]||'미평가'}`;$('liteScores').append(p);
+   }
+  }
   $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);

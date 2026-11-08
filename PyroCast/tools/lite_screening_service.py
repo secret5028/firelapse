@@ -57,7 +57,7 @@ def compute(top_n,rooms=None):
     (out/'progress.json').write_text(json.dumps({'state':'running','completed':0,'top_n':top_n,'total':(1 if payload(top_n)['opening_mode']=='fixed' else 2)*(1 if rooms else top_n),'current_room':'입력 준비'}),'utf-8')
     with (out/'console.txt').open('w',encoding='utf-8') as log:
         try:
-            subprocess.run([sys.executable,'-X','utf8',str(ROOT/'tools/run_lite_screening_v8_approved.py'),'--top-n',str(top_n),'--out',str(out)]+(['--room',rooms[0]] if rooms else []),
+            subprocess.run([sys.executable,'-X','utf8',str(ROOT/'tools/run_cfast_screening.py'),'--top-n',str(top_n),'--out',str(out)]+(['--room',rooms[0]] if rooms else []),
                            cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,check=True,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
         except Exception as exc:
             (out/'progress.json').write_text(json.dumps({'state':'failed','error':str(exc)}),'utf-8')

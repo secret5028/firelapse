@@ -27,6 +27,7 @@ def prepare(raw, parameters=None):
 
 class LiteModel(Model):
     def __init__(self, model, manifest, parameters=None):
+        self.runtime_parameters = deepcopy(parameters)
         self.input_model = model
         self.manifest = manifest
         self.manifest_sha256 = digest(manifest)

@@ -421,7 +421,7 @@ function createAssistantPanel({store,revealSidebar,available=true,getContext,onN
  summaryCard.innerHTML='<summary>결과 요약</summary><div role="status"></div>';
  const summaryBody=summaryCard.lastElementChild;
  Object.assign(summaryBody.style,{maxHeight:'220px',overflow:'auto',whiteSpace:'pre-wrap',overflowWrap:'anywhere'});
- $('resultContent').prepend(summaryCard);
+ $('resultContent').append(summaryCard);
  let summaryRequest=null;
  async function loadSummary(){
   const ctx=getContext(),signal=contextRequest.signal;
@@ -718,7 +718,8 @@ function createRoutePanel({store,graph,onPlaceStart}){
  const container=document.createElement('details');container.id='routeSettings';container.hidden=true;container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace" hidden>차량 지정 취소</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중앙·복도 폭 중앙 우선 배치 경로. 등록 장애물은 회피, 미등록 적재물·실제 호스 처짐은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
  const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 3현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 시간바와 무관한 전 구간 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="resultCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
- document.getElementById('resultContent').append(summary);
+ const savedSummary=document.getElementById('resultSavedSummary');
+ if(savedSummary)savedSummary.before(summary);else document.getElementById('resultContent').append(summary);
  const style=document.createElement('style');style.textContent='#routeRiskSummary table{table-layout:fixed;font-size:13px}#routeRiskSummary th,#routeRiskSummary td{padding:6px 2px;white-space:normal;overflow-wrap:anywhere}#routeRiskSummary th:nth-child(1){width:8%}#routeRiskSummary th:nth-child(2){width:24%}#routeRiskSummary th:nth-child(3){width:17%}#routeRiskSummary th:nth-child(4){width:17%}#routeRiskSummary th:nth-child(5){width:21%}#routeRiskSummary th:nth-child(6){width:13%}#routeRiskSummary td:nth-child(2){min-width:0}#routeRiskSummary thead{position:sticky;top:0;background:var(--bg-card)}#routeRiskBasis{font-size:11px;color:var(--text-muted);margin-bottom:6px}';summary.append(style);
  const hud=document.createElement('div');hud.id='routeHUD';hud.style.cssText='padding-top:5px;font-size:13px;color:var(--accent)';document.querySelector('.compactHUD').append(hud);
  const $=id=>container.querySelector('#'+id);const cleanup=[];const on=(id,event,fn)=>{$(id).addEventListener(event,fn);cleanup.push(()=>$(id).removeEventListener(event,fn));};
@@ -1282,7 +1283,7 @@ function adaptBuilding({scenario,playback,sourceHash}){
    'Coordinates copied from saved CAD geometry; no nearest-room repair or geometry recomputation']};
 }
 
-const SERIES_MAP={T_upper_C:'Tu',T_lower_C:'Tl',interface_m:'h',O2_upper_volfrac:'Ou',O2_lower_volfrac:'Ol',
+const SERIES_MAP={floor_incident_kW_m2:'floor_incident_kW_m2',T_upper_C:'Tu',T_lower_C:'Tl',interface_m:'h',O2_upper_volfrac:'Ou',O2_lower_volfrac:'Ol',
  fuel_upper_massfrac:'Fu',HRR_actual_kW:'Qsolid_kW',HRR_doorjet_kW:'Qvent_kW',HRR_upperburn_kW:'Qbulk_kW'};
 const unknown=n=>Array(n).fill(null);
 function series(values,n,ref){if(values==null)return unknown(n);if(!Array.isArray(values)||values.length!==n)throw Error(`Series length mismatch: ${ref}`);
@@ -1312,7 +1313,7 @@ function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:
 }
 
 async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,building,resultId,sourceRefs={}}){
- const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2'].includes(p.native_mapping);
+ const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2','fixed-r8-native-v3'].includes(p.native_mapping);
  if(p.engine_kind!=='pyrocast_lite'&&!native)throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
  const errors=[],notes=[],n=p.time_s.length;
  if(!n||p.time_s.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=p.time_s[i-1])))throw Error('Time axis must be finite and strictly increasing');
@@ -1378,7 +1379,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v2'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v3'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -5012,7 +5013,15 @@ function updateLitePanel({data,index,selected,clicked,playing,floor,$,selectionL
   const s=data.solvers[selected.solver_id],event=data.events.find(e=>e.room===selected.key),burn=s.Qsolid_kW[index]>0;
   const quantity=(key,unit,digits=1,scale=1)=>{const v=s[key]?.[index];return Number.isFinite(v)?(v*scale).toFixed(digits)+unit:'미평가';};
   $('liteDetail').textContent=clicked?`${name(selected)} · 저장 조건 지수 · ${burn?'연소 중':event&&time>=event.supply_start_s?'조건 충족, 산소 부족 미연소':'고체 연소 없음'} · 상층 ${quantity('Tu','℃')} / 하층 ${quantity('Tl','℃')} · 상/하층 O₂ ${quantity('Ou','%',1,100)}/${quantity('Ol','%',1,100)} · 경계 ${quantity('h','m',2)} · 고체 ${quantity('Qsolid_kW','kW')} / 문 분출 ${quantity('Qvent_kW','kW')} / 상층 ${quantity('Qbulk_kW','kW')}`:'실을 클릭하거나 선택하면 계산값·현상 지수·판정 근거를 표시합니다.';
-  $('liteScores').replaceChildren();if(clicked){for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','BD']]){const q=s.conditions[key].scores,degree=q.degree[index],p=document.createElement('div');p.textContent=`${title} 지수 ${degree==null?'미평가':(degree*100).toFixed(0)} (100=조건 기준, 확률 아님) · 병목 ${q.weakest[index]||'미평가'} · 우세 ${q.strongest[index]||'미평가'}`;$('liteScores').append(p);}}
+  $('liteScores').replaceChildren();if(clicked){
+   if(data.status==='physically_invalid'||data.physical_validation?.status==='physically_invalid'){
+    $('liteScores').textContent='물리 타당성 검사 실패 · 위험 지수 표시 제외';
+   }else for(const [key,title] of [['FO','FO'],['FGI','FGI'],['backdraft','BD']]){
+    const condition=s.conditions?.[key];if(condition?.status==='physically_invalid')continue;
+    const q=condition?.scores,degree=q?.degree?.[index],p=document.createElement('div');
+    p.textContent=`${title} 지수 ${Number.isFinite(degree)?(degree*100).toFixed(0):'미평가'} (100=조건 기준, 확률 아님) · 병목 ${q?.weakest?.[index]||'미평가'} · 우세 ${q?.strongest?.[index]||'미평가'}`;$('liteScores').append(p);
+   }
+  }
   $('liteStatus').textContent=data.engine_kind==='cfast_native'?`${data.label} · 연기 광학밀도: 순정 CSV 1/m · 플룸은 표시용 상관식`:`${data.label} · 3F 층 계산 · 문 분출 ON · 연기는 계산 상층 범위·온도의 표시 효과(광학밀도 미계산)`;
  $('liteWhole').textContent=floor==='all'?'건물 전체 맞춤':'층 전체';
  $('liteCoreLegend').hidden=!(floor==='all'&&$('liteCores').checked);
@@ -5603,7 +5612,7 @@ function createResultsPanel({panel,store}){
  const move=(node,parent)=>{const mark=document.createComment('result restore');node.before(mark);moves.push(()=>mark.replaceWith(node));parent.append(node);};
  root.innerHTML='<h3>저장 결과</h3><div class="resultCard" id="resultCase"><label for="liteCase" hidden>사례</label><div id="resultCaseControls" hidden></div><div id="resultMetadata" hidden></div><div id="resultReuse" role="status" hidden></div><button id="resultReplay" hidden type="button" title="검증된 캐시는 반환하고, 증명 불가한 옛 사례는 과거 결과로 엽니다. 계산은 시작하지 않습니다.">다시 실행</button><div class="resultTools" id="resultTools"></div></div><h3>선택 실 위험 지수 <span class="resultInfo" tabindex="0" title="저장된 조건 지수 × 100. 100은 세 조건의 기준이며 발생 확률이 아닙니다. 표시 임계선은 표시 탭 설정을 따릅니다.">ⓘ</span></h3><div class="resultCard"><div id="resultRoomTitle"></div><div id="resultAtmosphere"></div><details id="resultCells"><summary>셀 목록 · 방 평균 없음</summary><div id="resultCellList"></div></details><div id="resultScores"></div><section aria-label="계산값"><h3>계산값</h3><div id="resultQuantities"></div></section></div><section id="resultMCSection" hidden><h3>MC 개폐 조합 비교 <span class="resultInfo" tabindex="0" title="표본 비율은 발생 확률이 아닙니다. ≥100은 고정 집계 기준이며 표시 임계값 변경과 별개입니다. 최대 실은 전체 시간 중 한 번 이상 충족한 원래 방 수의 표본 간 최대입니다.">ⓘ</span></h3><div class="resultCard"><div id="resultMCWorst"></div><div id="resultMCStatus" role="status"></div><div class="mcActions"><button id="resultMCApplyWorst" disabled title="선정된 조합의 문·창 상태를 이후 계산 입력에 적용합니다. 현재 재생 결과는 유지합니다.">이 조합의 급기 적용</button><button id="resultMCLoad">집계 다시 읽기</button></div><table><thead><tr><th>현상</th><th title="한 실이라도 지수 100에 도달한 무작위 조합 수">조건 충족<br>조합</th><th title="한 조합에서 시간 전체에 걸쳐 지수 100에 도달한 실 수의 최대. 동시 충족 실 수가 아닙니다.">최대 충족<br>실</th><th>최고<br>지수</th></tr></thead><tbody id="resultMCRows"></tbody></table><div id="resultMCBasis"></div></div></section><details id="resultLimits" hidden><summary>가정과 한계</summary><ul></ul></details>';
  const riskHeading=$('resultCase').nextElementSibling,riskCard=riskHeading.nextElementSibling;root.prepend(riskHeading,riskCard);
- const scope=document.createElement('div');scope.id='resultScope';scope.style.cssText='font-size:11px;color:var(--text-muted);margin:4px 0 12px';scope.title='현재 선택과 별개인 저장 결과의 계산 범위·화점';root.prepend(scope);
+ const scope=document.createElement('div');scope.id='resultScope';scope.style.cssText='font-size:11px;color:var(--text-muted);margin:4px 0 12px';scope.title='현재 선택과 별개인 저장 결과의 계산 범위·화점';riskCard.after(scope);
  const source=document.createElement('div');source.id='resultFireInput';source.className='resultCard';source.style.cssText='font-size:12px;line-height:1.6';scope.after(source);
  const state=document.createElement('small');state.id='resultEvaluation';state.style.cssText='font-size:11px;color:var(--text-muted)';$('resultRoomTitle').before(state);
  move($('liteCase'),$('resultCaseControls'));move($('liteRefresh'),$('resultCaseControls'));$('liteRefresh').textContent='목록 새로고침';
@@ -5619,8 +5628,8 @@ function createResultsPanel({panel,store}){
  const append=(parent,tag,text,cls)=>{const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;parent.append(e);return e;};
  let previous=null,roomKey=null;
  function update({building,result,series,index,selection,fireInput}){
-  let boundary=document.getElementById('resultBoundaryNotice');if(!boundary){boundary=document.createElement('div');boundary.id='resultBoundaryNotice';boundary.style.cssText='padding:10px;background:#533d12;color:#fff';root.prepend(boundary);}
-  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('최소 누기 가정 적용:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')).join(' · ');boundary.hidden=!boundary.textContent;
+  let boundary=document.getElementById('resultBoundaryNotice');if(!boundary){boundary=document.createElement('div');boundary.id='resultBoundaryNotice';boundary.style.cssText='padding:10px;background:#533d12;color:#fff';riskCard.prepend(boundary);}
+  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('지하 압력 간략식:')||s.startsWith('최소 누기 가정 적용:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')).join(' · ');boundary.hidden=!boundary.textContent;
   const invalid=(result.limits_text||[]).filter(s=>s.startsWith('물리 타당성 검사 실패:'));if(invalid.length){boundary.textContent=invalid.join(' · ');boundary.style.background='#9d1515';boundary.hidden=false;}else boundary.style.background='#533d12';
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
@@ -5653,7 +5662,7 @@ function createResultsPanel({panel,store}){
    const peakTime=append(row,'span',finite(peak?.time)?stamp(peak.time):'—','resultPeakTime');peakTime.title=`전 구간 최대 ${number(peak?.value)} · ${peak?.source??'미평가'} · 동률은 최초 시각`;peakTime.setAttribute('aria-label',s.name+' 최악 시간 '+peakTime.textContent);
    if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 조건 충족':'롤오버 조건 충족 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}
   }
-  $('resultQuantities').replaceChildren();for(const [label,key,unit] of [['상층 온도','T_upper_C','℃'],['하층 온도','T_lower_C','℃'],['상층 산소','O2_upper_volfrac','%'],['하층 산소','O2_lower_volfrac','%'],['연기층 경계 높이','interface_m','m'],['화원 발열','HRR_actual_kW','kW'],['문 분출 연소','HRR_doorjet_kW','kW'],['상층 연소','HRR_upperburn_kW','kW']]){const v=values?.[key]?.[index],noLower=['T_lower_C','O2_lower_volfrac'].includes(key)&&finite(values?.interface_m?.[index])&&values.interface_m[index]<.05;append($('resultQuantities'),'span',label);const shown=append($('resultQuantities'),'b',!noLower&&finite(v)?number(v*(unit==='%'?100:1),1)+' '+unit:'—');if(noLower)shown.title='하층 두께 0.05 m 미만 · 구획 평균값 표시 생략';}
+  $('resultQuantities').replaceChildren();for(const [label,key,unit] of [['상층 온도','T_upper_C','℃'],['하층 온도','T_lower_C','℃'],['상층 산소','O2_upper_volfrac','%'],['하층 산소','O2_lower_volfrac','%'],['연기층 경계 높이','interface_m','m'],['화원 발열','HRR_actual_kW','kW'],['바닥 평균 입사 복사열','floor_incident_kW_m2','kW/m²'],['문 분출 연소','HRR_doorjet_kW','kW'],['상층 연소','HRR_upperburn_kW','kW']]){const v=values?.[key]?.[index],noLower=['T_lower_C','O2_lower_volfrac'].includes(key)&&finite(values?.interface_m?.[index])&&values.interface_m[index]<.05;append($('resultQuantities'),'span',label);const shown=append($('resultQuantities'),'b',!noLower&&finite(v)?number(v*(unit==='%'?100:1),1)+' '+unit:'—');if(noLower)shown.title='하층 두께 0.05 m 미만 · 구획 평균값 표시 생략';}
   if(result.engine?.kind==='cfast'){
    const od=values?.legacy_optical?.ODu?.[index];
    append($('resultQuantities'),'span','상층 연기 광학밀도');
@@ -5756,6 +5765,11 @@ const __module63=(()=>{
 const {attentionRanking}=__module61;
 const {savedAttention}=__module62;
 const {fixedInputFor}=__module39;
+function isBelowGrade(floor,floors){
+ if(typeof floor?.below_grade==='boolean')return floor.below_grade;
+ const ground=floors.find(f=>f.is_ground)||floors.find(f=>f.name==='1F');
+ return Number.isFinite(floor?.z)&&Number.isFinite(ground?.z)&&floor.z<ground.z;
+}
 const finite=Number.isFinite;
 const count=v=>finite(v)?String(v):'—';
 function screeningRows(payload){
@@ -5763,11 +5777,16 @@ function screeningRows(payload){
  return {first,second:attentionRanking(payload.comparison,payload.attention??savedAttention).map(r=>({...r,rank1:byId.get(r.room)?.rank1??r.rank1,name:byId.get(r.room)?.name??r.name}))};
 }
 function mcEstimate(summary,samples){
- return finite(summary?.wall_s)&&summary.wall_s>0&&summary.completed>0?summary.wall_s/summary.completed*samples:null;
+ return summary?.engine_kind==='cfast_native'&&finite(summary?.wall_s)&&summary.wall_s>0&&summary.completed>0?summary.wall_s/summary.completed*samples:null;
+}
+function nativeProgress(progress){
+ if(!finite(progress?.last_native_time_s)||!finite(progress?.requested_horizon_s))return '';
+ const clock=s=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+ return `해석 ${clock(progress.last_native_time_s)} / ${clock(progress.requested_horizon_s)}`;
 }
 function calculationStatus({floor,origin,job={},pending=false,dirty=false,changed=false,saved=false,verified=false}){
  if(pending)return '요청 중';
- if(job.running)return `계산 중 ${job.completed??0}/${job.total??'—'}`;
+ if(job.running)return `계산 중 ${job.completed??0}/${job.total??'—'}${nativeProgress(job.native_progress)?' · '+nativeProgress(job.native_progress):''}`;
  if(job.server_busy)return '다른 계산 진행 중';
  if(!floor)return '층 선택 필요';
  if(!origin)return '화점 없음';
@@ -5776,6 +5795,7 @@ function calculationStatus({floor,origin,job={},pending=false,dirty=false,change
  if(job.room===origin&&['failed','interrupted'].includes(job.state))return job.state==='failed'?'계산 실패':'계산 중단';
  if(changed)return '재계산 필요';
  if(job.room===origin&&job.state==='completed'&&job.total>0&&job.failed_or_incomplete>=job.total)return '계산 실패 · 완주 0/'+job.total;
+ if(job.room===origin&&job.state==='completed'&&job.excluded_physically_invalid>0)return `계산 완료 · 타당성 검사 제외 ${job.excluded_physically_invalid}건${job.excluded_physically_invalid+(job.failed_or_incomplete||0)>=job.total?' · 적용 가능한 표본 없음':''}`;
  if(job.room===origin&&job.state==='completed')return job.failed_or_incomplete?'일부 미완료':verified?'계산 완료':'저장 결과 있음';
  return saved?'저장 결과 있음':'계산 전';
 }
@@ -5786,7 +5806,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  <form id="exploreRunForm" hidden><label>상위 N <input id="exploreN" type="number" min="1" step="1" value="8" required></label><button id="exploreRun" type="submit" disabled>② 실행</button><button id="exploreRefresh" type="button">새로고침</button></form><div id="exploreStatus" role="status">목록 읽는 중</div><div class="exploreScroll"><table><thead><tr><th>#</th><th>후보 실</th><th>점수</th></tr></thead><tbody id="exploreCandidates"></tbody></table></div></div>
  <h3 hidden>② 시뮬레이션 순위 <span tabindex="0" title="표시 순위: 연소 실 수 → 주의 이상 실 수 → 최초 FO가 빠른 순. 주의 이상은 3현상 중 최대 지수 ≥70인 원래 방 수입니다. 두 극단 상태 중 나쁜 쪽을 사용합니다. 행을 선택하면 다음 탐색의 화점만 바뀝니다.">ⓘ</span></h3>
  <div class="exploreCard" hidden><div id="exploreRankBasis"></div><div class="exploreScroll"><table><thead><tr><th>#</th><th>화점</th><th>①순위</th><th>연소</th><th title="3현상 최대 지수 ≥70인 실 수">주의 ≥70</th><th>최초 FO</th></tr></thead><tbody id="exploreRanking"></tbody></table></div></div>
- <div class="exploreCard workflowStep"><h3>4단계 · MC 급기 탐색</h3><label hidden>화점 <select id="exploreOrigin" disabled></select></label><label>계산 시간 <select id="exploreDuration"><option value="1800">30분</option><option value="3600" selected>60분</option></select></label><label>표본 수 <input id="exploreSamples" type="number" min="2" max="1000" step="1" value="10" required></label><div id="exploreEstimate" title="저장된 MC 전체 경과시간 ÷ 완료 표본 수 × 요청 표본 수. 다른 화점과 개폐 조건의 소요시간은 달라질 수 있습니다.">예상 시간 —</div><div class="exploreButtons"><button id="exploreOriginRun" hidden disabled>선택 실 2상태 실행</button><button id="exploreMC" disabled title="MC 서버 연결 확인 중">최악 급기 탐색</button></div><div id="exploreMCStatus" role="status">MC 서버 연결 확인 중</div></div>
+ <div class="exploreCard workflowStep"><h3>4단계 · CFAST MC 급기 탐색</h3><label hidden>화점 <select id="exploreOrigin" disabled></select></label><label>계산 시간 <select id="exploreDuration"><option value="1800">30분</option><option value="3600" selected>60분</option></select></label><label>표본 수 <input id="exploreSamples" type="number" min="2" max="1000" step="1" value="10" required></label><div id="exploreEstimate" title="저장된 MC 전체 경과시간 ÷ 완료 표본 수 × 요청 표본 수. 다른 화점과 개폐 조건의 소요시간은 달라질 수 있습니다.">예상 시간 —</div><div class="exploreButtons"><button id="exploreOriginRun" hidden disabled>선택 실 2상태 실행</button><button id="exploreMC" disabled title="MC 서버 연결 확인 중">최악 급기 탐색</button></div><div id="exploreMCStatus" role="status">MC 서버 연결 확인 중</div></div>
  <div class="exploreCard workflowStep"><h3>5단계 · 최악 결과 적용</h3><button id="exploreResults" disabled>MC 결과 보기</button><button id="exploreApplyWorst" disabled>최악 개폐 상태 적용·재생</button></div>
  <details id="exploreRules" hidden><summary>규칙 설정</summary><div id="exploreRuleContext"></div><div id="exploreRuleMount"></div></details>`;
  const style=document.createElement('style');style.dataset.pyrocastExplore='true';style.textContent=`
@@ -5794,19 +5814,20 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  `;document.head.append(style);
  // One explicit execution control at the end of the combined workflow.
  const calculate=document.createElement('section');calculate.id='exploreCalculate';calculate.className='exploreCard';
- calculate.innerHTML='<div class="exploreEngineButtons" role="group" aria-label="계산 방식"><button type="button" id="exploreEngineLite" aria-pressed="false">간략 계산</button><button type="button" id="exploreEngineCfast" aria-pressed="false">순정 CFAST</button></div><button type="button" id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><div id="exploreCalculationProgress" hidden><span class="calculationSpinner" aria-hidden="true"></span><span id="exploreCalculationElapsed" aria-live="off"></span></div><button type="button" id="exploreCalculationResult" hidden>결과 보기</button>';
+ calculate.innerHTML='<div class="exploreEngineButtons" role="group" aria-label="계산 방식"><button type="button" id="exploreEngineLite" hidden disabled aria-pressed="false">간략 계산</button><button type="button" id="exploreEngineCfast" aria-pressed="false">순정 CFAST</button></div><button type="button" id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><div id="exploreCalculationProgress" hidden><span class="calculationSpinner" aria-hidden="true"></span><span id="exploreCalculationElapsed" aria-live="off"></span></div><button type="button" id="exploreCalculationResult" hidden>결과 보기</button>';
  style.textContent+=`#exploreContent .exploreEngineButtons{display:flex;gap:6px}#exploreContent .exploreEngineButtons button{flex:1;padding:9px 4px}#exploreContent .exploreEngineButtons button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:700}#exploreCalculateRun:not(:disabled){background:var(--bg-control);border-color:var(--accent)}#exploreCalculationProgress:not([hidden]){display:flex;align-items:center;gap:7px;margin-top:8px;color:var(--accent);font-variant-numeric:tabular-nums}.calculationSpinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:calculationSpin .9s linear infinite}@keyframes calculationSpin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.calculationSpinner{animation:none}}`;
- root.append(calculate);$('exploreMC').textContent='MC 급기 탐색';
+ root.append(calculate);$('exploreMC').textContent='CFAST MC 급기 탐색';
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const fireInputs=document.createElement('fieldset');
  fireInputs.style.cssText='display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--border)';
- fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><label>최소 누기 면적 (m²/경로) <input id="exploreLeakArea" type="number" min="0.0001" step="any" placeholder="계단 0.02 · 승강로 0.06"></label><label>급기·배기 각각 (ACH) <input id="exploreACH" type="number" min="0.01" step="any" placeholder="예시 6 · 미지정"></label><label>외기 연결 램프 폭 (m) <input id="exploreRampWidth" type="number" min="0.01" step="any"></label><label>램프 입구 높이 (m) <input id="exploreRampHeight" type="number" min="0.01" step="any"></label><small>빈칸은 저장 MC 입력을 사용합니다. 값을 바꾸면 기존 개폐 조합으로 해당 엔진을 새로 계산합니다.</small>';
+ fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><label>최소 누기 면적 (m²/경로) <input id="exploreLeakArea" type="number" min="0.0001" step="any" placeholder="계단 0.02 · 승강로 0.06"></label><label>급기·배기 각각 (ACH) <input id="exploreACH" type="number" min="0" step="any" placeholder="직접 입력 · 0=설비 정지"></label><button id="exploreFanOff" type="button">급배기 정지 조건 (0 ACH)</button><small id="exploreBasementNote" hidden>지하층: 외기 경로가 없으면 생략한 건물·덕트 경로를 등가화하고 설정된 압력 상한에 맞춰 배출 면적을 자동 보정합니다. 상한은 계산 가정입니다. 0 ACH는 팬 정지이며 압력 배출 경로와 별도입니다.</small><label>실제로 외기에 연결된 램프 폭 (m) <input id="exploreRampWidth" type="number" min="0.01" step="any"></label><label>램프 입구 높이 (m) <input id="exploreRampHeight" type="number" min="0.01" step="any"></label><small>빈칸은 저장 MC 입력을 사용합니다. 새 계산은 모두 CFAST를 사용합니다. 기존 결과는 그대로 보존합니다. 급·배기량 = ACH × 실 체적 ÷ 3,600 (m³/s).</small>';
  calculate.insertBefore(fireInputs,$('exploreCalculateRun'));
  let fireInputRoom;
  fireInputs.addEventListener('input',sync);
- let calculation={available:false},calculationPending=false,selectedEngine=null,calculationTimer=null,calculationStarted=0;
- for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']])$(id).onclick=()=>{selectedEngine=engine;calculation={...calculation,error:null};sync();};
- function updateElapsed(){const seconds=Math.max(0,Math.floor((Date.now()-calculationStarted)/1000));$('exploreCalculationElapsed').textContent=`경과 ${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;}
+ $('exploreFanOff').onclick=()=>{$('exploreACH').value='0';sync();};
+ let calculation={available:false},calculationPending=false,selectedEngine='cfast',calculationTimer=null,calculationStarted=0;
+ $('exploreEngineCfast').onclick=()=>{selectedEngine='cfast';calculation={...calculation,error:null};sync();};
+ function updateElapsed(){const seconds=Math.max(0,Math.floor((Date.now()-calculationStarted)/1000));$('exploreCalculationElapsed').textContent=`경과 ${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}${nativeProgress(calculation.native_progress)?' · '+nativeProgress(calculation.native_progress):''}`;}
  $('exploreCalculationResult').onclick=onCalculationResult;
  function savedCalculationInput(state){
   const fixed=fixedInputFor(store.get('buildingReview'),state.origin_room_id);
@@ -5847,7 +5868,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   const fuel=store.get('fuelSettings'),dirty=Object.values(fuel.draft).some(v=>v&&Object.keys(v).length),changed=!!submitted&&submitted.key!==inputKey();
   let fuelNotice=$('exploreFuelNotice');if(!fuelNotice){fuelNotice=document.createElement('small');fuelNotice.id='exploreFuelNotice';$('exploreCandidates').closest('.exploreScroll').before(fuelNotice);}fuelNotice.hidden=!dirty&&!fuel.saving;fuelNotice.textContent=fuel.saving?'저장·순위 갱신 중…':previewStatus;
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id||!store.get('floor').floor_id||dirty||fuel.saving;
-  $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'간략 엔진으로 개구부 조합 MC 계산 · 직렬 실행 · 표본당 적분 예산 1,200초':'MC 실행 연결 없음';
+  $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'모든 개구부 조합을 순정 CFAST로 계산 · 직렬 실행 · 표본당 최대 3,600초':'MC 실행 연결 없음';
   $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
   $('exploreMCStatus').title=mcJob.error||'현재 화점 기준. 저장 결과 있음은 현재 설정과의 일치 확인을 뜻하지 않습니다.';
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
@@ -5858,11 +5879,12 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   if(fireInputRoom!==state.origin_room_id){
    fireInputRoom=state.origin_room_id;$('exploreFuelEnergy').value='';$('exploreFirePeak').value='';for(const id of ['exploreLeakArea','exploreACH','exploreRampWidth','exploreRampHeight'])$(id).value='';
   }
+  $('exploreBasementNote').hidden=!isBelowGrade(floors.find(f=>f.name===store.get('floor').floor_id),floors);
   const customFire=['exploreFuelEnergy','exploreFirePeak','exploreLeakArea','exploreACH','exploreRampWidth','exploreRampHeight'].some(id=>$(id).value!=='');
   fireInputs.disabled=!!calculating||!calculation.available;
   $('exploreCalculationResult').hidden=calculating||!!calculation.error||!['complete','physically_invalid'].includes(calculation.state)||!calculation.case_id;
   $('exploreCalculationResult').textContent=(calculation.engine==='cfast'?'순정 CFAST':'간략 계산')+' 결과 보기';
-  for(const [id,engine] of [['exploreEngineLite','lite'],['exploreEngineCfast','cfast']]){$(id).disabled=calculating;$(id).setAttribute('aria-pressed',String(kind===engine));}
+  $('exploreEngineCfast').disabled=calculating;$('exploreEngineCfast').setAttribute('aria-pressed','true');
   calculate.setAttribute('aria-busy',String(!!calculating));
   $('exploreCalculateRun').textContent=calculationPending?'요청 중…':calculation.running?'계산 중…':'계산하기';
   $('exploreCalculationProgress').hidden=!calculating;
@@ -5870,10 +5892,10 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   else if(calculationTimer){clearInterval(calculationTimer);calculationTimer=null;}
   $('exploreCalculateRun').disabled=!kind||!calculation.available||!ready||dirty||fuel.saving||calculating||mcJob.running||mcPending||calculation.server_busy||mcJob.server_busy||(kind==='cfast'&&!calculation.cfast_available);
   $('exploreMC').disabled ||= calculating||calculation.server_busy;
-  $('exploreCalculateRun').title=kind==='cfast'?'선택한 급기 조합으로 순정 CFAST 1회':customFire?'수정한 화원 입력으로 간략 엔진 1회':'동일 조건의 완료된 간략 MC 결과 사용 · 재계산 없음';
+  $('exploreCalculateRun').title='선택한 급기 조합과 화원 입력으로 순정 CFAST 계산';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:var(--text-muted)';
   const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:'확정 급기';
-  $('exploreCalculateStatus').textContent=calculation.state==='physically_invalid'?'물리 타당성 검사 실패 · 진단 결과를 확인하세요':calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):!customFire&&calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+(kind==='cfast'||customFire?' · 1회 계산':' · 간략 결과 불러오기');
+  $('exploreCalculateStatus').textContent=calculation.state==='physically_invalid'?'물리 타당성 검사 실패 · 진단 결과를 확인하세요':calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):!customFire&&calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+' · CFAST 계산';
   $('exploreCalculateStatus').className=calculation.error||calculation.state==='physically_invalid'?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
   $('exploreMCStatus').className=/실패|시간초과|차단|미완료|오류/.test($('exploreMCStatus').textContent)?'status-error':(mcJob.running||mcPending)?'status-busy':/완료/.test($('exploreMCStatus').textContent)?'status-ok':'';
   $('exploreEstimate').className=estimate===null?'':'status-busy';
@@ -5905,10 +5927,10 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   if(value.available===false){$('exploreStatus').textContent=first.length?`적격 ${first.length}실`:value.unavailable_reason||'화점 후보 없음';$('exploreRun').title=$('exploreOriginRun').title=value.unavailable_reason||'실행 연결 전';}
   sync();
  }
- return {update,calculationState(value,pendingRequest=false){calculation=value;calculationPending=pendingRequest;if(value.running||pendingRequest)selectedEngine=value.engine;sync();},previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){if(calculationTimer)clearInterval(calculationTimer);off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
+ return {update,calculationState(value,pendingRequest=false){calculation=value;calculationPending=pendingRequest;selectedEngine='cfast';sync();},previewState(message){previewStatus=message;sync();},calculationKey:inputKey,mcSubmitted(value,key){submitted={id:value.id,key};sync();},mcState(value,pendingRequest=false){mcJob=value;mcPending=pendingRequest;sync();},catalog(c,origin){summary=c.mc_summary??null;mcOrigin=origin;sync();},busy(value){pending=value;sync();},status(message){$('exploreStatus').textContent=message;},dispose(){if(calculationTimer)clearInterval(calculationTimer);off();offFloor();offFuel();offDoors();scope.remove();root.remove();style.remove();}};
 }
 
-return {screeningRows,mcEstimate,calculationStatus,createExplorePanel};
+return {isBelowGrade,screeningRows,mcEstimate,nativeProgress,calculationStatus,createExplorePanel};
 })();
 
 // app/web/controller.js
@@ -6331,7 +6353,7 @@ async function attach(viewer){
  const pending=(async()=>{
   try{
   const r=await fetch('/cfbt/lite/active.json'),data=r.ok?await r.json():null;
-  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2'].includes(data.native_mapping)))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
+  if(data?.engine_kind!=='pyrocast_lite'&&!(data?.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2','fixed-r8-native-v3'].includes(data.native_mapping)))throw Error('지원하지 않는 결과 형식입니다. 저장 사례를 확인하세요.');
   document.documentElement.dataset.pyrocastUi='modern';
   const app=await attachModern(viewer,data);loading.remove();return app;
   }catch(error){loading.textContent='불러오기 실패 · '+error.message;throw error;}

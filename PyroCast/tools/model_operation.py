@@ -96,7 +96,7 @@ def jobs(ident, warnings=None):
     for p in sorted(sim.result_glob(sim.RESULTS/ident,'*/status.json'), key=lambda p:p.stat().st_mtime, reverse=True):
         try:
             status = json.loads(p.read_text('utf-8-sig'))
-            if not isinstance(status, dict) or status.get('state') != 'complete': continue
+            if not isinstance(status, dict) or status.get('state') not in ('complete','physically_invalid'): continue
             request = json.loads((p.parent/'request.json').read_text('utf-8-sig'))
             if not isinstance(request, dict): raise ValueError('Invalid saved request')
             if request.get('building_sha256') != digest: continue

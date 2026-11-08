@@ -76,7 +76,7 @@ class Handler(BaseHTTPRequestHandler):
      return self.json({'jobs':[dict(job=p.parent.name,**{k:v for k,v in sim.read(p).items() if k!='job'},request=sim.read(p.parent/'request.json')) for p in folders]})
     folder=sim.job_path(ident,query.get('job',[''])[0])
     if path.endswith('/status'):return self.json(sim.read(folder/'status.json'))
-    if sim.read(folder/'status.json')['state']!='complete':return self.json({'error':'아직 완료되지 않은 결과'},409)
+    if sim.read(folder/'status.json')['state'] not in ('complete','physically_invalid'):return self.json({'error':'아직 완료되지 않은 결과'},409)
     return self.send((folder/'playback.json').read_bytes())
    except (ValueError,KeyError,TypeError,OSError) as exc:return self.json({'error':str(exc)},400)
   if path in FILES:

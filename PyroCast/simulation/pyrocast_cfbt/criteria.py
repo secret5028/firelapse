@@ -6,7 +6,7 @@ BD is a potential; an opening increase is additionally required for occurred.
 import numpy as np
 from .physics_config import defaults
 
-CONDITION_VERSION = 'physics_p0_v2'
+CONDITION_VERSION = 'physics_p0_v3'
 
 
 def settings(model):

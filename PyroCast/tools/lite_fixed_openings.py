@@ -90,7 +90,7 @@ def ranked_samples(folder, building_sha):
         if not re.fullmatch(r'S\d+', path.parent.name):
             continue
         value = read(path, {})
-        if not value.get('complete'):
+        if not value.get('complete') or value.get('ranking_eligible') is False:
             continue
         index = result_index(path.with_name('result.json'))
         if not index['complete'] or index['unknown_rooms']:

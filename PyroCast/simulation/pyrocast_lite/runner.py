@@ -7,6 +7,38 @@ from .jacobian import fresh_jacobian
 
 
 def run(model, duration_s, output_s=10., budget_s=600., method='BDF'):
+    from copy import deepcopy
+    from pyrocast_cfbt.basement_pressure import below_grade, record_and_resize
+    policy=getattr(model,'input_model',{}).get('basement_pressure')
+    if not policy:return _run_once(model,duration_s,output_s,budget_s,method)
+    started=time.perf_counter();policy['history']=[];replays=0
+    while True:
+        remaining=budget_s-(time.perf_counter()-started)
+        if remaining<=0:raise TimeoutError('Basement pressure sizing time budget exceeded')
+        sol=_run_once(model,duration_s,output_s,remaining,method)
+        if not model.integration['complete']:return sol
+        indices=[i for i,r in enumerate(model.input_model['rooms']) if below_grade(r,model.input_model)]
+        # The first state block is gauge pressure plus the ambient hydrostatic
+        # reference; compare against y0, not against sea-level pressure.
+        peak=float(np.max(np.abs(sol.y[indices]-model.y0()[indices,None])))
+        try:changed=record_and_resize(model.input_model,peak)
+        except ValueError as exc:
+            model.integration.update(complete=False,failure=str(exc));sol.success=False;sol.message=str(exc);return sol
+        if not changed:
+            from .adapter import digest
+            model.manifest['basement_pressure']=deepcopy(model.input_model['basement_pressure'])
+            retained=[s for s in model.manifest.get('limits',[]) if not s.startswith(('지하 압력 간략식:','최소 누기 가정 적용:'))]
+            model.manifest['limits']=list(dict.fromkeys(retained+model.input_model.get('limits',[])))
+            model.manifest_sha256=digest(model.manifest)
+            model.integration.update(from_zero_replays=replays,wall_seconds=time.perf_counter()-started,
+                                     basement_pressure=model.input_model['basement_pressure'])
+            return sol
+        from .adapter import LiteModel
+        rebuilt=LiteModel(deepcopy(model.input_model),deepcopy(model.manifest),model.runtime_parameters)
+        model.__dict__.clear();model.__dict__.update(rebuilt.__dict__);replays+=1
+
+
+def _run_once(model, duration_s, output_s=10., budget_s=600., method='BDF'):
     if duration_s <= 0 or output_s <= 0 or budget_s <= 0:
         raise ValueError('Positive time limits required')
     started = time.perf_counter(); n = model.N

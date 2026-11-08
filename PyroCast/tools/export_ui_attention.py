@@ -20,6 +20,8 @@ def summarize(result):
                 unknown.add(room)
                 continue
             for value in values:
+                if value is None and result.get('engine_kind')=='cfast_native' and result['shared_conditions']['rooms'][row['cell']][kind].get('status')=='evaluated':
+                    continue # Shared criteria explicitly use null for not-applicable states.
                 if not isinstance(value, (int, float)) or not math.isfinite(value):
                     unknown.add(room)
                 elif value * 100 >= 70:
@@ -62,7 +64,7 @@ def comparison_attention(comparison, root=None):
             if not case.get('selected_attempt'):continue
             from runtime_storage import is_result_path
             try:
-                source=(Path(case['result_folder'])/case['selected_attempt']/'result.json').resolve()
+                source=(Path(case['result_folder'])/('' if case.get('engine_kind')=='cfast_native' else case['selected_attempt'])/'result.json').resolve()
                 if not source.is_relative_to(root) and not (root==(ROOT/'simulation/results').resolve() and is_result_path(source)):raise ValueError('Result outside workspace')
             except ValueError:
                 attention_skipped+=1

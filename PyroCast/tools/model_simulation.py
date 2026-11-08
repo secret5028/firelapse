@@ -1,4 +1,4 @@
-"""Building-scoped lite execution for the model library; existing engine unchanged."""
+"""Building-scoped stock CFAST execution; historical Lite playback remains readable."""
 import hashlib
 import json
 import os
@@ -36,6 +36,7 @@ def entry(ident):
         raise ValueError('스캔·비 CAD 모델은 이 계산 경로를 사용할 수 없습니다')
     if not row.get('simulation_enabled'):
         raise ValueError('계산 가능한 CAD 층이 없습니다')
+    # Preserve the historical library routing identifier; the execution engine is CFAST.
     if row.get('execution_mode') != 'library_lite':
         raise ValueError('이 건물은 전용 운영 화면의 계산 경로를 사용합니다')
     return row
@@ -114,8 +115,9 @@ def capabilities(ident):
             item['warnings'] = raw.get('warnings', [])
         except Exception as exc: item['error'] = str(exc)
         floors.append(item)
+    from cfast_calculation import runtime_settings
     return dict(building=ident, building_sha256=digest, floors=floors,
-        engine='pyrocast_lite', budget_s=1200, states=list(STATES),
+        engine='cfast_native', budget_s=runtime_settings()['max_wall_s'], states=list(STATES),
         limits=['단일 층 계산. 수직 전파·창 파괴 OFF.',
                 '미확인 연결·용도는 도면 표시와 같은 추정 상태. 자동 용도 분류와 기존 연료표 사용.',
                 '강화 기존 운영 화면의 사용자 승인 연료 설정과 별개인 자동 분류 입력입니다.'])
@@ -160,42 +162,25 @@ def start(body):
 def _work(folder):
     global _active
     started = time.monotonic()
+    from cfast_calculation import runtime_settings
     try:
         save(folder/'status.json', dict(state='running', job=folder.name, building=folder.parent.name))
         env = {**os.environ, 'OPENBLAS_NUM_THREADS':'1', 'OMP_NUM_THREADS':'1', 'MKL_NUM_THREADS':'1'}
         with (folder/'console.txt').open('w', encoding='utf8') as log:
             subprocess.run([sys.executable,'-B','-X','utf8',str(Path(__file__)),str(folder)],
                 cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, check=True,
-                timeout=1260, creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+                timeout=runtime_settings()['max_wall_s']+60, creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
     except Exception as exc:
         save(folder/'status.json', dict(state='failed', error=str(exc), wall_s=time.monotonic()-started))
     finally:
         with _lock: _active = None
 
 def execute(folder):
-    from pyrocast_lite.adapter import prepare
-    from pyrocast_lite.runner import run, results
-    from pyrocast_lite.visualization import package
-    from pyrocast_lite.screening_v8_approved import summarize
-    from export_ui_attention import summarize as attention
-    start_time = time.perf_counter(); data = read(folder/'input.json'); request = read(folder/'request.json')
-    model, manifest = prepare(data, PARAMS); prep = time.perf_counter()-start_time
-    save(folder/'rule_manifest.json', manifest)
-    run(model, request['duration_s'], 10, 1200, method='BDF')
-    result = results(model); save(folder/'result.json', result)
-    if not result['ok']:
-        save(folder/'status.json', dict(state='failed', error=model.integration['failure'], integration=model.integration)); return
-    summary = {**summarize(model,result), **attention(result), 'preprocess_s':prep,
-        'integration_s':model.integration['wall_seconds'], 'wall_s':time.perf_counter()-start_time}
-    save(folder/'summary.json', summary)
-    pb = package(model,result,data,f"{request['floor']} · {request['room']} · {request['opening_state']}")
-    for r in pb['rooms']:
-        cls = data['approved_input']['room_uses'].get(r['original_room'], {})
-        r.update(display_name=cls.get('label','용도 미확인'), approved_fuel_class=cls.get('usage_class'))
-    save(folder/'playback.json', pb)
-    save(folder/'index-summary.json', attention(result))
-    save(folder/'status.json', dict(state='complete', job=folder.name, building=request['building'],
-        wall_s=time.perf_counter()-start_time, summary=summary))
+    from cfast_calculation import run_case
+    start_time=time.perf_counter();data=read(folder/'input.json');request=read(folder/'request.json')
+    pb,_,summary=run_case(data,folder,label=f"{request['floor']} · {request['room']} · CFAST · {request['opening_state']}")
+    save(folder/'status.json',dict(state=pb.get('status','complete'),job=folder.name,building=request['building'],
+        engine='cfast',physical_validation=pb.get('physical_validation'),wall_s=time.perf_counter()-start_time,summary=summary))
 
 if __name__ == '__main__':
     target = Path(sys.argv[1]).resolve()

@@ -57,6 +57,29 @@ def polygon_data(geom):
             for g in parts if g.geom_type == 'Polygon' and g.area > .001]
 
 
+def envelope_width(raw, dimensions):
+    """Repair centroid-doubled legacy envelopes, retaining explicit CAD spans.
+
+    A lopsided door symbol's centroid is not the midpoint of its bounds.
+    Twice the farthest distance inflated widths (B1 EV5: 1.719 vs 0.88 m).
+    Use the actual oriented envelope, without editing the source drawing.
+    """
+    width = dimensions['width_m']
+    if (dimensions.get('width_source') != 'CAD_aperture_envelope'
+            or raw.get('span') or raw.get('leaves') or not raw.get('polys')):
+        return width, None
+    from shapely.geometry import MultiPoint
+    rect = MultiPoint([p for ring in raw['polys'] for p in ring]).minimum_rotated_rectangle
+    if rect.geom_type != 'Polygon':
+        return width, None
+    coords = list(rect.exterior.coords)
+    extent = max(math.dist(a, b) for a, b in zip(coords, coords[1:]))
+    if width <= extent + 1e-4:  # Stored dimensions are rounded to 4 places.
+        return width, None
+    return extent, dict(revision='cad_aperture_extent_v1', previous_width_m=width,
+                        width_m=extent, basis='CAD oriented envelope extent; not twice centroid radius')
+
+
 def native_point(room, xyz):
     """An explicit, auditable affine map; CAD points are never native box coordinates."""
     x0, y0, x1, y1 = room['cad_bounds_m']
@@ -249,11 +272,13 @@ def adapt(project, options=None):
             if a=='OUTSIDE':a,b=b,a
             if a not in rooms or (b!='OUTSIDE' and b not in rooms) or a==b:continue
             dims=conn['dimensions']; kind=conn['kind']
+            width, width_correction = envelope_width(originals.get(conn['id'], {}), dims)
             fraction=options.get('window_fraction',0.) if 'window' in kind else (options.get('elevator_fraction',.01) if kind=='door_elev' else options.get('door_fraction',1.))
             fraction=options.get('opening_overrides',{}).get(key(f['name'],conn['id']),fraction)
             if kind=='open_passage':fraction=1.0  # No door leaf exists to close.
             horizontal.append({'id':key(f['name'],conn['id']),'a':a,'b':b,'kind':kind,
-                'width_m':dims['width_m'],'bottom_m':dims['bottom_m'],'top_m':dims['top_m'],
+                'width_m':width,'bottom_m':dims['bottom_m'],'top_m':dims['top_m'],
+                **({'width_correction':width_correction} if width_correction else {}),
                 'schedule':[[0,fraction]],'cad_floor':f['name'],'cad_opening':conn['id'],
                 'topology_correction':conn.get('topology_correction'),
                 'raw_geometry':originals.get(conn['id'],{'id':conn['id']})})
@@ -330,14 +355,25 @@ def adapt(project, options=None):
             if v['a']==b:v['a']=a
             if v['b']==b:v['b']=a
         horizontal=[v for v in horizontal if v['a']!=v['b']]
+    from .physics_config import defaults as geometry_defaults
+    box_settings = geometry_defaults('cad_equivalent_geometry')
     for i,(k,r) in enumerate(rooms.items()):
-        maxwidth=max([v['width_m']+.2 for v in horizontal if k in (v['a'],v['b'])] or [0.])
+        aperture_width=max([v['width_m'] for v in horizontal if k in (v['a'],v['b'])] or [0.])
+        maxwidth=aperture_width + box_settings['preferred_margin_m']
         bounds=list(footprint(r['cad_polys']).bounds); x0,y0,x1,y1=bounds
-        width=max(maxwidth,math.sqrt(r['area_m2']*(x1-x0)/(y1-y0)))
+        width=max(box_settings['minimum_side_m'],maxwidth,math.sqrt(r['area_m2']*(x1-x0)/(y1-y0)))
         depth=r['area_m2']/width
-        if depth<=.6: # Preserve area while keeping the native minimum usable depth.
-            width=r['area_m2']/.61;depth=.61
-            if width<maxwidth:raise ValueError('Opening wider than usable equivalent room: '+k)
+        if depth < box_settings['minimum_side_m']:
+            # Margin is optional; neither aperture area nor compartment volume is.
+            width=r['area_m2']/box_settings['minimum_side_m'];depth=box_settings['minimum_side_m']
+            if width<aperture_width:
+                # A folded/multipart aperture can exceed one equivalent box wall.
+                # Native input splits it into parallel vents, preserving total width.
+                width=min(width, math.sqrt(r['area_m2']*box_settings['max_small_box_aspect']))
+                depth=r['area_m2']/width
+                r['equivalent_aperture_required']=True
+                warnings.append('넓은 개구부는 폭 합계 보존 등가 분할로 계산: '+k)
+            warnings.append('계산용 문 옆 여유 폭 축소 · 실 면적·문 폭 유지: '+k)
         r.update(origin_m=[i*100.,0.,r['z_m']],size_m=[width,depth,r['height_m']],cad_bounds_m=bounds,
                  shaft=bool(r['core_kind']),members=members[k])
     for v in horizontal:

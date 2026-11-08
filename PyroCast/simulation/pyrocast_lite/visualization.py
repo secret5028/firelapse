@@ -56,6 +56,9 @@ def package(model,result,raw,label):
                 basis='compact display symbol only; no quantitative flame dimensions')))
     return dict(schema='pyrocast-cad-playback-1',engine_kind='pyrocast_lite',condition_version=__import__('pyrocast_cfbt.criteria',fromlist=['CONDITION_VERSION']).CONDITION_VERSION,
         complete=True,time_s=t.tolist(),building_sha256=raw['cad']['building_sha256'],label=label,
+        boundary_revision=model.input_model.get('boundary_revision'),minimum_leakage=model.input_model.get('minimum_leakage',[]),
+        ventilation_assumptions=model.input_model.get('ventilation_assumptions',{}),
+        basement_pressure=model.input_model.get('basement_pressure'),
         fire_key=next((f['cad_key'] for f in fires if f['kind']=='initial'),rows[0]['key']),
         rooms=rows,solvers=solvers,fires=fires,fuel_symbols=units,fuel_units=[],events=result['events'],
         original_room_count=len(originals),door_jet=result['door_jet'],integration=result['integration'],

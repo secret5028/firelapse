@@ -155,6 +155,20 @@ def make_deck(model, committed, targets, transitions=None):
         pos=','.join(f'{v:.9g}' for v in target['local_xyz'])
         normal=','.join(f'{v:g}' for v in target['normal'])
         lines.append(f"&DEVC ID='{target['id']}' COMP_ID='{target['room']}' TYPE='PLATE' LOCATION={pos} NORMAL={normal} MATL_ID='{mid}' THICKNESS={mat['thickness_m']} /")
+    # Passive black gauges: incident radiative flux, not net heat transfer.
+    # Append after existing devices so their indices/ignition IDs remain stable.
+    from .floor_flux import gauges
+    floor_gauges=gauges(model)
+    from .physics_config import defaults
+    cfg=defaults('native_floor_flux');target_count=len(floor_gauges)+len(targets)+len(windows)
+    if target_count>cfg['max_native_targets'] or 1+target_count*cfg['columns_per_plate']>cfg['max_device_csv_columns']:
+        raise ValueError('Floor radiation gauges exceed native target capacity; reduce grid or calculation scope')
+    if {g['id'] for g in floor_gauges}&{g['id'] for g in [*targets,*windows]}:
+        raise ValueError('Reserved floor radiation device ID')
+    lines.append(f"&MATL ID='FO_BLACK_GAUGE' CONDUCTIVITY={wall['conductivity_W_mK']} DENSITY={wall['density_kg_m3']} SPECIFIC_HEAT={wall['specific_heat_kJ_kgK']} THICKNESS={wall['thickness_m']} EMISSIVITY=1 /")
+    for g in floor_gauges:
+        pos=','.join(f'{v:.9g}' for v in g['local_xyz'])
+        lines.append(f"&DEVC ID='{g['id']}' COMP_ID='{g['room']}' TYPE='PLATE' LOCATION={pos} NORMAL=0,0,1 MATL_ID='FO_BLACK_GAUGE' THICKNESS={wall['thickness_m']} /")
     active={f["id"]:{"t_ign_s":f["initial_time_s"],"xyz":f["position_m"],"solver_xyz":f.get('solver_position_m',f['position_m'])} for f in model["fuel_groups"] if "initial_time_s" in f}
     active.update({e["group"]:e for e in committed})
     curves = {}

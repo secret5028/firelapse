@@ -41,5 +41,45 @@
     "lfl_min_factor": 0.2,
     "oxygen_molar_mass": 32,
     "background_molar_mass": 28.97
+  },
+  "basement_pressure": {
+    "enabled": true,
+    "early_resize": true,
+    "probe_interval_s": 5,
+    "limit_Pa": 300,
+    "target_Pa": 100,
+    "max_area_m2": 10,
+    "max_scale": 8,
+    "max_attempts": 5
+  },
+  "native_execution": {
+    "max_wall_s": 3600,
+    "progress_stall_s": 90,
+    "basis": "A wall-time budget, not a physical constant. Low-ventilation native runs can require more than the previous 1800 s; accepted steps prove progress even when rounded simulation time is unchanged."
+  },
+  "native_floor_flux": {
+    "grid_side": 2,
+    "origin_grid_side": 8,
+    "max_native_targets": 2525,
+    "max_device_csv_columns": 16384,
+    "columns_per_plate": 36,
+    "height_m": 0.02,
+    "emissivity": 1.0,
+    "basis": "Equal-area midpoint quadrature of upward-facing floor gauges, 0.02 m above floor. User-selected 8x8 (64) gauges in initially burning physical rooms; 5F R16 8x8 to 16x16 changed peak by 1.7%. Other rooms use 2x2 and may require refinement if they ignite. CFAST 7.7.7 target.f90 TRGFLXI is incident radiation multiplied by target emissivity; a black gauge measures incident radiation without convection or reradiative subtraction. Sampled area mean, not a local maximum. Stock cparams mxitems=25*101; outputspreadsheet ssprintresults has 16384 cells and validation output uses 36 columns per plate."
+  },
+  "display_output": {
+    "decimal_places": 5,
+    "degree_boundaries": [0.7, 1.0],
+    "basis": "Round only newly saved playback for display. Keep raw native CSV, input, analytical result and MC summary precision. Do not round a below-boundary degree up across the 70/100 display decision boundary."
+  },
+  "cad_equivalent_geometry": {
+    "minimum_side_m": 0.600001,
+    "preferred_margin_m": 0.2,
+    "max_small_box_aspect": 3,
+    "basis": "Geometry placement guard above the existing 0.6 m rule-cell minimum; optional 0.2 m total jamb margin yields to exact area/volume and aperture-width preservation. Not a physical room enlargement."
+  },
+  "native_compartments": {
+    "merge_virtual_cells": true,
+    "basis": "CFAST physical room zones. Artificial full-height inter-cell vents produced mass drift in controlled native runs; keep prescribed sources and target locations."
   }
 }

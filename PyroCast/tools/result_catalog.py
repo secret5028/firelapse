@@ -26,13 +26,14 @@ def read(path, default=None):
     except (OSError, ValueError): return default
 
 
-def atomic_json(path, value):
+def atomic_json(path, value, *, compact=False):
     path=Path(path)
     tmp=_io_path(path.with_name(path.name+'.'+uuid.uuid4().hex+'.tmp'))
     path=_io_path(path)
     tmp.parent.mkdir(parents=True,exist_ok=True)
     try:
-        tmp.write_text(json.dumps(value,ensure_ascii=False,indent=2,allow_nan=False)+'\n','utf-8')
+        tmp.write_text(json.dumps(value,ensure_ascii=False,indent=None if compact else 2,
+                                  separators=(',',':') if compact else None,allow_nan=False)+'\n','utf-8')
         for attempt in range(5):
             try:
                 tmp.replace(path)

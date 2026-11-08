@@ -89,7 +89,7 @@ export function createAssistantPanel({store,revealSidebar,available=true,getCont
  summaryCard.innerHTML='<summary>결과 요약</summary><div role="status"></div>';
  const summaryBody=summaryCard.lastElementChild;
  Object.assign(summaryBody.style,{maxHeight:'220px',overflow:'auto',whiteSpace:'pre-wrap',overflowWrap:'anywhere'});
- $('resultContent').prepend(summaryCard);
+ $('resultContent').append(summaryCard);
  let summaryRequest=null;
  async function loadSummary(){
   const ctx=getContext(),signal=contextRequest.signal;

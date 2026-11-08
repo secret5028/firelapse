@@ -1,4 +1,4 @@
-"""Engine boundary: frozen inputs, zero-run reuse, one native call, no real simulation."""
+"""Engine boundary: frozen saved inputs, CFAST-only requests, no real simulation."""
 import copy
 import json
 from pathlib import Path
@@ -56,15 +56,13 @@ class FixedCalculationTests(unittest.TestCase):
             with self.assertRaises(ValueError):calc.context(self.sha,'parkmarine')
         with self.assertRaises(ValueError):calc.playback(self.sha,'../../escape')
 
-    def test_lite_reuse_runs_no_solver(self):
+    def test_new_lite_request_is_rejected_without_reusing_saved_result(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'app/tests') as tmp:
             with patch.object(calc,'JOBS',Path(tmp)),patch.object(model_mc,'prepare_request',return_value=({},self.original)),patch('pyrocast_cfbt.native.execute') as execute:
-                f=calc.reserve(self.sha,{**self.body(),'engine':'lite'},'parkmarine');calc.compute(f)
-                status=read(f/'status.json');self.assertEqual(status['state'],'complete');self.assertEqual(status['solver_runs'],0)
+                with self.assertRaisesRegex(ValueError,'CFAST'):
+                    calc.reserve(self.sha,{**self.body(),'engine':'lite'},'parkmarine')
                 execute.assert_not_called()
-                pb=calc.playback(self.sha,f.name);source=read(self.source/'playback.json')
-                self.assertEqual(pb['solvers'],source['solvers']);self.assertEqual(pb['display_opening_state']['states'],self.fixed['states'])
-                self.assertEqual(calc.cases(self.sha)[0]['id'],f.name)
+                self.assertEqual(calc.cases(self.sha),[])
 
     def test_native_single_call_exact_input_and_failure(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'app/tests') as tmp:
@@ -72,7 +70,8 @@ class FixedCalculationTests(unittest.TestCase):
                 f=calc.reserve(self.sha,self.body(),'parkmarine');calc.compute(f)
                 self.assertEqual(execute.call_count,1)
                 args=execute.call_args.args
-                self.assertEqual(args[0],calc.ENGINE);self.assertNotIn('&CFBT',args[2]);self.assertEqual(args[4:6],(3600,1800))
+                from cfast_calculation import runtime_settings
+                self.assertEqual(args[0],calc.ENGINE);self.assertNotIn('&CFBT',args[2]);self.assertEqual(args[4:6],(3600,runtime_settings()['max_wall_s']))
                 self.assertEqual(read(f/'input.json'),self.raw)
                 self.assertEqual(read(f/'status.json')['state'],'failed');self.assertFalse((f/'playback.json').exists())
                 self.assertEqual(calc.cases(self.sha),[])
@@ -90,6 +89,7 @@ class FixedCalculationTests(unittest.TestCase):
         native={}
         for key,suffix in [('zone','zone'),('compartments','compartments'),('native_vents','vents')]:
             native[key],native[key+'_ids'],native[key+'_units']=read_native_csv(folder/('case_'+suffix+'.csv'))
+        native['run']={'engine_sha256':'saved-csv-fixture'}
         template=read(ROOT/'simulation/results/overnight-20261104/parkmarine/5F/playback.json')
         model=read(folder/'scenario.json');pb=package(model,native,template,folder)
         self.assertEqual(len(pb['rooms']),23);self.assertEqual(pb['engine_kind'],'cfast_native')

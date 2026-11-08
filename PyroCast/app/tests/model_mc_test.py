@@ -47,7 +47,7 @@ class WorkflowTests(unittest.TestCase):
    folder=Path(tmp);mc.atomic_json(folder/'progress.json',{'state':'completed'})
    with patch.object(mc.sim,'_active','test'),patch.object(mc.subprocess,'run') as run:
     mc.compute(folder);self.assertIsNone(mc.sim._active)
-    cmd=run.call_args.args[0];self.assertIn(str(ROOT/'tools/run_lite_mc.py'),cmd);self.assertIn('--request',cmd)
+    cmd=run.call_args.args[0];self.assertIn(str(ROOT/'tools/run_cfast_mc.py'),cmd);self.assertIn('--request',cmd)
  def test_apply_uses_building_scoped_config(self):
   job='mc-123-abcd'
   with tempfile.TemporaryDirectory() as tmp:

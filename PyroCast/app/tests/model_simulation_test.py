@@ -23,9 +23,12 @@ class ModelSimulationTest(unittest.TestCase):
    self.assertEqual([g['room'] for g in data['fuel_groups'] if g.get('initial_time_s')==0],[rid])
    self.assertEqual(data['screening_source']['state'],'closed')
   self.assertNotEqual(*fingerprints)
- def test_bad_floor_not_silently_repaired(self):
-  with self.assertRaisesRegex(ValueError,'Opening wider'):
-   sim.prepared('parkmarine','B1',sim.fingerprint('parkmarine'))
+ def test_b1_geometry_corrections_are_explicit(self):
+  raw,_=sim.prepared('parkmarine','B1',sim.fingerprint('parkmarine'))
+  repairs=[v['width_correction'] for v in raw['openings'] if v.get('width_correction')]
+  self.assertTrue(repairs)
+  self.assertTrue(all(r['revision']=='cad_aperture_extent_v1' and r['previous_width_m']>r['width_m'] for r in repairs))
+  self.assertTrue(any('여유 폭 축소' in w for w in raw['cad']['warnings']))
  def test_invalid_request_never_launches(self):
   body=dict(building='parkmarine',floor='5F',room='CAD_5F_R16',duration_s=60,opening_state='closed')
   for patch in [dict(duration_s=True),dict(duration_s=61),dict(duration_s=7200),dict(opening_state='invented'),dict(room='CAD_3F_R2')]:

@@ -19,6 +19,32 @@ class NativeRunInterrupted(TimeoutError):
         super().__init__(f'CFAST 미완료: {reason}; 마지막 진행 약 {native_time_s:g}/{duration_s:g}초. 부분 결과는 완료로 저장하지 않습니다.')
 
 
+class PressureSizingRestart(RuntimeError):
+    def __init__(self, peak, native_time_s):
+        self.peak=peak;self.native_time_s=native_time_s
+        super().__init__('Pressure sizing prefix exceeded the configured bound')
+
+
+def pressure_prefix(path, model):
+    """Read complete native pressure records only; partial writes are ignored."""
+    from .basement_pressure import below_grade
+    wanted={r['id'] for r in model['rooms'] if below_grade(r,model)}
+    try:
+        with Path(path).open(encoding='utf-8-sig') as f:
+            reader=csv.reader(f);names=next(reader);next(reader);ids=next(reader);units=next(reader)
+            cols=[i for i,n in enumerate(names) if n.startswith('PRS_') and ids[i] in wanted and units[i]=='Pa']
+            if len(cols)!=len(wanted):return None
+            peak=0.;last=None
+            for row in reader:
+                if len(row)!=len(names):continue
+                try:t=native_float(row[0]);values=[abs(native_float(row[i])) for i in cols]
+                except ValueError:continue
+                if not math.isfinite(t) or not all(math.isfinite(v) for v in values):continue
+                peak=max(peak,*values);last=t
+            return (peak,last) if last is not None else None
+    except (OSError,StopIteration,IndexError):return None
+
+
 def interruption_status(exc):
     return 'solver_stalled' if getattr(exc,'reason',None)=='native_progress_stalled' else 'time_budget'
 
@@ -97,6 +123,36 @@ def read_diagnostic(path,until_s=None):
 
 
 def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=90., *, preserve_input_files=False, validation_model=None):
+    from .basement_pressure import below_grade, record_and_resize, rewrite_deck
+    policy=(validation_model or {}).get('basement_pressure')
+    if not policy or preserve_input_files:
+        return _execute_once(exe,folder,deck,sidecar,duration_s,timeout_s,stall_timeout_s,
+                             preserve_input_files=preserve_input_files,validation_model=validation_model)
+    started=time.monotonic();policy['history']=[]
+    while True:
+        remaining=timeout_s-(time.monotonic()-started)
+        if remaining<=0:raise TimeoutError('Basement pressure sizing time budget exceeded')
+        try:
+            result=_execute_once(exe,folder,deck,sidecar,duration_s,remaining,stall_timeout_s,validation_model=validation_model)
+        except PressureSizingRestart as prefix:
+            record_and_resize(validation_model,prefix.peak)
+            policy['history'][-1].update(complete=False,observed_until_s=prefix.native_time_s,
+                                       purpose='rejected sizing prefix; not a calculation result')
+            Path(folder,'basement-pressure.json').write_text(json.dumps(policy,ensure_ascii=False,indent=2),encoding='utf8')
+            deck=rewrite_deck(deck,validation_model)
+            continue
+        peak=max(float(np.max(np.abs(result['compartments'][f'PRS_{i}'])))
+                 for i,r in enumerate(validation_model['rooms'],1) if below_grade(r,validation_model))
+        changed=record_and_resize(validation_model,peak)
+        Path(folder,'basement-pressure.json').write_text(json.dumps(policy,ensure_ascii=False,indent=2),encoding='utf8')
+        if not changed:
+            result['basement_pressure']=policy.copy()
+            Path(folder,'effective-scenario.json').write_text(json.dumps(validation_model,ensure_ascii=False,indent=2),encoding='utf8')
+            return result
+        deck=rewrite_deck(deck,validation_model)
+
+
+def _execute_once(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=90., *, preserve_input_files=False, validation_model=None):
     exe=Path(exe).resolve(); folder=Path(folder).resolve(); folder.mkdir(parents=True,exist_ok=True)
     if preserve_input_files:
         if (folder/'case.in').read_text('ascii')!=deck or (folder/'case.cfbt').read_text('ascii')!=sidecar:
@@ -121,11 +177,13 @@ def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=9
     cache.unlink(missing_ok=True)
     # A retry must not treat the previous run's final status as new progress.
     (folder/'case.status').unlink(missing_ok=True)
-    started=time.monotonic(); last_progress=started; last_time=0.
+    (folder/'case_compartments.csv').unlink(missing_ok=True)
+    started=time.monotonic(); last_progress=started; last_time=0.;last_steps=0
+    last_pressure_check=started
     statefile=folder/'execution-state.json'
     def state(status, reason=None):
         payload={'status':status,'reason':reason,'last_native_time_s':last_time,
-                 'requested_horizon_s':duration_s,'wall_seconds':time.monotonic()-started}
+                 'requested_horizon_s':duration_s,'accepted_steps':last_steps,'wall_seconds':time.monotonic()-started}
         tmp=statefile.with_suffix('.tmp');tmp.write_text(json.dumps(payload,indent=2),encoding='utf-8');tmp.replace(statefile)
     state('running')
     with (folder/'execution.log').open('w',encoding='utf-8') as log:
@@ -134,13 +192,27 @@ def execute(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeout_s=9
         try:
             while process.poll() is None:
                 try:
+                    # Stock CFAST otherwise refreshes status only at output
+                    # intervals. Query each poll; T is rounded to 3 significant
+                    # digits, so accepted step count is the progress heartbeat.
+                    (folder/'case.query').touch(exist_ok=True)
                     header=(folder/'case.status').read_text(errors='replace').splitlines()[0]
                     match=re.search(r'T\s*=\s*([0-9.Ee+\-]+)',header)
                     value=float(match[1]) if match else last_time
-                    if value>last_time:
-                        last_time=value;last_progress=time.monotonic();state('running')
+                    steps_match=re.search(r'STEPS\s*=\s*(\d+)',header)
+                    steps=int(steps_match[1]) if steps_match else last_steps
+                    if value>last_time or steps>last_steps:
+                        last_time=max(last_time,value);last_steps=max(last_steps,steps);last_progress=time.monotonic();state('running')
                 except (OSError,ValueError,IndexError):pass
                 elapsed=time.monotonic()-started
+                policy=(validation_model or {}).get('basement_pressure')
+                if (policy and not preserve_input_files and policy.get('early_resize',False)
+                        and time.monotonic()-last_pressure_check>=policy['probe_interval_s']):
+                    last_pressure_check=time.monotonic()
+                    prefix=pressure_prefix(folder/'case_compartments.csv',validation_model)
+                    if prefix and prefix[0]>policy['limit_Pa']:
+                        state('sizing_retry','pressure_bound_exceeded')
+                        raise PressureSizingRestart(*prefix)
                 reason=('wall_time_budget' if elapsed>=timeout_s else
                         'native_progress_stalled' if stall_timeout_s and time.monotonic()-last_progress>=stall_timeout_s else None)
                 if reason:

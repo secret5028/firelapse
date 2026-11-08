@@ -16,7 +16,7 @@ def opening_class(v):
     if 'window' in kind or v.get('is_window'):
         if v.get('fixed_window') or v.get('openable') is False or v.get('window_type') in ('fixed','FIX') or 'fixed' in kind:return 'fixed_window'
         return 'operable_window'
-    if kind=='open_passage':return 'permanent_open'
+    if kind in ('open_passage','ramp'):return 'permanent_open'
     if 'door' in kind:return 'ordinary_door'
     raise ValueError('Unclassified opening: '+v['id'])
 

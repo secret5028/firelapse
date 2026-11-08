@@ -26,6 +26,8 @@ def _sample(path, mtime_ns, size, building_sha):
                     missing = True
                     continue
                 for degree in degrees:
+                    condition=value['solvers'][room['solver_id']]['conditions'][key]
+                    if degree is None and value.get('engine_kind')=='cfast_native' and condition.get('status')=='evaluated':continue
                     if isinstance(degree, bool) or not isinstance(degree, (int, float)) or not math.isfinite(degree):
                         missing = True
                     elif degree >= 1:
@@ -45,7 +47,7 @@ def rooms_max(folder, rows, building_sha):
     result = {key: {'rooms': 0, 'unknown': False} for key in TYPES}
     completed = 0
     for i, row in enumerate(rows):
-        if not row.get('complete'):
+        if not row.get('complete') or row.get('ranking_eligible') is False:
             continue
         completed += 1
         path = folder / f'S{i:02d}' / 'playback.json'

@@ -40,8 +40,9 @@ def status(building_sha):
     running=progress.get('state') in ('queued','running')
     if running and not process_alive(ref.get('pid')) and not process_alive(ref.get('owner_pid')):
         progress={**progress,'state':'interrupted','error':'MC 실행 프로세스가 종료되었습니다. 자동 재실행하지 않습니다.'};running=False
-        atomic_json(folder/'progress.json',progress)
-    return {**progress,'id':ref['id'],'room':req['room'],'running':running,'workers':1,'budget_s_per_sample':1200}
+    if running and __import__('re').fullmatch(r'S\d+',str(progress.get('current',''))):
+        progress={**progress,'native_progress':read(folder/progress['current']/'CFAST/execution-state.json',{})}
+    return {**progress,'id':ref['id'],'room':req['room'],'running':running,'workers':1,'budget_s_per_sample':__import__('cfast_calculation').runtime_settings()['max_wall_s']}
 
 
 def prepare_request(body, building_sha):
@@ -75,7 +76,7 @@ def prepare_request(body, building_sha):
     else:model.pop("fixed_openings",None)
     # Screening replaces the initial fuel group; keep copied CAD metadata in sync too.
     model['cad']['fire_key']=room
-    return dict(room=room,samples=count,duration_s=duration,seed=seed,building_sha256=building_sha,manual=manual),model
+    return dict(engine='cfast',room=room,samples=count,duration_s=duration,seed=seed,building_sha256=building_sha,manual=manual),model
 
 
 def reserve(request, model):
@@ -89,7 +90,7 @@ def reserve(request, model):
 def compute(folder):
     with (folder/'console.txt').open('w',encoding='utf-8') as log:
         try:
-            process=subprocess.Popen([sys.executable,'-X','utf8',str(ROOT/'tools/run_lite_mc.py'),'--request',str(folder/'request.json'),'--out',str(folder)],
+            process=subprocess.Popen([sys.executable,'-X','utf8',str(ROOT/'tools/run_cfast_mc.py'),'--request',str(folder/'request.json'),'--out',str(folder)],
                 cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
             atomic_json(LATEST,{'id':folder.name,'owner_pid':os.getpid(),'pid':process.pid})
             code=process.wait()

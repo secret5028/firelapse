@@ -52,7 +52,7 @@ export function adaptBuilding({scenario,playback,sourceHash}){
    'Coordinates copied from saved CAD geometry; no nearest-room repair or geometry recomputation']};
 }
 
-export const SERIES_MAP={T_upper_C:'Tu',T_lower_C:'Tl',interface_m:'h',O2_upper_volfrac:'Ou',O2_lower_volfrac:'Ol',
+export const SERIES_MAP={floor_incident_kW_m2:'floor_incident_kW_m2',T_upper_C:'Tu',T_lower_C:'Tl',interface_m:'h',O2_upper_volfrac:'Ou',O2_lower_volfrac:'Ol',
  fuel_upper_massfrac:'Fu',HRR_actual_kW:'Qsolid_kW',HRR_doorjet_kW:'Qvent_kW',HRR_upperburn_kW:'Qbulk_kW'};
 const unknown=n=>Array(n).fill(null);
 function series(values,n,ref){if(values==null)return unknown(n);if(!Array.isArray(values)||values.length!==n)throw Error(`Series length mismatch: ${ref}`);
@@ -82,7 +82,7 @@ function frame(s,i,cid){const f={smoke_stage:null,smoke_factors:[],source_cells:
 }
 
 export async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,building,resultId,sourceRefs={}}){
- const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2'].includes(p.native_mapping);
+ const native=p.engine_kind==='cfast_native'&&['wando-c11-p1-v1','fixed-r8-native-v1','fixed-r8-native-v2','fixed-r8-native-v3'].includes(p.native_mapping);
  if(p.engine_kind!=='pyrocast_lite'&&!native)throw Error('Unsupported playback engine; native adapter requires its own verified mapping');
  const errors=[],notes=[],n=p.time_s.length;
  if(!n||p.time_s.some((t,i)=>!Number.isFinite(t)||(i>0&&t<=p.time_s[i-1])))throw Error('Time axis must be finite and strictly increasing');
@@ -148,7 +148,7 @@ export async function adaptResult({playback:p,sourceResult=null,scenario,summary
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v2'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v3'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }

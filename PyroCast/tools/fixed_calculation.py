@@ -66,8 +66,8 @@ def context(sha, ident=None, job_id=None, room=None):
 def prepare(sha, body, ident=None):
     if not isinstance(body, dict) or set(body)-({'mc_job_id'}|FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS) != {'engine', 'room', 'floor', 'duration_s'}:
         raise ValueError('계산 방식·화점·층·시간을 지정하세요')
-    if body['engine'] not in ('lite', 'cfast'):
-        raise ValueError('지원하지 않는 계산 방식')
+    if body['engine'] != 'cfast':
+        raise ValueError('새 계산은 CFAST만 지원합니다. 기존 간략 결과는 열람할 수 있습니다.')
     if 'mc_job_id' in body and (not ident or not isinstance(body['mc_job_id'], str)):
         raise ValueError('저장 MC 작업 ID 오류')
     folder, fixed, req, model = context(sha, ident, body.get('mc_job_id'), body['room'])
@@ -112,14 +112,18 @@ def set_ventilation_input(raw,body):
     from pyrocast_cfbt.physics_config import defaults
     cfg=defaults('ventilation')
     room=next(r for r in raw['rooms'] if r['id']==body['room'])
-    for key in ('ventilation_ach','ramp_width_m','ramp_height_m'):
+    if 'ventilation_ach' in body and (type(body['ventilation_ach']) not in (int,float) or not math.isfinite(body['ventilation_ach']) or body['ventilation_ach']<0):
+        raise ValueError('급배기량은 0 이상이어야 합니다. 0은 설비 정지입니다.')
+    for key in ('ramp_width_m','ramp_height_m'):
         if key in body and (type(body[key]) not in (int,float) or not math.isfinite(body[key]) or body[key]<=0):
             raise ValueError('환기량과 램프 치수는 양수여야 합니다')
     if 'ventilation_ach' in body:
         flow=body['ventilation_ach']*math.prod(room['size_m'])/3600
         raw['mechanical_vents']=[v for v in raw.get('mechanical_vents',[]) if v['comp']!=room['id']]
         for direction,height in [('supply',min(cfg['supply_height_m'],room['size_m'][2])),('exhaust',max(0,room['size_m'][2]-cfg['exhaust_ceiling_offset_m']))]:
+            if flow==0:continue
             raw['mechanical_vents'].append(dict(id='FAN_'+direction+'_'+room['id'],comp=room['id'],flow_m3_s=flow,area=cfg['area_m2'],height=height,direction=direction))
+        raw.setdefault('ventilation_assumptions',{})[room['id']]=dict(ach=body['ventilation_ach'],nominal_flow_m3_s=flow,mode='off' if flow==0 else 'balanced',basis='user specified; actual fan flow depends on pressure cutoffs')
         raw.setdefault('limits',[]).append(f"사용자 환기 가정: {room['id']} 급기·배기 각각 {body['ventilation_ach']:g} ACH ({flow:g} m³/s)")
     if 'ramp_width_m' in body or 'ramp_height_m' in body:
         if not {'ramp_width_m','ramp_height_m'}<=body.keys():raise ValueError('램프 폭과 높이를 함께 입력하세요')
@@ -174,13 +178,14 @@ def set_fire_input(raw, body):
 
 def fire_details(raw, manifest, playback):
     cell=playback['fire_key']
+    input_cell=manifest.get('initial_source',{}).get('room',cell)
     room=playback_origin(playback)
     input_values=raw.get('fire_input',{})
     fuel=next((g for g in raw.get('fuel_groups',[]) if g['room']==room and 'initial_time_s' in g),{})
     actual=[q for q in playback['solvers'].get(cell,{}).get('Qsolid_kW',[]) if q is not None]
     return dict(room_id=room,cell_id=cell,fuel_energy_MJ=fuel.get('energy_MJ'),
                 requested_peak_kW=input_values.get('requested_peak_kW'),
-                prescribed_peak_kW=manifest.get('supplies',{}).get(cell,{}).get('scaled_peak_kW'),
+                prescribed_peak_kW=manifest.get('supplies',{}).get(input_cell,{}).get('scaled_peak_kW'),
                 actual_peak_kW=max(actual,default=None),vehicle_count=input_values.get('vehicle_count'))
 
 
@@ -195,6 +200,9 @@ def status(sha):
     if running and not process_alive(value.get('owner_pid')):
         value = {**value, 'state': 'interrupted', 'error': '계산 프로세스 종료 · 자동 재실행 없음'}
         running = False
+    if running and rows:
+        progress=read(rows[0]/'CFAST/execution-state.json',{})
+        value={**value,'native_progress':progress}
     return {**value, 'available': True, 'cfast_available': ENGINE.is_file(), 'running': running}
 
 
@@ -258,58 +266,19 @@ def reserve(sha, body, ident=None):
 def compute(folder):
     started = time.monotonic()
     req = read(folder/'request.json'); raw = read(folder/'input.json')
-    source = Path(req['source_path'])
     try:
+        if req['engine'] != 'cfast':raise ValueError('새 계산은 CFAST만 지원합니다')
         atomic_json(folder/'status.json', dict(state='running', id=folder.name, **req))
-        if req['engine'] == 'lite' and (FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS).isdisjoint(req) and not raw.get('minimum_leakage') and read(source/'playback.json',{}).get('condition_version')=='physics_p0_v2':
-            pb = read(source/'playback.json')
-            if not pb or not pb.get('complete'):
-                raise ValueError('확정 표본의 완료 결과 없음')
-            runs = 0
-        elif req['engine']=='lite':
-            from model_simulation import PARAMS
-            from pyrocast_lite.adapter import prepare as lite_prepare
-            from pyrocast_lite.runner import run, results
-            from pyrocast_lite.visualization import package
-            model,manifest=lite_prepare(raw,PARAMS)
-            atomic_json(folder/'rule_manifest.json',manifest)
-            run(model,req['duration_s'],10,1200,method='BDF')
-            if not model.integration['complete']:
-                raise ValueError(model.integration['failure'])
-            result=results(model)
-            atomic_json(folder/'result.json',result)
-            pb=package(model,result,raw,'간략 계산')
-            runs=1
-        else:
-            from pyrocast_cfbt.room_rule_r8 import prepare as native_prepare
-            from pyrocast_cfbt.deck import make_deck, window_targets
-            from pyrocast_cfbt.native import execute, digest
-            from fixed_native_playback import package
-            model, targets, manifest = native_prepare(raw)
-            if window_targets(model):
-                raise ValueError('확정 급기는 창 파괴를 실행하지 않습니다')
-            deck = make_deck(model, [], targets)
-            if '&CFBT' in deck:
-                raise ValueError('순정 CFAST 입력이 아닙니다')
-            atomic_json(folder/'scenario.json', model)
-            atomic_json(folder/'rule_manifest.json', manifest)
-            atomic_json(folder/'execution-evidence.json', dict(**req, engine_sha256=digest(ENGINE),
-                rule_settings=model.get('rule_settings'), fixed_openings=read(folder/'fixed-state.json'),
-                native_budget_s=1800, trigger='native r8 plate sensor'))
-            native = execute(ENGINE, folder, deck, '', model['duration_s'], 1800, stall_timeout_s=90, validation_model=model)
-            pb = package(model, native, read(source/'playback.json'), folder)
-            runs = 1
-        boundary_model = locals().get('model',raw)
-        if not isinstance(boundary_model,dict): boundary_model=boundary_model.input_model
-        pb['limits'] = list(dict.fromkeys(pb.get('limits',[])+boundary_model.get('limits',[])))
-        pb['case_id'] = folder.name
-        pb['label'] = f"{req['floor']} {req['room'].split('_')[-1]} · {'순정 CFAST' if req['engine']=='cfast' else '간략 계산'} · 확정 급기"
-        manifest=read(folder/'rule_manifest.json') or read(source/'BDF/rule_manifest.json') or {}
-        pb['fire_input']=fire_details(raw,manifest,pb)
+        from cfast_calculation import run_case
+        pb, _, _ = run_case(raw,folder,label=f"{req['floor']} {req['room'].split('_')[-1]} · 순정 CFAST · 확정 급기")
+        runs = len((pb.get('basement_pressure') or {}).get('history',[])) or 1
         fixed = read(folder/'fixed-state.json')
         pb['display_opening_state'] = dict(building_sha256=req['building_sha256'], case_id=folder.name,
             basis='saved_case_input', states=fixed['states'])
-        atomic_json(folder/'playback.json', pb)
+        from display_playback import save_playback
+        pb=save_playback(folder/'playback.json',pb)
+        from cfast_calculation import seal
+        seal(folder)
         atomic_json(folder/'status.json', dict(state=pb.get('status','complete'), physical_validation=pb.get('physical_validation'), id=folder.name, **req,
             wall_s=time.monotonic()-started, solver_runs=runs, case_id=folder.name))
     except Exception as exc:

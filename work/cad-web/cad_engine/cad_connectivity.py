@@ -106,7 +106,9 @@ def opening_dimensions(o, defaults=None):
         source = 'CAD_leaf'
     if not width:
         frame = aperture_frame(o)
-        width = frame[4]*2 if frame else None
+        # The area centroid of an asymmetric door symbol is not its bounds midpoint.
+        points = np.asarray(frame[0].minimum_rotated_rectangle.exterior.coords[:4]) if frame else None
+        width = float(np.ptp(points @ frame[2])) if frame else None
         source = 'CAD_aperture_envelope'
     if not width or not math.isfinite(width) or width <= 0:
         raise ValueError(f"Opening {o['id']} has no valid width")

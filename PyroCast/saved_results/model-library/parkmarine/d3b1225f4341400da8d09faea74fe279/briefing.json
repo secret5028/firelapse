@@ -1,0 +1,14 @@
+{
+  "case": "d3b1225f4341400da8d09faea74fe279",
+  "building": "c3f428a9a3bb007bd8d46dc34b8fa71eb29816e6e82b83ff47f448e881747b19",
+  "text": "물리 타당성 검사 실패: max_upper_fuel_fraction=0.9999, burned_fraction=0.2339",
+  "sections": [
+    {
+      "title": "물리적으로 무효인 계산",
+      "text": "물리 타당성 검사 실패: max_upper_fuel_fraction=0.9999, burned_fraction=0.2339"
+    }
+  ],
+  "template_version": "invalid/1",
+  "time_s": 3600.0,
+  "tool_count": 0
+}

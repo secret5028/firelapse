@@ -12,16 +12,17 @@ from lite_ai_briefing import basic_briefing, briefing_value
 from lite_ai_tools import ROOT, finite
 from model_ai_tools import service_for_hash
 from result_catalog import atomic_json, read
-from runtime_storage import LEGACY_RESULTS, RESULTS
+from runtime_storage import LEGACY_RESULTS, RESULTS, DATA_ROOT
 
-VERSION = 2
+VERSION = 3
 LOG = logging.getLogger(__name__)
 
 
 def ensure(path, context=None):
     raw = path.read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
-    target = path.with_name(path.stem + '-briefing.json')
+    # New presentations never rewrite archived result-side briefing files.
+    target = DATA_ROOT/'cache'/'briefings'/f'v{VERSION}-{digest}.json'
     if os.name == 'nt':
         absolute = str(target.resolve())
         extended = '\\\\?\\UNC\\' + absolute[2:] if absolute.startswith('\\\\') else '\\\\?\\' + absolute

@@ -77,8 +77,10 @@ def _playback_metadata(path, mtime_ns, size):
 class ResultCatalog:
     def __init__(self, root, aliases):
         self.root=Path(root).resolve();self.aliases=Path(aliases)
-        self.file=self.root/'playback-catalog.json';self.lock=threading.RLock();self.checked=0
-        self.index=read(self.file,{'schema':'pyrocast.playback-catalog/1','files':{}})
+        from runtime_storage import DATA_ROOT
+        key=hashlib.sha256(str(self.root).encode()).hexdigest()
+        self.file=DATA_ROOT/'cache'/'catalogs'/(key+'.json');self.lock=threading.RLock();self.checked=0
+        self.index=read(self.file,read(self.root/'playback-catalog.json',{'schema':'pyrocast.playback-catalog/1','files':{}}))
 
     def scan(self, force=False):
         with self.lock:

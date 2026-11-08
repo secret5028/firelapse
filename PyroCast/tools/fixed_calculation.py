@@ -9,7 +9,7 @@ import sys
 import threading
 import time
 import uuid
-from result_catalog import read, atomic_json, playback_origin, playback_coverage
+from result_catalog import read, atomic_json, playback_origin, playback_coverage, _io_path
 from lite_mc_service import process_alive
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -209,13 +209,13 @@ def status(sha):
 def cases(sha):
     rows = []
     for p in paths(sha):
-        if read(p/'status.json', {}).get('state') not in ('complete','physically_invalid') or not (p/'playback.json').is_file(): continue
+        if read(p/'status.json', {}).get('state') not in ('complete','physically_invalid') or not _io_path(p/'playback.json').is_file(): continue
         data = read(p/'playback.json')
         rows.append(dict(id=p.name, label=data['label'], engine_kind=data.get('engine_kind'),
                          origin_room_id=playback_origin(data), complete=data.get('complete') is True,
                          covered_room_ids=playback_coverage(data),
                          duration_s=(data.get('time_s') or [None])[-1],
-                         saved_at_ms=int((p/'playback.json').stat().st_mtime*1000), run_id=p.name))
+                         saved_at_ms=int(_io_path(p/'playback.json').stat().st_mtime*1000), run_id=p.name))
     return rows
 
 
@@ -229,7 +229,7 @@ def playback_file(sha, case):
 
 
 def playback(sha, case):
-    file=playback_file(sha,case)
+    file=_io_path(playback_file(sha,case))
     value = read(file)
     if value['building_sha256'] != sha:
         raise ValueError('다른 건물의 결과')

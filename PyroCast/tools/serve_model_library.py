@@ -7,6 +7,7 @@ ASSETS=ROOT/'cad-project/work/cad-web/local-resources/cad-assets'
 if not ASSETS.is_dir():
  ASSETS=ROOT/'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets'
 FILES={
+ '/favicon.ico':(ROOT.parent/'FireLapse.ico','image/x-icon'),
  '/models/scan-new':(ROOT/'app/model-library/new.html','text/html; charset=utf-8'),
  '/models/scan-new.js':(ROOT/'app/model-library/new.js','text/javascript; charset=utf-8'),
  '/models/ai':(ROOT/'app/model-library/ai.html','text/html; charset=utf-8'),
@@ -41,7 +42,10 @@ class Handler(BaseHTTPRequestHandler):
   path=urlsplit(self.path).path
   if path==APP_CONTROL:
    from app_control import signal_path
-   return self.json({'managed': signal_path() is not None})
+   from pyrocast_cfbt.criteria import CONDITION_VERSION
+   meta=ROOT.parent/'distribution.json'
+   version=json.loads(meta.read_text('utf-8')).get('version') if meta.is_file() else 'source'
+   return self.json({'managed': signal_path() is not None,'version':version,'condition_version':CONDITION_VERSION})
   if path in ('/models/ai/connection','/models/ai/completion'):
    import ai_connection
    return ai_connection.handle(self,path)

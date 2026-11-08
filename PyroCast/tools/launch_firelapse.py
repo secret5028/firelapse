@@ -156,7 +156,7 @@ def main():
     env={**environment(),SIGNAL_ENV:str(stop_file)}
     executable=Path(sys.executable).with_name('python.exe') if args.background else sys.executable
     flags=(subprocess.CREATE_NO_WINDOW if args.background else getattr(subprocess,'CREATE_NEW_PROCESS_GROUP',0))
-    children=[];streams=[];browser=None
+    children=[];streams=[];browser=None;identity=None;next_identity=0
     try:
         for name in ('library','wando','ganghwa','briefings'):
             stream=(logs/(name+'.log')).open('a',encoding='utf8');streams.append(stream)
@@ -170,6 +170,8 @@ def main():
         else:raise TimeoutError('서버 준비 시간 초과. logs 폴더를 확인하세요.')
         print('\nFireLapse 실행 중: '+URL+'\n전용 창을 닫거나 상단 종료 버튼을 누르면 종료합니다.',flush=True)
         if browser_exe:
+            from taskbar_identity import WindowIdentity
+            identity=WindowIdentity(ROOT.parent)
             browser=desktop_browser.start(browser_exe,DATA_ROOT/'browser-profile',URL)
         visible_deadline=time.monotonic()+30
         window_seen=False;missing_since=None;next_shutdown_check=0
@@ -182,6 +184,12 @@ def main():
                 now=time.monotonic()
                 if handles:
                     window_seen=True;missing_since=None
+                    if identity and now>=next_identity:
+                        # Chromium may reset its own AppID/icon after navigation.
+                        for hwnd in handles:
+                            try:identity.apply(hwnd)
+                            except OSError as exc:print('작업표시줄 아이콘 적용 실패: '+str(exc),flush=True)
+                        next_identity=now+3
                 elif window_seen and missing_since is None:
                     missing_since=now
                 if open_request.exists():
@@ -216,6 +224,7 @@ def main():
             try:child.wait(timeout=8)
             except subprocess.TimeoutExpired:child.kill();child.wait()
         for stream in streams:stream.close()
+        if identity:identity.close()
         open_request.unlink(missing_ok=True)
         session.cleanup()
 

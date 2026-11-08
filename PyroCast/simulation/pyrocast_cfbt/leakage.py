@@ -3,6 +3,14 @@ import math
 from .physics_config import defaults
 
 
+def remove_assumed_leaks(model):
+    """Before sampling/ranking real openings; regenerate for each chosen scenario."""
+    model['openings']=[v for v in model.get('openings',[]) if not v.get('minimum_leakage')]
+    model.pop('minimum_leakage',None)
+    model['limits']=[s for s in model.get('limits',[]) if not s.startswith('최소 누기 가정 적용:')]
+    return model
+
+
 def apply_minimum_leakage(model):
     settings = {**defaults('leakage'), **model.get('leakage_defaults', {})}
     if any(type(v) not in (int, float) or not math.isfinite(v) or v <= 0 for v in settings.values()):

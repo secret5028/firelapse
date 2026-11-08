@@ -80,6 +80,7 @@ def origin_budgets(m):
         energy=sum(g['energy_MJ'] for g in groups);h=groups[0]['hrrpua_kW_m2'] if groups else 0.
         ext=[];inside=[]
         for v in m['openings']:
+            if v.get('minimum_leakage'):continue
             if v.get('type','WALL')!='WALL' or rid not in (v['a'],v['b']):continue
             ah=v['width_m']*max(v['top_m']-v.get('bottom_m',0),0)**1.5
             (inside if (v['b'] if v['a']==rid else v['a']) in ids else ext).append((v['id'],ah))

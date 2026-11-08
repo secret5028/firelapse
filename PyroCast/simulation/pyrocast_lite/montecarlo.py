@@ -21,6 +21,8 @@ def opening_class(v):
     raise ValueError('Unclassified opening: '+v['id'])
 
 def make_samples(raw,seed=20261025,count=20,probabilities=None,mode='bernoulli',fixed_states=None):
+    from pyrocast_cfbt.leakage import remove_assumed_leaks
+    raw=remove_assumed_leaks(deepcopy(raw))
     if count<2:raise ValueError('Two mandatory samples required')
     if mode not in ('bernoulli','fixed_count'):raise ValueError('Unknown sampling mode')
     probs={**DEFAULT_PROBABILITIES,**(probabilities or {})};fixed=fixed_states or {}

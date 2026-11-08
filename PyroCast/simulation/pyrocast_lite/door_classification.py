@@ -21,7 +21,8 @@ def core_evidence(room,config):
             'eligible':area_ok and (kind_ok or bool(match))}
 
 def classify_doors(raw,overrides=None):
-    config=load_rules()['doors'];model=deepcopy(raw);rows=[]
+    from pyrocast_cfbt.leakage import remove_assumed_leaks
+    config=load_rules()['doors'];model=remove_assumed_leaks(deepcopy(raw));rows=[]
     rooms={r['id']:r for r in model['rooms']};overrides=overrides or {}
     def names(r):return ' '.join([str(r.get('name','')),*map(str,r.get('cad_names',[]))])
     def area(r):return r.get('area_m2',r['size_m'][0]*r['size_m'][1])

@@ -11,6 +11,24 @@ def sealed():
 
 
 class Leakage(unittest.TestCase):
+    def test_assumed_leaks_are_not_mc_openings_or_source_cap(self):
+        from pyrocast_lite.montecarlo import make_samples
+        from pyrocast_lite.screening_v8_approved import origin_budgets
+        model=sealed();model['duration_s']=1800
+        model['openings'][0].update(kind='door',width_m=1.,bottom_m=0,top_m=2.)
+        model['fuel_groups'][0].update(energy_MJ=1000,hrrpua_kW_m2=250)
+        model['approved_input']={'room_uses':{}}
+        budgets=origin_budgets(model)
+        apply_minimum_leakage(model)
+        self.assertEqual(budgets,origin_budgets(model))
+        samples=make_samples(model,count=2)
+        self.assertTrue(model['minimum_leakage'])
+        for s in samples:
+            self.assertEqual({v['id'] for v in s['scenario']['openings']},{'Door'})
+            self.assertEqual({v['id'] for v in s['openings']},{'Door'})
+            apply_minimum_leakage(s['scenario'])
+            self.assertTrue(s['scenario']['minimum_leakage'])
+
     def test_closed_component_uses_stair_and_is_idempotent(self):
         m=sealed();apply_minimum_leakage(m)
         self.assertEqual(m['minimum_leakage'][0]['room'],'Stair')

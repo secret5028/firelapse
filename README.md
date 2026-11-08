@@ -3,17 +3,17 @@
 
 **3D 건물 모델에서 구획 화재의 진행과 위험 조건을 시간에 따라 살펴보는 Windows용 로컬 앱입니다.**
 
-최신 실행 패키지 `v2026.11.08-r15`에는 7개 건물 모델과 기존 153개 완료 재생 파일과 새 층별 CFAST 계산 25건이 포함됩니다. 결과를 바로 재생하거나, 계산 가능한 CAD 건물에서 층·화점·가연물·급기 조건을 설정해 다시 계산할 수 있습니다.
+최신 실행 패키지 `v2026.11.08-r17`에는 7개 건물 모델, 기본 입력 수정 후 다시 계산한 CFAST 결과 4건(호텔 5F·B1, 강화 공장 2F, 아이엔테크놀로지 1F), 기존 MC 결과가 포함됩니다. 그 밖의 과거 계산·기본 샘플은 새 패키지에서 제외했습니다. 기존 PC의 공용 결과 폴더는 업데이트할 때 삭제하지 않습니다.
 
 **계산 대상 시간: 30분 또는 최대 60분(1시간) · 기본값: 60분**
 
 이는 시뮬레이션 속 화재 진행 시간입니다. PC에서 실제 계산을 완료하는 데 걸리는 시간은 건물과 엔진에 따라 달라집니다.
 
-[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.08-r15) · [소스 코드](https://github.com/secret5028/firelapse)
+[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.08-r17) · [소스 코드](https://github.com/secret5028/firelapse)
 
 ## 화면 미리보기
 
-아래 두 HTML은 기존 보관 샘플입니다. 링크를 누르면 바로 다운로드되며 서버 없이 브라우저에서 열 수 있습니다. 새 층별 CFAST 25건은 최신 실행 패키지의 계산 결과 목록에서 확인할 수 있습니다.
+아래 두 HTML은 이전 버전의 보관 샘플이며 r17 계산 결과가 아닙니다. 링크를 누르면 바로 다운로드되며 서버 없이 브라우저에서 열 수 있습니다. 최신 CFAST 4건과 MC는 실행 패키지의 계산 결과 목록에서 확인할 수 있습니다. 호텔 B1은 연료 입력 확인이 필요한 `unverified` 상태를 유지합니다.
 
 - [호텔 · 5F R16 HTML 다운로드](https://github.com/secret5028/firelapse/releases/download/v2026.11.07-r7/FireLapse-parkmarine-5F-R16.html)
 - [아이엔테크 · 1F R3 HTML 다운로드](https://github.com/secret5028/firelapse/releases/download/v2026.11.07-r7/FireLapse-intech-1F-R3.html)
@@ -55,7 +55,7 @@
 3. 첫 실행 때 실행 패키지를 내려받아 `%LOCALAPPDATA%\FireLapse\releases`에 풀고, 바탕화면에 **FireLapse** 바로가기를 만듭니다. 이후에는 그 바로가기로 실행할 수 있습니다.
 4. 바탕화면 아이콘을 누르면 Chrome 또는 Microsoft Edge에서 FireLapse 전용 창이 열립니다. 빨간 **종료** 버튼이나 창의 **X**로 닫으면 로컬 서버도 종료됩니다. 계산 중에 **X**로 창을 닫으면 계산을 마친 뒤 서버가 종료됩니다.
 
-오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.08-r15)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
+오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.08-r17)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
 
 실행 패키지에는 Python·Node·필수 라이브러리와 계산 실행 파일이 포함됩니다. 저장된 모델과 결과를 보는 데 별도 API 키나 AI 계정은 필요하지 않습니다.
 

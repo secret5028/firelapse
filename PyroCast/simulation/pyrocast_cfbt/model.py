@@ -50,6 +50,9 @@ DEFAULTS = {
 }
 
 
+from .physics_config import defaults as physics_defaults
+DEFAULTS['criteria'] = {**DEFAULTS['criteria'], **physics_defaults('criteria')}
+
 def merge(base, patch):
     result = deepcopy(base)
     for key, value in patch.items():

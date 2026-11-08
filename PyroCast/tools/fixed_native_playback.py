@@ -81,22 +81,27 @@ def package(model, native, template, folder):
         Tu = c[f'ULT_{i}']; Ou = c[f'ULO2_{i}']; Ol = col(c, f'LLO2_{i}')
         jet = c[f'DJET_{i}']/1000
         required = fo_required_hrr(model, dict(time_s=t, opening_states=opening_states), room, t)
-        scores = {
-            'FO': screening_scores((Tu, criteria['fo_temperature_C'], False), (q+jet, required, False), (Ol*100, gas['oxygen_min_vol_percent'], False), n),
-            'FGI': screening_scores((Tu, gas['hot_C'], False), (fuel, screening_lfl(model, Tu), False), (Ou*100, criteria['fgi_oxygen_vol_percent'], False), n),
-            'backdraft': screening_scores((Tu, criteria['hot_C'], False), (fuel, criteria['fuel_rich_mass_fraction'], False), (Ou*100, criteria['oxygen_deficient_vol_percent'], True), n)}
+        from pyrocast_cfbt.criteria import evaluate_cell
+        parent=room.get('parent_room',rid)
+        sibling_ids={r['id'] for r in model['rooms'] if r.get('parent_room',r['id'])==parent}
+        parent_heat=sum((c[f'HRR_{j}']/1000 for j,g in enumerate(model['fuel_groups'],1) if g['room'] in sibling_ids),np.zeros(n))
+        heights=[col(c,f'FLHGT_{j}') for j,g in enumerate(model['fuel_groups'],1) if g['room']==rid]
+        conditions=evaluate_cell(model,room,t,Tu,col(c,f'HGT_{i}'),Ou*100,fuel,q,jet_kW=jet,
+            own_fire=parent_heat,flame_height_m=np.max(heights,axis=0) if heights else None)
+        conditions['FO']['diagnostics']={'Thomas_required_kW':required,'label':'셀·대공간에서는 무효인 진단값'}
+        conditions['FGI']['rollover']=conditions.pop('rollover')
         upper_od,lower_od=smoke_optics(c,ids,units,rid,i)
         solvers[rid] = dict(Tu=Tu, Tl=col(c,f'LLT_{i}'), h=col(c,f'HGT_{i}'), Ou=Ou, Ol=Ol,
             Fu=fuel, ODu=upper_od, ODl=lower_od, height_m=room['size_m'][2],
             Qsolid_kW=q, Qvent_kW=jet, Qbulk_kW=[None]*n,
-            conditions={k:dict(scores=s, status='evaluated') for k,s in scores.items()})
+            conditions=conditions)
     rollover = rollover_states(model, t, {r:s['conditions']['FGI'] for r,s in solvers.items()},
         {r:s['Qsolid_kW'] for r,s in solvers.items()}, {r:s['Qvent_kW'] for r,s in solvers.items()},
         dict(time_s=t, opening_states=opening_states))
-    for r, state in rollover.items(): solvers[r]['conditions']['FGI']['rollover'] = state
+    for r, state in rollover.items(): solvers[r]['conditions']['FGI']['remote_ignition_condition'] = state
     from fixed_calculation import ENGINE
     playback = _finite(dict(schema='pyrocast-cad-playback-1', engine_kind='cfast_native',
-        native_mapping='fixed-r8-native-v2', condition_version='shared_condition_indices', complete=True,
+        native_mapping='fixed-r8-native-v2', condition_version=__import__('pyrocast_cfbt.criteria',fromlist=['CONDITION_VERSION']).CONDITION_VERSION, complete=True,
         building_sha256=model['cad']['building_sha256'], time_s=t, fire_key=template['fire_key'],
         rooms=deepcopy(template['rooms']), fuel_symbols=deepcopy(template.get('fuel_symbols', [])),
         solvers=solvers, fires=fires, events=[], fuel_units=[], opening_states=opening_states,

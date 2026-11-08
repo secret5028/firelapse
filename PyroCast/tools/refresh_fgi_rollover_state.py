@@ -23,6 +23,7 @@ def graph(p,source):
     return {'rooms':rooms,'openings':vents,'fuel_groups':[{'room':f['solver_id'],'initial_time_s':f.get('time_s',0)} for f in p['fires'] if f.get('kind')=='initial']}
 
 def main():
+    raise SystemExit("Superseded: use refresh_physics_p0.py with explicit scenario, playback and a new output path; legacy definitions must not overwrite new indices.")
     OUT.mkdir(exist_ok=True,parents=True);previous=read(ROOT/'simulation/results/rollover_route_20261103/comparison.json')
     cases=sorted({r['case'] for r in previous['rows'] if not r['case'].startswith('wando_')})
     rows=[];changed=[];batches=set();resume='--resume' in sys.argv

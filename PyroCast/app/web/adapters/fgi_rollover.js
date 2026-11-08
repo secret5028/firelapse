@@ -2,6 +2,7 @@
 export function fgiRollover(result,cell,index,threshold=100,history=false){
  const r=result?.fgi_rollover_by_cell?.[cell];
  if(!r)return null;
+ if(Array.isArray(r.active))return history?(r.active.includes(true)?true:r.active.includes(null)?null:false):r.active[index]??null;
  if(r.excluded_origin===true)return false;
  if(r.excluded_origin!==false)return null;
  if(history)return Number.isFinite(r.eligible_peak_index)?r.eligible_peak_index>=threshold:r.status==='evaluated'?false:null;

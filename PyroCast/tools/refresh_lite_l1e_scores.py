@@ -28,6 +28,7 @@ def refresh(folder,raw,params,statepath,sample=None):
     return s,{'state':str(statepath),'sha256':h,'unchanged':True}
 
 def main():
+    raise SystemExit("Superseded: use refresh_physics_p0.py with explicit scenario, playback and a new output path; legacy definitions must not overwrite new indices.")
     out=runmod.OUT;start=time.perf_counter()
     previous=runmod.read(out/'mc-aggregate.json')
     assert len(list((out/'mc').glob('*/summary.json')))==20

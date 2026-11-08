@@ -110,7 +110,7 @@ def condition_summary(model,result,sample):
                 masks=[]
                 for i in ix:
                     rec=records[result['room_summary'][i]['cell']][name]
-                    masks.append(np.array([v is True for v in rec.get('scores',{}).get('all_met',rec['all_met'])]))
+                    masks.append(np.array([v is True for v in rec.get('occurred',rec['all_met'])]))
                     scores.extend(v for v in rec['scores']['degree'] if v is not None and np.isfinite(v))
                 by_room[room]=np.any(masks,axis=0)
             hit={room:float(t[np.flatnonzero(mask)[0]]) for room,mask in by_room.items() if mask.any()}
@@ -129,16 +129,11 @@ def condition_summary(model,result,sample):
                 'boundary':abs(r['upper_max_C']-threshold)<=30} for r in result['room_summary']]
     opening_risk=None
     if sample['kind']=='all_openings_closed' and result.get('gas_conditions_evaluable',False):
-        hot=model.input_model.get('gas',{}).get('hot_C')
-        if hot is None:opening_risk={'status':'not_evaluated','reason':'No configured hot_C'}
-        else:
-            tu=ys[2*n:3*n]-273.15;oxygen=ys[4*n:5*n]*29/32;fuel=ys[6*n:7*n]
-            flags=(fuel>=model.P['Yf_backdraft'])&(oxygen<model.P['LOC'])&(tu>=hot)
-            opening_risk={'status':'evaluated','thresholds':{'fuel_mass_fraction':model.P['Yf_backdraft'],
-                'oxygen_vol_fraction_below':model.P['LOC'],'upper_C_at_least':hot},
-                'threshold_sources':{'fuel':'legacy Yf_backdraft','oxygen':'legacy LOC','hot':'input gas.hot_C'},
-                'rooms':{room:intervals(np.any(flags[ix],axis=0),t) for room,ix in mapping.items()},
-                'meaning':'opening-risk conditions in closed-state calculation; opening/ignition itself not simulated'}
+        records=result['shared_conditions']['rooms']
+        flags=np.array([[v is not None and v>=1 for v in records[row['cell']]['backdraft'].get('potential',[])] for row in result['room_summary']])
+        opening_risk={'status':'evaluated','basis':'criteria.py BD potential; no temperature gate',
+            'rooms':{room:intervals(np.any(flags[ix],axis=0),t) for room,ix in mapping.items()},
+            'meaning':'BD potential on opening; no opening event simulated'}
     return {'sample_id':sample['id'],'kind':sample['kind'],'complete':bool(result['ok']),
         'safe_end_s':float(t[-1]),'phenomena':phenomena,'room_boundaries':room_rows,'cell_boundaries':cell_rows,
         'boundary_room_count':sum(r['boundary'] for r in room_rows),'original_room_count':len(room_rows),

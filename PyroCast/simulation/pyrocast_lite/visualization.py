@@ -54,7 +54,7 @@ def package(model,result,raw,label):
             condition_time_s=0. if initial else e['condition_time_s'],
             visuals=dict(base_height_m=0.,flame_height_m=np.where(q>0,.9,0.).tolist(),area_m2=[.25]*len(t),radiative_fraction=.35,
                 basis='compact display symbol only; no quantitative flame dimensions')))
-    return dict(schema='pyrocast-cad-playback-1',engine_kind='pyrocast_lite',condition_version='shared_condition_indices',
+    return dict(schema='pyrocast-cad-playback-1',engine_kind='pyrocast_lite',condition_version=__import__('pyrocast_cfbt.criteria',fromlist=['CONDITION_VERSION']).CONDITION_VERSION,
         complete=True,time_s=t.tolist(),building_sha256=raw['cad']['building_sha256'],label=label,
         fire_key=next((f['cad_key'] for f in fires if f['kind']=='initial'),rows[0]['key']),
         rooms=rows,solvers=solvers,fires=fires,fuel_symbols=units,fuel_units=[],events=result['events'],

@@ -132,7 +132,7 @@ def summarize(model,result):
         # Only ranking metric; does not enable the future 3D smoke-stage display.
         smoke=(temp>=hot)&(yf>=lfl)&((model.Ha[i]-z>=.3)|(z<=1.8))
         record['smoke_risk']|=bool(smoke.any())
-        mask=result['shared_conditions']['rooms'][row['cell']]['FO']['scores']['all_met']
+        mask=result['shared_conditions']['rooms'][row['cell']]['FO']['occurred']
         hits=[float(t[j]) for j,v in enumerate(mask) if v is True]
         if hits:
             record['first_FO_s']=min(record['first_FO_s'] if record['first_FO_s'] is not None else float('inf'),min(hits));fo.extend(hits)

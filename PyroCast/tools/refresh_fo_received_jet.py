@@ -57,6 +57,7 @@ def refresh_result(d):
 
 
 def main():
+    raise SystemExit("Superseded: use refresh_physics_p0.py with explicit scenario, playback and a new output path; legacy definitions must not overwrite new indices.")
     OUT.mkdir(parents=True,exist_ok=True);start=time.perf_counter()
     rows=[];changed=[];skipped=[]
     # Archive the pre-change files once. Archived trials/fixtures stay immutable.

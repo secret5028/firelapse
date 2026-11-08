@@ -39,7 +39,7 @@ def rollover_states(model, t, fgi, actual_hrr, received_jet, result=None, thresh
         degree=fgi[rid].get('scores',{}).get('degree',[None]*n)
         active=[False if excluded or not ignition[i] else None if v is None else bool(v*100>=threshold) for i,v in enumerate(degree)]
         hits=[i for i,v in enumerate(active) if v is True]
-        out[rid]={'revision':ROLLOVER_REVISION,'label':'롤오버 진행','active':active,
+        out[rid]={'revision':ROLLOVER_REVISION,'label':'인접실 원격점화 FGI 조건','active':active,
             'ignition':ignition.tolist(),'excluded_origin':excluded,'threshold':threshold,
             'first_active_s':float(t[hits[0]]) if hits else None,
             'upstream_flame_rooms':[sorted(v) for v in sources[room]],
@@ -169,27 +169,7 @@ def evaluate(model,result):
         starts=[f['initial_time_s'] for f in groups if 'initial_time_s' in f]+[e.get('prescribed_supply_start_s',e['t_ign_s']) for e in result['ignitions'] if e['room']==rid]
         own=t>=min(starts,default=float('inf'))
         def tr(key,label,value,threshold,op,unit,source):return term(key,label,value,threshold,op,unit,source,n)
-        temperature=tr('Tu','상층 온도',temp,c['fo_temperature_C'],'>=','℃','criteria.fo_temperature_C')
-        ft=[tr('own_fire','활성 화원',own,True,'==','','executed fire schedule'),temperature]
-        met=temperature['met']
-        if model['flashover']['criterion']=='temperature_or_flux':
-            flux=tr('floor_flux','바닥 입사열',p['floor_incident_flux_kW_m2'],c['fo_flux_kW_m2'],'>=','kW/㎡','criteria.fo_flux_kW_m2')
-            ft.append(flux);met=logic([met,flux['met']],'or')
-        met=logic([ft[0]['met'],met])
-        fo=phenomenon(t,ft,{'over_C':temp-c['fo_temperature_C'],'Q_actual_kW':qa,
-                           'actual_to_supply':np.divide(qa,qi,out=np.full(n,np.nan),where=qi>0)},met,
-                      'own_fire AND (temperature OR evaluated floor flux)' if len(ft)==3 else 'own_fire AND temperature')
-        bd=phenomenon(t,[tr('Yf','연료 질량분율',yf,c['fuel_rich_mass_fraction'],'>=','','criteria.fuel_rich_mass_fraction'),
-            tr('Tu','상층 온도',temp,c['hot_C'],'>=','℃','criteria.hot_C'),
-            tr('O2','상층 산소',o2,c['oxygen_deficient_vol_percent'],'<','체적%','criteria.oxygen_deficient_vol_percent')],
-            {'fuel_energy_MJ':energy,'fuel_mass_kg':s.get('combustible_upper_kg',s['fuel_upper_kg'])})
-        # Preserve legacy FGI_POTENTIAL exactly. Screening settings are not the
-        # extension reaction gates, and need no invented autoignition condition.
-        fgi=phenomenon(t,[tr('Yf','연료 질량분율',yf,c['fgi_fuel_mass_fraction'],'>=','','criteria.fgi_fuel_mass_fraction'),
-            tr('O2','상층 산소',o2,c['fgi_oxygen_vol_percent'],'>=','체적%','criteria.fgi_oxygen_vol_percent'),
-            tr('no_solid','실제 고체 발열 >1kW 없음',~own_actual,True,'==','','legacy classify own_fire'),
-            tr('no_bulk','현재 상층 추가연소 없음',np.asarray(s['bulk_HRR_W'])<=1e-6,True,'==','','legacy classify reaction diagnostic')],
-            {'fuel_energy_MJ':energy,'Q_bulk_kW':bulk},list(map(bool,p['tags']['FGI_POTENTIAL'])))
+        fo={};bd={};fgi={}
         force=model.get('ignition_assumption') or {};forced=(rid==force.get('room'))&(t>=force.get('time_s',float('inf')))&(t<force.get('time_s',float('inf'))+force.get('duration_s',0))
         pilot=bool(g['pilot_assumed'])&(t>=g['pilot_start_s'])&(t<=g['pilot_end_s'])
         ignition=(temp>=g['gas_ignition_C'])|(pilot&(temp>=g['hot_C']))|forced
@@ -226,33 +206,27 @@ def evaluate(model,result):
             lower=result.get('zone',{}).get('LLO2_'+str(model['rooms'].index(room)+1))
         lower=[None]*n if lower is None else np.asarray(lower)*100
         required=fo_required_hrr(model,result,room,t)
-        fo['scores']=screening_scores((temp,c['fo_temperature_C'],False),(qa+bulk,required,False),
-            (lower,g['oxygen_min_vol_percent'],False),n,fo['all_met'])
-        fo['score_basis']={'Q_required_kW':required,'formula':'7.8*A_internal+378*sum(A_open*sqrt(H))',
-            'assumption':True,'internal_area':'bounding surfaces minus effective open area',
-            'oxygen_source':'lower layer, gas.oxygen_min_vol_percent',
-            'limits':'local solver-cell geometry; virtual vents excluded; not a validated FO prediction'}
-        from .fo_hrr import apply_fo_hrr
         # Prefer the explicitly mapped receiving-room total. Stock DJET is
         # already a receiving-compartment sum; do not add directional rows again.
         received=s.get('received_door_jet_HRR_W')
         if received is None:
             received=result.get('zone',{}).get('DJET_'+str(model['rooms'].index(room)+1))
         if received is None:received=p['vent_HRR_W']
-        apply_fo_hrr(fo,qa+bulk,np.asarray(received)/1000,required)
         actual_by_room[rid]=qa+bulk;jet_by_room[rid]=np.asarray(received)/1000
-        lfl=screening_lfl(model,temp)
-        fgi['scores']=screening_scores((temp,g['hot_C'],False),(yf,lfl,False),
-            (o2,c['fgi_oxygen_vol_percent'],False),n,fgi['all_met'])
-        fgi['score_basis']={'assumption':True,'temperature':'gas.hot_C','fuel_threshold':lfl,
-            'fuel_formula':'legacy fire_zone LFL0_hrr/Hc*clip(1-(T_K-293)/1300,.2,1)',
-            'limits':'effective-fuel screening approximation; mixed-Hc inputs unknown; legacy boolean unchanged'}
-        bd['scores']=screening_scores((temp,c['hot_C'],False),(yf,c['fuel_rich_mass_fraction'],False),
-            (o2,c['oxygen_deficient_vol_percent'],True),n,bd['all_met'])
+        from .criteria import evaluate_cell, opening_increases
+        parent=room.get('parent_room',rid)
+        siblings={r['id'] for r in model['rooms'] if r.get('parent_room',r['id'])==parent}
+        parent_heat=sum((np.asarray(inventory[f['id']].get('actual_HRR_W',np.zeros(n))) for f in model['fuel_groups'] if f['room'] in siblings),np.zeros(n))/1000
+        shared=evaluate_cell(model,room,t,temp,s.get('interface_m'),o2,yf,qa,bulk,
+            np.asarray(received)/1000,p.get('floor_incident_flux_kW_m2'),own_fire=parent_heat,
+            opening_increased=opening_increases(model,room,t,result))
+        shared['FO']['diagnostics']={'Thomas_required_kW':required,'label':'셀·대공간에서는 무효인 진단값; 근접도에 미사용'}
+        shared['FGI']['rollover']=shared['rollover']
+        out[rid].update(fo=shared['FO'],fgi=shared['FGI'],backdraft=shared['backdraft'],rollover=shared['rollover'])
         upper['scores']=screening_scores((temp,g['gas_ignition_C'],False),(yf,g['fuel_min_mass_fraction'],False),
             (o2,g['oxygen_min_vol_percent'],False),n,upper['all_met'])
     rollovers=rollover_states(model,t,{rid:out[rid]['fgi'] for rid in actual_by_room},actual_by_room,jet_by_room,result)
-    for rid,record in rollovers.items():out[rid]['fgi']['rollover']=record
+    for rid,record in rollovers.items():out[rid]['fgi']['remote_ignition_condition']=record
     out['_groups']={}
     for f in model['fuel_groups']:
         views=[v for v in result['candidates'] if v['group']==f['id'] and v.get('status')=='ok']

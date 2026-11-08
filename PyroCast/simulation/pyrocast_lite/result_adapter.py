@@ -56,7 +56,7 @@ def shared_conditions(model,result):
         mass=P0/(RG*temp)*vu;fuel=mass*np.maximum(y[6*n+i],0)
         states[node['id']]={'T_upper_C':temp-273.15,'o2_upper_vol':y[4*n+i]*29/32,
             'o2_lower_vol':y[5*n+i]*29/32,
-            'upper_mass_kg':mass,'fuel_upper_kg':fuel,'fuel_upper_J':fuel*model.P['dHc'],
+            'interface_m':(model.Va[i]-vu)/model.Aa[i], 'upper_mass_kg':mass,'fuel_upper_kg':fuel,'fuel_upper_J':fuel*model.P['dHc'],
             'bulk_HRR_W':np.asarray(result['rooms'][i].get('upper_HRR_kW',np.zeros(size)))*1000,
             'received_door_jet_HRR_W':np.asarray(result['rooms'][i].get('door_jet_HRR_kW',np.zeros(size)))*1000}
     classified=classify(source,{'zone':zone,'slabs':[],'vents':[]},states,ignitions,[])
@@ -76,9 +76,6 @@ def shared_conditions(model,result):
                  'untenable':unten}
         for name,rec in records.items():
             rec['status']='evaluated'
-            if name in ('FGI','backdraft') and not enabled:
-                rec['status']='not_evaluated';rec['all_met']=[None]*size;rec['first_met_s']=None
-                rec['reason']='upper unburned-fuel reaction absent; historical inventory not qualified'
             if 'scores' not in rec:rec['scores']=factor_scores(rec)
             if name!='untenable' and rec['status']=='evaluated':
                 known=sum(v is not None for v in rec['scores']['degree'])
@@ -103,8 +100,8 @@ def shared_conditions(model,result):
                  'oxygen':'stored mass fraction *29/32 -> volume fraction, shared table uses vol%',
                  'fuel':'upper unburned mass/upper total mass, no separately resolved CO',
                  'HRR':'primary source and upper reaction separate, W for shared evaluator'},
-        'limits':['FO display adds Thomas HRR and configured lower O2 factors; transition rules unchanged',
-                  'FGI display adds configured hot_C temperature factor; probability not estimated',
-                  'rollover is an FGI subsidiary state, not an index; initial origin excluded',
+        'limits':['FO uses ambient-relative temperature OR floor flux; transition rules unchanged',
+                  'FGI uses fuel/oxygen only, excludes physical origin and burning cells',
+                  'rollover is independent of FGI and includes origin rooms',
                   'door-jet surrogate is reported separately when enabled; detailed oxygen-inflow causality remains unassessed',
                   'tenability uses existing lite temperature/interface rule; no PPE/FED/visibility evaluation']})

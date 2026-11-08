@@ -537,6 +537,7 @@ const __module10=(()=>{
 function fgiRollover(result,cell,index,threshold=100,history=false){
  const r=result?.fgi_rollover_by_cell?.[cell];
  if(!r)return null;
+ if(Array.isArray(r.active))return history?(r.active.includes(true)?true:r.active.includes(null)?null:false):r.active[index]??null;
  if(r.excluded_origin===true)return false;
  if(r.excluded_origin!==false)return null;
  if(history)return Number.isFinite(r.eligible_peak_index)?r.eligible_peak_index>=threshold:r.status==='evaluated'?false:null;
@@ -1290,7 +1291,7 @@ const at=(values,i)=>values?.[i]??null;
 const axis=x=>({temperature:'T',fuel:'F',oxygen:'O'}[x]??null);
 function criterion(rec,i){const sc=rec?.scores;return {met:at(sc?.all_met??rec?.all_met,i),degree:at(sc?.degree,i),
  r_T:at(sc?.factors?.temperature,i),r_F:at(sc?.factors?.fuel,i),r_O:at(sc?.factors?.oxygen,i),
- bottleneck:axis(at(sc?.weakest,i)),dominant:axis(at(sc?.strongest,i)),status:rec?.status??null};}
+ bottleneck:axis(at(sc?.weakest,i)),dominant:axis(at(sc?.strongest,i)),status:rec?.gate?.[i]===false?'not_applicable':rec?.status??null};}
 // Whole saved interval, one maximum and its earliest sample time per phenomenon.
 // Unknown-only series remain null. No integration or scalar room averages.
 function indexHistoryExtrema(indices,times=[]){
@@ -1337,7 +1338,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    const degree=cellConditions[cid][i][key].degree;return Number.isFinite(degree)?degree*100:null;
   })]));
   const state=s.conditions?.FGI?.rollover,ignition=state?.ignition??unknown(n),eligible=indexByCell[cid].FGI.filter((value,j)=>ignition[j]===true&&Number.isFinite(value));
-  fgiRollover[cid]={ignition:copy(ignition),excluded_origin:state?.excluded_origin??null,
+  fgiRollover[cid]={active:copy(state?.active??null),ignition:copy(ignition),excluded_origin:state?.excluded_origin??null,
    eligible_peak_index:state?.excluded_origin===false&&eligible.length?Math.max(...eligible):null,status:state?.status??'not_evaluated'};
   legacyColor[cid]={color:Array(n).fill(''),LOC_vol_fraction:null};
   // Read-only archive compatibility: old results keep their saved boundary geometry.
@@ -1377,7 +1378,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:copy(p.limits||[]),time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v1'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -5619,7 +5620,7 @@ function createResultsPanel({panel,store}){
  let previous=null,roomKey=null;
  function update({building,result,series,index,selection,fireInput}){
   let boundary=document.getElementById('resultBoundaryNotice');if(!boundary){boundary=document.createElement('div');boundary.id='resultBoundaryNotice';boundary.style.cssText='padding:10px;background:#533d12;color:#fff';root.prepend(boundary);}
-  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('최소 누기 가정 적용:')).join(' · ');boundary.hidden=!boundary.textContent;
+  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('최소 누기 가정 적용:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')).join(' · ');boundary.hidden=!boundary.textContent;
   const invalid=(result.limits_text||[]).filter(s=>s.startsWith('물리 타당성 검사 실패:'));if(invalid.length){boundary.textContent=invalid.join(' · ');boundary.style.background='#9d1515';boundary.hidden=false;}else boundary.style.background='#533d12';
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
@@ -5645,9 +5646,9 @@ function createResultsPanel({panel,store}){
   const scores=cell?selectedScores(result,cell,index):resultTypes.map(([type,name,color])=>({type,name,color,value:null})),threshold=store.get('risk').threshold,scale=Math.max(200,threshold.ribbon,threshold.caution,...scores.map(s=>s.value??0));
   $('resultScores').replaceChildren();
   const heading=append($('resultScores'),'div',undefined,'resultScoreHeading');append(heading,'span','현재');append(heading,'span','최고');append(heading,'span','최악 시각');
-  for(const s of scores){const row=append($('resultScores'),'div',undefined,'resultScore');row.dataset.type=s.type;const name=append(row,'span',s.name);if(s.type==='backdraft'){name.title='고온연기 축적·산소부족';name.tabIndex=0;}const bar=append(row,'div',undefined,'resultBar');bar.setAttribute('role',finite(s.value)?'meter':'img');bar.setAttribute('aria-label',s.name+(finite(s.value)?' 지수':' 미평가'));if(finite(s.value)){bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(scale));bar.setAttribute('aria-valuenow',String(s.value));bar.setAttribute('aria-valuetext',number(s.value));}const fill=append(bar,'i',undefined,'resultFill');fill.style.width=(finite(s.value)?Math.max(0,s.value)/scale*100:0)+'%';fill.style.background=s.color;
+  for(const s of scores){const row=append($('resultScores'),'div',undefined,'resultScore');row.dataset.type=s.type;const name=append(row,'span',s.type==='backdraft'?'BD 잠재':s.name);if(s.type==='backdraft'){name.title='고온연기 축적·산소부족';name.tabIndex=0;}const bar=append(row,'div',undefined,'resultBar');bar.setAttribute('role',finite(s.value)?'meter':'img');bar.setAttribute('aria-label',s.name+(finite(s.value)?' 지수':' 미평가'));if(finite(s.value)){bar.setAttribute('aria-valuemin','0');bar.setAttribute('aria-valuemax',String(scale));bar.setAttribute('aria-valuenow',String(s.value));bar.setAttribute('aria-valuetext',number(s.value));}const fill=append(bar,'i',undefined,'resultFill');fill.style.width=(finite(s.value)?Math.max(0,s.value)/scale*100:0)+'%';fill.style.background=s.color;
    for(const [value,cls] of [[threshold.caution,''],[threshold.ribbon,' main']]){const mark=append(bar,'i',undefined,'resultMark'+cls);mark.style.left=value/scale*100+'%';mark.title=String(value);}
-   const value=append(row,'span',number(s.value),'resultValue');value.style.color=finite(s.value)&&s.value>=threshold.ribbon?s.color:'';
+   const applicable=result.cell_conditions?.[cell]?.[index]?.[s.type]?.status!=='not_applicable';const value=append(row,'span',applicable?number(s.value):'해당 없음','resultValue');value.style.color=finite(s.value)&&s.value>=threshold.ribbon?s.color:'';
    const peak=peaks.find(p=>p.type===s.type),peakValue=append(row,'small',finite(peak?.value)?number(peak.value):'—','resultPeakValue');peakValue.title='전 구간 최고 점수';peakValue.setAttribute('aria-label',s.name+' 최고 점수 '+peakValue.textContent);
    const peakTime=append(row,'span',finite(peak?.time)?stamp(peak.time):'—','resultPeakTime');peakTime.title=`전 구간 최대 ${number(peak?.value)} · ${peak?.source??'미평가'} · 동률은 최초 시각`;peakTime.setAttribute('aria-label',s.name+' 최악 시간 '+peakTime.textContent);
    if(s.type==='FGI'&&roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,store.get('risk').history)===true){const now=roomFgiRollover(result,cell?[cell]:room?.cells||[],index,threshold.ribbon,false)===true;const badge=append(row,'small',now?'롤오버 조건 충족':'롤오버 조건 충족 이력','fgiRolloverBadge');badge.style.cssText='grid-column:1/-1;color:#f97316';}

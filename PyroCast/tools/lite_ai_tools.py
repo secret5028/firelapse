@@ -26,6 +26,7 @@ def at(a,i):return a[i] if isinstance(a,list) and i<len(a) and finite(a[i]) else
 
 def rollover_at(s,i,threshold=100):
     f=s.get('conditions',{}).get('FGI',{});r=f.get('rollover',{})
+    if isinstance(r.get('active'),list) and i is not None:return r['active'][i] if i<len(r['active']) else None
     if r.get('excluded_origin') is True:return False
     if r.get('excluded_origin') is not False or i is None:return None
     ignition=r.get('ignition',[]);value=at(f.get('scores',{}).get('degree'),i)

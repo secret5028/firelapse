@@ -92,3 +92,45 @@ class Ventilation(unittest.TestCase):
         from pyrocast_cfbt.ventilation import validate_ventilation
         m=sealed();m['mechanical_vents']=[dict(id='Fan',comp='Fire',flow_m3_s=1,area=1,height=2,cutoffs=[300,200])]
         with self.assertRaises(ValueError):validate_ventilation(m)
+
+
+class Criteria(unittest.TestCase):
+    def evaluate(self,room='Fire',**kw):
+        from pyrocast_cfbt.criteria import evaluate_cell
+        model=sealed();model['fuel_groups'][0]['heat_of_combustion_kJ_kg']=18100
+        values=dict(temperature=[35.],interface=[1.],oxygen=[3.],fuel=[.78],solid_kW=[0.])
+        values.update(kw)
+        return evaluate_cell(model,next(r for r in model['rooms'] if r['id']==room),[3300.],**values)
+
+    def test_cold_rich_origin_has_bd_potential_but_not_fgi(self):
+        r=self.evaluate()
+        self.assertGreaterEqual(r['backdraft']['potential'][0],1)
+        self.assertAlmostEqual(r['backdraft']['potential'][0],17.9/10.9)
+        self.assertIsNone(r['FGI']['proximity'][0]);self.assertFalse(r['FGI']['gate'][0])
+        self.assertFalse(r['backdraft']['occurred'][0])
+        self.assertTrue(self.evaluate(opening_increased=[True])['backdraft']['occurred'][0])
+
+    def test_shallow_layer_is_unassessed_even_if_rich(self):
+        for key in ('FO','FGI','backdraft'):
+            self.assertEqual(self.evaluate(interface=[2.94])[key]['proximity'],[None])
+
+    def test_ambient_clean_room_has_zero_or_not_applicable(self):
+        r=self.evaluate(room='Stair',temperature=[20],oxygen=[20.9],fuel=[0])
+        for key in ('FO','FGI','backdraft'):self.assertIn(r[key]['proximity'][0],(None,0))
+
+    def test_fo_uses_ambient_relative_temperature_or_flux(self):
+        self.assertEqual(self.evaluate(temperature=[20],solid_kW=[100])['FO']['proximity'],[0])
+        self.assertTrue(self.evaluate(temperature=[20],solid_kW=[100],flux_kW_m2=[21])['FO']['occurred'][0])
+        self.assertAlmostEqual(self.evaluate(temperature=[310],solid_kW=[100])['FO']['proximity'][0],.5)
+
+    def test_fgi_cold_adjacent_and_too_rich(self):
+        r=self.evaluate(room='Stair',temperature=[25],oxygen=[20],fuel=[.1])
+        self.assertGreaterEqual(r['FGI']['proximity'][0],1)
+        self.assertTrue(r['FGI']['occurred'][0])
+        rich=self.evaluate(room='Stair',temperature=[25],oxygen=[20],fuel=[.78])
+        self.assertTrue(rich['FGI']['too_rich'][0]);self.assertEqual(rich['FGI']['proximity'][0],0)
+        self.assertIsNone(self.evaluate(room='Stair',solid_kW=[1])['FGI']['proximity'][0])
+
+    def test_rollover_is_independent_and_includes_origin(self):
+        r=self.evaluate(bulk_kW=[10])
+        self.assertTrue(r['rollover']['active'][0]);self.assertIsNone(r['FGI']['proximity'][0])

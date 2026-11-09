@@ -68,9 +68,14 @@ def build_export(origin, case, state, interval=10, *, model_service=False):
               '/cfbt/lite/result/'+case: playback}
     if not model_service:
         routes[directory+'legacy-context.json'] = value(directory+'legacy-context.json')
+    fire_room = next((r for r in playback.get('rooms', []) if r.get('key') == playback.get('fire_key')), {})
+    export_floor = fire_room.get('cad_floor')
     for path in ['/cfbt/lite/doors', '/cfbt/lite/screening',
                  '/cfbt/lite/fire-load-table', '/cfbt/model-info']:
-        routes[path] = value(path)
+        request_path = path
+        if model_service and export_floor and path in ('/cfbt/lite/doors', '/cfbt/lite/screening'):
+            request_path += '?floor=' + quote(export_floor, safe='')
+        routes[path] = value(request_path)
     if not model_service:
         routes['/cfbt/r8/schema'] = value('/cfbt/r8/schema')
         job = directory.strip('/').split('/')[-1]

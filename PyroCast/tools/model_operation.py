@@ -202,7 +202,7 @@ def handler(base, ident):
                     return self.json({**fixed_calculation.status(sim.fingerprint(ident)), 'server_busy':bool(sim._active),
                                       'saved_mc_input':True})
                 if path=='/cfbt/lite/doors':
-                    raw,_=scope(ident);rows=[]
+                    raw,_=scope(ident,query.get('floor',[None])[0]);rows=[]
                     for v in raw['openings']:
                         if 'door' not in v.get('kind',''):continue
                         rows.append(dict(id=v['id'],a=v['a'],b=v['b'],door_class=v.get('door_class','external' if v['b']=='OUTSIDE' else 'ordinary'),confidence=v.get('door_class_confidence','inferred'),connected_names=[v['a'],v['b']],reason=v.get('door_class_reason','자동 연결망 분류 · 미확인 표시 유지'),read_only=True))

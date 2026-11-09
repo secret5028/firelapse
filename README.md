@@ -13,12 +13,12 @@
 
 ## 화면 미리보기
 
-아래 두 HTML은 이전 버전의 보관 샘플이며 r17 계산 결과가 아닙니다. 링크를 누르면 바로 다운로드되며 서버 없이 브라우저에서 열 수 있습니다. 최신 CFAST 4건과 MC는 실행 패키지의 계산 결과 목록에서 확인할 수 있습니다. 호텔 B1은 연료 입력 확인이 필요한 `unverified` 상태를 유지합니다.
+아래 두 HTML은 r17의 최신 CFAST 결과에 **결과 요약을 포함한 단독 실행 샘플**입니다. 다운로드한 파일을 브라우저에서 열면 인터넷·API 연결 없이도 **결과 탭 맨 아래의 결과 요약**을 볼 수 있습니다. 호텔 B1을 포함한 CFAST 4건과 MC는 실행 패키지에서 확인할 수 있으며, B1의 입력 확인 필요(`unverified`) 상태는 유지합니다.
 
-- [호텔 · 5F R16 HTML 다운로드](https://github.com/secret5028/firelapse/releases/download/v2026.11.07-r7/FireLapse-parkmarine-5F-R16.html)
-- [아이엔테크 · 1F R3 HTML 다운로드](https://github.com/secret5028/firelapse/releases/download/v2026.11.07-r7/FireLapse-intech-1F-R3.html)
+- [호텔 · 5F R16 HTML 다운로드 — 결과 요약 포함](https://github.com/secret5028/firelapse/releases/download/v2026.11.08-r17/FireLapse-parkmarine-5F-R16.html)
+- [아이엔테크 · 1F R3 HTML 다운로드 — 결과 요약 포함](https://github.com/secret5028/firelapse/releases/download/v2026.11.08-r17/FireLapse-intech-1F-R3.html)
 
-실행 중인 앱에서 직접 캡처한 화면입니다. 호텔은 간략 엔진 저장 결과, 완도는 전용 CFAST P1 결과입니다.
+아래 이미지는 이전 실행 화면을 보관한 것으로, 위 최신 CFAST 샘플과 구분됩니다. 호텔 이미지는 간략 엔진 결과, 완도 이미지는 전용 CFAST P1 결과입니다.
 
 ### 호텔 · 층별 결과와 위험 지수
 

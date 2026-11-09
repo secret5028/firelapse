@@ -44,7 +44,7 @@ class ExportTests(unittest.TestCase):
 
     def test_model_service_external_entry_and_offline_assets(self):
         playback={'complete':True,'building_sha256':'b','time_s':[0,10], 'fire_key':'cell',
-                  'rooms':[{'key':'cell','original_room':'room'}], 'solvers':{},'fires':[]}
+                  'rooms':[{'key':'cell','original_room':'room','cad_floor':'5F'}], 'solvers':{},'fires':[]}
         routes={'/':(ROOT/'app/model-library/operation.html').read_bytes(),
           '/operation.js':b"import * as T from 'three'; import {attach} from '/app/web/entry.js';",
           '/vendor/three.module.js':b'export const Scene=1;',
@@ -54,9 +54,9 @@ class ExportTests(unittest.TestCase):
           '/cfbt/lite/screening':{},'/cfbt/lite/fire-load-table':{},
           '/cfbt/theme.css':b':root{--text:#eaf3f8}', '/cfbt/model-info':{'label':'새 건물'},'/cfbt/overlay.css':b'.pyroShell{color:red}',
           '/cfbt/lite/catalog.json':{'cases':[{'id':'saved','label':'저장 결과'}]}}
-        requested=[]
+        requested=[];requested_urls=[]
         class Response:
-            def __init__(self,url):self.url=url;self.path=urlsplit(url).path;requested.append(self.path)
+            def __init__(self,url):self.url=url;self.path=urlsplit(url).path;requested.append(self.path);requested_urls.append(url)
             def __enter__(self):return self
             def __exit__(self,*args):pass
             def read(self):
@@ -78,6 +78,9 @@ class ExportTests(unittest.TestCase):
         self.assertEqual(data['fixed_openings'],{'source':'this-building'})
         self.assertEqual(set(data['routes']['/cfbt/lite/doors']['fixed_by_room']),{'room'})
         self.assertEqual(data['routes']['/cfbt/model-info']['label'],'새 건물')
+        self.assertEqual(data['saved_summary']['text'],'저장 요약')
+        self.assertIn('http://127.0.0.1:1/cfbt/lite/doors?floor=5F',requested_urls)
+        self.assertIn('http://127.0.0.1:1/cfbt/lite/screening?floor=5F',requested_urls)
         self.assertIn('/vendor/three.module.js',data['modules'])
         self.assertTrue(data['scripts']);self.assertEqual(info['modules'],2)
         self.assertFalse(any('legacy-context' in r or 'hydraulics' in r for r in requested))

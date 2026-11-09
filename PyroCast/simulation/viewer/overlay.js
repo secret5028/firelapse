@@ -575,8 +575,11 @@ function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings}){
   if(cache.has(id))return cache.get(id);
   let maximum=null,type=null,source_cell=null,missing=false;
   const cells=rooms.get(id)?.cells||[];
+  const phenomena=types.map(key=>({type:key,phenomenon:labels[key],index:null,source_cell:null,missing:false}));
   for(const c of cells)for(const key of types){const value=history?indices?.[c.cell_id]?.[key]:i<0?null:indices?.[c.cell_id]?.[key]?.[i];
-   if(!Number.isFinite(value)){missing=true;continue;}
+   const item=phenomena.find(p=>p.type===key);
+   if(!Number.isFinite(value)){missing=true;item.missing=true;continue;}
+   if(item.index===null||value>item.index){item.index=value;item.source_cell=c.cell_id;}
    // Stable ties: first member and FO/FGI/backdraft order.
    if(maximum===null||value>maximum){maximum=value;type=key;source_cell=c.cell_id;}
   }
@@ -584,6 +587,12 @@ function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings}){
    phenomenon:maximum===null?(id?'미평가':'외부'):labels[type],partial:missing&&maximum!==null,
    color:maximum>=100?RISK_COLORS[type]:maximum>=70?RISK_COLORS.smoke:ROUTE_CLEAR};
   row.rollover_active=roomFgiRollover(resultMeta,cells,i,100,history);
+  for(const item of phenomena){
+   item.partial=item.missing&&item.index!==null;
+   item.color=item.index>=100?RISK_COLORS[item.type]:item.index>=70?RISK_COLORS.smoke:ROUTE_CLEAR;
+   if(item.type==='FGI'&&row.rollover_active===true)item.phenomenon+=' · 롤오버 조건 충족'+(history?' 이력':'');
+  }
+  row.phenomena=phenomena;
   if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 조건 충족'+(history?' 이력':'');
   cache.set(id,row);return row;
  }
@@ -714,10 +723,14 @@ return {RouteLayer};
 // app/web/panels/route.js
 const __module15=(()=>{
 const routeIndexText=value=>Number.isFinite(value)&&Math.round(value)!==0?String(Math.round(value)):'—';
+function routeRiskEntries(row){
+ const entries=(row.phenomena||[]).filter(p=>Number.isFinite(p.index)&&p.index>=70);
+ return entries.length?entries:[row];
+}
 function createRoutePanel({store,graph,onPlaceStart}){
  const container=document.createElement('details');container.id='routeSettings';container.hidden=true;container.innerHTML='<summary>경로 설정</summary><label>호스 1본(m) <input id="routeHose" type="number" min="1" step="1" value="15"></label><label>계단 계수 <input id="routeStair" type="number" min="1" step="0.1" value="1.5"></label><div><button id="routePlace" hidden>차량 지정 취소</button><button id="routeReset">차량 기본 위치</button></div><div id="routeSummary"></div><div id="routeStatus" role="status"></div><span title="실 중앙·복도 폭 중앙 우선 배치 경로. 등록 장애물은 회피, 미등록 적재물·실제 호스 처짐은 미반영. 확인된 연결만 사용하며 진입 안전을 보증하지 않습니다.">ⓘ 경로 가정</span><pre id="routeDiagnostics" hidden></pre>';
  document.getElementById('exploreContent').append(container);
- const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 멤버 셀의 저장된 3현상 지수 중 최댓값. 100 이상은 현상 색, 70 이상은 회색. 이력은 시간바와 무관한 전 구간 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="resultCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
+ const summary=document.createElement('section');summary.id='routeRiskSummary';summary.innerHTML='<h3>경로 위험 요약 <span tabindex="0" title="실별 FO·FGI·BD를 각각 확인해 70 이상인 현상마다 한 행씩 표시합니다. 각 현상은 멤버 셀 최댓값이며, 100 이상은 현상 색, 70 이상은 회색. 이력은 시간바와 무관한 전 구간 최대. 계산하지 않은 층·실은 미평가이며 안전을 뜻하지 않습니다. 호스 번호는 해당 구간에 걸친 본 번호 범위입니다.">ⓘ</span></h3><div class="resultCard"><div id="routeRiskBasis"></div><div class="exploreScroll"><table><thead><tr><th>순서</th><th>실</th><th>누적 m</th><th>호스 번호</th><th>현상</th><th>지수</th></tr></thead><tbody id="routeRiskRows"></tbody></table></div></div>';
  const savedSummary=document.getElementById('resultSavedSummary');
  if(savedSummary)savedSummary.before(summary);else document.getElementById('resultContent').append(summary);
  const style=document.createElement('style');style.textContent='#routeRiskSummary table{table-layout:fixed;font-size:13px}#routeRiskSummary th,#routeRiskSummary td{padding:6px 2px;white-space:normal;overflow-wrap:anywhere}#routeRiskSummary th:nth-child(1){width:8%}#routeRiskSummary th:nth-child(2){width:24%}#routeRiskSummary th:nth-child(3){width:17%}#routeRiskSummary th:nth-child(4){width:17%}#routeRiskSummary th:nth-child(5){width:21%}#routeRiskSummary th:nth-child(6){width:13%}#routeRiskSummary td:nth-child(2){min-width:0}#routeRiskSummary thead{position:sticky;top:0;background:var(--bg-card)}#routeRiskBasis{font-size:11px;color:var(--text-muted);margin-bottom:6px}';summary.append(style);
@@ -736,15 +749,18 @@ function createRoutePanel({store,graph,onPlaceStart}){
   const display=r.risk_summary,body=summary.querySelector('#routeRiskRows');body.replaceChildren();
   const t=display?.sample_s,stamp=Number.isFinite(t)?`${Math.floor(t/60).toString().padStart(2,'0')}:${Math.floor(t%60).toString().padStart(2,'0')}`:'미평가';
   summary.querySelector('#routeRiskBasis').textContent=r.error||`${stamp} · ${display?.history?'전 구간 최대':'현재 시점'}`;
-  for(const row of display?.rows||[]){const tr=document.createElement('tr');tr.dataset.room=row.room||'OUTSIDE';tr.dataset.color=row.color;tr.dataset.index=row.index??'';
+  for(const row of display?.rows||[]){const entries=routeRiskEntries(row);
    const hose=row.hose_first===row.hose_last?String(row.hose_first):`${row.hose_first}–${row.hose_last}`;
-   for(const value of [row.order,row.label,row.end_m.toFixed(1),hose,Number.isFinite(row.index)&&row.index<70?'—':row.phenomenon,routeIndexText(row.index)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}
-   tr.children[4].style.color=row.index===null?'var(--text-muted)':row.color;tr.title=row.index===null?'저장된 평가 없음':`${row.source_cell} · ${row.type} ${row.index.toFixed(2)}${row.partial?' · 일부 지수 미평가':''}`;body.append(tr);
+   entries.forEach((item,index)=>{const tr=document.createElement('tr');tr.dataset.room=row.room||'OUTSIDE';tr.dataset.phenomenon=item.type||'';tr.dataset.color=item.color;tr.dataset.index=item.index??'';
+    if(index===0)for(const value of [row.order,row.label,row.end_m.toFixed(1),hose]){const td=document.createElement('td');td.textContent=value;td.rowSpan=entries.length;td.style.verticalAlign='middle';tr.append(td);}
+    for(const value of [Number.isFinite(item.index)&&item.index<70?'—':item.phenomenon,routeIndexText(item.index)]){const td=document.createElement('td');td.textContent=value;td.style.color=item.index===null?'var(--text-muted)':item.color;tr.append(td);}
+    tr.title=item.index===null?'저장된 평가 없음':`${row.label} · ${item.source_cell} · ${item.type} ${item.index.toFixed(2)}${item.partial?' · 일부 지수 미평가':''}`;body.append(tr);
+   });
   }
   $('routeDiagnostics').textContent=JSON.stringify({main:graph.mainEntrance?.id,main_point:graph.mainEntrance?.point,default_vehicle:graph.defaultVehicle,...r});},dispose(){cleanup.forEach(f=>f());popup.remove();hint.remove();hud.remove();container.remove();summary.remove();}};
 }
 
-return {routeIndexText,createRoutePanel};
+return {routeIndexText,routeRiskEntries,createRoutePanel};
 })();
 
 // app/web/state/fuel_settings.js
@@ -5771,11 +5787,47 @@ const savedAttention = {
 return {savedAttention};
 })();
 
-// app/web/panels/explore.js
+// app/web/panels/mc_progress.js
 const __module63=(()=>{
+// Progress is processed MC samples, not a wall-clock estimate or a success rate.
+function mcProgressState(job={},pending=false,origin=null){
+ const active=pending||job.running||job.state==='queued';
+ const terminal=['completed','failed','interrupted'].includes(job.state);
+ if(!active&&(!terminal||(job.room&&job.room!==origin)))return {visible:false};
+ const known=!pending&&Number.isFinite(job.total)&&job.total>0&&Number.isFinite(job.completed);
+ const percent=known?Math.round(Math.min(1,Math.max(0,job.completed/job.total))*100):null;
+ const warning=job.error||['failed','interrupted'].includes(job.state)||job.failed_or_incomplete>0||job.excluded_physically_invalid>0;
+ return {visible:true,percent,state:warning?'warning':job.state==='completed'?'complete':'running',
+  text:percent===null?(pending?'준비 중':'진행률 확인 중'):`${percent}%`};
+}
+function createMCProgress(){
+ const root=document.createElement('div');root.id='exploreMCProgress';root.hidden=true;
+ root.innerHTML='<div class="mcProgressHeading"><span>MC 전체 진행</span><span id="exploreMCPercent"></span></div><progress id="exploreMCBar" max="100" aria-label="MC 전체 진행률"></progress>';
+ const style=document.createElement('style');style.textContent=`
+ #exploreMCProgress{margin-top:12px;--mc-progress:var(--accent)}#exploreMCProgress[data-state=complete]{--mc-progress:#62dcb0}#exploreMCProgress[data-state=warning]{--mc-progress:#f59e0b}
+ .mcProgressHeading{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:12px;font-variant-numeric:tabular-nums;color:var(--mc-progress)}
+ #exploreMCBar{display:block;appearance:none;width:100%;height:10px;border:0;border-radius:6px;overflow:hidden;background:var(--bg-control);accent-color:var(--mc-progress)}
+ #exploreMCBar::-webkit-progress-bar{background:var(--bg-control);border-radius:6px}#exploreMCBar::-webkit-progress-value{background:var(--mc-progress);border-radius:6px;transition:width .2s}#exploreMCBar::-moz-progress-bar{background:var(--mc-progress)}
+ #exploreMCBar:indeterminate{background:linear-gradient(90deg,var(--bg-control),var(--mc-progress),var(--bg-control));background-size:200% 100%;animation:mcProgressPending 1.5s linear infinite}#exploreMCBar:indeterminate::-webkit-progress-bar{background:transparent}
+ @keyframes mcProgressPending{to{background-position:-200% 0}}@media(prefers-reduced-motion:reduce){#exploreMCBar{animation:none!important}#exploreMCBar::-webkit-progress-value{transition:none}}
+ `;root.append(style);
+ const bar=root.querySelector('progress'),label=root.querySelector('#exploreMCPercent');
+ return {root,update(job,pending,origin){const state=mcProgressState(job,pending,origin);root.hidden=!state.visible;if(!state.visible)return;
+  root.dataset.state=state.state;label.textContent=state.text;
+  if(state.percent===null){bar.removeAttribute('value');bar.setAttribute('aria-valuetext',state.text);}
+  else{bar.value=state.percent;bar.setAttribute('aria-valuetext',state.text+' 진행');}
+ }};
+}
+
+return {mcProgressState,createMCProgress};
+})();
+
+// app/web/panels/explore.js
+const __module64=(()=>{
 const {attentionRanking}=__module61;
 const {savedAttention}=__module62;
 const {fixedInputFor}=__module39;
+const {createMCProgress}=__module63;
 function isBelowGrade(floor,floors){
  if(typeof floor?.below_grade==='boolean')return floor.below_grade;
  const ground=floors.find(f=>f.is_ground)||floors.find(f=>f.name==='1F');
@@ -5797,7 +5849,7 @@ function nativeProgress(progress){
 }
 function calculationStatus({floor,origin,job={},pending=false,dirty=false,changed=false,saved=false,verified=false}){
  if(pending)return '요청 중';
- if(job.running)return `계산 중 ${job.completed??0}/${job.total??'—'}${nativeProgress(job.native_progress)?' · '+nativeProgress(job.native_progress):''}`;
+ if(job.running)return `계산 중${nativeProgress(job.native_progress)?' · '+nativeProgress(job.native_progress):''}`;
  if(job.server_busy)return '다른 계산 진행 중';
  if(!floor)return '층 선택 필요';
  if(!origin)return '화점 없음';
@@ -5828,6 +5880,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  calculate.innerHTML='<div class="exploreEngineButtons" role="group" aria-label="계산 방식"><button type="button" id="exploreEngineLite" hidden disabled aria-pressed="false">간략 계산</button><button type="button" id="exploreEngineCfast" aria-pressed="false">순정 CFAST</button></div><button type="button" id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><div id="exploreCalculationProgress" hidden><span class="calculationSpinner" aria-hidden="true"></span><span id="exploreCalculationElapsed" aria-live="off"></span></div><button type="button" id="exploreCalculationResult" hidden>결과 보기</button>';
  style.textContent+=`#exploreContent .exploreEngineButtons{display:flex;gap:6px}#exploreContent .exploreEngineButtons button{flex:1;padding:9px 4px}#exploreContent .exploreEngineButtons button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:700}#exploreCalculateRun:not(:disabled){background:var(--bg-control);border-color:var(--accent)}#exploreCalculationProgress:not([hidden]){display:flex;align-items:center;gap:7px;margin-top:8px;color:var(--accent);font-variant-numeric:tabular-nums}.calculationSpinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:calculationSpin .9s linear infinite}@keyframes calculationSpin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.calculationSpinner{animation:none}}`;
  root.append(calculate);$('exploreMC').textContent='CFAST MC 급기 탐색';
+ const mcProgress=createMCProgress();$('exploreMCStatus').before(mcProgress.root);
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const fireInputs=document.createElement('fieldset');
  fireInputs.style.cssText='display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--border)';
@@ -5880,11 +5933,11 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   let fuelNotice=$('exploreFuelNotice');if(!fuelNotice){fuelNotice=document.createElement('small');fuelNotice.id='exploreFuelNotice';$('exploreCandidates').closest('.exploreScroll').before(fuelNotice);}fuelNotice.hidden=!dirty&&!fuel.saving;fuelNotice.textContent=fuel.saving?'저장·순위 갱신 중…':previewStatus;
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id||!store.get('floor').floor_id||dirty||fuel.saving;
   $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'모든 개구부 조합을 순정 CFAST로 계산 · 직렬 실행 · 표본당 최대 3,600초':'MC 실행 연결 없음';
-  $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
   $('exploreMCStatus').title=mcJob.error||'현재 화점 기준. 저장 결과 있음은 현재 설정과의 일치 확인을 뜻하지 않습니다.';
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
+  mcProgress.update(mcJob,mcPending,state.origin_room_id);
   const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
   if(fireInputRoom!==state.origin_room_id){
@@ -5945,7 +5998,7 @@ return {isBelowGrade,screeningRows,mcEstimate,nativeProgress,calculationStatus,c
 })();
 
 // app/web/controller.js
-const __module64=(()=>{
+const __module65=(()=>{
 const {createModelReview}=__module0;
 const {vehicleFitsGround}=__module5;
 const {createAssistantPanel}=__module7;
@@ -5979,7 +6032,7 @@ const {createPanelShell}=__module56;
 const {createDisplayPanel}=__module58;
 const {createResultsPanel,resultTypes,worstIndexEntries}=__module60;
 const {latestRoomCases}=__module53;
-const {createExplorePanel}=__module63;
+const {createExplorePanel}=__module64;
 const {attachFrozenRules}=__external1;
 
 // One boundary: existing panel/CAD loader <-> pure store and display layers.
@@ -6355,8 +6408,8 @@ return {attachModern};
 })();
 
 // app/web/entry.js
-const __module65=(()=>{
-const {attachModern}=__module64;
+const __module66=(()=>{
+const {attachModern}=__module65;
 const attached=new WeakMap();
 async function attach(viewer){
  if(attached.has(viewer.R.domElement))return attached.get(viewer.R.domElement);
@@ -6374,4 +6427,4 @@ async function attach(viewer){
 return {attach};
 })();
 
-export const attach=__module65.attach;
+export const attach=__module66.attach;

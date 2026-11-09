@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {mcProgressState} from '../web/panels/mc_progress.js';
+const job={running:true,state:'running',room:'R16',completed:5,total:10};
+assert.equal(mcProgressState(job,false,'R16').percent,50);
+assert.equal(mcProgressState({...job,completed:0},false,'R16').percent,0);
+assert.equal(mcProgressState({...job,completed:10,running:false,state:'completed'},false,'R16').state,'complete');
+assert.equal(mcProgressState({...job,completed:10,running:false,state:'completed'},false,'R16').percent,100);
+assert.equal(mcProgressState({...job,running:false,state:'completed'},true,'R16').percent,null,'new request never shows old completed progress');
+assert.equal(mcProgressState({...job,running:false,state:'completed'},false,'R3').visible,false,'another room never inherits completion');
+assert.equal(mcProgressState({},false,'R16').visible,false);
+for(const total of [0,null,undefined,NaN])assert.equal(mcProgressState({...job,total},false,'R16').percent,null);
+for(const state of ['failed','interrupted'])assert.equal(mcProgressState({...job,state,running:false},false,'R16').state,'warning');
+assert.equal(mcProgressState({...job,state:'completed',running:false,completed:10,failed_or_incomplete:2},false,'R16').state,'warning');
+assert.equal(mcProgressState({...job,completed:11},false,'R16').percent,100);
+assert.equal(mcProgressState({...job,completed:-1},false,'R16').percent,0);
+assert.equal(mcProgressState({...job,total:3,completed:1},false,'R16').text,'33%');
+console.log('PASS MC progress: pending, zero, running, completed, partial failure, interruption, origin isolation');

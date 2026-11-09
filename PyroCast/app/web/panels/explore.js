@@ -1,6 +1,7 @@
 import {attentionRanking} from '../adapters/attention.js';
 import {savedAttention} from '../data/saved_attention.js';
 import {fixedInputFor} from '../state/fixed_openings.js';
+import {createMCProgress} from './mc_progress.js';
 export function isBelowGrade(floor,floors){
  if(typeof floor?.below_grade==='boolean')return floor.below_grade;
  const ground=floors.find(f=>f.is_ground)||floors.find(f=>f.name==='1F');
@@ -22,7 +23,7 @@ export function nativeProgress(progress){
 }
 export function calculationStatus({floor,origin,job={},pending=false,dirty=false,changed=false,saved=false,verified=false}){
  if(pending)return '요청 중';
- if(job.running)return `계산 중 ${job.completed??0}/${job.total??'—'}${nativeProgress(job.native_progress)?' · '+nativeProgress(job.native_progress):''}`;
+ if(job.running)return `계산 중${nativeProgress(job.native_progress)?' · '+nativeProgress(job.native_progress):''}`;
  if(job.server_busy)return '다른 계산 진행 중';
  if(!floor)return '층 선택 필요';
  if(!origin)return '화점 없음';
@@ -53,6 +54,7 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
  calculate.innerHTML='<div class="exploreEngineButtons" role="group" aria-label="계산 방식"><button type="button" id="exploreEngineLite" hidden disabled aria-pressed="false">간략 계산</button><button type="button" id="exploreEngineCfast" aria-pressed="false">순정 CFAST</button></div><button type="button" id="exploreCalculateRun" disabled>계산하기</button><div id="exploreCalculateStatus" role="status"></div><div id="exploreCalculationProgress" hidden><span class="calculationSpinner" aria-hidden="true"></span><span id="exploreCalculationElapsed" aria-live="off"></span></div><button type="button" id="exploreCalculationResult" hidden>결과 보기</button>';
  style.textContent+=`#exploreContent .exploreEngineButtons{display:flex;gap:6px}#exploreContent .exploreEngineButtons button{flex:1;padding:9px 4px}#exploreContent .exploreEngineButtons button[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:700}#exploreCalculateRun:not(:disabled){background:var(--bg-control);border-color:var(--accent)}#exploreCalculationProgress:not([hidden]){display:flex;align-items:center;gap:7px;margin-top:8px;color:var(--accent);font-variant-numeric:tabular-nums}.calculationSpinner{width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:calculationSpin .9s linear infinite}@keyframes calculationSpin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.calculationSpinner{animation:none}}`;
  root.append(calculate);$('exploreMC').textContent='CFAST MC 급기 탐색';
+ const mcProgress=createMCProgress();$('exploreMCStatus').before(mcProgress.root);
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const fireInputs=document.createElement('fieldset');
  fireInputs.style.cssText='display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--border)';
@@ -105,11 +107,11 @@ export function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,
   let fuelNotice=$('exploreFuelNotice');if(!fuelNotice){fuelNotice=document.createElement('small');fuelNotice.id='exploreFuelNotice';$('exploreCandidates').closest('.exploreScroll').before(fuelNotice);}fuelNotice.hidden=!dirty&&!fuel.saving;fuelNotice.textContent=fuel.saving?'저장·순위 갱신 중…':previewStatus;
   $('exploreMC').disabled=mcPending||!mcJob.available||mcJob.server_busy||mcJob.running||!state.origin_room_id||!store.get('floor').floor_id||dirty||fuel.saving;
   $('exploreMC').title=dirty?'가연물 변경을 먼저 저장하세요':mcJob.available?'모든 개구부 조합을 순정 CFAST로 계산 · 직렬 실행 · 표본당 최대 3,600초':'MC 실행 연결 없음';
-  $('exploreMCStatus').textContent=mcJob.error?'MC 오류 · '+mcJob.error:mcPending?'MC 요청 중':mcJob.running?`MC ${mcJob.completed??0}/${mcJob.total??state.samples} · ${mcJob.current??mcJob.state}`:mcJob.server_busy?'다른 계산 진행 중':({completed:`MC 완료${mcJob.failed_or_incomplete?' · 실패·미완료 '+mcJob.failed_or_incomplete+'건':''}`,failed:'MC 실패',interrupted:'MC 중단'}[mcJob.state]||'MC 대기')+(matching?' · 저장 결과 있음':' · 저장 결과 없음');
   $('exploreMCStatus').title=mcJob.error||'현재 화점 기준. 저장 결과 있음은 현재 설정과의 일치 확인을 뜻하지 않습니다.';
   $('exploreMCStatus').textContent=calculationStatus({floor:store.get('floor').floor_id,origin:state.origin_room_id,job:mcJob,pending:mcPending,dirty,changed,saved:matching,verified:submitted?.id===mcJob.id&&!changed});
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
+  mcProgress.update(mcJob,mcPending,state.origin_room_id);
   const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
   if(fireInputRoom!==state.origin_room_id){

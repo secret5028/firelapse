@@ -6,7 +6,7 @@ assert.equal(calculationStatus(base),'계산 전');
 assert.equal(calculationStatus({...base,floor:null}),'층 선택 필요');
 assert.equal(calculationStatus({...base,dirty:true}),'가연물 변경 저장 필요');
 assert.equal(calculationStatus({...base,pending:true}),'요청 중');
-assert.equal(calculationStatus({...base,job:{running:true,completed:1,total:10}}),'계산 중 1/10');
+assert.equal(calculationStatus({...base,job:{running:true,completed:1,total:10}}),'계산 중');
 const done={...base,job:{room:'R16',state:'completed'}};
 assert.equal(calculationStatus(done),'저장 결과 있음','Old result must not certify current inputs');
 assert.equal(calculationStatus({...done,verified:true}),'계산 완료');

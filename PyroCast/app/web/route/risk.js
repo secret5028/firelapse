@@ -18,8 +18,11 @@ export function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings
   if(cache.has(id))return cache.get(id);
   let maximum=null,type=null,source_cell=null,missing=false;
   const cells=rooms.get(id)?.cells||[];
+  const phenomena=types.map(key=>({type:key,phenomenon:labels[key],index:null,source_cell:null,missing:false}));
   for(const c of cells)for(const key of types){const value=history?indices?.[c.cell_id]?.[key]:i<0?null:indices?.[c.cell_id]?.[key]?.[i];
-   if(!Number.isFinite(value)){missing=true;continue;}
+   const item=phenomena.find(p=>p.type===key);
+   if(!Number.isFinite(value)){missing=true;item.missing=true;continue;}
+   if(item.index===null||value>item.index){item.index=value;item.source_cell=c.cell_id;}
    // Stable ties: first member and FO/FGI/backdraft order.
    if(maximum===null||value>maximum){maximum=value;type=key;source_cell=c.cell_id;}
   }
@@ -27,6 +30,12 @@ export function routeRiskRows(route,{building,resultMeta,t_s,risk,route:settings
    phenomenon:maximum===null?(id?'미평가':'외부'):labels[type],partial:missing&&maximum!==null,
    color:maximum>=100?RISK_COLORS[type]:maximum>=70?RISK_COLORS.smoke:ROUTE_CLEAR};
   row.rollover_active=roomFgiRollover(resultMeta,cells,i,100,history);
+  for(const item of phenomena){
+   item.partial=item.missing&&item.index!==null;
+   item.color=item.index>=100?RISK_COLORS[item.type]:item.index>=70?RISK_COLORS.smoke:ROUTE_CLEAR;
+   if(item.type==='FGI'&&row.rollover_active===true)item.phenomenon+=' · 롤오버 조건 충족'+(history?' 이력':'');
+  }
+  row.phenomena=phenomena;
   if(type==='FGI'&&row.rollover_active===true)row.phenomenon+=' · 롤오버 조건 충족'+(history?' 이력':'');
   cache.set(id,row);return row;
  }

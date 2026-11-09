@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {routeRiskRows,routeSampleIndex} from '../web/route/risk.js';
 import {indexHistoryExtrema} from '../web/adapters/read.js';
+import {routeRiskEntries} from '../web/panels/route.js';
 const cell=(FO,FGI,backdraft,rollover)=>({FO,FGI,backdraft,rollover});
 const building={floors:[{rooms:[{room_id:'R2',cells:[{cell_id:'C0'},{cell_id:'C1'}]},{room_id:'R3',cells:[{cell_id:'C2'}]}]}]};
 const index_by_cell={C0:cell([0,120,0],[0,110,0],[0,30,0],[0,20,0]),C1:cell([0,10,0],[0,140,0],[0,30,0],[0,20,0]),C2:cell([0,75,0],[null,null,null],[0,50,0],[0,99,0])};
@@ -10,6 +11,17 @@ const frame={building,resultMeta,t_s:10,risk:{history:false,show:{FGI:false},thr
 const before=JSON.stringify(resultMeta),rows=routeRiskRows(route,frame).rows;
 assert.equal(rows.length,4);assert.equal(rows[0].phenomenon,'외부');assert.equal(rows[1].phenomenon,'미평가');assert.equal(rows[1].index,null);
 assert.equal(rows[2].index,140);assert.equal(rows[2].type,'FGI');assert.equal(rows[2].color,'#a855f7');assert.equal(rows[2].end_m,30);
+assert.deepEqual(routeRiskEntries(rows[2]).map(p=>[p.type,p.index]),[['FO',120],['FGI',140]],'both simultaneous risks survive member-cell maximum selection');
+const triple=structuredClone(resultMeta);triple.index_by_cell.C1.backdraft[1]=105;
+assert.deepEqual(routeRiskEntries(routeRiskRows(route,{...frame,resultMeta:triple}).rows[2]).map(p=>p.type),['FO','FGI','backdraft']);
+assert.equal(routeRiskEntries(rows[0]).length,1,'outside retains one route segment');
+assert.equal(routeRiskEntries(rows[1]).length,1,'unevaluated retains one route segment');
+assert.equal(routeRiskEntries(routeRiskRows(route,{...frame,t_s:20}).rows[2]).length,1,'no current risks keeps a single quiet row');
+assert.equal(routeRiskEntries(routeRiskRows(route,{...frame,t_s:20,risk:{history:true}}).rows[2]).length,2,'history independently retains both peaks');
+const threshold=structuredClone(resultMeta);threshold.index_by_cell.C1.backdraft[1]=70;
+assert.equal(routeRiskEntries(routeRiskRows(route,{...frame,resultMeta:threshold}).rows[2]).length,3,'70-point caution is included');
+threshold.index_by_cell.C1.backdraft[1]=69.99;
+assert.equal(routeRiskEntries(routeRiskRows(route,{...frame,resultMeta:threshold}).rows[2]).length,2,'rounded 70 does not cross the actual threshold');
 assert.equal(rows[2].hose_first,2);assert.equal(rows[2].hose_last,2);assert.equal(rows[3].color,'#9ca3af');assert.equal(rows[3].partial,true);
 assert.equal(routeRiskRows(route,{...frame,t_s:20}).rows[2].color,'#38bdf8');
 assert.equal(routeRiskRows(route,{...frame,t_s:20,risk:{history:true}}).rows[2].color,'#a855f7');

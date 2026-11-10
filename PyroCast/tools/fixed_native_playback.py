@@ -65,6 +65,28 @@ def native_geometry(model, template):
     return data
 
 
+def native_opening_states(model, native):
+    """Keep native conditional-window output; fixed openings still must stay fixed."""
+    from pyrocast_cfbt.openings import policy
+    values = native['native_vents']; ids = native['native_vents_ids']
+    states = {}
+    for opening in model['openings']:
+        matches = [k for k in values if k.startswith(('WF_', 'CFF_')) and ids[k] == opening['id']]
+        if len(matches) != 1:
+            raise ValueError('Missing or ambiguous native opening fraction: '+opening['id'])
+        series = values[matches[0]]
+        conditional = policy(model, opening)
+        if conditional and conditional['post_fraction'] != conditional['pre_fraction']:
+            pre, post = conditional['pre_fraction'], conditional['post_fraction']
+            allowed = np.isclose(series, pre, atol=1e-8) | np.isclose(series, post, atol=1e-8)
+            if not np.all(allowed) or np.any(np.diff(series) < -1e-8):
+                raise ValueError('Native conditional opening fraction differs from input policy')
+        elif not np.allclose(series, opening['schedule'][0][1], atol=1e-8):
+            raise ValueError('Native fixed opening fraction changed')
+        states[opening['id']] = dict(fraction=series)
+    return states
+
+
 def package(model, native, template, folder):
     template=native_geometry(model,template)
     c = native['compartments']; z = native['zone']; ids = native['compartments_ids']
@@ -76,13 +98,7 @@ def package(model, native, template, folder):
     geometry = {r['solver_id']: r for r in template['rooms']}
     if set(byid) != set(geometry):
         raise ValueError('CFAST/MC cell geometry differs; refusing to reuse geometry')
-    v = native['native_vents']; vids = native['native_vents_ids']
-    opening_states = {}
-    for op in model['openings']:
-        k = next(k for k in v if k.startswith(('WF_','CFF_')) and vids[k] == op['id'])
-        if not np.allclose(v[k], op['schedule'][0][1], atol=1e-8):
-            raise ValueError('Native fixed opening fraction changed')
-        opening_states[op['id']] = dict(fraction=v[k])
+    opening_states = native_opening_states(model, native)
     def col(table, key):
         return table[key] if key in table else np.full(n, np.nan)
     solvers = {}; fires = []; criteria = model['criteria']; gas = model['gas']

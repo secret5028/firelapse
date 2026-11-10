@@ -63,13 +63,63 @@ def context(sha, ident=None, job_id=None, room=None):
     return folder, fixed, request, model
 
 
+def saved_input_available(sha, body, ident=None):
+    """Absent historical MC samples do not block a default run; present samples
+    still use context() and its existing complete stale-input checks."""
+    if body.get('mc_job_id'):return True
+    if ident:
+        import model_mc
+        fixed=model_mc.fixed_inputs(ident).get(body['room'])
+        jobs=model_mc.JOBS/ident
+    else:
+        from lite_fixed_openings import CONFIG, JOBS as jobs
+        fixed=read(CONFIG,{}).get('fixed_state')
+    if not fixed or fixed.get('building_sha256')!=sha or fixed.get('source_room')!=body['room']:
+        return False
+    if not re.fullmatch(r'mc-\d+-[a-f0-9]+',fixed.get('job_id','')) or not re.fullmatch(r'S\d+',fixed.get('sample_id','')):
+        return True  # Let context reject malformed persisted identities; never probe an outside path.
+    folder=locate(jobs/fixed.get('job_id','missing')/fixed.get('sample_id','missing'))
+    return (folder/'sample.json').is_file() and (folder/'summary.json').is_file()
+
+
+def default_input(sha, body, ident=None):
+    """Use the app's current candidate input without inventing an MC winner."""
+    request=dict(room=body['room'],floor=body['floor'],duration_s=body['duration_s'],samples=2,selection_mode='candidate')
+    if ident:
+        import model_mc
+        req,raw=model_mc.prepare_request(ident,request)
+    else:
+        import lite_mc_service
+        req,raw=lite_mc_service.prepare_request(request,sha)
+    if raw.get('cad',{}).get('building_sha256')!=sha:
+        raise ValueError('다른 건물의 기본 입력입니다')
+    raw=deepcopy(raw)
+    if 'leakage_area_m2' in body:
+        area=body['leakage_area_m2']
+        if type(area) not in (int,float) or not math.isfinite(area) or area<=0:
+            raise ValueError('최소 누기 면적은 양수여야 합니다')
+        raw['leakage_defaults']=dict(stair_area_m2=area,elevator_area_m2=area,fallback_area_m2=area)
+    set_ventilation_input(raw,body)
+    if FIRE_INPUT_KEYS & body.keys():set_fire_input(raw,body)
+    states={v['id']:dict(id=v['id'],a=v['a'],b=v['b'],open=v['schedule'][0][1]>0,
+                        effective_fraction=v['schedule'][0][1],schedule=deepcopy(v['schedule'])) for v in raw['openings']}
+    fixed=dict(building_sha256=sha,source_room=body['room'],duration_s=body['duration_s'],
+               job_id='input-default',sample_id='none',basis='application_default',states=states)
+    return None,fixed,req,raw
+
+
 def prepare(sha, body, ident=None):
-    if not isinstance(body, dict) or set(body)-({'mc_job_id'}|FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS) != {'engine', 'room', 'floor', 'duration_s'}:
+    if not isinstance(body, dict) or set(body)-({'mc_job_id','use_default_openings'}|FIRE_INPUT_KEYS|BOUNDARY_INPUT_KEYS) != {'engine', 'room', 'floor', 'duration_s'}:
         raise ValueError('계산 방식·화점·층·시간을 지정하세요')
     if body['engine'] != 'cfast':
         raise ValueError('새 계산은 CFAST만 지원합니다. 기존 간략 결과는 열람할 수 있습니다.')
     if 'mc_job_id' in body and (not ident or not isinstance(body['mc_job_id'], str)):
         raise ValueError('저장 MC 작업 ID 오류')
+    if 'use_default_openings' in body and type(body['use_default_openings']) is not bool:
+        raise ValueError('use_default_openings must be boolean')
+    if body.get('use_default_openings') and not saved_input_available(sha,body,ident):
+        if not ENGINE.is_file():raise ValueError('순정 CFAST 실행 파일 없음')
+        return default_input(sha,body,ident)
     folder, fixed, req, model = context(sha, ident, body.get('mc_job_id'), body['room'])
     if body['room'] != req['room'] or body['room'] != fixed['source_room']:
         raise ValueError('화점이 변경되었습니다. 해당 화점의 MC 급기를 확정하세요')
@@ -203,7 +253,7 @@ def status(sha):
     if running and rows:
         progress=read(rows[0]/'CFAST/execution-state.json',{})
         value={**value,'native_progress':progress}
-    return {**value, 'available': True, 'cfast_available': ENGINE.is_file(), 'running': running}
+    return {**value, 'available': True, 'cfast_available': ENGINE.is_file(), 'default_input_available': True, 'running': running}
 
 
 def cases(sha):
@@ -255,7 +305,7 @@ def reserve(sha, body, ident=None):
     source, fixed, req, raw = prepare(sha, body, ident)
     folder = JOBS/sha/('calc-'+str(time.time_ns())+'-'+uuid.uuid4().hex[:8])
     evidence = dict(**body, building_sha256=sha, source_job=fixed['job_id'],
-        source_sample=fixed['sample_id'], source_path=str(source), input_sha256=fingerprint(raw),
+        source_sample=fixed['sample_id'], source_path=str(source) if source else None, input_basis=fixed.get('basis','saved_mc'), input_sha256=fingerprint(raw),
         owner_pid=os.getpid(), automatic_retry=False, started_at_ms=int(time.time()*1000))
     atomic_json(folder/'request.json', evidence)
     atomic_json(folder/'input.json', raw)
@@ -271,7 +321,8 @@ def compute(folder):
         if req['engine'] != 'cfast':raise ValueError('새 계산은 CFAST만 지원합니다')
         atomic_json(folder/'status.json', dict(state='running', id=folder.name, **req))
         from cfast_calculation import run_case
-        pb, _, _ = run_case(raw,folder,label=f"{req['floor']} {req['room'].split('_')[-1]} · 순정 CFAST · 확정 급기")
+        opening_label='기본 개구부' if req.get('input_basis')=='application_default' else '확정 급기'
+        pb, _, _ = run_case(raw,folder,label=f"{req['floor']} {req['room'].split('_')[-1]} · 순정 CFAST · {opening_label}")
         runs = len((pb.get('basement_pressure') or {}).get('history',[])) or 1
         fixed = read(folder/'fixed-state.json')
         pb['display_opening_state'] = dict(building_sha256=req['building_sha256'], case_id=folder.name,

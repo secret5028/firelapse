@@ -362,8 +362,17 @@ def main():
                 return self.json({'error':'아직 완료된 계산이 없습니다'},404)
             if path in ('/cfbt/lite/active.json','/cfbt/lite/catalog.json') or path.startswith('/cfbt/lite/result/'):
                 conf=SIM/'config/lite-viewer.json'
-                if not conf.is_file():return self.json({'error':'No adopted lite result'},404)
-                cfg=json.loads(conf.read_text('utf-8'))
+                cfg=json.loads(conf.read_text('utf-8')) if conf.is_file() else {'cases':[]}
+                if path.endswith('active.json'):
+                    from runtime_storage import playback_path as active_path
+                    try: active_file=active_path(cfg.get('active_path',''))
+                    except ValueError: active_file=None
+                    if not active_file or not active_file.is_file():
+                        import fixed_calculation
+                        cases=fixed_calculation.cases(sha)
+                        if cases:return self.json(fixed_calculation.playback(sha,cases[0]['id']))
+                        from model_operation import building_preview
+                        return self.json(building_preview(building,sha))
                 if not path.endswith('active.json'):
                     cfg['cases']=catalog_index.cases(sha,'lite',cfg.get('cases',[]))
                 requested_room=parse_qs(urlsplit(self.path).query).get('mc_room',[None])[0]

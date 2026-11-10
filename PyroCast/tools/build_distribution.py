@@ -79,8 +79,12 @@ def main():
     result_sources=[root/'simulation/results',external_results]
     archive=[];playbacks=0;excluded_bytes=0
     portable_indices=0
+    omitted_lite=[];omitted_lite_bytes=0
+    from distribution_results import result_policy
     for results in result_sources:
         if not results.exists():continue
+        keep_result,native_folders,lite_cases=result_policy(results)
+        omitted_lite.extend(lite_cases)
         # Some approved final cases live in historic ui_* experiment folders.
         # Keep only catalog-validated final-result directories, never UI captures/fixtures.
         known_hashes={e.get('sha256') for e in registry_source['models']}
@@ -94,11 +98,14 @@ def main():
             if top.name.startswith('ui_') and not any(d.is_relative_to(top.resolve()) for d in ui_finals):continue
             for f in files(top):
                 if top.name.startswith('ui_') and f.parent.resolve() not in ui_finals:continue
+                if not keep_result(f):
+                    omitted_lite_bytes+=f.stat().st_size
+                    continue
                 rel=Path('simulation/results')/f.relative_to(results)
                 if f.name.endswith(('.lock','.pid')):continue
                 # Final playback and small settings/summaries only. Raw solver matrices,
                 # CSV/logs/plots, retries and intermediate attempts are not distributed.
-                include=f.name=='playback.json' or (f.suffix=='.json' and f.stat().st_size<2*1024*1024
+                include=any(f.is_relative_to(folder) for folder in native_folders) or f.name=='playback.json' or (f.suffix=='.json' and f.stat().st_size<2*1024*1024
                     and f.name not in ('result.json','execution-evidence.json','started.json','build.json','worker.json','control.json')
                     and not any(s in f.name for s in ('before','backup','trace','debug')))
                 if include:copy(f,app/rel);playbacks+=int(f.name=='playback.json')
@@ -129,6 +136,7 @@ def main():
     meta={'name':'FireLapse','version':'2026.11.06','source_root':str(root),'source_data_root':str(external_results.parent),'platform':'Windows x64',
           'models':[{k:e.get(k) for k in ('id','label','source_kind','floor_count','room_count','simulation_enabled')} for e in data['models']],
           'playback_count':playbacks,'new_simulations':0,'portable_indices':portable_indices,'excluded_bytes':excluded_bytes,
+          'excluded_lite_results':omitted_lite,'excluded_lite_bytes':omitted_lite_bytes,
           'excluded':['Raw solver matrices/CSV/logs/intermediate attempts','API keys and connection secrets','nested Git checkout','UI test captures and temporary unit fixtures'],
           'cad_import':'External DWG/DXF extraction toolchain must be configured separately; existing 7 models are bundled'}
     (bundle/'distribution.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n','utf8')

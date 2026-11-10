@@ -47,3 +47,22 @@ def filter_bundle_results(app):
     remaining=[p.relative_to(app).as_posix() for p in root.rglob('playback.json') if _read(p).get('engine_kind') in LITE_ENGINES]
     if remaining:raise ValueError('Lite playback remains: '+str(remaining))
     return dict(removed_lite_cases=cases,removed_files=removed,removed_bytes=sum(r['bytes'] for r in removed),remaining_lite_playbacks=len(remaining),preserved_native_playbacks=len(native))
+
+
+def filter_bundle_standalone(bundle):
+    """Exclude embedded Lite replays from an isolated package, not source samples."""
+    import base64,gzip,re
+    bundle=Path(bundle).resolve();removed=[];native=[]
+    pattern=re.compile(r'<script\s+id=["\']pcOfflineData["\'][^>]*>(.*?)</script>',re.S)
+    for path in sorted(bundle.rglob('*.html')):
+        match=pattern.search(path.read_text('utf-8-sig'))
+        if not match:continue
+        value=json.loads(gzip.decompress(base64.b64decode(match[1].strip(),validate=True)))
+        engines={v.get('engine_kind') for v in value.get('routes',{}).values() if isinstance(v,dict) and 'solvers' in v}
+        if engines & LITE_ENGINES:
+            if 'cfast_native' in engines:raise ValueError('Mixed native/Lite standalone sample; manual review required')
+            if path.is_symlink() or not path.resolve().is_relative_to(bundle):raise ValueError('Unsafe standalone cleanup path')
+            removed.append(dict(path=path.relative_to(bundle).as_posix(),bytes=path.stat().st_size,engine_kinds=sorted(engines)))
+            path.unlink()
+        elif 'cfast_native' in engines:native.append(path.relative_to(bundle).as_posix())
+    return dict(removed_lite_html=removed,removed_bytes=sum(r['bytes'] for r in removed),preserved_native_html=native)

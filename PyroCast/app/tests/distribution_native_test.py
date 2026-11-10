@@ -30,6 +30,19 @@ class DistributionNativeTests(unittest.TestCase):
    filter_bundle_results(app)
    self.assertTrue((root/'lite/native/playback.json').exists());self.assertTrue((root/'native/playback.json').exists())
    self.assertFalse((root/'lite/playback.json').exists());self.assertFalse((root/'native/lite/playback.json').exists())
+ def test_embedded_lite_html_excluded_native_html_unchanged(self):
+  import base64,gzip
+  from distribution_results import filter_bundle_standalone
+  with tempfile.TemporaryDirectory() as tmp:
+   bundle=Path(tmp);source={}
+   for engine in ('lite','pyrocast_lite','cfast_native'):
+    envelope={'routes':{'/active':{'engine_kind':engine,'solvers':{}}}}
+    data=base64.b64encode(gzip.compress(json.dumps(envelope).encode())).decode()
+    p=bundle/(engine+'.html');p.write_text('<script id="pcOfflineData" type="application/octet-stream">'+data+'</script>','utf8');source[engine]=p.read_bytes()
+   report=filter_bundle_standalone(bundle)
+   self.assertEqual(len(report['removed_lite_html']),2)
+   self.assertFalse((bundle/'lite.html').exists());self.assertFalse((bundle/'pyrocast_lite.html').exists())
+   self.assertEqual((bundle/'cfast_native.html').read_bytes(),source['cfast_native'])
  def test_factory_input_retained_without_lite_result(self):
   with tempfile.TemporaryDirectory() as tmp:
    app=Path(tmp);p=app/'simulation/results/lite_v8_example';p.mkdir(parents=True)

@@ -80,7 +80,7 @@ def main():
     archive=[];playbacks=0;excluded_bytes=0
     portable_indices=0
     omitted_lite=[];omitted_lite_bytes=0
-    from distribution_results import result_policy
+    from distribution_results import result_policy,filter_bundle_standalone
     for results in result_sources:
         if not results.exists():continue
         keep_result,native_folders,lite_cases=result_policy(results)
@@ -126,6 +126,7 @@ def main():
             sealed={'schema':'firelapse.portable-result-index/1','playback_sha256':sha(pb),'index':cached,
                     'index_sha256':hashlib.sha256(json.dumps(cached,sort_keys=True,separators=(',',':')).encode()).hexdigest()}
             dest=app/rel.parent/'portable-result-index.json';dest.write_text(json.dumps(sealed,ensure_ascii=False,indent=2),'utf8');portable_indices+=1
+    standalone=filter_bundle_standalone(bundle)
     # Operational model registry gets portable paths, without changing model JSON hashes.
     registry=app/'config/model-library.json';data=json.loads(registry.read_text('utf8'))
     for entry in data['models']:
@@ -136,7 +137,7 @@ def main():
     meta={'name':'FireLapse','version':'2026.11.06','source_root':str(root),'source_data_root':str(external_results.parent),'platform':'Windows x64',
           'models':[{k:e.get(k) for k in ('id','label','source_kind','floor_count','room_count','simulation_enabled')} for e in data['models']],
           'playback_count':playbacks,'new_simulations':0,'portable_indices':portable_indices,'excluded_bytes':excluded_bytes,
-          'excluded_lite_results':omitted_lite,'excluded_lite_bytes':omitted_lite_bytes,
+          'excluded_lite_results':omitted_lite,'excluded_lite_bytes':omitted_lite_bytes,'excluded_lite_html':standalone,
           'excluded':['Raw solver matrices/CSV/logs/intermediate attempts','API keys and connection secrets','nested Git checkout','UI test captures and temporary unit fixtures'],
           'cad_import':'External DWG/DXF extraction toolchain must be configured separately; existing 7 models are bundled'}
     (bundle/'distribution.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2)+'\n','utf8')

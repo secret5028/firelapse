@@ -11,11 +11,13 @@ import re
 import sys
 import threading
 import time
+import traceback
 from urllib.parse import urlsplit,unquote,parse_qs
 
 ROOT=Path(__file__).resolve().parents[1]
 SIM=ROOT/'simulation'
 from runtime_storage import RESULTS as DATA_RESULTS
+from loopback_guard import LoopbackHostMixin
 sys.path.insert(0,str(SIM))
 from pyrocast_cfbt.cad import adapt,resolve_building
 from pyrocast_cfbt.playback import package
@@ -138,6 +140,18 @@ def main():
     def saved_cases():
         rows=catalog_index.cases(sha, 'native')
         return {r['id']:(r['label'],Path(r['path'])) for r in rows}
+    sha_by_file={}
+    def stored_sha(path):
+        """building_sha256 of a saved replay, parsed once per file version (status polls call this)."""
+        path=Path(path)
+        try:stat=path.stat()
+        except OSError:return None
+        version=(stat.st_mtime_ns,stat.st_size);known=sha_by_file.get(path)
+        if known and known[0]==version:return known[1]
+        try:value=json.loads(path.read_text('utf-8')).get('building_sha256')
+        except (OSError,ValueError,AttributeError):return None
+        sha_by_file[path]=(version,value)
+        return value
     def latest():
         with lock:
             path=state['latest'] or (args.result if args.result.is_file() else SIM/'results/cad_floor_smoke_v5_prescribed/playback.json')
@@ -146,11 +160,7 @@ def main():
                     candidate=json.loads((watch/'playback.json').read_text('utf-8'))
                     if candidate.get('complete') and candidate.get('building_sha256')==sha:path=watch/'playback.json'
                 except (OSError,ValueError):pass
-            if not Path(path).is_file():return None
-            try:
-                if json.loads(Path(path).read_text('utf-8')).get('building_sha256')!=sha:return None
-            except (OSError,ValueError):return None
-            return path
+            return path if stored_sha(path)==sha else None
     def compute(options,identity):
         destination=DATA_RESULTS/'cad_interactive'/identity
         try:
@@ -204,7 +214,7 @@ def main():
         finally:
             with lock:state['busy']=False
 
-    class Handler(BaseHTTPRequestHandler):
+    class Handler(LoopbackHostMixin,BaseHTTPRequestHandler):
         def send_data(self,data,mime='application/json; charset=utf-8',code=200):
             compressed=(len(data)>65536 and mime.startswith('application/json') and
                         'gzip' in self.headers.get('Accept-Encoding','').lower())
@@ -213,7 +223,16 @@ def main():
             if compressed:self.send_header('Content-Encoding','gzip');self.send_header('Vary','Accept-Encoding')
             self.send_header('Cache-Control','no-store');self.send_header('X-Content-Type-Options','nosniff');self.end_headers();self.wfile.write(data)
         def json(self,value,code=200):return self.send_data(json.dumps(value,ensure_ascii=False).encode(),'application/json; charset=utf-8',code)
-        def do_GET(self):
+        def guarded(self,action):
+            # An unexpected failure must still answer; details go to the server log only.
+            try:return action()
+            except ConnectionError:raise
+            except Exception:
+                traceback.print_exc()
+                return self.json({'error':'요청 처리 실패'},500)
+        def do_GET(self):return self.guarded(self.get)
+        def do_POST(self):return self.guarded(self.post)
+        def get(self):
             path=unquote(urlsplit(self.path).path);prefix='/cad-result/'+job+'/'
             # A server instance owns one building. Keep its entry URL stable
             # when an extracted model moves or its content-derived ID changes.
@@ -239,8 +258,9 @@ def main():
                 key=path[len('/cfbt/case/'):]
                 cases=saved_cases()
                 if key not in cases or not cases[key][1].is_file():return self.send_error(404)
-                if json.loads(cases[key][1].read_text('utf-8')).get('building_sha256')!=sha:return self.send_error(404)
-                return self.json(present_playback(json.loads(cases[key][1].read_text('utf-8'))))
+                saved_case=json.loads(cases[key][1].read_text('utf-8'))
+                if saved_case.get('building_sha256')!=sha:return self.send_error(404)
+                return self.json(present_playback(saved_case))
             if path=='/cfbt/r8/schema':
                 from pyrocast_cfbt.rule_settings import schema
                 return self.json(schema())
@@ -402,7 +422,7 @@ def main():
                 data=html.encode('utf-8')
             mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.json':'application/json','.css':'text/css','.svg':'image/svg+xml','.png':'image/png'}[file.suffix]
             return self.send_data(data,mime)
-        def do_POST(self):
+        def post(self):
             nonlocal r8_folder
             request_path=urlsplit(self.path).path
             if request_path in (RUN_PATHS|{'/cfbt/calculation'}):

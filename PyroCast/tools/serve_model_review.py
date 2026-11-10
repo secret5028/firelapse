@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 import argparse
+from loopback_guard import LoopbackHostMixin
 ROOT=Path(__file__).resolve().parents[1]
 FILES={
  '/data/parkmarine-hotel/review.html':('data/parkmarine-hotel/review.html','text/html; charset=utf-8'),
@@ -10,7 +11,7 @@ FILES={
  '/data/parkmarine-hotel/building.json':('data/parkmarine-hotel/building.json','application/json; charset=utf-8'),
  '/app/web/panels/model_review.js':('app/web/panels/model_review.js','text/javascript; charset=utf-8'),
  '/vendor/three.module.js':('simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets/three.module.js','text/javascript; charset=utf-8')}
-class Handler(BaseHTTPRequestHandler):
+class Handler(LoopbackHostMixin,BaseHTTPRequestHandler):
  def do_GET(self):
   entry=FILES.get(urlsplit(self.path).path)
   if not entry:return self.send_error(404)

@@ -59,7 +59,18 @@ function Install-FireLapse {
     if (Test-Path -LiteralPath $launcher -PathType Leaf) { return }
 
     [void][IO.Directory]::CreateDirectory($releaseRoot)
-    $stage = Join-Path $releaseRoot ('.setup-' + [guid]::NewGuid().ToString('N'))
+    # The package holds paths about 195 characters deep and Windows PowerShell stops at 260.
+    # '.new\FireLapse' is no longer than the final version folder, so anything that fits once
+    # installed also fits while staged. The setup mutex makes the fixed name safe.
+    $stage = Join-Path $releaseRoot '.new'
+    # Remove what an interrupted setup left behind (up to 5 GB each).
+    Get-ChildItem -LiteralPath $releaseRoot -Directory -Force -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -eq '.new' -or $_.Name -like '.setup-*' } |
+        ForEach-Object { Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue }
+    $drive = New-Object IO.DriveInfo ([IO.Path]::GetPathRoot($releaseRoot))
+    if ($drive.AvailableFreeSpace -lt 6GB) {
+        throw ('FireLapse needs about 6 GB free on {0} and only {1:N1} GB is free.' -f $drive.Name, ($drive.AvailableFreeSpace / 1GB))
+    }
     [void][IO.Directory]::CreateDirectory($stage)
     try {
         $archive = Join-Path $stage $archiveName

@@ -28,7 +28,7 @@ try{
  let floor='1F';const setFloor=id=>{floor=id;for(const g of groups)g.visible=id==='all'||g.name===id;};$('all').onclick=()=>setFloor('all');$('floor1').onclick=()=>setFloor('1F');
  $('top').onclick=()=>{C.position.set(O.target.x,O.target.y,80);O.update();};$('iso').onclick=()=>{C.position.copy(O.target).add(new T.Vector3(25,-35,28));O.update();};$('resetView').onclick=()=>{O.target.set(36,10,3);C.position.set(85,-45,60);O.update();};
  $('zoomIn').onclick=()=>{C.position.sub(O.target).multiplyScalar(.8).add(O.target);O.update();};$('zoomOut').onclick=()=>{C.position.sub(O.target).multiplyScalar(1.25).add(O.target);O.update();};
- const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor};
+ const viewer={THREE:T,B,S,C,O,R,groups,legacyRoot,shp,getFloor:()=>floor,setFloor,capabilities:{fuelSettings:false,frozenRules:false}};
  const app=await attach(viewer);
  // Include the scale references in the initial framing; room-only fitting can
  // put the person and most of the truck below the canvas in a narrow viewport.

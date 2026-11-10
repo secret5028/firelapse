@@ -27,7 +27,7 @@ def protected(path):
             or path.startswith('app/data/') and Path(path).suffix not in ('.js','.html','.css'))
 
 def source_code(rel):
-    if rel.startswith(('app/web/','tools/','simulation/viewer/','simulation/pyrocast_cfbt/','simulation/pyrocast_lite/')):
+    if rel.startswith(('app/web/','app/model-library/','tools/','simulation/viewer/','simulation/pyrocast_cfbt/','simulation/pyrocast_lite/')):
         return True
     if rel.startswith(('simulation/tests/','app/tests/','simulation/results/','saved_results/','simulation/deps/','simulation/plot_deps/','simulation/build/','simulation/vendor/')):
         return False
@@ -62,6 +62,13 @@ def stage(args):
     for p in (ROOT/'docs').rglob('*'):
         if p.is_file():
             dest=bundle/'docs'/p.relative_to(ROOT/'docs');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+    # Restore the dedicated Wando playback omitted from r17; never overwrite a result.
+    wando='data/wando-coldstore/P1-playback.json'
+    src=ROOT/'PyroCast'/wando;dest=bundle/'app'/wando
+    if not dest.exists():
+        shutil.copyfile(src,dest)
+    if sha(src)!=sha(dest):raise ValueError('Dedicated Wando result differs from source')
+    source_manifest[wando]=sha(src)
     meta=json.loads((bundle/'distribution.json').read_text('utf8'))
     meta.update(version=args.version,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
                 source_branch=subprocess.check_output(['git','branch','--show-current'],cwd=ROOT,text=True).strip(),

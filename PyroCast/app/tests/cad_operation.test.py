@@ -50,4 +50,21 @@ class NewCADOperationTest(unittest.TestCase):
  def test_active_can_restore_saved_mc_without_seed_calculation(self):
   with patch.object(op,'jobs',return_value=[]),patch.object(sim,'fingerprint',return_value='abc'),patch('model_mc.cases',return_value=[{'id':'modelmc-test-S01'}]),patch('fixed_calculation.cases',return_value=[]),patch.object(op,'playback',return_value={'complete':True}) as playback:
    self.assertEqual(op.active_playback('new'),{'complete':True});playback.assert_called_once_with('new','modelmc-test-S01')
+ def test_unselected_floor_doors_are_empty_without_preparing_a_case(self):
+  class Base:
+   def json(self,value,status=200):return status,value
+  h=op.handler(Base,'showroom')();h.path='/cfbt/lite/doors'
+  with patch.object(op,'jobs',return_value=[]),patch.object(sim,'entry',return_value={}),patch.object(op,'scope') as prepare,patch('model_mc.fixed_inputs',return_value={}):
+   status,value=h.do_GET()
+   self.assertEqual(status,200);self.assertEqual(value,dict(rows=[],fixed_by_room={}))
+   prepare.assert_not_called()
+ def test_explicit_floor_still_resolves_door_rows(self):
+  class Base:
+   def json(self,value,status=200):return status,value
+  h=op.handler(Base,'showroom')();h.path='/cfbt/lite/doors?floor=2F'
+  raw={'openings':[dict(id='D1',a='R1',b='OUTSIDE',kind='door')]}
+  with patch.object(op,'scope',return_value=(raw,{})) as prepare,patch('model_mc.fixed_inputs',return_value={}):
+   status,value=h.do_GET()
+   self.assertEqual(status,200);self.assertEqual(value['rows'][0]['id'],'D1')
+   prepare.assert_called_once_with('showroom','2F')
 if __name__=='__main__':unittest.main()

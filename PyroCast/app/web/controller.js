@@ -77,7 +77,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
  let aiFuelRooms=null;
  const buildingPanel=createBuildingPanel({store});
  let fuelPreviewTimer=null;
- const fuelPanel=createFuelSettingsPanel({store,available:initial.engine_kind!=='cfast_native',onDraft:previewFuelRanking,onSaved:async()=>{clearTimeout(fuelPreviewTimer);await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>{clearTimeout(fuelPreviewTimer);fuelPanel.dispose();});
+ const fuelPanel=createFuelSettingsPanel({store,available:viewer.capabilities?.fuelSettings!==false&&initial.engine_kind!=='cfast_native',onDraft:previewFuelRanking,onSaved:async()=>{clearTimeout(fuelPreviewTimer);await refreshScreening();await refreshFuelRooms();}});cleanup.push(()=>{clearTimeout(fuelPreviewTimer);fuelPanel.dispose();});
  function previewFuelRanking(current,draft){
   clearTimeout(fuelPreviewTimer);++screeningRequest;
   if(!Object.values(draft).some(rows=>Object.keys(rows).length)){refreshScreening();return;}

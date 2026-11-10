@@ -1,12 +1,16 @@
-# 알려진 문제
+# 알려진 문제와 검증 범위
 
-저장소 정리 PUBLISH-1b(2026-11-06)에서 공개한 제한 사항입니다. 아래 시험 제외는 결함 수정이나 물리 검증 통과를 의미하지 않습니다.
+2026-11-10 기준입니다. 시험의 PASS와 미실행(SKIP), 계산 결과의 `unverified`는 구분합니다.
 
-| ID | 현상 | 재현 | 영향 | 예정 조치 |
-|---|---|---|---|---|
-| KI-1 | **완화됨(응답 유지, 항목 제외)**: 저장 comparison의 원본 PC result_folder가 워크스페이스 밖이면 attention 집계에서 그 항목만 제외 | 다른 경로의 clone에서 /cfbt/lite/screening 조회; attention_skipped 건수 확인 | 보안 경계 유지·외부 결과 미열람; 유효 항목과 기존 응답 유지. 기존 fixture 5개 skip은 유지 | 결과 경로 이식 방식은 별도 검토; 이번에 제외 건수와 파일명만 경고 기록 |
-| KI-2 | Headless WebGL 장면 준비가 120초 안에 완료되지 않을 수 있음 | risk_index_scene.test.mjs after | 해당 화면 비교가 실행되지 않음; 앱의 모든 WebGL 동작이 검증됐다는 뜻 아님 | headless 장면 fixture·준비 신호 점검; 대기 초과만 명시적 skip |
-| KI-3 | route.js가 host 바깥에서 DOM에 의존 | stage2.test.mjs의 정적 검사 | 레이어 경계 구조 결함; 이번 구조 동결 범위에서 해당 시험 skip | **다음 UI 작업에서 수정**: DOM 처리를 host 경계로 이동하고 시험 복구 |
-| KI-4 | 호텔·아이엔테크 building.json의 출처 경로가 전체 파일 SHA256 결과 ID에 묶임 | source 문자열만 바꿔도 SHA와 저장 결과 연결이 달라짐 | 이 두 파일의 원본 PC 경로 유지 | 별도 승인된 identity/출처 분리 설계와 기존 결과 호환 검증; 이번에는 파일 보존 |
-| KI-5 | 소스 clone의 저장 결과는 강화 11건·완도 1건 | clone 기동 후 사례 목록 확인 | 다른 건물은 모델 미리보기이며 최신 전체 결과 미포함 | 전체 7개 건물·152개 결과는 Releases 실행 ZIP 사용; 호텔·아이엔테크는 docs/samples의 단독 HTML 제공 |
-| KI-6 | 서버 포트를 기본값(8841 등)에서 바꾸면 모델 라이브러리·AI 연결 조회가 CORS로 실패할 수 있음 | 임시 포트에서 models/catalog.json·models/ai/connection 조회 | 해당 연결 조회 실패; 저장 재생과 구분 | 포트 변경 시 허용 Origin 목록에 새 포트를 추가해야 함. 등록 모델의 설정은 PyroCast/config/model-library.json의 operation_url, 고정 허용 목록은 PyroCast/tools/serve_model_library.py의 Handler.send에 있음(독립 CORS 설정 파일은 없음). 클라이언트 8841 고정 참조도 함께 검토. 이번에는 코드·설정 변경 없음 |
+| ID | 상태·현상 | 재현·영향 | 조치 |
+|---|---|---|---|
+| KI-1 | 완화됨: 원본 PC 밖을 가리키는 옛 비교 결과 | `/cfbt/lite/screening`은 200을 유지하고 `attention_skipped`로 제외 건수 반환. 외부 경로는 읽지 않음 | 보안 경계 유지. 외부 원본 비교에 의존하는 과거 acceptance 5개는 별도 SKIP로 기록 |
+| KI-2 | 수정됨: 장면 시험의 개발 서버·고정 URL 의존 | `risk_index_scene.test.mjs`가 자체 HTTPS fixture와 실제 WebGL로 실행됨 | 고정 8780 서버 및 120초 후 성공 처리 제거. 준비·렌더링 실패는 실제 FAIL |
+| KI-3 | 수정됨: 수관 레이어의 DOM 의존 | `stage2.test.mjs`의 정적 경계 검사와 50회 장면 생성/해제 시험 | 캔버스 라벨 생성을 host factory로 이동. 수관 모양·색·좌표 유지 |
+| KI-4 | 보존: building.json 출처 문자열과 결과 식별 해시 결합 | 출처 문자열만 고쳐도 저장 결과 연결이 달라질 수 있음 | 원본 모델 바이트·결과 ID 유지. 별도 마이그레이션 전 임의 치환 금지 |
+| KI-5 | 소스와 실행 ZIP의 자료 구성 차이 | 소스의 `saved_results/*.gz`는 회귀 검증용 보관본. 실행 ZIP은 7개 모델, r17에서 유지한 CFAST 4건과 MC 결과 포함 | `tools/test_all.py`는 보관 입력을 먼저 복원. 실행 패키지의 기존 결과는 변경·재계산하지 않음 |
+| KI-6 | 기본 포트 밖의 CORS 제한 | 포트를 바꾸면 모델 라이브러리·AI 연결 조회가 실패할 수 있음 | 기본 loopback 포트 사용. 관련 위치: `PyroCast/config/model-library.json` operation_url, `PyroCast/tools/serve_model_library.py` Handler.send, 클라이언트 8841 참조. 보안 목록 임의 완화 안 함 |
+| KI-7 | 호텔 B1 일부 입력 확인 필요 | 저장된 CFAST 결과의 `unverified` 표시 | 입력 증거 확인 전 확정·안전 판정으로 바꾸지 않음. 결과 자체 보존 |
+| KI-8 | 과거 개발 환경 전용 증거와 폐기된 모드 시험 | 옛 화면 전후 비교 캡처, 원본 DWG, 구형 산소 모드 등에 의존하는 시험은 SKIP 가능 | 전수시험 보고서에 이름·사유를 그대로 남김. 현재 WebGL·단위시험·배포 UI 검증으로 대체하는 범위는 `docs/TESTING.md` 참조 |
+
+FireLapse 자체 라이선스는 [LICENSE](LICENSE)의 **All rights reserved**입니다. 제3자 고지는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 따릅니다.

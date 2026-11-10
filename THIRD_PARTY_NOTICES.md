@@ -37,4 +37,4 @@ CFAST Windows 빌드에 포함된 MinGW-w64 런타임 고지는 `licenses/MinGW-
 
 NIST 연료 참고 자료는 `work/nist-fuels/download-manifest.json`의 원문 URL·SHA256을 유지합니다. [SP 1021](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication1021.pdf), [NCSTAR 1-5e](https://nvlpubs.nist.gov/nistpubs/Legacy/NCSTAR/ncstar1-5e.pdf), NCSTAR 1-5c 등을 참조합니다. 그림 디지타이징 CSV는 원문과 구분되는 프로젝트 가공 자료이며 공식 CFAST 재료 라이브러리로 간주하지 않습니다.
 
-FireLapse 자체 라이선스는 미결정입니다. 이 고지는 프로젝트 전체에 MIT 또는 Apache-2.0을 부여하지 않습니다.
+FireLapse 자체 소스·문서·데이터는 [LICENSE](LICENSE)의 All rights reserved 조건을 따릅니다. 이 고지는 프로젝트 전체에 MIT 또는 Apache-2.0을 부여하지 않습니다.

@@ -3,20 +3,20 @@
 
 **3D 건물 모델에서 구획 화재의 진행과 위험 조건을 시간에 따라 살펴보는 Windows용 로컬 앱입니다.**
 
-최신 실행 패키지 `v2026.11.08-r17`에는 7개 건물 모델, 기본 입력 수정 후 다시 계산한 CFAST 결과 4건(호텔 5F·B1, 강화 공장 2F, 아이엔테크놀로지 1F), 기존 MC 결과가 포함됩니다. 그 밖의 과거 계산·기본 샘플은 새 패키지에서 제외했습니다. 기존 PC의 공용 결과 폴더는 업데이트할 때 삭제하지 않습니다.
+최신 실행 패키지 `v2026.11.10-r18`에는 7개 건물 모델, 기본 입력 수정 후 다시 계산한 CFAST 결과 4건(호텔 5F·B1, 강화 공장 2F, 아이엔테크놀로지 1F), 기존 MC 결과가 포함됩니다. 그 밖의 과거 계산·기본 샘플은 새 패키지에서 제외했습니다. 기존 PC의 공용 결과 폴더는 업데이트할 때 삭제하지 않습니다.
 
 **계산 대상 시간: 30분 또는 최대 60분(1시간) · 기본값: 60분**
 
 이는 시뮬레이션 속 화재 진행 시간입니다. PC에서 실제 계산을 완료하는 데 걸리는 시간은 건물과 엔진에 따라 달라집니다.
 
-[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.08-r17) · [소스 코드](https://github.com/secret5028/firelapse)
+[배포 파일 확인](https://github.com/secret5028/firelapse/releases/tag/v2026.11.10-r18) · [소스 코드](https://github.com/secret5028/firelapse)
 
 ## 화면 미리보기
 
-아래 두 HTML은 r17의 최신 CFAST 결과에 **결과 요약을 포함한 단독 실행 샘플**입니다. 다운로드한 파일을 브라우저에서 열면 인터넷·API 연결 없이도 **결과 탭 맨 아래의 결과 요약**을 볼 수 있습니다. 호텔 B1을 포함한 CFAST 4건과 MC는 실행 패키지에서 확인할 수 있으며, B1의 입력 확인 필요(`unverified`) 상태는 유지합니다.
+아래 두 HTML은 r18에 포함된 CFAST 결과에 **결과 요약을 포함한 단독 실행 샘플**입니다. 다운로드한 파일을 브라우저에서 열면 인터넷·API 연결 없이도 **결과 탭 맨 아래의 결과 요약**을 볼 수 있습니다. 호텔 B1을 포함한 CFAST 4건과 MC는 실행 패키지에서 확인할 수 있으며, B1의 입력 확인 필요(`unverified`) 상태는 유지합니다.
 
-- [호텔 · 5F R16 HTML 다운로드 — 결과 요약 포함](https://github.com/secret5028/firelapse/releases/download/v2026.11.08-r17/FireLapse-parkmarine-5F-R16-route-v2.html)
-- [아이엔테크 · 1F R3 HTML 다운로드 — 결과 요약 포함](https://github.com/secret5028/firelapse/releases/download/v2026.11.08-r17/FireLapse-intech-1F-R3-route-v2.html)
+- [호텔 · 5F R16 HTML 다운로드 — 결과 요약 포함](https://github.com/secret5028/firelapse/releases/download/v2026.11.10-r18/FireLapse-parkmarine-5F-R16-route-v2.html)
+- [아이엔테크 · 1F R3 HTML 다운로드 — 결과 요약 포함](https://github.com/secret5028/firelapse/releases/download/v2026.11.10-r18/FireLapse-intech-1F-R3-route-v2.html)
 
 아래 이미지는 이전 실행 화면을 보관한 것으로, 위 최신 CFAST 샘플과 구분됩니다. 호텔 이미지는 간략 엔진 결과, 완도 이미지는 전용 CFAST P1 결과입니다.
 
@@ -55,7 +55,7 @@
 3. 첫 실행 때 실행 패키지를 내려받아 `%LOCALAPPDATA%\FireLapse\releases`에 풀고, 바탕화면에 **FireLapse** 바로가기를 만듭니다. 이후에는 그 바로가기로 실행할 수 있습니다.
 4. 바탕화면 아이콘을 누르면 Chrome 또는 Microsoft Edge에서 FireLapse 전용 창이 열립니다. 빨간 **종료** 버튼이나 창의 **X**로 닫으면 로컬 서버도 종료됩니다. 계산 중에 **X**로 창을 닫으면 계산을 마친 뒤 서버가 종료됩니다.
 
-오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.08-r17)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
+오프라인 PC에 옮기거나 폴더 위치를 직접 지정하려면 [Windows 실행 패키지 ZIP](https://github.com/secret5028/firelapse/releases/tag/v2026.11.10-r18)을 따로 받아 모두 압축을 푼 뒤, 그 안의 `FireLapse.cmd`를 실행합니다.
 
 실행 패키지에는 Python·Node·필수 라이브러리와 계산 실행 파일이 포함됩니다. 저장된 모델과 결과를 보는 데 별도 API 키나 AI 계정은 필요하지 않습니다.
 
@@ -149,7 +149,7 @@ CAD 지하층의 외기 직접 누기 기본값은 0입니다. 도면의 출입�
 | FGI | 가연성 화재 가스의 점화 관련 조건 충족 지수 |
 | BD | 고온 연기 축적·산소 부족 등 백드래프트 관련 조건 충족 지수 |
 | 100 | 앱에서 정의한 조건 기준에 도달 |
-| 롤오버 조건 충족 | FGI에 연결된 부속 상태; 독립된 네 번째 지수가 아님 |
+| 롤오버 조건 충족 | 상층 연소·산소·온도 조건으로 독립 판정하는 상태; FO·FGI·BD와 별도로 표시 |
 | 연기 두께 | 천장에서 상층·하층 경계까지의 두께 |
 | `—` | 계산 자료가 없거나 해당 항목이 미평가됨 |
 
@@ -221,7 +221,7 @@ FireLapse/
 
 - 일반 CAD 계산은 층별 구획 입력을 사용합니다. 전 층의 연기 전파를 함께 검증한 것으로 해석하지 않습니다.
 - 모델의 불확실한 연결과 일부 물리 근사는 남아 있습니다. 엔진·입력·추정 표시를 함께 확인해야 합니다.
-- 완도 전용 보기 서버의 일반 계산 상태 API(`/cfbt/calculation`)는 미지원이며 404가 발생할 수 있습니다.
+- 완도 전용 서버의 `/cfbt/calculation`은 계산 대기 상태를 HTTP 200으로 반환합니다. 완도의 기존 전용 입력·저장 재생 경로를 유지합니다.
 - 이번 실행 패키지 검증에서 새 시뮬레이션을 실행한 것은 아닙니다. 입력 준비·저장 결과 재생과 새로운 계산의 물리 정확도 검증은 구분합니다.
 - 이 앱은 시나리오 계산·시각화 도구입니다. 현장 측정이나 실제 화재 발생 예측을 대신하지 않습니다.
 
@@ -270,6 +270,6 @@ AI 키가 없으면 AI 기능만 비활성화되며 건물 열람·저장 결과
 
 실제 키는 `PYROCAST_AI_KEY` 환경변수로 전달합니다. `ai.json`에는 키 원문을 넣는 필드가 없습니다. 환경변수만 설정하고 API 주소·모델을 빠뜨리면 연결되지 않습니다.
 
-타사 구성요소와 버전은 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요. FireLapse 자체 라이선스는 아직 결정되지 않았습니다.
+타사 구성요소와 버전은 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 참고하세요. FireLapse 자체 소스·문서·데이터는 **All rights reserved**이며, 열람·평가 외 이용 조건은 [LICENSE](LICENSE)를 따릅니다.
 
-라이선스: All rights reserved — LICENSE 참조. 제3자 구성요소는 THIRD_PARTY_NOTICES.md
+라이선스: All rights reserved — [LICENSE](LICENSE) 참조. 제3자 구성요소는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

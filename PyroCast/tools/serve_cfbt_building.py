@@ -363,6 +363,9 @@ def main():
                 except ValueError:return self.json({'error':'Invalid lite path'},404)
                 payload=json.loads(file.read_text('utf-8'))
                 if payload.get('building_sha256')!=sha:return self.json({'error':'Different building'},400)
+                if file.parent.name.startswith('calc-'):
+                    import fixed_calculation
+                    return self.json(fixed_calculation.playback(sha,file.parent.name))
                 return self.json(payload)
             if path in ('/cfbt/comparison.json','/cfbt/comparison-demo.json','/cfbt/comparison-floor.json'):
                 with lock:selected_path=state['comparison_path']

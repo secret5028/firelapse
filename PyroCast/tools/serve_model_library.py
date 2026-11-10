@@ -3,6 +3,7 @@ import argparse,gzip,json
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from urllib.parse import urlsplit,parse_qs
 from model_library import ROOT,entries,model_path,catalog
+from loopback_guard import LoopbackHostMixin
 ASSETS=ROOT/'cad-project/work/cad-web/local-resources/cad-assets'
 if not ASSETS.is_dir():
  ASSETS=ROOT/'simulation/results/github-publish-20261026/PyroCast/cad-project/work/cad-web/local-resources/cad-assets'
@@ -28,7 +29,7 @@ def app_origins():
  return {p.scheme+'://'+p.netloc for e in entries() if (p:=urlsplit(e.get('operation_url') or '')).netloc} | {
   'http://127.0.0.1:'+str(port) for port in (8780,8832,8840,8841,8842,8843,8844)}
 
-class Handler(BaseHTTPRequestHandler):
+class Handler(LoopbackHostMixin,BaseHTTPRequestHandler):
  def send(self,data,mime='application/json; charset=utf-8',code=200):
   zipped=len(data)>65536 and 'gzip' in self.headers.get('Accept-Encoding','')
   if zipped:data=gzip.compress(data,compresslevel=1,mtime=0)

@@ -1,5 +1,6 @@
 """Read-only preview of the preserved CAD viewer and its saved state."""
 import argparse
+from loopback_guard import LoopbackHostMixin
 import hashlib
 import json
 import mimetypes
@@ -20,7 +21,7 @@ def main():
     model = folder / 'cad-output'
     assert (model / 'model.html').is_file() and assets.is_dir()
 
-    class Handler(BaseHTTPRequestHandler):
+    class Handler(LoopbackHostMixin,BaseHTTPRequestHandler):
         def do_GET(self):
             path = unquote(urlsplit(self.path).path)
             prefix = '/cad-result/' + job + '/'

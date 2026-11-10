@@ -6,6 +6,7 @@ import argparse
 import json
 import hashlib
 from urllib.parse import urlsplit, unquote
+from loopback_guard import LoopbackHostMixin
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -25,7 +26,7 @@ def empty_playback(data_dir):
         time_s=[0],fire_key=None,rooms=rooms,solvers={},fires=[],events=[],fuel_symbols=[],fuel_units=[],limits=[])
 
 
-class Handler(SimpleHTTPRequestHandler):
+class Handler(LoopbackHostMixin, SimpleHTTPRequestHandler):
     def do_POST(self):
         path=urlsplit(self.path).path
         if path.startswith('/cfbt/storage/'):

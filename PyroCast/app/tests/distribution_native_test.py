@@ -21,6 +21,15 @@ class DistributionNativeTests(unittest.TestCase):
    self.assertFalse((job/'S00/playback.json').exists());self.assertFalse((job/'mc-summary.json').exists())
    for p,b in before.items():self.assertEqual(p.read_bytes(),b)
    self.assertTrue((job/'request.json').exists())
+ def test_nested_cases_keep_their_own_engine_identity(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   app=Path(tmp);root=app/'simulation/results'
+   for rel,engine in [('lite','lite'),('lite/native','cfast_native'),('native','cfast_native'),('native/lite','pyrocast_lite')]:
+    folder=root/rel;folder.mkdir(parents=True,exist_ok=True)
+    (folder/'playback.json').write_text(json.dumps(dict(engine_kind=engine)),'utf8')
+   filter_bundle_results(app)
+   self.assertTrue((root/'lite/native/playback.json').exists());self.assertTrue((root/'native/playback.json').exists())
+   self.assertFalse((root/'lite/playback.json').exists());self.assertFalse((root/'native/lite/playback.json').exists())
  def test_factory_input_retained_without_lite_result(self):
   with tempfile.TemporaryDirectory() as tmp:
    app=Path(tmp);p=app/'simulation/results/lite_v8_example';p.mkdir(parents=True)

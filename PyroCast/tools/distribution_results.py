@@ -23,8 +23,8 @@ def result_policy(root):
         path=Path(path).resolve()
         if not path.is_relative_to(root):raise ValueError('Result file outside packaging root')
         if path.name=='source-scenario.json':return True # required immutable factory input
-        if any(path.is_relative_to(p) for p in lite):return False
-        if any(path.is_relative_to(p) for p in native):return True
+        owners=[p for p in lite+native if path.is_relative_to(p)]
+        if owners:return max(owners,key=lambda p:len(p.parts)) in native
         if path.parent in lite_jobs and path.name not in ('request.json','input.json'):
             return False
         if path.name=='playback-catalog.json':return False # rebuilt in external cache

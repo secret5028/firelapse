@@ -80,6 +80,8 @@ export function createResultsPanel({panel,store}){
   boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('지하 압력 간략식:')||s.startsWith('최소 누기 가정 적용:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')||s.startsWith('입력 가정 검토 필요:')||s.startsWith('연소 진단:')||s.startsWith('물리 타당성 일부 미확인:')).join(' · ');boundary.hidden=!boundary.textContent;
   const invalid=(result.limits_text||[]).filter(s=>s.startsWith('물리 타당성 검사 실패:'));if(invalid.length){boundary.textContent=invalid.join(' · ');boundary.style.background='#9d1515';boundary.hidden=false;}else boundary.style.background='#533d12';
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
+  // No room selected: show the bare index bars only. A failed validity check stays visible.
+  if(!room&&!invalid.length)boundary.hidden=true;
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   const info=roomDisplayInfo(room,cell,values?.interface_m?.[index]);
   const coverage=resultCoverage(building,result,room),time=result.time_s?.[index];scope.textContent=coverage.label+(finite(time)?` · 재생 ${stamp(time)}`:'');state.textContent=coverage.status;state.className=coverage.evaluated?'status-ok':'';state.hidden=!room;

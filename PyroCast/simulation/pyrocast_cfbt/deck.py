@@ -94,7 +94,7 @@ def candidates(model):
     return result
 
 
-def make_deck(model, committed, targets, transitions=None):
+def make_deck(model, committed, targets, transitions=None, *, include_floor_gauges=True):
     windows=window_targets(model)
     window_by_opening={v['opening_id']:v for v in windows}
     if {v['id'] for v in windows} & {v['id'] for v in targets}:
@@ -158,7 +158,7 @@ def make_deck(model, committed, targets, transitions=None):
     # Passive black gauges: incident radiative flux, not net heat transfer.
     # Append after existing devices so their indices/ignition IDs remain stable.
     from .floor_flux import gauges
-    floor_gauges=gauges(model)
+    floor_gauges=gauges(model) if include_floor_gauges else []
     from .physics_config import defaults
     cfg=defaults('native_floor_flux');target_count=len(floor_gauges)+len(targets)+len(windows)
     if target_count>cfg['max_native_targets'] or 1+target_count*cfg['columns_per_plate']>cfg['max_device_csv_columns']:

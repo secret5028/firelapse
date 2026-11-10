@@ -30,7 +30,9 @@ def records(deck):
 
 
 def read_shared(model):
-    deck=make_deck(model,[],model.get('explicit_candidates',[]))
+    # Legacy input inspection consumes INIT/MATL/COMP/CHEM/MISC only, not
+    # native output devices. Keep CFAST execution capacity checks unchanged.
+    deck=make_deck(model,[],model.get('explicit_candidates',[]),include_floor_gauges=False)
     rec=records(deck)
     init=next(v for k,v in rec if k=='INIT')
     materials={v['ID']:v for k,v in rec if k=='MATL'}

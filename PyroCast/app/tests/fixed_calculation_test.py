@@ -34,6 +34,16 @@ class FixedCalculationTests(unittest.TestCase):
         cls.source,cls.fixed,cls.req,cls.raw=calc.context(cls.sha,'parkmarine')
         cls.original=read(cls.source.parent/'input.json')
 
+    def test_loaded_case_identity_is_catalog_id_without_rewriting_result(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'playback.json'
+            raw=dict(building_sha256='abc',case_id='new-run',fire_input={})
+            atomic_json(path,raw);before=path.read_bytes()
+            with patch.object(calc,'playback_file',return_value=path):
+                value=calc.playback('abc','calc-123-abcdef')
+            self.assertEqual(value['case_id'],'calc-123-abcdef')
+            self.assertEqual(path.read_bytes(),before)
+
     def body(self, **kw):
         return dict(engine='cfast',room=self.req['room'],floor='5F',duration_s=self.req['duration_s'],**kw)
 

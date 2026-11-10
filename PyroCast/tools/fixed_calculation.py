@@ -231,6 +231,7 @@ def playback_file(sha, case):
 def playback(sha, case):
     file=_io_path(playback_file(sha,case))
     value = read(file)
+    value['case_id'] = case  # Public saved-result identity, not the solver's new-run label.
     if value['building_sha256'] != sha:
         raise ValueError('다른 건물의 결과')
     if value.get('native_mapping')=='fixed-r8-native-v1':

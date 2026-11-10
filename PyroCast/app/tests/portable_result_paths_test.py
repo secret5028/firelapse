@@ -23,7 +23,7 @@ class PortableResultPaths(unittest.TestCase):
    with patch.object(storage,'RESULTS',new),patch.object(storage,'LEGACY_RESULTS',old),patch.object(calc,'JOBS',new/'fixed-calculations'):
     self.assertEqual(storage.locate(new/'fixed-calculations'/sha/case),folder)
     self.assertEqual([r['id'] for r in calc.cases(sha)],[case])
-    self.assertEqual(calc.playback(sha,case),value)
+    self.assertEqual(calc.playback(sha,case),{**value,'case_id':case})
     self.assertEqual(json.loads(storage.playback_path(file).read_text('utf8')),value)
    self.assertEqual(hashlib.sha256(_io_path(file).read_bytes()).hexdigest(),before)
 

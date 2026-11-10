@@ -1,10 +1,10 @@
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'FireLapse-Retention.ps1')
 
-$version = 'v2026.11.08-r17'
-$archiveName = 'FireLapse-Windows-x64-2026.11.08-r17.zip'
+$version = 'v2026.11.10-r18'
+$archiveName = 'FireLapse-Windows-x64-2026.11.10-r18.zip'
 $releaseUrl = "https://github.com/secret5028/firelapse/releases/download/$version/$archiveName"
-$expectedHash = 'ba361c69ce404bdc4fffc50ab5b0735b2192f99378e75ecb4358f767d5d719e4'
+$expectedHash = '6940efa6b76de11ca2c13b17128ae77d189c9ca11b00844d4525e8f68e173ae6'
 $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\releases'))
 $selectionFile = Join-Path (Split-Path -Parent $releaseRoot) 'config\current-release.json'
 # An older downloaded source ZIP must not downgrade a newer verified local install.

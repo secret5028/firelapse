@@ -17,9 +17,20 @@ from result_catalog import atomic_json, read
 class FixedCalculationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.sha=model_mc.sim.fingerprint('parkmarine')
-        if not read(model_mc.config_path('parkmarine'),{}).get('fixed_state'):
-            raise unittest.SkipTest('SKIP: evidence folder missing (saved MC opening selection)')
+        import gzip
+        cls.temp=tempfile.TemporaryDirectory(prefix='firelapse-fixed-contract-')
+        cls.addClassCleanup(cls.temp.cleanup)
+        folder=Path(cls.temp.name)
+        fixture=ROOT/'app/tests/fixtures/fixed-calculation'
+        def saved(name):return json.loads(gzip.decompress((fixture/(name+'.gz')).read_bytes()))
+        config=saved('config.json');fixed=config['fixed_state'];cls.sha=fixed['building_sha256']
+        job=folder/'jobs/parkmarine'/fixed['job_id'];sample=job/fixed['sample_id']
+        for name in ('input.json','request.json'):atomic_json(job/name,saved(name))
+        for name in ('sample.json','summary.json'):atomic_json(sample/name,saved(name))
+        atomic_json(folder/'fixed.json',config)
+        engine=folder/'test-engine.exe';engine.write_bytes(b'test marker; execution is mocked')
+        for patcher in (patch.object(model_mc,'JOBS',folder/'jobs'),patch.object(model_mc,'config_path',return_value=folder/'fixed.json'),patch.object(calc,'ENGINE',engine),patch('cfast_calculation.ENGINE',engine)):
+            patcher.start();cls.addClassCleanup(patcher.stop)
         cls.source,cls.fixed,cls.req,cls.raw=calc.context(cls.sha,'parkmarine')
         cls.original=read(cls.source.parent/'input.json')
 

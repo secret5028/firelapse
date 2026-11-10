@@ -4,7 +4,7 @@ import {findRoute} from '../route/graph.js';
 import {routeRiskRows,routeSampleIndex} from '../route/risk.js';
 export class RouteLayer extends EmptyLayer {
  static id='route';
- constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
+ constructor(T,{graph,targetFor,vehicleSource,onChange,createCouplingTexture}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange,createCouplingTexture});this.signature=null;this.items=[];this.result=null;}
  clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.vehicleObject=null;this.roomMaterials=new Map();this.riskKey=null;}
  build(result){this.clear();const T=this.THREE;
   // Crisp narrow ribbons render after smoke, while testing solid-object depth.
@@ -30,8 +30,7 @@ export class RouteLayer extends EmptyLayer {
    }
   }
   for(const batch of batches.values()){const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(batch.positions,3));add(new T.Mesh(g,batch.material),batch.floor,true,batch.order);}
-  for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#ffffff';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
-   const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
+  for(const tick of result.ticks||[]){if(!this.createCouplingTexture)continue;const map=this.own(this.createCouplingTexture(T,tick.number)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }
   if(this.vehicleSource){const vehicle=new T.Group();vehicle.rotation.x=Math.PI/2;
    // Borrow existing geometry/materials; include scale person only when requested.

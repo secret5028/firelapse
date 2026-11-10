@@ -653,7 +653,7 @@ const {findRoute}=__module4;
 const {routeRiskRows,routeSampleIndex}=__module11;
 class RouteLayer extends EmptyLayer {
  static id='route';
- constructor(T,{graph,targetFor,vehicleSource,onChange}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange});this.signature=null;this.items=[];this.result=null;}
+ constructor(T,{graph,targetFor,vehicleSource,onChange,createCouplingTexture}){super(T);Object.assign(this,{graph,targetFor,vehicleSource,onChange,createCouplingTexture});this.signature=null;this.items=[];this.result=null;}
  clear(){for(const r of this.resources)r.dispose();this.resources.clear();this.group?.clear();this.items=[];this.vehiclePick=null;this.vehicleObject=null;this.roomMaterials=new Map();this.riskKey=null;}
  build(result){this.clear();const T=this.THREE;
   // Crisp narrow ribbons render after smoke, while testing solid-object depth.
@@ -679,8 +679,7 @@ class RouteLayer extends EmptyLayer {
    }
   }
   for(const batch of batches.values()){const g=this.own(new T.BufferGeometry());g.setAttribute('position',new T.Float32BufferAttribute(batch.positions,3));add(new T.Mesh(g,batch.material),batch.floor,true,batch.order);}
-  for(const tick of result.ticks||[]){const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#ffffff';c.lineWidth=4;c.stroke();c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(tick.number),32,33);
-   const map=this.own(new T.CanvasTexture(canvas)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
+  for(const tick of result.ticks||[]){if(!this.createCouplingTexture)continue;const map=this.own(this.createCouplingTexture(T,tick.number)),m=this.own(new T.SpriteMaterial({map,depthTest:true,depthWrite:false,transparent:true}));const label=new T.Sprite(m);label.position.fromArray(tick.point);label.position.z+=.4;label.scale.set(1,1,1);add(label,tick.floor);
   }
   if(this.vehicleSource){const vehicle=new T.Group();vehicle.rotation.x=Math.PI/2;
    // Borrow existing geometry/materials; include scale person only when requested.
@@ -4960,7 +4959,15 @@ function createSceneHost({container,THREE,store,clock={now:()=>performance.now()
 }
 function countObjects(scene){let n=0;scene.traverse(()=>n++);return n;}
 
-return {createSceneHost};
+// DOM-owned label factory; geometry layers remain usable without a browser.
+function createCouplingTexture(T,number){
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');
+ c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#ffffff';c.lineWidth=4;c.stroke();
+ c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(number),32,33);
+ return new T.CanvasTexture(canvas);
+}
+
+return {createSceneHost,createCouplingTexture};
 })();
 
 // app/web/scene/scale_reference.js
@@ -6025,7 +6032,7 @@ const {CoreLayer}=__module42;
 const {createRealViewLayers}=__module47;
 const {RiskLayer}=__module48;
 const {SelectionLayer}=__module49;
-const {createSceneHost}=__module50;
+const {createSceneHost,createCouplingTexture}=__module50;
 const {createScaleReference}=__module51;
 const {createLitePanel,updateLitePanel}=__module52;
 const {createPanelShell}=__module56;
@@ -6069,7 +6076,7 @@ async function attachModern(viewer,initial,{clock={now:()=>performance.now()}}={
   if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-15,ground.z||0];}
  }
  let routeUI=null;
- const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const target=store.get('route').target_room_id;if(target)return target;const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
+ const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,createCouplingTexture,targetFor:()=>{const target=store.get('route').target_room_id;if(target)return target;const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
  const layers=[buildingLayer,openings,core,new RoomNamesLayer(T,{building:B,groups,camera:C,container:$('v')}),...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  if(ownedReference)cleanup.push(()=>ownedReference.userData.dispose());

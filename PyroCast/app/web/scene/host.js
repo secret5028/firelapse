@@ -77,3 +77,11 @@ export function createSceneHost({container,THREE,store,clock={now:()=>performanc
   diagnostics:()=>({running,disposed,pendingFrame:raf!==null,canvasCount:container.querySelectorAll('canvas').length,sceneObjects:countObjects(scene)})});
 }
 function countObjects(scene){let n=0;scene.traverse(()=>n++);return n;}
+
+// DOM-owned label factory; geometry layers remain usable without a browser.
+export function createCouplingTexture(T,number){
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=64;const c=canvas.getContext('2d');
+ c.fillStyle='#17384d';c.beginPath();c.arc(32,32,29,0,Math.PI*2);c.fill();c.strokeStyle='#ffffff';c.lineWidth=4;c.stroke();
+ c.fillStyle='#fff';c.font='bold 35px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(String(number),32,33);
+ return new T.CanvasTexture(canvas);
+}

@@ -6,7 +6,7 @@ const browser=await chromium.launch({headless:true,executablePath:'C:/Program Fi
 try{
  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
  const module=fs.readFileSync(new URL('../web/panels/assistant.js',import.meta.url),'utf8');
- await page.route('http://assistant.test/**',r=>r.fulfill({contentType:r.request().url().endsWith('.js')?'text/javascript':'text/html',body:r.request().url().endsWith('/resize_handle.js')?fs.readFileSync(new URL('../web/panels/resize_handle.js',import.meta.url),'utf8'):r.request().url().endsWith('/assistant.js')?module:'<div id="pyroShellTabs"></div><div id="pyroShellSidebar"><div id="resultCase"></div></div><div id="displayViewSettings"></div>'}));
+ await page.route('http://assistant.test/**',r=>r.fulfill({contentType:r.request().url().endsWith('.js')?'text/javascript':'text/html',body:r.request().url().endsWith('/resize_handle.js')?fs.readFileSync(new URL('../web/panels/resize_handle.js',import.meta.url),'utf8'):r.request().url().endsWith('/assistant.js')?module:'<div id="pyroShellHeader"></div><div id="pyroShellTabs"></div><div id="pyroShellSidebar"><div id="resultContent"><div id="resultCase"></div></div></div><div id="displayViewSettings"></div>'}));
  await page.goto('http://assistant.test/');
  await page.evaluate(async()=>{
   const {createAssistantPanel}=await import('/assistant.js');window.ctx={building:'test',case:'S09'};window.applied=[];window.nextProposals=[];window.failApply=false;

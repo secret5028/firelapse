@@ -24,7 +24,7 @@ import {CoreLayer} from './layers/core.js';
 import {createRealViewLayers} from './layers/real_view_layers.js';
 import {RiskLayer} from './layers/risk.js';
 import {SelectionLayer} from './layers/selection.js';
-import {createSceneHost} from './scene/host.js';
+import {createSceneHost,createCouplingTexture} from './scene/host.js';
 import {createScaleReference} from './scene/scale_reference.js';
 import {createLitePanel,updateLitePanel} from './panels/legacy_lite_panel.js';
 import {createPanelShell} from './panels/shell.js';
@@ -68,7 +68,7 @@ export async function attachModern(viewer,initial,{clock={now:()=>performance.no
   if(points.length){const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);routeGraph.ground={...ground,z:ground.z||0};routeGraph.defaultVehicle=[(Math.min(...xs)+Math.max(...xs))/2,Math.min(...ys)-15,ground.z||0];}
  }
  let routeUI=null;
- const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,targetFor:()=>{const target=store.get('route').target_room_id;if(target)return target;const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
+ const route=new RouteLayer(T,{graph:routeGraph,vehicleSource,createCouplingTexture,targetFor:()=>{const target=store.get('route').target_room_id;if(target)return target;const choice=store.get('exploration');if(choice.origin_mode==='manual'&&choice.origin_room_id)return choice.origin_room_id;if(data?.route_target_room_id)return data.route_target_room_id;const r=data?.rooms.find(r=>r.key===data.fire_key);return r?.original_room||r?.key||data?.fire_key;},onChange:r=>routeUI?.update(r)});
  const layers=[buildingLayer,openings,core,new RoomNamesLayer(T,{building:B,groups,camera:C,container:$('v')}),...real,new FuelQuantityLayer(T,B),risk,selection,route];
  const cleanup=[],originalRender=R.render,baseRender=R.render.bind(R);
  if(ownedReference)cleanup.push(()=>ownedReference.userData.dispose());

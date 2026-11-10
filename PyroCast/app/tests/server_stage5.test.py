@@ -69,7 +69,8 @@ class Contracts(unittest.TestCase):
             self.assertEqual(len(index.cases('A','native')),2)
             (root/'new/playback.json').unlink();index.scan(True)
             self.assertEqual(len(index.cases('A','native')),1)
-            self.assertTrue((root/'playback-catalog.json').is_file())
+            self.assertTrue(index.file.is_file())
+            self.assertFalse((root/'playback-catalog.json').exists(), 'index belongs in the external cache')
 
     def test_attention_invalidation_and_unknown(self):
         with tempfile.TemporaryDirectory(dir=ROOT/'simulation/results',prefix='server_stage5_test') as directory:
@@ -120,7 +121,7 @@ class Contracts(unittest.TestCase):
                     launch.return_value.pid=123;launch.return_value.wait.return_value=0
                     atomic_json(folder/'progress.json',{'state':'completed'})
                     service.compute(folder);args=launch.call_args.args[0]
-                    self.assertIn('run_lite_mc.py',args[3]);self.assertNotIn('shell',launch.call_args.kwargs)
+                    self.assertIn('run_cfast_mc.py',args[3]);self.assertNotIn('shell',launch.call_args.kwargs)
                 atomic_json(folder/'progress.json',{'state':'running'})
                 with patch.object(service,'process_alive',return_value=False):self.assertEqual(service.status('A')['state'],'interrupted')
                 with patch.object(service.subprocess,'Popen',side_effect=OSError('fixture')):

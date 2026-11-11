@@ -14,6 +14,18 @@ class CADImportTest(unittest.TestCase):
     def test_invalid_dwg_header(self):
         with self.assertRaisesRegex(ValueError,'헤더'):
             imp.upload({'files':[dict(name='scan.dwg',data=base64.b64encode(b'not cad').decode())]})
+    def test_bundled_converter_is_used_without_local_config(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)/'app'
+            for name in ('cad-reader/run_building.py','cad-tools/libredwg/dwg2dxf.exe'):
+                (root/name).parent.mkdir(parents=True);(root/name).write_bytes(b'')
+            with patch.object(imp,'ROOT',root):cfg=imp.runtime()
+            self.assertEqual(Path(cfg['reader_dir']),root/'cad-reader')
+            self.assertEqual(Path(cfg['dwg2dxf']),root/'cad-tools/libredwg/dwg2dxf.exe')
+            self.assertEqual(cfg['dependency_paths'],[str(root/'simulation/cad_deps')])
+    def test_missing_converter_is_reported(self):
+        with tempfile.TemporaryDirectory() as d, patch.object(imp,'ROOT',Path(d)/'app'), self.assertRaisesRegex(ValueError,'미설정'):
+            imp.runtime()
     def test_cad_saved_with_original_hash(self):
         with tempfile.TemporaryDirectory() as d, patch.object(imp,'STAGING',Path(d)), patch.object(imp,'runtime',return_value={}):
             v=imp.upload({'files':[dict(name='floor.dwg',data=base64.b64encode(b'AC1027test').decode())]})

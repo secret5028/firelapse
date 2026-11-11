@@ -33,7 +33,12 @@ def normalize_plan(plan):
     def normalize(parts,family,oid):
         output=[]
         for part in parts:
-            g=Polygon(part['o'],part.get('h',[]))
+            if len(part['o'])<3:
+                # A contour that collapsed to a point or a segment has no area to repair.
+                plan['checks'].append(dict(rule='Q형상정리',id=oid,family=family,area_before=0,area_after=0,
+                    note='점 3개 미만으로 붕괴한 윤곽 제외'))
+                continue
+            g=Polygon(part['o'],[h for h in part.get('h',[]) if len(h)>=3])
             fixed=g if g.is_valid else make_valid(g)
             pieces=polygon_components(fixed)
             if not g.is_valid or not pieces:

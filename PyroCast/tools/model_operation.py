@@ -67,7 +67,11 @@ def ensure_server(row):
 
 def model_preview(ident):
     """Geometry for a building with no calculation; no synthetic measurements."""
-    b = sim.read(model_path(sim.entry(ident))); rooms = []
+    return building_preview(sim.read(model_path(sim.entry(ident))), sim.fingerprint(ident))
+
+
+def building_preview(b, digest):
+    rooms = []
     for f in b['floors']:
         for r in f.get('rooms', []):
             key = f"CAD_{f['name']}_{r['id']}"
@@ -77,7 +81,7 @@ def model_preview(ident):
     if not rooms: raise ValueError('표시할 실 형상이 없습니다')
     return dict(schema='pyrocast-cad-playback-1',engine_kind='pyrocast_lite',model_preview=True,
         complete=False,simulation_output_complete=False,case_id='model-preview',
-        building_sha256=sim.fingerprint(ident),label='계산 전 · 미평가',time_s=[0],
+        building_sha256=digest,label='계산 전 · 미평가',time_s=[0],
         fire_key=None,rooms=rooms,solvers={},fires=[],events=[],fuel_symbols=[],fuel_units=[],
         limits=b.get('notes',[])+['층별 계산 · 미확정 연결·층고는 추정값 유지 · 수직 전파 미평가'])
 

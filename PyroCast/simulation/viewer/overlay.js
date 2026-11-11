@@ -1394,7 +1394,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v3'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:[...copy((p.limits||[]).filter(s=>!s.startsWith('지하 압력 간략식:')||(p.basement_pressure?.history||[]).some((r,i,a)=>i>0&&r.area_m2!==a[i-1].area_m2))),...(p.condition_version==='physics_p0_v3'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -5661,9 +5661,11 @@ function createResultsPanel({panel,store}){
  let previous=null,roomKey=null;
  function update({building,result,series,index,selection,fireInput}){
   let boundary=document.getElementById('resultBoundaryNotice');if(!boundary){boundary=document.createElement('div');boundary.id='resultBoundaryNotice';boundary.style.cssText='padding:10px;background:#533d12;color:#fff';riskCard.prepend(boundary);}
-  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('지하 압력 간략식:')||s.startsWith('최소 누기 가정 적용:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')||s.startsWith('입력 가정 검토 필요:')||s.startsWith('연소 진단:')||s.startsWith('물리 타당성 일부 미확인:')).join(' · ');boundary.hidden=!boundary.textContent;
+  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('지하 압력 간략식:')||s.startsWith('최소 누기 가정 적용:')||s.startsWith('지하 환기 경로 가정:')||s.startsWith('수치 수렴 재실행:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')||s.startsWith('입력 가정 검토 필요:')||s.startsWith('연소 진단:')||s.startsWith('물리 타당성 일부 미확인:')).join(' · ');boundary.hidden=!boundary.textContent;
   const invalid=(result.limits_text||[]).filter(s=>s.startsWith('물리 타당성 검사 실패:'));if(invalid.length){boundary.textContent=invalid.join(' · ');boundary.style.background='#9d1515';boundary.hidden=false;}else boundary.style.background='#533d12';
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
+  // No room selected: show the bare index bars only. A failed validity check stays visible.
+  if(!room&&!invalid.length)boundary.hidden=true;
   $('resultMetadata').textContent=`${result.engine.kind==='lite'?'간략':'CFAST'} · ${result.status==='complete'?'완료':'미완료'} ${stamp(result.t_end_s)}`;
   const info=roomDisplayInfo(room,cell,values?.interface_m?.[index]);
   const coverage=resultCoverage(building,result,room),time=result.time_s?.[index];scope.textContent=coverage.label+(finite(time)?` · 재생 ${stamp(time)}`:'');state.textContent=coverage.status;state.className=coverage.evaluated?'status-ok':'';state.hidden=!room;
@@ -5891,7 +5893,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  $('exploreCalculateRun').style.cssText='display:block;width:100%;padding:10px;margin-top:8px;font-weight:700';
  const fireInputs=document.createElement('fieldset');
  fireInputs.style.cssText='display:grid;gap:6px;margin:8px 0;padding:8px;border:1px solid var(--border)';
- fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><label>최소 누기 면적 (m²/경로) <input id="exploreLeakArea" type="number" min="0.0001" step="any" placeholder="계단 0.02 · 승강로 0.06"></label><label>급기·배기 각각 (ACH) <input id="exploreACH" type="number" min="0" step="any" placeholder="직접 입력 · 0=설비 정지"></label><button id="exploreFanOff" type="button">급배기 정지 조건 (0 ACH)</button><small id="exploreBasementNote" hidden>지하층: 외기 경로가 없으면 생략한 건물·덕트 경로를 등가화하고 설정된 압력 상한에 맞춰 배출 면적을 자동 보정합니다. 상한은 계산 가정입니다. 0 ACH는 팬 정지이며 압력 배출 경로와 별도입니다.</small><label>실제로 외기에 연결된 램프 폭 (m) <input id="exploreRampWidth" type="number" min="0.01" step="any"></label><label>램프 입구 높이 (m) <input id="exploreRampHeight" type="number" min="0.01" step="any"></label><small>빈칸은 저장 MC 입력을 사용합니다. 새 계산은 모두 CFAST를 사용합니다. 기존 결과는 그대로 보존합니다. 급·배기량 = ACH × 실 체적 ÷ 3,600 (m³/s).</small>';
+ fireInputs.innerHTML='<legend>이번 계산의 화원 입력</legend><label>화점실 가연물 총량 (GJ) <input id="exploreFuelEnergy" type="number" min="0.001" max="1000000" step="any" placeholder="저장값"></label><label>화점 셀 최대 발열률 (MW) <input id="exploreFirePeak" type="number" min="0.001" max="1000" step="any" placeholder="자동"></label><label>최소 누기 면적 (m²/경로) <input id="exploreLeakArea" type="number" min="0.0001" step="any" placeholder="계단 0.02 · 승강로 0.06"></label><label>급기·배기 각각 (ACH) <input id="exploreACH" type="number" min="0" step="any" placeholder="직접 입력 · 0=설비 정지"></label><button id="exploreFanOff" type="button">급배기 정지 조건 (0 ACH)</button><small id="exploreBasementNote" hidden>지하층: 외기 경로가 없으면 생략한 건물·덕트 경로를 등가화하고 설정된 압력 상한에 맞춰 배출 면적을 자동 보정합니다. 상한은 계산 가정입니다. 0 ACH는 팬 정지이며 압력 배출 경로와 별도입니다.</small><label>실제로 외기에 연결된 램프 폭 (m) <input id="exploreRampWidth" type="number" min="0.01" step="any"></label><label>램프 입구 높이 (m) <input id="exploreRampHeight" type="number" min="0.01" step="any"></label><small>빈칸은 기본 입력 또는 저장 MC 입력을 사용합니다. 새 계산은 모두 CFAST를 사용합니다. 기존 결과는 그대로 보존합니다. 급·배기량 = ACH × 실 체적 ÷ 3,600 (m³/s).</small>';
  calculate.insertBefore(fireInputs,$('exploreCalculateRun'));
  let fireInputRoom;
  fireInputs.addEventListener('input',sync);
@@ -5902,11 +5904,11 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
  $('exploreCalculationResult').onclick=onCalculationResult;
  function savedCalculationInput(state){
   const fixed=fixedInputFor(store.get('buildingReview'),state.origin_room_id);
-  if(fixed&&fixed.source_room===state.origin_room_id&&(!fixed.duration_s||fixed.duration_s===state.duration_s))return {ready:true};
+  if(summary?.completed&&fixed&&fixed.source_room===state.origin_room_id&&(!fixed.duration_s||fixed.duration_s===state.duration_s))return {ready:true};
   if(calculation.saved_mc_input&&summary?.job_id&&summary.worst&&
     summary.source_room===state.origin_room_id&&summary.duration_s===state.duration_s)
    return {ready:true,job:summary.job_id,sample:summary.worst.sample_id};
-  return {ready:false};
+  return {ready:!!calculation.default_input_available&&!!state.origin_room_id&&!!store.get('floor').floor_id,defaults:true};
  }
  $('exploreCalculateRun').onclick=()=>{
   if(!selectedEngine||$('exploreCalculateRun').disabled)return;
@@ -5915,7 +5917,8 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   const fire=Object.fromEntries(inputs.filter(([,input])=>input.value!=='').map(([key,input])=>[key,input.valueAsNumber*1000]));
   if($('exploreLeakArea').value!==''){if(!$('exploreLeakArea').reportValidity())return;fire.leakage_area_m2=$('exploreLeakArea').valueAsNumber;}
   for(const [key,id] of [['ventilation_ach','exploreACH'],['ramp_width_m','exploreRampWidth'],['ramp_height_m','exploreRampHeight']]){const input=$(id);if(input.value!==''){if(!input.reportValidity())return;fire[key]=input.valueAsNumber;}}
-  onCalculate?.(selectedEngine,savedCalculationInput(store.get('exploration')).job,fire);
+  const input=savedCalculationInput(store.get('exploration'));fire.use_default_openings=true;
+  onCalculate?.(selectedEngine,input.job,fire);
  };
  const scope=$('workflowFloor');scope.style.margin='12px 16px';if($('aiConnectionControl'))$('aiConnectionControl').after(scope);else $('shellPane-building').prepend(scope);
  for(const f of floors)$('exploreFloor').add(new Option(f.name,f.name));
@@ -5945,7 +5948,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   if(!mcJob.available&&!mcPending)$('exploreMCStatus').textContent='실행 연결 없음';
   if($('exploreMCStatus').textContent==='저장 결과 있음')$('exploreMCStatus').textContent='';
   mcProgress.update(mcJob,mcPending,state.origin_room_id);
-  const kind=selectedEngine,{ready,sample}=savedCalculationInput(state);
+  const kind=selectedEngine,{ready,sample,defaults}=savedCalculationInput(state);
   const calculating=calculationPending||calculation.running;
   if(fireInputRoom!==state.origin_room_id){
    fireInputRoom=state.origin_room_id;$('exploreFuelEnergy').value='';$('exploreFirePeak').value='';for(const id of ['exploreLeakArea','exploreACH','exploreRampWidth','exploreRampHeight'])$(id).value='';
@@ -5965,7 +5968,7 @@ function createExplorePanel({store,onRun,onRunOrigin,onRefresh,onResults,onMC,on
   $('exploreMC').disabled ||= calculating||calculation.server_busy;
   $('exploreCalculateRun').title='선택한 급기 조합과 화원 입력으로 순정 CFAST 계산';
   $('exploreCalculateStatus').style.cssText='font-size:11px;margin-top:8px;color:var(--text-muted)';
-  const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:'확정 급기';
+  const openingLabel=sample?`저장 MC 최악 조합 ${sample}`:defaults?'기본 개구부':'확정 급기';
   $('exploreCalculateStatus').textContent=calculation.state==='physically_invalid'?'물리 타당성 검사 실패 · 진단 결과를 확인하세요':calculation.error?'계산 실패 · '+calculation.error:calculationPending?'계산 요청 중':calculating?`${calculation.engine==='cfast'?'순정 CFAST':'간략 계산'} · 계산 중`:!calculation.available?'실행 연결 없음':!kind?'계산 방식을 선택하세요':(calculation.server_busy||mcJob.running||mcPending||mcJob.server_busy)?'다른 계산 진행 중':dirty?'가연물 변경 저장 필요':kind==='cfast'&&!calculation.cfast_available?'순정 CFAST 실행 파일 없음':!ready?(calculation.saved_mc_input?'이 화점과 같은 계산 시간의 완료 MC가 필요합니다':'최악 개폐 상태 적용 후 계산'):!customFire&&calculation.state==='complete'&&calculation.room===state.origin_room_id&&calculation.engine===kind?'계산 완료':openingLabel+' · CFAST 계산';
   $('exploreCalculateStatus').className=calculation.error||calculation.state==='physically_invalid'?'status-error':calculating?'status-busy':$('exploreCalculateStatus').textContent==='계산 완료'?'status-ok':'';
   $('exploreMCStatus').className=/실패|시간초과|차단|미완료|오류/.test($('exploreMCStatus').textContent)?'status-error':(mcJob.running||mcPending)?'status-busy':/완료/.test($('exploreMCStatus').textContent)?'status-ok':'';

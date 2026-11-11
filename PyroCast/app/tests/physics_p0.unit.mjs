@@ -21,3 +21,11 @@ assert(!result.limits_text.some(s=>s.startsWith('구버전 지수')));
 const old=await adaptResult({...args,playback:{...playback,condition_version:'physics_p0_v2'}});
 assert(old.limits_text.some(s=>s.startsWith('구버전 지수')));
 console.log('PASS: applicability, stored rollover independent of display threshold, legacy version notice');
+
+// Merely configuring the exception policy must not claim a sizing rerun.
+for(const [history,visible] of [[[],false],[[{area_m2:.1}],false],[[{area_m2:.1},{area_m2:.1}],false],[[{area_m2:.1},{area_m2:.2}],true]]){
+ const checked=await adaptResult({...args,playback:{...playback,limits:['지하 압력 간략식: test','지하 환기 경로 가정: test'],basement_pressure:{history}}});
+ assert.equal(checked.limits_text.some(s=>s.startsWith('지하 압력 간략식:')),visible);
+ assert(checked.limits_text.some(s=>s.startsWith('지하 환기 경로 가정:')));
+}
+console.log('PASS: pressure resizing notice requires an actual area change');

@@ -18,6 +18,14 @@ def active_fuels(model,committed):
 
 
 def fire_curve(group, floor_area):
+    t, q, area = prescribed_curve(group, floor_area)
+    if group.get('release_limit'):
+        from .release_limit import limited_curve
+        return limited_curve(t, q, area, group['release_limit'])
+    return t, q, area
+
+
+def prescribed_curve(group, floor_area):
     if 'room_rule_curve' in group:
         curve=group['room_rule_curve']
         return curve['t'],curve['q'],curve['area']

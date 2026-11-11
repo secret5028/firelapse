@@ -32,7 +32,7 @@ class Leakage(unittest.TestCase):
     def test_closed_component_uses_stair_and_is_idempotent(self):
         m=sealed();apply_minimum_leakage(m)
         self.assertEqual(m['minimum_leakage'][0]['room'],'Stair')
-        self.assertAlmostEqual(m['minimum_leakage'][0]['area_m2'],.02)
+        self.assertAlmostEqual(m['minimum_leakage'][0]['area_m2'],6*327/(3600*8))
         before=deepcopy(m);apply_minimum_leakage(m);self.assertEqual(m,before)
         self.assertEqual(m['rooms'][0]['leak_area_ratio'],[0,0])
 
@@ -45,7 +45,7 @@ class Leakage(unittest.TestCase):
         m['leakage_defaults']={'fallback_area_m2':.04}
         apply_minimum_leakage(m)
         self.assertEqual(m['minimum_leakage'][0]['room'],'Fire')
-        self.assertAlmostEqual(m['minimum_leakage'][0]['area_m2'],.04)
+        self.assertAlmostEqual(m['minimum_leakage'][0]['area_m2'],6*300/(3600*8))
 
     def test_numeric_grade_not_floor_spelling(self):
         for name in ('P1','B-1','Basement 1','-1F'):

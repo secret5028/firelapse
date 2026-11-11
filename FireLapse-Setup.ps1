@@ -1,10 +1,10 @@
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'FireLapse-Retention.ps1')
 
-$version = 'v2026.11.10-r18'
-$archiveName = 'FireLapse-Windows-x64-2026.11.10-r18.zip'
+$version = 'v2026.11.10-r19'
+$archiveName = 'FireLapse-Windows-x64-2026.11.10-r19.zip'
 $releaseUrl = "https://github.com/secret5028/firelapse/releases/download/$version/$archiveName"
-$expectedHash = '6940efa6b76de11ca2c13b17128ae77d189c9ca11b00844d4525e8f68e173ae6'
+$expectedHash = '0bab0578c79d28e94d857c506f867617c4af271223bfb69b3280839cd47c52ca'
 $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\releases'))
 $selectionFile = Join-Path (Split-Path -Parent $releaseRoot) 'config\current-release.json'
 # An older downloaded source ZIP must not downgrade a newer verified local install.
@@ -63,18 +63,18 @@ function Install-FireLapse {
     # '.new\FireLapse' is no longer than the final version folder, so anything that fits once
     # installed also fits while staged. The setup mutex makes the fixed name safe.
     $stage = Join-Path $releaseRoot '.new'
-    # Remove what an interrupted setup left behind (up to 5 GB each).
+    # Remove what an interrupted setup left behind (up to 7 GB each).
     Get-ChildItem -LiteralPath $releaseRoot -Directory -Force -ErrorAction SilentlyContinue |
         Where-Object { $_.Name -eq '.new' -or $_.Name -like '.setup-*' } |
         ForEach-Object { Remove-Item -LiteralPath $_.FullName -Recurse -Force -ErrorAction SilentlyContinue }
     $drive = New-Object IO.DriveInfo ([IO.Path]::GetPathRoot($releaseRoot))
-    if ($drive.AvailableFreeSpace -lt 6GB) {
-        throw ('FireLapse needs about 6 GB free on {0} and only {1:N1} GB is free.' -f $drive.Name, ($drive.AvailableFreeSpace / 1GB))
+    if ($drive.AvailableFreeSpace -lt 8GB) {
+        throw ('FireLapse needs about 8 GB free on {0} and only {1:N1} GB is free.' -f $drive.Name, ($drive.AvailableFreeSpace / 1GB))
     }
     [void][IO.Directory]::CreateDirectory($stage)
     try {
         $archive = Join-Path $stage $archiveName
-        Write-Host "Downloading FireLapse $version (372 MB)..."
+        Write-Host "Downloading FireLapse $version (856 MB)..."
         & "$env:SystemRoot\System32\curl.exe" --fail --location --retry 2 --progress-bar --output $archive $releaseUrl
         if ($LASTEXITCODE -ne 0) { throw 'Download failed. Check your internet connection and try again.' }
         $sha256 = [Security.Cryptography.SHA256]::Create()
@@ -88,7 +88,7 @@ function Install-FireLapse {
             throw 'The downloaded ZIP failed its SHA-256 check. Run FireLapse.cmd again to retry.'
         }
 
-        Write-Host 'Extracting FireLapse (about 4.9 GB)...'
+        Write-Host 'Extracting FireLapse (about 6.6 GB)...'
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [IO.Compression.ZipFile]::ExtractToDirectory($archive, $stage)
         $package = Join-Path $stage 'FireLapse'

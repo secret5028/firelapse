@@ -24,10 +24,16 @@ def status(ident):
         value.update(state='interrupted',message='CAD 변환 중단 · 도면을 다시 추가하세요')
     return value
 
+def bundled_runtime():
+    """The converter shipped with the app: reader, LibreDWG dwg2dxf and their Python libraries."""
+    reader=next((p for p in (ROOT/'cad-reader',ROOT.parent/'work/cad-web/cad_engine') if (p/'run_building.py').is_file()),None)
+    tool=ROOT/'cad-tools/libredwg/dwg2dxf.exe'
+    if not reader or not tool.is_file(): raise ValueError('CAD 변환기 미설정 · config/cad-import.local.json')
+    return dict(reader_dir=str(reader),dwg2dxf=str(tool),dependency_paths=[str(ROOT/'simulation/cad_deps')])
+
 def runtime():
     path=ROOT/'config/cad-import.local.json'
-    if not path.is_file(): raise ValueError('CAD 변환기 미설정 · config/cad-import.local.json')
-    cfg=read(path)
+    cfg=read(path) if path.is_file() else bundled_runtime()
     if not (Path(cfg['reader_dir'])/'run_building.py').is_file() or not Path(cfg['dwg2dxf']).is_file():
         raise ValueError('CAD 변환기 경로를 확인하세요')
     return cfg

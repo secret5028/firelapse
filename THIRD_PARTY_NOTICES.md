@@ -15,7 +15,18 @@ FireLapse 배포본은 다음 실행 환경과 라이브러리를 함께 제공�
 
 CFAST 원본과 FireLapse의 간략 엔진·추가 후처리는 구분됩니다. 기준 CFAST 실행 파일과 추가 엔진을 같은 이름으로 표시하지 않습니다. CFAST는 NIST의 공식 출처를 보존한 버전이며, 이 배포 자체가 NIST의 인증·검증 또는 보증을 뜻하지 않습니다.
 
-DWG 변환기와 별도 CAD 추출 도구는 이번 실행 패키지에 포함하지 않습니다. 해당 도구는 사용자가 별도 설치하고 그 라이선스를 확인해야 합니다. 7개 기존 모델과 저장 결과 열람에는 필요하지 않습니다.
+r20부터 실행 패키지에 DWG 변환기와 CAD 판독용 라이브러리를 포함합니다. DWG 변환기는 LibreDWG `dwg2dxf` 0.14이며 GNU GPL 버전 3 또는 이후 버전으로 배포되는 별도 프로그램입니다. FireLapse는 이를 독립 실행 파일로 호출할 뿐 연결(link)하지 않으며, FireLapse 자체의 라이선스는 바뀌지 않습니다. 라이선스 전문과 소스 위치는 `app/cad-tools/libredwg/`의 `COPYING`, `SOURCE.txt`에 있고, 소스는 <https://github.com/LibreDWG/libredwg/releases/tag/0.14>에서 받을 수 있습니다. 7개 기존 모델과 저장 결과 열람에는 이 구성요소가 필요하지 않습니다.
+
+| r20 추가 구성요소 | 버전 | 라이선스·고지 위치 |
+|---|---|---|
+| LibreDWG `dwg2dxf` | 0.14 | GPL-3.0-or-later; `app/cad-tools/libredwg/COPYING`, `SOURCE.txt` |
+| GNU libiconv (DLL) | LibreDWG 동봉본 | LGPL-2.1-or-later; `app/cad-tools/libredwg/libiconv-COPYING.LIB` |
+| PCRE2 (DLL) | LibreDWG 동봉본 | BSD; `app/cad-tools/libredwg/pcre2-LICENCE.md` |
+| ezdxf | 1.4.4 | MIT; `app/simulation/cad_deps/ezdxf-1.4.4.dist-info/licenses/` |
+| fontTools | 4.65.0 | MIT; `app/simulation/cad_deps/fonttools-4.65.0.dist-info/licenses/` |
+| pyparsing | 3.3.2 | MIT; `app/simulation/cad_deps/pyparsing-3.3.2.dist-info/licenses/` |
+| typing_extensions | 4.16.0 | PSF-2.0; `app/simulation/cad_deps/typing_extensions-4.16.0.dist-info/licenses/` |
+| OpenCV (opencv-python-headless) | 4.14.0.94 | Apache-2.0 및 포함 라이브러리 고지; `app/simulation/cad_deps/cv2/LICENSE.txt`, `LICENSE-3RD-PARTY.txt` |
 
 CFAST Windows 빌드에 포함된 MinGW-w64 런타임 고지는 `licenses/MinGW-w64-runtime.txt`를 참고하세요.
 

@@ -6,6 +6,7 @@ import json
 import math
 import os
 import re
+import shutil
 import subprocess
 import time
 import numpy as np
@@ -183,17 +184,20 @@ def _execute_once(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeo
         if saved.get('signature')==signature and all((folder/name).exists() and digest(folder/name)==sha for name,sha in saved.get('files',{}).items()):
             if saved.get('files'):
                 native_log=folder/'case.log'
-                if native_log.exists() and 'NORMAL EXIT' in native_log.read_text(errors='replace').upper():
-                    result=load_result(folder,duration_s,dict(saved['run'],cache_hit=True))
-                    from .validation import validate_native, model_from_deck
-                    result['physical_validation']=validate_native(result,validation_model or model_from_deck(deck),folder)
-                    return result
+                if saved['run'].get('steady_extension') or native_log.exists() and 'NORMAL EXIT' in native_log.read_text(errors='replace').upper():
+                    return validated_result(folder,duration_s,dict(saved['run'],cache_hit=True),deck,validation_model)
     cache.unlink(missing_ok=True)
     # A retry must not treat the previous run's final status as new progress.
     (folder/'case.status').unlink(missing_ok=True)
     (folder/'case_compartments.csv').unlink(missing_ok=True)
+    (folder/'case.stop').unlink(missing_ok=True)
+    (folder/'steady-extension.json').unlink(missing_ok=True);shutil.rmtree(folder/'native-prefix',ignore_errors=True)
     started=time.monotonic(); last_progress=started; last_time=0.;last_steps=0
     last_pressure_check=started
+    from . import steady_extension
+    steady=None if preserve_input_files else steady_extension.settings()
+    if steady and not steady['enabled']:steady=None
+    last_steady_check=started;pace=[(0.,0.)];extension=None
     statefile=folder/'execution-state.json'
     def state(status, reason=None):
         payload={'status':status,'reason':reason,'last_native_time_s':last_time,
@@ -229,6 +233,17 @@ def _execute_once(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeo
                         raise PressureSizingRestart(*prefix)
                 reason=('wall_time_budget' if elapsed>=timeout_s else
                         'native_progress_stalled' if stall_timeout_s and time.monotonic()-last_progress>=stall_timeout_s else None)
+                slow=False
+                if steady and not reason and elapsed>=steady['min_wall_s'] and time.monotonic()-last_steady_check>=steady['check_interval_s']:
+                    last_steady_check=time.monotonic();pace.append((elapsed,last_time))
+                    slow=steady_extension.overrun(pace,duration_s,timeout_s,steady)
+                # Nothing is changing any more, yet the horizon is out of reach: finish with constants.
+                if steady and (reason or slow) and steady_extension.probe(folder,deck,duration_s,steady):
+                    exit_kind=stop_native(process,folder)
+                    extension=steady_extension.finish(folder,deck,duration_s,steady,trigger=reason or 'projected_wall_time_overrun',
+                        exit_kind=exit_kind,wall_seconds=time.monotonic()-started,accepted_steps=last_steps)
+                    if extension:break
+                    reason=reason or 'quasi_steady_extension_failed'
                 if reason:
                     state('incomplete',reason)
                     raise NativeRunInterrupted(reason,last_time,duration_s,elapsed)
@@ -240,21 +255,52 @@ def _execute_once(exe, folder, deck, sidecar, duration_s, timeout_s, stall_timeo
     log=(folder/'execution.log').read_text(encoding='utf-8',errors='replace')
     if (folder/'case.log').exists():
         log+='\n'+(folder/'case.log').read_text(encoding='utf-8',errors='replace')
-    if process.returncode!=0 or 'NORMAL EXIT' not in log.upper():
+    normal=process.returncode==0 and 'NORMAL EXIT' in log.upper()
+    if not normal and not extension:
         state('failed','abnormal_native_exit')
         raise RuntimeError('CFAST failed: '+log[-3000:])
     run={'folder':str(folder),'engine_sha256':signature['engine'],'input_sha256':signature['input'],
-         'wall_seconds':time.monotonic()-started,'cache_hit':False,'normal_exit':True}
-    try:result=load_result(folder,duration_s,run)
+         'wall_seconds':time.monotonic()-started,'cache_hit':False,'normal_exit':normal}
+    if extension:run['steady_extension']=extension
+    try:result=validated_result(folder,duration_s,run,deck,validation_model)
     except (ValueError,OSError,StopIteration):
         state('failed','invalid_native_output');raise
-    from .validation import validate_native, model_from_deck
-    result['physical_validation']=validate_native(result,validation_model or model_from_deck(deck),folder)
-    last_time=float(duration_s);state(result['physical_validation']['status'])
-    files=[p for p in folder.glob('case*.csv')]+[folder/'execution.log',folder/'case.log']
+    if not extension:last_time=float(duration_s)
+    state(result['physical_validation']['status'],'quasi_steady_extension' if extension else None)
+    files=[p for p in folder.glob('case*.csv')]+[p for p in (folder/'execution.log',folder/'case.log',folder/'steady-extension.json') if p.exists()]
     payload={'signature':signature,'run':run,'physical_validation':result['physical_validation'],'files':{p.name:digest(p) for p in files}}
     temporary=folder/'completed.json.tmp'
     temporary.write_text(json.dumps(payload,indent=2),encoding='utf-8'); temporary.replace(cache)
+    return result
+
+
+def stop_native(process,folder,wait_s=30.):
+    """Ask stock CFAST to close its files after the current step; kill only if it does not answer."""
+    stop=Path(folder)/'case.stop'
+    try:
+        stop.write_bytes(b'')
+        try:process.wait(timeout=wait_s);return 'stopped_by_request'
+        except subprocess.TimeoutExpired:
+            process.kill();process.wait();return 'killed_after_stop_request'
+    finally:stop.unlink(missing_ok=True)
+
+
+def validated_result(folder,duration_s,run,deck,validation_model):
+    """Screen what the solver itself produced: the whole run, or the native prefix of an extended one."""
+    from .validation import validate_native, model_from_deck
+    folder=Path(folder);model=validation_model or model_from_deck(deck)
+    result=load_result(folder,duration_s,run)
+    extension=run.get('steady_extension')
+    if not extension:
+        result['physical_validation']=validate_native(result,model,folder)
+        return result
+    from .steady_extension import NOTICE,notice,qualify
+    prefix=load_result(folder/'native-prefix',extension['native_until_s'],run,allow_prefix=True)
+    result['physical_validation']=qualify(validate_native(prefix,model,folder/'native-prefix'),extension)
+    result['steady_extension']=extension
+    if validation_model is not None:
+        validation_model['limits']=[s for s in validation_model.get('limits',[]) if not s.startswith(NOTICE)]+[notice(extension)]
+        validation_model['steady_extension']={k:extension[k] for k in ('revision','trigger','native_until_s','horizon_s')}
     return result
 
 

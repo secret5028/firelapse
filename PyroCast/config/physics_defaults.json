@@ -66,6 +66,23 @@
     "max_scale": 8,
     "max_attempts": 5
   },
+  "quasi_steady": {
+    "enabled": true,
+    "min_wall_s": 600,
+    "check_interval_s": 60,
+    "pace_window_s": 300,
+    "window_s": 300,
+    "min_native_s": 900,
+    "hrr_band": 0.02,
+    "o2_drift_pct": 0.5,
+    "layer_drift_m": 0.05,
+    "pressure_drift_Pa": 5,
+    "pressure_drift_fraction": 0.1,
+    "temperature_growth_ratio": 1.1,
+    "min_temperature_rise_C": 5,
+    "max_temperature_exponent": 0.35,
+    "basis": "Project simplification, not CFAST and not a measured rule. A run that cannot reach the horizon inside max_wall_s while its last window_s of output is steady (constant heat release, pinned oxygen and layer, slow pressure drift) is stopped and completed from its own last values; temperatures continue as dT ~ t^p with p fitted on the last two windows and capped (McCaffrey-Quintiere-Harkleroad wall heating gives 1/6). Extended results are reported as unverified."
+  },
   "native_execution": {
     "max_wall_s": 4200,
     "progress_stall_s": 90,

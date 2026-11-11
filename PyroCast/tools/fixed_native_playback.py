@@ -166,5 +166,8 @@ def package(model, native, template, folder):
             mapping='stock compartments CSV: C, mol_frac, W/1000, OD converted to 1/m, TUHC/upper gas mass')))
 
     from pyrocast_cfbt.validation import validate_native, protect_playback
-    protect_playback(playback,validate_native(native,model,folder))
+    # An extended run was screened on what the solver produced; the constant tail is not re-screened.
+    extension=native.get('steady_extension')
+    if extension:playback['steady_extension']={k:extension[k] for k in ('revision','trigger','native_until_s','horizon_s')}
+    protect_playback(playback,native['physical_validation'] if extension else validate_native(native,model,folder))
     return playback

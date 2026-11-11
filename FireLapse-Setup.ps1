@@ -55,6 +55,42 @@ public static class FireLapseShellPath {
     [FireLapseShellPath]::Resolve($path)
 }
 
+function Expand-FireLapseArchive($archive, $destination) {
+    # ZipFile.ExtractToDirectory is silent for the minutes this takes, which looks like a hang.
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $root = [IO.Path]::GetFullPath($destination).TrimEnd('\') + '\'
+    $zip = [IO.Compression.ZipFile]::OpenRead($archive)
+    try {
+        $total = [long]0
+        foreach ($entry in $zip.Entries) { $total += $entry.Length }
+        $done = [long]0
+        $clock = [Diagnostics.Stopwatch]::StartNew()
+        $shown = [long]-1000
+        foreach ($entry in $zip.Entries) {
+            $target = [IO.Path]::GetFullPath([IO.Path]::Combine($root, $entry.FullName))
+            if (-not $target.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+                throw 'The ZIP holds a path outside the install folder.'
+            }
+            if ($entry.Name -eq '') {
+                [void][IO.Directory]::CreateDirectory($target)
+                continue
+            }
+            [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target))
+            [IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $target, $false)
+            $done += $entry.Length
+            if ($clock.ElapsedMilliseconds - $shown -ge 500) {
+                $shown = $clock.ElapsedMilliseconds
+                Write-Host -NoNewline ("`r  {0,5:N1}%  {1:N1} / {2:N1} GB" -f (100 * $done / [Math]::Max($total, 1)), ($done / 1e9), ($total / 1e9))
+            }
+        }
+        Write-Host -NoNewline ("`r  100.0%  {0:N1} / {0:N1} GB" -f ($total / 1e9))
+    }
+    finally {
+        Write-Host ''
+        $zip.Dispose()
+    }
+}
+
 function Install-FireLapse {
     if (Test-Path -LiteralPath $launcher -PathType Leaf) { return }
 
@@ -89,8 +125,7 @@ function Install-FireLapse {
         }
 
         Write-Host 'Extracting FireLapse (about 6.8 GB)...'
-        Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [IO.Compression.ZipFile]::ExtractToDirectory($archive, $stage)
+        Expand-FireLapseArchive $archive $stage
         $package = Join-Path $stage 'FireLapse'
         if (-not (Test-Path -LiteralPath (Join-Path $package 'FireLapse.cmd') -PathType Leaf)) {
             throw 'The ZIP is missing the FireLapse launcher.'

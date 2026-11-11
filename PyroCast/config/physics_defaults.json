@@ -13,7 +13,11 @@
     "stair_area_m2": 0.02,
     "elevator_area_m2": 0.06,
     "fallback_area_m2": 0.02,
-    "height_m": 2.1
+    "height_m": 2.1,
+    "below_grade_ach": 6,
+    "parking_m3_h_m2": 27,
+    "duct_velocity_m_s": 8,
+    "basis": "일반 지하 6회/h는 설계 환기 횟수 가정. 주차장 27 m³/㎡·h는 건축물의 설비기준 등에 관한 규칙 별표 1의6 자동차 관련 시설 환기량 참조. 주 배기덕트 풍속 8 m/s는 사용자 지정 통상 범위 4.5~8 m/s 상한 가정. 실측 아님, 환기 경로 등가 가정; 실제 팬 운전·화재 시 환기 성능 보증 아님."
   },
   "validation_basis": "Pressure and mass balance are rejection limits. Fuel fraction 0.3 is a prescribed-pyrolysis input review trigger; source HRR energy ratio 0.5 is diagnostic only. CFAST 7.7.7 fire.f90 do_fire adds prescribed fuel to the upper layer independently of oxygen-limited burning; outputspreadsheet.f90 HRR excludes separate DJET combustion. Neither diagnostic is a universal physical validity bound.",
   "validation": {

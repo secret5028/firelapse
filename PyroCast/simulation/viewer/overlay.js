@@ -1394,7 +1394,7 @@ async function adaptResult({playback:p,sourceResult=null,scenario,summary=null,b
    origin_room_id:cellRoom.get(p.fire_key)??null,settings_snapshot:settings,settings_hash:await snapshotHash(settings),seed:sourceResult?.seed??null,
    opening_state:Object.fromEntries(scenario.openings.map(v=>[v.id,v.schedule?.[0]?.[1]??null]))},
   status:p.complete===true&&p.simulation_output_complete!==false?'complete':p.time_s.length?'partial':'failed',t_end_s:p.time_s.at(-1),dt_out_s:gaps.length&&gaps.every(g=>g===gaps[0])?gaps[0]:null,
-  limits_text:[...copy(p.limits||[]),...(p.condition_version==='physics_p0_v3'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
+  limits_text:[...copy((p.limits||[]).filter(s=>!s.startsWith('지하 압력 간략식:')||(p.basement_pressure?.history||[]).some((r,i,a)=>i>0&&r.area_m2!==a[i-1].area_m2))),...(p.condition_version==='physics_p0_v3'?[]:['구버전 지수 · 새 조건 정의로 재계산이 필요합니다.'])],time_s:copy(p.time_s),rooms,cells,conditions,cell_conditions:cellConditions,index_by_cell:indexByCell,fgi_rollover_by_cell:fgiRollover,index_history_max:history.maximum,index_history_peak_s:history.peak_time_s,events,
   opening_risk:risk,opening_risk_status:openingRisk?.status??'not_provided',boundary_rooms:[...boundaries],boundary_by_cell:boundaryByCell,
   fallback_sensors:null,legacy_color:legacyColor,errors,notes,source_refs:copy(p.model_preview?{...sourceRefs,model_preview:true}:sourceRefs),aggregation_policy:'single: exact cell; multi: no scalar aggregate; conditions: cell OR with unknown preserved'};
 }
@@ -5661,7 +5661,7 @@ function createResultsPanel({panel,store}){
  let previous=null,roomKey=null;
  function update({building,result,series,index,selection,fireInput}){
   let boundary=document.getElementById('resultBoundaryNotice');if(!boundary){boundary=document.createElement('div');boundary.id='resultBoundaryNotice';boundary.style.cssText='padding:10px;background:#533d12;color:#fff';riskCard.prepend(boundary);}
-  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('지하 압력 간략식:')||s.startsWith('최소 누기 가정 적용:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')||s.startsWith('입력 가정 검토 필요:')||s.startsWith('연소 진단:')||s.startsWith('물리 타당성 일부 미확인:')).join(' · ');boundary.hidden=!boundary.textContent;
+  boundary.textContent=(result.limits_text||[]).filter(s=>s.startsWith('지하 압력 간략식:')||s.startsWith('최소 누기 가정 적용:')||s.startsWith('지하 환기 경로 가정:')||s.startsWith('구버전 지수')||s.startsWith('사용자 환기 가정:')||s.startsWith('주차장 환기 미지정:')||s.startsWith('입력 가정 검토 필요:')||s.startsWith('연소 진단:')||s.startsWith('물리 타당성 일부 미확인:')).join(' · ');boundary.hidden=!boundary.textContent;
   const invalid=(result.limits_text||[]).filter(s=>s.startsWith('물리 타당성 검사 실패:'));if(invalid.length){boundary.textContent=invalid.join(' · ');boundary.style.background='#9d1515';boundary.hidden=false;}else boundary.style.background='#533d12';
   const room=building.floors.flatMap(f=>f.rooms).find(r=>r.room_id===selection.room_id),cell=selection.cell_id??(room?.cells.length===1?room.cells[0].cell_id:null),values=series.cells[cell];
   // No room selected: show the bare index bars only. A failed validity check stays visible.

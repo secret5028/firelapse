@@ -36,5 +36,8 @@ def prepare_native(raw):
     if model.get('equivalent_apertures'):
         manifest['equivalent_apertures']=deepcopy(model['equivalent_apertures'])
     if defaults('native_compartments')['merge_virtual_cells']:
-        return coalesce(model,targets,manifest)
+        model,targets,manifest=coalesce(model,targets,manifest)
+    from .release_limit import apply as limit_release
+    limit_release(model)
+    if model.get('fuel_release_limit'):manifest['fuel_release_limit']=deepcopy(model['fuel_release_limit'])
     return model,targets,manifest

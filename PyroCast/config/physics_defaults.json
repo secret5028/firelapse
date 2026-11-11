@@ -66,6 +66,16 @@
     "max_scale": 8,
     "max_attempts": 5
   },
+  "fuel_release_limit": {
+    "enabled": true,
+    "air_density_kg_m3": 1.2,
+    "air_energy_kJ_kg": 3000,
+    "usable_oxygen_fraction": 0.5,
+    "opening_air_factor_kg_s_m25": 0.5,
+    "excess_release_ratio": 1.5,
+    "ramp_s": 10,
+    "basis": "Project simplification for fires that reach ambient only through an assumed equivalent path (MINLEAK). Heat per kg of air 3 MJ (13.1 MJ per kg of oxygen); inflow 0.5 A sqrt(H) kg/s gives the ventilation-controlled 1500 A sqrt(H) kW (Kawagoe); half of the enclosed oxygen is treated as usable before the fire is starved. Release beyond that budget is held at excess_release_ratio times the path supply so that unburned gas can still accumulate. Not measured; real openings, fans and doors that open later are outside this rule."
+  },
   "quasi_steady": {
     "enabled": true,
     "min_wall_s": 600,

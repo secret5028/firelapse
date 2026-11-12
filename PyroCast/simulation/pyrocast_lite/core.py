@@ -539,7 +539,7 @@ class Model:
                 opening_increased=opening_increases(source,room,sol.t)))
         flash=np.array([[v is True for v in r['FO']['occurred']] for r in records])
         backdraft=np.array([[v is True for v in r['backdraft']['occurred']] for r in records])
-        fgi=np.array([[v is True for v in r['FGI']['occurred']] for r in records])
+        fgi=np.array([[v is True for v in r['FGI']['all_met']] for r in records])
         unten = (np.minimum(hl, self.Ha[:, None]) < P['z_ten']) & (Tu > P['T_ten'])
         unten &= (self.zfa[:, None] == self.zfa.max()) | np.array([n['kind'] == 'room' for n in self.nodes])[:, None]
         rooms = []

@@ -1,10 +1,10 @@
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'FireLapse-Retention.ps1')
 
-$version = 'v2026.11.11-r20'
-$archiveName = 'FireLapse-Windows-x64-2026.11.11-r20.zip'
+$version = 'v2026.11.12-r21'
+$archiveName = 'FireLapse-Windows-x64-2026.11.12-r21.zip'
 $releaseUrl = "https://github.com/secret5028/firelapse/releases/download/$version/$archiveName"
-$expectedHash = '15d393840578763822df69034f4ba0ae0afe7fd48422fd7d75e05fb4c70db9ab'
+$expectedHash = '3ab959f379e9177dc031275d41a613da0a2e992bd9e407bbb690f121db3d88af'
 $releaseRoot = [IO.Path]::GetFullPath((Join-Path $env:LOCALAPPDATA 'FireLapse\releases'))
 $selectionFile = Join-Path (Split-Path -Parent $releaseRoot) 'config\current-release.json'
 # An older downloaded source ZIP must not downgrade a newer verified local install.
@@ -110,7 +110,7 @@ function Install-FireLapse {
     [void][IO.Directory]::CreateDirectory($stage)
     try {
         $archive = Join-Path $stage $archiveName
-        Write-Host "Downloading FireLapse $version (911 MB)..."
+        Write-Host "Downloading FireLapse $version (912 MB)..."
         & "$env:SystemRoot\System32\curl.exe" --fail --location --retry 2 --progress-bar --output $archive $releaseUrl
         if ($LASTEXITCODE -ne 0) { throw 'Download failed. Check your internet connection and try again.' }
         $sha256 = [Security.Cryptography.SHA256]::Create()

@@ -1,6 +1,6 @@
 # 알려진 문제와 검증 범위
 
-2026-11-11 기준입니다. 시험의 PASS와 미실행(SKIP), 계산 결과의 `unverified`는 구분합니다.
+2026-11-12 기준입니다. 시험의 PASS와 미실행(SKIP), 계산 결과의 `unverified`는 구분합니다.
 
 | ID | 상태·현상 | 재현·영향 | 조치 |
 |---|---|---|---|
@@ -16,5 +16,6 @@
 | KI-10 | 계산을 끝내기 위한 단순화 2종 | 밀폐 구역 연료 방출 제한(호텔 B1·B2·B3 4건 적용), 준정상 상수 연장(r19 수록 결과에는 적용 없음) | 적용한 결과에 안내 문구 표시. 상수 연장 결과는 `unverified`로만 표시. 계수는 `PyroCast/config/physics_defaults.json`의 `fuel_release_limit`, `quasi_steady` |
 | KI-11 | 저장 결과를 빠르게 연속 전환한 직후의 화면 지연 | 수 초 간격으로 여러 저장 결과를 연달아 넘긴 직후 다른 건물로 바꾸면, 서버가 앞선 요청을 처리하는 동안(최대 약 1분) 새 화면이 열리지 않을 수 있음. 자동 화면 검사에서 관찰 | 잠시 뒤 새로 고침하면 정상 표시. 결과 파일과 계산에는 영향 없음 |
 | KI-12 | 새 CAD 가져오기의 한계 | 한 장에 두 층이 그려진 평면도는 층으로 인식하지 못해, 그 층을 범위에 넣으면 생성이 차단됨. 층간 정렬이 확정되지 않으면 층간 연결이 만들어지지 않음. API AI 미연결 시 공리 검토 후보와 보정 후 검증이 검토 목록에 남음. 수록되지 않은 건물 한 곳으로만 확인 | 층별 도면을 따로 추가하고 검토 목록을 확인. 관련 위치: `PyroCast/tools/cad_import.py`, `PyroCast/tools/cad_completion.py`, `work/cad-web/cad_engine/run_building.py` |
+| KI-13 | FGI 평가 범위 | 연기층이 0.3 m 이상이고 상층 온도가 가스 점화 기준(520 ℃) 미만인 실에서 혼합기 조건만 평가하며 실제 점화 발생은 판정하지 않음. 계산이 층 단위라 계단으로 다른 층에 넘어간 연기는 평가하지 않음. 수록 결과 32건은 CFAST를 다시 돌리지 않고 FGI만 재평가함. r20 이하에서 계산해 PC에 남아 있는 결과는 화점실을 제외하던 이전 정의이며 "구버전 지수" 안내가 붙음 | 이전 결과는 같은 조건으로 다시 계산하면 새 정의로 평가됨. 수정 위치: `PyroCast/simulation/pyrocast_cfbt/criteria.py`, `PyroCast/tools/reassess_fgi.py` |
 
 FireLapse 자체 라이선스는 [LICENSE](LICENSE)의 **All rights reserved**입니다. 제3자 고지는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)를 따릅니다.

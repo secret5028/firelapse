@@ -142,11 +142,11 @@ class Criteria(unittest.TestCase):
         values.update(kw)
         return evaluate_cell(model,next(r for r in model['rooms'] if r['id']==room),[3300.],**values)
 
-    def test_cold_rich_origin_has_bd_potential_but_not_fgi(self):
+    def test_cold_rich_origin_has_bd_potential_and_too_rich_fgi(self):
         r=self.evaluate()
         self.assertGreaterEqual(r['backdraft']['potential'][0],1)
         self.assertAlmostEqual(r['backdraft']['potential'][0],17.9/10.9)
-        self.assertIsNone(r['FGI']['proximity'][0]);self.assertFalse(r['FGI']['gate'][0])
+        self.assertTrue(r['FGI']['gate'][0]);self.assertTrue(r['FGI']['too_rich'][0]);self.assertEqual(r['FGI']['proximity'][0],0)
         self.assertFalse(r['backdraft']['occurred'][0])
         self.assertTrue(self.evaluate(opening_increased=[True])['backdraft']['occurred'][0])
 
@@ -171,10 +171,10 @@ class Criteria(unittest.TestCase):
     def test_fgi_cold_adjacent_and_too_rich(self):
         r=self.evaluate(room='Stair',temperature=[25],oxygen=[20],fuel=[.1])
         self.assertGreaterEqual(r['FGI']['proximity'][0],1)
-        self.assertTrue(r['FGI']['occurred'][0])
+        self.assertTrue(r['FGI']['all_met'][0]);self.assertIsNone(r['FGI']['occurred'][0])
         rich=self.evaluate(room='Stair',temperature=[25],oxygen=[20],fuel=[.78])
         self.assertTrue(rich['FGI']['too_rich'][0]);self.assertEqual(rich['FGI']['proximity'][0],0)
-        self.assertIsNone(self.evaluate(room='Stair',solid_kW=[1])['FGI']['proximity'][0])
+        self.assertEqual(self.evaluate(room='Stair',solid_kW=[1])['FGI']['proximity'][0],0)
 
     def test_wando_r5_explicit_fgi_oxygen_not_replaced_by_native_combustion_limit(self):
         from pyrocast_cfbt.criteria import evaluate_cell
@@ -184,14 +184,24 @@ class Criteria(unittest.TestCase):
         room=model['rooms'][1];room['size_m'][2]=6.405
         r=evaluate_cell(model,room,[2305],[421.723130638],[2.39530866637],[11.4096635957],[.04446537048911817],[0])
         self.assertAlmostEqual(r['FGI']['proximity'][0]*100,114.096635957)
-        self.assertTrue(r['FGI']['occurred'][0])
+        self.assertTrue(r['FGI']['all_met'][0])
         model['gas']['native_lower_oxygen_limit_mass_fraction']=.18
         other=evaluate_cell(model,room,[2305],[421.723130638],[2.39530866637],[11.4096635957],[.04446537048911817],[0])
         self.assertEqual(r['FGI']['proximity'],other['FGI']['proximity'])
 
     def test_rollover_is_independent_and_includes_origin(self):
         r=self.evaluate(bulk_kW=[10])
-        self.assertTrue(r['rollover']['active'][0]);self.assertIsNone(r['FGI']['proximity'][0])
+        self.assertTrue(r['rollover']['active'][0]);self.assertEqual(r['FGI']['proximity'][0],0)
+
+    def test_fgi_potential_ignores_room_role_and_burning(self):
+        mixture=dict(temperature=[200],oxygen=[15],fuel=[.1])
+        origin=self.evaluate(solid_kW=[100],**mixture)['FGI'];other=self.evaluate(room='Stair',**mixture)['FGI']
+        self.assertGreaterEqual(origin['proximity'][0],1)
+        self.assertEqual(origin['proximity'],other['proximity'])
+        self.assertEqual(origin['proximity'],self.evaluate(bulk_kW=[10],**mixture)['FGI']['proximity'])
+        self.assertIs(origin['occurrence_assessed'],False);self.assertEqual(origin['occurred'],[None])
+        self.assertEqual(origin['revision'],'fgi_layer_potential_v1')
+        self.assertFalse(self.evaluate(temperature=[520],oxygen=[15],fuel=[.1])['FGI']['gate'][0])
 
 
 class Tactics(unittest.TestCase):

@@ -6,7 +6,10 @@ function Assert($ok, $message) { if (-not $ok) { throw $message } }
 function Add-Release($name) {
     $dir = Join-Path $releases $name
     [void][IO.Directory]::CreateDirectory($dir)
-    @{name='FireLapse';version=$name.Substring(1)} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $dir 'distribution.json')
+    # As shipped: UTF-8 without BOM with Korean model labels. Read as ANSI, this label breaks the JSON on a Korean Windows.
+    $label = -join [char[]](0xD30C,0xD06C,0xB9C8,0xB9B0,0xD638,0xD154,0x20,0xB7,0x20,0xBCF4,0xC815,0xBCF8)
+    $json = @{name='FireLapse';version=$name.Substring(1);models=@(@{label=$label})} | ConvertTo-Json -Depth 4
+    [IO.File]::WriteAllText((Join-Path $dir 'distribution.json'), $json, (New-Object Text.UTF8Encoding $false))
 }
 try {
     foreach ($v in @('v2026.11.07-r8','v2026.11.07-r9','v2026.11.07-r10','v2026.11.07-r11','v2026.11.07-r12','v2026.11.07-r13','v2026.11.07-r14')) { Add-Release $v }

@@ -32,7 +32,7 @@ function Remove-FireLapseOldReleases {
         if ($dir.Attributes -band [IO.FileAttributes]::ReparsePoint) { Write-Warning "Skipped linked release: $target"; continue }
         $manifest = Join-Path $target 'distribution.json'
         if (-not (Test-Path -LiteralPath $manifest -PathType Leaf)) { continue }
-        $meta = Get-Content -LiteralPath $manifest -Raw | ConvertFrom-Json
+        $meta = Get-Content -LiteralPath $manifest -Raw -Encoding UTF8 | ConvertFrom-Json
         if ($meta.name -ne 'FireLapse' -or ('v' + $meta.version) -ne $dir.Name) { continue }
         $prefix = $target + '\'
         if (@($ProcessPaths | Where-Object { $_.IndexOf($prefix, [StringComparison]::OrdinalIgnoreCase) -ge 0 }).Count) {

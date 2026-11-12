@@ -16,7 +16,7 @@ try {
         $bundledKey = $Matches[1] + ('{0:D8}' -f [int]$Matches[2])
         $selectedDir = Join-Path $releaseRoot $selection.version
         if ($selectedKey -gt $bundledKey -and (Test-Path -LiteralPath (Join-Path $selectedDir 'FireLapse.cmd'))) {
-            $meta = Get-Content -LiteralPath (Join-Path $selectedDir 'distribution.json') -Raw | ConvertFrom-Json
+            $meta = Get-Content -LiteralPath (Join-Path $selectedDir 'distribution.json') -Raw -Encoding UTF8 | ConvertFrom-Json
             if ($meta.name -eq 'FireLapse' -and ('v'+$meta.version) -eq $selection.version) { $version = $selection.version }
         }
     }

@@ -8,7 +8,7 @@
 | KI-2 | 수정됨: 장면 시험의 개발 서버·고정 URL 의존 | `risk_index_scene.test.mjs`가 자체 HTTPS fixture와 실제 WebGL로 실행됨 | 고정 8780 서버 및 120초 후 성공 처리 제거. 준비·렌더링 실패는 실제 FAIL |
 | KI-3 | 수정됨: 수관 레이어의 DOM 의존 | `stage2.test.mjs`의 정적 경계 검사와 50회 장면 생성/해제 시험 | 캔버스 라벨 생성을 host factory로 이동. 수관 모양·색·좌표 유지 |
 | KI-4 | 보존: building.json 출처 문자열과 결과 식별 해시 결합 | 출처 문자열만 고쳐도 저장 결과 연결이 달라질 수 있음 | 원본 모델 바이트·결과 ID 유지. 별도 마이그레이션 전 임의 치환 금지 |
-| KI-5 | 소스와 실행 ZIP의 자료 구성 차이 | 소스의 `saved_results/*.gz`는 회귀 검증용 보관본. r20 실행 ZIP은 7개 모델, r18의 CFAST 4건, 2026-11-11 층별 CFAST 28건, DWG·DXF 변환기 포함. 과거 간략 엔진 결과는 제외 | `tools/test_all.py`는 보관 입력을 먼저 복원. 실행 패키지의 기존 결과는 변경·재계산하지 않음 |
+| KI-5 | 소스와 실행 ZIP의 자료 구성 차이 | 소스의 `saved_results/*.gz`는 회귀 검증용 보관본. r20 이후 실행 ZIP은 7개 모델, r18의 CFAST 4건, 2026-11-11 층별 CFAST 28건, DWG·DXF 변환기 포함. 과거 간략 엔진 결과는 제외 | `tools/test_all.py`는 보관 입력을 먼저 복원. 실행 패키지의 기존 결과는 변경·재계산하지 않음 |
 | KI-6 | 기본 포트 밖의 CORS 제한 | 포트를 바꾸면 모델 라이브러리·AI 연결 조회가 실패할 수 있음 | 기본 loopback 포트 사용. 관련 위치: `PyroCast/config/model-library.json` operation_url, `PyroCast/tools/serve_model_library.py` Handler.send, 클라이언트 8841 참조. 보안 목록 임의 완화 안 함 |
 | KI-7 | 호텔 B1 일부 입력 확인 필요 | 저장된 CFAST 결과의 `unverified` 표시 | 입력 증거 확인 전 확정·안전 판정으로 바꾸지 않음. 결과 자체 보존 |
 | KI-8 | 과거 개발 환경 전용 증거와 폐기된 모드 시험 | 옛 화면 전후 비교 캡처, 원본 DWG, 구형 산소 모드 등에 의존하는 시험은 SKIP 가능 | 전수시험 보고서에 이름·사유를 그대로 남김. 현재 WebGL·단위시험·배포 UI 검증으로 대체하는 범위는 `docs/TESTING.md` 참조 |
